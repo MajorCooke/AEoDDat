@@ -3,6 +3,12 @@ AEons of Death
 
 First off, anyone who is not a developer or internal tester, please leave this place at once. You don't belong here, and this is private development.
 
+The ones who are allowed to submit directly to this repository are:
+- DBThanatos
+- Major Cooke
+
+If account is not on the list above, you must submit via pull request to contribute. You must NOT accept the pull request for me.
+
 Rules for submitting to this repository:
 
 1. Make a fork. Rebase the forks off of the master branch before committing, and separate all changes out to different branches on your fork.
