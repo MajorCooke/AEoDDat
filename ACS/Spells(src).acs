@@ -1,0 +1,134 @@
+#library "Spells"
+
+#include "zcommon.acs"
+
+global int 3: splslct;	//the main control number representing, of the spell selected
+			//item to give, font, display text, pickup/weapon name, fontempty
+str spellcall[8][5]={{"empty","empty","empty","empty","empty"},
+			  {"ChaosSpItem",		"ChaosF",	"Chaos",	"ChaosPresent","ChaosEm"},
+			  {"CharmSpItem",		"CharmF",	"Charm",	"CharmPresent","CharmEm"},
+			  {"DefileSpItem",	"DefileF",	"Defile",	"DefilePresent","DefileEm"},
+			  {"DrainSpItem",		"DrainF",	"Drain",	"DrainPresent","DrainEm"},
+			  {"MorphSpItem",		"MorphF",	"Morph",	"MorphPresent","MorphEm"},
+			  {"RaiseSpItem",		"RaiseF",	"Raise",	"RaisePresent","RaiseEm"},
+			  {"TerrorSpItem",	"TerrorF",	"Terror",	"TerrorPresent","TerrorEm"}};
+int spellpresent[8]={0,0,0,0,0,0,0,0};	//to track which spells are accesible
+int spellcost[8]={0,2,1,2,1,3,2,1};
+int spellcoord[8]={0,120,150,180,210,240,270,300};		//Y coords to use for the spell icon printing
+int direction,atleastonespell;
+
+// Upon entering the game, if one of the items is there, then it displays the HUD elements
+script "s650" (void) //is called by script 901 in "Gametype.o"
+{
+	int i;
+		for(i=1;i<=7;i++)	
+		{
+			if(CheckInventory(spellcall[i][3])==1)	//then, let's record what spells we have available
+			{
+				atleastonespell=1;
+				spellpresent[i]=1;
+			}
+		}
+		if(atleastonespell==1)		//if there is at least one spell, will print the icons
+			ACS_NamedExecute("s651",0,splslct,0,0);
+
+}
+
+script "s651" (int spellpicked)	//main HUD spell icon, called by "weapon" pickups
+{
+	atleastonespell=1;	//it tells the game that at least one spell has been obtained
+	spellpresent[spellpicked]=1;	//records on the main spell prescence tracker that this spell was obtained
+	splslct=spellpicked;	//the passed arg to this script is assigned to the main control spell pos variable
+	SetHudSize(800,600,1);
+	for(int i=1;i<=7;i++)	
+	{
+		if(CheckInventory(spellcall[i][3])==1)	//will check for all spells, if any present...
+		{
+			SetFont(spellcall[i][4]);		//gets the font/image name and...
+			HudMessage(s:"A"; HUDMSG_PLAIN, i+399, 0, 780.0, spellcoord[i]*1.0, 0); //will print the faded/non-selected icon
+		}
+	}
+	ACS_NamedExecute("s655",0,0,0,0);
+}
+
+script "s652" (void)	//cycle forwards/down
+{
+	direction=1;
+	if(atleastonespell==1)
+	{
+		splslct++;
+		while(spellpresent[splslct]==0)
+		{
+			if(splslct>7)
+				splslct=1;
+			else
+				splslct++;
+		}
+		ACS_NamedExecute("s655",0,0,0,0);
+	}
+}
+script "s653" (void) //cycle backwards/up
+{
+	direction=-1;
+	if(atleastonespell==1)
+	{
+		splslct--;
+		while(spellpresent[splslct]==0)
+		{
+			if(splslct==0)
+				splslct=7;
+			else
+				splslct--;
+		}
+		ACS_NamedExecute("s655",0,0,0,0);
+	}
+}
+
+// fire selected spell
+script "s654" (void)	//gives the inventory item that fires the projectile(s)
+{
+	if(GetActorProperty(0, APROP_HEALTH)>0)
+	{
+		if(splslct!=0)
+			if(CheckInventory("DarkMana")>=spellcost[splslct] || GetCVar("sv_infiniteammo") == 1)
+			{
+				GiveInventory(spellcall[splslct][0],1);
+				if(GetCVar("sv_infiniteammo") == 0)
+					TakeInventory("DarkMana",spellcost[splslct]);
+					
+				delay(35);
+			}
+	}
+}
+
+script "s655" (void)
+{
+	SetHudSize(800,600,1);
+	setfont(spellcall[splslct][1]);
+	HudMessage(s:"a"; HUDMSG_PLAIN, 399, 0, 780.0, spellcoord[splslct]*1.0, 0);
+	SetFont("SMALLFONT2");
+	HudMessage(s:spellcall[splslct][2]; HUDMSG_PLAIN, 2, 0, 780.2, spellcoord[splslct]*1.0, 0);
+}
+
+
+
+//---------------------------------------------------------------------------------
+//This is the quick spell call. Depending the key pressed, it passes an arg to this
+//which is used to identify which spell was attempted
+script "s656" (int quickspell)
+{
+	if(GetActorProperty(0, APROP_HEALTH)>0)
+	{
+		if(spellpresent[quickspell]==1)			//does the spell you are attempting is in the array?
+		{
+			splslct=quickspell;	//if so, put the passed arg to the main control number
+			ACS_NamedExecute("s655",0,0,0,0);	//call the script that prints the colored/selected icon, whether you have ammo or not, it will show you just tried to use that one
+			if(CheckInventory("DarkMana")>=spellcost[splslct])	//do you have ammo to fire it? compared with the array of costs?
+			{
+				GiveInventory(spellcall[splslct][0],1);		//if so, give the item that shoots the projectile
+				TakeInventory("DarkMana",spellcost[splslct]);	//take the ammo
+				delay(35);							//and wait for a little before attempting anything again
+			}
+		}
+	}
+}

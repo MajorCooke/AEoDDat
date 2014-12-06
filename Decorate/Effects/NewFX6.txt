@@ -1,0 +1,236 @@
+/*
+Ending map FX, entities, and what have you.
+Made by Major Cooke
+
+This will hold all assets for DECORATE actors that will be used for the map.
+*/
+
+//Doesn't move. Used for the intro effect of him running out of a long colossal
+//hall of impending explosions right on his ass.
+
+Actor AniMarine1 : ScriptedMarine
+{
+	+NOINTERACTION
+	-SHOOTABLE
+	+NONSHOOTABLE
+	+NODAMAGE
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SetAngle(270)
+		PLAY ABCD 4
+		Loop
+	}
+}
+
+//RUNAWAY! Get to da portaaaaaahl!
+Actor AniMarine2 : ScriptedMarine
+{
+	+THRUACTORS
+	-NODROPOFF
+	+DROPOFF
+	+NODAMAGE
+	-NOTELEPORT
+	+NOBLOCKMONST
+	Mass 0x7FFFFFFF
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SetAngle(270)
+	Running1:
+		PLAY AAAA 1 A_ChangeVelocity(16,0,0,3)
+		TNT1 A 0 A_CheckFloor("Running2")
+		Goto Airwall
+	Running2:
+		PLAY BBBB 1 A_ChangeVelocity(16,0,0,3)
+		TNT1 A 0 A_CheckFloor("Running3")
+		Goto Airwall
+	Running3:
+		PLAY CCCC 1 A_ChangeVelocity(16,0,0,3)
+		TNT1 A 0 A_CheckFloor("Running4")
+		Goto Airwall
+	Running4:
+		PLAY DDDD 1 A_ChangeVelocity(16,0,0,3)
+		TNT1 A 0 A_CheckFloor("Running1")
+		Goto Airwall
+	Airwall:
+		PLAY A 1 A_CheckFloor("Running1")
+		Loop
+	}
+}
+
+Actor AniMarine3 : ScriptedMarine
+{
+	+THRUACTORS
+	-NODROPOFF
+	+DROPOFF
+	+NODAMAGE
+	-NOTELEPORT
+	+NOBLOCKMONST
+	+NOGRAVITY
+	Mass 0x7FFFFFFF
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 AA 35
+		TNT1 A 0 A_SetAngle(0)
+		TNT1 A 0 A_SpawnItemEx("TeleportFog",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_Gravity
+		PLAY A 0 A_ChangeVelocity(25,0,0,3)
+	Check:
+		PLAY A 5
+		PLAY A 0 A_CheckFloor("FloorAnim")
+		Loop
+	FloorAnim:
+		PLAY A 25
+		PLAY AAAA 6 A_SetAngle(angle+45)
+		PLAY AAA 35
+		PLAY AAAA 7 A_SetAngle(angle-45)
+		PLAY AA 3 A_ChangeVelocity(1,0,0,1)
+		PLAY BBCCDDAABBCCDDAABBCCDD 3 A_ChangeVelocity(1,0,0,1)
+		PLAY A 0 A_SetAngle(315)
+		PLAY AABBCCDDAABBCCDDAABBCCDD 3 A_ChangeVelocity(1,0,0,1)
+		PLAY B 0 A_SetAngle(270)
+		//PLAY BBCCDD 3 A_ChangeVelocity(1,0,0,1)
+	Strolling:
+		PLAY AABBCCDD 3 A_ChangeVelocity(1,0,0,1)
+		Loop
+	}
+}
+
+Actor AniExploSpawner1
+{
+	+NOINTERACTION
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SetAngle(270)
+		TNT1 A 0 A_Quake(4,35,0,2048)
+	Delay:
+		TNT1 A 0 A_Jump(256,1,2,3,4)//,5)
+		TNT1 AAAAA 1
+		TNT1 A 0 A_SpawnItemEx("AniExplosion1",random(-60,-150),random(-96,96),random(8,112),-13,0,0,0,32)
+		TNT1 AAAA 0 A_SpawnItemEx("AniExplosion1",random(-60,-150),random(-96,96),random(8,112),-13,0,0,0,32,192)
+		Goto Spawn+2
+	}
+}
+
+Actor AniExploSpawner2
+{
+	var int user_count;
+	Projectile
+	+THRUACTORS
+	+NOTRIGGER
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SetAngle(270)
+		//TNT1 A 0 A_ChangeVelocity(12,0,0,3)
+		TNT1 A 0 A_Quake(4,35,0,2048)
+	Delay:
+		TNT1 A 0 A_JumpIf(user_count>=35,"Travel")
+		TNT1 A 0 A_Jump(256,/*1,*/2,3,4)//,5)
+		TNT1 AAAAA 1 A_SetUserVar("user_count",user_count+1)
+		TNT1 A 0 A_SpawnItemEx("AniExplosion1",random(0,-250),random(-96,96),random(8,112),0,0,0,0,32)
+		TNT1 AAAA 0 A_SpawnItemEx("AniExplosion1",random(0,-250),random(-96,96),random(8,112),0,0,0,0,32,128)
+		Goto Spawn+2
+	Travel:
+		TNT1 A 0 A_ChangeVelocity(12,0,0,3)
+	Travelling:
+		TNT1 A 0 A_Quake(4,35,0,6000)
+		TNT1 A 0 A_Jump(256,1,2,3,4)//,5)
+		TNT1 AAAAA 1
+		TNT1 A 0 A_SpawnItemEx("AniExplosion1",random(0,-250),random(-96,96),random(8,112),0,0,0,0,32)
+		TNT1 AAAA 0 A_SpawnItemEx("AniExplosion1",random(0,-250),random(-96,96),random(8,112),0,0,0,0,32,128)
+		Loop
+	}
+}
+
+Actor AniFireSpawner
+{
+	+NOINTERACTION
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SetAngle(270)
+	Flaming:
+		TNT1 A 0 A_SpawnItemEx("AniFlameBig",random(-25,25),random(-96,96),random(8,112),random(35,105),0,random(0,20),random(-25,25),32)
+		TNT1 AAAA 0 A_SpawnItemEx("AniFlameBig",random(-25,25),random(-96,96),random(8,112),random(35,105),0,random(0,20),random(-25,25),32,128)
+		TNT1 A 0 A_Quake(4,35,0,6000)
+		TNT1 A 0 A_Jump(256,4,6,8,10)
+		TNT1 AAAAAAAAAAAAAAA 1
+		Loop
+	}
+}
+
+Actor AniFlameBig
+{
+	Projectile
+	+THRUACTORS
+	-NOGRAVITY
+	+DONTSPLASH
+	+NOTRIGGER
+	BounceType "Doom"
+	ReactionTime 100
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_Jump(256,5,6,7,8,9,10)
+		TNT1 AAAAAAAAAAA 1 A_CountDown
+		TNT1 A 0 A_SpawnItemEx("AniExplosion2",random(-5,5),random(-5,5),random(-5,5),0,0,random(1,4),random(0,359),32)
+		TNT1 AAA 0 A_SpawnItemEx("AniExplosion2",random(-5,5),random(-5,5),random(-5,5),0,0,random(1,4),random(0,359),32,128)
+		Loop
+	Death:
+		TNT1 A 0 A_SpawnItemEx("AniExplosion1",0,0,0,0,0,0,0,32)
+		TNT1 AAA 0 A_SpawnItemEx("AniExplosion2",random(-5,5),random(-5,5),random(-5,5),0,0,random(1,4),random(0,359),32)
+		Stop
+	}
+}
+		
+Actor AniExplosion1
+{
+	+NOINTERACTION
+	RenderStyle Add
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_PlaySound("weapons/dnrocketexplo")
+		TNT1 A 0 A_Jump(256,"A1","A2","A3","A4")
+	A1:
+		TNT1 A 0 A_SetScale(1.7) //+.3 up from originals.
+		X004 ABCDEFGHIJKLMNOPQ 2 Bright A_FadeOut(0.03)
+		Wait
+	A2:
+		TNT1 A 0 A_SetScale(1.6)
+		X005 ABCDEFGHI 1 Bright A_FadeOut(0.015)
+		X005 JKLMNOPQRSTUVWX 2 Bright A_FadeOut(0.03)
+		Wait
+	A3:
+		TNT1 A 0 A_SetScale(1.6)
+		X006 ABCDEFGHIJKLMNOP 2 Bright A_FadeOut(0.03)
+		Wait
+	A4:
+		TNT1 A 0 A_SetScale(3.0)
+		X015 ABCDEFGHIJKLMNOPQRSTUVWX 2 Bright A_FadeOut(0.042)
+		Wait
+	}
+}
+
+Actor AniExplosion2 : AniExplosion1
+{
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_Jump(256,"A1","A2","A3","A4")
+		Goto A1
+	}
+}

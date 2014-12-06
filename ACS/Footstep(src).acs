@@ -1,0 +1,811 @@
+//------------------------------------------------------------------------
+//------------------------------------------------------------------------
+//	The credits go to Ryan Cordell for posting this as a resource <3
+// He also credits
+// "Credit goes to SolarSnowfall for the base, HotWax for optimization 
+// on the script, Isle for further optimization, Kate for even further 
+// optimization"
+//------------------------------------------------------------------------
+//------------------------------------------------------------------------
+// Slightly modified by DBT for AEoD
+//------------------------------------------------------------------------
+
+#library "FOOTSTEP"
+#include "zcommon.acs"
+
+#define V_OFFSET	20
+
+global int 44:stepping;
+
+int feet[8];		//footsteps on or off?
+int v[8];		//velocity per player
+int x;
+int y;
+int z;
+
+FUNCTION int GetVelocity (void)
+{
+   int len;
+   x = GetActorVelX(0);
+   y = GetActorVelY(0);
+//   z = GetActorVelZ(0);
+
+   int ang = vectorangle(x,y);
+   if(((ang+0.125)%0.5) > 0.25) len = fixeddiv(y, sin(ang));
+   else len = fixeddiv(x, cos(ang));
+
+/*
+   ang = vectorangle(len, z);
+   if(((ang+0.125)%0.5) > 0.25) len = fixeddiv(z, sin(ang));
+   else len = fixeddiv(len, cos(ang));
+*/
+
+   return len;
+}
+
+SCRIPT "s614" ENTER
+{
+   feet[PlayerNumber ()] = ON;
+   ACS_NamedExecuteAlways ("s610", 0);
+   ACS_NamedExecuteAlways ("s616", 0);
+   ACS_NamedExecuteAlways ("s617", 0);
+}
+
+SCRIPT "s615" RESPAWN
+{
+   feet[PlayerNumber ()] = ON;
+   ACS_NamedExecuteAlways ("s610", 0);
+   ACS_NamedExecuteAlways ("s616", 0);
+   ACS_NamedExecuteAlways ("s617", 0);
+}
+
+//This is the script that tracks the player's velocity.
+
+SCRIPT "s616" (VOID)
+{
+   int p_num = PlayerNumber ();
+   stepping = 1;
+
+   while (feet[p_num])
+   {
+      delay(1);
+
+      v[p_num] = GetVelocity ()>>16;
+   }
+}
+
+//=====================
+// Do the floor maths.
+//=====================
+
+#DEFINE NUMFLOORTYPES 14
+
+str FloorSound[NUMFLOORTYPES][250];
+
+SCRIPT "s617" (VOID)
+{
+   int i, counter;
+   int delay_time = 2;
+   int volume;
+   stepping = 1;
+
+   while (feet[PlayerNumber ()])
+   {
+      delay_time = V_OFFSET -(3) - v[PlayerNumber ()]/2;
+	if(delay_time<=0)
+		delay_time=1;
+      volume = (v[PlayerNumber ()] * 7);
+      if (GetActorZ (0) == GetActorFloorZ (0))
+      {
+         // Loop through the different floor types
+         for (i=0; i<NUMFLOORTYPES; i++) {
+            counter = 1;
+
+            // Check through all the listed textures for this floor type
+            while (counter < 200 && FloorSound[i][counter] != -1) {
+               if (CheckActorFloorTexture(0, FloorSound[i][counter]))
+               {
+                  ActivatorSound (FloorSound[i][0], volume);
+
+                  // No reason to keep looking
+                  counter = 200;
+               }
+               counter++;
+            }
+         }
+      }
+      delay(delay_time+1);
+   }
+}
+
+SCRIPT "s610" OPEN
+{
+   // Initialize the array of floor sounds
+
+   FloorSound[0][0] = "floor/tile";
+   FloorSound[0][1] = "CEIL1_3";
+   FloorSound[0][2] = "CEIL3_3";
+   FloorSound[0][3] = "CEIL3_4";
+   FloorSound[0][4] = "CONS1_1";
+   FloorSound[0][5] = "CONS1_5";
+   FloorSound[0][6] = "CONS1_7";
+   FloorSound[0][7] = "COMP01";
+   FloorSound[0][8] = "FLAT2";
+   FloorSound[0][9] = "FLAT3";
+   FloorSound[0][10] = "FLAT8";
+   FloorSound[0][11] = "FLAT9";
+   FloorSound[0][12] = "FLAT17";
+   FloorSound[0][13] = "FLAT18";
+   FloorSound[0][14] = "FLAT19";
+   FloorSound[0][15] = "FLOOR0_5";
+   FloorSound[0][16] = "FLOOR0_6";
+   FloorSound[0][17] = "FLOOR0_7";
+   FloorSound[0][18] = "FLOOR3_3";
+   FloorSound[0][19] = "FLOOR4_1";
+   FloorSound[0][20] = "FLOOR4_5";
+   FloorSound[0][21] = "TLITE6_1";
+   FloorSound[0][22] = "TLITE6_4";
+   FloorSound[0][23] = "TLITE6_5";
+   FloorSound[0][24] = "FLOOR5_1";
+   FloorSound[0][25] = "FLOOR5_2";
+   FloorSound[0][26] = "FLOOR5_3";
+   FloorSound[0][27] = "FLOOR7_2";
+   FloorSound[0][28] = "ADEL_F08"; //Check
+   FloorSound[0][29] = "ADEL_F14"; //Check
+   FloorSound[0][30] = "ADEL_F31"; //Check
+   FloorSound[0][31] = "ADEL_F49"; //Check
+   FloorSound[0][32] = "ADEL_F55"; //Check
+   FloorSound[0][33] = "ADEL_F56"; //Check
+   FloorSound[0][34] = "ADEL_F63"; //Check
+   FloorSound[0][35] = "ADEL_J06"; //Check
+   FloorSound[0][36] = "ADEL_J07"; //Check
+   FloorSound[0][37] = "ADEL_J12"; //Check
+   FloorSound[0][38] = "ADEL_J15"; //Check
+   FloorSound[0][39] = "CFLOOR2"; //Check
+   FloorSound[0][40] = "CFLOOR3"; //Check
+   FloorSound[0][41] = "CFLOOR4"; //Check
+   FloorSound[0][42] = "CITYF01"; //Check
+   FloorSound[0][43] = "CITYF02"; //Check
+   FloorSound[0][44] = "CITYF03"; //Check
+   FloorSound[0][45] = "CITYF04"; //Check
+   FloorSound[0][46] = "CITYF05"; //Check
+   FloorSound[0][47] = "CITYF06"; //Check
+   FloorSound[0][48] = "CITYF07"; //Check
+   FloorSound[0][49] = "CITYF08"; //Check
+   FloorSound[0][50] = "CITYF09"; //Check
+   FloorSound[0][51] = "CITYF10"; //Check
+   FloorSound[0][52] = "CITYF13"; //Check
+   FloorSound[0][53] = "CITYF14"; //Check
+   FloorSound[0][54] = "CITYF15"; //Check
+   FloorSound[0][55] = "CITYF16"; //Check
+   FloorSound[0][56] = "CITYF17"; //Check
+   FloorSound[0][57] = "CITYF18"; //Check
+   FloorSound[0][58] = "IKTCR05B"; //Check
+   FloorSound[0][59] = "IKTCR05C"; //Check
+   FloorSound[0][60] = "IKTKP11C"; //Check
+   FloorSound[0][61] = "IKTKP18A"; //Check
+   FloorSound[0][62] = "IKTKP18B"; //Check
+   FloorSound[0][63] = "IKTKWL2B"; //Check
+   FloorSound[0][64] = "NICK_A01"; //Check
+   FloorSound[0][65] = "NICK_A07"; //Check
+   FloorSound[0][66] = "NICK_A10"; //Check
+   FloorSound[0][67] = "QFLAT02"; //Check
+   FloorSound[0][68] = "QFLAT03"; //Check
+   FloorSound[0][69] = "QFLAT04"; //Check
+   FloorSound[0][70] = "QFLAT05"; //Check
+   FloorSound[0][71] = "QFLAT06"; //Check
+   FloorSound[0][72] = "QFLAT07"; //Check
+   FloorSound[0][73] = "WALLF1"; //Check
+   FloorSound[0][74] = "WALLF2"; //Check
+   FloorSound[0][75] = "WALLF3"; //Check
+   FloorSound[0][76] = "CONS1_3"; //Check
+   FloorSound[0][77] = "GRNLITE1"; //Check
+   FloorSound[0][78] = "NFBRGN01"; //Check
+   FloorSound[0][79] = "NFBRKA03"; //Check
+   FloorSound[0][80] = "NFCL31GN"; //Check
+   FloorSound[0][81] = "NFCL31GR"; //Check
+   FloorSound[0][82] = "NFCL32GN"; //Check
+   FloorSound[0][83] = "NFCL32GR"; //Check
+   FloorSound[0][84] = "NFCL33GN"; //Check
+   FloorSound[0][85] = "NFCL33GR"; //Check
+   FloorSound[0][86] = "NFCL41GN"; //Check
+   FloorSound[0][87] = "NFCL41RD"; //Check
+   FloorSound[0][88] = "NFCL42GN"; //Check
+   FloorSound[0][89] = "NFCL42GR"; //Check
+   FloorSound[0][90] = "NFCL42RD"; //Check
+   FloorSound[0][91] = "NFCL43GN"; //Check
+   FloorSound[0][92] = "NFCL43GR"; //Check
+   FloorSound[0][93] = "NFCL52GN"; //Check
+   FloorSound[0][94] = "NFCL52GR"; //Check
+   FloorSound[0][95] = "NFCNS1_3"; //Check
+   FloorSound[0][96] = "NFCSPN01"; //Check
+   FloorSound[0][97] = "NFCSPN02"; //Check
+   FloorSound[0][98] = "NFCSPN04"; //Check
+   FloorSound[0][99] = "NFDM15BR"; //Check
+   FloorSound[0][100] = "NFDM15GR"; //Check
+   FloorSound[0][101] = "NFDM16BR"; //Check
+   FloorSound[0][102] = "NFFL03GN"; //Check
+   FloorSound[0][103] = "NFFL06BR"; //Check
+   FloorSound[0][104] = "NFFL06GN"; //Check
+   FloorSound[0][105] = "NFFL33GR"; //Check
+   FloorSound[0][106] = "NFFL41GN"; //Check
+   FloorSound[0][107] = "NFFL41GR"; //Check
+   FloorSound[0][108] = "NFFL45GN"; //Check
+   FloorSound[0][109] = "NFFL45GR"; //Check
+   FloorSound[0][110] = "NFFL46GN"; //Check
+   FloorSound[0][111] = "NFFL46GR"; //Check
+   FloorSound[0][112] = "NFFL48B"; //Check
+   FloorSound[0][113] = "NFFL52B"; //Check
+   FloorSound[0][114] = "NFFL53B"; //Check
+   FloorSound[0][115] = "NFFL54GN"; //Check
+   FloorSound[0][116] = "NFFL54GR"; //Check
+   FloorSound[0][117] = "NFFL54H"; //Check
+   FloorSound[0][118] = "NFFL72GR"; //Check
+   FloorSound[0][119] = "NFFT1BR"; //Check
+   FloorSound[0][120] = "NFFT1GN"; //Check
+   FloorSound[0][121] = "NFFT5GN"; //Check
+   FloorSound[0][122] = "NFFT5GR"; //Check
+   FloorSound[0][123] = "NFFT11GR"; //Check
+   FloorSound[0][124] = "NFFT13GN"; //Check
+   FloorSound[0][125] = "NFFT13GR"; //Check
+   FloorSound[0][126] = "NFFT20BR"; //Check
+   FloorSound[0][127] = "NFFT20GN"; //Check
+   FloorSound[0][128] = "NFFT55GN"; //Check
+   FloorSound[0][129] = "NFFT72BR"; //Check
+   FloorSound[0][130] = "NFFT72GR"; //Check
+   FloorSound[0][131] = "NFFT72RD"; //Check
+   FloorSound[0][132] = "NFGCN1_1"; //Check
+   FloorSound[0][133] = "NFGCN1_3"; //Check
+   FloorSound[0][134] = "NFRR09GN"; //Check
+   FloorSound[0][135] = "NFRR09GR"; //Check
+   FloorSound[0][136] = "NFRR10GN"; //Check
+   FloorSound[0][137] = "NFRR10GR"; //Check
+   FloorSound[0][138] = "NFRR13BR"; //Check
+   FloorSound[0][139] = "NFRR16GR"; //Check
+   FloorSound[0][140] = "NFSL14GN"; //Check
+   FloorSound[0][141] = "NFSL15GN"; //Check
+   FloorSound[0][142] = "NFSPHT01"; //Check
+   FloorSound[0][143] = "NFSTBN12"; //Check
+   FloorSound[0][144] = "NFSTEP03"; //Check
+   FloorSound[0][145] = "NFSTGN12"; //Check
+   FloorSound[0][146] = "NFSTGY12"; //Check
+   FloorSound[0][147] = "NFSTSK02"; //Check
+   FloorSound[0][148] = "NFSTTN12"; //Check
+   FloorSound[0][149] = "SLIME14"; //Check
+   FloorSound[0][150] = "SLIME15"; //Check
+   FloorSound[0][151] = "SLIME16"; //Check
+   FloorSound[0][152] = "FLOOR0_1"; //Check - Doom (Pre-D2)
+   FloorSound[0][153] = "FLOOR0_3"; //Check - Doom (Pre-D2)
+   FloorSound[0][154] = "FLOOR0_6"; //Check - Doom (Pre-D2)
+   FloorSound[0][155] = "FLOOR1_1"; //Check - Doom (Pre-D2)
+   FloorSound[0][156] = "FLOOR1_7"; //Check - Doom (Pre-D2)
+   FloorSound[0][157] = "FLOOR4_6"; //Check - Doom (Pre-D2)
+   FloorSound[0][158] = "FLOOR4_8"; //Check - Doom (Pre-D2)
+   FloorSound[0][159] = -1;
+
+   FloorSound[1][0] = "floor/tile2";
+   FloorSound[1][1] = "DEM1_1";
+   FloorSound[1][2] = "DEM1_2";
+   FloorSound[1][3] = "DEM1_3";
+   FloorSound[1][4] = "DEM1_4";
+   FloorSound[1][5] = "DEM1_5";
+   FloorSound[1][6] = "DEM1_6";
+   FloorSound[1][7] = "FLOOR4_6";
+   FloorSound[1][8] = "FLOOR4_8";
+   FloorSound[1][9] = "ADEL_F65"; //Check
+   FloorSound[1][10] = "ADEL_F66"; //Check
+   FloorSound[1][11] = "ADEL_F84"; //Check
+   FloorSound[1][12] = "ADEL_J08"; //Check
+   FloorSound[1][13] = "ADEL_J09"; //Check
+   FloorSound[1][14] = "ADEL_J10"; //Check
+   FloorSound[1][15] = "ADEL_J11"; //Check
+   FloorSound[1][16] = "CFLOOR1"; //Check
+   FloorSound[1][17] = "COLMF3"; //Check
+   FloorSound[1][18] = "Q2FLAT05"; //Check
+   FloorSound[1][19] = "Q2FLAT06"; //Check
+   FloorSound[1][20] = "Q2FLAT07"; //Check
+   FloorSound[1][21] = "Q2FLAT08"; //Check
+   FloorSound[1][22] = "LITE7"; //Check
+   FloorSound[1][23] = "NFLTB04H"; //Check
+   FloorSound[1][24] = "NFLTB04V"; //Check
+   FloorSound[1][25] = "NFLTW03H"; //Check
+   FloorSound[1][26] = "NFLTW03V"; //Check
+   FloorSound[1][27] = "NFLTW05H"; //Check
+   FloorSound[1][28] = "NFLTW05V"; //Check
+   FloorSound[1][29] = -1;
+
+   FloorSound[2][0] = "floor/wood";
+   FloorSound[2][1] = "CEIL1_1";
+   FloorSound[2][2] = "CRATOP1";
+   FloorSound[2][3] = "CRATOP2";
+   FloorSound[2][4] = "FLAT5_1";
+   FloorSound[2][5] = "FLAT5_2";
+   FloorSound[2][6] = "ADEL_F12"; //Check
+   FloorSound[2][7] = "ADEL_F13"; //Check
+   FloorSound[2][8] = "ADEL_F54"; //Check
+   FloorSound[2][9] = "ADEL_F67"; //Check
+   FloorSound[2][10] = "ADEL_F68"; //Check
+   FloorSound[2][11] = "ADEL_F71"; //Check
+   FloorSound[2][12] = "ADEL_F72"; //Check
+   FloorSound[2][13] = "ADEL_J18"; //Check
+   FloorSound[2][14] = "ADEL_J19"; //Check
+   FloorSound[2][15] = "DUNGF1"; //Check
+   FloorSound[2][16] = "DUNGF2"; //Check
+   FloorSound[2][17] = "DUNGF3"; //Check
+   FloorSound[2][18] = "DUNGF4"; //Check
+   FloorSound[2][19] = "FTUB1"; //Check
+   FloorSound[2][20] = "FTUB2"; //Check
+   FloorSound[2][21] = "FTUB3"; //Check
+   FloorSound[2][22] = "NFWOOD"; //Check
+   FloorSound[2][23] = "NICK_A02"; //Check
+   FloorSound[2][24] = "NICK_A03"; //Check
+   FloorSound[2][25] = "NICK_A06"; //Check
+   FloorSound[2][26] = "NICK_A08"; //Check
+   FloorSound[2][27] = "NICK_A09"; //Check
+   FloorSound[2][28] = "OLA_F_01"; //Check
+   FloorSound[2][29] = "OLA_F_02"; //Check
+   FloorSound[2][30] = "SWITCH1"; //Check
+   FloorSound[2][31] = "SWITCH2"; //Check
+   FloorSound[2][32] = "SWITCH3"; //Check
+   FloorSound[2][32] = "SWITCH4"; //Check
+   FloorSound[2][34] = "WOODF1"; //Check
+   FloorSound[2][35] = "WOODF2"; //Check
+   FloorSound[2][36] = "WOODF3"; //Check
+   FloorSound[2][37] = "WOODF4"; //Check
+   FloorSound[2][38] = "WOODF5"; //Check
+   FloorSound[2][39] = "WOODF6"; //Check
+   FloorSound[2][40] = "WOODF7"; //Check
+   FloorSound[2][41] = "WOODF8"; //Check
+   FloorSound[2][41] = "NFPANL01"; //Check
+   FloorSound[2][42] = -1;
+
+   FloorSound[3][0] = "floor/hard";
+   FloorSound[3][1] = "CEIL3_1";
+   FloorSound[3][2] = "CEIL3_2";
+   FloorSound[3][3] = "CEIL3_5";
+   FloorSound[3][4] = "CEIL3_6";
+   FloorSound[3][5] = "CEIL5_1";
+   FloorSound[3][6] = "CEIL5_2";
+   FloorSound[3][7] = "FLAT5";
+   FloorSound[3][8] = "FLOOR0_1";
+   FloorSound[3][9] = "FLOOR0_2";
+   FloorSound[3][10] = "FLOOR0_3";
+   FloorSound[3][11] = "FLOOR1_6";
+   FloorSound[3][12] = "FLOOR1_7";
+   FloorSound[3][13] = "FLOOR7_1";
+   FloorSound[3][14] = "GRNLITE1";
+   FloorSound[3][15] = "MFLR8_1";
+   FloorSound[3][16] = "ADEL_F62"; //Check
+   FloorSound[3][17] = "ALTARF1"; //Check
+   FloorSound[3][18] = "ALTARF2"; //Check
+   FloorSound[3][19] = "M5"; //Check
+   FloorSound[3][20] = "QFLAT01"; //Check
+   FloorSound[3][21] = "NFGSTN01"; //Check
+   FloorSound[3][22] = "NFPANL02"; //Check
+   FloorSound[3][23] = -1;
+
+   FloorSound[4][0] = "floor/carpet";
+   FloorSound[4][1] = "CEIL4_1";
+   FloorSound[4][2] = "CEIL4_2";
+   FloorSound[4][3] = "CEIL4_3";
+   FloorSound[4][4] = "FLAT5_3";
+   FloorSound[4][5] = "FLAT5_4";
+   FloorSound[4][6] = "FLAT5_5";
+   FloorSound[4][7] = "FLAT14";
+   FloorSound[4][8] = "FLOOR1_1";
+   FloorSound[4][9] = "CRATEF1"; //Check
+   FloorSound[4][10] = "CRATEF2"; //Check
+   FloorSound[4][12] = "IKFLAT02"; //Check
+   FloorSound[4][13] = "IKFLAT2"; //Check
+   FloorSound[4][14] = "IKFLAT4"; //Check
+   FloorSound[4][15] = "TRAV_F01"; //Check
+   FloorSound[4][16] = "TRAV_F02"; //Check
+   FloorSound[4][17] = "TRAV_F04"; //Check
+   FloorSound[4][18] = "N5FL14RD"; //Check
+   FloorSound[4][19] = "NFBRLT01"; //Check
+   FloorSound[4][20] = "NFBRWN01"; //Check
+   FloorSound[4][21] = "NFBRWN02"; //Check
+   FloorSound[4][22] = "NFCTOP03"; //Check
+   FloorSound[4][23] = "NFFT14RD"; //Check
+   FloorSound[4][24] = "NFFT19BR"; //Check
+   FloorSound[4][25] = "NFFT19GN"; //Check
+   FloorSound[4][26] = "NFGNL1H"; //Check
+   FloorSound[4][27] = "NFGRLT01"; //Check
+   FloorSound[4][28] = "NFRDLT01"; //Check
+   FloorSound[4][29] = -1;
+
+   FloorSound[5][0] = "floor/rock";
+   FloorSound[5][1] = "FLAT1_1";
+   FloorSound[5][2] = "FLAT1_2";
+   FloorSound[5][3] = "FLAT5_6";
+   FloorSound[5][4] = "FLAT5_7";
+   FloorSound[5][5] = "FLAT5_8";
+   FloorSound[5][6] = "FLOOR5_4";
+   FloorSound[5][7] = "GRNROCK";
+   FloorSound[5][8] = "RROCK03";
+   FloorSound[5][9] = "RROCK04";
+   FloorSound[5][10] = "RROCK09";
+   FloorSound[5][11] = "RROCK10";
+   FloorSound[5][12] = "RROCK11";
+   FloorSound[5][13] = "RROCK12";
+   FloorSound[5][14] = "RROCK13";
+   FloorSound[5][15] = "RROCK14";
+   FloorSound[5][16] = "RROCK15";
+   FloorSound[5][17] = "SLIME13";
+   FloorSound[5][18] = "ADEL_F47"; //Check
+   FloorSound[5][19] = "ADEL_F48"; //Check
+   FloorSound[5][20] = "CITYF20"; //Check
+   FloorSound[5][21] = "ROCKF1"; //Check
+   FloorSound[5][22] = "ROCKF2"; //Check
+   FloorSound[5][23] = "ROCKF3"; //Check
+   FloorSound[5][24] = "ROCKF4"; //Check
+   FloorSound[5][25] = "ROCKF5"; //Check
+   FloorSound[5][26] = "ROCKF6"; //Check
+   FloorSound[5][27] = "ROCKF7"; //Check
+   FloorSound[5][28] = "ROCKF8"; //Check
+   FloorSound[5][29] = "STONEF"; //Check
+   FloorSound[5][30] = "NFRR01GR"; //Check
+   FloorSound[5][31] = "RROCK01"; //Check
+   FloorSound[5][32] = "RROCK16"; //Check
+   FloorSound[5][33] = "RROCK17"; //Check
+   FloorSound[5][34] = "RROCK18"; //Check
+   FloorSound[5][35] = "RROCK19"; //Check
+   FloorSound[5][36] = -1;
+
+   FloorSound[6][0] = "floor/metal";
+   FloorSound[6][1] = "CEIL1_2";
+   FloorSound[6][2] = "FLAT1_3";
+   FloorSound[6][3] = "FLAT4";
+   FloorSound[6][4] = "FLAT20";
+   FloorSound[6][5] = "FLAT22";
+   FloorSound[6][6] = "FLAT23";
+   FloorSound[6][7] = "GATE1";
+   FloorSound[6][8] = "GATE2";
+   FloorSound[6][9] = "GATE3";
+   FloorSound[6][10] = "GATE4";
+   FloorSound[6][11] = "STEP1";
+   FloorSound[6][12] = "STEP2";
+   FloorSound[6][13] = "MFLR8_2";
+   FloorSound[6][14] = "16X16"; //Check
+   FloorSound[6][15] = "T_FL01"; //Check
+   FloorSound[6][16] = "T_FL02"; //Check
+   FloorSound[6][17] = "16X16LT"; //Check
+   FloorSound[6][18] = "A-DAN1"; //Check
+   FloorSound[6][19] = "A-DAN2"; //Check
+   FloorSound[6][20] = "A-DAN3"; //Check
+   FloorSound[6][21] = "A-DAN4"; //Check
+   FloorSound[6][22] = "A-DAN5"; //Check
+   FloorSound[6][23] = "ADEL_F09"; //Check
+   FloorSound[6][24] = "ADEL_F16"; //Check
+   FloorSound[6][25] = "ADEL_F33"; //Check
+   FloorSound[6][26] = "ADEL_F34"; //Check
+   FloorSound[6][27] = "ADEL_F36"; //Check
+   FloorSound[6][28] = "ADEL_F50"; //Check
+   FloorSound[6][29] = "ADEL_F51"; //Check
+   FloorSound[6][30] = "ADEL_F52"; //Check
+   FloorSound[6][31] = "ADEL_F53"; //Check
+   FloorSound[6][32] = "ADEL_F57"; //Check
+   FloorSound[6][33] = "ADEL_F58"; //Check
+   FloorSound[6][34] = "ADEL_F59"; //Check
+   FloorSound[6][35] = "ADEL_F60"; //Check
+   FloorSound[6][36] = "ADEL_F61"; //Check
+   FloorSound[6][37] = "ADEL_F64"; //Check
+   FloorSound[6][38] = "ADEL_F73"; //Check
+   FloorSound[6][39] = "ADEL_F74"; //Check
+   FloorSound[6][40] = "ADEL_F80"; //Check
+   FloorSound[6][41] = "ADEL_F81"; //Check
+   FloorSound[6][42] = "ADEL_F82"; //Check
+   FloorSound[6][43] = "ADEL_F83"; //Check
+   FloorSound[6][44] = "ADEL_J03"; //Check
+   FloorSound[6][45] = "ADEL_J13"; //Check
+   FloorSound[6][46] = "ADEL_J16"; //Check
+   FloorSound[6][47] = "BRFLR1"; //Check
+   FloorSound[6][48] = "BRFLR2"; //Check
+   FloorSound[6][49] = "BRFLR2B"; //Check
+   FloorSound[6][50] = "BRFLR3"; //Check
+   FloorSound[6][51] = "BRFLR3B"; //Check
+   FloorSound[6][52] = "BRFLR4"; //Check
+   FloorSound[6][53] = "BRFLR4B"; //Check
+   FloorSound[6][54] = "BRFLR4B"; //Check
+   FloorSound[6][55] = "COPF01"; //Check
+   FloorSound[6][56] = "COPF02"; //Check
+   FloorSound[6][57] = "COPF03"; //Check
+   FloorSound[6][58] = "COPF04"; //Check
+   FloorSound[6][59] = "COPF05"; //Check
+   FloorSound[6][60] = "COPF06"; //Check
+   FloorSound[6][61] = "COPF07"; //Check
+   FloorSound[6][62] = "COPF08"; //Check
+   FloorSound[6][63] = "COPF09"; //Check
+   FloorSound[6][64] = "COPF10"; //Check
+   FloorSound[6][65] = "COPF11"; //Check
+   FloorSound[6][66] = "COPF12"; //Check
+   FloorSound[6][67] = "ECOPF1"; //Check
+   FloorSound[6][68] = "ECOPF2"; //Check
+   FloorSound[6][69] = "ECOPF3"; //Check
+   FloorSound[6][70] = "ECOPF4"; //Check
+   FloorSound[6][71] = "ECOPF5"; //Check
+   FloorSound[6][72] = "FLOOR1"; //Check
+   FloorSound[6][73] = "FLOOR2"; //Check
+   FloorSound[6][74] = "FLOOR3"; //Check
+   FloorSound[6][75] = "FLOOR4"; //Check
+   FloorSound[6][76] = "GRIDR"; //Check
+   FloorSound[6][77] = "IKLITE2"; //Check
+   FloorSound[6][78] = "IKLITE3"; //Check
+   FloorSound[6][79] = "IKLITF01"; //Check
+   FloorSound[6][80] = "IKLITF07"; //Check
+   FloorSound[6][81] = "IKMTWL02"; //Check
+   FloorSound[6][82] = "IKMTWL04"; //Check
+   FloorSound[6][83] = "IKTKPN2"; //Check
+   FloorSound[6][84] = "IKTKPN3"; //Check
+   FloorSound[6][85] = "IKTKPN4"; //Check
+   FloorSound[6][86] = "IKTPN02B"; //Check
+   FloorSound[6][87] = "IKTPW06A"; //Check
+   FloorSound[6][88] = "IKTPW06B"; //Check
+   FloorSound[6][89] = "IKTPW06C"; //Check
+   FloorSound[6][90] = "LITEF01"; //Check
+   FloorSound[6][91] = "LITEF02"; //Check
+   FloorSound[6][92] = "LITEF03"; //Check
+   FloorSound[6][93] = "LITEF04"; //Check
+   FloorSound[6][94] = "LITEF05"; //Check
+   FloorSound[6][95] = "LITEF06"; //Check
+   FloorSound[6][96] = "LITEF07"; //Check
+   FloorSound[6][97] = "LITEF08"; //Check
+   FloorSound[6][98] = "LITEF09"; //Check
+   FloorSound[6][99] = "LITEF10"; //Check
+   FloorSound[6][100] = "LITEF11"; //Check
+   FloorSound[6][101] = "LITEF12"; //Check
+   FloorSound[6][102] = "LITEF13"; //Check
+   FloorSound[6][103] = "LITEF14"; //Check
+   FloorSound[6][104] = "LITEF15"; //Check
+   FloorSound[6][105] = "METALF01"; //Check
+   FloorSound[6][106] = "METALF02"; //Check
+   FloorSound[6][107] = "METALF03"; //Check
+   FloorSound[6][108] = "METALF04"; //Check
+   FloorSound[6][109] = "METALF05"; //Check
+   FloorSound[6][110] = "METALF06"; //Check
+   FloorSound[6][111] = "METALF07"; //Check
+   FloorSound[6][112] = "METALF08"; //Check
+   FloorSound[6][113] = "METALF09"; //Check
+   FloorSound[6][114] = "METALF10"; //Check
+   FloorSound[6][115] = "METALF11"; //Check
+   FloorSound[6][116] = "METALF12"; //Check
+   FloorSound[6][117] = "METALF13"; //Check
+   FloorSound[6][118] = "METALF14"; //Check
+   FloorSound[6][119] = "METALF15"; //Check
+   FloorSound[6][120] = "METALF16"; //Check
+   FloorSound[6][121] = "METALF17"; //Check
+   FloorSound[6][122] = "METALF18"; //Check
+   FloorSound[6][123] = "METALF19"; //Check
+   FloorSound[6][124] = "METALF20"; //Check
+   FloorSound[6][125] = "METALF21"; //Check
+   FloorSound[6][126] = "METALF22"; //Check
+   FloorSound[6][127] = "METALF23"; //Check
+   FloorSound[6][128] = "METALF24"; //Check
+   FloorSound[6][129] = "NMTRC1"; //Check
+   FloorSound[6][130] = "NMTRC2"; //Check
+   FloorSound[6][131] = "NMTRC5"; //Check
+   FloorSound[6][132] = "PLATF1"; //Check
+   FloorSound[6][133] = "PLATF2"; //Check
+   FloorSound[6][134] = "QFLAT09"; //Check
+   FloorSound[6][135] = "QFLAT10"; //Check
+   FloorSound[6][136] = "QSLIP1"; //Check
+   FloorSound[6][137] = "QSLIP2"; //Check
+   FloorSound[6][138] = "QSLIP3"; //Check
+   FloorSound[6][139] = "QSLIP4"; //Check
+   FloorSound[6][140] = "QSLIP5"; //Check
+   FloorSound[6][141] = "QSLIP6"; //Check
+   FloorSound[6][142] = "QSLIP7"; //Check
+   FloorSound[6][143] = "SFLOOR1"; //Check
+   FloorSound[6][144] = "SFLOOR2"; //Check
+   FloorSound[6][145] = "SFLOOR3"; //Check
+   FloorSound[6][146] = "SFLOOR4"; //Check
+   FloorSound[6][147] = "SFLOOR5"; //Check
+   FloorSound[6][148] = "SFLOOR6"; //Check
+   FloorSound[6][149] = "SLIPBOT"; //Check
+   FloorSound[6][150] = "SLIPTOP"; //Check
+   FloorSound[6][151] = "TECHBR1D"; //Check
+   FloorSound[6][152] = "TECHBR1E"; //Check
+   FloorSound[6][153] = "TECHBR2C"; //Check
+   FloorSound[6][154] = "TECHBR2D"; //Check
+   FloorSound[6][155] = "TECHF1"; //Check
+   FloorSound[6][156] = "TECHF2"; //Check
+   FloorSound[6][157] = "TECHF3"; //Check
+   FloorSound[6][158] = "TECHF4"; //Check
+   FloorSound[6][159] = "TECHF5"; //Check
+   FloorSound[6][160] = "TECHFL2"; //Check
+   FloorSound[6][161] = "TECHG"; //Check
+   FloorSound[6][162] = "TELETOP"; //Check
+   FloorSound[6][163] = "NFFL48W"; //Check
+   FloorSound[6][164] = "NFFT22GN"; //Check
+   FloorSound[6][165] = "NFFT22GR"; //Check
+   FloorSound[6][166] = "NFFT22OR"; //Check
+   FloorSound[6][167] = "NFFT22RD"; //Check
+   FloorSound[6][168] = "NFGF22GN"; //Check
+   FloorSound[6][169] = "NFGF22RD"; //Check
+   FloorSound[6][170] = "NFGF23"; //Check
+   FloorSound[6][171] = "NFMETA03"; //Check
+   FloorSound[6][172] = "NFMETA05"; //Check
+   FloorSound[6][173] = "NFMETA06"; //Check
+   FloorSound[6][174] = "NFMETA45"; //Check
+   FloorSound[6][175] = "NFMTPN04"; //Check
+   FloorSound[6][176] = "NFMTPN05"; //Check
+   FloorSound[6][177] = "NFMTPN06"; //Check
+   FloorSound[6][178] = "NFMTSH00"; //Check
+   FloorSound[6][179] = "NFMTSV00"; //Check
+   FloorSound[6][180] = "NFMTTK01"; //Check
+   FloorSound[6][181] = "NFMTTK12"; //Check
+   FloorSound[6][182] = "NFMTTK13"; //Check
+   FloorSound[6][183] = "NFMTTK14"; //Check
+   FloorSound[6][184] = "NFMTTK15"; //Check
+   FloorSound[6][185] = "NFMTWL01"; //Check
+   FloorSound[6][186] = "NFMTWL02"; //Check
+   FloorSound[6][187] = "NFMTWL03"; //Check
+   FloorSound[6][188] = "NFSILV3A"; //Check
+   FloorSound[6][189] = "NFSVPP01"; //Check
+   FloorSound[6][190] = "NFSVPP02"; //Check
+   FloorSound[6][191] = "NFSVPP04"; //Check
+   FloorSound[6][192] = "NFTKGN00"; //Check
+   FloorSound[6][193] = "NFTKGN01"; //Check
+   FloorSound[6][194] = "NFTL65BL"; //Check
+   FloorSound[6][195] = "NFTL65GN"; //Check
+   FloorSound[6][196] = "NFTL65OR"; //Check
+   FloorSound[6][197] = "NFTL65WT"; //Check
+   FloorSound[6][198] = "NFTL65YL"; //Check
+   FloorSound[6][199] = "NFTLTE01"; //Check
+   FloorSound[6][200] = "NFTLTE02"; //Check
+   FloorSound[6][201] = "VADFLR1"; //Check
+   FloorSound[6][202] = "VADFLR2"; //Check
+   FloorSound[6][203] = -1;
+
+   FloorSound[7][0] = "floor/dirt";
+   FloorSound[7][1] = "FLAT10";
+   FloorSound[7][2] = "GRASS1";
+   FloorSound[7][3] = "GRASS2";
+   FloorSound[7][4] = "RROCK16";
+   FloorSound[7][5] = "RROCK17";
+   FloorSound[7][6] = "RROCK18";
+   FloorSound[7][7] = "RROCK19";
+   FloorSound[7][8] = "RROCK20";
+   FloorSound[7][9] = "MFLR8_4";
+   FloorSound[7][10] = "ADEL_J02"; //Check
+   FloorSound[7][11] = "ADEL_J04"; //Check
+   FloorSound[7][12] = "ADEL_J05"; //Check
+   FloorSound[7][13] = "NICK_A04"; //Check
+   FloorSound[7][14] = "QGRASS"; //Check
+   FloorSound[7][15] = -1;
+
+   FloorSound[8][0] = "floor/gravel";
+   FloorSound[8][1] = "FLOOR6_1";
+   FloorSound[8][2] = "FLOOR6_2";
+   FloorSound[8][3] = "MFLR8_3";
+   FloorSound[8][4] = "ADEL_F04"; //Check
+   FloorSound[8][5] = "ADEL_F75"; //Check
+   FloorSound[8][6] = "ADEL_F76"; //Check
+   FloorSound[8][7] = "ADEL_J01"; //Check
+   FloorSound[8][8] = "ADEL_J17"; //Check
+   FloorSound[8][9] = "CITYF11"; //Check
+   FloorSound[8][10] = "CITYF12"; //Check
+   FloorSound[8][11] = "CITYF19"; //Check
+   FloorSound[8][12] = "CITYF21"; //Check
+   FloorSound[8][13] = "COLMF1"; //Check
+   FloorSound[8][14] = "COLMF2"; //Check
+   FloorSound[8][15] = "COLMF4"; //Check
+   FloorSound[8][16] = "GRAVE01"; //Check
+   FloorSound[8][17] = "GRAVE02"; //Check
+   FloorSound[8][18] = "GRAVE03"; //Check
+   FloorSound[8][19] = "GRAVE04"; //Check
+   FloorSound[8][20] = "GRAVE05"; //Check
+   FloorSound[8][21] = "GRAVE06"; //Check
+   FloorSound[8][22] = "GRAVE07"; //Check
+   FloorSound[8][23] = "GRAVE08"; //Check
+   FloorSound[8][24] = "GRAVE09"; //Check
+   FloorSound[8][25] = "GRAVE10"; //Check
+   FloorSound[8][26] = "GRAVE11"; //Check
+   FloorSound[8][27] = "GRAVE12"; //Check
+   FloorSound[8][28] = "GROUND1"; //Check
+   FloorSound[8][29] = "GROUND2"; //Check
+   FloorSound[8][30] = "GROUND3"; //Check
+   FloorSound[8][31] = "GROUND4"; //Check
+   FloorSound[8][32] = "NFMF82BR"; //Check
+   FloorSound[8][33] = "NFMF82GN"; //Check
+   FloorSound[8][34] = "NFMF82GR"; //Check
+   FloorSound[8][35] = -1;
+
+   FloorSound[9][0] = "floor/met2";
+   FloorSound[9][1] = "SLIME14";
+   FloorSound[9][2] = "SLIME15";
+   FloorSound[9][3] = "SLIME16";
+   FloorSound[9][4] = "ADEL_F70"; //Check
+   FloorSound[9][5] = -1;
+
+   FloorSound[10][0] = "floor/slimy";
+   FloorSound[10][1] = "BLOOD1";
+   FloorSound[10][2] = "BLOOD2";
+   FloorSound[10][3] = "BLOOD3";
+   FloorSound[10][4] = "SLIME01";
+   FloorSound[10][5] = "SLIME02";
+   FloorSound[10][6] = "SLIME03";
+   FloorSound[10][7] = "SLIME04";
+   FloorSound[10][8] = "SLIME05";
+   FloorSound[10][9] = "SLIME06";
+   FloorSound[10][10] = "SLIME07";
+   FloorSound[10][11] = "SLIME08";
+   FloorSound[10][12] = "AQUAFLAT"; //Check
+   FloorSound[10][13] = "NICK_A05"; //Check
+   FloorSound[10][14] = "ORG11B"; //Check
+   FloorSound[10][15] = "ORG9"; //Check
+   FloorSound[10][16] = "QSLIME1"; //Check
+   FloorSound[10][17] = "QSLIME9"; //Check
+   FloorSound[10][18] = "SLIME05B"; //Check
+   FloorSound[10][19] = "W3SNAKE"; //Check
+   FloorSound[10][20] = "WBLOOD"; //Check
+   FloorSound[10][21] = "SFLR6_1"; //Check
+   FloorSound[10][22] = "SFLR6_4"; //Check
+   FloorSound[10][23] = "SFLR7_1"; //Check
+   FloorSound[10][24] = "SFLR7_4"; //Check
+   FloorSound[10][25] = "SNAK7_1"; //Check
+   FloorSound[10][26] = "SNAK8_1"; //Check
+   FloorSound[10][27] = "HELL5_1"; //Check
+   FloorSound[10][28] = "HELL5_2"; //Check
+   FloorSound[10][29] = "HELL6_2"; //Check
+   FloorSound[10][30] = "HELL6_3"; //Check
+   FloorSound[10][31] = "HELL8_1"; //Check
+   FloorSound[10][32] = "HELL8_2"; //Check
+   FloorSound[10][33] = "HELL8_4"; //Check
+   FloorSound[10][34] = "SPINE3_1"; //Check
+   FloorSound[10][35] = "SPINE3_2"; //Check
+   FloorSound[10][36] = "SPINE4_1"; //Check
+   FloorSound[10][37] = "BFALL1"; //Check
+   FloorSound[10][38] = "BFALL2"; //Check
+   FloorSound[10][39] = "BFALL3"; //Check
+   FloorSound[10][40] = "RW47_3"; //Check
+   FloorSound[10][41] = "RW47_4"; //Check
+   FloorSound[10][42] = "RW48_1"; //Check
+   FloorSound[10][43] = "RW48_2"; //Check
+   FloorSound[10][44] = "RW48_3"; //Check
+   FloorSound[10][45] = "RW48_4"; //Check
+   FloorSound[10][46] = -1;
+
+   FloorSound[11][0] = "floor/water";
+   FloorSound[11][1] = "FWATER1";
+   FloorSound[11][2] = "FWATER2";
+   FloorSound[11][3] = "FWATER3";
+   FloorSound[11][4] = "FWATER4";
+   FloorSound[11][5] = "NUKAGE1";
+   FloorSound[11][6] = "NUKAGE2";
+   FloorSound[11][7] = "NUKAGE3";
+   FloorSound[11][8] = "LAVA1";
+   FloorSound[11][9] = "LAVA2";
+   FloorSound[11][10] = "LAVA3";
+   FloorSound[11][11] = "LAVA4";
+   FloorSound[11][12] = "ADEL_J14"; //Check
+   FloorSound[11][13] = "QFWAT"; //Check
+   FloorSound[11][14] = "QLAVA"; //Check
+   FloorSound[11][15] = "QLAVA2"; //Check
+   FloorSound[11][16] = "QLAVA7"; //Check
+   FloorSound[11][17] = "QWATER1"; //Check
+   FloorSound[11][18] = "QWATER2"; //Check
+   FloorSound[11][19] = "QWATER3"; //Check
+   FloorSound[11][20] = "QWATER3A"; //Check
+   FloorSound[11][21] = "QWATERT6"; //Check
+   FloorSound[11][22] = "SB_FLAT3"; //Check
+   FloorSound[11][23] = "SB_FLAT4"; //Check
+   FloorSound[11][24] = "W3LAVA"; //Check
+   FloorSound[11][25] = "WLAVA"; //Check
+   FloorSound[11][26] = "WNUKAGE"; //Check
+   FloorSound[11][27] = "WSLIME2"; //Check
+   FloorSound[11][28] = "WSLIME"; //Check
+   FloorSound[11][29] = "WWATER"; //Check
+   FloorSound[11][30] = -1;
+
+   FloorSound[12][0] = "floor/snow";
+   FloorSound[12][1] = "SNOW";
+   FloorSound[12][2] = "SNOW3";
+   FloorSound[12][3] = "SB_FLAT5";
+   FloorSound[12][4] = -1;
+}
+
+SCRIPT "s618" DEATH
+{
+   feet[PlayerNumber ()] = OFF;
+}

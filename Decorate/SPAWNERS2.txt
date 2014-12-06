@@ -1,0 +1,850 @@
+// ====================================================================================
+// New Spawners to random the death Corps along the Levels
+// ====================================================================================
+
+//Actor DeadMarineSpawner replaces DeadMarine
+
+Actor DeadZombieManSpawner replaces DeadZombieMan
+{
+	var int user_Type;
+	+NOINTERACTION
+	States
+	{
+	Spawn:
+		TNT1 A 1
+		
+	//-------------------------------------------------------------------------------------------------------
+	//	Type Check
+	//-------------------------------------------------------------------------------------------------------
+		TNT1 A 0 A_SetUserVar("user_Type",(CallACS("s911",0,0,0)))
+		TNT1 A 0 A_JumpIf(user_Type==1,"Demonesque")
+		TNT1 A 0 A_JumpIf(user_Type==2,"DarkMagic")
+		TNT1 A 0 A_JumpIf(user_Type==3,"Magic")
+		TNT1 A 0 A_JumpIf(user_Type==4,"Tech")
+		TNT1 A 0 A_JumpIf(user_Type==5,"Aliens")
+		TNT1 A 0 A_JumpIf(user_Type==6,"Joke")
+		TNT1 A 0 A_JumpIf(user_Type==11,"Doom")
+		TNT1 A 0 A_JumpIf(user_Type==12,"Blood")
+		TNT1 A 0 A_JumpIf(user_Type==13,"DN3D")
+		TNT1 A 0 A_JumpIf(user_Type==14,"HL")
+		TNT1 A 0 A_JumpIf(user_Type==15,"HL2")
+		TNT1 A 0 A_JumpIf(user_Type==16,"Heretic")
+		TNT1 A 0 A_JumpIf(user_Type==17,"Hexen")
+		TNT1 A 0 A_JumpIf(user_Type==18,"Hexen2")
+		TNT1 A 0 A_JumpIf(user_Type==19,"MM")
+		TNT1 A 0 A_JumpIf(user_Type==20,"PowerSlave")
+		TNT1 A 0 A_JumpIf(user_Type==21,"Quake1")
+		TNT1 A 0 A_JumpIf(user_Type==22,"Quake2")
+		TNT1 A 0 A_JumpIf(user_Type==23,"Quake4")
+		TNT1 A 0 A_JumpIf(user_Type==24,"ShadowWarr")
+		TNT1 A 0 A_JumpIf(user_Type==25,"Strife")
+		TNT1 A 0 A_JumpIf(user_Type==26,"L4D")
+		Goto ClassicAEoD
+	Doom:
+		TNT1 A 0 A_SpawnItemEx("DeadZombieman01",0,0,0,0,0,0,0,32) Goto End
+	Blood:
+		TNT1 A 0 A_SpawnItemEx("DeadZombieman02",0,0,0,0,0,0,0,32) Goto End
+	DN3D:
+		TNT1 A 0 A_SpawnItemEx("DeadZombieman03",0,0,0,0,0,0,0,32) Goto End
+	HL:
+		TNT1 A 0 A_SpawnItemEx("DeadZombieman04",0,0,0,0,0,0,0,32) Goto End
+	HL2:
+		TNT1 A 0 A_SpawnItemEx("DeadZombieman05",0,0,0,0,0,0,0,32) Goto End
+	Heretic:
+		TNT1 A 0 A_SpawnItemEx("DeadZombieman06",0,0,0,0,0,0,0,32) Goto End
+	Hexen:
+		TNT1 A 0 A_SpawnItemEx("DeadZombieman07",0,0,0,0,0,0,0,32) Goto End
+	Hexen2:
+		TNT1 A 0 A_SpawnItemEx("DeadZombieman08",0,0,0,0,0,0,0,32) Goto End
+	MM:
+		TNT1 A 0 A_SpawnItemEx("DeadZombieman09",0,0,0,0,0,0,0,32) Goto End
+	PowerSlave:
+		TNT1 A 0 A_SpawnItemEx("DeadZombieman10",0,0,0,0,0,0,0,32) Goto End
+	Quake1:
+		TNT1 A 0 A_SpawnItemEx("DeadZombieman11",0,0,0,0,0,0,0,32) Goto End
+	Quake2:
+		TNT1 A 0 A_SpawnItemEx("DeadZombieman12",0,0,0,0,0,0,0,32) Goto End
+	Quake4:
+		TNT1 A 0 A_SpawnItemEx("DeadZombieman13",0,0,0,0,0,0,0,32) Goto End
+	ShadowWarr:
+		TNT1 A 0 A_SpawnItemEx("DeadZombieman14",0,0,0,0,0,0,0,32) Goto End
+	Strife:
+		TNT1 A 0 A_SpawnItemEx("DeadZombieman15",0,0,0,0,0,0,0,32) Goto End
+
+	DarkMagic:
+	Demonesque:
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadZombieman01",1)	//Doom
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadZombieman02",1) //Blood
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadZombieman10",1) //Powerslave
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadZombieman11",1) //quake
+		Goto End
+		TNT1 A 0 A_Jump(256,"Demonesque")
+		Goto Demonesque
+	Magic:
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadZombieman06",1)	//heretic
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadZombieman07",1) //hexen
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadZombieman08",1) //hexen2
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadZombieman09",1) //M&M
+		Goto End
+		TNT1 A 0 A_Jump(256,"Magic")
+		Goto Magic
+	Aliens:
+	Tech:
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadZombieman12",1)	//quake2
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadZombieman13",1) //quake4
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadZombieman15",1) //Powerslave
+		Goto End
+		TNT1 A 0 A_Jump(256,"Tech")
+		Goto Tech
+		
+	Joke:
+	ClassicAEoD:
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadZombieman01",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadZombieman02",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadZombieman03",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadZombieman04",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadZombieman05",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadZombieman06",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadZombieman07",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadZombieman08",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadZombieman09",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadZombieman10",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadZombieman11",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadZombieman12",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadZombieman13",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadZombieman14",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadZombieman15",1) 
+		Goto End
+		TNT1 A 0 A_Jump(256,"ClassicAEoD")
+		Goto ClassicAEoD
+	L4D:
+	End:
+		TNT1 A 1
+		Stop
+	}
+}
+
+Actor DeadShotguySpawner replaces DeadShotgunGuy
+{
+	var int user_Type;
+	+NOINTERACTION
+	States
+	{
+	Spawn:
+		TNT1 A 1
+		
+	//-------------------------------------------------------------------------------------------------------
+	//	Type Check
+	//-------------------------------------------------------------------------------------------------------
+		TNT1 A 0 A_SetUserVar("user_Type",(CallACS("s911",0,0,0)))
+		TNT1 A 0 A_JumpIf(user_Type==1,"Demonesque")
+		TNT1 A 0 A_JumpIf(user_Type==2,"DarkMagic")
+		TNT1 A 0 A_JumpIf(user_Type==3,"Magic")
+		TNT1 A 0 A_JumpIf(user_Type==4,"Tech")
+		TNT1 A 0 A_JumpIf(user_Type==5,"Aliens")
+		TNT1 A 0 A_JumpIf(user_Type==6,"Joke")
+		TNT1 A 0 A_JumpIf(user_Type==11,"Doom")
+		TNT1 A 0 A_JumpIf(user_Type==12,"Blood")
+		TNT1 A 0 A_JumpIf(user_Type==13,"DN3D")
+		TNT1 A 0 A_JumpIf(user_Type==14,"HL")
+		TNT1 A 0 A_JumpIf(user_Type==15,"HL2")
+		TNT1 A 0 A_JumpIf(user_Type==16,"Heretic")
+		TNT1 A 0 A_JumpIf(user_Type==17,"Hexen")
+		TNT1 A 0 A_JumpIf(user_Type==18,"Hexen2")
+		TNT1 A 0 A_JumpIf(user_Type==19,"MM")
+		TNT1 A 0 A_JumpIf(user_Type==20,"PowerSlave")
+		TNT1 A 0 A_JumpIf(user_Type==21,"Quake1")
+		TNT1 A 0 A_JumpIf(user_Type==22,"Quake2")
+		TNT1 A 0 A_JumpIf(user_Type==23,"Quake4")
+		TNT1 A 0 A_JumpIf(user_Type==24,"ShadowWarr")
+		TNT1 A 0 A_JumpIf(user_Type==25,"Strife")
+		TNT1 A 0 A_JumpIf(user_Type==26,"L4D")
+		Goto ClassicAEoD
+	Doom:
+		TNT1 A 0 A_SpawnItemEx("DeadShotguy01",0,0,0,0,0,0,0,32) Goto End
+	Blood:
+		TNT1 A 0 A_SpawnItemEx("DeadShotguy02",0,0,0,0,0,0,0,32) Goto End
+	DN3D:
+		TNT1 A 0 A_SpawnItemEx("DeadShotguy03",0,0,0,0,0,0,0,32) Goto End
+	HL:
+		TNT1 A 0 A_SpawnItemEx("DeadShotguy04",0,0,0,0,0,0,0,32) Goto End
+	HL2:
+		TNT1 A 0 A_SpawnItemEx("DeadShotguy05",0,0,0,0,0,0,0,32) Goto End
+	Heretic:
+		TNT1 A 0 A_SpawnItemEx("DeadShotguy06",0,0,0,0,0,0,0,32) Goto End
+	Hexen:
+		TNT1 A 0 A_SpawnItemEx("DeadShotguy07",0,0,0,0,0,0,0,32) Goto End
+	Hexen2:
+		TNT1 A 0 A_SpawnItemEx("DeadShotguy08",0,0,0,0,0,0,0,32) Goto End
+	MM:
+		TNT1 A 0 A_SpawnItemEx("DeadShotguy09",0,0,0,0,0,0,0,32) Goto End
+	PowerSlave:
+		TNT1 A 0 A_SpawnItemEx("DeadShotguy10",0,0,0,0,0,0,0,32) Goto End
+	Quake1:
+		TNT1 A 0 A_SpawnItemEx("DeadShotguy11",0,0,0,0,0,0,0,32) Goto End
+	Quake2:
+		TNT1 A 0 A_SpawnItemEx("DeadShotguy12",0,0,0,0,0,0,0,32) Goto End
+	Quake4:
+		TNT1 A 0 A_SpawnItemEx("DeadShotguy13",0,0,0,0,0,0,0,32) Goto End
+	ShadowWarr:
+		TNT1 A 0 A_SpawnItemEx("DeadShotguy14",0,0,0,0,0,0,0,32) Goto End
+	Strife:
+		TNT1 A 0 A_SpawnItemEx("DeadShotguy15",0,0,0,0,0,0,0,32) Goto End
+
+	DarkMagic:
+	Demonesque:
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadShotguy01",1)	//Doom
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadShotguy02",1) //Blood
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadShotguy10",1) //Powerslave
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadShotguy11",1) //quake
+		Goto End
+		TNT1 A 0 A_Jump(256,"Demonesque")
+		Goto Demonesque
+	Magic:
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadShotguy06",1)	//heretic
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadShotguy07",1) //hexen
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadShotguy08",1) //hexen2
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadShotguy09",1) //M&M
+		Goto End
+		TNT1 A 0 A_Jump(256,"Magic")
+		Goto Magic
+	Aliens:
+	Tech:
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadShotguy12",1)	//quake2
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadShotguy13",1) //quake4
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadShotguy15",1) //Powerslave
+		Goto End
+		TNT1 A 0 A_Jump(256,"Tech")
+		Goto Tech
+	
+	Joke:	
+	ClassicAEoD:
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadShotguy01",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadShotguy02",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadShotguy03",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadShotguy04",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadShotguy05",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadShotguy06",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadShotguy07",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadShotguy08",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadShotguy09",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadShotguy10",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadShotguy11",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadShotguy12",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadShotguy13",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadShotguy14",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadShotguy15",1) 
+		Goto End
+		TNT1 A 0 A_Jump(256,"ClassicAEoD")
+		Goto ClassicAEoD
+	L4D:
+	End:
+		TNT1 A 1
+		Stop
+	}
+}
+
+Actor DeadImpSpawner replaces DeadDoomImp
+{
+	var int user_Type;
+	+NOINTERACTION
+	States
+	{
+	Spawn:
+		TNT1 A 1
+		
+	//-------------------------------------------------------------------------------------------------------
+	//	Type Check
+	//-------------------------------------------------------------------------------------------------------
+		TNT1 A 0 A_SetUserVar("user_Type",(CallACS("s911",0,0,0)))
+		TNT1 A 0 A_JumpIf(user_Type==1,"Demonesque")
+		TNT1 A 0 A_JumpIf(user_Type==2,"DarkMagic")
+		TNT1 A 0 A_JumpIf(user_Type==3,"Magic")
+		TNT1 A 0 A_JumpIf(user_Type==4,"Tech")
+		TNT1 A 0 A_JumpIf(user_Type==5,"Aliens")
+		TNT1 A 0 A_JumpIf(user_Type==6,"Joke")
+		TNT1 A 0 A_JumpIf(user_Type==11,"Doom")
+		TNT1 A 0 A_JumpIf(user_Type==12,"Blood")
+		TNT1 A 0 A_JumpIf(user_Type==13,"DN3D")
+		TNT1 A 0 A_JumpIf(user_Type==14,"HL")
+		TNT1 A 0 A_JumpIf(user_Type==15,"HL2")
+		TNT1 A 0 A_JumpIf(user_Type==16,"Heretic")
+		TNT1 A 0 A_JumpIf(user_Type==17,"Hexen")
+		TNT1 A 0 A_JumpIf(user_Type==18,"Hexen2")
+		TNT1 A 0 A_JumpIf(user_Type==19,"MM")
+		TNT1 A 0 A_JumpIf(user_Type==20,"PowerSlave")
+		TNT1 A 0 A_JumpIf(user_Type==21,"Quake1")
+		TNT1 A 0 A_JumpIf(user_Type==22,"Quake2")
+		TNT1 A 0 A_JumpIf(user_Type==23,"Quake4")
+		TNT1 A 0 A_JumpIf(user_Type==24,"ShadowWarr")
+		TNT1 A 0 A_JumpIf(user_Type==25,"Strife")
+		TNT1 A 0 A_JumpIf(user_Type==26,"L4D")
+		Goto ClassicAEoD
+	Doom:
+		TNT1 A 0 A_SpawnItemEx("DeadImp01",0,0,0,0,0,0,0,32) Goto End
+	Blood:
+		TNT1 A 0 A_SpawnItemEx("DeadImp02",0,0,0,0,0,0,0,32) Goto End
+	DN3D:
+		TNT1 A 0 A_SpawnItemEx("DeadImp03",0,0,0,0,0,0,0,32) Goto End
+	HL:
+		TNT1 A 0 A_SpawnItemEx("DeadImp04",0,0,0,0,0,0,0,32) Goto End
+	HL2:
+		TNT1 A 0 A_SpawnItemEx("DeadImp05",0,0,0,0,0,0,0,32) Goto End
+	Heretic:
+		TNT1 A 0 A_SpawnItemEx("DeadImp06",0,0,0,0,0,0,0,32) Goto End
+	Hexen:
+		TNT1 A 0 A_SpawnItemEx("DeadImp07",0,0,0,0,0,0,0,32) Goto End
+	Hexen2:
+		TNT1 A 0 A_SpawnItemEx("DeadImp08",0,0,0,0,0,0,0,32) Goto End
+	MM:
+		TNT1 A 0 A_SpawnItemEx("DeadImp09",0,0,0,0,0,0,0,32) Goto End
+	PowerSlave:
+		TNT1 A 0 A_SpawnItemEx("DeadImp10",0,0,0,0,0,0,0,32) Goto End
+	Quake1:
+		TNT1 A 0 A_SpawnItemEx("DeadImp11",0,0,0,0,0,0,0,32) Goto End
+	Quake2:
+		TNT1 A 0 A_SpawnItemEx("DeadImp12",0,0,0,0,0,0,0,32) Goto End
+	Quake4:
+		TNT1 A 0 A_SpawnItemEx("DeadImp13",0,0,0,0,0,0,0,32) Goto End
+	ShadowWarr:
+		TNT1 A 0 A_SpawnItemEx("DeadImp14",0,0,0,0,0,0,0,32) Goto End
+	Strife:
+		TNT1 A 0 A_SpawnItemEx("DeadImp15",0,0,0,0,0,0,0,32) Goto End
+
+	DarkMagic:
+	Demonesque:
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadImp01",1)	//Doom
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadImp02",1) //Blood
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadImp10",1) //Powerslave
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadImp11",1) //quake
+		Goto End
+		TNT1 A 0 A_Jump(256,"Demonesque")
+		Goto Demonesque
+	Magic:
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadImp06",1)	//heretic
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadImp07",1) //hexen
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadImp08",1) //hexen2
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadImp09",1) //M&M
+		Goto End
+		TNT1 A 0 A_Jump(256,"Magic")
+		Goto Magic
+	Aliens:
+	Tech:
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadImp12",1)	//quake2
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadImp13",1) //quake4
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadImp15",1) //Powerslave
+		Goto End
+		TNT1 A 0 A_Jump(256,"Tech")
+		Goto Tech
+		
+	Joke:	
+	ClassicAEoD:
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadImp01",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadImp02",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadImp03",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadImp04",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadImp05",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadImp06",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadImp07",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadImp08",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadImp09",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadImp10",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadImp11",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadImp12",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadImp13",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadImp14",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadImp15",1) 
+		Goto End
+		TNT1 A 0 A_Jump(256,"ClassicAEoD")
+		Goto ClassicAEoD
+	
+	L4D:
+	End:
+		TNT1 A 1
+		Stop
+	}
+}
+
+
+Actor DeadDemonSpawner replaces DeadDemon
+{
+	var int user_Type;
+	+NOINTERACTION
+	States
+	{
+	Spawn:
+		TNT1 A 1
+		
+	//-------------------------------------------------------------------------------------------------------
+	//	Type Check
+	//-------------------------------------------------------------------------------------------------------
+		TNT1 A 0 A_SetUserVar("user_Type",(CallACS("s911",0,0,0)))
+		TNT1 A 0 A_JumpIf(user_Type==1,"Demonesque")
+		TNT1 A 0 A_JumpIf(user_Type==2,"DarkMagic")
+		TNT1 A 0 A_JumpIf(user_Type==3,"Magic")
+		TNT1 A 0 A_JumpIf(user_Type==4,"Tech")
+		TNT1 A 0 A_JumpIf(user_Type==5,"Aliens")
+		TNT1 A 0 A_JumpIf(user_Type==6,"Joke")
+		TNT1 A 0 A_JumpIf(user_Type==11,"Doom")
+		TNT1 A 0 A_JumpIf(user_Type==12,"Blood")
+		TNT1 A 0 A_JumpIf(user_Type==13,"DN3D")
+		TNT1 A 0 A_JumpIf(user_Type==14,"HL")
+		TNT1 A 0 A_JumpIf(user_Type==15,"HL2")
+		TNT1 A 0 A_JumpIf(user_Type==16,"Heretic")
+		TNT1 A 0 A_JumpIf(user_Type==17,"Hexen")
+		TNT1 A 0 A_JumpIf(user_Type==18,"Hexen2")
+		TNT1 A 0 A_JumpIf(user_Type==19,"MM")
+		TNT1 A 0 A_JumpIf(user_Type==20,"PowerSlave")
+		TNT1 A 0 A_JumpIf(user_Type==21,"Quake1")
+		TNT1 A 0 A_JumpIf(user_Type==22,"Quake2")
+		TNT1 A 0 A_JumpIf(user_Type==23,"Quake4")
+		TNT1 A 0 A_JumpIf(user_Type==24,"ShadowWarr")
+		TNT1 A 0 A_JumpIf(user_Type==25,"Strife")
+		TNT1 A 0 A_JumpIf(user_Type==26,"L4D")
+		Goto ClassicAEoD
+	Doom:
+		TNT1 A 0 A_SpawnItemEx("DeadDemon01",0,0,0,0,0,0,0,32) Goto End
+	Blood:
+		TNT1 A 0 A_SpawnItemEx("DeadDemon02",0,0,0,0,0,0,0,32) Goto End
+	DN3D:
+		TNT1 A 0 A_SpawnItemEx("DeadDemon03",0,0,0,0,0,0,0,32) Goto End
+	HL:
+		TNT1 A 0 A_SpawnItemEx("DeadDemon04",0,0,0,0,0,0,0,32) Goto End
+	HL2:
+		TNT1 A 0 A_SpawnItemEx("DeadDemon05",0,0,0,0,0,0,0,32) Goto End
+	Heretic:
+		TNT1 A 0 A_SpawnItemEx("DeadDemon06",0,0,0,0,0,0,0,32) Goto End
+	Hexen:
+		TNT1 A 0 A_SpawnItemEx("DeadDemon07",0,0,0,0,0,0,0,32) Goto End
+	Hexen2:
+		TNT1 A 0 A_SpawnItemEx("DeadDemon08",0,0,0,0,0,0,0,32) Goto End
+	MM:
+		TNT1 A 0 A_SpawnItemEx("DeadDemon09",0,0,0,0,0,0,0,32) Goto End
+	PowerSlave:
+		TNT1 A 0 A_SpawnItemEx("DeadDemon10",0,0,0,0,0,0,0,32) Goto End
+	Quake1:
+		TNT1 A 0 A_SpawnItemEx("DeadDemon11",0,0,0,0,0,0,0,32) Goto End
+	Quake2:
+		TNT1 A 0 A_SpawnItemEx("DeadDemon12",0,0,0,0,0,0,0,32) Goto End
+	Quake4:
+		TNT1 A 0 A_SpawnItemEx("DeadDemon13",0,0,0,0,0,0,0,32) Goto End
+	ShadowWarr:
+		TNT1 A 0 A_SpawnItemEx("DeadDemon14",0,0,0,0,0,0,0,32) Goto End
+	Strife:
+		TNT1 A 0 A_SpawnItemEx("DeadDemon15",0,0,0,0,0,0,0,32) Goto End
+
+	DarkMagic:
+	Demonesque:
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadDemon01",1)	//Doom
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadDemon02",1) //Blood
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadDemon10",1) //Powerslave
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadDemon11",1) //quake
+		Goto End
+		TNT1 A 0 A_Jump(256,"Demonesque")
+		Goto Demonesque
+	Magic:
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadDemon06",1)	//heretic
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadDemon07",1) //hexen
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadDemon08",1) //hexen2
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadDemon09",1) //M&M
+		Goto End
+		TNT1 A 0 A_Jump(256,"Magic")
+		Goto Magic
+	Aliens:
+	Tech:
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadDemon12",1)	//quake2
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadDemon13",1) //quake4
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadDemon15",1) //Powerslave
+		Goto End
+		TNT1 A 0 A_Jump(256,"Tech")
+		Goto Tech
+
+	Joke:	
+	ClassicAEoD:
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadDemon01",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadDemon02",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadDemon03",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadDemon04",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadDemon05",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadDemon06",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadDemon07",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadDemon08",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadDemon09",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadDemon10",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadDemon11",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadDemon12",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadDemon13",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadDemon14",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadDemon15",1) 
+		Goto End
+		TNT1 A 0 A_Jump(256,"ClassicAEoD")
+		Goto ClassicAEoD
+	
+	L4D:
+	End:
+		TNT1 A 1
+		Stop
+	}
+}
+
+
+Actor DeadCacoSpawner replaces DeadCacodemon
+{
+	var int user_Type;
+	+NOINTERACTION
+	States
+	{
+	Spawn:
+		TNT1 A 1
+		
+	//-------------------------------------------------------------------------------------------------------
+	//	Type Check
+	//-------------------------------------------------------------------------------------------------------
+		TNT1 A 0 A_SetUserVar("user_Type",(CallACS("s911",0,0,0)))
+		TNT1 A 0 A_JumpIf(user_Type==1,"Demonesque")
+		TNT1 A 0 A_JumpIf(user_Type==2,"DarkMagic")
+		TNT1 A 0 A_JumpIf(user_Type==3,"Magic")
+		TNT1 A 0 A_JumpIf(user_Type==4,"Tech")
+		TNT1 A 0 A_JumpIf(user_Type==5,"Aliens")
+		TNT1 A 0 A_JumpIf(user_Type==6,"Joke")
+		TNT1 A 0 A_JumpIf(user_Type==11,"Doom")
+		TNT1 A 0 A_JumpIf(user_Type==12,"Blood")
+		TNT1 A 0 A_JumpIf(user_Type==13,"DN3D")
+		TNT1 A 0 A_JumpIf(user_Type==14,"HL")
+		TNT1 A 0 A_JumpIf(user_Type==15,"HL2")
+		TNT1 A 0 A_JumpIf(user_Type==16,"Heretic")
+		TNT1 A 0 A_JumpIf(user_Type==17,"Hexen")
+		TNT1 A 0 A_JumpIf(user_Type==18,"Hexen2")
+		TNT1 A 0 A_JumpIf(user_Type==19,"MM")
+		TNT1 A 0 A_JumpIf(user_Type==20,"PowerSlave")
+		TNT1 A 0 A_JumpIf(user_Type==21,"Quake1")
+		TNT1 A 0 A_JumpIf(user_Type==22,"Quake2")
+		TNT1 A 0 A_JumpIf(user_Type==23,"Quake4")
+		TNT1 A 0 A_JumpIf(user_Type==24,"ShadowWarr")
+		TNT1 A 0 A_JumpIf(user_Type==25,"Strife")
+		TNT1 A 0 A_JumpIf(user_Type==26,"L4D")
+		Goto ClassicAEoD
+	Doom:
+		TNT1 A 0 A_SpawnItemEx("DeadCaco01",0,0,0,0,0,0,0,32) Goto End
+	Blood:
+		TNT1 A 0 A_SpawnItemEx("DeadCaco02",0,0,0,0,0,0,0,32) Goto End
+	DN3D:
+		TNT1 A 0 A_SpawnItemEx("DeadCaco03",0,0,0,0,0,0,0,32) Goto End
+	HL:
+		TNT1 A 0 A_SpawnItemEx("DeadCaco04",0,0,0,0,0,0,0,32) Goto End
+	HL2:
+		TNT1 A 0 A_SpawnItemEx("DeadCaco05",0,0,0,0,0,0,0,32) Goto End
+	Heretic:
+		TNT1 A 0 A_SpawnItemEx("DeadCaco06",0,0,0,0,0,0,0,32) Goto End
+	Hexen:
+		TNT1 A 0 A_SpawnItemEx("DeadCaco07",0,0,0,0,0,0,0,32) Goto End
+	Hexen2:
+		TNT1 A 0 A_SpawnItemEx("DeadCaco08",0,0,0,0,0,0,0,32) Goto End
+	MM:
+		TNT1 A 0 A_SpawnItemEx("DeadCaco09",0,0,0,0,0,0,0,32) Goto End
+	PowerSlave:
+		TNT1 A 0 A_SpawnItemEx("DeadCaco10",0,0,0,0,0,0,0,32) Goto End
+	Quake1:
+		TNT1 A 0 A_SpawnItemEx("DeadCaco11",0,0,0,0,0,0,0,32) Goto End
+	Quake2:
+		TNT1 A 0 A_SpawnItemEx("DeadCaco12",0,0,0,0,0,0,0,32) Goto End
+	Quake4:
+		TNT1 A 0 A_SpawnItemEx("DeadCaco13",0,0,0,0,0,0,0,32) Goto End
+	ShadowWarr:
+		TNT1 A 0 A_SpawnItemEx("DeadCaco14",0,0,0,0,0,0,0,32) Goto End
+	Strife:
+		TNT1 A 0 A_SpawnItemEx("DeadCaco15",0,0,0,0,0,0,0,32) Goto End
+
+	DarkMagic:
+	Demonesque:
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadCaco01",1)	//Doom
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadCaco02",1) //Blood
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadCaco10",1) //Powerslave
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadCaco11",1) //quake
+		Goto End
+		TNT1 A 0 A_Jump(256,"Demonesque")
+		Goto Demonesque
+	Magic:
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadCaco06",1)	//heretic
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadCaco07",1) //hexen
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadCaco08",1) //hexen2
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadCaco09",1) //M&M
+		Goto End
+		TNT1 A 0 A_Jump(256,"Magic")
+		Goto Magic
+	Aliens:
+	Tech:
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadCaco12",1)	//quake2
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadCaco13",1) //quake4
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadCaco15",1) //Powerslave
+		Goto End
+		TNT1 A 0 A_Jump(256,"Tech")
+		Goto Tech
+
+	Joke:
+	ClassicAEoD:
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadCaco01",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadCaco02",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadCaco03",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadCaco04",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadCaco05",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadCaco06",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadCaco07",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadCaco08",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadCaco09",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadCaco10",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadCaco11",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadCaco12",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadCaco13",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadCaco14",1) 
+		Goto End
+		TNT1 A 0 A_Jump(210,2)
+		TNT1 A 1 A_SpawnItem("DeadCaco15",1) 
+		Goto End
+		TNT1 A 0 A_Jump(256,"ClassicAEoD")
+		Goto ClassicAEoD
+	
+	L4D:
+	End:
+		TNT1 A 1
+		Stop
+	}
+}

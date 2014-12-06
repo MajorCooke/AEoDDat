@@ -1,0 +1,602 @@
+//***************************\\
+//***************************\\
+//****** V I C T I M S ******\\
+//***************************\\
+//***************************\\
+
+Actor HeadOnAStick1 : HeadOnAStick replaces HeadOnAStick
+{
++SHOOTABLE
+health 20
+  mass 0xFFFFFFFF
+deathheight 56
+  states
+  {
+  Spawn:
+    POL4 A 1
+    loop
+  Death:
+  	POL4 B 1 A_custommissile("HeadFromPole",56,0,random(-200,200),2,random(10,30))
+  	POL4 B -1
+  	stop
+  }
+}
+
+
+actor HeadFromPole : Gibs_general
+{
++NOBLOOD
+DamageFactor "Ice", 0.0
+states
+	{
+	spawn:
+		PL4P ABCDEFGH 1 A_Custommissile("BloodDrop",0,0,random(-360,360),2,random(10,30))
+		loop
+	Death:
+		TNT1 A 0
+		TNT1 A 0 A_jump(96,"death1")
+		TNT1 A 0 A_jump(96,"death2")
+		TNT1 A 0 A_jump(96,"death3")
+		goto death4
+/*	Ice:
+		"####" "#" 5 A_GenericFreezeDeath
+		"####" "#" 1 A_FreezeDeathChunks
+		Wait*/
+	Death1:
+		PL4P A 1
+		loop
+	Death2:
+		PL4P C 1
+		loop
+	Death3:
+		PL4P E 1
+		loop
+	Death4:
+		PL4P G 1
+		loop
+	Pain:
+		TNT1 A 0
+		TNT1 A 0 A_custommissile("HeadFromPole",4,0,random(-200,200),2,random(10,30))
+		stop
+   }
+}
+
+
+actor HeadsOnAStick1 : HeadsOnAStick replaces HeadsOnAStick
+{
++SHOOTABLE
+health 20
+  mass 0xFFFFFFFF
+states
+	{
+	Spawn:
+		POL2 A 1
+		loop
+	Death:
+		POL2 B 1 A_custommissile("HeadFromPole",64,0,random(-200,200),2,random(10,30))
+		TNT1 A 0 A_noblocking
+		POL2 B 1 A_spawnitem("HeadsOnAStick2")
+		stop
+	}
+}
+
+actor HeadsOnAStick2 : HeadsOnAStick1
+{
+states
+	{
+	Spawn:
+		POL2 B 1
+		loop
+	Death:
+		POL2 C 1 A_custommissile("HeadFromPole",50,0,random(-200,200),2,random(10,30))
+		TNT1 A 0 A_noblocking
+		POL2 C 1 A_spawnitem("HeadsOnAStick3")
+		stop
+	}
+}
+
+actor HeadsOnAStick3 : HeadsOnAStick1
+{
+states
+	{
+	Spawn:
+		POL2 C 1
+		loop
+	Death:
+		POL2 D 1 A_custommissile("HeadFromPole",40,0,random(-200,200),2,random(10,30))
+		TNT1 A 0 A_noblocking
+		POL2 D 1 A_spawnitem("HeadsOnAStick4")
+		stop
+	}
+}
+
+actor HeadsOnAStick4 : HeadsOnAStick1
+{
+states
+	{
+	Spawn:
+		POL2 D 1
+		loop
+	Death:
+		POL2 D 1 A_custommissile("HeadFromPole",32,0,random(-200,200),2,random(10,30))
+		TNT1 A 0 A_noblocking
+		POL2 D 1 A_spawnitem("HeadsOnAStick5")
+		stop
+	}
+}
+
+actor HeadsOnAStick5 : HeadsOnAStick1
+{
+deathheight 56
+states
+	{
+	Spawn:
+		POL2 E 1
+		loop
+	Death:
+		POL2 F 1 A_custommissile("HeadFromPole",16,0,random(-200,200),2,random(10,30))
+		POL2 F -1
+		stop
+	}
+}
+
+actor BloodSpill : BloodDrop
+{
+speed 0
+states
+{
+	Death:
+		BSPH E 3 A_Scream
+		BSPH FGH 3
+		stop
+	}
+}
+
+actor BloodyTwitch1 : BloodyTwitch replaces BloodyTwitch
+{
+health 60
+painsound "shotguy/pain"
+deathsound "shotguy/death"
+painchance 255
++SHOOTABLE
++DONTFALL
+  mass 0xFFFFFFFF
+states
+	{
+  Spawn:
+    GOR1 A 12 A_Spawnitem("BloodSpill")
+    GOR1 B 10
+    GOR1 C 12
+    GOR1 B 10
+    loop
+	Pain:
+		TNT1 AAAAAAAA 0 A_SpawnItemEx("BloodDrop",0,0,frandom(24,48),frandom(0,2),frandom(0,2),0,random(0,360),32,0)
+		GOR1 A 4 A_Pain
+		goto spawn
+	Death:
+		GOR1 D 4 A_scream
+		GOR1 EF 4
+		GOR1 G 35 A_Spawnitem("BloodSpill")
+		goto death+3
+	}
+}
+
+actor DeadStick1 : DeadStick replaces DeadStick
+{
++SHOOTABLE
+painchance 255
+  mass 0xFFFFFFFF
+health 60
+deathheight 64
++LOOKALLAROUND
+states
+	{
+	Spawn:
+		POL1 A 1 A_Look
+		loop
+	See:
+		POL1 A 35 A_Spawnitem("BloodSpill",0,32)
+		TNT1 A 0 A_CheckSight("Spawn")
+		loop
+	Pain:
+		TNT1 AAAAAAAA 0 A_SpawnItemEx("BloodDrop",0,0,frandom(24,48),frandom(0,2),frandom(0,2),0,random(0,360),32,0)
+		POL1 A 5
+		goto spawn
+	Death:
+		POL1 BCDEFGHIJK 5
+		POL1 L -1
+		stop
+	}
+}
+
+Actor HangBNoBrain1 : HangBNoBrain replaces HangBNoBrain
+{
++SHOOTABLE
++DONTFALL
+health 30
+  mass 0xFFFFFFFF
+painchance 255
++LOOKALLAROUND
+states
+	{
+	Spawn:
+		HDB2 A 1 A_Look
+		loop
+	See:
+		HDB2 A 35 A_Spawnitem("BloodSpill")
+		TNT1 A 0 A_CheckSight("Spawn")
+		loop
+	Pain:
+		TNT1 AAAAAAAA 0 A_SpawnItemEx("BloodDrop",0,0,frandom(24,48),frandom(0,2),frandom(0,2),0,random(0,360),32,0)
+		HDB2 A 1
+		goto spawn
+	Death:
+		HDB2 B 1 A_spawnitem("BodyNoBrain")
+		HDB2 B -1
+		stop
+	}
+}
+
+
+actor BodyNoBrain
+{
+deathsound "gibs/splash"
+states
+	{
+	Spawn:
+		HDD2 ABCD 3
+	Death:
+		HDD2 E 1 A_scream
+		HDD2 E -1
+		stop
+	}
+}
+
+Actor HangNoGuts1 : HangNoGuts replaces HangNoGuts
+{
++SHOOTABLE
++DONTFALL
+health 30
+  mass 0xFFFFFFFF
+painchance 255
++LOOKALLAROUND
+states
+	{
+	Spawn:
+		HDB1 A 1 A_Look
+		loop
+	See:
+		HDB1 A 35 A_Spawnitem("BloodSpill")
+		TNT1 A 0 A_CheckSight("Spawn")
+		loop
+	Pain:
+		TNT1 AAAAAAAA 0 A_SpawnItemEx("BloodDrop",0,0,frandom(24,48),frandom(0,2),frandom(0,2),0,random(0,360),32,0)
+		HDB1 A 1
+		goto spawn
+	Death:
+		HDB2 B 1 A_spawnitem("BodyNoGuts")
+		HDB2 B -1
+		stop
+	}
+}
+
+actor BodyNoGuts
+{
+deathsound "gibs/splash"
+states
+	{
+	Spawn:
+		HDD1 ABCD 3
+	Death:
+		HDD1 E 1 A_scream
+		HDD1 E -1
+		stop
+	}
+}
+
+Actor HangTLookingDown1 : HangTLookingDown replaces HangTLookingDown
+{
++SHOOTABLE
++DONTFALL
+health 30
+  mass 0xFFFFFFFF
+painchance 255
++LOOKALLAROUND
+states
+	{
+	Spawn:
+		HDB3 A 1 A_Look
+		loop
+	See:
+		HDB3 A 35 A_Spawnitem("BloodSpill")
+		TNT1 A 0 A_CheckSight("Spawn")
+		loop
+	Pain:
+		TNT1 AAAAAAAA 0 A_SpawnItemEx("BloodDrop",0,0,frandom(24,48),frandom(0,2),frandom(0,2),0,random(0,360),32,0)
+		HDB3 A 1
+		goto spawn
+	Death:
+		HDB3 B 1 A_spawnitem("TorsoLookingDown")
+		HDB3 B -1
+		stop
+	}
+}
+
+actor TorsoLookingDown
+{
+deathsound "gibs/splash"
+states
+	{
+	Spawn:
+		HDD3 ABCD 3
+	Death:
+		HDD3 E 1 A_scream
+		HDD3 E -1
+		stop
+	}
+}
+
+Actor HangTSkull1 : HangTSkull replaces HangTSkull
+{
++SHOOTABLE
++DONTFALL
+health 30
+  mass 0xFFFFFFFF
+painchance 255
++LOOKALLAROUND
+states
+	{
+	Spawn:
+		HDB4 A 1 A_Look
+		loop
+	See:
+		HDB4 A 35 A_Spawnitem("BloodSpill")
+		TNT1 A 0 A_CheckSight("Spawn")
+		loop
+	Pain:
+		TNT1 AAAAAAAA 0 A_SpawnItemEx("BloodDrop",0,0,frandom(24,48),frandom(0,2),frandom(0,2),0,random(0,360),32,0)
+		HDB4 A 1
+		goto spawn
+	Death:
+		HDB3 B 1 A_spawnitem("TorsoSkull")
+		HDB3 B -1
+		stop
+	}
+}
+
+actor TorsoSkull
+{
+deathsound "gibs/splash"
+states
+	{
+	Spawn:
+		HDD4 ABCD 3
+	Death:
+		HDD3 E 1 A_scream
+		HDD3 E -1
+		stop
+	}
+}
+
+Actor HangTLookingUp1 : HangTLookingUp replaces HangTLookingUp
+{
++SHOOTABLE
++DONTFALL
+health 30
+  mass 0xFFFFFFFF
+painchance 255
++LOOKALLAROUND
+states
+	{
+	Spawn:
+		HDB5 A 1 A_Look
+		loop
+	See:
+		HDB5 A 35 A_Spawnitem("BloodSpill")
+		TNT1 A 0 A_CheckSight("Spawn")
+		loop
+	Pain:
+		TNT1 AAAAAAAA 0 A_SpawnItemEx("BloodDrop",0,0,frandom(24,48),frandom(0,2),frandom(0,2),0,random(0,360),32,0)
+		HDB5 A 1
+		goto spawn
+	Death:
+		HDB3 B 1 A_spawnitem("TorsoLookingUp")
+		HDB3 B -1
+		stop
+	}
+}
+
+actor TorsoLookingUp
+{
+deathsound "gibs/splash"
+states
+	{
+	Spawn:
+		HDD5 ABCD 3
+	Death:
+		HDD3 E 1 A_scream
+		HDD3 E -1
+		stop
+	}
+}
+
+Actor HangTNoBrain1 : HangTNoBrain replaces HangTNoBrain
+{
++SHOOTABLE
++DONTFALL
+health 30
+  mass 0xFFFFFFFF
+painchance 255
++LOOKALLAROUND
+states
+	{
+	Spawn:
+		HDB6 A 1 A_Look
+		loop
+	See:
+		HDB6 A 35 A_Spawnitem("BloodSpill")
+		TNT1 A 0 A_CheckSight("Spawn")
+		loop
+	Pain:
+		TNT1 AAAAAAAA 0 A_SpawnItemEx("BloodDrop",0,0,frandom(24,48),frandom(0,2),frandom(0,2),0,random(0,360),32,0)
+		HDB6 A 1
+		goto spawn
+	Death:
+		HDB3 B 1 A_spawnitem("TorsoNoBrain")
+		HDB3 B -1
+		stop
+	}
+}
+
+actor TorsoNoBrain
+{
+deathsound "gibs/splash"
+states
+	{
+	Spawn:
+		HDD6 ABCD 3
+	Death:
+		HDD3 E 1 A_scream
+		HDD3 E -1
+		stop
+	}
+}
+
+
+Actor Meat21 : Meat2 replaces Meat2
+{
++SHOOTABLE
++NODAMAGE
++NOBLOOD
+  mass 0xFFFFFFFF
+painchance 255
+states
+	{
+	Spawn:
+		GOR2 A 1
+		loop
+	Pain:
+		TNT1 AAAAAAAA 0 A_SpawnItemEx("BloodDrop",0,0,frandom(24,48),frandom(0,2),frandom(0,2),0,random(0,360),32,0)
+		GOR2 A 1
+		goto spawn
+	}
+}
+
+Actor Meat31 : Meat3 replaces Meat3
+{
++SHOOTABLE
++NODAMAGE
++NOBLOOD
+  mass 0xFFFFFFFF
+painchance 255
++LOOKALLAROUND
+states
+	{
+	Spawn:
+		GOR3 A 1 A_Look
+		loop
+	See:
+		GOR3 A 35 A_Spawnitem("BloodSpill",0,30)
+		TNT1 A 0 A_CheckSight("Spawn")
+		loop
+	Pain:
+		TNT1 AAAAAAAA 0 A_SpawnItemEx("BloodDrop",0,0,frandom(24,48),frandom(0,2),frandom(0,2),0,random(0,360),32,0)
+		GOR3 A 1
+		goto spawn
+	}
+}
+
+Actor Meat41 : Meat4 replaces Meat4
+{
++SHOOTABLE
++NODAMAGE
++NOBLOOD
+  mass 0xFFFFFFFF
+painchance 255
++LOOKALLAROUND
+states
+	{
+	Spawn:
+		GOR4 A 1 A_Look
+		loop
+	See:
+		GOR4 A 35 A_Spawnitem("BloodSpill")
+		TNT1 A 0 A_CheckSight("Spawn")
+		loop
+	Pain:
+		TNT1 AAAAAAAA 0 A_SpawnItemEx("BloodDrop",0,0,frandom(24,48),frandom(0,2),frandom(0,2),0,random(0,360),32,0)
+		GOR4 A 1
+		goto spawn
+	}
+}
+
+Actor Meat51 : Meat5 replaces Meat5
+{
++SHOOTABLE
++NODAMAGE
++NOBLOOD
+  mass 0xFFFFFFFF
+painchance 255
++LOOKALLAROUND
+states
+	{
+	Spawn:
+		GOR5 A 1 A_Look
+		loop
+	See:
+		GOR5 A 35 A_Spawnitem("BloodSpill")
+		TNT1 A 0 A_CheckSight("Spawn")
+		loop
+	Pain:
+		TNT1 AAAAAAAA 0 A_SpawnItemEx("BloodDrop",0,0,frandom(24,48),frandom(0,2),frandom(0,2),0,random(0,360),32,0)
+		GOR5 A 1
+		goto spawn
+	}
+}
+
+actor LiveStick1 : LiveStick replaces LiveStick
+{
+health 40
+painsound "grunt/pain"
+deathsound "grunt/death"
+painchance 255
+deathheight 64
++SHOOTABLE
++DONTFALL
+  mass 0xFFFFFFFF
+states
+	{
+  Spawn:
+    POL6 A 6
+    POL6 B 8
+    loop
+	Pain:
+		TNT1 AAAAAAAA 0 A_SpawnItemEx("BloodDrop",0,0,frandom(24,48),frandom(0,2),frandom(0,2),0,random(0,360),32,0)
+		POL6 B 4 A_Pain
+		goto spawn
+	Death:
+		POL6 B 50 A_Scream
+		POL6 CDEFGHIJKL 4
+		POL6 L -1
+		stop
+	}
+}
+
+
+Actor NonsolidTwitch1 : BloodyTwitch1 replaces NonsolidTwitch
+{
+-SOLID
+-SHOOTABLE
+}
+
+Actor NonsolidMeat21 : Meat21 replaces NonsolidMeat2
+{
+-SOLID
+-SHOOTABLE
+}
+
+Actor NonsolidMeat51 : Meat51 replaces NonsolidMeat5
+{
+-SOLID
+-SHOOTABLE
+}

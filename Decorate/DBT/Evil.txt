@@ -1,0 +1,335 @@
+ 
+Actor DBTEvilSkullShooter
+{
+        Projectile
+        +THRUACTORS
+        +SKYEXPLODE
+        +DONTSPLASH
+        +CANBOUNCEWATER
+        BounceType "Doom"
+        Radius 10
+        Height 8
+        Speed 10
+        Scale 0.2
+        States
+        {
+        Spawn:
+                TSSH AAAAA 4 A_SpawnItemEx("DBTEvilSkullTrail",0,0,0,0,0,0,0,32)
+                TSSH A 0 A_SpawnItemEx("DBTEvilSkull",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_SETMASTER)
+                Stop
+        }
+}
+ 
+Actor DBTEvilSkullTrail
+{
+        +NOINTERACTION
+        RenderStyle Add
+        Alpha 1
+        Scale 0.2
+        States
+        {
+        Spawn:
+                TNT1 A 0
+                TSSH A 1 A_FadeOut(0.05)
+                Wait
+        }
+}
+ 
+Actor DBTEvilSkull
+{
+        Monster
+        +NOICEDEATH
+        +DONTMORPH
+        +FLOAT
+        +FLOATBOB
+        +NOGRAVITY
+        +NOTELEPORT
+        -SOLID
+        +LOOKALLAROUND
+        Mass 0x7FFFFFFF
+        Health 300
+        Radius 8
+        Height 6
+        Speed 2
+        Scale 0.2
+        States
+        {
+        Spawn:
+                TSSH A 4 A_Look
+                Loop
+        See:
+                TSSH AAAA 1 A_Chase
+                Loop
+        Missile:
+                TSSH A 0 A_PlaySound("Lich/death")
+                TSSH ABCDE 8 bright A_FaceTarget
+                TSSH E 35 bright A_FaceTarget
+                TSSH E 0 A_CustomMissile("DBTBloodSpear",8,0,0)
+        Death:
+                TSSH A 0 A_SpawnItemEx("BossDeathExplosion",0,0,0,0,0,0,0,32)
+                TSSH A 1
+                Stop
+        }
+}
+ 
+Actor DBTBloodSpear
+{
+        Projectile
+        Radius 10
+        Height 8
+        Speed 20
+        Scale 0.5
+        //Damage 4
+        +SEEKERMISSILE
+        +THRUACTORS
+        +DONTSPLASH
+        Translation "0:255=%[0,0,0]:[0,0,0]"
+        States
+        {
+        Spawn:
+                WAX2 A 0
+        Seek:
+                WAX2 A 1 A_SeekerMissile(10,20)
+                WAX2 A 0 A_JumpIfTracerCloser(50,"Preparation")
+                Loop
+        Preparation:
+                WAX2 A 0 A_ChangeFlag("THRUACTORS",0)
+                WAX2 A 0 A_JumpIfTracerCloser(100,"Seek") //More tolerance for out-of-range. It's going to hit the player anyway...
+                WAX2 A 0 A_ChangeFlag("THRUACTORS",1)
+                Goto Seek
+        Death:
+                TNT1 A 0 A_ChangeFlag("FLOORHUGGER",1)
+                TNT1 A 0 A_ChangeFlag("THRUACTORS",0)
+                //TNT1 A 0 A_SpawnItemEx("DBTBloodSpearEffects",0,0,0,0,0,0,0,32)
+                TNT1 A 0 A_Fire(0)
+                TNT1 A 0 A_SpawnItemEx("DBTBloodPool",0,0,0,0,0,0,0,48)
+                TNT1 A 1
+                Stop
+        }
+}
+ 
+/*
+Maybe some sorta blood splatter effect, a large explosion of gibbings...
+Or a sort of dark shockwave... Yeah I think this'll work.
+*/
+ 
+Actor DBTBloodSpearEffects
+{
+        var int user_angle;
+        +NOINTERACTION
+        States
+        {
+        Spawn:
+                TNT1 A 0 //...
+                TNT1 A 0 A_SetUserVar("user_angle",0)
+        AngleChange:
+                TNT1 A 0 A_SpawnItemEx("DBTDarkSpot",0,0,0,30,0,0,user_angle,32)
+                TNT1 A 0 A_SetUserVar("user_angle",user_angle+3)
+                TNT1 A 0 A_JumpIf(user_angle>=360,1)
+                Loop
+                TNT1 A 0
+                Stop
+        }
+}
+ 
+Actor DBTDarkSpot
+{
+        Radius 2
+        Height 2
+        Speed 30
+        Projectile
+        +THRUACTORS
+        +DONTSPLASH
+        +FLOORHUGGER
+        States
+        {
+        Spawn:
+                TNT1 A 0 Light("DBTDarkSpotLight")
+                TNT1 A 1 Light("DBTDarkSpotLight")
+                Loop
+        Death:
+                TNT1 A 0
+                Stop
+        }
+}
+ 
+Actor DBTBloodPool
+{
+        var int user_bloodwavecount;
+        var int user_twinangles;
+        //+NOINTERACTION
+        Projectile
+        +THRUACTORS
+        +FLOORHUGGER
+        +FORCERADIUSDMG
+        +DONTSPLASH
+        States
+        {
+        Spawn:
+                TNT1 A 0
+                TNT1 A 0 A_SetUserVar("user_bloodwavecount",0)
+                TNT1 A 0 A_SetAngle(random(0,359))
+        Spurting2:
+                TNT1 A 0 A_SpawnItemEx("DBTTwinBloodSpawner",0,0,0,0,0,0,user_twinangles,32)
+                TNT1 AA 0 A_SpawnItemEx("DBTBlood",random(0,40),0,5,0,0,0,random(0,359),32)
+                TNT1 A 0 A_Explode(2,128,1|RTF_NOIMPACTDAMAGE,1,128)
+                TNT1 A 1 A_RadiusThrust(25,256,1)
+                TNT1 AA 0 A_SpawnItemEx("DBTBlood",random(0,40),0,5,0,0,0,random(0,359),32)
+                TNT1 A 0 A_Explode(2,128,1|RTF_NOIMPACTDAMAGE,1,128)
+                TNT1 A 0 A_RadiusThrust(25,256,1)
+                TNT1 A 0 A_SetUserVar("user_twinangles",user_twinangles+12)
+                TNT1 A 1 A_SetUserVar("user_bloodwavecount",user_bloodwavecount+1)
+                TNT1 A 0 A_JumpIf(user_bloodwavecount>=47,1)
+                Loop
+                TNT1 A 1
+                Stop
+        }
+}
+ 
+Actor DBTTwinBloodSpawner
+{
+        +NOINTERACTION
+        +DONTSPLASH
+        States
+        {
+        Spawn:
+                TNT1 A 0
+                //TNT1 A 0 A_SpawnItemEx("DBTBloodRaiseReverse",0,-25,0,0,0,0,0,32)
+                //TNT1 A 0 A_SetAngle(angle+180)
+                TNT1 A 0 A_SpawnItemEx("DBTBloodRaise",0,0,0,0,0,0,0,32)
+                Stop
+        }
+}
+ 
+Actor DBTBloodRaise
+{
+        /*var int user_leveller;
+        var int user_pitch;*/
+        var int user_angle;
+        var int user_xvel;
+        var int user_zvel;
+        //+NOINTERACTION
+        Projectile
+        +THRUACTORS
+        +SKYEXPLODE
+        +DONTSPLASH
+        RenderStyle Translucent
+        Alpha 1
+        Scale 0.2
+        Speed 5
+        States
+        {
+        Spawn:
+                TNT1 A 0
+                /*TNT1 A 0 A_SetUserVar("user_leveller",0)
+                TNT1 A 0 A_SetUserVar("user_pitch",0)*/
+                TNT1 A 0 A_SetUserVar("user_angle",0)
+                TNT1 A 0 A_SetUserVar("user_xvel",5)
+                TNT1 A 0 A_SetUserVar("user_zvel",5)
+        SpiralLooper:
+                //TNT1 A 0 A_SetUserVar("user_zvel",5)
+                X050 A 0 A_SetAngle(user_angle)
+                X050 A 1 A_ChangeVelocity(5,0,5,3)
+                X050 A 0 A_SetUserVar("user_angle",user_angle+6)
+                Loop
+        Death:
+                TNT1 A 0
+                Stop
+        /*Rising:
+                X050 A 0 A_SetUserVar("user_pitch",user_pitch+2)
+                X050 A 0 A_SetPitch(user_pitch)
+                X050 A 0 A_ChangeVelocity(1,0,1,3)
+                X050 A 2 A_JumpIf(user_pitch>=88,"Fading")
+                Loop
+        Fading:
+                X050 A 1 A_FadeOut(0.05)
+                Wait*/
+        }
+}
+ 
+Actor DBTBloodRaiseReverse : DBTBloodRaise
+{
+        States
+        {
+        Spawn:
+                TNT1 A 0
+                /*TNT1 A 0 A_SetUserVar("user_leveller",0)
+                TNT1 A 0 A_SetUserVar("user_pitch",0)*/
+                TNT1 A 0 A_SetUserVar("user_angle",0)
+                TNT1 A 0 A_SetUserVar("user_xvel",5)
+                TNT1 A 0 A_SetUserVar("user_zvel",5)
+        SpiralLooper:
+                //TNT1 A 0 A_SetUserVar("user_zvel",5)
+                X050 A 0 A_SetAngle(user_angle)
+                X050 A 1 A_ChangeVelocity(5,0,5,3)
+                X050 A 0 A_SetUserVar("user_angle",user_angle-6)
+                Loop
+        }
+}
+ 
+Actor DBTBlood
+{
+        +NOINTERACTION
+        +DONTSPLASH
+        States
+        {
+        Spawn:
+                TNT1 A 0
+                TNT1 A 0 A_Jump(255,"B1","B2","B3","B4")
+        B1:
+                TNT1 A 0 A_SpawnItemEx("DBTBlood1",0,0,0,0,0,1,0,32)
+                Stop
+        B2:
+                TNT1 A 0 A_SpawnItemEx("DBTBlood2",0,0,0,0,0,1,0,32)
+                Stop
+        B3:
+                TNT1 A 0 A_SpawnItemEx("DBTBlood3",0,0,0,0,0,1,0,32)
+                Stop
+        B4:
+                TNT1 A 0 A_SpawnItemEx("DBTBlood4",0,0,0,0,0,1,0,32)
+                Stop
+        }
+}
+ 
+Actor DBTBlood1
+{
+        Projectile
+        +THRUACTORS
+        +SKYEXPLODE
+        +DONTSPLASH
+        RenderStyle Translucent
+        Speed 1
+        Radius 5
+        Height 3
+        Scale 0.2
+        Alpha 0.01
+        States
+        {
+        Spawn:
+                TNT1 A 0
+                X050 A 1 A_ScaleVelocity(frandom(1.01,1.10))
+                "####" "#" 0 A_FadeIn(0.1)
+                Loop
+        Death:
+                "####" "#" 0 A_SetAngle(random(0,359))
+                "####" "#" 0 A_ChangeVelocity(random(3,5),0,0,3)
+                "####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
+                "####" "#" 1 A_FadeOut(0.1)
+                Wait
+        }
+}
+ 
+Actor DBTBlood2 : DBTBlood1
+{
+        Translation "0:255=%[0,0,0]:[2,0,0]"
+}
+ 
+Actor DBTBlood3 : DBTBlood1
+{
+        Translation "0:255=%[0,0,0]:[1.6,0,0]"
+}
+ 
+Actor DBTBlood4 : DBTBlood1
+{
+        Translation "0:255=%[0,0,0]:[1.3,0,0]"
+}

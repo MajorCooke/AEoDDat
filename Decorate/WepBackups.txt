@@ -1,0 +1,2228 @@
+//--------------------------------------------------------------------
+
+//Lightning and Thunderstorm Spell
+//Originally by Major Cooke
+//Heavily modified by DBT and Ichor
+
+//--------------------------------------------------------------------
+
+//Name changed to Tome of Set after Ichor got the idea of adding it to... well, you guessed it...
+//Set... as an attack. It's quite useful, except the primary's aiming method of going up and down is a bit
+//iffy...
+
+ACTOR AEoDTomeOfSetItem : CustomInventory 6127
+{
+    +FLOORCLIP
+    +FLOATBOB
+    +INVENTORY.IGNORESKILL
+    Scale 0.8
+    Inventory.Amount 1
+    Inventory.PickupSound "weaponbuild"
+    Inventory.PickupMessage "The Mystic Tome of Set is now yours!"
+    States
+    {
+    Spawn:
+        WTME ABCDEFGH 4 Bright
+        Loop
+    Pickup:
+	TNT1 A 0 A_JumpIfInventory("AEoDTomeOfSet",1,"Ammo")
+	TNT1 A 0 A_JumpIfInventory("Weapon8Count",3,"Nothing")
+	TNT1 A 0 A_GiveInventory("Weapon8Count",1)
+	TNT1 A 0 A_GiveInventory("TomeOfSetDrop",1)
+	TNT1 A 0 A_GiveInventory("AEoDTomeOfSet",1)
+	TNT1 A 0 ACS_Execute(799,0,16,0,0)
+	Stop
+    Nothing:
+	TNT1 A 0 A_JumpIfInventory("AEoDTomeOfSet",1,"Ammo")
+	TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
+	Goto Pickup+2
+	TNT1 A 0 ACS_Execute(798,0,8,0,0)
+	Fail
+    Ammo:
+	TNT1 A 0 A_GiveInventory("AEoDTomeOfSet",1)
+	Stop
+    }
+}
+
+Actor AEoDTomeOfSet : Weapon // 6127
+{
+Weapon.AmmoType1 "BlueMana"
+Weapon.AmmoType2 "BlueMana"
+Weapon.AmmoGive1 40
+Weapon.AmmoUse1 1
+Weapon.AmmoUse2 25
+Weapon.UpSound "weapons/draw"
+Inventory.PickupSound "weaponbuild"
+Inventory.PickupMessage "The Mystic Tome of Set is now yours!"
+Scale 0.8
++INVENTORY.IGNORESKILL
++CHEATNOTWEAPON
++FLOORCLIP
++FLOATBOB
+States
+{
+Spawn:
+	WTME ABCDEFGH 4 Bright
+	Loop
+Select:
+	TNT1 A 0 ACS_Execute(799,0,16,0,0)
+	TSET A 1 A_Raise
+	TSET AA 0 A_Raise
+	Loop
+Deselect:
+	TNT1 A 0 ACS_Execute(799,0,0,0,0)
+	TSET B 1 A_Lower
+	TSET BB 0 A_Lower
+	Loop
+Ready:
+	TSET AAAAAABBBBBBCCCCCCDDDDDD 1 Bright A_WeaponReady
+	Loop
+Fire:
+	TSET E 2 Bright Offset(0,42)
+	TNT1 A 0 Bright ACS_Execute(851,0,random(4,-4),random(4,-4),0)
+	TSET F 0 bright A_PlaySound("weapons/lightningshot",CHAN_WEAPON)
+	TSET F 0 bright A_FireCustomMissile("LightningTargetMissile",0,0,8)
+	TSET F 0 bright A_FireCustomMissile("LightningTagger",0,0,8)
+	TSET F 2 Bright Offset(0,52) A_FireCustomMissile("LightningMissile1",0+random(-2,2),1,8,-6)
+	TNT1 A 0 Bright ACS_Execute(851,0,random(4,-4),random(4,-4),0)
+	TSET G 0 bright A_PlaySound("weapons/lightningshot",CHAN_WEAPON)
+	TSET G 0 bright A_FireCustomMissile("LightningTargetMissile",0,0,-8)
+	TSET G 0 bright A_FireCustomMissile("LightningTagger",0,0,-8)
+	TSET G 2 Bright A_FireCustomMissile("LightningMissile1",0+random(-2,2),1,-8,-6)
+	TSET I 0 Bright A_ReFire
+	TSET IJK 2 bright Offset(0,52)
+	Goto Ready
+Hold:
+	TNT1 A 0 Bright ACS_Execute(851,0,random(4,-4),random(4,-4),0)
+	TSET F 0 bright A_PlaySound("weapons/lightningshot",CHAN_WEAPON)
+	TSET F 0 bright A_FireCustomMissile("LightningTargetMissile",0,0)
+	TSET F 0 bright A_FireCustomMissile("LightningTagger",0,0)
+	TSET F 2 Bright Offset(0,52) A_FireCustomMissile("LightningMissile1",0+random(-2,2),1,8,-6)
+	TNT1 A 0 Bright ACS_Execute(851,0,random(4,-4),random(4,-4),0)
+	TSET G 0 bright A_PlaySound("weapons/lightningshot",CHAN_WEAPON)
+	TSET G 0 bright A_FireCustomMissile("LightningTargetMissile",0,0)
+	TSET G 0 bright A_FireCustomMissile("LightningTagger",0,0)
+	TSET G 2 Bright Offset(0,52) A_FireCustomMissile("LightningMissile1",0+random(-2,2),1,-8,-6)
+	TSET I 0 Bright A_ReFire
+	TSET IJK 2 bright Offset(0,52)
+	Goto Ready
+AltFire:
+	TSET EF 3 bright
+	TSET G 0 bright A_PlaySound("weapons/lightningshotalt",CHAN_WEAPON)
+	TNT1 A 0 ACS_Execute(851,0,200,0,0)
+	TNT1 A 0 A_SetBlend("DD DD FF",0.7,35)
+	TSET G 2 bright A_FireCustomMissile("ThunderStormSpellShot",0,1)
+	TSET GIII 1 Bright ACS_Execute(851,0,-50,0,0)
+	TSET JK 3 bright
+	TSET ABCDABCDABCDABCD 4 bright
+	Goto Ready
+}
+}
+/*
+ACTOR LightningSpellMissile
+{
+Radius 2
+Height 2
+Speed 40
+Damage 15
+DamageType "Electric"
+Projectile
++EXTREMEDEATH
+DeathSound "weapons/lightningend"
+States
+{
+Spawn:
+	TNT1 A 0
+	TNT1 AAAAAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+	TNT1 A 0 A_CustomMissile("LightningSpellMissile",0,0,random(-8,8),6,random(-8,8))
+	TNT1 A 1 //A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+	Stop
+Death:
+	TNT1 AAAAAAA 0 A_SpawnItemEx("TeslaFX",0,0,0,random(6,-6),random(6,-6),random(6,-6),0,0)
+	TNT1 A 1 A_Scream
+	Stop
+}
+}
+
+//	The good actors here. Left the previous for compat. But are no longer used and MUST
+//	not be used for primary. Im all for upgrades, not for downgrades on code. -DBT
+
+Actor LightningTargetMissile : FastProjectile
+{
+Speed 200
+Damage 0
+Projectile
++THRUACTORS
++BloodlessImpact
+States
+{
+Spawn:
+	TNT1 A 5
+	Goto Death
+Death:
+	TNT1 A 0 A_SpawnItemEx("LightningTarget",0,0,0,0,0,0,0,32)
+	TNT1 A 1
+	Stop
+}
+}
+
+Actor LightningTarget 
+{
+Radius 3
+Height 3
+Speed 0
+Damage 0
+Health 1000000
+DamageFactor "Normal", 0	//Invulnerable to everything, because if destroyed, missile4 would just wander around
+Monster
++NOCLIP
++NOBLOOD
+-COUNTKILL
++NOGRAVITY
++FLOAT
++SPECTRAL
++THRUACTORS
++NORADIUSDMG
+RenderStyle None
+States
+{
+Spawn:
+	TNT1 A 0
+	TNT1 A 0 Thing_ChangeTid(0,1932)	//Is based in TIDs, not in DoomEdNums
+	TNT1 A 35
+	Stop
+Death:
+	TNT1 A 0
+	Stop
+}
+}
+
+Actor LightningMissile1
+{
+Radius 2
+Height 2
+Speed 40
+Damage 10
+DamageType "Electric"  //lightningstorm
+Projectile
++FORCERADIUSDMG
++EXTREMEDEATH
+DeathSound "weapons/lightningend"
+States
+{
+Spawn:
+	TNT1 A 0
+	TNT1 AAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+	TNT1 A 0 A_CustomMissile("LightningMissile2",0,0,0+random(-15,15),6,0+random(-15,15))
+	Stop
+Death:
+	TNT1 AAAAAAA 0 A_SpawnItemEx("TeslaFX",0,0,0,random(6,-6),random(6,-6),random(6,-6),0,0)
+	TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+	TNT1 A 0 A_Explode(15,20,0)
+	TNT1 A 1 A_Scream
+	Stop
+}
+}
+
+Actor LightningMissile2 : LightningMissile1
+{
+Damage 10
+States
+{
+Spawn:
+	TNT1 A 0
+	TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+	TNT1 AAAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+	TNT1 A 0 A_CustomMissile("LightningMissile3",0,0,0+random(-15,15),6,0+random(-15,15))
+	Stop
+Death:
+	TNT1 AAAAAAA 0 A_SpawnItemEx("TeslaFX",0,0,0,random(6,-6),random(6,-6),random(6,-6),0,0)
+	TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+	TNT1 A 0 A_Explode(15,20,0)
+	TNT1 A 1 A_Scream
+	Stop
+}
+}
+
+Actor LightningMissile3 : LightningMissile2
+{
+States
+{
+Spawn:
+	TNT1 A 0
+	TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+	TNT1 AAAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+	TNT1 A 0 A_CustomMissile("LightningMissileTargetSeeker",0,0,0+random(-15,15),6,0+random(-15,15))
+	Stop
+Death:
+	TNT1 AAAAAAA 0 A_SpawnItemEx("TeslaFX",0,0,0,random(6,-6),random(6,-6),random(6,-6),0,0)
+	TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+	TNT1 A 0 A_Explode(15,20,0)
+	TNT1 A 1 A_Scream
+	Stop
+}
+}
+
+Actor LightningMissile4 : LightningMissile3
+{
++SEEKERMISSILE
+States
+{
+Spawn:
+	TNT1 A 0
+	TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+	TNT1 A 0 A_JumpIfCloser(15, "Death")
+	TNT1 AAAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+	TNT1 A 0 A_SeekerMissile(90,90)
+	Loop
+Death:
+	TNT1 AAAAAAA 0 A_SpawnItemEx("TeslaFX",0,0,0,random(6,-6),random(6,-6),random(6,-6),0,0)
+	TNT1 A 0 A_Explode(15,20,0)
+	TNT1 A 1 A_Scream
+	Stop
+}
+}
+
+ACTOR LightningMissileTargetSeeker 
+{  
++FRIENDLY
+MONSTER
++NOGRAVITY
++NOCLIP
++THRUACTORS
++LOOKALLAROUND
+Radius 1
+Height 1
+Speed 0
+States
+{
+Spawn:
+	TNT1 A 0
+	TNT1 A 0 Thing_ChangeTid(0,1933)
+	TNT1 A 0 Thing_Hate(1933,1932,2)
+	PLAY A 0 A_UnSetShootable
+	PLAY A 0 A_Look
+See:
+	PLAY A 0 A_Chase
+Missile:
+	PLAY A 0 A_FaceTarget
+	PLAY A 0 A_CustomMissile("LightningMissile4",0,0)
+	Stop
+}
+}
+
+Actor LightningTrail
+{
+
++NOINTERACTION
+RenderStyle Add
+Scale 0.5
+Alpha 1
+States
+{
+Spawn:
+	LTNG CDEFG 2 bright
+	Stop
+}
+}
+
+
+
+Actor LightningTagger : FastProjectile	//This thing is the main damager in the attack. While the random "zaps" can 
+{							//cause damage, this "tagger" are the ones in charge of dealing the main dmg.
+Damage 15
+Speed 60
+Radius 3
+Height 3
+Projectile
++EXTREMEDEATH
+DamageType "Electric"
+RenderStyle None
+States
+{
+Spawn:
+	TNT1 AAAAAAAAAAAAAAAAAA 1
+	Stop
+Death:
+	//TNT1 AAAAAAAAAAAA 0 A_SpawnItemEx("TeslaFX",0,0,0,random(6,-6),random(6,-6),random(6,-6),0,0)
+	TNT1 A 0 A_CustomMissile("LightningTrail",0,0)
+	Stop
+}
+}
+
+
+//*****************************
+Actor ThunderStormSpellShot
+{
+Speed 37
+Damage 30
+Radius 12
+Height 12
+Projectile
++SEEKERMISSILE
++DONTREFLECT
++EXTREMEDEATH
+//+FLOORHUGGER
+DamageType "Electric" //lightningstorm
+RenderStyle Add
+Scale 0.8
+States
+{
+Spawn:
+	TNT1 A 0
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	ZAP7 A 1 Bright A_SeekerMissile(90,90)
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	ZAP7 A 1 Bright 
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	ZAP7 B 1 Bright A_SeekerMissile(90,90)
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	ZAP7 B 1 Bright //A_JumpIfCloser(30,"Death")
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	ZAP7 C 1 Bright A_SeekerMissile(90,90)
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	ZAP7 C 1 Bright //A_JumpIfCloser(30,"Death")
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	ZAP7 D 1 Bright A_SeekerMissile(90,90)
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	ZAP7 D 1 Bright //A_JumpIfCloser(30,"Death")
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	ZAP7 E 1 Bright A_SeekerMissile(90,90)
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	ZAP7 E 1 Bright //A_JumpIfCloser(30,"Death")
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	ZAP7 A 1 Bright A_SeekerMissile(90,90)
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	ZAP7 A 1 Bright 
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	ZAP7 B 1 Bright A_SeekerMissile(90,90)
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	ZAP7 B 1 Bright //A_JumpIfCloser(30,"Death")
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	ZAP7 C 1 Bright A_SeekerMissile(90,90)
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	ZAP7 C 1 Bright //A_JumpIfCloser(30,"Death")
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	ZAP7 D 1 Bright A_SeekerMissile(90,90)
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	ZAP7 D 1 Bright //A_JumpIfCloser(30,"Death")
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	ZAP7 E 1 Bright A_SeekerMissile(90,90)
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	ZAP7 E 1 Bright //A_JumpIfCloser(30,"Death")
+	Goto Death
+Death:
+	TNT1 A 0 A_CustomMissile("StormSpawner",0,0,0,6,90)
+	TNT1 A 7
+	Stop
+}
+}
+Actor ThunderStormSpellShotTrail
+{
+	+NOINTERACTION
+	RenderStyle Add
+	Scale 0.3
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_Jump(255,1,2,3,4,5,6,7,8)
+		ZAP7 AABBCCDDEE 1 Bright A_FadeOut(0.03)
+		Goto Spawn+2
+	}
+}
+
+Actor StormSpawner //: FastProjectile //Added inheritance due to speed issues...
+{
+   Speed 40
+   Radius 1
+   Height 6
+   Projectile
+   +SKYEXPLODE
+   +THRUACTORS
+   BounceFactor 0
+   WallBounceFactor 0
+   BounceType "Doom"
+   States
+   {
+   Spawn:
+      TNT1 AAA 1
+      Goto Death
+   Death:
+		TNT1 A 0 A_Stop
+		TNT1 A 10 A_SpawnItemEx("CloudSpawner1",0,0,0,0,0,0,0,48)
+	  //TNT1 A 0 A_PlaySound("weapons/thunderstormactive")
+	  //TNT1 AA 0 A_SpawnItemEx("LightningGenerator",0,0,0,0,0,0,0,48)
+      Stop
+	  //TNT1 A 0 A_SpawnItemEx("CeilingStormSpawner",0,0,0,0,0,0,0,48)
+	 // Stop
+   }
+}
+
+
+Actor CloudSpawner1
+{
+var int user_cloudspawncount;
+Speed 0
+Radius 1
+Height 1
+Projectile
++NOINTERACTION
+States
+{
+Spawn:
+	TNT1 A 0 A_SetUserVar("user_cloudspawncount",0)
+	CloudShoot:
+	TNT1 AAA 0 A_SpawnItemEx("Cloud1",0,0,0,3,0,0,random(0,359),SXF_NOCHECKPOSITION)
+	TNT1 A 1 A_SetUserVar("user_cloudspawncount",user_cloudspawncount+1)
+	TNT1 A 0 A_JumpIf(user_cloudspawncount>=10,1)
+	Loop
+	TNT1 A 0 A_SetUserVar("user_cloudspawncount",0)
+	TNT1 A 0 A_PlaySound("weapons/thunderstormactive")
+	TNT1 AA 0 A_SpawnItemEx("LightningGenerator",0,0,0,0,0,0,0,48)
+	CloudShoot2:
+	TNT1 AAA 0 A_SpawnItemEx("Cloud1",0,0,0,3,0,0,random(0,359),SXF_NOCHECKPOSITION)
+	TNT1 A 1 A_SetUserVar("user_cloudspawncount",user_cloudspawncount+1)
+	TNT1 A 0 A_JumpIf(user_cloudspawncount>=75,1)
+	Loop
+	TNT1 A 0 A_SetUserVar("user_cloudspawncount",0)
+	Stop
+}
+}
+
+Actor LightningGenerator
+{
+Radius 1
+Height 1
+Speed 0
+Projectile
++NOINTERACTION
+States
+{
+Spawn:
+	TNT1 A 0
+	TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 1 A_CustomMissile("LightningShotRandom",0,0,0+random(0,360),6,-10+random(-80,0))
+	Goto Death
+Death:
+	TNT1 A 0
+	Stop
+}
+}
+
+Actor Cloud1
+{
+Radius 5
+Height 4
+Speed 3
+Damage 0
+Scale .75
+Projectile
++NOINTERACTION
+Renderstyle Add
+Alpha .75
+States
+{
+Spawn:
+	SMOK ABC 15
+	SMOK DEFGHI 15
+	SMOK JKL 15 A_FadeOut(0.1)
+	Stop
+}
+}
+
+Actor LightningShotRandom : LightningSpellMissile
+{
+Speed 50
+Damage 15
+DamageType "Electric"
++NODAMAGETHRUST
++FORCERADIUSDMG
++EXTREMEDEATH
+States
+{
+Spawn:
+	TNT1 AAAAAA 1 A_CustomMissile("LightningTrail",0,0)
+	TNT1 A 0 A_CustomMissile("LightningShotRandom",0,0,0+random(-30,30),2,0+random(-30,30))
+	Stop
+Death:
+	TNT1 A 0 A_Scream
+	TNT1 AAAAAAA 0 A_SpawnItemEx("TeslaFX",0,0,0,random(6,-6),random(6,-6),random(6,-6),0,0)
+	TNT1 A 0 A_Explode(15,256,0)
+	Stop
+}
+}*/
+
+ACTOR LightningSpellMissile : FastProjectile
+{
+Radius 2
+Height 2
+Speed 40
+Damage 15
+DamageType "Electric"
+Projectile
++EXTREMEDEATH
+DeathSound "weapons/lightningend"
+MissileType "LightningTrail"
+States
+{
+Spawn:
+        TNT1 A 0
+        TNT1 AAAAAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 A 0 A_CustomMissile("LightningSpellMissile",0,0,random(-8,8),6,random(-8,8))
+        TNT1 A 1 //A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        Stop
+Death:
+        TNT1 AAAAAAA 0 A_SpawnItemEx("TeslaFX",0,0,0,random(6,-6),random(6,-6),random(6,-6),0,0)
+        TNT1 A 1 A_Scream
+        Stop
+}
+}
+ 
+//      The good actors here. Left the previous for compat. But are no longer used and MUST
+//      not be used for primary. Im all for upgrades, not for downgrades on code. -DBT
+ 
+Actor LightningTargetMissile : FastProjectile
+{
+Speed 200
+Damage 0
+Projectile
++THRUACTORS
++BloodlessImpact
+States
+{
+Spawn:
+        TNT1 A 5
+        Goto Death
+Death:
+        TNT1 A 0 A_SpawnItemEx("LightningTarget",0,0,0,0,0,0,0,32)
+        TNT1 A 1
+        Stop
+}
+}
+ 
+Actor LightningTarget
+{
+Radius 3
+Height 3
+Speed 0
+Damage 0
+Health 1000000
+DamageFactor "Normal", 0        //Invulnerable to everything, because if destroyed, missile4 would just wander around
+Monster
++NOCLIP
++NOBLOOD
+-COUNTKILL
++NOGRAVITY
++FLOAT
++SPECTRAL
++THRUACTORS
++NORADIUSDMG
+RenderStyle None
+States
+{
+Spawn:
+        TNT1 A 0
+        TNT1 A 0 Thing_ChangeTid(0,1932)        //Is based in TIDs, not in DoomEdNums
+        TNT1 A 35
+        Stop
+Death:
+        TNT1 A 0
+        Stop
+}
+}
+ 
+Actor LightningMissile1 : FastProjectile
+{
+Radius 4
+Height 2
+Speed 40
+Damage 10
+DamageType "Electric"  //lightningstorm
+Projectile
++FORCERADIUSDMG
++EXTREMEDEATH
+DeathSound "weapons/lightningend"
+MissileType "LightningTrail"
+States
+{
+Spawn:
+        TNT1 A 0
+        TNT1 AAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 A 0 A_CustomMissile("LightningMissile2",0,0,0+random(-15,15),6,0+random(-15,15))
+        Stop
+Death:
+        TNT1 AAAAAAA 0 A_SpawnItemEx("TeslaFX",0,0,0,random(6,-6),random(6,-6),random(6,-6),0,0)
+        TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 A 0 A_Explode(15,20,0)
+        TNT1 A 1 A_Scream
+        Stop
+}
+}
+ 
+Actor LightningMissile2 : LightningMissile1
+{
+Damage 10
+States
+{
+Spawn:
+        TNT1 A 0
+        TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 AAAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 A 0 A_CustomMissile("LightningMissile3",0,0,0+random(-15,15),6,0+random(-15,15))
+        Stop
+Death:
+        TNT1 AAAAAAA 0 A_SpawnItemEx("TeslaFX",0,0,0,random(6,-6),random(6,-6),random(6,-6),0,0)
+        TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 A 0 A_Explode(15,20,0)
+        TNT1 A 1 A_Scream
+        Stop
+}
+}
+ 
+Actor LightningMissile3 : LightningMissile2
+{
+States
+{
+Spawn:
+        TNT1 A 0
+        TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 AAAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 A 0 A_CustomMissile("LightningMissileTargetSeeker",0,0,0+random(-15,15),6,0+random(-15,15))
+        Stop
+Death:
+        TNT1 AAAAAAA 0 A_SpawnItemEx("TeslaFX",0,0,0,random(6,-6),random(6,-6),random(6,-6),0,0)
+        TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 A 0 A_Explode(15,20,0)
+        TNT1 A 1 A_Scream
+        Stop
+}
+}
+ 
+Actor LightningMissile4 : LightningMissile3
+{
++SEEKERMISSILE
+States
+{
+Spawn:
+        TNT1 A 0
+        TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 A 0 A_JumpIfCloser(15, "Death")
+        TNT1 AAAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 A 0 A_SeekerMissile(90,90)
+        Loop
+Death:
+        TNT1 AAAAAAA 0 A_SpawnItemEx("TeslaFX",0,0,0,random(6,-6),random(6,-6),random(6,-6),0,0)
+        TNT1 A 0 A_Explode(15,20,0)
+        TNT1 A 1 A_Scream
+        Stop
+}
+}
+ 
+ACTOR LightningMissileTargetSeeker
+{  
++FRIENDLY
+MONSTER
++NOGRAVITY
++NOCLIP
++THRUACTORS
++LOOKALLAROUND
+Radius 1
+Height 1
+Speed 0
+States
+{
+Spawn:
+        TNT1 A 0
+        TNT1 A 0 Thing_ChangeTid(0,1933)
+        TNT1 A 0 Thing_Hate(1933,1932,2)
+        PLAY A 0 A_UnSetShootable
+        PLAY A 0 A_Look
+See:
+        PLAY A 0 A_Chase
+Missile:
+        PLAY A 0 A_FaceTarget
+        PLAY A 0 A_CustomMissile("LightningMissile4",0,0)
+        Stop
+}
+}
+ 
+Actor LightningTrail
+{
+        +NOINTERACTION
+        States
+        {
+        Spawn:
+                TNT1 A 0
+                TNT1 A 0 A_SpawnItemEx("LightningTrailDistortion",0,frandom(-5,5),frandom(-5,5),0,0,0,0,32)
+                Stop
+        }
+}
+ 
+Actor LightningTrailDistortion
+{
+ 
++NOINTERACTION
+RenderStyle Add
+Scale 0.5
+//Scale 0.75
+Alpha 0.5
+States
+{
+Spawn:
+        PLSE BCD 2 bright //LTNG CDEFG 2 bright
+        Stop
+}
+}
+ 
+ 
+ 
+Actor LightningTagger : FastProjectile  //This thing is the main damager in the attack. While the random "zaps" can
+{                                                       //cause damage, this "tagger" are the ones in charge of dealing the main dmg.
+Damage 15
+Speed 60
+Radius 3
+Height 3
+Projectile
++EXTREMEDEATH
+DamageType "Electric"
+RenderStyle None
+States
+{
+Spawn:
+        TNT1 AAAAAAAAAAAAAAAAAA 1
+        Stop
+Death:
+        //TNT1 AAAAAAAAAAAA 0 A_SpawnItemEx("TeslaFX",0,0,0,random(6,-6),random(6,-6),random(6,-6),0,0)
+        TNT1 A 0 A_CustomMissile("LightningTrail",0,0)
+        Stop
+}
+}
+ 
+ 
+//*****************************
+Actor ThunderStormSpellShot
+{
+Speed 37
+Damage 30
+Radius 12
+Height 12
+Projectile
++SEEKERMISSILE
++DONTREFLECT
++EXTREMEDEATH
+//+FLOORHUGGER
+DamageType "Electric" //lightningstorm
+RenderStyle Add
+Scale 0.8
+States
+{
+Spawn:
+        TNT1 A 0
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 A 1 Bright A_SeekerMissile(90,90)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 A 1 Bright
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 B 1 Bright A_SeekerMissile(90,90)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 B 1 Bright //A_JumpIfCloser(30,"Death")
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 C 1 Bright A_SeekerMissile(90,90)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 C 1 Bright //A_JumpIfCloser(30,"Death")
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 D 1 Bright A_SeekerMissile(90,90)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 D 1 Bright //A_JumpIfCloser(30,"Death")
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 E 1 Bright A_SeekerMissile(90,90)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 E 1 Bright //A_JumpIfCloser(30,"Death")
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 A 1 Bright A_SeekerMissile(90,90)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 A 1 Bright
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 B 1 Bright A_SeekerMissile(90,90)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 B 1 Bright //A_JumpIfCloser(30,"Death")
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 C 1 Bright A_SeekerMissile(90,90)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 C 1 Bright //A_JumpIfCloser(30,"Death")
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 D 1 Bright A_SeekerMissile(90,90)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 D 1 Bright //A_JumpIfCloser(30,"Death")
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 E 1 Bright A_SeekerMissile(90,90)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 E 1 Bright //A_JumpIfCloser(30,"Death")
+        Goto Death
+Death:
+        TNT1 A 0 A_CheckCeiling("CSpawner")
+        TNT1 A 0 A_CustomMissile("StormSpawner",0,0,0,6,90)
+        TNT1 A 7
+        Stop
+CSpawner:
+        TNT1 A 0 A_SpawnItemEx("StormSpawner",0,0,-40,0,0,0,0,48)
+        Stop
+}
+}
+Actor ThunderStormSpellShotTrail
+{
+        +NOINTERACTION
+        RenderStyle Add
+        Scale 0.3
+        States
+        {
+        Spawn:
+                TNT1 A 0
+                TNT1 A 0 A_Jump(255,1,2,3,4,5,6,7,8)
+                ZAP7 AABBCCDDEE 1 Bright A_FadeOut(0.03)
+                Goto Spawn+2
+        }
+}
+ 
+Actor StormSpawner //: FastProjectile //Added inheritance due to speed issues...
+{
+   Speed 40
+   Radius 1
+   Height 6
+   Projectile
+   +SKYEXPLODE
+   +THRUACTORS
+   BounceFactor 0
+   WallBounceFactor 0
+   BounceType "Doom"
+   States
+   {
+   Spawn:
+      TNT1 AAA 1
+      Goto Death
+   Death:
+                TNT1 A 0 A_Stop
+                TNT1 A 10 A_SpawnItemEx("CloudSpawner1",0,0,0,0,0,0,0,48)
+          //TNT1 A 0 A_PlaySound("weapons/thunderstormactive")
+          //TNT1 AA 0 A_SpawnItemEx("LightningGenerator",0,0,0,0,0,0,0,48)
+      Stop
+          //TNT1 A 0 A_SpawnItemEx("CeilingStormSpawner",0,0,0,0,0,0,0,48)
+         // Stop
+   }
+}
+ 
+ 
+Actor CloudSpawner1
+{
+var int user_cloudspawncount;
+Speed 0
+Radius 1
+Height 1
+Projectile
++NOINTERACTION
+States
+{
+Spawn:
+        TNT1 A 0 A_SetUserVar("user_cloudspawncount",0)
+        CloudShoot:
+        TNT1 AAA 0 A_SpawnItemEx("Cloud1",0,0,0,3,0,0,random(0,359),SXF_NOCHECKPOSITION)
+        TNT1 A 1 A_SetUserVar("user_cloudspawncount",user_cloudspawncount+1)
+        TNT1 A 0 A_JumpIf(user_cloudspawncount>=10,1)
+        Loop
+        TNT1 A 0 A_SetUserVar("user_cloudspawncount",0)
+        TNT1 A 0 A_PlaySound("weapons/thunderstormactive")
+        TNT1 AA 0 A_SpawnItemEx("LightningGenerator",0,0,0,0,0,0,0,48)
+        CloudShoot2:
+        TNT1 AAA 0 A_SpawnItemEx("Cloud1",0,0,0,3,0,0,random(0,359),SXF_NOCHECKPOSITION)
+        TNT1 A 1 A_SetUserVar("user_cloudspawncount",user_cloudspawncount+1)
+        TNT1 A 0 A_JumpIf(user_cloudspawncount>=60,1)
+        Loop
+        TNT1 A 0 A_SetUserVar("user_cloudspawncount",0)
+        /*TNT1 AAAAAAAAAA 0 A_SpawnItemEx("Cloud1",0,0,0,3,0,0,random(0,359),SXF_NOCHECKPOSITION) //A_CustomMissile("Cloud1",0,0,0+random(0,360),6)
+        TNT1 AAAAAAAAAA 1 A_SpawnItemEx("Cloud1",0,0,0,3,0,0,random(0,359),SXF_NOCHECKPOSITION)
+        TNT1 A 0 A_PlaySound("weapons/thunderstormactive")
+        TNT1 A 0 A_CustomMissile("LightningGenerator",0,0,0,6)
+        TNT1 A 0 A_CustomMissile("LightningGenerator",0,0,0,6)
+        TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 1 A_SpawnItemEx("Cloud1",0,0,0,3,0,0,random(0,359),SXF_NOCHECKPOSITION)*/
+        Stop
+}
+}
+ 
+Actor LightningGenerator
+{
+Radius 1
+Height 1
+Speed 0
+Projectile
++NOINTERACTION
+States
+{
+Spawn:
+        TNT1 A 0
+        TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 1 A_SpawnItemEx("LightningShotRandom",0,0,0,50,0,random(-75,-10),random(0,359),48)//A_CustomMissile("LightningShotRandom",0,0,0+random(0,360),6,-10+random(-80,0))
+        Goto Death
+Death:
+        TNT1 A 0
+        Stop
+}
+}
+ 
+Actor Cloud1
+{
+Radius 5
+Height 4
+Speed 3
+Damage 0
+Scale .75
+Projectile
++NOINTERACTION
+Renderstyle Add
+Alpha .75
+States
+{
+Spawn:
+        SMOK ABC 15
+        SMOK DEFGHI 15
+        SMOK JKL 15 A_FadeOut(0.1)
+        Stop
+}
+}
+ 
+Actor LightningShotRandom : LightningSpellMissile
+{
+Speed 50
+Damage 15
+DamageType "Electric"
++NODAMAGETHRUST
++FORCERADIUSDMG
++EXTREMEDEATH
+States
+{
+Spawn:
+        TNT1 AAAA 1 //A_CustomMissile("LightningTrail",0,0)
+        //TNT1 A 0 A_SpawnItemEx("LightningShotRandom",0,0,0,50,0,random(-30,30),random(-30,30),48)
+        TNT1 A 0 A_SetAngle(angle+random(-30,30))
+        TNT1 A 0 //A_SetPitch(pitch+random(-30,30))
+        TNT1 A 0 A_ChangeVelocity(50,0,random(-30,30),3)
+        Loop
+Death:
+        TNT1 A 0 A_Scream
+        TNT1 AAAAAAA 0 A_SpawnItemEx("TeslaFX",0,0,0,random(6,-6),random(6,-6),random(6,-6),0,0)
+        TNT1 A 0 A_Explode(15,256,0)
+        Stop
+}
+}
+
+Actor TomeOfSetDrop : CustomInventory
+{
+    Inventory.MaxAmount 1
+    States
+    {
+    Use:
+	TNT1 A 0
+	TNT1 A 0 A_SpawnItemEx("DroppedTomeOfSet",0,0,32,8,0,0,0,32,0)
+	Stop
+    }
+}
+
+ACTOR DroppedTomeOfSet
+{
+    Radius 16
+    Height 20
+    Scale 0.8
+    States
+    {
+    Spawn:
+	WTME A 15 Bright 
+	TNT1 A 0 A_SpawnItemEx("AEoDTomeOfSetNoAmmo",0,0,0,0,0,0,0,48,0)
+	Stop
+    }
+}
+
+ACTOR AEoDTomeOfSetNoAmmo : AEoDTomeOfSetItem
+{
+    +FLOORCLIP
+    +FLOATBOB
+    +INVENTORY.IGNORESKILL
+    Scale 0.8
+    Inventory.Amount 1
+    Inventory.PickupSound "weaponbuild"
+    Inventory.PickupMessage "The Mystic Tome of Set is now yours!"
+    States
+    {
+    Spawn:
+        WTME ABCDEFGH 4 Bright
+        Loop
+    Pickup:
+	TNT1 A 0 A_JumpIfInventory("Weapon8Count",3,"Nothing")
+	TNT1 A 0 A_JumpIfInventory("BlueMana",40,"Ammo")
+	TNT1 A 0 A_GiveInventory("Weapon8Count",1)
+	TNT1 A 0 A_GiveInventory("TomeOfSetDrop",1)
+	TNT1 A 0 A_GiveInventory("AEoDTomeOfSet",1)
+	TNT1 A 0 A_TakeInventory("BlueMana",40)
+	TNT1 A 0 ACS_Execute(799,0,16,0,0)
+	Stop
+    Nothing:
+	TNT1 A 0 A_JumpIfInventory("AEoDTomeOfSet",1,"Ammo")
+	TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
+	Goto Pickup+2
+	TNT1 A 0 ACS_Execute(798,0,16,0,0)
+	Fail
+    Ammo:
+	TNT1 A 0 A_TakeInventory("BlueMana",40)
+	TNT1 A 0 A_JumpIfInventory("AEoDTomeOfSet",1,2)
+	TNT1 A 0 A_GiveInventory("Weapon8Count",1)
+	TNT1 A 0 A_GiveInventory("TomeOfSetDrop",1)
+	TNT1 A 0 A_GiveInventory("AEoDTomeOfSet",1)
+	Stop
+    }
+}
+
+ACTOR AEoDPulsegun : Weapon // 6105
+{
++FloorClip
++INVENTORY.IGNORESKILL
+Weapon.AmmoType1 "PlasmaRod"
+Weapon.AmmoType2 "PlasmaRod"
+Weapon.AmmoGive1 50
+Weapon.AmmoUse1 1
+Weapon.AmmoUse2 8
+Obituary "%o was destroyed by %k's Pulsegun!"
+Inventory.PickupMessage "You got the Pulsegun!"
+Inventory.PickupSound "reilsss/weappickup/laserrifle"
+weapon.upsound "weapons/plasma/draw"
+Scale 0.35
+States
+{
+Spawn:
+	NGUP ABCDEFGH 6
+	Loop
+Ready:
+	TNT1 A 0 A_StopSound(6)
+	NGU2 A 1 A_WeaponReady
+	Goto Ready+1
+Deselect:
+	TNT1 A 0 A_StopSound(6)
+	TNT1 A 0 ACS_Execute(799,0,0,0,0)
+	NGU2 A 1 A_Lower
+	TNT1 AA 0 A_Lower
+	Goto Deselect+1
+Select:
+	TNT1 A 0 ACS_Execute(799,0,10,0,0)
+	NGU2 A 1 A_Raise
+	TNT1 AA 0 A_Raise
+	Loop
+Fire:
+	TNT1 A 0 A_PlaySound("reilsss/weapons/firestormcannonspinon", 7, 1.0, 0)
+	NGU2 H 5
+	NGU2 I 4
+	NGU2 J 3
+	NGU2 K 2
+	TNT1 A 0 A_PlaySound("reilsss/weapons/firestormcannonspin", 6, 1.0, 1)
+Hold:
+	TNT1 A 0 A_PlaySound("reilsss/weapons/lasergunfire", CHAN_WEAPON, 1.0, 0)
+	TNT1 A 0 A_GunFlash
+	//TNT1 A 0 ACS_Execute(851,0,20,0,0)
+	NGU2 E 0 Bright A_FireCustomMissile("PulseBall",0,1,6,0)
+	NGU2 E 2 bright ACS_Execute(851,0,20,0,0)
+	TNT1 A 0 ACS_Execute(851,0,-20,0,0)
+	NGU2 G 2 
+	TNT1 A 0 A_JumpIfNoAmmo("HoldEndA")
+	TNT1 A 0 A_PlaySound("reilsss/weapons/lasergunfire", CHAN_WEAPON, 1.0, 0)
+	TNT1 A 0 A_GunFlash
+	//TNT1 A 0 ACS_Execute(851,0,20,0,0)
+	NGU2 D 0 Bright A_FireCustomMissile("PulseBall",0,1,6,0)
+	NGU2 D 2 bright ACS_Execute(851,0,20,0,0)
+	NGU2 F 2 ACS_Execute(851,0,-20,0,0)
+	TNT1 A 0 A_JumpIfNoAmmo("HoldEndB")
+	TNT1 A 0 A_ReFire
+	TNT1 A 0 A_StopSound(CHAN_BODY)
+	TNT1 A 0 A_PlaySound("reilsss/weapons/firestormcannonspin", 7, 1.0, 0)
+	NGU2 I 2 A_WeaponReady
+	NGU2 J 2 A_WeaponReady
+	NGU2 K 2 A_WeaponReady
+	TNT1 A 0 A_PlaySound("reilsss/weapons/hyperblasterspinoff2", 8, 1.0, 0)
+	NGU2 H 3 A_WeaponReady
+	NGU2 I 3 A_WeaponReady
+	NGU2 J 3 A_WeaponReady
+	NGU2 K 3 A_WeaponReady
+	NGU2 H 3 A_WeaponReady
+	NGU2 I 5 A_WeaponReady
+	NGU2 J 8 A_WeaponReady
+	NGU2 K 12 A_WeaponReady
+	Goto Ready
+HoldEndB:
+	TNT1 A 0 A_StopSound(CHAN_BODY)
+	TNT1 A 0 A_PlaySound("reilsss/weapons/firestormcannonspin", 7, 1.0, 0)
+	NGU2 I 2 A_WeaponReady
+	NGU2 J 2 A_WeaponReady
+	NGU2 K 2 A_WeaponReady
+	TNT1 A 0 A_PlaySound("reilsss/weapons/hyperblasterspinoff2", 8, 1.0, 0)
+	NGU2 H 3 A_WeaponReady
+	NGU2 I 3 A_WeaponReady
+	NGU2 J 3 A_WeaponReady
+	NGU2 K 3 A_WeaponReady
+	NGU2 H 3 A_WeaponReady
+	NGU2 I 5 A_WeaponReady
+	NGU2 J 8 A_WeaponReady
+	NGU2 K 12 A_WeaponReady
+	Goto Ready
+HoldEndA:
+	TNT1 A 0 A_StopSound(CHAN_BODY)
+	TNT1 A 0 A_PlaySound("reilsss/weapons/firestormcannonspin", 7, 1.0, 0)
+	NGU2 H 2 A_WeaponReady
+	NGU2 I 2 A_WeaponReady
+	NGU2 J 2 A_WeaponReady
+	TNT1 A 0 A_PlaySound("reilsss/weapons/hyperblasterspinoff2", 8, 1.0, 0)
+	NGU2 K 2 A_WeaponReady
+	NGU2 H 3 A_WeaponReady
+	NGU2 I 3 A_WeaponReady
+	NGU2 J 3 A_WeaponReady
+	NGU2 K 3 A_WeaponReady
+	NGU2 H 3 A_WeaponReady
+	NGU2 I 5 A_WeaponReady
+	NGU2 J 8 A_WeaponReady
+	NGU2 K 12 A_WeaponReady
+	Goto Ready
+AltFire:
+	TNT1 A 0 A_StopSoundEx("SoundSlot6")
+	TNT1 A 0 A_PlaySound("reilsss/weapons/dispersionfire", CHAN_WEAPON, 1.0, 0)
+	TNT1 A 0 A_GunFlash
+	TNT1 A 0 ACS_Execute(851,0,180,random(-30,30),0)
+	NGU2 B 3 Bright A_FireCustomMissile("PulseBallGrenade",0,1,6,4)
+	NGU2 CCC 1 ACS_Execute(851,0,-60,random(-30,30),0)
+	NGU2 A 16
+	Goto Ready
+Flash:
+	TNT1 A 2 A_Light2
+	TNT1 A 1 A_Light0
+	Stop
+}
+}
+
+ACTOR AEoDMinigun : Weapon // 6006
+{ 
++FLOORCLIP
++INVENTORY.IGNORESKILL
+Weapon.AmmoType1 "AEClip" 
+Weapon.AmmoType2 "AEClip" 
+Weapon.AmmoGive1 50
+Weapon.AmmoUse1 1
+Weapon.AmmoUse2 1
++CHEATNOTWEAPON
+Obituary "%o was shredded by %k's minigun."
+Inventory.PickupMessage "Picked up the Minigun!"
+Inventory.PickupSound "reilsss/weappickup/minigun" 
+weapon.upsound "weapons/rlan/draw"
+Scale 0.20
+States 
+{ 
+Spawn: 
+	MINN A -1 
+	Loop 
+Ready: 
+	TNT1 A 0 A_StopSound(6)
+	TNT1 A 0 A_TakeInventory ("MinigunSlowShot",7)
+	MING A 1 A_WeaponReady 
+	Goto Ready+2
+Deselect: 
+	TNT1 A 0 A_StopSound(6)
+	TNT1 A 0 ACS_Execute(799,0,0,0,0)
+	MING A 1 A_Lower
+	TNT1 AA 0 A_Lower 
+	Goto Deselect+1 
+Select: 
+	TNT1 A 0 ACS_Execute(799,0,4,0,0)
+	MING A 1 A_Raise
+	TNT1 AA 0 A_Raise 
+	Loop 
+Fire: 
+	TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,"FireQuick")
+	TNT1 A 0 A_PlaySound("reilsss/weapons/minigunspin", 6, 1.0, 1)
+	MING A 1 A_GunFlash
+	TNT1 A 0 A_Recoil(0.25)
+	TNT1 A 0 ACS_Execute(851,0,18,random(-4,4),0)
+	TNT1 A 0 A_FireCustomMissile("GunSmokeSpawner",0,0,2,8)
+	TNT1 A 0 A_PlaySound("reilsss/weapons/minigunfire", CHAN_WEAPON, 1.0, 0)
+	MING B 1 Bright A_FireBullets(5, 3, 2, 4, "BulletDamagePuff", 1)
+	TNT1 A 0 ACS_Execute(851,0,-18,0,0)
+	TNT1 A 0 A_FireCustomMissile("ChGunCasing",-45+random(-15,15),0,2,3)
+	MING C 1
+	MING D 1 //A_GunFlash
+	TNT1 A 0 A_Recoil(0.25)
+	TNT1 A 0 ACS_Execute(851,0,18,random(-4,4),0)
+	TNT1 A 0 A_FireCustomMissile("GunSmokeSpawner",0,0,3,8)
+	TNT1 A 0 A_PlaySound("reilsss/weapons/minigunfire", CHAN_WEAPON, 1.0, 0)
+	MING E 1 Bright A_FireBullets(5, 3, 2, 4, "BulletDamagePuff", 1)
+	TNT1 A 0 ACS_Execute(851,0,-18,0,0)
+	MING A 0 A_FireCustomMissile("ChGunCasing",-45+random(-15,15),0,2,3)
+	MING F 1 A_StopSound(6)
+	MING A 1 A_ReFire
+	MING B 1 A_PlaySound("reilsss/weapons/minigunspinoff", 6, 1.0, 0)
+	MING CDEF 1 A_ReFire
+	MING AABBCCDDEEFF 1 A_ReFire
+	MING AAABBBCCCDDDEEEFFF 1 A_ReFire
+	goto Ready
+FireQuick:
+	TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,1)
+	Goto Fire
+	TNT1 A 0 A_PlaySound("reilsss/weapons/minigunspin", 6, 1.0, 1)
+	MING A 1 A_GunFlash
+	TNT1 A 0 A_Recoil(0.25)
+	TNT1 A 0 ACS_Execute(851,0,18,random(-4,4),0)
+	TNT1 A 0 A_FireCustomMissile("GunSmokeSpawner",0,0,2,8)
+	TNT1 A 0 A_PlaySound("reilsss/weapons/minigunfire", CHAN_WEAPON, 1.0, 0)
+	MING B 1 Bright A_FireBullets(5, 3, 2, 7, "BulletDamagePuff", 1)
+	TNT1 A 0 ACS_Execute(851,0,-18,0,0)
+	TNT1 A 0 A_FireCustomMissile("ChGunCasing",-45+random(-15,15),0,2,3)
+	MING C 1 A_TakeInventory("AEClip",1)
+	MING D 1 A_GunFlash
+	TNT1 A 0 A_Recoil(0.25)
+	TNT1 A 0 ACS_Execute(851,0,18,random(-4,4),0)
+	TNT1 A 0 A_FireCustomMissile("GunSmokeSpawner",0,0,3,8)
+	TNT1 A 0 A_PlaySound("reilsss/weapons/minigunfire", CHAN_WEAPON, 1.0, 0)
+	MING E 1 Bright A_FireBullets(5, 3, 2, 7, "BulletDamagePuff", 1)
+	TNT1 A 0 ACS_Execute(851,0,-18,0,0)
+	MING A 0 A_FireCustomMissile("ChGunCasing",-45+random(-15,15),0,2,3)
+	MING F 1 A_StopSound(6)
+	MING A 1 A_ReFire
+	MING B 1 A_PlaySound("reilsss/weapons/minigunspinoff", 6, 1.0, 0)
+	MING CDEF 1 A_ReFire
+	MING ABCDEF 1 A_ReFire
+	MING AABBCCDDEEFF 1 A_ReFire
+	goto Ready
+AltFire:
+	TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,"AltFireQuick")
+	TNT1 A 0 A_PlaySound("reilsss/weapons/minigunspinon", 6, 1.0, 0)
+	MING AAABBBCCCDDDEEEFFF 1
+	MING AABBCCDDEEFF 1
+	TNT1 A 0 A_PlaySound("reilsss/weapons/minigunspin", 6, 1.0, 1)
+	MING ABCDEF 1
+	MING F 0 A_Jump(256,"AltHold")
+	MING A 1 A_GunFlash
+	TNT1 A 0 A_Recoil(0.25)
+	TNT1 A 0 ACS_Execute(851,0,18,random(-4,4),0)
+	TNT1 A 0 A_FireCustomMissile("GunSmokeSpawner",0,0,3,8)
+	TNT1 A 0 A_PlaySound("reilsss/weapons/minigunfire", CHAN_WEAPON, 1.0, 0)
+	MING B 1 Bright A_FireBullets(5, 3, 2, 4, "BulletDamagePuff", 1)
+	TNT1 A 0 ACS_Execute(851,0,-18,0,0)
+	TNT1 A 0 A_FireCustomMissile("ChGunCasing",-45+random(-15,15),0,2,3)
+	MING C 1
+	MING D 1 //A_GunFlash
+	TNT1 A 0 A_Recoil(0.25)
+	TNT1 A 0 ACS_Execute(851,0,18,random(-4,4),0)
+	TNT1 A 0 A_FireCustomMissile("GunSmokeSpawner",0,0,3,8)
+	TNT1 A 0 A_PlaySound("reilsss/weapons/minigunfire", CHAN_WEAPON, 1.0, 0)
+	MING E 1 Bright A_FireBullets(5, 3, 2, 4, "BulletDamagePuff", 1)
+	TNT1 A 0 ACS_Execute(851,0,-18,0,0)
+	MING A 0 A_FireCustomMissile("ChGunCasing",-45+random(-15,15),0,2,3)
+	MING F 1 A_StopSound(6)
+	MING A 1 A_ReFire
+	MING B 1 A_PlaySound("reilsss/weapons/minigunspinoff", 6, 1.0, 0)
+	MING CDEF 1 A_ReFire
+	MING ABCDEF 1 A_ReFire
+	MING AABBCCDDEEFF 1 A_ReFire
+	goto Ready
+AltFireQuick:
+	TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,1)
+	Goto AltFire
+	TNT1 A 0 A_PlaySound("reilsss/weapons/minigunspinon", 6, 1.0, 0)
+	MING AABBCCDDEEFF 1
+	MING ABCDEF 1
+	TNT1 A 0 A_PlaySound("reilsss/weapons/minigunspin", 6, 1.0, 1)
+	MING ABCDEF 1
+	MING F 0 A_Jump(256,"AltHold")
+	MING A 1 A_GunFlash
+	TNT1 A 0 A_Recoil(0.25)
+	TNT1 A 0 ACS_Execute(851,0,18,random(-4,4),0)
+	TNT1 A 0 A_FireCustomMissile("GunSmokeSpawner",0,0,3,8)
+	TNT1 A 0 A_PlaySound("reilsss/weapons/minigunfire", CHAN_WEAPON, 1.0, 0)
+	MING B 1 Bright A_FireBullets(5, 3, 2, 7, "BulletDamagePuff", 1)
+	TNT1 A 0 ACS_Execute(851,0,-18,0,0)
+	TNT1 A 0 A_FireCustomMissile("ChGunCasing",-45+random(-15,15),0,2,3)
+	MING C 1 A_TakeInventory("AEClip",1)
+	MING D 1 A_GunFlash
+	TNT1 A 0 A_Recoil(0.25)
+	TNT1 A 0 ACS_Execute(851,0,18,random(-4,4),0)
+	TNT1 A 0 A_FireCustomMissile("GunSmokeSpawner",0,0,3,8)
+	TNT1 A 0 A_PlaySound("reilsss/weapons/minigunfire", CHAN_WEAPON, 1.0, 0)
+	MING E 1 Bright A_FireBullets(5, 3, 2, 7, "BulletDamagePuff", 1)
+	TNT1 A 0 ACS_Execute(851,0,-18,0,0)
+	MING A 0 A_FireCustomMissile("ChGunCasing",-45+random(-15,15),0,2,3)
+	MING F 1 A_StopSound(6)
+	MING A 1 A_ReFire
+	MING B 1 A_PlaySound("reilsss/weapons/minigunspinoff", 6, 1.0, 0)
+	MING CDEF 1 A_ReFire
+	MING AABBCCDDEEFF 1 A_ReFire
+	MING AAABBBCCCDDDEEEFFF 1 A_ReFire
+	goto Ready
+AltHold:
+	TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,"AltHoldQuick")
+	TNT1 A 0 A_PlaySound("reilsss/weapons/minigunspin", 6, 1.0, 1)
+	MING A 0 A_GunFlash
+	TNT1 A 0 A_Recoil(0.25)
+	TNT1 A 0 ACS_Execute(851,0,18,random(-4,4),0)
+	TNT1 A 0 A_FireCustomMissile("GunSmokeSpawner",0,0,3,8)
+	TNT1 A 0 A_PlaySound("reilsss/weapons/minigunfirealt", CHAN_WEAPON, 1.0, 0)
+	MING A 1 Bright A_FireBullets(5, 3, 2, 4, "BulletDamagePuff", 1)
+	TNT1 A 0 ACS_Execute(851,0,-18,0,0)
+	TNT1 A 0 A_FireCustomMissile("ChGunCasing",-45+random(-15,15),0,2,3)
+	MING B 1
+	TNT1 A 0 //A_GunFlash
+	TNT1 A 0 A_Recoil(0.25)
+	TNT1 A 0 ACS_Execute(851,0,18,random(-4,4),0)
+	TNT1 A 0 A_FireCustomMissile("GunSmokeSpawner",0,0,3,8)
+	TNT1 A 0 A_PlaySound("reilsss/weapons/minigunfirealt", CHAN_WEAPON, 1.0, 0)
+	MING C 1 Bright A_FireBullets(5, 3, 2, 4, "BulletDamagePuff", 1)
+	TNT1 A 0 ACS_Execute(851,0,-18,0,0)
+	MING A 0 A_FireCustomMissile("ChGunCasing",-45+random(-15,15),0,2,3)
+	MING E 1 A_StopSoundEx("SoundSlot6")
+	TNT1 A 0 A_GunFlash
+	TNT1 A 0 A_Recoil(0.25)
+	TNT1 A 0 ACS_Execute(851,0,18,random(-4,4),0)
+	TNT1 A 0 A_FireCustomMissile("GunSmokeSpawner",0,0,3,8)
+	TNT1 A 0 A_PlaySound("reilsss/weapons/minigunfirealt", CHAN_WEAPON, 1.0, 0)
+	MING E 1 Bright A_FireBullets(5, 3, 2, 4, "BulletDamagePuff", 1)
+	TNT1 A 0 ACS_Execute(851,0,-18,0,0)
+	MING A 0 A_FireCustomMissile("ChGunCasing",-45+random(-15,15),0,2,3)
+	MING F 1 A_StopSound(6)
+	TNT1 A 0 A_ReFire
+	TNT1 A 0 A_TakeInventory ("MinigunSlowShot",7)
+	MING A 1 A_PlaySound("reilsss/weapons/minigunspin", 6, 1.0, 0)
+	MING BCDEF 1 A_ReFire
+	MING AABBCCDDEEFF 1 A_ReFire
+	TNT1 A 0 A_PlaySound("reilsss/weapons/minigunspinoff", 6, 1.0, 0)
+	MING AAABBBCCCDDDEEEFFF 1 A_ReFire
+	MING AAAABBBBCCCCDDDDDEEEEFFFF 1 A_ReFire
+	MING AAAAABBBBBCCCCCDDDDDEEEEEFFFFF 1 A_ReFire
+	goto Ready
+AltHoldQuick:
+	TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,1)
+	Goto Fire
+	TNT1 A 0 A_PlaySound("reilsss/weapons/minigunspin", 6, 1.0, 1)
+	MING A 0 A_GunFlash
+	TNT1 A 0 A_Recoil(0.25)
+	TNT1 A 0 ACS_Execute(851,0,18,random(-4,4),0)
+	TNT1 A 0 A_FireCustomMissile("GunSmokeSpawner",0,0,3,8)
+	TNT1 A 0 A_PlaySound("reilsss/weapons/minigunfirealt", CHAN_WEAPON, 1.0, 0)
+	MING A 1 Bright A_FireBullets(5, 3, 2, 7, "BulletDamagePuff", 1)
+	TNT1 A 0 ACS_Execute(851,0,-18,0,0)
+	TNT1 A 0 A_FireCustomMissile("ChGunCasing",-45+random(-15,15),0,2,3)
+	MING B 1 A_TakeInventory("AEClip",1)
+	TNT1 A 0 //A_GunFlash
+	TNT1 A 0 A_Recoil(0.25)
+	TNT1 A 0 ACS_Execute(851,0,18,random(-4,4),0)
+	TNT1 A 0 A_FireCustomMissile("GunSmokeSpawner",0,0,3,8)
+	TNT1 A 0 A_PlaySound("reilsss/weapons/minigunfirealt", CHAN_WEAPON, 1.0, 0)
+	MING C 1 Bright A_FireBullets(5, 3, 2, 7, "BulletDamagePuff", 1)
+	TNT1 A 0 ACS_Execute(851,0,-18,0,0)
+	MING A 0 A_FireCustomMissile("ChGunCasing",-45+random(-15,15),0,2,3)
+	MING E 1 A_StopSoundEx("SoundSlot6")
+	TNT1 A 0 A_GunFlash
+	TNT1 A 0 A_Recoil(0.25)
+	TNT1 A 0 ACS_Execute(851,0,18,random(-4,4),0)
+	TNT1 A 0 A_FireCustomMissile("GunSmokeSpawner",0,0,3,8)
+	TNT1 A 0 A_PlaySound("reilsss/weapons/minigunfirealt", CHAN_WEAPON, 1.0, 0)
+	MING E 1 Bright A_FireBullets(5, 3, 2, 7, "BulletDamagePuff", 1)
+	TNT1 A 0 ACS_Execute(851,0,-18,0,0)
+	MING A 0 A_FireCustomMissile("ChGunCasing",-45+random(-15,15),0,2,3)
+	MING F 1 A_StopSound(6)
+	TNT1 A 0 A_ReFire
+	TNT1 A 0 A_TakeInventory ("MinigunSlowShot",7)
+	MING A 1 A_PlaySound("reilsss/weapons/minigunspin", 6, 1.0, 0)
+	MING BCDEF 1 A_ReFire
+	MING ABCDEF 1 A_ReFire
+	TNT1 A 0 A_PlaySound("reilsss/weapons/minigunspinoff", 6, 1.0, 0)
+	MING AABBCCDDEEFF 1 A_ReFire
+	MING AABBBCCDDDEEFF 1 A_ReFire
+	MING AAABBBCCCDDDEEEFFF 1 A_ReFire
+	goto Ready
+Flash: 
+	MING G 2 BRIGHT A_Light1
+	MING H 2 BRIGHT A_Light2
+	MING G 2 BRIGHT A_Light1
+	MING H 2 BRIGHT A_Light2
+	TNT1 A 0 A_Light0
+	Stop 
+}
+} 
+ACTOR AEoDVulcanCannon : Weapon // 6053
+{ 
++FLOORCLIP
++INVENTORY.IGNORESKILL
++CHEATNOTWEAPON
+Weapon.Kickback 90
+Weapon.AmmoType1 "AEClip" 
+Weapon.AmmoType2 "AEShell" 
+Weapon.AmmoGive1 100
+Weapon.AmmoGive2 16
+Weapon.AmmoUse1 2
+Weapon.AmmoUse2 3
+Obituary "%o was slaughtered by %k's Vulcan Cannon."
+Inventory.PickupMessage "Picked up the Vulcan Cannon!"
+Inventory.PickupSound "reilsss/weappickup/flyergun" 
+AttackSound "reilsss/weapons/vulcancannonfire"
+weapon.upsound "weapons/draw"
+Scale 0.7
+States 
+{ 
+Spawn: 
+	W001 H -1
+	Loop 
+Ready: 
+	TNT1 A 0 A_StopSound(6)
+	W001 A 1 A_WeaponReady 
+	Goto Ready+1
+Deselect: 
+	TNT1 A 0 A_StopSound(6)
+	TNT1 A 0 ACS_Execute(799,0,0,0,0)
+	W001 A 1 A_Lower 
+	TNT1 AA 0 A_Lower
+	Goto Deselect+1
+Select: 
+	TNT1 A 0 ACS_Execute(799,0,7,0,0)
+	W001 A 1 A_Raise
+	TNT1 AA 0 A_Raise 
+	Loop 
+Fire:
+	W001 A 0 A_PlaySound("reilsss/weapons/vulcanspinon", 7, 1.0, 0)
+	W001 BCD 3
+	W001 EFG 2
+	W001 A 0 A_PlaySound("reilsss/weapons/vulcanspin", 6, 1.0, 1)
+	W001 BCD 2
+	W001 A 0 A_GunFlash
+	W001 A 0 A_Recoil(0.08)
+	TNT1 A 0 ACS_Execute(851,0,random(20,-20),random(-25,25),0)
+	W001 I 2 Bright A_FireBullets(4, 4, 1, 3, "BulletDamagePuff", 1)
+	TNT1 A 0 A_FireCustomMissile("ChGunCasing",-45+random(-15,15),0,0,3)
+	TNT1 A 0 A_Recoil(0.16)
+	TNT1 A 0 ACS_Execute(851,0,random(20,-20),random(-25,25),0)
+	TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,4,9)
+	W001 J 2 Bright A_FireBullets(4, 4, 2, 3, "BulletDamagePuff", 1)
+	TNT1 A 0 A_FireCustomMissile("ChGunCasing",-45+random(-15,15),0,0,3)
+	TNT1 A 0 A_Recoil(0.24)
+	TNT1 A 0 ACS_Execute(851,0,random(20,-20),random(-25,25),0)
+	W001 K 2 Bright A_FireBullets(4, 4, 3, 3, "BulletDamagePuff", 0)
+	TNT1 A 0 A_FireCustomMissile("ChGunCasing",-45+random(-15,15),0,0,3)
+	TNT1 A 0 A_Recoil(0.24)
+	TNT1 A 0 ACS_Execute(851,0,random(20,-20),random(-25,25),0)
+	W001 L 2 Bright A_FireBullets(4, 4, 3, 3, "BulletDamagePuff", 1)
+	TNT1 A 0 A_FireCustomMissile("ChGunCasing",-45+random(-15,15),0,0,3)
+	TNT1 A 0 A_Recoil(0.24)
+	TNT1 A 0 ACS_Execute(851,0,random(20,-20),random(-25,25),0)
+	W001 M 2 Bright A_FireBullets(4, 4, 3, 3, "BulletDamagePuff", 1)
+	TNT1 A 0 A_FireCustomMissile("ChGunCasing",-45+random(-15,15),0,0,3)
+	TNT1 A 0 A_Recoil(0.24)
+	TNT1 A 0 ACS_Execute(851,0,random(20,-20),random(-25,25),0)
+	W001 N 2 Bright A_FireBullets(4, 4, 3, 3, "BulletDamagePuff", 0)
+	TNT1 A 0 A_FireCustomMissile("ChGunCasing",-45+random(-15,15),0,0,3)
+	TNT1 A 0 A_Recoil(0.24)
+	TNT1 A 0 ACS_Execute(851,0,random(20,-20),random(-25,25),0)
+	W001 O 2 Bright A_FireBullets(4, 4, 3, 3, "BulletDamagePuff", 1)
+	TNT1 A 0 A_FireCustomMissile("ChGunCasing",-45+random(-15,15),0,0,3)
+Hold: 
+	TNT1 A 0 A_GunFlash
+	TNT1 A 0
+	TNT1 A 0 A_Recoil(0.38)
+	TNT1 A 0 ACS_Execute(851,0,random(20,-20),random(-25,25),0)
+	W001 I 1 Bright A_FireBullets(4, 4, 3, 7, "BulletDamagePuff", 1)
+	TNT1 A 0 A_FireCustomMissile("ChGunCasing",-45+random(-15,15),0,0,3)
+	TNT1 A 0 BRIGHT A_FireCustomMissile("GunSmokeSpawner",0+random(-7,7),0,6,6)
+	TNT1 A 0 A_Recoil(0.38)
+	TNT1 A 0 ACS_Execute(851,0,random(20,-20),random(-25,25),0)
+	W001 J 1 Bright A_FireBullets(4, 4, 3, 6, "BulletDamagePuff", 0)
+	TNT1 A 0 A_FireCustomMissile("ChGunCasing",-45+random(-15,15),0,0,3)
+	TNT1 A 0 BRIGHT A_FireCustomMissile("GunSmokeSpawner",0+random(-7,7),0,6,6)
+	TNT1 A 0 A_Recoil(0.38)
+	TNT1 A 0 ACS_Execute(851,0,random(20,-20),random(-25,25),0)
+	W001 K 1 Bright A_FireBullets(4, 4, 3, 7, "BulletDamagePuff", 1)
+	TNT1 A 0 A_FireCustomMissile("ChGunCasing",-45+random(-15,15),0,0,3)
+	TNT1 A 0 BRIGHT A_FireCustomMissile("GunSmokeSpawner",0+random(-7,7),0,6,6)
+	TNT1 A 0 A_Recoil(0.38)
+	TNT1 A 0 ACS_Execute(851,0,random(20,-20),random(-25,25),0)
+	W001 L 1 Bright A_FireBullets(4, 4, 3, 6, "BulletDamagePuff", 1)
+	TNT1 A 0 A_FireCustomMissile("ChGunCasing",-45+random(-15,15),0,0,3)
+	TNT1 A 0 BRIGHT A_FireCustomMissile("GunSmokeSpawner",0+random(-7,7),0,6,6)
+	TNT1 A 0 A_Recoil(0.38)
+	TNT1 A 0 ACS_Execute(851,0,random(20,-20),random(-25,25),0)
+	TNT1 A 0 A_FireCustomMissile("GunSmokeSpawner",0,0,4,9)
+	W001 M 1 Bright A_FireBullets(4, 4, 3, 7, "BulletDamagePuff", 0)
+	TNT1 A 0 A_FireCustomMissile("ChGunCasing",-45+random(-15,15),0,0,3)
+	TNT1 A 0 BRIGHT A_FireCustomMissile("GunSmokeSpawner",0+random(-7,7),0,6,6)
+	TNT1 A 0 A_Recoil(0.38)
+	TNT1 A 0 ACS_Execute(851,0,random(20,-20),random(-25,25),0)
+	W001 N 1 Bright A_FireBullets(4, 4, 3, 6, "BulletDamagePuff", 1)
+	TNT1 A 0 A_FireCustomMissile("ChGunCasing",-45+random(-15,15),0,0,3)
+	TNT1 A 0 BRIGHT A_FireCustomMissile("GunSmokeSpawner",0+random(-7,7),0,6,6)
+	TNT1 A 0 ACS_Execute(851,0,random(20,-20),random(-25,25),0)
+	W001 O 1 Bright A_FireBullets(4, 4, 3, 7, "BulletDamagePuff", 1)
+	TNT1 A 0 A_FireCustomMissile("ChGunCasing",-45+random(-15,15),0,0,3)
+	TNT1 A 0 BRIGHT A_FireCustomMissile("GunSmokeSpawner",0+random(-7,7),0,6,6)
+	TNT1 A 0 A_ReFire
+	TNT1 A 0 A_GunFlash
+	TNT1 A 0
+	TNT1 A 0 A_Recoil(0.24)
+	TNT1 A 0 ACS_Execute(851,0,random(20,-20),random(-25,25),0)
+	W001 I 1 Bright A_FireBullets(4, 4, 3, 4, "BulletDamagePuff", 0)
+	TNT1 A 0 A_FireCustomMissile("ChGunCasing",-45+random(-15,15),0,0,3)
+	TNT1 A 0 A_Recoil(0.19)
+	TNT1 A 0 ACS_Execute(851,0,random(20,-20),random(-25,25),0)
+	TNT1 A 0 A_FireCustomMissile("GunSmokeSpawner",0,0,6,6)
+	W001 J 1 Bright A_FireBullets(4, 4, 3, 4, "BulletDamagePuff", 1)
+	TNT1 A 0 A_FireCustomMissile("ChGunCasing",-45+random(-15,15),0,0,3)
+	TNT1 A 0 A_Recoil(0.15)
+	TNT1 A 0 ACS_Execute(851,0,random(20,-20),random(-25,25),0)
+	W001 K 1 Bright A_FireBullets(4, 4, 3, 2, "BulletDamagePuff", 1)
+	TNT1 A 0 A_FireCustomMissile("ChGunCasing",-45+random(-15,15),0,0,3)
+	TNT1 A 0 A_Recoil(0.1)
+	TNT1 A 0 ACS_Execute(851,0,random(20,-20),random(-25,25),0)
+	TNT1 A 0
+	W001 L 2 Bright A_FireBullets(3, 3, 1, 2, "BulletDamagePuff", 0)
+	TNT1 A 0 A_FireCustomMissile("ChGunCasing",-45+random(-15,15),0,0,3)
+	TNT1 A 0 A_Recoil(0.07)
+	TNT1 A 0 ACS_Execute(851,0,random(20,-20),random(-25,25),0)
+	TNT1 A 0 A_FireCustomMissile("GunSmokeSpawner",0,0,6,6)
+	W001 M 2 Bright A_FireBullets(3, 3, 1, 2, "BulletDamagePuff", 1)
+	TNT1 A 0 A_FireCustomMissile("ChGunCasing",-45+random(-15,15),0,0,3)
+	TNT1 A 0 A_Recoil(0.03)
+	W001 O 2 Bright A_FireBullets(3, 3, 1, 1, "BulletDamagePuff", 1)
+	TNT1 A 0 A_FireCustomMissile("ChGunCasing",-45+random(-15,15),0,0,3)
+	TNT1 A 0 A_StopSound(6)
+	TNT1 A 0 A_PlaySound("reilsss/weapons/vulcanspinoff", 7, 1.0, 0)
+	W001 A 2
+	W001 B 2
+	W001 C 3
+	W001 D 3
+	TNT1 A 0 BRIGHT A_FireCustomMissile("GunSmokeSpawner",0+random(-7,7),0,6,6)
+	W001 E 3 A_WeaponReady 
+	W001 F 4 A_WeaponReady 
+	W001 G 4 A_WeaponReady 
+	TNT1 A 0 BRIGHT A_FireCustomMissile("GunSmokeSpawner",0+random(-7,7),0,6,6)
+	W001 A 4 A_WeaponReady 
+	W001 B 5 A_WeaponReady 
+	W001 C 5 A_WeaponReady 
+	W001 D 6 A_WeaponReady 
+	W001 E 6 A_WeaponReady 
+	W001 F 7 A_WeaponReady 
+	W001 G 7 A_WeaponReady 
+	goto Ready 
+AltFire:
+	TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,"AltFireQuick")
+	W001 A 0 A_PlaySound("reilsss/weapons/vulcanspinon", 7, 1.0, 0)
+	W001 BCD 3
+	W001 EFG 2
+	W001 A 0 A_PlaySound("reilsss/weapons/vulcanspin", 6, 1.0, 1)
+	W001 BCDEFG 1
+	W001 A 0 A_GunFlash
+	W001 A 0 A_Recoil(0.08)
+	W001 A 0 A_PlaySound("weapons/shotgunfire")
+	TNT1 A 0 ACS_Execute(851,0,20,0,0)
+	W001 I 1 Bright A_FireBullets(7,7,15,8,"BulletDamagePuff",1)
+	TNT1 AA 0 A_FireCustomMissile("ShotgunCasing",-45+random(-15,15),0,0,3)
+	W001 BC 1 Bright ACS_Execute(851,0,-10,0,0)
+	W001 DEFG 1 Bright 
+	W001 G 0 Bright A_ReFire
+	W001 A 1 A_WeaponReady 
+	W001 BC 2 A_WeaponReady  
+	W001 DE 2 A_WeaponReady 
+	W001 FG 3 A_WeaponReady
+	W001 A 3 A_WeaponReady 
+	W001 BC 4 A_WeaponReady  
+	W001 DE 5 A_WeaponReady 
+	W001 FG 6 A_WeaponReady
+	Goto Ready
+AltFireQuick:
+	TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,1)
+	Goto AltFire
+	W001 A 0 A_PlaySound("reilsss/weapons/vulcanspinon", 7, 1.0, 0)
+	W001 BCD 3
+	W001 EFG 2
+	W001 A 0 A_PlaySound("reilsss/weapons/vulcanspin", 6, 1.0, 1)
+	W001 BCDEFG 1
+	W001 A 0 A_GunFlash
+	W001 A 0 A_Recoil(0.08)
+	W001 A 0 A_PlaySound("weapons/shotgunfire")
+	TNT1 A 0 ACS_Execute(851,0,20,0,0)
+	W001 I 0 Bright A_FireBullets(7,7,15,8,"BulletDamagePuff",1)
+	W001 I 1 Bright A_FireBullets(7,7,15,8,"BulletDamagePuff",1)
+	TNT1 AA 0 A_FireCustomMissile("ShotgunCasing",-45+random(-15,15),0,0,3)
+	W001 BC 1 Bright ACS_Execute(851,0,-10,0,0)
+	W001 DEFG 1 Bright 
+	W001 G 0 Bright A_ReFire
+	W001 A 1 A_WeaponReady 
+	W001 BC 2 A_WeaponReady  
+	W001 DE 2 A_WeaponReady 
+	W001 FG 3 A_WeaponReady
+	W001 A 3 A_WeaponReady 
+	W001 BC 4 A_WeaponReady  
+	W001 DE 5 A_WeaponReady 
+	W001 FG 6 A_WeaponReady
+AltHold: 
+	TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,"AltFireQuickHold")
+	W001 A 0 A_GunFlash
+	W001 A 0 A_Recoil(0.08)
+	W001 A 0 A_PlaySound("weapons/shotgunfire")
+	TNT1 A 0 ACS_Execute(851,0,20,0,0)
+	W001 I 1 Bright A_FireBullets(7,7,15,8,"BulletDamagePuff",1)
+	TNT1 AA 0 A_FireCustomMissile("ShotgunCasing",-45+random(-15,15),0,0,3)
+	W001 BC 1 Bright ACS_Execute(851,0,-10,0,0)
+	W001 DEFG 1 Bright 
+	W001 G 0 Bright A_ReFire
+	W001 A 1 A_WeaponReady 
+	W001 BC 2 A_WeaponReady  
+	W001 DE 2 A_WeaponReady 
+	W001 FG 3 A_WeaponReady
+	W001 A 3 A_WeaponReady 
+	W001 BC 4 A_WeaponReady  
+	W001 DE 5 A_WeaponReady 
+	W001 FG 6 A_WeaponReady
+	goto Ready 
+AltFireQuickHold:
+	W001 A 0 A_GunFlash
+	W001 A 0 A_Recoil(0.08)
+	W001 A 0 A_PlaySound("weapons/shotgunfire")
+	TNT1 A 0 ACS_Execute(851,0,20,0,0)
+	W001 I 0 Bright A_FireBullets(7,7,15,8,"BulletDamagePuff",1)
+	W001 I 1 Bright A_FireBullets(7,7,15,8,"BulletDamagePuff",1)
+	TNT1 AA 0 A_FireCustomMissile("ShotgunCasing",-45+random(-15,15),0,0,3)
+	W001 BC 1 Bright ACS_Execute(851,0,-10,0,0)
+	W001 DEFG 1 Bright 
+	W001 G 0 Bright A_ReFire
+	W001 A 1 A_WeaponReady 
+	W001 BC 2 A_WeaponReady  
+	W001 DE 2 A_WeaponReady 
+	W001 FG 3 A_WeaponReady
+	W001 A 3 A_WeaponReady 
+	W001 BC 4 A_WeaponReady  
+	W001 DE 5 A_WeaponReady 
+	W001 FG 6 A_WeaponReady
+	goto Ready 
+Flash: 
+	CHF3 Z 1 BRIGHT A_Light2 
+	CHF3 Z 2 BRIGHT A_Light1 
+	CHF3 Z 3 BRIGHT A_Light0
+	Stop 
+}
+} 
+
+/*
+Actor AEoDTomeOfSet : Weapon // 6127
+{
+Weapon.AmmoType1 "BlueMana"
+Weapon.AmmoType2 "BlueMana"
+Weapon.AmmoGive1 40
+Weapon.AmmoUse1 1
+Weapon.AmmoUse2 25
+Weapon.UpSound "weapons/draw"
+Inventory.PickupSound "weaponbuild"
+Inventory.PickupMessage "The Mystic Tome of Set is now yours!"
+Scale 0.8
++INVENTORY.IGNORESKILL
++CHEATNOTWEAPON
++FLOORCLIP
++FLOATBOB
+Tag "Tome of set"
+States
+{
+Spawn:
+	WTME ABCDEFGH 4 Bright
+	Loop
+Select:
+	TNT1 A 0 ACS_Execute(799,0,16,0,0)
+	TSET A 1 A_Raise
+	TSET AA 0 A_Raise
+	Loop
+Deselect:
+	TNT1 A 0 ACS_Execute(799,0,0,0,0)
+	TSET B 1 A_Lower
+	TSET BB 0 A_Lower
+	Loop
+Ready:
+	TSET AAAAAABBBBBBCCCCCCDDDDDD 1 Bright A_WeaponReady
+	Loop
+Fire:
+	TSET E 2 Bright Offset(0,42)
+	TNT1 A 0 Bright ACS_Execute(851,0,random(4,-4),random(4,-4),0)
+	TSET F 0 bright A_PlaySound("LightningSpell/Loop",CHAN_WEAPON,1,1)
+	TSET F 0 bright A_FireCustomMissile("LightningTargetMissile",0,0,8)
+	TSET F 0 bright A_FireCustomMissile("LightningTagger",0,0,8)
+	TSET F 2 Bright Offset(0,52) A_FireCustomMissile("LightningMissile1",0+random(-2,2),1,8,-6)
+	TNT1 A 0 Bright ACS_Execute(851,0,random(4,-4),random(4,-4),0)
+	//TSET G 0 bright A_PlaySound("weapons/lightningshot",CHAN_WEAPON)
+	TSET G 0 bright A_FireCustomMissile("LightningTargetMissile",0,0,-8)
+	TSET G 0 bright A_FireCustomMissile("LightningTagger",0,0,-8)
+	TSET G 2 Bright A_FireCustomMissile("LightningMissile1",0+random(-2,2),1,-8,-6)
+	TSET I 0 Bright A_ReFire
+	TSET I 0 A_StopSound(CHAN_WEAPON)
+	TSET I 0 A_PlaySound("LightningSpell/End",CHAN_WEAPON,1,0)
+	TSET IJK 2 bright Offset(0,52)
+	Goto Ready
+Hold:
+	TNT1 A 0 Bright ACS_Execute(851,0,random(4,-4),random(4,-4),0)
+	TSET F 0 bright A_FireCustomMissile("LightningTargetMissile",0,0)
+	TSET F 0 bright A_FireCustomMissile("LightningTagger",0,0)
+	TSET F 2 Bright Offset(0,52) A_FireCustomMissile("LightningMissile1",0+random(-2,2),1,8,-6)
+	TNT1 A 0 Bright ACS_Execute(851,0,random(4,-4),random(4,-4),0)
+	TSET G 0 bright A_FireCustomMissile("LightningTargetMissile",0,0)
+	TSET G 0 bright A_FireCustomMissile("LightningTagger",0,0)
+	TSET G 2 Bright Offset(0,52) A_FireCustomMissile("LightningMissile1",0+random(-2,2),1,-8,-6)
+	TSET I 0 Bright A_ReFire
+	TSET I 0 A_StopSound(CHAN_WEAPON)
+	TSET I 0 A_PlaySound("LightningSpell/End",CHAN_WEAPON,1,0)
+	TSET IJK 2 bright Offset(0,52)
+	Goto Ready
+AltFire:
+	TSET EF 3 bright
+	TSET G 0 bright A_PlaySound("weapons/lightningshotalt",CHAN_WEAPON)
+	TNT1 A 0 ACS_Execute(851,0,200,0,0)
+	TNT1 A 0 A_SetBlend("DD DD FF",0.7,35)
+	TSET G 2 bright A_FireCustomMissile("ThunderStormSpellShot",0,1)
+	TSET GIII 1 Bright ACS_Execute(851,0,-50,0,0)
+	TSET JK 3 bright
+	TSET ABCDABCDABCDABCD 4 bright
+	Goto Ready
+}
+}
+ 
+
+ACTOR LightningSpellMissile : FastProjectile
+{
+Radius 2
+Height 2
+Speed 40
+Damage 15
+DamageType "Electric"
+Projectile
++EXTREMEDEATH
+DeathSound "weapons/lightningend"
+MissileType "LightningTrail"
+States
+{
+Spawn:
+        TNT1 A 0
+        TNT1 AAAAAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 A 0 A_CustomMissile("LightningSpellMissile",0,0,random(-8,8),6,random(-8,8))
+        TNT1 A 1 //A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        Stop
+Death:
+        TNT1 AAAAAAA 0 A_SpawnItemEx("TeslaFX",0,0,0,random(6,-6),random(6,-6),random(6,-6),0,0)
+        TNT1 A 1 A_Scream
+        Stop
+}
+}
+ 
+//      The good actors here. Left the previous for compat. But are no longer used and MUST
+//      not be used for primary. Im all for upgrades, not for downgrades on code. -DBT
+ 
+Actor LightningTargetMissile : FastProjectile
+{
+Speed 200
+Damage 0
+Projectile
++THRUACTORS
++BloodlessImpact
+States
+{
+Spawn:
+        TNT1 A 5
+        Goto Death
+Death:
+        TNT1 A 0 A_SpawnItemEx("LightningTarget",0,0,0,0,0,0,0,32)
+        TNT1 A 1
+        Stop
+}
+}
+ 
+Actor LightningTarget
+{
+Radius 3
+Height 3
+Speed 0
+Damage 0
+Health 1000000
+DamageFactor "Normal", 0        //Invulnerable to everything, because if destroyed, missile4 would just wander around
+Monster
++NOCLIP
++NOBLOOD
+-COUNTKILL
++NOGRAVITY
++FLOAT
++SPECTRAL
++THRUACTORS
++NORADIUSDMG
+RenderStyle None
+States
+{
+Spawn:
+        TNT1 A 0
+        TNT1 A 0 Thing_ChangeTid(0,1932)        //Is based in TIDs, not in DoomEdNums
+        TNT1 A 35
+        Stop
+Death:
+        TNT1 A 0
+        Stop
+}
+}
+ 
+Actor LightningMissile1 : FastProjectile
+{
+Radius 4
+Height 2
+Speed 40
+Damage 10
+DamageType "Electric"  //lightningstorm
+Projectile
++FORCERADIUSDMG
++EXTREMEDEATH
+DeathSound "weapons/lightningend"
+MissileType "LightningTrail"
+States
+{
+Spawn:
+        TNT1 A 0
+        TNT1 AAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 A 0 A_CustomMissile("LightningMissile2",0,0,0+random(-15,15),6,0+random(-15,15))
+        Stop
+Death:
+        TNT1 AAAAAAA 0 A_SpawnItemEx("TeslaFX",0,0,0,random(6,-6),random(6,-6),random(6,-6),0,0)
+        TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 A 0 A_Explode(15,20,0)
+        TNT1 A 1 A_Scream
+        Stop
+}
+}
+ 
+Actor LightningMissile2 : LightningMissile1
+{
+Damage 10
+States
+{
+Spawn:
+        TNT1 A 0
+        TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 AAAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 A 0 A_CustomMissile("LightningMissile3",0,0,0+random(-15,15),6,0+random(-15,15))
+        Stop
+Death:
+        TNT1 AAAAAAA 0 A_SpawnItemEx("TeslaFX",0,0,0,random(6,-6),random(6,-6),random(6,-6),0,0)
+        TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 A 0 A_Explode(15,20,0)
+        TNT1 A 1 A_Scream
+        Stop
+}
+}
+ 
+Actor LightningMissile3 : LightningMissile2
+{
+States
+{
+Spawn:
+        TNT1 A 0
+        TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 AAAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 A 0 A_CustomMissile("LightningMissileTargetSeeker",0,0,0+random(-15,15),6,0+random(-15,15))
+        Stop
+Death:
+        TNT1 AAAAAAA 0 A_SpawnItemEx("TeslaFX",0,0,0,random(6,-6),random(6,-6),random(6,-6),0,0)
+        TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 A 0 A_Explode(15,20,0)
+        TNT1 A 1 A_Scream
+        Stop
+}
+}
+ 
+Actor LightningMissile4 : LightningMissile3
+{
++SEEKERMISSILE
+States
+{
+Spawn:
+        TNT1 A 0
+        TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 A 0 A_JumpIfCloser(15, "Death")
+        TNT1 AAAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 A 0 A_SeekerMissile(90,90)
+        Loop
+Death:
+        TNT1 AAAAAAA 0 A_SpawnItemEx("TeslaFX",0,0,0,random(6,-6),random(6,-6),random(6,-6),0,0)
+        TNT1 A 0 A_Explode(15,20,0)
+        TNT1 A 1 A_Scream
+        Stop
+}
+}
+ 
+ACTOR LightningMissileTargetSeeker
+{  
++FRIENDLY
+MONSTER
++NOGRAVITY
++NOCLIP
++THRUACTORS
++LOOKALLAROUND
+Radius 1
+Height 1
+Speed 0
+States
+{
+Spawn:
+        TNT1 A 0
+        TNT1 A 0 Thing_ChangeTid(0,1933)
+        TNT1 A 0 Thing_Hate(1933,1932,2)
+        PLAY A 0 A_UnSetShootable
+        PLAY A 0 A_Look
+See:
+        PLAY A 0 A_Chase
+Missile:
+        PLAY A 0 A_FaceTarget
+        PLAY A 0 A_CustomMissile("LightningMissile4",0,0)
+        Stop
+}
+}
+ 
+Actor LightningTrail
+{
+        +NOINTERACTION
+        States
+        {
+        Spawn:
+                TNT1 A 0
+                TNT1 A 0 A_SpawnItemEx("LightningTrailDistortion",0,frandom(-5,5),frandom(-5,5),0,0,0,0,32)
+                Stop
+        }
+}
+ 
+Actor LightningTrailDistortion
+{
+ 
++NOINTERACTION
+RenderStyle Add
+Scale 0.5
+//Scale 0.75
+Alpha 0.5
+States
+{
+Spawn:
+        PLSE BCD 2 bright //LTNG CDEFG 2 bright
+        Stop
+}
+}
+ 
+ 
+ 
+Actor LightningTagger : FastProjectile  //This thing is the main damager in the attack. While the random "zaps" can
+{                                                       //cause damage, this "tagger" are the ones in charge of dealing the main dmg.
+Damage 15
+Speed 60
+Radius 3
+Height 3
+Projectile
++EXTREMEDEATH
+DamageType "Electric"
+RenderStyle None
+States
+{
+Spawn:
+        TNT1 AAAAAAAAAAAAAAAAAA 1
+        Stop
+Death:
+        //TNT1 AAAAAAAAAAAA 0 A_SpawnItemEx("TeslaFX",0,0,0,random(6,-6),random(6,-6),random(6,-6),0,0)
+        TNT1 A 0 A_CustomMissile("LightningTrail",0,0)
+        Stop
+}
+}
+ 
+//*****************************
+Actor ThunderStormSpellShot
+{
+	Speed 37
+	Damage 30
+	Radius 12
+	Height 12
+	Projectile
+	+SEEKERMISSILE
+	+DONTREFLECT
+	+EXTREMEDEATH
+	DamageType "Electric"
+	RenderStyle Add
+	Scale 0.8
+	States
+	{
+	Spawn:
+        TNT1 A 0
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 A 1 Bright A_SeekerMissile(90,90)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 A 1 Bright
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 B 1 Bright A_SeekerMissile(90,90)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 B 1 Bright
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 C 1 Bright A_SeekerMissile(90,90)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 C 1 Bright
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 D 1 Bright A_SeekerMissile(90,90)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 D 1 Bright
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 E 1 Bright A_SeekerMissile(90,90)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 E 1 Bright
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 A 1 Bright A_SeekerMissile(90,90)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 A 1 Bright
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 B 1 Bright
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 B 1 Bright
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 C 1 Bright A_SeekerMissile(90,90)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 C 1 Bright
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 D 1 Bright A_SeekerMissile(90,90)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 D 1 Bright
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 E 1 Bright A_SeekerMissile(90,90)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        ZAP7 E 1 Bright
+        Goto Death
+	Death:
+        TNT1 A 0 A_CheckCeiling("CSpawner")
+        TNT1 A 0 A_CustomMissile("StormSpawner",0,0,0,6,90)
+        TNT1 A 7
+        Stop
+	CSpawner:
+        TNT1 A 0 A_SpawnItemEx("StormSpawner",0,0,-40,0,0,0,0,48)
+        Stop
+	}
+}
+Actor ThunderStormSpellShotTrail
+{
+    +NOINTERACTION
+    RenderStyle Add
+    Scale 0.3
+    States
+    {
+	Spawn:
+         TNT1 A 0
+         TNT1 A 0 A_Jump(255,1,2,3,4,5,6,7,8)
+         ZAP7 AABBCCDDEE 1 Bright A_FadeOut(0.03)
+         Goto Spawn+2
+    }
+}
+ 
+Actor StormSpawner
+{
+   Speed 40
+   Radius 1
+   Height 6
+   Projectile
+   +SKYEXPLODE
+   +THRUACTORS
+   BounceFactor 0
+   WallBounceFactor 0
+   BounceType "Doom"
+   States
+   {
+   Spawn:
+      TNT1 AAA 1
+      Goto Death
+   Death:
+      TNT1 A 0 A_Stop
+      TNT1 A 10 A_SpawnItemEx("CloudSpawner1",0,0,0,0,0,0,0,48)
+      Stop
+   }
+}
+ 
+ 
+Actor CloudSpawner1
+{
+	var int user_cloudspawncount;
+	Projectile
+	+NOINTERACTION
+	States
+	{
+	Spawn:
+        TNT1 A 0 A_SetUserVar("user_cloudspawncount",0)
+    CloudShoot:
+        TNT1 AAAAA 0 A_SpawnItemEx("Cloud1",0,0,0,6,0,0,random(0,359),SXF_NOCHECKPOSITION)
+        TNT1 A 1 A_SetUserVar("user_cloudspawncount",user_cloudspawncount+1)
+        TNT1 A 0 A_JumpIf(user_cloudspawncount>=10,1)
+        Loop
+        TNT1 A 0 A_SetUserVar("user_cloudspawncount",0)
+        TNT1 A 0 A_PlaySound("weapons/thunderstormactive")
+        TNT1 A 0 A_SpawnItemEx("LightningGenerator",0,0,0,0,0,0,0,48)
+    CloudShoot2:
+        TNT1 AAAAA 0 A_SpawnItemEx("Cloud1",0,0,0,6,0,0,random(0,359),SXF_NOCHECKPOSITION)
+        TNT1 A 1 A_SetUserVar("user_cloudspawncount",user_cloudspawncount+1)
+        TNT1 A 0 A_JumpIf(user_cloudspawncount>=60,1)
+        Loop
+        TNT1 A 0 A_SetUserVar("user_cloudspawncount",0)
+        Stop
+	}
+}
+ 
+Actor LightningGenerator
+{
+	var int user_count;
+	Projectile
+	+NOINTERACTION
+	States
+	{
+	Spawn:
+        TNT1 A 0
+		TNT1 A 0 A_SetUserVar("user_count",0)
+	Shooter:
+        TNT1 AA 0 A_SpawnItemEx("LightningShotRandom",random(0,70),0,0,random(-50,50),0,random(-75,-45),random(0,359),48)//A_CustomMissile("LightningShotRandom",0,0,0+random(0,360),6,-10+random(-80,0))
+		TNT1 A 0 A_SetUserVar("user_count",user_count+1)
+		TNT1 A 1 A_JumpIf(user_count>=55,1)
+        Loop
+		TNT1 A 0
+		Stop
+	}
+}
+ 
+Actor Cloud1
+{
+	Scale .75
+	+NOINTERACTION
+	Renderstyle Add
+	Alpha .75
+	States
+	{
+	Spawn:
+        SMOK ABC 7 //15
+        SMOK DEFGHI 7 //15
+        SMOK JKL 7 A_FadeOut(0.1) //15 A_FadeOut(0.1)
+        Wait
+	}
+}
+ 
+Actor LightningShotRandom : LightningMissile1
+{
+	Speed 50
+	Damage 15
+	DamageType "Electric"
+	+NODAMAGETHRUST
+	+FORCERADIUSDMG
+	+EXTREMEDEATH
+	States
+	{
+	Spawn:
+        TNT1 AAAA 1 //A_CustomMissile("LightningTrail",0,0)
+        //TNT1 A 0 A_SpawnItemEx("LightningShotRandom",0,0,0,50,0,random(-30,30),random(-30,30),48)
+        TNT1 A 0 A_SetAngle(angle+random(-30,30))
+        TNT1 A 0 //A_SetPitch(pitch+random(-30,30))
+        TNT1 A 0 A_ChangeVelocity(random(-6,6),0,random(-6,6),1)
+        Loop
+	Death:
+        TNT1 A 0 A_Scream
+        TNT1 AAAAAAA 0 A_SpawnItemEx("TeslaFX",0,0,0,random(6,-6),random(6,-6),random(6,-6),0,0)
+        TNT1 A 0 A_Explode(15,300,0)
+        Stop
+	}
+}*/

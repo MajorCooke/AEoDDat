@@ -1,0 +1,3812 @@
+//===========================================================================
+//===========================================================================
+
+//===========================================================================
+//===========================================================================
+
+
+ACTOR FZombieMan 7001
+{
+	DropItem "BulletAmmo"
+	DropItem "HealthHeart" 210
+	DropItem "HealthBottle" 64
+	DropItem "PowerSlaveSpawnerMonsterAmmo" 128
+	DropItem "PowerupSpawner" 8
+    Health 20
+    Radius 20
+    Height 56
+    Speed 8
+    PainChance 200
+    MONSTER 
+    +FLOORCLIP
+    SeeSound "grunt/sight"
+    AttackSound "weapons/pstlf"
+    PainSound "grunt/pain"
+    DeathSound "grunt/death"
+    ActiveSound "grunt/active"
+    Obituary "%o was killed by a zombieman."
+    Damage 4
+    PainChance "Charm", 255
+    PainChance "Terror", 255
+    PainChance "Defile", 255
+    PainChance "Drain", 160
+    PainChance "Chaos", 255
+    PainChance "ChaosExpl1", 255
+    PainChance "ChaosExpl2", 255
+//Armor
+	DamageFactor "Electric", 1.25
+	DamageFactor "Plasma", 0.75
+	DamageFactor "PlasmaDisint", 0.75
+	DamageFactor "AEBullet", 0.5
+    States
+    {
+    Pain.Chaos:
+	TNT1 A 0
+	TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+	TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+	Goto See
+    Pain.ChaosExpl1:
+	TNT1 A 0
+	TNT1 A 0 A_ClearTarget
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+	Goto Spawn
+    Pain.ChaosExpl2:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)
+	Goto See
+    Pain.Charm:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
+	Goto See
+    Pain.Terror:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
+	Goto See
+    Pain.Drain:
+	TNT1 A 0
+	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+	Goto Pain
+    Pain.Defile:
+	TNT1 A 0
+	TNT1 A 0 A_GiveInventory("DefileCheck",1)
+	Goto See
+    Spawn:
+        POSP AB 10 A_Look
+        Loop
+    See:
+        POSP AABBCCDD 4 A_Chase
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,2)
+	TNT1 A 0
+	Loop
+	TNT1 A 0 A_Jump(15,"Death")
+	Loop
+    Missile:
+        POSP E 10 A_FaceTarget
+        POSP F 8 A_CustomBulletAttack(22.5, 0, 1, 5, "BulletDamagePuff")
+        POSP E 8
+        Goto See
+    Pain:
+        POSP G 3
+        POSP G 3 A_Pain
+        Goto See
+    Death:
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,6)
+        POSP H 5
+        POSS I 5 A_Scream
+        POSS J 5 A_Fall
+        POSS K 5
+        POSS L -1
+        Stop
+	TNT1 A 0 A_Die
+	TNT1 A 0 A_NoBlocking
+	TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
+	Goto XDeathBlood
+    XDeath:
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"Death")
+	TNT1 A 0 A_Jump(256,"XDeathBlood")
+        POSP M 5 
+	TNT1 AAAAAA 0 A_TossGib
+        POSS N 5 A_XScream
+        POSS O 5 A_Fall
+        POSS PQRST 5
+        POSS U -1
+        Stop
+    XDeathBlood:
+	TNT1 A 0 A_PlaySound("other/gibdeath")
+	TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,1)
+	TNT1 A 1 A_Fall
+	Stop
+    Burn:
+	TNT1 A 0
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"Death")
+	TNT1 A 0 A_Fall
+	TNT1 A 0 A_SpawnItemEx("GenericHumanBurn",0,0,0,0,0,0,0,32)
+	Stop
+    Death.UnholyDisint:
+    Death.PlasmaDisint:
+    Disintegrate:
+	TNT1 A 0 Thing_SetTranslation(0,50)	
+	POSP G 1 A_FadeOut(0.015)
+	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+	TNT1 a 0 A_Stop	
+	TNT1 a 0 A_Fall
+	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
+	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+	POSP G 2 A_FadeOut(0.03)
+	Goto Disintegrate+6
+    Raise:
+        POSS KJI 5
+        POSP H 5
+        Goto See
+    }
+}
+
+//===========================================================================
+//===========================================================================
+
+Actor FShotgunGuy : ShotgunGuy 7002
+{
+	DropItem "ShellAmmo"
+	DropItem "HealthHeart" 210
+	DropItem "HealthBottle" 64
+	DropItem "PowerSlaveSpawnerShotgunner" 210 
+	DropItem "PowerupSpawner" 8
+    +FLOORCLIP
+    AttackSound "weapons/d3shtgnf"
+    PainChance "Charm", 255
+    PainChance "Terror", 255
+    PainChance "Defile", 255
+    PainChance "Drain", 160
+    PainChance "Chaos", 255
+    PainChance "ChaosExpl1", 255
+    PainChance "ChaosExpl2", 255
+//Armor
+	DamageFactor "Electric", 1.25
+	DamageFactor "Plasma", 0.75
+	DamageFactor "PlasmaDisint", 0.75
+	DamageFactor "AEBullet", 0.5
+    States
+    {
+    Pain.Chaos:
+	TNT1 A 0
+	TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+	TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+	Goto See
+    Pain.ChaosExpl1:
+	TNT1 A 0
+	TNT1 A 0 A_ClearTarget
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+	Goto Spawn
+    Pain.ChaosExpl2:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)
+	Goto See
+    Pain.Charm:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
+	Goto See
+    Pain.Terror:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
+	Goto See
+    Pain.Drain:
+	TNT1 A 0
+	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+	Goto Pain
+    Pain.Defile:
+	TNT1 A 0
+	TNT1 A 0 A_GiveInventory("DefileCheck",1)
+	Goto See
+    See:
+	SPOS AABBCCDD 3 A_Chase
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,2)
+	TNT1 A 0
+	Loop
+	TNT1 A 0 A_Jump(15,"Death")
+	Loop
+    Missile:
+        SPOS E 5 A_FaceTarget
+       	SPOS E 1 A_FaceTarget
+        SPOS F 3 Bright A_CustomBulletAttack(22.5, 0, 3, 5, "BulletDamagePuff")
+	SPOS EEEEE 2 A_FaceTarget
+	TNT1 A 0 A_PlaySound("weapons/d3shtgnbk")
+        SPOS EEEE 2 A_FaceTarget
+	TNT1 A 0 A_PlaySound("weapons/d3shtgnfd")
+       	SPOS EEE 2 A_FaceTarget
+	Goto See
+    Pain:
+	SPOS G 3
+	SPOS G 3 A_Pain
+	Goto See
+    Death:
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,6)
+	SPOS H 5
+	SPOS I 5 A_Scream
+	SPOS J 5 A_NoBlocking
+	SPOS K 5
+	SPOS L -1
+	Stop
+	TNT1 A 0 A_Die
+	TNT1 A 0 A_NoBlocking
+	TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
+	Goto XDeathBlood
+    XDeath:
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"Death")
+	TNT1 A 0 A_Jump(256,"XDeathBlood")
+       	SPOS M 5
+       	SPOS N 5 A_XScream
+		TNT1 AAAAAA 0 A_TossGib
+       	SPOS O 5 A_Fall
+       	SPOS PQRST 5 
+       	SPOS U -1
+       	Stop
+    XDeathBlood:
+	TNT1 A 0 A_PlaySound("other/gibdeath")
+	TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,1)
+	TNT1 A 1 A_Fall
+	Stop
+    Burn:
+	TNT1 A 0
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"Death")
+	TNT1 A 0 A_Fall
+	TNT1 A 0 A_SpawnItemEx("GenericHumanBurn",0,0,0,0,0,0,0,32)
+	Stop
+    Death.UnholyDisint:
+    Death.PlasmaDisint:
+    Disintegrate:
+	TNT1 A 0 Thing_SetTranslation(0,50)	
+	SPOS G 1 A_FadeOut(0.015)
+	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+	TNT1 a 0 A_Stop	
+	TNT1 a 0 A_Fall
+	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
+	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+	SPOS G 2 A_FadeOut(0.03)
+	Goto Disintegrate+6
+    }
+}
+
+//===========================================================================
+//===========================================================================
+
+Actor FChaingunGuy : ChaingunGuy 7003
+{
+	DropItem "BulletAmmo"
+	DropItem "AEoDMinigunItem" 64
+	DropItem "HealthHeart" 210
+	DropItem "HealthBottle" 64
+	DropItem "PowerSlaveSpawnerMonsterAmmo" 28
+	DropItem "PowerupSpawner" 8
+    +FLOORCLIP
+    AttackSound "weapons/riflefre"
+    PainChance "Charm", 255
+    PainChance "Terror", 255
+    PainChance "Defile", 255
+    PainChance "Drain", 160
+    PainChance "Chaos", 255
+    PainChance "ChaosExpl1", 255
+    PainChance "ChaosExpl2", 255
+//Armor
+	DamageFactor "Electric", 1.25
+	DamageFactor "Plasma", 0.75
+	DamageFactor "PlasmaDisint", 0.75
+	DamageFactor "AEBullet", 0.5
+    States
+    {
+    Pain.Chaos:
+	TNT1 A 0
+	TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+	TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+	Goto See
+    Pain.ChaosExpl1:
+	TNT1 A 0
+	TNT1 A 0 A_ClearTarget
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+	Goto Spawn
+    Pain.ChaosExpl2:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)
+	Goto See
+    Pain.Charm:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
+	Goto See
+    Pain.Terror:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
+	Goto See
+    Pain.Drain:
+	TNT1 A 0
+	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+	Goto Pain
+    Pain.Defile:
+	TNT1 A 0
+	TNT1 A 0 A_GiveInventory("DefileCheck",1)
+	Goto See
+    Burn:
+	TNT1 A 0
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"Death")
+	TNT1 A 0 A_Fall
+	TNT1 A 0 A_SpawnItemEx("GenericHumanBurn",0,0,0,0,0,0,0,32)
+	Stop
+    See:
+	CPOS AABBCCDD 3 A_Chase
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,2)
+	TNT1 A 0
+	Loop
+	TNT1 A 0 A_Jump(15,"Death")
+	Loop
+    Missile:
+	CPOS E 10 A_FaceTarget
+	CPOS FE 4 bright A_CustomBulletAttack(22.5, 0, 1, 5, "BulletDamagePuff") //according to wiki, this is the closest
+	CPOS F 1 A_CPosRefire
+	Goto Missile+1
+    Pain:
+	CPOS G 3
+	CPOS G 3 A_Pain
+	Goto See
+    Death:
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,8)
+	CPOS H 5
+	CPOS I 5 A_Scream
+	CPOS J 5 A_NoBlocking
+	CPOS KLM 5
+	CPOS N -1
+	Stop
+	TNT1 A 0 A_Die
+	TNT1 A 0 A_NoBlocking
+	TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
+	Goto XDeathBlood
+    XDeath:
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"Death")
+	TNT1 A 0 A_Jump(256,"XDeathBlood")
+	CPOS O 5
+	TNT1 AAAAAA 0 A_TossGib
+	TNTA A 0 A_XScream
+	CPOS P 5 A_TossGib
+	TNTA AA 0 A_TossGib
+	TNT1 A 0 A_Fall
+	CPOS Q 5 
+	CPOS RS 5 
+	CPOS T -1
+	Stop
+    XDeathBlood:
+	TNT1 A 0 A_PlaySound("other/gibdeath")
+	TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,1)
+	TNT1 A 1 A_Fall
+	Stop
+    Death.UnholyDisint:
+    Death.PlasmaDisint:
+    Disintegrate:
+	TNT1 A 0 Thing_SetTranslation(0,50)	
+	CPOS G 1 A_FadeOut(0.015)
+	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+	TNT1 a 0 A_Stop	
+	TNT1 a 0 A_Fall
+	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
+	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+	CPOS GG 2 A_FadeOut(0.03)
+	Goto Disintegrate+6
+    }
+}
+
+//===========================================================================
+//===========================================================================
+
+Actor FImp : DoomImp 7004
+{
+	DropItem "HealthHeart" 210
+	DropItem "PowerslaveSpawner" 128
+	DropItem "PowerupSpawner" 8
+    +FLOORCLIP
+    PainChance "Charm", 255
+    PainChance "Terror", 255
+    PainChance "Defile", 255
+    PainChance "Drain", 160
+    PainChance "Chaos", 255
+    PainChance "ChaosExpl1", 255
+    PainChance "ChaosExpl2", 255
+//Flesh
+	DamageFactor "Electric", 1.25
+	DamageFactor "AEPoison", 1.25
+	DamageFactor "AEBullet", 1.5
+    States
+    {
+    Pain.Chaos:
+	TNT1 A 0
+	TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+	TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+	Goto See
+    Pain.ChaosExpl1:
+	TNT1 A 0
+	TNT1 A 0 A_ClearTarget
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+	Goto Spawn
+    Pain.ChaosExpl2:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)
+	Goto See
+    Pain.Charm:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
+	Goto See
+    Pain.Terror:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
+	Goto See
+    Pain.Drain:
+	TNT1 A 0
+	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+	Goto Pain
+    Pain.Defile:
+	TNT1 A 0
+	TNT1 A 0 A_GiveInventory("DefileCheck",1)
+	Goto See
+    See:
+	TROO AABBCCDD 3 A_Chase
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,2)
+	TNT1 A 0
+	Loop
+	TNT1 A 0 A_Jump(15,"Death")
+	Loop
+    Missile:
+	TROO EF 8 A_FaceTarget
+	TROO G 6 A_TroopAttack
+	Goto See
+    Pain:
+	TROO H 2
+	TROO H 2 A_Pain
+	Goto See
+    Death:
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,6)
+	TROO I 8
+	TROO J 8 A_Scream
+	TROO K 6
+	TROO L 6 A_NoBlocking
+	TROO M -1
+	Stop
+	TNT1 A 0 A_Die
+	TNT1 A 0 A_NoBlocking
+	TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
+	Goto XDeathBlood
+    XDeath:
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"Death")
+ 	TNT1 A 0 A_Jump(256,"XDeathBlood")
+	TROO N 5 A_XScream
+	TNT1 AAAAAA 0 A_TossGib
+	TROO O 5 A_TossGib
+	TROO O 5 A_Fall
+	TNT1 A 0 A_Jump(220,3)
+	TROO Q 5
+	TNT1 AAAA 0
+	TROO RST 5
+	TROO U -1
+    XDeathBlood:
+	TNT1 A 0 A_PlaySound("other/gibdeath")
+	TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,1)
+	TNT1 A 1 A_Fall
+	Stop
+    Burn:
+	TNT1 A 0
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"Death")
+	TNT1 A 0 A_Scream
+	TNT1 A 0 A_Fall
+	TNT1 A 0 A_SpawnItemEx("GenericHumanoidBurn",0,0,0,0,0,0,0,32)
+	Stop
+    Death.UnholyDisint:
+    Death.PlasmaDisint:
+    Disintegrate:
+	TNT1 A 0 Thing_SetTranslation(0,50)	
+	TROO H 1 A_FadeOut(0.015)
+	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+	TNT1 a 0 A_Stop	
+	TNT1 a 0 A_Fall
+	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
+	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+	TROO HH 2 A_FadeOut(0.03)
+	Goto Disintegrate+6
+    }
+}
+
+Actor DoomImpBallDMG : DoomImpBall replaces DoomImpBall
+{
+DamageType "Fire"
+}
+
+
+
+//===========================================================================
+//===========================================================================
+
+Actor FDemon : Demon 7005
+{
+	DropItem "HealthHeart" 210
+	DropItem "PowerslaveSpawner" 128
+	DropItem "PowerupSpawner" 8
+    +FLOORCLIP
+    PainChance "Charm", 255
+    PainChance "Terror", 255
+    PainChance "Defile", 255
+    PainChance "Drain", 153
+    PainChance "Chaos", 255
+    PainChance "ChaosExpl1", 255
+    PainChance "ChaosExpl2", 255
+//Flesh
+	DamageFactor "Electric", 1.25
+	DamageFactor "AEPoison", 1.25
+	DamageFactor "AEBullet", 1.5
+    States
+    {
+    Pain.Chaos:
+	TNT1 A 0
+	TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+	TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+	Goto See
+    Pain.ChaosExpl1:
+	TNT1 A 0
+	TNT1 A 0 A_ClearTarget
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+	Goto Spawn
+    Pain.ChaosExpl2:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)
+	Goto See 
+    Pain.Charm:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
+	Goto See
+    Pain.Terror:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
+	Goto See
+    Pain.Drain:
+	TNT1 A 0
+	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+	Goto Pain
+    Pain.Defile:
+	TNT1 A 0
+	TNT1 A 0 A_GiveInventory("DefileCheck",1)
+	Goto See
+    See:
+	SARG AABBCCDD 2 A_Chase
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,2)
+	TNT1 A 0
+	Loop
+	TNT1 A 0 A_Jump(15,"Death")
+	Loop
+    Melee:
+	SARG EF 8 A_FaceTarget
+	SARG G 8 A_SargAttack
+	Goto See
+    Pain:
+	SARG H 2
+	SARG H 2 A_Pain
+	Goto See
+    Death:
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,7)
+	SARG I 8
+	SARG J 8 A_Scream
+	SARG K 4
+	SARG L 4 A_NoBlocking
+	SARG M 4
+	SARG N -1
+	Stop
+	TNT1 A 0 A_Die
+	TNT1 A 0 A_TakeInventory("DefileCheck",1)
+	TNT1 A 0 A_NoBlocking
+	TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
+	Goto XDeathBlood
+    XDeath:
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"Death")
+	TNT1 A 0 A_Jump(256,"XDeathBlood")
+	TNT1 AAAAAAAA 0 A_TossGib
+	Goto Death
+    XDeathBlood:
+	TNT1 A 0 A_PlaySound("other/gibdeath")
+	TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,1)
+	TNT1 AAAAAAA 0 A_TossGib
+	TNT1 A 1 A_Fall
+	Stop
+    Death.UnholyDisint:
+    Death.PlasmaDisint:
+    Disintegrate:
+	TNT1 A 0 Thing_SetTranslation(0,50)	
+	SARG H 1 A_FadeOut(0.015)
+	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+	TNT1 a 0 A_Stop	
+	TNT1 a 0 A_Fall
+	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
+	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+	SARG HH 2 A_FadeOut(0.03)
+	Goto Disintegrate+6
+    }
+}
+//===========================================================================
+//===========================================================================
+
+Actor FSpectre : Spectre 7006
+{
+	DropItem "Mana1Ammo"
+	DropItem "HealthHeart" 210
+	DropItem "PowerslaveSpawner" 70
+	DropItem "PowerupSpawner" 8
+    +FLOORCLIP
+//Ethereal
+	DamageFactor "Electric", 1.25
+	DamageFactor "AEPoison", 0.75
+	DamageFactor "AEBullet", 0.5
+	DamageFactor "Holy", 0.75
+	DamageFactor "Unholy", 1.25
+	DamageFactor "UnholyDisint", 1.25
+	DamageFactor "AEMagic", 1.25
+	DamageFactor "Plasma", 1.25
+	DamageFactor "PlasmaDisint", 1.25
+	States
+	{
+    Death.UnholyDisint:
+    Death.PlasmaDisint:
+    Disintegrate:
+	TNT1 A 0 A_SetTranslucent(1.0,0)
+	TNT1 A 0 Thing_SetTranslation(0,50)	
+	SARG H 1 A_FadeOut(0.015)
+	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+	TNT1 a 0 A_Stop	
+	TNT1 a 0 A_Fall
+	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
+	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+	SARG HH 2 A_FadeOut(0.03)
+	Goto Disintegrate+7
+    }
+}
+
+
+//===========================================================================
+//===========================================================================
+
+Actor FWolfensteinSS : WolfensteinSS 7007
+{
+	DropItem "BulletAmmo"
+	DropItem "HealthHeart" 210
+	DropItem "HealthBottle" 64
+	DropItem "PowerslaveSpawner" 28
+	DropItem "PowerupSpawner" 8
+    +FLOORCLIP
+    PainChance "Charm", 255
+    PainChance "Terror", 255
+    PainChance "Defile", 255
+    PainChance "Drain", 160
+    PainChance "Chaos", 255
+    PainChance "ChaosExpl1", 255
+    PainChance "ChaosExpl2", 255
+//Armor
+	DamageFactor "Electric", 1.25
+	DamageFactor "Plasma", 0.75
+	DamageFactor "PlasmaDisint", 0.75
+	DamageFactor "AEBullet", 0.5
+    States
+    {
+    Pain.Chaos:
+	TNT1 A 0
+	TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+	TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+	Goto See
+    Pain.ChaosExpl1:
+	TNT1 A 0
+	TNT1 A 0 A_ClearTarget
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+	Goto Spawn
+    Pain.ChaosExpl2:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)
+	Goto See
+    Pain.Charm:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
+	Goto See
+    Pain.Terror:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
+	Goto See
+    Pain.Drain:
+	TNT1 A 0
+	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+	Goto Pain
+    Pain.Defile:
+	TNT1 A 0
+	TNT1 A 0 A_GiveInventory("DefileCheck",1)
+	Goto See
+    See:
+	SSWV AABBCCDD 3 A_Chase
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,2)
+	TNT1 A 0
+	Loop
+	TNT1 A 0 A_Jump(15,"Death")
+	Loop
+    Missile:
+	SSWV EF 10 A_FaceTarget
+	SSWV G 4 bright A_CustomBulletAttack(22.5, 0, 1, 5, "BulletDamagePuff")
+	SSWV F 6 A_FaceTarget
+	SSWV G 4 bright A_CustomBulletAttack(22.5, 0, 1, 5, "BulletDamagePuff")
+	SSWV F 1 A_CPosRefire
+	Goto Missile+2
+    Pain:
+	SSWV H 3
+	SSWV H 3 A_Pain
+	Goto See
+    Burn:
+	TNT1 A 0
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"Death")
+	TNT1 A 0 A_Fall
+	TNT1 A 0 A_SpawnItemEx("GenericHumanBurn",0,0,0,0,0,0,0,32)
+	Stop
+    Death:
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,6)
+	SSWV I 5
+	SSWV J 5 A_Scream
+	SSWV K 5 A_NoBlocking
+	SSWV L 5
+	SSWV M -1
+	Stop
+	TNT1 A 0 A_Die
+	TNT1 A 0 A_NoBlocking
+	TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
+	Goto XDeathBlood
+    XDeath:
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"Death")
+	TNT1 A 0 A_Jump(256,"XDeathBlood")
+	TNT1 AAAAAA 0 A_TossGib
+	SSWV N 5 A_XScream
+	SSWV O 5 A_Fall
+	SSWV PQRSTU 4
+	SSWV V -1
+	Stop
+    XDeathBlood:
+	TNT1 A 0 A_PlaySound("other/gibdeath")
+	TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,1)
+	TNT1 A 1 A_Fall
+	Stop
+    Death.UnholyDisint:
+    Death.PlasmaDisint:
+    Disintegrate:
+	TNT1 A 0 Thing_SetTranslation(0,50)	
+	SSWV H 1 A_FadeOut(0.015)
+	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+	TNT1 a 0 A_Stop	
+	TNT1 a 0 A_Fall
+	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
+	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+	SSWV HH 2 A_FadeOut(0.03)
+	Goto Disintegrate+6
+    }
+}
+
+//===========================================================================
+//===========================================================================
+
+Actor FLostSoul : LostSoul 7008
+{
+	DropItem "PowerslaveSpawner" 128
+	DropItem "PowerupSpawner" 8
+    PainChance "Charm", 255
+    PainChance "Terror", 255
+    PainChance "Drain", 160
+    PainChance "Chaos", 255
+    PainChance "ChaosExpl1", 255
+    PainChance "ChaosExpl2", 255
+//Ethereal
+	DamageFactor "Electric", 1.25
+	DamageFactor "AEPoison", 0.75
+	DamageFactor "AEBullet", 0.5
+	DamageFactor "Holy", 0.75
+	DamageFactor "Unholy", 1.25
+	DamageFactor "UnholyDisint", 1.25
+	DamageFactor "AEMagic", 1.25
+	DamageFactor "Plasma", 1.25
+	DamageFactor "PlasmaDisint", 1.25
+    States
+    {
+    Pain.Chaos:
+	TNT1 A 0
+	TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+	TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+	Goto See
+    Pain.ChaosExpl1:
+	TNT1 A 0
+	TNT1 A 0 A_ClearTarget
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+	Goto Spawn
+    Pain.ChaosExpl2:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)
+	Goto See
+    Pain.Charm:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
+	Goto See
+    Pain.Terror:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
+	Goto See
+    Pain.Drain:
+	TNT1 A 0
+	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+	Goto Pain
+    See:
+	TNT1 A 0
+	SKUL AB 6 bright A_Chase
+	Loop
+    Pain:
+	SKUL E 3 bright
+	SKUL E 3 bright A_Pain
+	Goto See
+    Missile:
+	SKUL C 10 bright A_FaceTarget
+	SKUL D 4 bright A_SkullAttack
+	SKUL CD 4 bright
+	Goto Missile+2
+	Death:
+		SKUL F 4 BRIGHT
+		SKUL G 4 BRIGHT A_Scream
+		SKUL H 4 BRIGHT
+		TNT1 A 0 A_SpawnItemEx("MonExplosionMediumConcentrated",0,0,24,0,0,0,0,32)
+		SKUL I 4 BRIGHT A_NoBlocking
+		SKUL J 4
+		SKUL K 4
+		Stop
+    Death.UnholyDisint:
+    Death.PlasmaDisint:
+    Disintegrate:
+	TNT1 A 0 A_SetTranslucent(1.0,0)
+	TNT1 A 0 Thing_SetTranslation(0,50)	
+	SKUL E 1 A_FadeOut(0.015)
+	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+	TNT1 a 0 A_Stop	
+	TNT1 a 0 A_Fall
+	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowSmallMedium",0,0,18,0,0,0,0,32)
+	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksSmallMedium",0,0,18,0,0,0,0,32)
+	SKUL EE 2 A_FadeOut(0.03)
+	Goto Disintegrate+7
+    }
+}
+
+//===========================================================================
+//===========================================================================
+
+Actor FCacodemon : Cacodemon 7009
+{
+	DropItem "HealthHeart" 210
+	DropItem "PowerslaveSpawner" 
+	DropItem "PowerupSpawner" 8
+    +FLOORCLIP
+    BloodColor Blue
+    PainChance "Charm", 255
+    PainChance "Terror", 255
+    PainChance "Defile", 255
+    PainChance "Drain", 128
+    PainChance "Chaos", 255
+    PainChance "ChaosExpl1", 255
+    PainChance "ChaosExpl2", 255
+//Flesh
+	DamageFactor "Electric", 1.25
+	DamageFactor "AEPoison", 1.25
+	DamageFactor "AEBullet", 1.5
+    States
+    {
+    Pain.Chaos:
+	TNT1 A 0
+	TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+	TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+	Goto See
+    Pain.ChaosExpl1:
+	TNT1 A 0
+	TNT1 A 0 A_ClearTarget
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+	Goto Spawn
+    Pain.ChaosExpl2:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)
+	Goto See
+    Pain.Charm:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
+	Goto See
+    Pain.Terror:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
+	Goto See
+    Pain.Drain:
+	TNT1 A 0
+	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+	Goto Pain
+    Pain.Defile:
+	TNT1 A 0
+	TNT1 A 0 A_GiveInventory("DefileCheck",1)
+	Goto See
+    See:
+	HEAD AAAAAAAA 3 A_Chase
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,2)
+	TNT1 A 0
+	Loop
+	TNT1 A 0 A_Jump(5,"Death")
+	Loop
+    Missile:
+	HEAD BC 5 A_FaceTarget
+	HEAD D 5 bright A_HeadAttack
+	Goto See
+    Pain:
+	HEAD E 3
+	HEAD E 3 A_Pain
+	HEAD F 6
+	Goto See
+    Death:
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,7)
+	HEAD G 8
+	HEAD H 8 A_Scream
+	HEAD IJ 8
+	HEAD K 8 A_NoBlocking
+	HEAD L -1 A_SetFloorClip
+	Stop
+	TNT1 A 0 A_Die
+	TNT1 A 0 A_NoBlocking
+	TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
+	Goto XDeathBlood
+    XDeath:
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"Death")
+	TNT1 A 0 A_Jump(256,"XDeathBlood")
+	TNT1 AAAAA 0 A_SpawnItemEx("BlueGib",0,0,random(1,5),0,0,0,0,32)
+	TNT1 AAAA 0 A_TossGib
+	Goto Death
+    XDeathBlood:
+	TNT1 A 0 A_PlaySound("other/gibdeath")
+	TNT1 A 0 A_SpawnItemEx("BlueGibSp",0,0,random(20,40),0,0,0,0,32)
+	TNT1 A 0 A_SpawnItemEx("BlueGib",0,0,random(1,5),0,0,0,0,32)
+	TNT1 AAAAAAA 0 A_TossGib
+	TNT1 A 0 A_KillMaster
+	TNT1 A 1 A_Fall
+	Stop
+    Death.UnholyDisint:
+    Death.PlasmaDisint:
+    Disintegrate:
+	TNT1 A 0 Thing_SetTranslation(0,50)	
+	HEAD E 1 A_FadeOut(0.015)
+	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+	TNT1 a 0 A_Stop	
+	TNT1 a 0 A_Fall
+	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,32)
+	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,32)
+	HEAD EE 2 A_FadeOut(0.03)
+	Goto Disintegrate+6
+    }
+}
+
+Actor CacodemonBallDMG : CacodemonBall replaces CacodemonBall
+{
+	DamageType "Plasma"
+}
+
+//===========================================================================
+//===========================================================================
+
+Actor FRevenant : Revenant 7010
+{
+	DropItem "CellAmmo"
+	DropItem "HealthHeart" 210
+	DropItem "PowerslaveSpawner" 28
+	DropItem "PowerupSpawner" 8
+    +FLOORCLIP
+    PainChance "Charm", 192
+    PainChance "Terror", 192
+    PainChance "Defile", 255
+    PainChance "Drain", 110
+    PainChance "Chaos", 255
+    PainChance "ChaosExpl1", 255
+    PainChance "ChaosExpl2", 255
+//Undead
+	DamageFactor "AEPoison", 0.5
+	DamageFactor "AEBullet", 0.75
+	DamageFactor "Holy", 1.5
+	DamageFactor "Unholy", 0.5
+	DamageFactor "UnholyDisint", 0.5
+	DamageFactor "AEMagic", 1.25
+    States
+    {
+    Pain.Chaos:
+	TNT1 A 0
+	TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+	TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+	Goto See
+    Pain.ChaosExpl1:
+	TNT1 A 0
+	TNT1 A 0 A_ClearTarget
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+	Goto Spawn
+    Pain.ChaosExpl2:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)
+	Goto See
+    Pain.Charm:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
+	Goto See
+    Pain.Terror:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
+	Goto See
+    Pain.Drain:
+	TNT1 A 0
+	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+	Goto Pain
+    Pain.Defile:
+	TNT1 A 0
+	TNT1 A 0 A_GiveInventory("DefileCheck",1)
+	Goto See
+    See:
+	SKEL AABBCCDDEEFF 2 A_Chase
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,2)
+	TNT1 A 0
+	Loop
+	TNT1 A 0 A_Jump(5,"Death")
+	Loop
+    Melee:
+	SKEL G 0 A_FaceTarget
+	SKEL G 6 A_SkelWhoosh
+	SKEL H 6 A_FaceTarget
+	SKEL I 6 A_SkelFist
+	Goto See
+    Missile:
+	SKEL J 0 bright A_FaceTarget
+	SKEL J 10 bright A_FaceTarget
+	SKEL K 10 A_SkelMissile
+	SKEL K 10 A_FaceTarget
+	Goto See
+    Pain:
+	SKEL L 5
+	SKEL L 5 A_Pain
+	Goto See
+    Death:
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,7)
+	SKEL LM 7
+	SKEL N 7 A_Scream
+	SKEL O 7 A_NoBlocking
+	SKEL P 7
+	SKEL Q -1
+	Stop
+	TNT1 A 0 A_Die
+	TNT1 A 0 A_NoBlocking
+	TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
+	Goto XDeathBlood
+    XDeath:
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"Death")
+	TNT1 A 0 A_Jump(256,"XDeathBlood")
+	TNT1 AAAAAAA 0 A_TossGib
+	Goto Death
+    XDeathBlood:
+	TNT1 A 0 A_PlaySound("other/gibdeath")
+	TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,1)
+	TNT1 A 1 A_Fall
+	Stop
+    Death.UnholyDisint:
+    Death.PlasmaDisint:
+    Disintegrate:
+	TNT1 A 0 Thing_SetTranslation(0,50)	
+	SKEL L 1 A_FadeOut(0.015)
+	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+	TNT1 a 0 A_Stop	
+	TNT1 a 0 A_Fall
+	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,32)
+	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,32)
+	SKEL LL 2 A_FadeOut(0.03)
+	Goto Disintegrate+6
+    }
+}
+Actor RevenantTracerNew : RevenantTracer replaces RevenantTracer 
+{
+	States
+	{
+	Death:
+		TNT1 A 0 A_SpawnItemEx("NewExplosionSmallLittleBigger",0,0,5,0,0,0,0,32)
+		TNT1 A 10
+		Stop
+	}
+}
+
+
+//===========================================================================
+//===========================================================================
+
+Actor FFatso : Fatso 7011
+{
+	DropItem "CellAmmo"
+	DropItem "HealthHeart" 210
+	DropItem "PowerslaveSpawner" 28
+	DropItem "PowerupSpawner" 8
+    +BOSSDEATH
+    +FLOORCLIP
+    +BOSS
+    PainChance "Charm", 192
+    PainChance "Terror", 192
+    PainChance "Defile", 255
+    PainChance "Drain", 96
+    PainChance "Chaos", 255
+    PainChance "ChaosExpl1", 255
+    PainChance "ChaosExpl2", 255
+//Flesh
+	DamageFactor "Electric", 1.25
+	DamageFactor "AEPoison", 1.25
+	DamageFactor "AEBullet", 1.5
+    States
+    {
+    Pain.Chaos:
+	TNT1 A 0
+	TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+	TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+	Goto See
+    Pain.ChaosExpl1:
+	TNT1 A 0
+	TNT1 A 0 A_ClearTarget
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+	Goto Spawn
+    Pain.ChaosExpl2:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)
+	Goto See
+    Pain.Charm:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
+	Goto See
+    Pain.Terror:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
+	Goto See
+    Pain.Drain:
+	TNT1 A 0
+	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+	Goto Pain
+    Pain.Defile:
+	TNT1 A 0
+	TNT1 A 0 A_GiveInventory("DefileCheck",1)
+	Goto See
+    See:
+	FATT AABBCCDDEEFF 4 A_Chase
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,2)
+	TNT1 A 0
+	Loop
+	TNT1 A 0 A_Jump(5,"Death")
+	Loop
+    Missile:
+	FATT G 20 A_FatRaise
+	FATT H 10 bright A_FatAttack1
+	FATT IG 5 A_FaceTarget
+	FATT H 10 bright A_FatAttack2
+	FATT IG 5 A_FaceTarget
+	FATT H 10 bright A_FatAttack3
+	FATT IG 5 A_FaceTarget
+	Goto See
+    Pain:
+	FATT J 3
+	FATT J 3 A_Pain
+	Goto See
+    Death:
+		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,11)
+		FATT K 5 A_Scream
+		FATT LMN 5
+		FATT O 5 A_Fall
+		FATT PQRS 5
+		FATT T -1 A_KillMaster
+		Stop
+		TNT1 A 0 A_Die
+		TNT1 A 0 A_NoBlocking
+		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
+		Goto XDeathBlood
+    XDeath:
+		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"Death")
+		TNT1 A 0 A_Jump(256,"XDeathBlood")
+		TNT1 AAAAAAAA 0 A_TossGib
+		FATT K 5 A_Scream
+		FATT LMN 5 
+		FATT O 5 A_Fall
+		FATT PQRS 5
+		FATT T -1 A_KillMaster
+		Stop
+    XDeathBlood:
+		TNT1 A 0 A_PlaySound("other/gibdeath")
+		TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,1)
+		TNT1 AAAAAA 0 A_TossGib
+		TNT1 A 0 A_KillMaster
+		TNT1 A 1 A_Fall
+		Stop
+    Ice:
+		"####" "#" 5 A_GenericFreezeDeath
+		"####" "#" 0 A_KillMaster
+		"####" "#" 1 A_FreezeDeathChunks
+		Wait
+    Death.UnholyDisint:
+    Death.PlasmaDisint:
+    Disintegrate:
+		TNT1 A 0 Thing_SetTranslation(0,50)	
+		TNT1 A 0 A_KillMaster
+		FATT J 1 A_FadeOut(0.015)
+		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+		TNT1 a 0 A_Stop	
+		TNT1 a 0 A_Fall
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,32)
+		FATT JJ 2 A_FadeOut(0.03)
+		Goto Disintegrate+7
+    }
+}
+
+ACTOR FatShotNew : FatShot Replaces FatShot
+{
+	DamageType "Plasma"
+	States
+	{
+	Death:
+		TNT1 AAAAA 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,5,random(10,-10)/(10*1.95),random(10,-10)/(10*1.95),random(10,-10)/(10*1.95),0,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,5,random(4,-4)/(4*2.0),0,random(4,-4)/(4*2.0),0,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,5,random(4,-4)/(4*2.0),0,random(4,-4)/(4*2.0),20,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,5,random(4,-4)/(4*2.0),0,random(4,-4)/(4*2.0),40,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,5,random(4,-4)/(4*2.0),0,random(4,-4)/(4*2.0),60,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,5,random(4,-4)/(4*2.0),0,random(4,-4)/(4*2.0),80,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,5,random(4,-4)/(4*2.0),0,random(4,-4)/(4*2.0),100,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,5,random(4,-4)/(4*2.0),0,random(4,-4)/(4*2.0),120,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,5,random(4,-4)/(4*2.0),0,random(4,-4)/(4*2.0),140,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,5,random(4,-4)/(4*2.0),0,random(4,-4)/(4*2.0),160,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,5,random(4,-4)/(4*2.0),0,random(4,-4)/(4*2.0),180,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,5,random(4,-4)/(4*2.0),0,random(4,-4)/(4*2.0),-20,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,5,random(4,-4)/(4*2.0),0,random(4,-4)/(4*2.0),-40,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,5,random(4,-4)/(4*2.0),0,random(4,-4)/(4*2.0),-60,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,5,random(4,-4)/(4*2.0),0,random(4,-4)/(4*2.0),-80,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,5,random(4,-4)/(4*2.0),0,random(4,-4)/(4*2.0),-100,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,5,random(4,-4)/(4*2.0),0,random(4,-4)/(4*2.0),-120,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,5,random(4,-4)/(4*2.0),0,random(4,-4)/(4*2.0),-140,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,5,random(4,-4)/(4*2.0),0,random(4,-4)/(4*2.0),-160,32)
+		MISL B 5 BRIGHT
+		MISL C 5 BRIGHT
+		MISL D 4 BRIGHT
+		Stop
+	}
+}
+
+
+//===========================================================================
+//===========================================================================
+
+Actor FPainElemental : PainElemental 7012
+{
+	DropItem "Mana1Ammo"
+	DropItem "PowerslaveSpawner" 28
+	DropItem "PowerupSpawner" 8
+    +FLOORCLIP
+    PainChance "Charm", 192
+    PainChance "Terror", 192
+    PainChance "Drain", 128
+    PainChance "Chaos", 255
+    PainChance "ChaosExpl1", 128
+    PainChance "ChaosExpl2", 128
+//Flesh
+	DamageFactor "Electric", 1.25
+	DamageFactor "AEPoison", 1.25
+	DamageFactor "AEBullet", 1.5
+    States
+    {
+    Pain.Chaos:
+	TNT1 A 0
+	TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+	TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+	Goto See
+    Pain.ChaosExpl1:
+	TNT1 A 0
+	TNT1 A 0 A_ClearTarget
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+	Goto Spawn
+    Pain.ChaosExpl2:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)
+	Goto See
+    Pain.Charm:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
+	Goto See
+    Pain.Terror:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
+	Goto See
+    Pain.Drain:
+	TNT1 A 0
+	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+	Goto Pain
+    See:
+	PAIN AABBCC 3 A_Chase
+	Loop
+    Missile:
+	PAIN DE 5 A_FaceTarget
+	PAIN F 5 bright A_FaceTarget
+	PAIN F 0 bright A_PainAttack    // See LostSoul
+	Goto See
+    Pain:
+	PAIN G 6
+	PAIN G 6 A_Pain
+	Goto See
+    Death:
+	PAIN H 5 A_Scream
+	PAIN IJ 5 Bright
+	TNT1 AAAAAAA 0 A_TossGib
+	PAIN K 5 Bright 	
+	PAIN L 5 Bright A_PainDie
+	PAIN M 5 Bright
+	Stop
+    Death.UnholyDisint:
+    Death.PlasmaDisint:
+    Disintegrate:
+	TNT1 A 0 Thing_SetTranslation(0,50)	
+	PAIN G 1 A_FadeOut(0.015)
+	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+	TNT1 a 0 A_Stop	
+	TNT1 a 0 A_Fall
+	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,32)
+	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,32)
+	PAIN GG 2 A_FadeOut(0.03)
+	Goto Disintegrate+6
+    }
+}
+//===========================================================================
+//===========================================================================
+
+Actor FHellKnight : HellKnight 7013
+{
+	DropItem "Mana1Ammo"
+	DropItem "HealthHeart" 210
+	DropItem "PowerslaveSpawner" 28
+	DropItem "PowerupSpawner" 8
+    +FLOORCLIP
+    BloodColor Green
+    PainChance "Charm", 192
+    PainChance "Terror", 192
+    PainChance "Defile", 255
+    PainChance "Drain", 110
+    PainChance "Chaos", 255
+    PainChance "ChaosExpl1", 255
+    PainChance "ChaosExpl2", 255
+//Flesh
+	DamageFactor "Electric", 1.25
+	DamageFactor "AEPoison", 1.25
+	DamageFactor "AEBullet", 1.5
+    States
+    {
+    Pain.Chaos:
+	TNT1 A 0
+	TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+	TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+	Goto See
+    Pain.ChaosExpl1:
+	TNT1 A 0
+	TNT1 A 0 A_ClearTarget
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+	Goto Spawn
+    Pain.ChaosExpl2:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)
+	Goto See
+    Pain.Charm:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
+	Goto See
+    Pain.Terror:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
+	Goto See
+    Pain.Drain:
+	TNT1 A 0
+	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+	Goto Pain
+    Pain.Defile:
+	TNT1 A 0
+	TNT1 A 0 A_GiveInventory("DefileCheck",1)
+	Goto See
+    See:
+	BOS2 AABBCCDD 3 A_Chase
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,2)
+	TNT1 A 0
+	Loop
+	TNT1 A 0 A_Jump(5,"Death")
+	Loop
+    Melee:
+    Missile:
+	BOS2 EF 8 A_FaceTarget
+	BOS2 G 8 A_BruisAttack
+	Goto See
+    Pain:
+	BOS2 H 2
+	BOS2 H 2 A_Pain
+	Goto See
+    Death:
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,8)
+	BOS2 I 8
+	BOS2 J 8 A_Scream
+	BOS2 K 8
+	BOS2 L 8 A_NoBlocking
+	BOS2 MN 8
+	BOS2 O -1 A_BossDeath
+	Stop
+	TNT1 A 0 A_Die
+	TNT1 A 0 A_NoBlocking
+	TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
+	Goto XDeathBlood
+    XDeath:
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"Death")
+	TNT1 A 0 A_Jump(256,"XDeathBlood")
+	TNT1 AAAAA 0 A_SpawnItemEx("GreenGib",0,0,random(1,5),0,0,0,0,32)
+	TNT1 AAAA 0 A_TossGib
+	Goto Death
+    XDeathBlood:
+	TNT1 A 0 A_PlaySound("other/gibdeath")
+	TNT1 AA 0 A_SpawnItemEx("GreenGibSp",0,0,random(20,40),0,0,0,0,32)
+	TNT1 AAAAAA 0 A_TossGib
+	TNT1 A 0 A_KillMaster
+	TNT1 A 1 A_Fall
+	Stop
+    Death.UnholyDisint:
+    Death.PlasmaDisint:
+    Disintegrate:
+	TNT1 A 0 Thing_SetTranslation(0,50)	
+	BOS2 H 1 A_FadeOut(0.015)
+	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+	TNT1 a 0 A_Stop	
+	TNT1 a 0 A_Fall
+	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,32)
+	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,32)
+	BOS2 HH 2 A_FadeOut(0.03)
+	Goto Disintegrate+6
+    }
+}
+Actor BaronBallDMG : BaronBall replaces BaronBall
+{
+	DamageType "Plasma"
+}
+
+
+//===========================================================================
+//===========================================================================
+
+Actor FBaronOfHell : BaronOfHell 7014
+{
+	DropItem "Mana2Ammo"
+	DropItem "HealthHeart" 210
+	DropItem "PowerslaveSpawner" 28
+	DropItem "PowerupSpawner" 8
+    +BOSSDEATH
+    +FLOORCLIP
+    +DONTMORPH
+    BloodColor Green
+    DamageFactor "Wormwood", 0.5
+    PainChance "Charm", 96
+    PainChance "Terror", 96
+    PainChance "Drain", 64
+    PainChance "Chaos", 255
+    PainChance "ChaosExpl1", 128
+    PainChance "ChaosExpl2", 128
+//Flesh
+	DamageFactor "Electric", 1.25
+	DamageFactor "AEPoison", 1.25
+	DamageFactor "AEBullet", 1.5
+    States
+    {
+    Pain.Chaos:
+	TNT1 A 0
+	TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+	TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+	Goto See
+    Pain.ChaosExpl1:
+	TNT1 A 0
+	TNT1 A 0 A_ClearTarget
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+	Goto Spawn
+    Pain.ChaosExpl2:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)
+	Goto See
+    Pain.Charm:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
+	Goto See
+    Pain.Terror:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
+	Goto See
+    Pain.Drain:
+	TNT1 A 0
+	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+	Goto Pain
+    Death:
+	BOSS I 5 A_Scream
+	BOSS JK 5
+	BOSS L 5 A_Fall
+	BOSS MN 5
+	BOSS O -1 A_KillMaster
+	Stop
+    XDeath:
+	TNT1 A 0 A_Jump(256,"XDeathBlood")
+	TNT1 AAAAA 0 A_SpawnItemEx("GreenGib",0,0,random(1,5),0,0,0,0,32)
+	TNT1 AAAA 0 A_TossGib
+	Goto Death
+    XDeathBlood:
+	TNT1 A 0 A_PlaySound("other/gibdeath")
+	TNT1 AA 0 A_SpawnItemEx("GreenGibSp",0,0,random(20,40),0,0,0,0,32)
+	TNT1 AAAAAA 0 A_TossGib
+	TNT1 A 0 A_KillMaster
+	TNT1 A 1 A_Fall
+	Stop
+    Ice:
+	BOSS H 5 A_GenericFreezeDeath
+	BOSS H 0 A_KillMaster
+	BOSS H 1 A_FreezeDeathChunks
+	Wait
+    Death.UnholyDisint:
+    Death.PlasmaDisint:
+    Disintegrate:
+	TNT1 A 0 Thing_SetTranslation(0,50)
+	TNT1 A 0 A_KillMaster
+	BOSS H 1 A_FadeOut(0.015)
+	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+	TNT1 a 0 A_Stop	
+	TNT1 a 0 A_Fall
+	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,32)
+	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,32)
+	BOSS HH 2 A_FadeOut(0.03)
+	Goto Disintegrate+7
+    }
+}
+
+//===========================================================================
+//===========================================================================
+
+Actor FArchvile : Archvile 7015
+{
+	DropItem "AEoDNecromanticBoneStaffItem" 32
+	DropItem "Mana1Ammo"
+	DropItem "DarkManaSmall" 128
+	DropItem "DarkManaSmall" 128
+	DropItem "DarkManaSmall" 128
+	DropItem "HealthHeart" 210
+	DropItem "PowerslaveSpawner" 28
+	DropItem "PowerupSpawner" 8
+    +DONTMORPH
+    +FLOORCLIP
+    +BOSS
+    DamageFactor "Wormwood", 0.5
+    PainChance "Charm", 96
+    PainChance "Terror", 96
+    PainChance "Drain", 64
+    PainChance "Chaos", 255
+    PainChance "ChaosExpl1", 128
+    PainChance "ChaosExpl2", 128
+//Unholy
+	DamageFactor "Holy", 1.5
+	DamageFactor "Unholy", 0.5
+	DamageFactor "UnholyDisint", 0.5
+	DamageFactor "Fire", 0.75
+	DamageFactor "Ice", 0.75
+	DamageFactor "AEPoison", 0.75
+	DamageFactor "AEMagic", 0.75
+    States
+    {
+    Pain.Chaos:
+	TNT1 A 0
+	TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+	TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+	Goto See
+    Pain.ChaosExpl1:
+	TNT1 A 0
+	TNT1 A 0 A_ClearTarget
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+	Goto Spawn
+    Pain.ChaosExpl2:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)
+	Goto See
+    Pain.Charm:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
+	Goto See
+    Pain.Terror:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
+	Goto See
+    Pain.Drain:
+	TNT1 A 0
+	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+	Goto Pain
+    Heal:
+	VILE "[" 10 Bright
+	AVL2 A 10 Bright
+	VILE "]" 10 Bright
+	Goto See
+    XDeath:
+	TNT1 A 0 A_Jump(256,"XDeathBlood")
+	TNT1 AAAAAAA 0 A_TossGib
+	Goto Death
+    XDeathBlood:
+	TNT1 A 0 A_PlaySound("other/gibdeath")
+	TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,1)
+	TNT1 A 1 A_Fall
+	Stop
+    Death.UnholyDisint:
+    Death.PlasmaDisint:
+    Disintegrate:
+	TNT1 A 0 Thing_SetTranslation(0,50)	
+	VILE Q 1 A_FadeOut(0.015)
+	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+	TNT1 a 0 A_Stop	
+	TNT1 a 0 A_Fall
+	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,32)
+	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,32)
+	VILE QQ 2 A_FadeOut(0.03)
+	Goto Disintegrate+6
+    }
+}
+
+//===========================================================================
+//===========================================================================
+
+Actor FArachnotron : Arachnotron 7016
+{
+	DropItem "AEoDPlasmaRifleItem" 16
+	DropItem "CellBigAmmo"
+	DropItem "HealthHeart" 210
+	DropItem "PowerslaveSpawner" 28
+	DropItem "PowerupSpawner" 8
+    +FLOORCLIP
+    +BOSS
+    +BOSSDEATH
+    PainChance "Charm", 192
+    PainChance "Terror", 192
+    PainChance "Drain", 96
+    PainChance "Chaos", 255
+    PainChance "ChaosExpl1", 255
+    PainChance "ChaosExpl2", 255
+//Mechanic
+	DamageFactor "Fire", 1.25
+	DamageFactor "Ice", 0.75
+	DamageFactor "Electric", 1.5
+	DamageFactor "AEPoison", 0.5
+	DamageFactor "AEBullet", 0.75
+	DamageFactor "AEMagic", 0.75
+ 	DamageFactor "Plasma", 1.25
+ 	DamageFactor "PlasmaDisint", 1.25
+    States
+    {
+    Pain.Chaos:
+	TNT1 A 0
+	TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+	TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+	Goto See
+    Pain.ChaosExpl1:
+	TNT1 A 0
+	TNT1 A 0 A_ClearTarget
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+	Goto Spawn
+    Pain.ChaosExpl2:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)
+	Goto See
+    Pain.Charm:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
+	Goto See
+    Pain.Terror:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
+	Goto See
+    Pain.Drain:
+	TNT1 A 0
+	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+	Goto Pain
+    See:
+	BSPI A 20
+	BSPI A 3 A_BabyMetal
+	BSPI ABBCC 3 A_Chase
+	BSPI D 3 A_BabyMetal
+	BSPI DEEFF 3 A_Chase
+	Goto See+1
+    Missile:
+	BSPI A 20 bright A_FaceTarget
+	BSPI G 4 bright A_BspiAttack
+	BSPI H 4 bright
+	BSPI H 1 bright A_SpidRefire
+	Goto Missile+1
+    Pain:
+	BSPI I 3
+	BSPI I 3 A_Pain
+	Goto See+1
+    Death:
+	BSPI J 5 A_Scream
+	BSPI K 5
+	BSPI L 5 A_Fall
+	BSPI MNO 5
+	BSPI P -1 A_KillMaster
+	Stop
+    XDeath:
+	TNT1 A 0 A_Jump(256,"XDeathBlood")
+	TNT1 AAAAAAAAA 0 A_TossGib
+	Goto Death
+    XDeathBlood:
+	TNT1 A 0 A_PlaySound("other/gibdeath")
+	TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,1)
+	TNT1 AAAAAAAAA 0 A_TossGib
+	TNT1 A 0 A_KillMaster
+	TNT1 A 1 A_Fall
+	Stop
+    Ice:
+	BSPI H 5 A_GenericFreezeDeath
+	BSPI H 0 A_KillMaster
+	BSPI H 1 A_FreezeDeathChunks
+	Wait
+    Death.UnholyDisint:
+    Death.PlasmaDisint:
+    Disintegrate:
+	TNT1 A 0 Thing_SetTranslation(0,50)
+	TNT1 a 0 A_KillMaster
+	BSPI H 1 A_FadeOut(0.015)
+	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+	TNT1 a 0 A_Stop	
+	TNT1 a 0 A_Fall
+	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,32)
+	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,32)
+	BSPI HH 2 A_FadeOut(0.03)
+	Goto Disintegrate+7
+    }
+}
+Actor ArachnotronPlasmaDMG : ArachnotronPlasma replaces ArachnotronPlasma
+{
+	DamageType "Plasma"
+}
+
+
+//===========================================================================
+//===========================================================================
+
+Actor FSpiderMastermind : SpiderMastermind 7017
+{
+	DropItem "AEoDMinigunItem"
+	DropItem "CellBigAmmo"
+	DropItem "CellBigAmmo"
+	DropItem "CellBigAmmo"
+	DropItem "BulletBigAmmo"
+	DropItem "BulletBigAmmo"
+	DropItem "BulletBigAmmo"
+	DropItem "MegaHeart"
+	DropItem "PowerslaveSpawner" 28
+	DropItem "PowerupSpawner" 8
+    +DONTMORPH
+    +BOSSDEATH
+    +FLOORCLIP
+    +NOFEAR
+    AttackSound "weapons/riflefre"
+    Health 4000
+    +NOICEDEATH
+    DamageFactor "Wormwood", 0.2
+    PainChance "Drain", 40
+    PainChance "Chaos", 255
+    DamageFactor "ChaosExpl1", 0
+    DamageFactor "ChaosExpl2", 0
+//Mechanic
+	DamageFactor "Fire", 1.25
+	DamageFactor "Ice", 0.75
+	DamageFactor "Electric", 1.5
+	DamageFactor "AEPoison", 0.5
+	DamageFactor "AEBullet", 0.75
+	DamageFactor "AEMagic", 0.75
+ 	DamageFactor "Plasma", 1.25
+ 	DamageFactor "PlasmaDisint", 1.25
+    States
+    {
+    Pain.Chaos:
+	TNT1 A 0
+	TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+	TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+	Goto See
+    Pain.Drain:
+	TNT1 A 0
+	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+	Goto Pain
+    Missile:
+	SPID A 20 bright A_FaceTarget
+	SPID GH 4 bright A_CustomBulletAttack(22.5, 0, 3, 5, "BulletDamagePuff")
+	SPID H 1 bright A_SpidRefire
+	goto Missile+1
+    Death:
+	SPID J 15 A_Scream
+	SPID K 7 
+	TNT1 A 0 A_SpawnItemEx("BossDeathExplosion",random(0,45),0,random(0,70),0,0,0,random(0,359),32)
+	SPID OOOOOO 0 A_TossGib
+	SPID L 7 Bright A_TossGib
+	TNT1 A 0 A_SpawnItemEx("BossDeathExplosion",random(0,45),0,random(0,70),0,0,0,random(0,359),32)
+	SPID OOOOOO 0 A_TossGib
+	SPID M 7 Bright A_TossGib
+	TNT1 AA 0 A_SpawnItemEx("BossDeathExplosion",random(0,45),0,random(0,70),0,0,0,random(0,359),32)
+	SPID OOOOOO 0 A_TossGib
+	SPID N 7 Bright A_TossGib
+	TNT1 AA 0 A_SpawnItemEx("BossDeathExplosion",random(0,45),0,random(0,70),0,0,0,random(0,359),32)
+	SPID OOOOOO 0 A_TossGib
+	SPID O 7 Bright A_TossGib
+	TNT1 AA 0 A_SpawnItemEx("BossDeathExplosion",random(0,45),0,random(0,70),0,0,0,random(0,359),32)
+	SPID OOOOOO 0 A_TossGib
+	SPID P 6 Bright A_Fall
+	TNT1 AAA 0 A_SpawnItemEx("BossDeathExplosion",random(0,45),0,random(0,70),0,0,0,random(0,359),32)
+	SPID QR 6 Bright
+	"####" "#" 0 A_QueueCorpse
+	SPID S -1 A_KillMaster
+	Stop
+    Death.UnholyDisint:
+    Death.PlasmaDisint:
+    Disintegrate:
+	TNT1 A 0 Thing_SetTranslation(0,50)	
+	TNT1 a 0 A_KillMaster
+	SPID I 1 A_FadeOut(0.015)
+	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+	TNT1 a 0 A_Stop	
+	TNT1 a 0 A_Fall
+	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowBig",0,0,45,0,0,0,0,32)
+	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksBig",0,0,45,0,0,0,0,32)
+	SPID II 2 A_FadeOut(0.03)
+	Goto Disintegrate+7
+    Ice:
+		"####" "#" 5 A_GenericFreezeDeath
+		"####" "#" 0 A_KillMaster
+		"####" "#" 1 A_FreezeDeathChunks
+		Wait
+    }
+}
+
+//===========================================================================
+//===========================================================================
+Actor CyberdemonNoType : Cyberdemon
+{} 
+Actor FCyberdemon : Cyberdemon 7018
+{
+	DropItem "AEoDRocketLauncherItem"
+	DropItem "CellBigAmmo"
+	DropItem "CellBigAmmo"
+	DropItem "ExploBigAmmo"
+	DropItem "ExploBigAmmo"
+	DropItem "ExploBigAmmo" 128
+	DropItem "ExploBigAmmo" 128
+	DropItem "ExploBigAmmo" 128
+	DropItem "MegaHeart"
+	DropItem "PowerslaveSpawner" 28
+	DropItem "PowerupSpawner" 8
+    Health 4500
+    +DONTMORPH
+    +FLOORCLIP
+    +NOICEDEATH
+    +BOSSDEATH
+    +NOFEAR
+    DamageFactor "Wormwood", 0.2
+    PainChance "Drain", 40
+    PainChance "Chaos", 255
+    DamageFactor "ChaosExpl1", 0
+    DamageFactor "ChaosExpl2", 0
+//Unholy
+	DamageFactor "Holy", 1.5
+	DamageFactor "Unholy", 0.5
+	DamageFactor "UnholyDisint", 0.5
+	DamageFactor "Fire", 0.75
+	DamageFactor "Ice", 0.75
+	DamageFactor "AEPoison", 0.75
+	DamageFactor "AEMagic", 0.75
+    States
+    {
+    Pain.Chaos:
+	TNT1 A 0
+	TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+	TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+	Goto See
+    Pain.Drain:
+	TNT1 A 0
+	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+	Goto Pain
+    Missile:
+	CYBR EE 5 A_FaceTarget
+	CYBR F 0 A_PlaySound("q2weapon/rocketlauncherfire")
+	CYBR F 5 A_CustomMissile("AnnihilatorRocket",45,-23,0)
+	CYBR F 5 A_FaceTarget
+	CYBR EE 5 A_FaceTarget
+	CYBR F 0 A_PlaySound("q2weapon/rocketlauncherfire")
+	CYBR F 5 A_CustomMissile("AnnihilatorRocket",45,-23,0)
+	CYBR F 5 A_FaceTarget
+	CYBR EE 5 A_FaceTarget
+	CYBR F 0 A_PlaySound("q2weapon/rocketlauncherfire")
+	CYBR F 5 A_CustomMissile("AnnihilatorRocket",45,-23,0)
+	CYBR F 5 A_FaceTarget
+	CYBR EE 5 A_FaceTarget
+	Goto See
+    Death:
+	CYBR H 5 A_Scream
+	TNT1 A 0 A_SpawnItemEx("BossDeathExplosion",random(0,35),0,random(0,90),0,0,0,random(0,359),32)
+	CYBR I 5 
+	TNT1 AA 0 A_SpawnItemEx("BossDeathExplosion",random(0,35),0,random(0,90),0,0,0,random(0,359),32)
+	TNT1 AAAAAAAAAAAAAA 0 A_TossGib
+	CYBR J 5
+	TNT1 AA 0 A_SpawnItemEx("BossDeathExplosion",random(0,35),0,random(0,90),0,0,0,random(0,359),32)
+	CYBR K 5
+	TNT1 AAAA 0 A_SpawnItemEx("BossDeathExplosion",random(0,35),0,random(0,90),0,0,0,random(0,359),32)
+	TNT1 AAAAAAAAAAAAAA 0 A_TossGib
+	CYBR L 5
+	TNT1 AA 0 A_SpawnItemEx("BossDeathExplosion",random(0,35),0,random(0,90),0,0,0,random(0,359),32)
+	CYBR M 5
+	CYBR N 5
+	CYBR O 5
+	"####" "#" 0 A_QueueCorpse
+	TNT1 A 0 A_KillMaster
+	CYBR P -1 A_NoBlocking
+	Stop
+    Death.UnholyDisint:
+    Death.PlasmaDisint:
+    Disintegrate:
+	TNT1 A 0 Thing_SetTranslation(0,50)	
+	TNT1 A 0 A_KillMaster
+	CYBR G 1 A_FadeOut(0.015)
+	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+	TNT1 a 0 A_Stop	
+	TNT1 a 0 A_Fall
+	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowBig",0,0,45,0,0,0,0,32)
+	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksBig",0,0,45,0,0,0,0,32)
+	CYBR GG 2 A_FadeOut(0.03)
+	Goto Disintegrate+7
+    Ice:
+		"####" "#" 5 A_GenericFreezeDeath
+		"####" "#" 0 A_KillMaster
+		"####" "#" 1 A_FreezeDeathChunks
+		Wait
+	}
+}
+
+
+
+//=====================================================================================
+//=====================================================================================
+//
+//=====================================================================================
+//
+//		Custom Monsters
+//
+//=====================================================================================
+//
+//=====================================================================================
+//=====================================================================================
+
+Actor FPlasmaZombie : ZombieMan 7019
+{
+	DropItem "CellAmmo"
+	DropItem "HealthHeart" 210
+	DropItem "HealthBottle" 64
+	DropItem "PowerSlaveSpawnerMonsterAmmo" 128
+	DropItem "PowerupSpawner" 8
+    Health 30
+    +FLOORCLIP
+    Obituary "%o was plasmed by a plasma zombie."
+    PainChance "Charm", 255
+    PainChance "Terror", 255
+    PainChance "Defile", 255
+    PainChance "Drain", 160
+    PainChance "Chaos", 255
+    PainChance "ChaosExpl1", 255
+    PainChance "ChaosExpl2", 255
+//Armor
+	DamageFactor "Electric", 1.25
+	DamageFactor "Plasma", 0.75
+	DamageFactor "PlasmaDisint", 0.75
+	DamageFactor "AEBullet", 0.5
+    States
+    {
+    Pain.Chaos:
+	TNT1 A 0
+	TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+	TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+	Goto See
+    Pain.ChaosExpl1:
+	TNT1 A 0
+	TNT1 A 0 A_ClearTarget
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+	Goto Spawn
+    Pain.ChaosExpl2:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)
+	Goto See
+    Pain.Charm:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
+	Goto See
+    Pain.Terror:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
+	Goto See
+    Pain.Drain:
+	TNT1 A 0
+	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+	Goto Pain
+    Pain.Defile:
+	TNT1 A 0
+	TNT1 A 0 A_GiveInventory("DefileCheck",1)
+	Goto See
+    See:
+	POSP AABBCCDD 4 A_Chase
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,2)
+	TNT1 A 0
+	Loop
+	TNT1 A 0 A_Jump(15,"Death")
+	Loop
+    Missile:
+	POSS A 0 A_Jump(128,7)
+	POSS E 10 A_FaceTarget
+	POSS F 0 A_CustomMissile("ZPlasmaBall",32,0,0)
+	POSS F 0 A_CustomMissile("ZPlasmaBall",32,0,5)
+	POSS F 0 A_CustomMissile("ZPlasmaBall",32,0,-5)
+	POSS F 5 Bright
+	POSS E 5
+	Goto See
+	POSS E 10 A_FaceTarget
+	POSS F 5 A_CustomMissile("ZPlasmaBall",32,0,0)
+	POSS E 5 A_FaceTarget
+	POSS F 5 A_CustomMissile("ZPlasmaBall",32,0,0)
+	POSS E 5 A_FaceTarget
+	POSS F 5 A_CustomMissile("ZPlasmaBall",32,0,0)
+	Goto See
+    Pain:
+	POSS G 3
+	POSS G 3 A_Pain
+	Goto See
+    Death:
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,6)
+        POSP H 5
+        POSS I 5 A_Scream
+        POSS J 5 A_Fall
+        POSS K 5
+       	POSS L -1
+        Stop
+	TNT1 A 0 A_Die
+	TNT1 A 0 A_NoBlocking
+	TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
+	Goto XDeathBlood
+	Raise:
+		POSS LKJIH 4
+		Goto See
+    XDeath:
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"Death")
+	TNT1 A 0 A_Jump(256,"XDeathBlood")
+	POSS M 5
+	POSS MMMMMM 0 A_TossGib
+	POSS N 5 A_XScream
+	POSS O 5 A_Fall
+	POSS PQRST 5
+	POSS U -1
+	Stop
+    XDeathBlood:
+	TNT1 A 0 A_PlaySound("other/gibdeath")
+	TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,1)
+	TNT1 A 1 A_Fall
+	Stop
+    Burn:
+	TNT1 A 0
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"Death")
+	TNT1 A 0 A_Fall
+	TNT1 A 0 A_SpawnItemEx("GenericHumanBurn",0,0,0,0,0,0,0,32)
+	Stop
+    Death.UnholyDisint:
+    Death.PlasmaDisint:
+    Disintegrate:
+	TNT1 A 0 Thing_SetTranslation(0,50)	
+	POSS G 1 A_FadeOut(0.015)
+	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+	TNT1 a 0 A_Stop	
+	TNT1 a 0 A_Fall
+	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
+	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+	POSS GG 2 A_FadeOut(0.03)
+	Goto Disintegrate+6
+    }
+}
+
+Actor ZPlasmaBall : PlasmaBall
+{
+	DamageType "Plasma"
+    Scale 0.7
+    Damage 2
+}
+
+
+
+//===========================================================================
+//
+// Super Imp with green projectiles
+// 
+// from Obtic
+//
+//===========================================================================
+//	Modified by DBT to use in AEoD
+//===========================================================================
+
+ACTOR FSuperImp : DoomImp 7020	//mancubus
+{
+	DropItem "Mana2Ammo"
+	DropItem "Mana2Ammo"
+	DropItem "HealthHeart" 210
+	DropItem "PowerslaveSpawner" 28
+	DropItem "PowerupSpawner" 8
+    +BOSSDEATH
+    +FLOORCLIP
+    PainChance 64
+    mass 1200
+    Scale 1.4
+    Health 600
+    Obituary "%o was shocked by the imp's superior firepower."
+    SeeSound "diablo2/deathmauler/sight"
+    PainSound "diablo2/deathmauler/pain"
+    DeathSOund "diablo2/deathmauler/death"
+    ActiveSound "diablo2/deathmauler/idle"
+    PainChance "Charm", 255
+    PainChance "Terror", 255
+    PainChance "Defile", 255
+    PainChance "Drain", 160
+    PainChance "Chaos", 255
+    PainChance "ChaosExpl1", 255
+    PainChance "ChaosExpl2", 255
+//Flesh
+	DamageFactor "Electric", 1.25
+	DamageFactor "AEPoison", 1.25
+	DamageFactor "AEBullet", 1.5
+    States
+    {
+    Pain.Chaos:
+	TNT1 A 0
+	TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+	TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+	Goto See
+    Pain.ChaosExpl1:
+	TNT1 A 0
+	TNT1 A 0 A_ClearTarget
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+	Goto Spawn
+    Pain.ChaosExpl2:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)
+	Goto See
+    Pain.Charm:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
+	Goto See
+    Pain.Terror:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
+	Goto See
+    Pain.Drain:
+	TNT1 A 0
+	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+	Goto Pain
+    Pain.Defile:
+	TNT1 A 0
+	TNT1 A 0 A_GiveInventory("DefileCheck",1)
+	Goto See
+
+	See:
+	TROO AABBCCDD 3 A_Chase
+	Loop
+    Melee:
+    Missile:
+	TNT1 A 0 A_Jump(128,"Missile2","Missile3")
+	IMP3 A 5 A_FaceTarget
+	IMP3 B 5 A_FaceTarget
+	TROO G 5 A_BruisAttack
+	IMP3 A 5 A_FaceTarget
+	IMP3 B 5 A_FaceTarget
+	TROO G 5 A_BruisAttack
+	IMP3 A 5 A_FaceTarget
+	IMP3 B 5 A_FaceTarget
+	TROO G 5 A_BruisAttack
+	Goto See
+    Missile2:
+	IMP3 AB 6 A_FaceTarget
+	TROO G 0 A_CustomMissile("BaronBall",32,0,20)
+	TROO G 0 A_CustomMissile("BaronBall",32,0,-20)
+	TROO G 6 A_CustomMissile("BaronBall",32,0,0)
+	IMP3 AB 6 A_FaceTarget
+	TROO G 0 A_CustomMissile("BaronBall",32,0,20)
+	TROO G 0 A_CustomMissile("BaronBall",32,0,-20)
+	TROO G 6 A_CustomMissile("BaronBall",32,0,0)
+	Goto See
+    Missile3:
+	IMP3 AB 6 A_FaceTarget
+	TROO G 0 A_CustomMissile("BaronBall",32,0,random(-15,15))
+	TROO G 6 A_CustomMissile("BaronBall",32,0,random(-15,15))
+	IMP3 AB 6 A_FaceTarget
+	TROO G 0 A_CustomMissile("BaronBall",32,0,random(-15,15))
+	TROO G 6 A_CustomMissile("BaronBall",32,0,random(-15,15))
+	TROO G 1 A_CPosReFire
+	Loop
+    Pain:
+	TROO H 2
+	TROO H 2 A_Pain
+	Goto See
+    Death:
+		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,7)
+		TROO I 4 A_Scream
+		TROO J 4 A_Fall
+		TROO H 0 A_KillMaster
+		TROO KL 4
+		TROO M -1
+		Stop
+		TNT1 A 0 A_Die
+		TNT1 A 0 A_NoBlocking
+		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
+		Goto XDeathBlood
+	Raise:
+		TROO LKHJI 4
+		Goto See
+	Ice:
+		"####" "#" 5 A_GenericFreezeDeath
+		"####" "#" 0 A_KillMaster
+		"####" "#" 1 A_FreezeDeathChunks
+		Wait
+    Death.UnholyDisint:
+    Death.PlasmaDisint:
+    Disintegrate:
+		TNT1 A 0 Thing_SetTranslation(0,50)	
+		TNT1 A 0 A_KillMaster
+		TROO H 1 A_FadeOut(0.015)
+		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+		TNT1 a 0 A_Stop	
+		TNT1 a 0 A_Fall
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,32)
+		TROO HH 2 A_FadeOut(0.03)
+		Goto Disintegrate+7
+    XDeath:
+		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"Death")
+		TNT1 A 0 A_Jump(256,"XDeathBlood")
+		TROO N 4 A_XScream
+		TNT1 AAAAAAAAA 0 A_TossGib
+		TROO O 4 A_Fall
+		TROO P 0 A_KillMaster
+		TROO QRST 4
+		TROO U -1
+		Stop
+    XDeathBlood:
+		TNT1 A 0 A_PlaySound("other/gibdeath")
+		TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,1)
+		TNT1 A 0 A_KillMaster
+		TNT1 AAAAA 0 A_TossGib
+		TNT1 A 1 A_Fall
+		Stop
+    }
+}
+
+//================================================================
+//================================================================
+
+
+//================================================================
+//================================================================
+
+actor MSkeleton 7021	//zombieman
+{
+	DropItem "PowerSlaveSpawnerMonsterAmmo" 210
+	DropItem "PowerupSpawner" 8
+    MONSTER
+    Radius 16
+    Health 30
+    Scale 0.7
+    Height 56
+    PainChance 200
+    Mass 80
+    +FLOORCLIP
+    BloodColor "Orange"
+    Speed 10
+    MeleeDamage 2
+    SeeSound "bonefetiche/sight"
+    PainSound "bonefetiche/pain"
+    DeathSound "bonefetiche/death"
+    ActiveSound "bonefetiche/active"
+    MeleeSound "bonefetiche/attack"
+    HitObituary "%o was smacked to death by a skeleton."
+    PainChance "Charm", 255
+    PainChance "Terror", 255
+    PainChance "Defile", 255
+    PainChance "Drain", 160
+    PainChance "Chaos", 255
+    PainChance "ChaosExpl1", 255
+    PainChance "ChaosExpl2", 255
+//Undead
+	DamageFactor "AEPoison", 0.5
+	DamageFactor "AEBullet", 0.75
+	DamageFactor "Holy", 1.5
+	DamageFactor "Unholy", 0.5
+	DamageFactor "UnholyDisint", 0.5
+	DamageFactor "AEMagic", 1.25
+    States
+    {
+    Pain.Chaos:
+	TNT1 A 0
+	TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+	TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+	Goto See
+    Pain.ChaosExpl1:
+	TNT1 A 0
+	TNT1 A 0 A_ClearTarget
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+	Goto Spawn
+    Pain.ChaosExpl2:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)
+	Goto See
+    Pain.Charm:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
+	Goto See
+    Pain.Terror:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
+	Goto See
+    Pain.Drain:
+	TNT1 A 0
+	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+	Goto Pain
+    Pain.Defile:
+	TNT1 A 0
+	TNT1 A 0 A_GiveInventory("DefileCheck",1)
+	Goto See
+    Spawn:
+	SKEL AB 10 A_Look
+	Loop
+    See:
+	SKEL AABBCCDDEEFF 3 A_Chase
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,2)
+	TNT1 A 0
+	Loop
+	TNT1 A 0 A_Jump(15,"Death")
+	Loop
+    Melee:
+	SKEL G 1 A_FaceTarget
+	SKEL G 4 A_SkelWhoosh
+	SKEL H 4 A_FaceTarget
+	SKEL I 4 A_MeleeAttack
+	Goto See
+    Pain:
+	SKEL L 3
+	SKEL L 3 A_Pain
+	Goto See
+    Death:
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,7)
+	SKEL L 6
+	SKEL M 6 A_Scream
+	SKEL N 6
+	SKEL O 6
+	SKEL P 6 A_Fall
+	SKEL Q -1
+	Stop
+	TNT1 A 0 A_Die
+	TNT1 A 0 A_NoBlocking
+	TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
+	Goto XDeathBlood
+    XDeath:
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"Death")
+	TNT1 A 0 A_Jump(256,"XDeathBlood")
+	TNT1 AAAAAA 0 A_TossGib
+	Goto Death
+    XDeathBlood:
+	TNT1 A 0 A_PlaySound("other/gibdeath")
+	TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,1)
+	TNT1 A 1 A_Fall
+	Stop
+    Raise:
+	SKEL PONML 6
+	Goto See
+    Death.UnholyDisint:
+    Death.PlasmaDisint:
+    Disintegrate:
+	TNT1 A 0 Thing_SetTranslation(0,50)	
+	SKEL L 1 A_FadeOut(0.015)
+	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+	TNT1 a 0 A_Stop	
+	TNT1 a 0 A_Fall
+	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowSmallMedium",0,0,18,0,0,0,0,32)
+	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksSmallMedium",0,0,18,0,0,0,0,32)
+	SKEL LL 2 A_FadeOut(0.03)
+	Goto Disintegrate+6
+    }
+}
+
+
+//=====================================================================================
+//=====================================================================================
+
+
+//=====================================================================================
+//=====================================================================================
+
+Actor ArchMinion 7022		//shotguy
+{
+	DropItem "ManaAmmo"
+	DropItem "Mana2Ammo" 128
+	DropItem "HealthHeart" 210
+	DropItem "PowerSlaveSpawnerShotgunner" 210
+	DropItem "PowerupSpawner" 8
+    Monster
+    Health 50
+    Radius 16
+    Height 56
+    Mass 110
+    Speed 10
+    PainChance 170
+    +FLOORCLIP
+    SeeSound "FleshThing/Idle"
+    PainSound "FleshThing/Pain"
+    DeathSound "FleshThing/death"
+    ActiveSound "FleshThing/Idle"
+    BloodColor DimGray
+    Translation "168:191=86:111"
+    Scale 0.68
+    PainChance "Charm", 255
+    PainChance "Terror", 255
+    PainChance "Defile", 255
+    PainChance "Drain", 160
+    PainChance "Chaos", 255
+    PainChance "ChaosExpl1", 255
+    PainChance "ChaosExpl2", 255
+//Flesh
+	DamageFactor "Electric", 1.25
+	DamageFactor "AEPoison", 1.25
+	DamageFactor "AEBullet", 1.5
+    States
+    {
+    Pain.Chaos:
+	TNT1 A 0
+	TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+	TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+	Goto See
+    Pain.ChaosExpl1:
+	TNT1 A 0
+	TNT1 A 0 A_ClearTarget
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+	Goto Spawn
+    Pain.ChaosExpl2:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)
+	Goto See
+    Pain.Charm:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
+	Goto See
+    Pain.Terror:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
+	Goto See
+    Pain.Drain:
+	TNT1 A 0
+	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+	Goto Pain
+    Pain.Defile:
+	TNT1 A 0
+	TNT1 A 0 A_GiveInventory("DefileCheck",1)
+	Goto See
+    Spawn:
+	VILE B 5 A_Look
+	Loop
+    See:
+	VILE AABBCCDDEEFF 3 A_Chase
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,2)
+	TNT1 A 0
+	Loop
+	TNT1 A 0 A_Jump(15,"Death")
+	Loop
+    Missile:
+	VILE "[" 8 A_FaceTarget
+	TNT1 A 0 A_PlaySound("sorcererspellcast")
+	TNT1 A 0 A_CustomMissile("ArchMinionBall",25,-18,0)
+	TNT1 A 0 A_CustomMissile("ArchMinionBall",40,0,0)
+	AVL2 A 8 A_CustomMissile("ArchMinionBall",25,18,0)
+	VILE "]" 8 A_FaceTarget
+	VILE "[" 8 A_FaceTarget
+	TNT1 A 0 A_PlaySound("sorcererspellcast")
+	TNT1 A 0 A_CustomMissile("ArchMinionBall",25,-18,0)
+	TNT1 A 0 A_CustomMissile("ArchMinionBall",40,0,0)
+	AVL2 A 8 A_CustomMissile("ArchMinionBall",25,18,0)
+	VILE "]" 8 A_FaceTarget
+	VILE "[" 8 A_FaceTarget
+	TNT1 A 0 A_PlaySound("sorcererspellcast")
+	TNT1 A 0 A_CustomMissile("ArchMinionBall",25,-18,0)
+	TNT1 A 0 A_CustomMissile("ArchMinionBall",40,0,0)
+	AVL2 A 8 A_CustomMissile("ArchMinionBall",25,18,0)
+	VILE "]" 8 A_FaceTarget
+	Goto See
+    Pain:
+	VILE Q 4
+	VILE Q 4 A_Pain
+	Goto See
+    Death:
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,7)
+	VILE RS 5
+	VILE T 5 A_Scream
+	VILE U 5 A_Fall
+	VILE VWXY 5
+	VILE Z -1
+	Stop
+	TNT1 A 0 A_Die
+	TNT1 A 0 A_NoBlocking
+	TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
+	Goto XDeathBlood
+    XDeath:
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"Death")
+	TNT1 A 0 A_Jump(256,"XDeathBlood")
+	TNT1 AAA 0 A_SpawnItemEx("GrayGib",0,0,random(1,5),0,0,0,0,32)
+	TNT1 AAA 0 A_TossGib
+	Goto Death
+    XDeathBlood:
+	TNT1 A 0 A_PlaySound("other/gibdeath")
+	TNT1 A 0 A_SpawnItemEx("GrayGibSp",0,0,random(20,40),0,0,0,0,32)
+	TNT1 AAAA 0 A_TossGib
+	TNT1 A 0 A_KillMaster
+	TNT1 A 1 A_Fall
+	Stop
+    Raise:
+	VILE ZYXWVUTSR 4
+	Goto See
+    Death.UnholyDisint:
+    Death.PlasmaDisint:
+    Disintegrate:
+	TNT1 A 0 Thing_SetTranslation(0,50)	
+	VILE Q 1 A_FadeOut(0.015)
+	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+	TNT1 a 0 A_Stop	
+	TNT1 a 0 A_Fall
+	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowSmallMedium",0,0,18,0,0,0,0,32)
+	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksSmallMedium",0,0,18,0,0,0,0,32)
+	VILE QQ 2 A_FadeOut(0.03)
+	Goto Disintegrate+6
+    }
+}
+
+Actor ArchMinionBall
+{
+	DamageType "AEMagic"
+    Projectile
+    Damage 3
+    +STRIFEDAMAGE
+    Speed 9
+    SeeSound ""
+    DeathSound "centaurmissileexplode"
+    Scale 0.8
+    RenderStyle SoulTrans
+    Translation "208:223=80:111", "112:127=80:111", "152:159=80:111"
+    States
+    {
+    Spawn:
+	TNT1 A 2 A_CStaffMissileSlither
+	TNT1 A 0 A_SpawnItemEx("ArchMinionBallTrail",0,0,0,0,0,0,0,32)
+	Loop
+    Death:
+	FRZ9 DEFGFED 1 Bright
+	Stop
+    }
+}
+
+Actor ArchMinionBallTrail
+{
+    Projectile
+    Speed 0
+    Damage 0
+    +NOCLIP
+    Scale 0.3
+    RenderStyle Add
+    States
+    {
+    Spawn:
+	TNT1 A 2
+	FRZ9 GFE 2 Bright
+	FRZ9 D 1 Bright A_FadeOut
+	Wait
+    }
+}
+
+//=====================================================================================
+//=====================================================================================
+
+
+//=====================================================================================
+//=====================================================================================
+
+
+Actor FatMinion 7023		//zombieman
+{
+	DropItem "HealthHeart" 210
+	DropItem "PowerSlaveSpawnerMonsterAmmo" 210
+	DropItem "PowerupSpawner" 8
+    Monster
+    Health 40
+    Radius 20
+    Height 48
+    Mass 110
+    Speed 7
+    +FLOORCLIP
+    PainChance 170
+    SeeSound "undeadhorror/sight"
+    PainSound "undeadhorror/pain"
+    DeathSound "undeadhorror/death"
+    ActiveSound "undeadhorror/active"
+    Translation "48:79=128:141"
+    Scale 0.68
+    PainChance "Charm", 255
+    PainChance "Terror", 255
+    PainChance "Defile", 255
+    PainChance "Drain", 160
+    PainChance "Chaos", 255
+    PainChance "ChaosExpl1", 255
+    PainChance "ChaosExpl2", 255
+//Flesh
+	DamageFactor "Electric", 1.25
+	DamageFactor "AEPoison", 1.25
+	DamageFactor "AEBullet", 1.5
+    States
+    {
+    Pain.Chaos:
+	TNT1 A 0
+	TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+	TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+	Goto See
+    Pain.ChaosExpl1:
+	TNT1 A 0
+	TNT1 A 0 A_ClearTarget
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+	Goto Spawn
+    Pain.ChaosExpl2:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)
+	Goto See
+    Pain.Charm:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
+	Goto See
+    Pain.Terror:
+	TNT1 A 0
+	TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
+	Goto See
+    Pain.Drain:
+	TNT1 A 0
+	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+	Goto Pain
+    Pain.Defile:
+	TNT1 A 0
+	TNT1 A 0 A_GiveInventory("DefileCheck",1)
+	Goto See
+    Spawn:
+	FATT B 5 A_Look
+	Loop
+    See:
+	FATT AABBCCDDEEFF 4 A_Chase
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,2)
+	TNT1 A 0
+	Loop
+	TNT1 A 0 A_Jump(15,"Death")
+	Loop
+    Missile:
+	FATT G 8 A_FaceTarget
+	TNT1 A 0 A_PlaySound("centaurleaderattack")
+	TNT1 A 0 A_CustomMissile("MVBall",15,-18,0)
+	FATT H 8 A_CustomMissile("MVBall",15,18,0)
+	FATT I 8 A_FaceTarget
+	Goto See
+    Pain:
+	FATT J 4
+	FATT J 4 A_Pain
+	Goto See
+    Death:
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,11)
+	FATT K 5
+	FATT L 5 A_Scream
+	FATT M 5 A_Fall
+	FATT NOPQRS 4
+	FATT T -1
+	Stop
+	TNT1 A 0 A_Die
+	TNT1 A 0 A_NoBlocking
+	TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
+	Goto XDeathBlood
+    XDeath:
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"Death")
+	TNT1 A 0 A_Jump(256,"XDeathBlood")
+	TNT1 AAAAAA 0 A_TossGib
+	Goto Death
+    XDeathBlood:
+	TNT1 A 0 A_PlaySound("other/gibdeath")
+	TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,1)
+	TNT1 A 1 A_Fall
+	Stop
+    Raise:
+	FATT SRQPONMLK 4
+	Goto See
+    Death.UnholyDisint:
+    Death.PlasmaDisint:
+    Disintegrate:
+	TNT1 A 0 Thing_SetTranslation(0,50)	
+	FATT J 1 A_FadeOut(0.015)
+	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+	TNT1 a 0 A_Stop	
+	TNT1 a 0 A_Fall
+	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
+	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+	FATT JJ 2 A_FadeOut(0.03)
+	Goto Disintegrate+6
+    }
+}
+
+
+Actor MVBall
+{
+    Projectile
+    Damage 2
+    Speed 9
+	DamageType "Plasma"
+    +SeekerMissile
+    SeeSound ""
+    DeathSound "centaurmissileexplode"
+    Scale 0.4
+    RenderStyle SoulTrans
+    States
+    {
+    Spawn:
+	BAL1 A 2 Bright A_SeekerMissile(10,10)
+	BAL1 A 0 A_CustomMissile("MVBT",0,0,0)
+	BAL1 B 2 Bright A_SeekerMissile(10,10)
+	BAL1 B 0 A_CustomMissile("MVBT",0,0,0)
+	Loop
+    Death:
+	BAL1 CDE 4 Bright
+	BAL1 E 1 Bright A_FadeOut
+	Wait
+    }
+}
+
+
+Actor MVBT
+{
+    Projectile
+    Speed 0
+    Damage 0
+    +NOCLIP
+    Scale 0.3
+    RenderStyle Add
+    States
+    {
+    Spawn:
+	TNT1 A 2
+	BAL1 CD 5 Bright
+	BAL1 E 1 Bright A_FadeOut
+	Wait
+    }
+}
+
+//=====================================================================================
+//=====================================================================================
+
+
+//=====================================================================================
+//=====================================================================================
+
+Actor FatUnseeing : FatMinion	7024	// hell knight
+{
+	DropItem "ManaAmmo" 200
+	DropItem "Mana2Ammo" 200
+	DropItem "HealthHeart" 210
+	DropItem "PowerslaveSpawner" 28
+	DropItem "PowerupSpawner" 8
+    Scale 0.8
+    Health 400
+    +Stealth
+    RenderStyle Translucent
+    Translation "48:79=176:191"
+    SeeSound "FatDemon/Idle"
+    PainSound "FatDemon/Pain"
+    DeathSound "FatDemon/death"
+    ActiveSound "FatDemon/Idle"
+    PainChance "Drain", 110
+//Ethereal
+	DamageFactor "Electric", 1.25
+	DamageFactor "AEPoison", 0.75
+	DamageFactor "AEBullet", 0.5
+	DamageFactor "Holy", 0.75
+	DamageFactor "Unholy", 1.25
+	DamageFactor "UnholyDisint", 1.25
+	DamageFactor "AEMagic", 1.25
+	DamageFactor "Plasma", 1.25
+	DamageFactor "PlasmaDisint", 1.25
+    States
+    {
+    Missile:
+	FATT G 8 A_FaceTarget
+	TNT1 A 0 A_PlaySound("q2weapon/blaster")
+	TNT1 A 0 A_CustomMissile("FatUnseeingBall",20,-18,0)
+	FATT H 8 A_CustomMissile("FatUnseeingBall",20,18,0)
+	FATT I 4 A_FaceTarget
+	FATT G 8 A_FaceTarget
+	TNT1 A 0 A_PlaySound("q2weapon/blaster")
+	TNT1 A 0 A_CustomMissile("FatUnseeingBall",20,-18,0)
+	FATT H 8 A_CustomMissile("FatUnseeingBall",20,18,0)
+	FATT I 8 A_FaceTarget
+	Goto See
+    XDeath:
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"Death")
+	TNT1 A 0 A_Jump(256,"XDeathBlood")
+	TNT1 AAAAAAAA 0 A_TossGib
+	Goto Death
+    XDeathBlood:
+	TNT1 A 0 A_PlaySound("other/gibdeath")
+	TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,1)
+	TNT1 AAAA 0 A_TossGib
+	TNT1 A 1 A_Fall
+	Stop
+    Death.UnholyDisint:
+    Death.PlasmaDisint:
+    Disintegrate:
+	TNT1 A 0 A_SetTranslucent(1.0,0)
+	TNT1 A 0 Thing_SetTranslation(0,50)	
+	FATT J 1 A_FadeOut(0.015)
+	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+	TNT1 a 0 A_Stop	
+	TNT1 a 0 A_Fall
+	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,32)
+	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,32)
+	FATT JJ 2 A_FadeOut(0.03)
+	Goto Disintegrate+7
+    }
+}
+
+Actor FatUnseeingBall
+{
+	DamageType "Plasma"
+    Projectile
+    Damage 3
+    Speed 30
+    +SeekerMissile
+    SeeSound ""
+    DeathSound "q2weapon/laserhit"
+    Scale 0.3
+    RenderStyle SoulTrans
+    States
+    {
+    Spawn:
+	FX00 CDEF 2 Bright
+	Loop
+    Death:
+	FX00 HIJKLM 4 Bright
+	Stop
+    }
+}
+
+
+//===========================================================================
+
+//===========================================================================
+//===========================================================================
+
+
+//===========================================================================
+//===========================================================================
+
+ACTOR PlayerCloneUltimate 7032	//cyberdemon
+{
+	DropItem "Shotgun" 190
+	DropItem "SuperShotgun" 190
+	DropItem "Chaingun" 190
+	DropItem "RocketLauncher" 128
+	DropItem "PlasmaRifle" 128
+	DropItem "BFG9000" 64
+	DropItem "ManaBigAmmo" 160
+	DropItem "ManaBigAmmo" 160
+	DropItem "Mana2BigAmmo" 160
+	DropItem "Mana2BigAmmo" 160
+	DropItem "BulletBigAmmo" 160
+	DropItem "BulletBigAmmo" 160
+	DropItem "CellBigAmmo" 160
+	DropItem "CellBigAmmo" 160
+	DropItem "HealthHeart" 210
+	DropItem "HealthBottle" 64
+	DropItem "PowerslaveSpawner" 28
+	DropItem "PowerupSpawner" 8
+    Health 3000
+    Radius 22
+    Height 68
+    Speed 8
+    PainChance 15
+    Scale 1.2
+    Mass 10000
+    MONSTER 
+    +DONTMORPH
+    +FLOORCLIP
+    +LONGMELEERANGE
+    +MISSILEMORE
+    +MISSILEEVENMORE
+    +NOICEDEATH
+    +BOSSDEATH
+    MinMissileChance 1
+    Translation "127:127=0:0","119:126=5:8","112:118=109:111"
+    SeeSound "player/sight"
+    PainSound "player/pain"
+    DeathSound "player/death"
+    ActiveSound "player/active"
+    HitObituary "%o got his clock cleaned by the ultimate clone."
+    Obituary "%o was defeated by the ultimate clone."
+    MeleeDamage 15
+    DamageFactor "Wormwood", 0.2
+    DamageFactor "ChaosExpl1", 0
+    DamageFactor "ChaosExpl2", 0
+    PainChance "Drain", 40
+    PainChance "Chaos", 255
+//Armor
+	DamageFactor "Electric", 1.25
+	DamageFactor "Plasma", 0.75
+	DamageFactor "PlasmaDisint", 0.75
+	DamageFactor "AEBullet", 0.5
+    States
+    {
+    Pain.Chaos:
+	TNT1 A 0
+	TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+	TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+	Goto See
+    Pain.Drain:
+	TNT1 A 0
+	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+	Goto Pain
+    Spawn:
+        PLAY B 10 A_Look
+        Loop
+    See:
+	PLAY A 4 A_FastChase
+	PLAY A 0 A_JumpIfInventory("PentagramCheck",1,15)
+	PLAY A 4 A_FastChase
+	PLAY A 0 A_JumpIfInventory("PentagramCheck",1,13)
+	PLAY B 4 A_FastChase
+	PLAY B 0 A_JumpIfInventory("PentagramCheck",1,11)
+	PLAY B 4 A_FastChase
+	PLAY B 0 A_JumpIfInventory("PentagramCheck",1,9)
+	PLAY C 4 A_FastChase
+	PLAY C 0 A_JumpIfInventory("PentagramCheck",1,7)
+	PLAY C 4 A_FastChase
+	PLAY C 0 A_JumpIfInventory("PentagramCheck",1,5)
+	PLAY D 4 A_FastChase
+	PLAY D 0 A_JumpIfInventory("PentagramCheck",1,3)
+	PLAY D 4 A_FastChase
+	PLAY D 0 A_JumpIfInventory("PentagramCheck",1,1)
+        Loop
+        PLAY A 4 Bright A_FastChase
+	PLAY A 0 Bright A_JumpIfInventory("PentagramActive",100,23)
+	PLAY A 0 Bright A_GiveInventory("PentagramActive",1)
+	PLAY A 4 Bright A_FastChase
+	PLAY A 0 Bright A_JumpIfInventory("PentagramActive",100,20)
+	PLAY A 0 Bright A_GiveInventory("PentagramActive",1)
+	PLAY B 4 Bright A_FastChase
+	PLAY B 0 Bright A_JumpIfInventory("PentagramActive",100,17)
+	PLAY B 0 Bright A_GiveInventory("PentagramActive",1)
+	PLAY B 4 Bright A_FastChase
+	PLAY B 0 Bright A_JumpIfInventory("PentagramActive",100,14)
+	PLAY B 0 Bright A_GiveInventory("PentagramActive",1)
+	PLAY C 4 Bright A_FastChase
+	PLAY C 0 Bright A_JumpIfInventory("PentagramActive",100,11)
+	PLAY C 0 Bright A_GiveInventory("PentagramActive",1)
+	PLAY C 4 Bright A_FastChase
+	PLAY C 0 Bright A_JumpIfInventory("PentagramActive",100,8)
+	PLAY C 0 Bright A_GiveInventory("PentagramActive",1)
+	PLAY D 4 Bright A_FastChase
+	PLAY D 0 Bright A_JumpIfInventory("PentagramActive",100,5)
+	PLAY D 0 Bright A_GiveInventory("PentagramActive",1)
+	PLAY D 4 Bright A_FastChase
+	PLAY D 0 Bright A_JumpIfInventory("PentagramActive",100,2)
+	PLAY D 0 Bright A_GiveInventory("PentagramActive",1)
+	Goto See+16
+	PLAY A 0 A_PlaySoundEx("q2items/protectiondown","Voice",0,1)
+	PLAY A 0 A_GiveInventory("PentagramUsed",1)
+	PLAY A 0 A_TakeInventory("PentagramActive",100)
+	PLAY A 0 A_TakeInventory("PentagramCheck",1)
+	PLAY A 0 A_UnSetInvulnerable
+	Goto See
+    Melee:
+	PLAY A 4 A_FaceTarget
+	PLAY E 0 A_Playsound("deathknight/swing1")
+	PLAY E 4 A_MeleeAttack
+	PLAY A 2 A_FaceTarget
+	Goto See
+    Missile:
+	PLAY E 0 A_JumpIfHealthLower(3000,"Protect")	// Pentagram
+	PLAY E 0 A_Jump(3,"FCube")			// Force Cube
+    	PLAY E 0 A_JumpIfCloser(500,"SRange")		// short range
+	PLAY E 0 A_Jump(128,"LRange")			// long range
+	Goto Missile+1
+    LRange:
+	PLAY E 0 A_Jump(128,"HRocket")
+	PLAY E 0 A_Jump(128,"RStaff")
+	PLAY E 0 A_Jump(128,"LLeech")
+	PLAY E 0 A_Jump(128,"LScarab")
+	PLAY E 0 A_Jump(48,"JackBomb")
+    Chicken:
+	PLAY E 5 A_FaceTarget
+	PLAY E 0 A_PlaySound("Chicken/Launch")
+	PLAY E 2 A_CustomMissile("ChickenRocket2",40,0,0)
+	PLAY E 5 A_FaceTarget
+	Goto See
+    HRocket:
+	PLAY E 5 A_FaceTarget
+	PLAY E 0 A_PlaySound("weapons/dnrpg")
+	PLAY E 0 A_Jump(50,3)
+	PLAY E 2 A_CustomMissile("SuperRocket",40,0,0) 
+	PLAY E 5 A_FaceTarget
+	Goto See
+	PLAY E 2 A_CustomMissile("IncendiaryRocket",40,0,0)
+	PLAY E 5 A_FaceTarget
+	Goto See
+    RStaff:
+	PLAY E 5 A_FaceTarget
+	PLAY E 0 A_PlaySound("h2ravenprojectile/shot")
+	PLAY E 0 A_CustomMissile("RavenStaffShot",40,0,0,1)
+	PLAY E 0 A_CustomMissile("RavenStaffShot",40,0,5,1)
+	PLAY E 2 A_CustomMissile("RavenStaffShot",40,0,-5,1)
+	PLAY E 5 A_FaceTarget
+	Goto See
+    LLeech:
+	PLAY E 5 A_FaceTarget
+	PLAY E 0 A_PlaySound("LifeLeech/Fire")
+	PLAY E 0 A_FaceTarget
+	PLAY E 0 A_ChangeFlag("NOPAIN",1)
+	PLAY E 0 A_JumpIfInventory("LLeechChecker",15,4)
+	PLAY E 2 A_CustomMissile("LifeLeechFireball",40,0,random(-3,3))
+	PLAY E 2 A_FaceTarget
+	PLAY E 0 A_GiveInventory("LLeechChecker",1)
+	Goto LLeech+2
+	PLAY E 0 A_ChangeFlag("NOPAIN",0)
+	PLAY E 0 A_TakeInventory("LLeechChecker",15)
+	PLAY E 0 A_FaceTarget
+	Goto See
+    LScarab:
+	PLAY E 5 A_FaceTarget
+	PLAY E 0 A_ChangeFlag("NOPAIN",1)
+        PLAY E 12 A_PlaySoundEx("h2assasin/scarabstaffcharge","SoundSlot7",0,2)
+        PLAY E 0 A_PlaySoundEx("h2assassin/scarabshot2","SoundSlot7",0,2)
+	PLAY E 0 A_CustomRailgun(110,0,none,"83 1F 1F",1,1,1,"ScarabPuff")
+	PLAY E 0 A_CustomRailgun(0,0,none,"9B 63 3B",1,1,1,"ScarabPuff")
+	PLAY E 0 A_ChangeFlag("NOPAIN",0)
+	PLAY E 5 A_FaceTarget
+	Goto See
+    SRange:
+	PLAY E 0 A_Jump(100,"Frag")
+	PLAY E 0 A_Jump(100,"Gas")
+	PLAY E 0 A_Jump(100,"MIRV")
+	PLAY E 0 A_Jump(100,"Bunnies")
+	PLAY E 0 A_Jump(32,"JackBomb")
+    Napalm:
+	PLAY E 5 A_FaceTarget
+	PLAY E 0 A_PlaySound("q2weapon/handgrenadethrow")
+	PLAY E 2 A_CustomMissile("NapalmGrenade",40,0,0)
+	PLAY E 0 A_Jump(128,2)
+	PLAY E 5 A_FaceTarget
+	Goto See
+	PLAY E 15 A_FaceTarget
+	PLAY E 0 A_PlaySound("q2weapon/handgrenadethrow")
+	PLAY E 2 A_CustomMissile("NapalmGrenade",40,0,0)
+	PLAY E 5 A_FaceTarget
+	Goto Napalm+3
+    Frag:
+	PLAY E 5 A_FaceTarget
+	PLAY E 0 A_PlaySound("q2weapon/handgrenadethrow")
+	PLAY E 2 A_CustomMissile("HandGrenade20b",40,0,0)
+	PLAY E 0 A_Jump(128,2)
+	PLAY E 5 A_FaceTarget
+	Goto See
+	PLAY E 15 A_FaceTarget
+	PLAY E 0 A_PlaySound("q2weapon/handgrenadethrow")
+	PLAY E 2 A_CustomMissile("HandGrenade20b",40,0,0)
+	PLAY E 5 A_FaceTarget
+	Goto Frag+3
+    Gas:
+	PLAY E 5 A_FaceTarget
+	PLAY E 0 A_PlaySound("q2weapon/grenadelaunfire")
+	PLAY E 2 A_CustomMissile("GasGrenade",40,0,0)
+	PLAY E 15 A_FaceTarget
+	PLAY E 0 A_PlaySound("q2weapon/grenadelaunfire")
+	PLAY E 2 A_CustomMissile("GasGrenade",40,0,0)
+	PLAY E 5 A_FaceTarget
+	Goto See
+    MIRV:
+	PLAY E 5 A_FaceTarget
+	PLAY E 0 A_PlaySound("weapons/grenadelaunch")
+	PLAY E 2 A_CustomMissile("QuakeGrenadeBig",40,0,0)
+	PLAY E 0 A_Jump(128,2)
+	PLAY E 5 A_FaceTarget
+	Goto See
+	PLAY E 15 A_FaceTarget
+	PLAY E 0 A_PlaySound("weapons/grenadelaunch")
+	PLAY E 2 A_CustomMissile("QuakeGrenadeBig",40,0,0)
+	PLAY E 5 A_FaceTarget
+	Goto MIRV+3
+    Bunnies:
+	PLAY E 5 A_FaceTarget
+	PLAY E 0 A_CustomMissile("UCBunnyEgg",0,0,0)
+	PLAY E 25 A_FaceTarget
+	PLAY E 0 A_CustomMissile("UCBunnyEgg",0,0,0)
+	PLAY E 25 A_FaceTarget
+	PLAY E 0 A_CustomMissile("UCBunnyEgg",0,0,0)
+	PLAY E 0 A_Jump(128,3)
+	PLAY E 25 A_FaceTarget
+	PLAY E 0 A_CustomMissile("UCBunnyEgg",0,0,0)
+	PLAY E 0 A_Jump(160,3)
+	PLAY E 25 A_FaceTarget
+	PLAY E 0 A_CustomMissile("UCBunnyEgg",0,0,0)
+	PLAY E 5 A_FaceTarget
+	Goto See
+    JackBomb:
+	PLAY E 5 A_FaceTarget
+	PLAY E 0 A_PlaySound("caleb/tnt")
+	PLAY E 2 A_CustomMissile("UCJackBomb1",0,0,0)
+	PLAY E 5 A_FaceTarget
+	Goto See
+    FCube:
+	PLAY E 0 A_PlaySound("ForceCube/Use")
+	PLAY E 0 A_SpawnItem("FForceCube",64,64)
+	Goto See
+    Protect:
+	PLAY E 0 A_JumpIfInventory("PentagramUsed",1,5)
+	PLAY E 0 A_JumpIfInventory("PentagramCheck",1,4)
+	PLAY E 0 A_PlaySoundEx("q2items/protectionup","Voice",0,1)
+	PLAY E 0 A_SetInvulnerable
+	PLAY E 0 A_GiveInventory("PentagramCheck",1)
+	PLAY E 0
+	Goto Missile+1
+    Pain:
+        PLAY G 3
+        PLAY G 3 A_Pain
+        Goto See
+    Death:
+        PLAY HI 5
+        PLAY J 5 A_Scream
+        PLAY K 5 A_Fall
+        PLAY LM 5
+		"####" "#" 0 A_QueueCorpse
+        PLAY N -1 A_Killmaster
+        Stop
+    XDeath:
+	TNT1 A 0 A_Jump(256,"XDeathBlood")
+	PLAY AAAAAA 0 A_TossGib
+	PLAY O 2 A_Fall
+	PLAY PQRSTUV 2
+	"####" "#" 0 A_QueueCorpse
+	PLAY W -1 A_Killmaster
+	Stop
+    XDeathBlood:
+	TNT1 A 0 A_PlaySound("other/gibdeath")
+	TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,1)
+	TNT1 a 0 A_Killmaster
+	TNT1 A 1 A_Fall
+	Stop
+    Death.UnholyDisint:
+    Death.PlasmaDisint:
+    Disintegrate:
+	TNT1 A 0 Thing_SetTranslation(0,50)	
+	TNT1 A 0 A_Killmaster
+	PLAY G 1 A_FadeOut(0.015)
+	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+	TNT1 a 0 A_Stop	
+	TNT1 a 0 A_Fall
+	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,32)
+	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,32)
+	PLAY GG 2 A_FadeOut(0.03)
+	Goto Disintegrate+7
+    Ice:
+		"####" "#" 5 A_GenericFreezeDeath
+		"####" "#" 0 A_KillMaster
+		"####" "#" 1 A_FreezeDeathChunks
+		Wait
+    }
+}
+
+ACTOR LLeechChecker : Inventory
+{
+    Inventory.Amount 1
+    Inventory.MaxAmount 15
+}
+
+ACTOR PentagramCheck : Inventory
+{
+    Inventory.Amount 1
+    Inventory.MaxAmount 1
+}
+
+ACTOR PentagramActive : Inventory
+{
+    Inventory.Amount 1
+    Inventory.MaxAmount 100
+}
+
+ACTOR PentagramUsed : Inventory
+{
+    Inventory.Amount 1
+    Inventory.MaxAmount 1
+}
+
+ACTOR UCBunnyEgg : BunnyEgg
+{
+    States
+    {
+    Spawn:
+	PLSS A 0
+	PLSS A 1 A_SpawnItem("UCBunny",1,0,0)
+	Stop
+    }
+}
+
+ACTOR UCBunny : Bunny
+{
+    -FRIENDLY
+    +SHOOTABLE
+    Health 10
+    Height 25
+    Radius 20
+    States
+    {
+    See:
+	BUNN A 2 A_Chase
+	BUNN A 0 A_GiveInventory("UCBunnyCheck",1)
+	BUNN A 0 A_JumpIfInventory("UCBunnyCheck",350,"Death")
+	BUNN A 2 A_Chase
+	BUNN A 0 A_GiveInventory("UCBunnyCheck",1)
+	BUNN A 0 A_JumpIfInventory("UCBunnyCheck",350,"Death")
+	BUNN B 2 A_Chase
+	BUNN B 0 A_GiveInventory("UCBunnyCheck",1)
+	BUNN B 0 A_JumpIfInventory("UCBunnyCheck",350,"Death")
+	BUNN B 2 A_Chase
+	BUNN B 0 A_GiveInventory("UCBunnyCheck",1)
+	BUNN B 0 A_JumpIfInventory("UCBunnyCheck",350,"Death")
+	BUNN C 2 A_Chase
+	BUNN C 0 A_GiveInventory("UCBunnyCheck",1)
+	BUNN C 0 A_JumpIfInventory("UCBunnyCheck",350,"Death")
+	BUNN C 2 A_Chase
+	BUNN C 0 A_GiveInventory("UCBunnyCheck",1)
+	BUNN C 0 A_JumpIfInventory("UCBunnyCheck",350,"Death")
+	BUNN D 2 A_Chase
+	BUNN D 0 A_GiveInventory("UCBunnyCheck",1)
+	BUNN D 0 A_JumpIfInventory("UCBunnyCheck",350,"Death")
+	BUNN D 2 A_Chase
+	BUNN D 0 A_GiveInventory("UCBunnyCheck",1)
+	BUNN D 0 A_JumpIfInventory("UCBunnyCheck",350,"Death")
+	Loop
+    }
+}
+
+ACTOR UCBunnyCheck : Inventory
+{
+    Inventory.Amount 1
+    Inventory.MaxAmount 350
+}
+
+ACTOR UCJackBomb1
+{
+    Speed 22
+    Radius 8
+    Height 8
+    Scale 0.25
+    Damage 0
+    Gravity 0.65
+    PROJECTILE
+    +GRENADETRAIL
+    -NOGRAVITY
+    +EXTREMEDEATH
+    +HEXENBOUNCE
+    +BOUNCEONACTORS
+    +CANBOUNCEWATER
+    +PAINLESS
+    BounceFactor 0.7
+    BounceCount 6
+    States
+    {
+    Spawn:
+	TNT1 A 0 
+	TNT1 A 0 ThrustThingZ(0,random(10,15),0,1)
+        JBTH A 1 Bright 
+        Goto Spawn+2
+    Death:
+	TNT1 A 0 A_SpawnItemEx("UCJackBomb2",0,0,0,0,0,0,0,32,0)
+	Stop
+    }
+}
+
+ACTOR UCJackBomb2
+{
+    Speed 0
+    Radius 8
+    Height 8
+    Health 100000
+    Scale 0.25
+    Damage 16
+    Mass 100000
+    ReactionTime 73
+    +EXTREMEDEATH
+    +SHOOTABLE
+    BloodType NoBloodPuff
+    +FLOORCLIP
+    +FORCERADIUSDMG
+    +THRUACTORS
+    +SPECTRAL
+    -COUNTKILL
+    -SOLID
+    DamageFactor "ChaosExpl1", 0
+    DamageFactor "ChaosExpl2", 0
+    States
+    {
+    Spawn:
+	TNT1 A 0
+	JBTH A 0 A_PlaySound("weapons/jackbomb")
+	JBTH ABCDEDCBABCDEDCB 5 A_CountDown
+	Goto Spawn+2
+    Death:
+	JBTH CDE 5
+	JBTH FG 3
+	JBTH H 15
+	TNT1 A 0 A_PlaySound("caleb/tnt/explode")
+	FRME A 0 Bright A_Explode(850,300,1)
+	TNT1 A 0 A_SpawnItemEx("NewExplosionMediumBig",0,0,0,0,0,0,0,32)
+	EXPL A 0 A_CustomMissile("SuperRocketBit2I",0,0,45)
+	EXPL A 0 A_CustomMissile("SuperRocketBit2I",0,0,90)
+	EXPL A 0 A_CustomMissile("SuperRocketBit2I",0,0,0)
+	EXPL A 0 A_CustomMissile("SuperRocketBit2I",0,0,135)
+	EXPL A 0 A_CustomMissile("SuperRocketBit2I",0,0,180)
+	EXPL A 0 A_CustomMissile("SuperRocketBit2I",0,0,225)
+	EXPL A 0 A_CustomMissile("SuperRocketBit2I",0,0,270)
+	EXPL A 0 A_CustomMissile("SuperRocketBit2I",0,0,315)
+	EXPL A 0 A_CustomMissile("SuperRocketBit2I",0,0,66)
+	EXPL A 0 A_CustomMissile("SuperRocketBit2I",0,0,155)
+	EXPL A 0 A_CustomMissile("SuperRocketBit2I",0,0,245)
+	TNT1 A 10
+	Stop
+    }
+}
+
+
+
+
+//===========================================================================
+//===========================================================================
+// Strong fast low rank soldiers which are still capable of moving erraticly
+// enough to be a difficult target. Even when they only usees an standard
+// sidearm pistol, the firing rate of this zombies is constant, dangerous
+// when you are facing more than one of this undead soldiers.
+//===========================================================================
+//===========================================================================
+
+ACTOR FSuperiorZombieMan : FZombieMan 7029
+{
+	DropItem "BulletBigAmmo"
+	DropItem "HealthHeart" 210
+	DropItem "HealthBottle" 64
+	DropItem "PowerSlaveSpawnerMonsterAmmo" 28
+	DropItem "PowerupSpawner" 8
+    Health 30
+    Speed 14
+    PainChance 128
+    MONSTER 
+    +FLOORCLIP
+    +MISSILEEVENMORE
+    AttackSound "weapons/pstlf"
+    Obituary "%o now knows that not all the zombies are that stupid."
+    Translation "112:127=76:79", "19:47=176:191", "152:159=148:151"
+//Armor
+	DamageFactor "Electric", 1.25
+	DamageFactor "Plasma", 0.75
+	DamageFactor "PlasmaDisint", 0.75
+	DamageFactor "AEBullet", 0.5
+    States
+    {
+    Pain.DarkSyphon:
+	TNT1 A 0 A_Jump(64,"Pain")
+	TNT1 A 0 A_SpawnItemEx("DarkMana",0,0,0,0,0,0,0,32)
+	Goto Pain
+    Pain.RedSyphon:
+	TNT1 A 0 A_Jump(105,"Pain")
+	TNT1 A 0 A_SpawnItemEx("RedMana",0,0,0,0,0,0,0,32)
+	Goto Pain
+    Pain.GreenSyphon:
+	TNT1 A 0 A_Jump(179,"Pain")
+	TNT1 A 0 A_SpawnItemEx("GreenMana",0,0,0,0,0,0,0,32)
+	Goto Pain
+    Pain.BlueSyphon:
+	TNT1 A 0 A_Jump(203,"Pain")
+	TNT1 A 0 A_SpawnItemEx("BlueMana",0,0,0,0,0,0,0,32)
+	Goto Pain
+    See:
+        POSP AABBCCDD 4 A_FastChase
+        Loop
+    Missile:
+        POSP EE 5 A_FaceTarget
+        POSP F 5 Bright A_CustomBulletAttack(2,2,1,3,"BulletDamagePuff")
+        POSP E 0 A_CPosReFire
+        POSP E 5 
+        Goto Missile+1
+    }
+}
+
+//===========================================================================
+//===========================================================================
+// Some of the Shotgunners in the armies, didn't lost their movement skills
+// when they were raised to serve the unknow being. This is the case. Strong
+// soldiers which can be stopped only killing them (again).
+//===========================================================================
+//===========================================================================
+
+Actor FSuperiorShotgunGuy : FShotgunGuy 7030
+{
+	DropItem "ShellBigAmmo"
+	DropItem "HealthHeart" 210
+	DropItem "HealthBottle" 64
+	DropItem "PowerSlaveSpawnerShotgunner" 210
+	DropItem "PowerupSpawner" 8
+    Health 60
+    Speed 14
+    PainChance 128
+    MONSTER 
+    +FLOORCLIP
+    +MISSILEEVENMORE
+    AttackSound "weapons/d3shtgnf"
+    Obituary "%o now knows that there are zombies that have a good shotgun."
+    Translation "19:47=124:127"
+//Armor
+	DamageFactor "Electric", 1.25
+	DamageFactor "Plasma", 0.75
+	DamageFactor "PlasmaDisint", 0.75
+	DamageFactor "AEBullet", 0.5
+    States
+    {
+    See:
+        SPOS AABBCCDD 4 A_FastChase
+	   TNT1 A 0
+	   Loop
+	   TNT1 A 0 A_Jump(15,"Death")
+	   Loop
+    Missile:
+        SPOS E 5 A_FaceTarget
+        SPOS E 1 A_FaceTarget
+        SPOS F 3 Bright A_CustomBulletAttack(5,5,6,5,"BulletDamagePuff")
+	SPOS EEEEE 2 A_FaceTarget
+	TNT1 A 0 A_PlaySound("weapons/d3shtgnbk")
+        SPOS EEEE 2 A_FaceTarget
+	TNT1 A 0 A_PlaySound("weapons/d3shtgnfd")
+        SPOS EEE 2 A_FaceTarget
+	TNT1 A 0 A_CPosReFire
+        Goto Missile+1
+    }
+}
+
+//===========================================================================
+//===========================================================================
+// As a former mayor commander in the UAC armies, this zombies carries the
+// Famous "FlayerGun"; an incredibly rapid and destructive kind of minigun.
+// Once this undead starts shooting, is very unlikely you survive.
+//===========================================================================
+//===========================================================================
+Actor FSuperiorChaingunGuy : FChaingunGuy 7031		//fatso
+{
+	DropItem "BulletBigAmmo"
+	DropItem "BulletBigAmmo" 128
+	DropItem "HealthHeart" 210
+	DropItem "HealthBottle" 64
+	DropItem "PowerslaveSpawner" 28
+	DropItem "PowerupSpawner" 8
+    +BOSSDEATH
+    Translation "32:47=96:111"
+    Health 500
+    Speed 12
+    PainChance 64
+    MONSTER 
+    +FLOORCLIP
+    +MISSILEEVENMORE
+    AttackSound "q2weapon/machinegun"
+    Obituary "%o was flayed by a former commander!"
+//Armor
+	DamageFactor "Electric", 1.25
+	DamageFactor "Plasma", 0.75
+	DamageFactor "PlasmaDisint", 0.75
+	DamageFactor "AEBullet", 0.5
+    States
+    {
+    See:
+	CPOS AABBCCDD 4 A_Chase
+	TNT1 A 0
+	Loop
+	TNT1 A 0 A_Jump(15,"Death")
+	Loop
+    Missile:
+	TNT1 A 0 A_PlaySound("q2weapon/chaingstart")
+	CPOS EEE 5 A_FaceTarget
+	TNT1 A 0 A_PlaySound("flayerguy/loopstop")
+	CPOS EEE 2 A_FaceTarget
+	CPOS F 1 Bright A_CustomBulletAttack(10,10,1,2,"BulletDamagePuff")
+	CPOS E 1 A_FaceTarget
+	CPOS F 1 Bright A_CustomBulletAttack(10,10,1,2,"BulletDamagePuff")
+	CPOS E 1 A_FaceTarget
+	CPOS F 1 Bright A_CustomBulletAttack(10,10,1,2,"BulletDamagePuff")
+	CPOS E 1 A_FaceTarget		
+	TNT1 A 0 A_PlaySound("flayerguy/loopstop")
+	CPOS F 0 A_CustomBulletAttack(10,10,1,2)
+	CPOS F 1 Bright A_FaceTarget
+	CPOS F 0 A_CustomBulletAttack(10,10,1,2)
+	CPOS F 1 Bright A_FaceTarget
+	CPOS F 0 A_CustomBulletAttack(10,10,1,2)
+	CPOS F 1 Bright A_FaceTarget
+	TNT1 A 0 A_CPosReFire
+	Goto Missile+14
+    Death:
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,8)
+	CPOS H 5 A_Scream
+	CPOS I 5
+	CPOS J 5
+	CPOS K 5 A_Fall
+	CPOS L 5
+	CPOS M 5
+	CPOS N -1 A_KillMaster
+	Stop
+	TNT1 A 0
+	TNT1 A 0 A_NoBlocking
+	TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
+	Goto XDeathBlood
+    XDeath:
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"Death")
+	TNT1 A 0 A_Jump(256,"XDeathBlood")
+	CPOS O 5 A_Scream
+	CPOS P 5
+	CPOS Q 5
+	CPOS R 5 A_Fall
+	CPOS S 5
+	CPOS T -1 A_KillMaster
+	Stop
+    XDeathBlood:
+	TNT1 A 0 A_PlaySound("other/gibdeath")
+	TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,1)
+	TNT1 A 0 A_KillMaster
+	TNT1 A 1 A_Fall
+	Stop
+    Ice:
+		"####" "#" 5 A_GenericFreezeDeath
+		"####" "#" 0 A_KillMaster
+		"####" "#" 1 A_FreezeDeathChunks
+		Wait
+    Burn:
+	TNT1 A 0
+	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"Death")
+	TNT1 A 0 A_Fall
+	TNT1 A 0 A_KillMaster
+	TNT1 A 0 A_SpawnItemEx("GenericHumanBurn",0,0,0,0,0,0,0,32)
+	Stop
+    Death.UnholyDisint:
+    Death.PlasmaDisint:
+    Disintegrate:
+	TNT1 A 0 Thing_SetTranslation(0,50)	
+	TNT1 A 0 A_KillMaster
+	CPOS G 1 A_FadeOut(0.015)
+	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+	TNT1 a 0 A_Stop	
+	TNT1 a 0 A_Fall
+	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
+	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+	CPOS GG 2 A_FadeOut(0.03)
+	Goto Disintegrate+7
+    }
+}
+
+ACTOR ChickenRocket2 : ChickenRocket
+{
+    States
+    {
+    Spawn:
+	CKRO A 0 Bright A_Jump(192,2)
+	CKRO A 0 Bright A_SpawnItemEx("ChickenFeather",random(-15,15),random(-15,15),0,random(0,1),random(0,1),0,random(0,359),4,0)
+	CKRO A 0 Bright A_SeekerMissile(3,3)
+	CKRO A 0 Bright A_CustomMissile("BarbasRocket1Trail2",random(3,-3),random(3,-3),0)
+	CKRO A 1 Bright A_CustomMissile("QRockTrail",0,0,0,0)
+	Loop
+    }
+}
+
+//===========================================================================
+//===========================================================================
+
+//===========================================================================
+//===========================================================================
+
+
+Actor RequiemBossBrainFinal replaces BossBrain/*: BossBrain*/ 6299
+{
+	var int user_heartexplo;
+	var int user_Type;
+	Health 250
+	Mass 0x7FFFFFFF
+  	PainChance 255
+ 	+SOLID +SHOOTABLE
+ 	+NOICEDEATH
+ 	+OLDRADIUSDMG
+ 	PainSound "brain/pain"
+ 	DeathSound "brain/death"
+ 	States
+ 	{
+	BrainExplode:
+		TNT1 A 0
+		Stop
+  	Spawn:
+		BBRN A 0
+		BBRN A 0 A_SetUserVar("user_Type",(CallACS("s911",0,0,0)))
+   	 	BBRN A 0 ACS_NamedExecute("s870",0,0,0,0)
+	Idle:
+		BBRN A -1
+		Loop
+	Pain:
+		TNT1 A 0 A_JumpIf((user_Type==6) || (user_Type == 27),"PainSpecial")
+		BBRN B 0 A_Quake(2,35,0,5000)
+		BBRN B 0 A_ChangeFlag("NOPAIN",1)
+		//BBRN B 8 A_PlaySound("brain/pain",CHAN_BODY,1,0,ATTN_NONE)
+		BBRN B 8 A_BrainPain
+		BBRN B 0 A_ChangeFlag("NOPAIN",0)
+		BBRN B 27
+		Goto Idle
+	PainSpecial:
+		BBRN B 0 A_ChangeFlag("NOPAIN",1)
+		BBRN B 0 A_Quake(2,35,0,5000)
+		BBRN B 0 A_GiveInventory("IOSHurt",1,AAPTR_PLAYER1)
+		BBRN B 35 A_PlaySound("Glados/Pain",CHAN_WEAPON,1,0,ATTN_NONE)
+		BBRN B 0 A_TakeInventory("IOSHurt",999,0,AAPTR_PLAYER1)
+		BBRN B 0 A_ChangeFlag("NOPAIN",0)
+		Goto Idle
+	Death:
+		BBRN A 0 A_GiveInventory("IOSDestroyed",1,AAPTR_PLAYER1)
+		//BBRN A 0 A_GiveInventory("PowerPlayerWin",1,AAPTR_PLAYER1)
+		BBRN A 0 Thing_Remove(20001)
+		BBRN A 0 Thing_Destroy(0,1)
+		TNT1 A 0 A_PlaySound("IconOfSin/Screams",CHAN_VOICE,1,0,ATTN_NONE)
+		
+		TNT1 A 0 A_JumpIf((user_Type != 6) || (user_Type != 27),2)
+		TNT1 A 0 A_PlaySound("Glados/IOSDeath",CHAN_WEAPON,1,0,ATTN_NONE)
+		
+		BBRN A 0 A_PlaySound("BoneDuster/AltFire",CHAN_BODY,1,0,ATTN_NONE)
+		BBRN A 70 A_Quake(4,125,0,5000)
+		BBRN A 0 A_Quake(3,300,0,5000)
+		BBRN A 60 A_SpawnItemEx("FaceExploSpawner",-288,0,0,0,0,0,90,32)
+		BBRN A 0 Thing_Destroy(0,1)
+		BBRN A 0 A_SpawnItemEx("NukeFaceExploSpawner",-288,0,0,0,0,0,90,32)
+		//BBRN A 10 //A_BrainScream
+		BBRN A 200 A_PlaySound("brain/death",CHAN_AUTO,1,0,ATTN_NONE)
+		BBRN AA 10
+		BBRN A 0 A_TakeInventory("IOSHurt",1000,0,AAPTR_PLAYER1)
+		BBRN A 0 A_TakeInventory("IOSDestroyed",1000,0,AAPTR_PLAYER1)
+		BBRN A -1 A_BrainDie
+		Stop
+	}
+}
+
+Actor FaceExploSpawner
+{
+	var int user_count;
+	+NOINTERACTION
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SetUserVar("user_count",0)
+	Looping:
+		TNT1 AAA 0 A_SpawnItemEx("SpecialExploSpawner",random(0,50),random(-300,300),random(-200,200),0,0,0,0,32)
+		TNT1 AAA 0 A_SpawnItemEx("GibDropper",random(0,50),random(-300,300),random(-150,200),0,0,0,0,32,250)
+		TNT1 A 1 A_SetUserVar("user_count",user_count+1)
+		//TNT1 A 0 A_JumpIf(user_count>=300,1)
+		TNT1 A 0 A_JumpIf(user_count>=70,1)
+		Loop
+		TNT1 AAA 0 A_SpawnItemEx("SpecialExploSpawner2",random(0,50),random(-300,300),random(-200,200),0,0,0,0,32)
+		TNT1 AAA 0 A_SpawnItemEx("GibDropper",random(0,50),random(-300,300),random(-150,200),0,0,0,0,32,250)
+		TNT1 A 1 A_SetUserVar("user_count",user_count+1)
+		//TNT1 A 0 A_JumpIf(user_count>=1500,1)
+		TNT1 A 0 A_JumpIf(user_count>=900,1)
+		Loop
+		TNT1 A 0
+		Stop
+	}
+}
+		
+Actor NukeFaceExploSpawner
+{
+	+NOINTERACTION
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 35 A_SpawnItemEx("InquisitorExplosionSpawner",random(0,50),random(-200,200),random(-200,0),0,0,0,0,32)
+		Loop
+	}
+}
+
+Actor NewBossEye : BossEye replaces BossEye
+{
+	var int user_Type;
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SetUserVar("user_Type",(CallACS("s911",0,0,0)))
+		TNT1 A 0 Thing_ChangeTID(0,20001)
+		TNT1 A 0 A_JumpIf(user_Type==6,"LookingSpecial")
+	Looking:
+		TNT1 A 10 A_Look
+		Loop
+	LookingSpecial:
+		TNT1 A 10 A_LookEx(0,0,0,0,180,"SpecialSee")
+		Loop
+	SpecialSee:
+		TNT1 A 181 A_SpawnItemEx("GladosTauntSpewer",0,0,0,0,0,0,0,32)
+		Goto Spitting
+	See:
+		TNT1 A 181 A_BrainAwake
+		Goto Spitting
+	Spitting:
+		TNT1 A 150 A_BrainSpit
+		Wait
+	}
+}
+
+Actor GladosTauntSpewer
+{
+	var int user_count[2];
+	//[0] = Current buildup
+	//[1] = Randomized capacity
+	+NOINTERACTION
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A random(1,5) A_SetUserArray("user_count",0,0)
+		TNT1 A 0 A_JumpIfInventory("IOSTauntSpawned",1,"End",AAPTR_PLAYER1)
+		TNT1 A 0 A_GiveInventory("IOSTauntSpawned",1,AAPTR_PLAYER1)
+		//TNT1 A 0 Thing_ChangeTID(0,20002)
+	/*Taunts:
+		TNT1 A 0 A_PlaySound("Glados/Spite",CHAN_VOICE,1,0,ATTN_NONE)
+		TNT1 A 0 A_SetUserArray("user_count",0,0)
+		TNT1 A 0 A_SetUserArray("user_count",1,random(350,1400)) //~10-40 seconds*/
+	Taunts:
+		TNT1 A 0 A_PlaySound("P1GladOsRandomLine",CHAN_VOICE,1,0,ATTN_NONE)
+		TNT1 A 0 A_SetUserArray("user_count",0,0)
+		TNT1 A 0 A_SetUserArray("user_count",1,35*random(20,30)) //~5-10 seconds
+	Waiting:
+		TNT1 A 0 A_JumpIfInventory("IOSDestroyed",1,"End",AAPTR_PLAYER1) //Call precedence.
+		TNT1 A 0 A_JumpIfInventory("IOSHurt",1,"Shutup",AAPTR_PLAYER1)
+		TNT1 A 1 A_SetUserArray("user_count",0,user_count[0]+1)
+		TNT1 A 0 A_JumpIf(user_count[0]>=user_count[1],"Taunts")
+		Loop
+	Shutup:
+		TNT1 A 0 A_StopSound(CHAN_VOICE)
+		TNT1 A 35 A_SetUserArray("user_count",0,user_count[0]-random(175,280))
+		Goto Waiting
+	End:
+		TNT1 A 0 A_StopSound(CHAN_VOICE)
+		Stop
+	}
+}
+
+Actor PowerPlayerWin : PowerProtection
+{
+	DamageFactor "Normal", 0
+}
+
+Actor IOSDestroyed : Inventory
+{	
+	Inventory.MaxAmount 1
+	Inventory.InterhubAmount 0
+}
+
+Actor IOSHurt : Inventory
+{	Inventory.MaxAmount 1
+	Inventory.InterhubAmount 0
+}
+
+Actor IOSTauntSpawned : Inventory
+{	Inventory.MaxAmount 1	
+	Inventory.InterhubAmount 0
+}

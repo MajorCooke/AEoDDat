@@ -1,0 +1,292 @@
+
+Actor DBTNoDamageOff : CustomInventory
+{
+	+INVENTORY.ALWAYSPICKUP
+	+INVENTORY.AUTOACTIVATE
+	States
+	{
+	Use:
+		TNT1 A 0 A_ChangeFlag("NODAMAGE",0)
+		Stop
+	}
+}
+
+Actor DBTNoDamageOn : CustomInventory
+{
+	+INVENTORY.ALWAYSPICKUP
+	+INVENTORY.AUTOACTIVATE
+	States
+	{
+	Use:
+		TNT1 A 0 A_ChangeFlag("NODAMAGE",1)
+		Stop
+	}
+}
+
+
+//************************************************
+actor DBTVulnerableThing
+{
+	var int user_damage;
+    Monster
+    -COUNTKILL
+//    -Solid		//Removed to have it DBT stuck when attacking
+    +NOGRAVITY
+    +DONTFALL
+	+NOICEDEATH
+	+DONTMORPH
+    +DONTTHRUST
+    Health 1500
+    Radius 30
+    Height 56
+    PainChance 255
+    RenderStyle Add
+    Scale 3.9
+	+GHOST
+    DamageFactor "Railgun", 1.0
+    DamageFactor "BFGSplash", 1.0
+    DamageFactor "Normal", 1.0
+	DamageFactor "DarkSyphon", 0.0
+	DamageFactor "DBTDamage", 0.0
+	RenderStyle None
+    PainSound "halflife/monsters/nihilant/pain"
+    States
+    {
+    Spawn:
+		TNT1 A 0
+		PLAY A 35
+		Stop
+    Pain:
+		TNT1 A 0 A_UnSetShootable
+		TNT1 A 0 A_Quake(3,35,0,9000)
+		TNT1 A 0 A_JumpIfHealthLower(801,"Damage6")			//If you deal 700 damage, it hurts 6
+		TNT1 A 0 A_JumpIfHealthLower(1151,"Damage3")		//If you deal 350 damage, it hurts 3
+		TNT1 A 0 A_JumpIfHealthLower(1401,"Damage2")		//If you deal 100 damage, it hurts 2
+		Goto "Damage1"
+    Damage1:
+		TNT1 A 0 A_SetUserVar("user_damage",1)		//If you deal less than 100, it hurts 2
+		Goto DealDamage
+	Damage2:
+		TNT1 A 0 A_SetUserVar("user_damage",2)			//If you deal >100&&<251, it hurts 4
+		Goto DealDamage
+	Damage3:
+		TNT1 A 0 A_SetUserVar("user_damage",3)		//If you deal >250&&<500, it hurts 6
+		Goto DealDamage
+	Damage6:
+		TNT1 A 0 A_SetUserVar("user_damage",6)
+		Goto DealDamage
+    DealDamage:
+		TNT1 A 0 A_GiveInventory("DBTNoDamageOff",1,AAPTR_MASTER)
+		TNT1 A 0 A_DamageMaster(user_damage,"DBTVulnerable",DMSS_NOFACTOR)
+		TNT1 A 0 A_GiveInventory("DBTNoDamageOn",1,AAPTR_MASTER)
+		TNT1 A 50
+		Stop
+    Death:
+		TNT1 A 0 A_SetUserVar("user_damage",20)	//if you deal 1500 damage, it hurts 20
+		TNT1 A 0 A_Quake(6,35,0,9000,"")
+		Goto DealDamage
+    }
+}
+
+//=============================================================
+//=============================================================
+
+//	Double Damage taken! Half the duration though.
+
+//=============================================================
+//=============================================================
+
+actor DBTVulnerableDouble
+{
+	var int user_damage;
+    Monster
+    -COUNTKILL
+//    -Solid		//Removed to have it DBT stuck when attacking
+    +NOGRAVITY
+    +DONTFALL
+	+NOICEDEATH
+	+DONTMORPH
+    +DONTTHRUST
+    Health 1500
+    Radius 30
+    Height 56
+    PainChance 255
+    RenderStyle Add
+    Scale 3.9
+	+GHOST
+    DamageFactor "Railgun", 1.0
+    DamageFactor "BFGSplash", 1.0
+    DamageFactor "Normal", 1.0
+	DamageFactor "DarkSyphon", 0.0
+	DamageFactor "DBTDamage", 0.0
+	RenderStyle None
+    PainSound "halflife/monsters/nihilant/pain"
+    States
+    {
+    Spawn:
+		TNT1 A 0
+		PLAY A 35
+		Stop
+    Pain:
+		TNT1 A 0 A_UnSetShootable
+		TNT1 A 0 A_Quake(3,35,0,9000)
+		TNT1 A 0 A_JumpIfHealthLower(801,"Damage6")			//If you deal 700 damage, it hurts 6
+		TNT1 A 0 A_JumpIfHealthLower(1151,"Damage3")		//If you deal 350 damage, it hurts 3
+		TNT1 A 0 A_JumpIfHealthLower(1401,"Damage2")		//If you deal 100 damage, it hurts 2
+		Goto "Damage1"
+    Damage1:
+		TNT1 A 0 A_SetUserVar("user_damage",2)		//If you deal less than 100, it hurts 2
+		Goto DealDamage
+	Damage2:
+		TNT1 A 0 A_SetUserVar("user_damage",4)			//If you deal >100&&<251, it hurts 4
+		Goto DealDamage
+	Damage3:
+		TNT1 A 0 A_SetUserVar("user_damage",6)		//If you deal >250&&<500, it hurts 6
+		Goto DealDamage
+	Damage6:
+		TNT1 A 0 A_SetUserVar("user_damage",12)
+		Goto DealDamage
+    DealDamage:
+		TNT1 A 0 A_GiveInventory("DBTNoDamageOff",1,AAPTR_MASTER)
+		TNT1 A 0 A_DamageMaster(user_damage,"DBTVulnerable",DMSS_NOFACTOR)
+		TNT1 A 0 A_GiveInventory("DBTNoDamageOn",1,AAPTR_MASTER)
+		TNT1 A 50
+		Stop
+    Death:
+		TNT1 A 0 A_SetUserVar("user_damage",20)	//if you deal 1500 damage, it hurts 20
+		TNT1 A 0 A_Quake(6,35,0,9000,"")
+		Goto DealDamage
+    }
+}
+
+//=============================================================
+//=============================================================
+
+//	For when DBT has "Steel" active
+
+//=============================================================
+//=============================================================
+
+actor DBTVulnerableThingSteel : DBTVulnerableThing
+{
+	DamageFactor "Railgun", 0.17
+    DamageFactor "BFGSplash", 0.1
+    DamageFactor "Normal", 0.2
+	DamageFactor "TempestLightning", 0.21
+	DamageFactor "Telefrag", 1.0
+	States
+	{
+    Pain:
+		TNT1 A 0 A_UnSetShootable
+		TNT1 A 0 A_JumpIfHealthLower(1001,"Damage6")		//If you deal 500 damage, it hurts 6
+		TNT1 A 0 A_JumpIfHealthLower(1251,"Damage3")		//If you deal 250 damage, it hurts 3
+		TNT1 A 0 A_JumpIfHealthLower(1401,"Damage2")		//If you deal 100 damage, it hurts 2
+		TNT1 A 0 A_JumpIfHealthLower(1451,"Damage1")		//If you deal 50 damage, it hurts 1
+		Goto "NoDamage"
+	NoDamage:
+		TNT1 A 0 //A_Print("Dealt 0")						//If you deal less than 75, no damage
+		//TNT1 A 0 A_Die
+		Stop
+	}
+}
+
+
+
+
+
+/*actor DBTVulnerableThingSteel
+{
+    Monster
+    -COUNTKILL
+//    -Solid		//Removed to have it DBT stuck when attacking
+    +NOGRAVITY
+    +DONTFALL
+    Mass 0xFFFFFFFFFFF
+    Health 3000
+    Radius 30
+    Height 56
+    PainChance 255
+    RenderStyle Add
+    Scale 3.9
+	+GHOST
+    DamageFactor "Railgun", 0.6
+    DamageFactor "BFGSplash", 0.5
+    DamageFactor "Normal", 1.0
+	DamageFactor "DarkSyphon", 0.0
+	DamageFactor "DBTDamage", 0.0
+    DeathSound "halflife/monsters/nihilant/pain"
+	BloodColor "88 88 88"
+    States
+    {
+    Spawn:
+		TNT1 A 0
+		PLAY A 70
+		Stop
+    Pain:
+		TNT1 A 0 A_UnSetShootable
+		TNT1 A 0 A_JumpIfHealthLower(1000,"Damage6")		//If you deal 2000 damage, it hurts 6
+		TNT1 A 0 A_JumpIfHealthLower(2000,"Damage3")		//If you deal 1000 damage, it hurts 3
+		TNT1 A 0 A_JumpIfHealthLower(2500,"Damage2")		//If you deal 500 damage, it hurts 2
+		TNT1 A 0 A_JumpIfHealthLower(2925,"Damage1")		//If you deal 75 damage, it hurts 1
+		Goto "NoDamage"
+	NoDamage:
+		TNT1 A 0 A_Print("Dealt 0")						//If you deal less than 75, no damage
+		TNT1 A 0 A_Die
+		Goto Death2
+    Damage1:
+		TNT1 A 0 A_Print("Dealt 1")
+		TNT1 A 0 A_DamageMaster(1,"DBTVulnerable")		//If you deal >75&&<501, it hurts 2
+		TNT1 A 0 A_Die
+		Goto Death2
+	Damage2:
+		TNT1 A 0 A_Print("Dealt 2")
+		TNT1 A 0 A_DamageMaster(2,"DBTVulnerable")		//If you deal >500&&<1001, it hurts 2
+		TNT1 A 0 A_Die
+		Goto Death2
+	Damage3:
+		TNT1 A 0 A_Print("Dealt 3")
+		TNT1 A 0 A_DamageMaster(3,"DBTVulnerable")		//If you deal >1001&&<2001, it hurts 3
+		TNT1 A 0 A_Die
+		Goto Death2
+    Damage6:
+		TNT1 A 0 A_Print("Dealt 6")
+		TNT1 A 0 A_DamageMaster(6,"DBTVulnerable")
+		TNT1 A 0 A_Die
+		Goto Death2
+    Death:
+		TNT1 A 0 A_Print("Dealt 10")
+		BOS2 A 50 A_DamageMaster(10,"DBTVulnerable")	//if you deal 1500 damage, it hurts 10
+		Stop
+    Death2:
+		BOSS A 50
+		Stop
+    }
+}*/
+
+Actor DBTVoices
+{
+	Monster
+	+NEVERTARGET
+	+THRUACTORS
+	+NOGRAVITY
+	-SHOOTABLE
+	+NONSHOOTABLE
+	+NODAMAGE
+	+NOTIMEFREEZE
+	-COUNTKILL
+	+NOTELESTOMP
+	RenderStyle None
+	States
+	{
+	Spawn:
+		TNT1 AAA 35
+		TNT1 A 0 A_PlaySound("mon/dbt2/idle",5,1,0,ATTN_NONE)
+	Acting:
+		TNT1 AAAAAAAAAAAAAAA 35 A_JumpIfInventory("IDied",1,"End",AAPTR_MASTER)
+		TNT1 A 0 A_PlaySound("mon/dbt2/idle",5,1,0,ATTN_NONE)
+		Loop
+	End:
+		TNT1 A 0 A_StopSound(5)
+		Stop
+	}
+}

@@ -1,0 +1,86 @@
+Actor InfernoParticleSpawner
+{
+	+NOINTERACTION
+	ReactionTime 20
+	States
+	{
+	Spawn:
+		//TNT1 AAAAA 0 A_CustomMissile("InfernoParticle",0,0,0+random(0,360),6,0+random(-25,-90))
+		TNT1 A 0 A_CustomMissile("InfernoTestParticle",0,0,0,6)
+		TNT1 A 0 A_CustomMissile("InfernoTestParticle",0,0,180,6)
+		TNT1 A 0 A_CustomMissile("InfernoReverseParticle",0,0,0,6)
+		TNT1 A 0 A_CustomMissile("InfernoReverseParticle",0,0,180,6)
+		TNT1 A 1 A_CountDown
+		Loop
+	}
+}
+
+Actor InfernoParticleSpawner2
+{
+	+NOINTERACTION
+	ReactionTime 60
+	States
+	{
+	Spawn:
+		TNT1 AAAAAAAA 0 A_CustomMissile("InfernoParticle",0,0,0+random(0,360),6,0+random(-25,-90))
+		TNT1 A 1 A_CountDown
+		Loop
+	}
+}
+Actor InfernoParticle
+{
+	+NOINTERACTION
+	RenderStyle Add
+	//RenderStyle Translucent
+	Alpha 1
+	Scale 0.48
+	Speed 15
+	Translation "0:255=%[0.1,0.0,0.0]:[0.55,0.0,0.0]"
+	States
+	{
+	Spawn:
+		TNT1 A 1
+		TNT1 A 0 A_ScaleVelocity(0.10)
+		X029 A 20
+		X029 A 2 A_ScaleVelocity(-1.0)
+		X029 AAAAAA 2 A_ScaleVelocity(1.25)
+		X029 A 2 A_FadeOut(0.1)
+		Wait
+	}
+}
+
+Actor InfernoTestParticle : InfernoParticle
+{
+	Speed 9
+	ReactionTime 62
+	States
+	{
+	Spawn:
+		TNT1 A 12
+		TNT1 A 0 A_SetAngle(-90 + angle)
+		X029 A 0 A_ChangeVelocity(9,0,0,3)
+		Goto ParticleLoop
+	ParticleLoop:
+		X029 A 2 A_SetAngle(-9 + angle)
+		X029 A 0 A_ChangeVelocity(9,0,0,3)
+		X029 A 0 A_CountDown
+		Loop
+	}
+}
+
+Actor InfernoReverseParticle : InfernoTestParticle
+{
+	States
+	{
+	Spawn:
+		TNT1 A 12
+		TNT1 A 0 A_SetAngle(90 + angle)
+		X029 A 0 A_ChangeVelocity(9,0,0,3)
+		Goto ParticleLoop
+		ParticleLoop:
+		X029 A 2 A_SetAngle(9 + angle)
+		X029 A 0 A_ChangeVelocity(9,0,0,3)
+		X029 A 0 A_CountDown
+		Loop
+	}
+}

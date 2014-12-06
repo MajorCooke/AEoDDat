@@ -1,0 +1,214 @@
+//******
+// HELL
+//******
+
+
+/*           //removing the 3 flags makes this actor the same as the original, so no point in having it
+Actor BigTree1 : BigTree replaces BigTree
+{
++SHOOTABLE
++NODAMAGE
++NOBLOOD
+  mass 0xFFFFFFFF
+}      */
+
+Actor EvilEye1 replaces EvilEye
+{
++NOCLIP +NOBLOCKMAP
+states
+	{
+	Spawn:
+		TNT1 A 1
+		TNT1 A 1 A_spawnitem("CandleStick")//"CandleStick1")
+		TNT1 A 1 A_spawnitem("FloatingEye",0,16)
+		stop
+	}
+}
+
+Actor FloatingEye
+{
+renderstyle translucent
++VISIBILITYPULSE
++SOLID
++NOGRAVITY
++FLOATBOB
+activesound "world/evileye"
+states
+	{
+	Spawn:
+		CEYE ABC 10 bright
+		CEYE A 0 bright A_LoopActiveSound
+		loop
+	}
+}
+
+Actor FloatingSkull1 : FloatingSkull replaces FloatingSkull
+{
+	+FLOATBOB
+	activesound "world/floatingskull"
+	+SOLID
+  states
+  {
+  Spawn:
+    FSKU ABC 4 bright A_CustomMissile("SkullSmoke",random(48,64),random(-15,15),random(0,360),2,random(80,100))
+    FSKU A 0 bright A_LoopActiveSound
+    loop
+  }
+}
+
+Actor SkullSmoke
+{
+projectile
+speed 4
++NOCLIP +NOBLOCKMAP
++NOINTERACTION
+renderstyle translucent
+alpha 0.5
+translation "0:255=230:231"
+scale .5
+states
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 Thing_ChangeTID(0,390)
+		PUFF A 1 A_fadeout(0.03)
+		loop
+	}
+}
+
+actor SkullColumn1 : SkullColumn replaces SkullColumn
+{
++SHOOTABLE
++NOBLOOD
+health 1
+  mass 0xFFFFFFFF
+deathheight 40
+activesound "world/evileye"
+states
+	{
+	Spawn:
+		//COL6 A 1
+		COL6 A 4 A_LoopActiveSound
+		loop
+	Death:
+		COL6 B 1 A_customMissile("SkullOff",40,0,random(-360,360),2,random(10,30))
+		COL6 B -1
+		stop
+	}
+}
+
+
+Actor SkullOff : SkelHead
+{
+scale 0.5
+states
+{
+spawn:
+HED6 ABCDEFGH 1 bright
+loop
+Death:
+	TNT1 A 0
+	TNT1 A 0 A_jump(128,"death1")
+	TNT1 A 0 A_jump(128,"death2")
+	TNT1 A 0 A_jump(128,"death3")
+	goto death4
+Death1:
+	HED6 A 1 bright
+	loop
+Death2:
+	HED6 C 1 bright
+	loop
+Death3:
+	HED6 E 1 bright
+	loop
+Death4:
+	HED6 G 1 bright
+	loop
+	Pain:
+		TNT1 A 0
+		TNT1 A 0 A_customMissile("SkullOff",6,0,random(-200,200),2,random(20,70))
+		stop
+}
+}
+
+
+actor ShortGreenColumn1 : ShortGreenColumn replaces ShortGreenColumn
+{
+/*+SHOOTABLE
++NODAMAGE
++NOBLOOD
+  mass 0xFFFFFFFF    */
+activesound "world/wind"
+  states
+  {
+  Spawn:
+    COL2 A 4 A_LoopActiveSound
+    loop
+  }
+}
+
+actor ShortRedColumn1 : ShortRedColumn replaces ShortRedColumn
+{
+/*+SHOOTABLE
++NODAMAGE
++NOBLOOD
+  mass 0xFFFFFFFF*/
+activesound "world/wind"
+  states
+  {
+  Spawn:
+    COL4 A 4 A_LoopActiveSound
+    loop
+  }
+}
+
+actor TallGreenColumn1 : TallGreenColumn replaces TallGreenColumn
+{
+/*+SHOOTABLE
++NODAMAGE
++NOBLOOD
+  mass 0xFFFFFFFF*/
+activesound "world/wind"
+  states
+  {
+  Spawn:
+    COL1 A 4 A_LoopActiveSound
+    loop
+  }
+}
+
+actor TallRedColumn1 : TallRedColumn replaces TallRedColumn
+{
+/*+SHOOTABLE
++NODAMAGE
++NOBLOOD
+  mass 0xFFFFFFFF*/
+activesound "world/wind"
+  states
+  {
+  Spawn:
+    COL3 A 4 A_LoopActiveSound
+    loop
+  }
+}
+
+actor HeartColumn1 : HeartColumn replaces HeartColumn
+{
++SHOOTABLE
+health 1
+  mass 0xFFFFFFFF
+deathheight 40
+activesound "hearthbeat"
+states
+	{
+	Spawn:
+		//COL5 A 1
+		COL5 AB 14 A_PlaySound("HearthBeat", CHAN_VOICE, 0.6, 0) //A_LoopActiveSound
+		loop
+	Death:
+		COL5 C 0 A_StopSound
+		COL5 C 1 A_customMissile("Heart",40,0,random(-200,200),2,random(10,30))
+		COL5 C -1
+		stop
+	}
+}

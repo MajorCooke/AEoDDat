@@ -1,0 +1,432 @@
+#library "Direct"
+#include "zcommon.acs"
+
+int L4DMode = 26;
+int ChaosMode = 27;
+int MonsterMayhem = 4;
+int CooldownSmall = 0;
+int CooldownSmallL4D = 0;
+int CooldownLarge = 0;
+int CooldownLargeL4D = 0;
+int CooldownHorde = 0;
+int SmallChildrenMax;
+int LargeChildrenMax;
+int SmallChildrenCount = 0;
+int LargeChildrenCount = 0;
+int DirectorFrozen = 0;
+bool FirstTimeOnMap = 1;
+int AEType;
+int choice;
+int chance;	
+int randompick;
+int HordeChance;
+int SmallChance;
+int MediumChance;
+int LargeChance;
+int SmallChanceL;
+int MediumChanceL;
+int LargeChanceL;
+int CDSmall[2];
+int CDSmallL[4];
+int CDMedium[2];
+int CDLarge[2];
+int CDHorde[4];
+int choicecap;
+
+Script "StartDirector" ENTER
+{
+	FirstTimeOnMap = 1;
+	Delay(35); //We'll give the first scripts a chance to start up and set themselves properly.
+	AEType = GetCVar("AEGtValues");
+	int DirectorType;
+	
+	if (GameSkill() == MonsterMayhem)
+		DirectorType += 1;
+		
+	if (AEType == L4DMode)
+		DirectorType += 2;
+		
+	if (AEType == ChaosMode)
+		DirectorType += 4;
+		
+	ACS_NamedExecute("MainDirectorThread",0,DirectorType,0);
+}
+
+Function bool CheckFirstTime (void)
+{
+	if (CheckActorInventory(21000,"PFirstTimeToken") > 0)
+		return true;
+		
+	return false;
+}
+
+Script "MainDirectorThread" (int type)
+{
+	//1 = Monster Mayhem
+	//2 = L4D mode
+	//3 = L4D mode Monster Mayhem
+	//4 = Chaos Capital
+	//5 = Chaos Capital with Monster Mayhem (quite hard!)
+	
+	//Prevent setting up.
+	if ((type == 0) || (type > 5))
+	{
+		ACS_NamedTerminate("CooldownSystemSmall",0);
+		ACS_NamedTerminate("CooldownSystemLarge",0);
+		Terminate;
+	}
+	
+/*
+int HordeChance[2];
+int SmallChance[2];
+int MediumChance[2];
+int LargeChance[2];
+int CDSmall[2];
+int CDLarge[2];
+int CDHorde[2];*/
+	
+	if (FirstTimeOnMap)
+	{
+		BootCooldownSystems();
+		SmallChildrenMax = GetCvar("SmallChildrenMax");
+		LargeChildrenMax = GetCvar("LargeChildrenMax");
+		HordeChance = GetCvar("HordeChance");
+		SmallChance = GetCvar("SmallChance");
+		MediumChance = GetCvar("MediumChance");
+		LargeChance = GetCvar("LargeChance");
+		SmallChanceL = GetCvar("SmallChanceL");
+		MediumChanceL = GetCvar("MediumChanceL");
+		LargeChanceL = GetCvar("LargeChanceL");
+		CDSmall[0] = GetCvar("CDSmall1");
+		CDSmall[1] = GetCvar("CDSmall2");
+		CDSmallL[0] = GetCvar("CDSmallL1");
+		CDSmallL[1] = GetCvar("CDSmallL2");
+		CDSmallL[2] = GetCvar("CDSmallL3");
+		CDSmallL[3] = GetCvar("CDSmallL4");
+		CDMedium[0] = GetCvar("CDMedium1");
+		CDMedium[1] = GetCvar("CDMedium1");
+		CDLarge[0] = GetCvar("CDLarge1");
+		CDLarge[1] = GetCvar("CDLarge2");
+		CDHorde[0] = GetCvar("CDHorde1");
+		CDHorde[1] = GetCvar("CDHorde2");
+		CDHorde[2] = GetCvar("CDHorde3");
+		CDHorde[3] = GetCvar("CDHorde4");
+		choicecap = GetCvar("RandomChoiceCap");
+		Delay(35*30);
+		FirstTimeOnMap = 0;
+		
+		if ((type == 3) || (type == 5))
+			GiveActorInventory(21000,"NightmareToken",1);
+	}
+
+	if (CheckFirstTime()) //Checks to see if the player is "starting new".
+	{
+		TakeActorInventory(21000,"PFirstTimeToken",100);
+		GiveActorInventory(21000,"SmallSpawnToken",20);
+		//Delay(35*30);
+	
+		while (CheckActorInventory(21000,"SmallSpawnToken") > 0)
+		{
+			randompick = random(1,5);
+			//The cooldown occurs upon first spawning the monster spawners.
+			if (type == 1) //If the gamemode isn't Chaos Capital + Monster Mayhem
+			{
+				if (CooldownSmall < 1)
+				{
+					if ((type == 1) && (SmallChildrenCount < SmallChildrenMax))
+					{
+						ACS_NamedExecute("SpawnSmallMonster",0,0,0);
+						TakeActorInventory(21000,"SmallSpawnToken",1);
+						CooldownSmall += 35*random(CDSmall[0],CDSmall[1]); //In the old spawner, the delay was handled in terms of 6 ticks per deduction.
+					}
+				}
+			}
+			else if ((type > 1) && (type < 5) && (CooldownSmallL4D < 1) && (SmallChildrenCount < SmallChildrenMax)) //If it is Chaos Capital + Monster Mayhem
+			{
+				TakeActorInventory(21000,"SmallSpawnToken",1);
+				ACS_NamedExecute("SpawnSmallMonsterL4D",0,0,0);
+				
+				//This one drained 2 per 6 ticks, so it's *3 instead.
+				if (type == 3) //L4D + MM
+					CooldownSmallL4D += 35*random(CDSmallL[2],CDSmallL[3]);
+				else
+					CooldownSmallL4D += 35*random(CDSmallL[0],CDSmallL[1]); 
+			}
+			else
+			{
+				if ((randompick < 4) && (CooldownSmallL4D < 1) && (SmallChildrenCount < SmallChildrenMax))
+				{
+					//PrintBold(s: "Calling Function...");
+					ACS_NamedExecute("SpawnSmallMonsterL4D",0,0,0);
+					TakeActorInventory(21000,"SmallSpawnToken",1);
+					CooldownSmallL4D += 35*random(CDSmallL[2],CDSmallL[3]);
+				}
+				
+				if ((randompick >= 4) && (CooldownSmall < 1) && (SmallChildrenCount < SmallChildrenMax))
+				{
+					//PrintBold(s: "Calling Function...");
+					ACS_NamedExecute("SpawnSmallMonster",0,0,0);
+					TakeActorInventory(21000,"SmallSpawnToken",1);
+					CooldownSmall += 35*random(CDSmall[0],CDSmall[1]);
+				}
+			}
+		Delay(35);
+		}
+	}
+	
+	randompick = random(1,5);
+	//If it picked 4 AND the game mode is CC + MM, or it's non-L4D mode
+	if (((type == 5) && (randompick >= 4)) || (type == 1))
+	{
+		//Spawn Classic + Joke monsters.
+		choice = random(1,choicecap);
+		if (choice <= LargeChance)
+		{
+			if ((CooldownLarge < 1) && (LargeChildrenCount < LargeChildrenMax))
+			{
+				ACS_NamedExecute("SpawnLargeMonster",0,0,0);
+				CooldownLarge += 35*random(CDLarge[0],CDLarge[1]);
+			}
+		}
+		else if (choice <= MediumChance)
+		{
+			if ((CooldownLarge < 1) && (LargeChildrenCount < LargeChildrenMax))
+			{
+				ACS_NamedExecute("SpawnMediumMonster",0,0,0);
+				CooldownLarge += 35*random(CDMedium[0],CDMedium[1]);
+			}
+		}
+		else if (choice <= SmallChance)
+		{
+			if ((CooldownSmall < 1) && (SmallChildrenCount < SmallChildrenMax))
+			{
+				ACS_NamedExecute("SpawnSmallMonster",0,0,0);
+				CooldownSmall += 35*random(CDSmall[0],CDSmall[1]);
+			}
+		}
+		else
+		{ }
+	}
+	else 
+	{
+		if (((type == 5) && (randompick < 4)) || ((type > 1) && (type < 5)))
+		//It hadn't picked 4, or the game mode is L4D oriented for directors only.
+		{
+			choice = random(1,choicecap);
+			if (choice <= HordeChance) //Spawn a horde.
+			{
+				if (CooldownHorde < 1)
+				{
+					ACS_NamedExecute("SpawnHorde",0,0,0);
+					if ((type == 3) || (type == 5))
+						CooldownHorde += 35*random(CDHorde[2],CDHorde[3]);
+					else
+						CooldownHorde += 35*random(CDHorde[0],CDHorde[1]);
+				}
+			}
+			else if (choice <= LargeChanceL)
+			{
+				if ((CooldownLargeL4D < 1) && (LargeChildrenCount < LargeChildrenMax))
+				{
+					ACS_NamedExecute("SpawnLargeMonsterL4D",0,0,0); //Tank or a witch.
+					CooldownLargeL4D += 35*random(CDLarge[0],CDLarge[1]);
+				}
+			}
+			else if (choice <= MediumChanceL)
+			{
+				if ((CooldownLargeL4D < 1) && (LargeChildrenCount < LargeChildrenMax))
+				{
+					ACS_NamedExecute("SpawnMediumMonsterL4D",0,0,0); //Special Infected.
+					CooldownLargeL4D += 35*random(CDMedium[0],CDMedium[1]);
+				}
+			}
+			else if (choice <= SmallChanceL)
+			{
+				if ((CooldownSmallL4D < 1) && (SmallChildrenCount < SmallChildrenMax))
+				{
+					ACS_NamedExecute("SpawnSmallMonsterL4D",0,0,0); //Common Infected.
+					if ((type == 3) || (type == 5)) //L4D + MM
+						CooldownSmall += 35*random(CDSmall[2],CDSmall[3]);
+					else
+						CooldownSmall += 35*random(CDSmall[0],CDSmall[1]); 
+				}
+			}
+			else
+			{ }
+		}
+	}
+	randompick = random(1,5);
+	Delay(35);
+	Restart;
+}
+//==============================================================================
+//==============================================================================
+
+//==============================================================================
+//==============================================================================
+
+Script "SpawnSmallMonster" (void)
+{
+	//PrintBold(s: "Attempting to spawn...");
+	GiveActorInventory(21000,"SpawnSmallMonster",1);
+}
+	
+Script "SpawnSmallMonsterL4D" (void)
+{
+	//PrintBold(s: "Attempting to spawn L4D...");
+	GiveActorInventory(21000,"SpawnSmallMonsterL4D",1);
+}
+
+Script "SpawnMediumMonster" (void)
+{
+
+	GiveActorInventory(21000,"SpawnMediumMonster",1);
+}
+	
+Script "SpawnMediumMonsterL4D" (void)
+{
+	GiveActorInventory(21000,"SpawnMediumMonsterL4D",1);
+}
+
+Script "SpawnLargeMonster" (void)
+{
+	//PrintBold(s: "Attempting to spawn...");
+	GiveActorInventory(21000,"SpawnLargeMonster",1);
+}
+	
+Script "SpawnLargeMonsterL4D" (void)
+{
+	//PrintBold(s: "Attempting to spawn L4D...");
+	GiveActorInventory(21000,"SpawnLargeMonsterL4D",1);
+}
+
+Script "SpawnHorde" (void)
+{
+	//PrintBold(s: "Attempting to spawn L4D...");
+	GiveActorInventory(21000,"SpawnHorde",1);
+}
+
+Function void BootCooldownSystems (void)
+{
+	ACS_NamedExecute("CooldownSystemSmall",0,0,0);
+	ACS_NamedExecute("CooldownSystemLarge",0,0,0);
+}
+
+Script "CooldownSystemSmall" (void)
+{	
+	if (AEType == ChaosMode)
+	{
+		while ((CooldownSmall > 0) || (CooldownSmallL4D > 0) || (CooldownHorde > 0))
+		{	if (CooldownSmall > 0)
+				CooldownSmall--;
+			if (CooldownSmallL4D > 0)
+				CooldownSmallL4D--;
+			if (CooldownHorde > 0)
+				CooldownHorde--;
+				Delay(1);	
+		}
+	}
+	else
+	{
+		while ((CooldownSmall > 0) || (CooldownHorde > 0)) 
+		{
+			CooldownSmall--;
+			if (CooldownHorde > 0)
+				CooldownHorde--;
+			Delay(1);
+		}
+	}
+	Delay(35);
+	Restart;
+}
+
+Script "CooldownSystemLarge" (void)
+{
+	if (AEType == ChaosMode)
+	{
+		while ((CooldownLarge > 0) || (CooldownLargeL4D > 0))
+		{
+			if (CooldownLarge > 0)
+				CooldownLarge--;
+			if (CooldownLargeL4D > 0)
+				CooldownLargeL4D--;
+			Delay(1);	
+		}
+	}
+	else
+	{
+		while (CooldownLarge > 0) 
+		{
+			CooldownLarge--;
+			Delay(1);	
+		}
+	}
+	Delay(35);
+	Restart;
+}
+
+Script "FreezeDirector" (int freeze)
+{
+	if (freeze)
+	{
+		ACS_NamedSuspend("MainDirectorThread",0);
+		ACS_NamedSuspend("CooldownSystemSmall",0);
+		ACS_NamedSuspend("CooldownSystemLarge",0);
+	}
+	else
+	{
+		ACS_NamedExecute("MainDirectorThread",0,0,0);
+		ACS_NamedExecute("CooldownSystemLarge",0,0,0);
+		ACS_NamedExecute("CooldownSystemSmall",0,0,0);
+	}
+}
+
+Script "DirectorLimiter" (int mode)
+{
+	if ((mode == 1) && (SmallChildrenCount < SmallChildrenMax))
+		SmallChildrenCount++;
+	else if ((mode == 2) && (SmallChildrenCount > 0))
+		SmallChildrenCount--;
+	else if ((mode == 3) && (LargeChildrenCount < LargeChildrenMax))
+		LargeChildrenCount++;
+	else if ((mode == 4) && (LargeChildrenCount > 0))
+		LargeChildrenCount--;
+}
+
+bool dirdebugging = 0;
+
+Script "DirectorDebug" (void)
+{
+	if (!dirdebugging)
+	{
+		dirdebugging = 1;
+		ACS_NamedExecute("DirDebug",0,0,0,0);
+	}	
+	else
+	{
+		dirdebugging = 0;
+		ACS_NamedTerminate("DirDebug",0);
+	}
+}
+
+Script "DirDebug" (void)
+{
+	SetHudSize(1024,768,0);
+	HudMessage(s:"Cooldown Small:"; HUDMSG_PLAIN,764,CR_BROWN,100.1,365.1,0.15);
+	HudMessage(s:"Cooldown SmallL:"; HUDMSG_PLAIN,765,CR_BROWN,100.1,375.1,0.15);
+	HudMessage(s:"Cooldown Large:"; HUDMSG_PLAIN,767,CR_BROWN,100.1,385.1,0.15);
+	HudMessage(s:"Cooldown LargeL:"; HUDMSG_PLAIN,768,CR_BROWN,100.1,395.1,0.15);
+	HudMessage(s:"Cooldown Horde:"; HUDMSG_PLAIN,769,CR_BROWN,100.1,405.1,0.15);
+	HudMessage(s:"Children Small:"; HUDMSG_PLAIN,775,CR_BROWN,100.1,415.1,0.15);
+	HudMessage(s:"Children Large:"; HUDMSG_PLAIN,776,CR_BROWN,100.1,425.1,0.15);
+	
+	HudMessage(i:CooldownSmall; HUDMSG_PLAIN,770,CR_BROWN,300.1,365.1,0.15);
+	HudMessage(i:CooldownSmallL4D; HUDMSG_PLAIN,771,CR_BROWN,300.1,375.1,0.15);
+	HudMessage(i:CooldownLarge; HUDMSG_PLAIN,772,CR_BROWN,300.1,385.1,0.15);
+	HudMessage(i:CooldownLargeL4D; HUDMSG_PLAIN,773,CR_BROWN,300.1,395.1,0.15);
+	HudMessage(i:CooldownHorde; HUDMSG_PLAIN,774,CR_BROWN,300.1,405.1,0.15);
+	HudMessage(i:SmallChildrenCount; HUDMSG_PLAIN,777,CR_BROWN,300.1,415.1,0.15);
+	HudMessage(i:LargeChildrenCount; HUDMSG_PLAIN,778,CR_BROWN,300.1,425.1,0.15);
+	Delay(5);
+	Restart;
+}

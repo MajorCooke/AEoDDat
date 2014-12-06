@@ -1,0 +1,952 @@
+//====================================================================================================
+//====================================================================================================
+// The contents of this file are old actors, leftovers of the monsters deleted. The reason they're
+// still around, is because they're needed in other parts of AEoD. I just wanted to have them all
+// in a single file.
+//====================================================================================================
+//====================================================================================================
+
+
+//*****************************************************************************************************
+//*****************************************************************************************************
+//		Gargantua gibs, originally found in "MonCust.AED"
+//*****************************************************************************************************
+//*****************************************************************************************************
+ACTOR gargantuagibblood : MCBloodSplatter
+{
+    Translation "0:255=%[0,0,0]:[1.35,1.48,0.66]"
+}
+
+ACTOR gargantuagibs
+{
+    radius 6
+    height 5
+    -NOLIFTDROP
+    -SOLID
+    +DROPOFF
+    +NOTELEPORT
+    +CORPSE
+    scale 0.3
+    states
+    {
+    Spawn:
+	TNT1 A 0
+	GGIB A 0 A_Gravity
+	GGIB A 0 A_Jump (255,"Gib1","Gib2","Gib3","Gib4","Gib5","Gib6","Gib7","Gib8")
+	Stop
+    Gib1:
+	GGIB A 3 A_SpawnItem("gargantuagibblood",1)
+	TNT1 A 0 A_CheckFloor("Gib1Crash")
+	Goto "Gib1"
+    Gib2:
+	GGIB B 3 A_SpawnItem("gargantuagibblood",1)
+	TNT1 A 0 A_CheckFloor("Gib2Crash")
+	Goto "Gib2"
+    Gib3:
+	GGIB C 3 A_SpawnItem("gargantuagibblood",1)
+	TNT1 A 0 A_CheckFloor("Gib3Crash")
+	Goto "Gib3"
+    Gib4:
+	GGIB D 3 A_SpawnItem("gargantuagibblood",1)
+	TNT1 A 0 A_CheckFloor("Gib4Crash")
+	Goto "Gib4"
+    Gib5:
+	GGIB E 3 A_SpawnItem("gargantuagibblood",1)
+	TNT1 A 0 A_CheckFloor("Gib5Crash")
+	Goto "Gib5"
+    Gib6:
+	GGIB F 3 A_SpawnItem("gargantuagibblood",1)
+	TNT1 A 0 A_CheckFloor("Gib6Crash")
+	Goto "Gib6"
+    Gib7:
+	GGIB G 3 A_SpawnItem("gargantuagibblood",1)
+	TNT1 A 0 A_CheckFloor("Gib7Crash")
+	Goto "Gib7"
+    Gib8:
+	GGIB H 3 A_SpawnItem("gargantuagibblood",1)
+	TNT1 A 0 A_CheckFloor("Gib8Crash")
+	Goto "Gib8"
+    Gib1Crash:
+	GGIB A 300
+	GGIB A 2 A_FadeOut
+	Wait
+    Gib2Crash:
+	GGIB B 300
+	GGIB B 2 A_FadeOut
+	Wait
+    Gib3Crash:
+	GGIB C 300
+	GGIB C 2 A_FadeOut
+	Wait
+    Gib4Crash:
+	GGIB D 300
+	GGIB D 2 A_FadeOut
+	Wait
+    Gib5Crash:
+	GGIB E 300
+	GGIB E 2 A_FadeOut
+	Wait
+    Gib6Crash:
+	GGIB F 300
+	GGIB F 2 A_FadeOut
+	Wait
+    Gib7Crash:
+	GGIB G 300
+	GGIB G 2 A_FadeOut
+	Wait
+    Gib8Crash:
+	GGIB H 300
+	GGIB H 2 A_FadeOut
+	Wait
+    }
+}
+
+
+
+//*****************************************************************************************************
+//*****************************************************************************************************
+//		Leftovers from MonCust.AED
+//*****************************************************************************************************
+//*****************************************************************************************************
+Actor BarbasRocket1Trail1
+{
+    +NOCLIP
+    +NOGRAVITY
+    Scale 0.3
+    RenderStyle Add
+    Alpha 0.6
+    Scale 0.4
+    States
+    {
+    Spawn:
+	TNT1 A 2
+ 	TNT1 A 0 ThrustThingZ(0,random(1,5),0,1)
+	SPIR KLMNO 3
+	Stop
+    }
+}
+
+Actor BarbasRocket1Trail2
+{
+    +NOCLIP
+    +NOGRAVITY
+    Scale 0.3
+    RenderStyle Add
+    Alpha 0.6
+    States
+    {
+    Spawn:
+	TNT1 A 2
+ 	TNT1 A 0 ThrustThingZ(0,random(1,5),0,1)
+	PUF2 ACEGIKMOQSUWY 1
+	PUF3 AC 1
+	Stop
+    }
+}
+
+
+Actor MicroRocket : DevastatorShot
+{
+    Speed 18
+    Damage 2
+    States
+    {
+    Death:
+	TNT1 a 0 A_SpawnItemEx("MonExplosionSmallTooSimple",0,0,0,0,0,0,0,32)
+	TNT1 A 3 Bright A_Explode(20,20)
+	Stop
+    }
+}
+
+ACTOR ZombieSuperRocket
+{
+    Radius 5
+    Height 5
+    Speed 20
+    Scale 0.5
+    Damage 20
+    PROJECTILE
+    +FIREDAMAGE
+    +ROCKETTRAIL
+    SeeSound "weapons/dnrpg"
+    DeathSound "weapons/dnrocketexplo"
+    States
+    {
+    Spawn:
+	MI13 A 1 Bright A_CustomMissile("QRockTrail",0,0,0,0)
+	MISS A 0 A_CustomMissile("BarbasRocket1Trail2",random(3,-3),random(3,-3),0)
+	TNT1 AA 0 A_CustomMissile("BarbasRocket1Trail1",random(3,-3),random(3,-3),0)
+	Loop
+   Death:
+	FRME A 0 Bright A_Explode(160,196)
+	FRME A 5 Bright A_SpawnItemEx("MonExplosionBig",0,0,0,0,0,0,0,32)
+	Stop
+    }
+}
+
+Actor SoulHarvesterBall
+{
+    Radius 8
+    Height 6
+    Speed 9
+    Damage 3
+    +SEEKERMISSILE
+    PROJECTILE
+    RENDERSTYLE ADD
+    ALPHA 0.8
+    SeeSound "harvester/scream"
+    DeathSound "imp/shotx"
+	DamageType "Unholy"
+    States
+    {
+    Spawn:
+        SHFB A 0 bright A_PlaySound("HarvesterBallScream")
+        SHFB ABCABC 4 Bright A_SeekerMissile (10,20)
+        Loop
+    Death:
+        SHFB DEFG 4 Bright
+        Stop
+    }
+}
+
+ACTOR MaelStromBall
+{
+    Radius 13
+    Height 8
+    Speed 25
+    Scale 1.5
+    Damage 4
+    DamageType "Ice"
+    +LOWGRAVITY
+    PROJECTILE
+    +DONTSPLASH
+    SeeSound "mageshardsfire"
+    DeathSound "mageshardsexplode"
+    States
+    {
+    Spawn:
+	SHRD A 0 A_LowGravity
+        SHRD A 1 BRIGHT A_CustomMissile("MaelstromTrail",0,0,0)
+        Loop
+    Death:
+        PLSE A 0 BRIGHT A_CustomMissile("MaelStromBolt", 0, 0, 0)
+        PLSE A 0 BRIGHT A_CustomMissile("MaelStromBolt4Spawner", 0, 0, -180)
+        PLSE A 0 BRIGHT A_CustomMissile("MaelStromBolt4Spawner", 0, 0, -135)
+        PLSE A 0 BRIGHT A_CustomMissile("MaelStromBolt4Spawner", 0, 0, -90)
+        PLSE A 0 BRIGHT A_CustomMissile("MaelStromBolt4Spawner", 0, 0, -45)
+        PLSE A 0 BRIGHT A_CustomMissile("MaelStromBolt4Spawner", 0, 0, -20)
+        PLSE A 0 BRIGHT A_CustomMissile("MaelStromBolt4Spawner", 0, 0, 20)
+        PLSE A 0 BRIGHT A_CustomMissile("MaelStromBolt4Spawner", 0, 0, 45)
+        PLSE A 0 BRIGHT A_CustomMissile("MaelStromBolt4Spawner", 0, 0, 90)
+        PLSE A 0 BRIGHT A_CustomMissile("MaelStromBolt4Spawner", 0, 0, 135)
+	SHEX ABCDE 4 BRIGHT
+	Stop
+    }
+}	
+
+Actor MaelstromTrail
+{
+    Radius 1
+    Height 1
+    Speed 0
+    Damage 0
+    RenderStyle Add
+    Alpha 0.5
+    +NOGRAVITY
+    States
+    {
+    Spawn:
+	SHEX ABCDE 3 BRIGHT
+	Stop
+    }
+}
+	   
+ACTOR MaelStromBolt
+{
+    Radius 13
+    Height 8
+	DamageType "Ice"
+    Speed 1
+    Mass 5000
+    +NOGRAVITY
+    +NOCLIP
+    +DONTSPLASH
+    Scale 0.75
+    States
+    {
+    Spawn:
+	TNT1 A 1
+        TNT1 A 0 BRIGHT A_CustomMissile("MaelStromBolt2", 0, 0, -180)
+        TNT1 A 0 BRIGHT A_CustomMissile("MaelStromBolt2", 0, 16, -175)
+        TNT1 A 0 BRIGHT A_CustomMissile("MaelStromBolt2", 0, 32, -170)
+        TNT1 A 0 BRIGHT A_CustomMissile("MaelStromBolt2", 0, -16, -185)
+        TNT1 A 0 BRIGHT A_CustomMissile("MaelStromBolt2", 0, -32, -190)
+        Stop
+    }
+}
+
+ACTOR MaelStromBolt2
+{
+    Radius 13
+    Height 8
+    Speed 2
+	DamageType "Ice"
+    Mass 5000
+    +NOGRAVITY
+    +NOCLIP
+    +DONTSPLASH
+    Scale 0.75
+    States
+    {
+    Spawn:
+        TNT1 A 1 BRIGHT
+        TNT1 A 0 BRIGHT A_CustomMissile("MaelStromBolt3", 0, 0, 0)
+        TNT1 A 0 BRIGHT A_CustomMissile("MaelStromBolt3", 0, 16, 0)
+        TNT1 A 0 BRIGHT A_CustomMissile("MaelStromBolt3", 0, -16, 0)
+        Stop
+    }
+}
+
+ACTOR MaelStromBolt3
+{
+    Radius 13
+    Height 8
+    Speed 0
+	DamageType "Ice"
+    +DONTSPLASH
+    Mass 5000
+    EXPLOSIONDAMAGE 2
+    EXPLOSIONRADIUS 64
+    +NOGRAVITY
+    +FLOORHUGGER
+    RENDERSTYLE ADD
+    ALPHA 0.5
+    Scale 0.75
+    Obituary "%o fell in Korax's rage."
+    States
+    {
+    Spawn:
+        FIR2 A 2 BRIGHT A_PlaySound("mealstrom/boltcrackle")
+        FIR2 B 2 BRIGHT 
+        FIR2 C 2 BRIGHT A_PlaySound("mealstrom/boltcrackle")
+        FIR2 D 2 BRIGHT A_Explode
+        FIR2 E 2 BRIGHT A_PlaySound("mealstrom/boltcrackle")
+        FIR2 F 2 BRIGHT 
+        FIR2 G 2 BRIGHT A_PlaySound("mealstrom/boltcrackle")
+        FIR2 H 2 BRIGHT A_Explode
+        FIR2 I 2 BRIGHT A_PlaySound("mealstrom/boltcrackle")
+        FIR2 J 2 BRIGHT 
+        FIR2 K 2 BRIGHT A_PlaySound("mealstrom/boltcrackle")
+        FIR2 L 2 BRIGHT A_Explode
+        FIR2 M 2 BRIGHT A_PlaySound("mealstrom/boltcrackle")
+        FIR2 N 2 BRIGHT 
+        FIR2 O 2 BRIGHT A_PlaySound("mealstrom/boltcrackle")
+        FIR2 P 2 BRIGHT A_Explode
+        FIR2 A 2 BRIGHT A_PlaySound("mealstrom/boltcrackle")
+        FIR2 B 2 BRIGHT 
+        FIR2 C 2 BRIGHT A_PlaySound("mealstrom/boltcrackle")
+        FIR2 D 2 BRIGHT A_Explode
+        FIR2 E 2 BRIGHT A_PlaySound("mealstrom/boltcrackle")
+        FIR2 F 2 BRIGHT 
+        FIR2 G 2 BRIGHT A_PlaySound("mealstrom/boltcrackle")
+        FIR2 H 2 BRIGHT 
+        FIR2 I 2 BRIGHT A_PlaySound("mealstrom/boltcrackle")
+        FIR2 J 2 BRIGHT 
+        FIR2 K 2 BRIGHT A_PlaySound("mealstrom/boltcrackle")
+        FIR2 L 2 BRIGHT A_Explode
+        FIR2 M 2 BRIGHT A_PlaySound("mealstrom/boltcrackle")
+        FIR2 N 2 BRIGHT 
+        FIR2 O 2 BRIGHT A_PlaySound("mealstrom/boltcrackle")
+        FIR2 P 2 BRIGHT 
+        FIR2 O 2 BRIGHT A_PlaySound("mealstrom/boltcrackle")
+        FIR2 N 2 BRIGHT
+        FIR2 M 2 BRIGHT A_PlaySound("mealstrom/boltcrackle")
+        FIR2 N 2 BRIGHT A_Explode
+        FIR2 O 2 BRIGHT A_PlaySound("mealstrom/boltcrackle")
+        FIR2 P 2 BRIGHT 
+        FIR2 O 2 BRIGHT A_PlaySound("mealstrom/boltcrackle")
+        FIR2 N 2 BRIGHT 
+        FIR2 M 2 BRIGHT A_PlaySound("mealstrom/boltcrackle")
+        FIR2 N 2 BRIGHT 
+        FIR2 QR 6 BRIGHT
+        Stop
+    }
+}		
+
+ACTOR MaelStromBolt4Spawner
+{
+    Radius 13
+    Height 8
+    Speed 20
+    Damage 2
+    Mass 5000
+    PROJECTILE
+	DamageType "Ice"
+    +DONTSPLASH
+    +RIPPER
+    +FLOORHUGGER
+    +SEEKERMISSILE
+    States
+    {
+    Spawn:
+        TNT1 A 1 A_CustomMissile("MaelStromBolt4", 0, 0, 0)
+	TNT1 A 0 A_SeekerMissile(5,15)
+        Loop
+    Death: 
+        TNT1 A 0
+        Stop
+    }
+}	
+
+ACTOR MaelStromBolt4SpawnerSlow : MaelStromBolt4Spawner
+{
+    Speed 10
+    States
+    {
+    Spawn:
+        TNT1 A 2 A_CustomMissile("MaelStromBolt4", 0, 0, 0)
+	TNT1 A 0 A_SeekerMissile(5,15)
+        Loop
+    }
+}
+
+ACTOR MaelStromBolt4
+{
+    Radius 13
+    Height 8
+    Speed 0
+    Mass 5000
+    Damage 2
+    EXPLOSIONDAMAGE 2
+    EXPLOSIONRADIUS 64
+    +DONTSPLASH
+    +NOGRAVITY
+    +FLOORCLIP
+    +STRIFEDAMAGE
+    +ICEDAMAGE
+    +RIPPER
+    +FLOORHUGGER
+    RENDERSTYLE ADD
+    ALPHA 0.5
+    Scale 0.75
+    States
+    {
+    Spawn:
+        FIR2 A 2 BRIGHT A_PlaySound("mealstrom/boltcrackle")
+        FIR2 B 2 BRIGHT A_Explode
+        FIR2 C 2 BRIGHT A_PlaySound("mealstrom/boltcrackle")
+        FIR2 D 2 BRIGHT 
+        FIR2 E 2 BRIGHT A_PlaySound("mealstrom/boltcrackle")
+        FIR2 F 2 BRIGHT A_Explode
+        FIR2 G 2 BRIGHT A_PlaySound("mealstrom/boltcrackle")
+        FIR2 H 2 BRIGHT 
+        FIR2 I 2 BRIGHT A_PlaySound("mealstrom/boltcrackle")
+        FIR2 J 2 BRIGHT A_Explode
+        FIR2 K 2 BRIGHT A_PlaySound("mealstrom/boltcrackle")
+        FIR2 L 2 BRIGHT 
+        FIR2 M 2 BRIGHT A_PlaySound("mealstrom/boltcrackle")
+        FIR2 N 2 BRIGHT A_Explode
+        FIR2 O 2 BRIGHT A_PlaySound("mealstrom/boltcrackle")
+        FIR2 P 2 BRIGHT 
+        FIR2 QR 6 BRIGHT
+        Stop
+    }
+}		
+
+Actor NewHellFire
+{
+	Projectile
+	Speed 16
+	Radius 3
+	Height 5
+	Damage 0
+	RenderStyle None
+	+FLOORHUGGER
+	+RIPPER
+	+BLOODLESSIMPACT
+	+DONTSPLASH
+	reactiontime 15
+	DamageType Fire
+	SeeSound "dragonfam/attack"
+	States
+	{
+	Spawn:
+		PLAY A 0
+		TNT1 A 0 A_Explode(8,64,0)
+		PLAY AA 0 A_SpawnItemEx("NewHellFireFx",random(20,-20),random(20,-20),0,0,0,0,0,32)
+		PLAY A 1 //A_SpawnItemEx("NewHellFire2nd",0,0,0,random(10,14),0,0,random(0,359),32)
+		TNT1 a 0 A_CountDown
+		Loop
+	Death:
+		PLAY F 4
+		Stop
+	}
+}
+
+
+Actor NewHellFire2nd : NewHellFire
+{
+	Speed 10
+	reactiontime 5
+	States
+	{
+	Spawn:
+		TNT1 a 0
+		PLAY a 0 A_SpawnItemEx("NewHellFireFx",random(20,-20),random(20,-20),0,0,0,0,0,32)
+		PLAY A 1 A_Explode(3,64)
+		TNT1 a 0 A_CountDown
+		Loop
+	Deaht:
+		PLAY a 0 A_SpawnItemEx("NewHellFireFx",random(20,-20),random(20,-20),0,0,0,0,0,32)
+		PLAY A 2 A_Explode(5,64)
+		Stop
+	}
+}
+		
+Actor NewHellFireFx
+{
+	RenderStyle Add
+	+NOINTERACTION
+	+DONTSPLASH
+	Scale 1.5
+	States
+	{
+	Spawn:
+		FRTF ABCDEFGHIJKLMNO 3 Bright	
+		Stop
+	}
+}
+
+
+Actor RaiseExp
+{
+    Projectile
+    Radius 1
+    Height 1
+    Speed 0
+    Damage 0
+    +NOCLIP
+    Renderstyle Add
+    SeeSound "SkeletonKing/idle"
+    Alpha 0.6
+    States
+    {
+    Spawn:
+	EXP3 ABCDEFGHIJKLMNOPQRSTUVWXYZ 2 Bright
+	Stop
+    }
+}	
+
+
+
+ACTOR DBTKES
+{
+PROJECTILE
++EXTREMEDEATH
++NODAMAGETHRUST
++DONTSPLASH
++RIPPER
+Mass 500
+Radius 10
+Height 10
+Speed 15
+Damage 5
+damagetype UnholyDisint
+SeeSound "DarkFire/Active"
+DeathSound "SorcererBigBallExplode"
+Scale 0.25
+States
+{
+Spawn:
+   DKFX AABB 1 Bright A_Explode(20,32,0)
+   TNT1 A 0 A_PlaySound("DarkFireSmall/Active")
+   DKFX CCDD 1 Bright A_Explode(20,32,0)
+   TNT1 A 0 A_PlaySound("DarkFireSmall/Active")
+   DKFX EEFF 1 Bright A_Explode(20,32,0)
+   Loop
+Death:
+   TNT1 AAAAAAAAA 0 A_SpawnItemEx("KESExplosionSpritesSmall",0,0,0,random(3,-3)/(2*1.95),random(3,-3)/(2*1.95),random(3,-3)/(2*1.95),0,32)
+   TNT1 A 1 A_Explode(32,96,0)
+   TNT1 A 0 A_SpawnItemEx("KESSmallExplosion",0,0,0,0,0,0,0,0,0)
+   Stop
+}
+}
+
+
+actor ZombieGrenade
+{
+    Radius 8
+    Height 8
+    Speed 15
+    Scale 0.65
+    Damage 5
+    PROJECTILE
+    +DOOMBOUNCE
+    +GRENADETRAIL
+    +CANBOUNCEWATER
+    SeeSound "weapons/grenadebounce"
+    DeathSound "weapons/rockexplo"
+    States
+    {
+    Spawn:
+        QGRP KJIHGFEDCBA 5 Bright A_Gravity
+        Loop
+    Death:
+	  TNT1 a 0 A_SpawnItemEx("MonExplosionMedium",0,0,0,0,0,0,0,32)
+        TNT1 A 3 Bright A_Explode(40,64,1)
+        Stop
+    }
+}
+
+actor ShadowTrailNew
+{
+    Radius 1
+    Height 1
+    Speed 0
+    PROJECTILE
+    RENDERSTYLE ADD
+    ALPHA 0.6
+    +NOCLIP
+    States
+    {
+    Spawn:
+     SHTR ABCDEF 4 Bright
+        Stop       
+    }
+}
+
+actor ZombieRocket
+{
+    Radius 8
+    Height 8
+    Speed 18
+    Scale 0.65
+    Damage 12
+    +ROCKETTRAIL
+    PROJECTILE
+    SeeSound "q2weapon/rocketlauncherfire"
+    DeathSound "weapons/rockexplo"
+    States
+    {
+    Spawn:
+	QROK A 2 Bright A_SpawnItemEx("Q2RocketAltSmoke",random(-2,2),random(-2,2),random(-2,2),0,0,0,random(1,360))
+	TNT1 A 0 A_SpawnItemEx("Q2RocketExtra",0,0,0,1,0,random(-1,1),random(1,360))
+	Loop
+    Death:
+      TNT1 a 0 A_SpawnItemEx("MonExplosionMedium",0,0,0,0,0,0,0,32)
+	TNT1 A 2 Bright A_Explode(64,64,1)
+	Stop
+    }
+}
+
+ACTOR ZombieBombRocket
+{
+    Radius 4
+    Height 4
+    Speed 22
+    Scale 0.5
+    Damage 3
+    PROJECTILE
+    +FIREDAMAGE
+    SeeSound "weapons/rocketlaunch"
+    DeathSound "weapons/devexpl"
+    States
+    {
+    Spawn:
+	FRMS A 2 Bright A_SpawnItemEx("Q2RocketExtra",0,0,0,1,0,random(-1,1),random(1,360))
+	Loop
+    Death:
+      TNT1 a 0 A_SpawnItemEx("NewExplosionSmall",0,0,0,0,0,0,0,32)
+	TNT1 A 0 A_explode(28,64)
+	Stop
+    }
+}
+
+//*****************************************************************************************************
+//*****************************************************************************************************
+//		Leftovers from Demon Eclipse
+//*****************************************************************************************************
+//*****************************************************************************************************
+
+ACTOR Bloodshot
+{
+    Radius 3
+    Height 3
+    Speed 20
+    Damage 2
+    PROJECTILE
+    RENDERSTYLE TRANSLUCENT
+    ALPHA 0.80
+    +THRUGHOST
+    DeathSound "weapons/bloodx"
+	DamageType "Unholy"
+    States
+    {
+    Spawn:
+	FBLD A 2 Bright A_CStaffMissileSlither
+	FBLD A 0 A_SpawnItem("DEBloodtrail",0,0)
+	FBLD B 2 Bright A_CStaffMissileSlither
+	FBLD B 0 A_SpawnItem("DEBloodtrail",0,0)
+	Loop
+    Death:
+	FBLD CDE 3 Bright
+	Stop
+   }
+}
+
+ACTOR DEBloodtrail
+{   
+    Radius 1
+    Height 1
+    PROJECTILE
+    RENDERSTYLE TRANSLUCENT
+    ALPHA 0.67
+    States
+    {
+    Spawn:
+	TNT1 A 3
+	FBLD FGH 3 BRIGHT
+	Stop 
+    }
+}
+
+
+Actor AnnihilatorRocket : Rocket
+{
+States
+{
+    Death:
+	EXP3 A 0 Bright A_Explode(64,128)
+	TNT1 A 0 A_SpawnItemEx("MonExplosionMedium",0,0,0,0,0,0,0,32)
+	TNT1 A 3
+	Stop
+}
+}
+
+
+ACTOR PentaLine1
+{
+    Radius 0
+    Height 32
+    Speed 200
+    RenderStyle NONE
+    Alpha 0.85
+    PROJECTILE
+    +FLOORHUGGER
+    +NOCLIP
+    +DONTSPLASH
+    SeeSound "weapons/diasht"
+    States
+    {
+    Spawn:
+        TNT1 A 1
+        TNT1 A 0 A_CustomMissile("PentaLine2",0,0,-198,2)
+        TNT1 A 0 A_CustomMissile("PentaLine2",0,0,198,2)
+	Stop
+    }
+}
+
+ACTOR PentaLine2
+{
+    Radius 0
+    Height 32
+    Speed 16
+    RenderStyle NONE
+    Alpha 0.85
+    PROJECTILE
+    +FLOORHUGGER
+    +NOCLIP
+    +DONTSPLASH
+    States
+    {
+    Spawn:
+	TNT1 AAAAAAAAAAAAAAAA 1 A_SpawnItem("PentaFire",0,0)
+	Stop
+    }
+}
+
+ACTOR PentaFire
+{
+    Radius 0
+    Height 32
+    Speed 0
+    DamageType fire
+    RenderStyle Add
+    Alpha 0.85
+    ReactionTime 2
+    PROJECTILE
+    +FLOORHUGGER
+    -NOGRAVITY
+    +DONTSPLASH
+    States
+    {
+    Spawn:
+	CFCF A 1 Bright A_Explode(1,32,1)
+	CFCF A 2 Bright A_PlaySound("weapons/onfire")
+	CFCF BCDEFGHIJKLM 3 Bright A_Explode(1,32,1)
+	CFCF A 0 Bright A_CountDown
+	Loop
+    Death:
+	CFCF NOP 3 Bright A_Explode(2,32,1)
+	Stop
+    }
+}
+
+
+ACTOR PentaLine3
+{
+    Radius 0
+    Height 32
+    Speed 200
+    RenderStyle NONE
+    Alpha 0.85
+    PROJECTILE
+    +FLOORHUGGER
+    +NOCLIP
+    +DONTSPLASH
+    SeeSound "weapons/diasht"
+    States
+    {
+    Spawn:
+	TNT1 A 1
+	TNT1 A 0 A_CustomMissile("PentaLine4",0,0,-198,2)
+	TNT1 A 0 A_CustomMissile("PentaLine4",0,0,198,2)
+	Stop
+    }
+}
+
+ACTOR PentaLine4
+{
+    Radius 0
+    Height 32
+    Speed 16
+    RenderStyle NONE
+    Alpha 0.85
+    PROJECTILE
+    +FLOORHUGGER
+    +NOCLIP
+    +DONTSPLASH
+    States
+    {
+    Spawn:
+	TNT1 AAAAAAAAAAAAAAAA 1 A_SpawnItem("PentaFire2",0,0)
+	Stop
+    }
+}
+
+ACTOR PentaFire2
+{
+    Radius 0
+    Height 32
+    Speed 0
+    RenderStyle Add
+    Alpha 0.85
+    ReactionTime 7
+    PROJECTILE
+    +FLOORHUGGER
+    -NOGRAVITY
+    +DONTSPLASH
+    States
+    {
+    Spawn:
+	CFCF A 1 Bright A_Explode(1,32,1)
+	CFCF A 2 Bright A_PlaySound("weapons/onfire")
+	CFCF BCDEFGHIJKLM 3 Bright A_Explode(1,32,1)
+	CFCF A 0 Bright A_CountDown
+	Loop
+    Death:
+	CFCF NOP 3 Bright A_Explode(1,32,1)
+	Stop
+    }
+}
+
+
+ACTOR DKbolt
+{
+    Radius 8
+    Height 8
+    Speed 15
+    Damage 8
+    PROJECTILE
+    RENDERSTYLE ADD
+    ALPHA 0.80
+    DamageType Fire
+    +THRUGHOST
+    SeeSound "Weapons/boltfi"
+    DeathSound "weapons/firex4"
+    States
+    {
+    Spawn:
+        BOLT A 1 Bright A_BishopMissileWeave
+        BOLT A 0 A_SpawnItem("RedPuff",0,0)
+        Loop
+    Death:
+        HBAL EFHI 2 Bright
+        Stop
+    }
+}
+ACTOR RedPuff
+{   
+    Radius 0
+    Height 1
+    Speed 0
+    PROJECTILE
+    RENDERSTYLE ADD
+    ALPHA 0.85
+    States
+    {
+    Spawn:
+	TNT1 A 3 Bright
+	RPUF ABCDE 3 Bright
+	Stop 
+    }
+}
+
+
+
+
+
+
+
+Actor BloodshotSlow : Bloodshot		//TEMP! it'll be deleted
+{}
+
+Actor SoulHarvesterBallSlow : Bloodshot
+{}
+
+Actor FatUnseeingBallSlow : Bloodshot
+{}
+
+Actor MaelStromBallSlow : Bloodshot
+{}
+
+Actor BaronBallSlow: Bloodshot
+{}
+
+Actor ZombieGrenadeSlow : Bloodshot
+{}
+
+Actor FallenRocketSlow : Bloodshot
+{}
+
+Actor FallenFireSlow : Bloodshot
+{}
+
+Actor FatShotSlow : Bloodshot
+{}
+
+Actor ArachnotronPlasmaSlow : Bloodshot
+{}
+
+Actor RevenantTracerSlow : Bloodshot
+{}
+
+Actor ZombieRocketSlow : Bloodshot
+{}
+
+Actor Demon1FX1Slow : Bloodshot
+{}
+Actor SkullWizardSpellSlow : Bloodshot
+{}
+Actor SerpentFXSlow : Bloodshot
+{}

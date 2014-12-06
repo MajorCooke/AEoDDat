@@ -1,0 +1,653 @@
+#library "GameType"
+#include "zcommon.acs"
+
+global Int 1:AEoDThemeType;
+global Int 2:GameStarted;
+global Int 5:ThemeMix;
+global Int 7:ActiveCount;
+global Bool 8:L4DMode;
+global Bool 9:L4DDir;
+global Bool 10:NorDir;
+global Bool 11:TechTheme;
+global Bool 12:MagicTheme;
+global Bool 13:NormalTheme;
+global Bool 14:JokeTheme;
+global Bool 15:ScriptSetup;
+global str 16:GameModeCh[]; 
+global bool 17:MonsterMayhem;
+
+str GameTypesText[28]={"Classic",	//0
+		"Doom/demon-esque",	//1		
+		"Dark sci-fi",		//2
+		"Magic/Fantasy",		//3
+		"High Tech",			//4
+		"Aliens",			//5
+		"Joke Mode",			//6, it just says "joke mode" in dec/char code
+		"Portal run",			//7
+		"Nothing",		
+		"Nothing",
+		"Nothing",
+		"Doom",				//11
+		"Blood",			//12
+		"Duke Nukem 3D",		//13
+		"Half Life",			//14
+		"Half Life 2",			//15
+		"Heretic",			//16
+		"Hexen",			//17
+		"Hexen II",			//18
+		"Might & Magic",		//19
+		"Powerslave",			//20
+		"Quake",			//21
+		"Quake II",			//22
+		"Quake IV",			//23
+		"Shadow Warrior",		//24
+		"Strife",			//25
+		"Left 4 Dead",		//26
+		"Chaos Capital"}; //27
+
+Script "s901" enter
+{
+	//ACS_NamedExecuteWait("SpawnerSetup",0,0,0,0);	
+	if (!(GameStarted))
+		delay(1);
+	if (CheckInventory("NotATrueMapToken") == 1)
+		Terminate;
+	ACS_NamedExecute("s650",0,0,0,0);		//starts the spells script
+	ACS_NamedExecute("s903",0,0,0,0);		//level checker
+	int NoWeapons;
+	
+	//This section below checks if at the beginning of the map, player has no weapons in slot 3, 4, 5, etc, 
+	if(CheckInventory("Weapon3Count")==0
+	   &&CheckInventory("Weapon4Count")==0
+	   &&CheckInventory("Weapon5Count")==0
+	   &&CheckInventory("Weapon6Count")==0
+	   &&CheckInventory("Weapon7Count")==0
+	   &&CheckInventory("Weapon8Count")==0
+	   &&CheckInventory("Weapon9Count")==0
+	   &&CheckInventory("Weapon0Count")==0)
+	   {
+		NoWeapons=1;		//it sets this var saying player has no viable weapons. If that's the case, it will also give the starting weapons
+		//HudMessageBold(s:"You have no weapons";HUDMSG_PLAIN, 0, CR_RED, 0.5, 0.9, 5.0); //debugging
+	   }
+	   /*else		// debugging
+		HudMessageBold(s:"You have weapons";HUDMSG_PLAIN, 0, CR_RED, 0.5, 0.9, 5.0);*/
+		
+	// This section above is for mapsets like Scythe 2 that relies on player dying, and entering a new "episode"
+	// from pistol start. The point here, is that without checking this, AEoD would give weapons only at map01.
+		
+	If(getlevelinfo(LEVELINFO_LEVELNUM)!=0)		//if ==0, is an special map (i.e. titlemap)
+	{
+		if(GameStarted==0||NoWeapons==1)
+		{
+			Delay(1);
+			GameStarted=1;	//this is for the first time player enters the game, after a second, the game will save this var
+			AEoDThemeType = GetCVar("AEGtValues");	
+			giveinventory("AEoDKnife",1);
+			giveinventory("KnifeDrop",1);
+			if(L4DMode || L4DDir)		//if L4D gives special weapon and ammo
+			{
+				giveinventory("AEoDBerettaItem",1);
+				giveinventory("AEoDBerettaItem",1);
+				giveinventory("AEClip",100);
+				giveInventory("AEoDSPASShotgunItem",1);
+				giveinventory("AEShell",34);
+				giveinventory("StoneOfRestoration",1);
+				giveinventory("HealthBottle",1);
+				SetWeapon("AEoDBeretta");
+			}
+			else if (NormalTheme || JokeTheme || ThemeMix <= 0)
+			{
+				giveinventory("AEoDBerettaItem",1);				//otherwise will give the pistol
+				giveinventory("AEClip",36);
+				SetWeapon("AEoDBeretta");
+			}
+			
+			if(MagicTheme)	//and if is a "magic type" game mode
+			{
+				giveinventory("AEoDGargoyleWandItem",1);							// will give the wand
+				giveinventory("BlueMana",70);
+				SetWeapon("AEoDGargoyleWand");
+			}
+			if(TechTheme)		//if tech
+			{
+				giveinventory("AEoDBlasterItem",1);							// will give the blaster
+				giveinventory("AECell",40);
+				SetWeapon("AEoDBlaster");
+			}
+			/*else if(AEoDThemeType==7)									//I cannot support portal run through the new system. Sorry.
+			{
+				GiveInventory("AEoDPortalGunItem",1);
+				GiveInventory("Weapon0Count",3);
+				GiveInventory("Weapon1Count",3);
+				GiveInventory("Weapon2Count",3);
+				GiveInventory("Weapon3Count",3);
+				GiveInventory("Weapon4Count",3);
+				GiveInventory("Weapon5Count",3);
+				GiveInventory("Weapon6Count",3);
+				GiveInventory("Weapon7Count",3);
+				GiveInventory("Weapon8Count",3);
+				GiveInventory("Weapon9Count",3);	
+			}*/
+			if (NormalTheme || JokeTheme)
+			{
+				giveinventory("AEoDBerettaItem",1);				//otherwise will give the pistol
+				giveinventory("AEClip",36);
+				SetWeapon("AEoDBeretta");
+			}
+			//SetFont("BIGFONT");
+			//HUDMessage(s:"AEoD: ",l:GameTypesText[AEoDThemeType],s:"."; HUDMSG_TYPEON| HUDMSG_LOG,0,CR_GREEN,0.5,0.1,6.0,0.1,1.0);
+		}
+		if(L4DMode || L4DDir)				//if L4D or chaos capital when entering a level
+	{
+		if(CheckInventory("FearRune")==0)	//and player has no fear rune
+			GiveInventory("FearRune",1);	//i will give one
+			
+		ACS_NamedExecute("s914",0,0,0,0);	//Start up the body count script.
+		GiveInventory("L4DMode",1);
+		GiveInventory("L4DCountHudToken",1);
+	}
+	
+	
+	int diff = GameSkill();
+	
+	if (L4DDir)	//If chaos capital	
+		giveinventory("L4DDirectorSpawner",1); //spawn only the l4d director
+		
+	if (NorDir) //if monster mayhem mode
+		giveinventory("DirectorSpawner",1); //spawn the director
+	
+		
+	//The above code handles the director, while below handles possible combos.
+	//This code below is used to give the player a perfect skill count dummy
+	//on EACH map, because it will be stripped.
+		
+	
+	if((NorDir) || (L4DDir) || (L4DMode))	//If L4D or Chaos Capital...
+	{	
+		if (GameSkill()==4 || MonsterMayhem)
+			giveinventory("NightmareToken",1);
+		
+		if (L4DDir || L4DMode)
+			giveinventory("SkillCount",GameSkill());
+	}	
+		
+	delay(10);
+	if(JokeTheme)				//if joke mode or chaos capital
+		ACS_NamedExecute("s902",0,0,0,0);		//starts the cave jonhson phrases check
+	}
+		/*
+	if(AEoDThemeType==7)				//if portal run, when entering a level
+	{
+		if(CheckInventory("EarthSymbol")<=1)	//gives 2 earth symbol if player has less than 2
+			GiveInventory("EarthSymbol",2);
+		if(CheckInventory("PentagramOfProtection")==0)	//and gives a pentagram if player didnt have one already
+			GiveInventory("PentagramOfProtection",1);	
+	
+		TakeInventory("CupOfMana",1);	//takes all the powerups but the medkits, life urn, pentagram and earth symbol
+		TakeInventory("IceShield",1);
+		TakeInventory("ThunderstormRune",1);
+		TakeInventory("FearRune",1);
+		TakeInventory("DrainRune",1);
+		TakeInventory("InvisibilityRune",1);
+		TakeInventory("TimeRune",1);
+		TakeInventory("FireSymbol",1);
+		TakeInventory("WaterSymbol",1);
+		TakeInventory("AirSymbol",1);
+		TakeInventory("Bracers",1);
+		TakeInventory("StoneOfQuickening",1);
+		TakeInventory("StoneOfTemperance",1);
+		TakeInventory("StoneOfRestoration",1);
+		TakeInventory("AntiChickenator",1);
+		TakeInventory("IconOfSummoning",1);
+		TakeInventory("DiabolicalDice",3);
+		TakeInventory("ForceCube",1);
+		TakeInventory("InfraredItem",1);
+		TakeInventory("RadSuitItem",1);
+	}	*/
+}
+
+str LevelsVisited[33]={"0","1","2","3","4","5","6","7","8","9","10",
+			     "11","12","13","14","15","16","17","18","19","20",
+			     "21","22","23","24","25","26","27","28","29","30","31","32"};
+global int 5: LevTracker[];
+int LevelsPlayed;
+
+
+script "s902" (void)
+{
+	if(GetLevelInfo(LEVELINFO_LEVELNUM)==1)	//only in map01
+		GiveActorInventory(21000,"CaveSaysHi",1);
+	else if(GetLevelInfo(LEVELINFO_LEVELNUM)==30) //only map30
+	{
+		GiveActorInventory(21000,"CaveIsPissed",1);	//plays the lemon speech
+		
+		for(int i=1;i<33;i++)		//this is the loop to count how many levels have been visited
+			if(LevTracker[i]==1)
+				LevelsPlayed++;
+		if(LevelsPlayed>=30)		//if you played at least 30 maps
+		{
+			Delay(35*33);		//after the speech ends
+			if(AEoDThemeType==7)	//and if in "portal run" mode
+			{
+				GiveActorInventory(21000,"AEGrenade",100);	//you get full grenades
+				GiveActorInventory(21000,"LemonNadeDrop",1);	//it gives you the pickup actors
+				GiveActorInventory(21000,"AEoDLemonNade",1);	//because player has in theory all slots full. like this, it will ignore that fact
+			}
+			else	//if it wasnt 7 (portal run), then is 6 (joke mode)
+				GiveActorInventory(21000,"LemonNadeSpawner",1);	//you get your prize
+		}
+	}
+	else //if(GetLevelInfo(LEVELINFO_LEVELNUM)>1&&GetLevelInfo(LEVELINFO_LEVELNUM)<30) //from map02 to map29
+		GiveActorInventory(21000,"CaveSaySomethingHalfTheTimes",1);	//1/3 of chances to say something at the beginning of the levels
+	if(GetLevelInfo(LEVELINFO_LEVELNUM)!=30)	//in map30, this wont play anymore
+		while(1)
+		{
+			delay(35*random(60,180));	//it will delay somewhere between 1 and 3 minutes before saying something again in the same level
+			GiveActorInventory(21000,"CaveSaySomethingHalfTheTimes",1);	//and then, again 1/3 of chances.
+		}
+}
+
+
+
+Script "s903" (void)		//This one is to keep track of the levels visited by player, stored in the "LevTracker" array
+{
+	LevTracker[GetLevelInfo(LEVELINFO_LEVELNUM)]=1;
+}
+
+script "s905" (void)		//debug to print the list
+{
+	for(int i=0;i<33;i++)
+		Log(l:LevelsVisited[i],s:"/",d:LevTracker[i]);
+}
+
+script "s906" (void)		//debug to print the actual level number
+{
+	Log(s:"You are in map number: ",d:GetLevelInfo(LEVELINFO_LEVELNUM));
+	for(int i=1;i<33;i++)
+		if(LevTracker[i]!=0)
+			LevelsPlayed++;
+	Log(s:"And you have played ",d:LevelsPlayed,s:" levels.");
+}
+
+
+
+
+
+
+script "s911" (void)	//called by the monster spawners.
+{
+	SetResultValue(AEoDThemeType);	//now im doing it backwards, first it will try to use that value
+	if(GameStarted==0)			//and if the game has not registered that it started already, then 
+		SetResultValue(GetCVar("AEGtValues"));	//pulls the console variable
+		
+}
+
+Script "s912" (void)
+{
+	SetResultValue(GetCVar("AEGtValues"));
+}
+
+script "s913" (void)
+{
+	HUDMessage(s:"ACS variable is: ",d:AEoDThemeType; HUDMSG_PLAIN,5,CR_GREEN,0.5,1.0,2.0);
+	HUDMessage(s:"Console variable is: ",d:GetCVar("AEGtValues"); HUDMSG_PLAIN,6,CR_GREEN,0.5,0.9,2.0);
+}
+
+script "s914" (int hudsizex, int hudsizey)
+{
+	int commoncount = CheckInventory("L4DCommonCount");
+	int tankcount = CheckInventory("L4DTankCount");
+	int witchcount = CheckInventory("L4DWitchCount");
+	int jockeycount = CheckInventory("L4DJockeyCount");
+	int spittercount = CheckInventory("L4DSpitterCount");
+	int huntercount = CheckInventory("L4DHunterCount");
+	int boomercount = CheckInventory("L4DBoomerCount");
+	int chargercount = CheckInventory("L4DChargerCount");
+	int smokercount = CheckInventory("L4DSmokerCount");
+	int maptotal = CheckInventory("L4DMapTotal");
+	int currenttotal = CheckInventory("L4DCurrentTotal");
+	int ccm = CheckInventory("L4DCCMultiplier");
+	int hudyoffset = 200.0;
+
+	SetHudSize(1024,768,0);
+	HudMessage(s:"Common:"; HUDMSG_PLAIN,666,CR_BROWN,100.1,hudyoffset+25.1,0.15);
+	HudMessage(s:"Tanks:"; HUDMSG_PLAIN,667,CR_BROWN,100.1,hudyoffset+35.1,0.15);
+	HudMessage(s:"Witches:"; HUDMSG_PLAIN,668,CR_BROWN,100.1,hudyoffset+45.1,0.15);
+	HudMessage(s:"Jockeys:"; HUDMSG_PLAIN,669,CR_BROWN,100.1,hudyoffset+55.1,0.15);
+	HudMessage(s:"Spitters:"; HUDMSG_PLAIN,670,CR_BROWN,100.1,hudyoffset+65.1,0.15);
+	HudMessage(s:"Hunters:"; HUDMSG_PLAIN,671,CR_BROWN,100.1,hudyoffset+75.1,0.15);
+	HudMessage(s:"Boomers:"; HUDMSG_PLAIN,672,CR_BROWN,100.1,hudyoffset+85.1,0.15);
+	HudMessage(s:"Chargers:"; HUDMSG_PLAIN,673,CR_BROWN,100.1,hudyoffset+95.1,0.15);
+	HudMessage(s:"Smokers:"; HUDMSG_PLAIN,674,CR_BROWN,100.1,hudyoffset+105.1,0.15);
+	HudMessage(s:"Map Total:"; HUDMSG_PLAIN,675,CR_BROWN,100.1,hudyoffset+125.1,0.15);
+	HudMessage(s:"Current Total:"; HUDMSG_PLAIN,676,CR_BROWN,100.1,hudyoffset+135.1,0.15);
+	HudMessage(s:"30000 Kills x"; HUDMSG_PLAIN,677,CR_BROWN,100.1,hudyoffset+145.1,0.15);
+	
+	HudMessage(i:commoncount; HUDMSG_PLAIN,678,CR_BROWN,300.1,hudyoffset+25.1,0.15);
+	HudMessage(i:tankcount; HUDMSG_PLAIN,679,CR_BROWN,300.1,hudyoffset+35.1,0.15);
+	HudMessage(i:witchcount; HUDMSG_PLAIN,680,CR_BROWN,300.1,hudyoffset+45.1,0.15);
+	HudMessage(i:jockeycount; HUDMSG_PLAIN,681,CR_BROWN,300.1,hudyoffset+55.1,0.15);
+	HudMessage(i:spittercount; HUDMSG_PLAIN,682,CR_BROWN,300.1,hudyoffset+65.1,0.15);
+	HudMessage(i:huntercount; HUDMSG_PLAIN,683,CR_BROWN,300.1,hudyoffset+75.1,0.15);
+	HudMessage(i:boomercount; HUDMSG_PLAIN,684,CR_BROWN,300.1,hudyoffset+85.1,0.15);
+	HudMessage(i:chargercount; HUDMSG_PLAIN,685,CR_BROWN,300.1,hudyoffset+95.1,0.15);
+	HudMessage(i:smokercount; HUDMSG_PLAIN,686,CR_BROWN,300.1,hudyoffset+105.1,0.15);
+	HudMessage(i:maptotal; HUDMSG_PLAIN,687,CR_BROWN,300.1,hudyoffset+125.1,0.15);
+	HudMessage(i:currenttotal; HUDMSG_PLAIN,688,CR_BROWN,300.1,hudyoffset+135.1,0.15);
+	HudMessage(i:ccm; HUDMSG_PLAIN,689,CR_BROWN,300.1,hudyoffset+145.1,0.15);
+	SetHudSize(0,0,0);
+	delay(5);
+	restart;
+}
+
+script "s915" (void)
+{
+	GiveInventory("L4DCountToggler",1);
+}
+
+Script "SpawnerSetup" enter
+{
+	if (!(ScriptSetup))
+	{
+		L4DMode = false;
+		L4DDir = false;
+		NorDir = false;
+		NormalTheme = false;
+		TechTheme = false;
+		MagicTheme = false;
+		JokeTheme = false;
+		MonsterMayhem = false;
+		ActiveCount = 0;
+		ThemeMix = 0;
+		if (GetCvar("user_MonsterMayhem"))
+			MonsterMayhem = true;
+		if (GetCvar("user_NorDir"))
+			NorDir = true;
+		if (GetCvar("user_L4DDir"))
+			L4DDir = true;
+		if (GetCvar("user_MonsterMayhem"))
+			MonsterMayhem = true;
+		if (GetCvar("user_L4DMode"))
+		{
+			L4DMode = true;
+			L4DDir = true;
+			NormalTheme = true;
+			TechTheme = true;
+			MagicTheme = true;
+			NorDir = false; //This must be disabled.
+			ScriptSetup = true;
+			Terminate; //Really, no point in bothering with the rest.
+		}
+		if (GetCvar("user_Doom"))
+		{
+			GameModeCh[ActiveCount] = "Doom";
+			ActiveCount++;
+			ThemeMix++;
+			NormalTheme = true;
+		}
+		if (GetCvar("user_Blood"))
+		{
+			GameModeCh[ActiveCount] = "Blood";
+			ActiveCount++;
+			ThemeMix++;
+			NormalTheme = true;
+		}
+		if (GetCvar("user_Duke"))
+		{
+			GameModeCh[ActiveCount] = "DN3D";
+			ActiveCount++;
+			ThemeMix++;
+			NormalTheme = true;
+		}
+		if (GetCvar("user_HL"))
+		{
+			GameModeCh[ActiveCount] = "HL";
+			ActiveCount++;
+			ThemeMix++;
+			NormalTheme = true;
+		}
+		if (GetCvar("user_HL2"))
+		{
+			GameModeCh[ActiveCount] = "HL2";
+			ActiveCount++;
+			ThemeMix++;
+			TechTheme = true;
+		}
+		if (GetCvar("user_Heretic"))
+		{
+			GameModeCh[ActiveCount] = "Heretic";
+			ActiveCount++;
+			ThemeMix++;
+			MagicTheme = true;
+		}
+		if (GetCvar("user_Hexen"))
+		{
+			GameModeCh[ActiveCount] = "Hexen";
+			ActiveCount++;
+			ThemeMix++;
+			MagicTheme = true;
+		}
+		if (GetCvar("user_Hexen2"))
+		{
+			GameModeCh[ActiveCount] = "Hexen2";
+			ActiveCount++;
+			ThemeMix++;
+			MagicTheme = true;
+		}
+		if (GetCvar("user_MM"))
+		{
+			GameModeCh[ActiveCount] = "MM";
+			ActiveCount++;
+			ThemeMix++;
+			MagicTheme = true;
+		}
+		if (GetCvar("user_Powerslave"))
+		{
+			GameModeCh[ActiveCount] = "Powerslave";
+			ActiveCount++;
+			ThemeMix++;
+			NormalTheme = true;
+		}
+		if (GetCvar("user_Quake1"))
+		{
+			GameModeCh[ActiveCount] = "Quake1";
+			ActiveCount++;
+			ThemeMix++;
+			NormalTheme = true;
+		}
+		if (GetCvar("user_Quake2"))
+		{
+			GameModeCh[ActiveCount] = "Quake2";
+			ActiveCount++;
+			ThemeMix++;
+			TechTheme = true;
+		}
+		if (GetCvar("user_Quake4"))
+		{
+			GameModeCh[ActiveCount] = "Quake4";
+			ActiveCount++;
+			ThemeMix++;
+			TechTheme = true;
+		}
+		if (GetCvar("user_SW"))
+		{
+			GameModeCh[ActiveCount] = "ShadowWarr";
+			ActiveCount++;
+			ThemeMix++;
+			NormalTheme = true;
+		}
+		if (GetCvar("user_Strife"))
+		{
+			GameModeCh[ActiveCount] = "Strife";
+			ActiveCount++;
+			ThemeMix++;
+			TechTheme = true;
+		}
+		if (GetCvar("user_L4DMon"))
+		{
+			GameModeCh[ActiveCount] = "L4DMon";
+			ActiveCount++;
+			//ThemeMix++;
+			//NormalTheme = true;
+		}
+		if (GetCvar("user_Joke"))
+		{
+			GameModeCh[ActiveCount] = "JokeMode";
+			ActiveCount++;
+			JokeTheme = true;
+			GiveInventory("JokeToken",1);
+		}
+		ScriptSetup = true;
+	}
+}
+
+Script "SpawnDeployMonster" (int nojoke)
+{
+	// nojoke
+	// 1 = No joke monsters available
+	// 2 = No L4D monsters available
+	// 3 = both 1 and 2
+	int roll;	
+	
+	if (!ScriptSetup)
+		Delay(1);
+	
+	if (L4DMode) //Overrides everything else. L4DMode calls priority.
+	{
+		SetActorState(0,"L4D",1);
+		Terminate;
+	}
+	else
+	{
+		if ((nojoke == 1) && (ThemeMix == 1) && (JokeTheme))
+			roll = 0;
+		else if ((nojoke == 1) && (ThemeMix > 1) && (JokeTheme))
+			roll = random(0,ActiveCount-2); //Don't roll joke chance. I'm doing it this way
+		else //because joke mode is conveniently at the end of the list.
+			roll = random(0,ActiveCount-1); //Roll joke chance.
+		if (ThemeMix == 0 || ((ThemeMix >= 15) && (!(JokeTheme)))) //Don't let zero themes dominate. Will cause nasty issues otherwise.
+		{
+			SetActorState(0,"ClassicAEoD",1);
+		}
+		else if ((ThemeMix >= 15) && (JokeTheme) && (nojoke != 1) && (nojoke != 3)) //Don't bother rolling.
+		{
+			SetActorState(0,"Joke",1);
+		}
+		else
+		{
+			if (nojoke == 2)
+			{
+				while (GameModeCh[roll] == "L4DMon")
+					roll = random(0,ActiveCount-1); //Reroll until we get anything but L4DMon.
+			}
+			else if (nojoke == 1)
+			{
+				if (ThemeMix == 1)
+					roll = 0;
+				else
+				{
+					while (GameModeCh[roll] == "JokeMode")
+						roll = random(0,ActiveCount-2); //Reroll until we get anything but JokeMode.
+				}
+			}
+			SetActorState(0,GameModeCh[roll],1);
+		}
+	}
+}
+
+//I cannot believe I had to resort to such methods.
+Script "SpawnDeployWeapons" (int nojoke)
+{
+	int roll = 1;
+	
+	if (!ScriptSetup)
+		Delay(1);
+		
+	if (L4DMode || ((TechTheme) && (MagicTheme) && (NormalTheme)))
+	{
+		if (nojoke == 1)
+			SetActorState(0,"C_AEoD",1);
+		else
+			SetActorState(0,"Joke",1);
+	}
+	else if ((TechTheme) && (MagicTheme) && (!(NormalTheme)))
+	{
+		if (JokeTheme)
+			roll = random(1,3);
+		else
+			roll = random(1,2);
+		
+		if (roll == 1)
+			SetActorState(0,"Tech",1);
+		else if (roll == 2)
+			SetActorState(0,"Magic",1);
+		else if (roll == 3)
+			SetActorState(0,"JokeMode",1);
+	}
+	else if ((TechTheme) && (!(MagicTheme)) && (NormalTheme))
+	{
+		if (JokeTheme)
+			roll = random(1,3);
+		else
+			roll = random(1,2);
+			
+		if (roll == 1)
+			SetActorState(0,"Tech",1);
+		else if (roll == 2)
+			SetActorState(0,"Normal",1);
+		else if (roll == 3)
+			SetActorState(0,"JokeMode",1);
+	}
+	else if ((!(TechTheme)) && (MagicTheme) && (NormalTheme))
+	{
+		if (JokeTheme)
+			roll = random(1,3);
+		else
+			roll = random(1,2);
+		
+		if (roll == 1)
+			SetActorState(0,"Normal",1);
+		else if (roll == 2)
+			SetActorState(0,"Magic",1);
+		else if (roll == 3)
+			SetActorState(0,"JokeMode",1);
+	}
+	else if ((!(TechTheme)) && (MagicTheme) && (!(NormalTheme)))
+	{
+		if (JokeTheme)
+			roll = random(1,2);
+		else
+			roll = 1;
+			
+		if (roll == 1)
+			SetActorState(0,"Magic",1);
+		else if (roll == 2)
+			SetActorState(0,"JokeMode",1);
+	}
+	else if ((!(TechTheme)) && (!(MagicTheme)) && (NormalTheme))
+	{
+		if (JokeTheme)
+			roll = 1;
+		else
+			roll = random(1,2);
+		
+		if (roll == 1)
+			SetActorState(0,"Normal",1);
+		else if (roll == 2)
+			SetActorState(0,"JokeMode",1);
+	}
+	else if ((TechTheme) && (!(MagicTheme)) && (!(NormalTheme)))
+	{
+		if (JokeTheme)
+			roll = 1;
+		else
+			roll = random(1,2);
+		
+		if (roll == 1)
+			SetActorState(0,"Tech",1);
+		else if (roll == 2)
+			SetActorState(0,"JokeMode",1);
+	}
+	else
+		SetActorState(0,"C_AEoD",1);
+}

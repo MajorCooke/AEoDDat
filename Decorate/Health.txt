@@ -1,0 +1,382 @@
+/********************************** 
+ *	       AEons of Death					*
+ *	       	Version 5.0						*
+ *        	Health Code					  *
+ **********************************/
+
+//--------------------------------------------------------------------
+
+Actor VitalSpawner : RandomSpawner replaces HealthBonus
+{
+	+NOTELESTOMP
+	DropItem "HealthPotion" 255 1
+	DropItem "FHealthPack" 255 1
+}
+
+//--------------------------------------------------------------------
+
+Actor StimpackSpawner : RandomSpawner replaces Stimpack
+{
+	+NOTELESTOMP
+	DropItem "FStimpack" 255 5
+	DropItem "FMedikit" 255 1
+}
+
+//--------------------------------------------------------------------
+
+ACTOR MedikitSpawner replaces Medikit
+{ 
+	DropItem FMedikit 
+	DropItem HealthBottle 160
+	+NOTELESTOMP
+	+NOINTERACTION
+	States 
+	{ 
+	Spawn: 
+		TNT1 A 0 
+		TNT1 A 1 A_Fall 
+		Stop 
+	} 
+}
+//--------------------------------------------------------------------
+
+Actor SoulsphereSpawner : RandomSpawner replaces Soulsphere
+{
+	+NOTELESTOMP
+	DropItem "MegaHeart" 255 20
+	DropItem "LifeUrn" 255 8
+	DropItem "FSoulSphere" 255 5
+}
+
+//--------------------------------------------------------------------
+
+ACTOR HealthPotion : HealthBonus
+{
++NOTELESTOMP
++FLOORCLIP
+Inventory.PickupMessage "You found a Health Potion."
+inventory.pickupsound "reilsss/health/vitalbonus1"
+Inventory.Amount 2
+Scale 0.7
+Inventory.MaxAmount 500
+States
+{
+Spawn:
+	RH02 A 0 NoDelay Thing_ChangeTID(0,22005)
+	Cont:
+	RH02 ABCD 3 Bright
+	Loop
+}
+}
+
+//--------------------------------------------------------------------
+
+ACTOR FHealthPack : HealthBonus
+{
+	+NOTELESTOMP
++FLOORCLIP
+Inventory.PickupMessage "You found a Vital pack."
+inventory.pickupsound "reilsss/health/vitalbonus2"
+Scale 0.2
+Inventory.Amount 5
+Inventory.MaxAmount 500
+States
+{
+Spawn:
+	ADRE A -1 Bright NoDelay Thing_ChangeTID(0,22005)
+	Loop
+}
+}
+
+//--------------------------------------------------------------------
+
+ACTOR FStimpack : Stimpack
+{
+	+NOTELESTOMP
++FLOORCLIP
++NOTARGET
+Scale 0.75
+Inventory.Amount 15 //10
+inventory.pickupsound "reilsss/health/stimkit"
+States
+{
+Spawn:
+	RH01 A -1 NoDelay Thing_ChangeTID(0,22005)
+	Stop
+}
+}
+
+//--------------------------------------------------------------------
+
+Actor FMedikit : Medikit
+{
+	+NOTELESTOMP
++FLOORCLIP
++NOTARGET
+Scale 0.75
+Inventory.Amount 30 //25
+Inventory.pickupsound "reilsss/health/medikit"
+Tag "Health boost"
+States
+{
+Spawn:
+	RH01 B -1 NoDelay Thing_ChangeTID(0,22005)
+	Stop
+}
+} 
+
+//--------------------------------------------------------------------
+
+//ment to replicate the health function of a beserker pack
+ACTOR FAdvancedMediKit : Medikit
+{
+	+NOTELESTOMP
++FLOORCLIP
++NOTARGET
+Scale 0.75
+Inventory.Amount 250
+Inventory.PickupSound "items/berserk/pickup"
+Inventory.PickupMessage "You picked up a advanced medikit"
+Tag "Big Health boost"
+States
+{
+Spawn:
+	RH01 C -1 NoDelay Thing_ChangeTID(0,22005)
+	Loop
+}
+}
+
+//--------------------------------------------------------------------
+
+ACTOR HealthBottle : MedicalKit //Medikit
+{
+	+NOTELESTOMP
+Health 40
++FLOORCLIP
+//-INVENTORY.INVBAR
+Scale 0.75
+Inventory.MaxAmount 25
+Inventory.Icon "HMEDIKIT"
+Inventory.PickupMessage "You picked up a First-Aid Kit"
+Inventory.PickupSound "reilsss/health/firstaidkit"
+Inventory.UseSound "health/medikit/use"
+HealthPickup.Autouse 2
+Tag "Health boost"
+States
+{
+Spawn:
+	RH01 D -1 NoDelay Thing_ChangeTID(0,22005)
+	Loop
+}
+}
+
+//--------------------------------------------------------------------
+
+Actor HealthHeart : RandomSpawner
+{
+	+NOTELESTOMP
+	DropItem "SoulHarvested" 255 20
+	DropItem "HealthHeartPickup" 255 20
+}
+
+
+//Classic heart
+Actor HealthHeartPickup : Health
+{
+	+NOTELESTOMP
++FLOORCLIP
+Scale 0.53
+Inventory.Amount 20
+Inventory.PickupMessage "You ate a heart"
+Inventory.PickupSound "health/heart"
+Health.LowMessage 25, "You ate a heart that you really needed!"
+States
+{
+Spawn:
+	HHRT A 0 NoDelay Thing_ChangeTID(0,22005)
+	HHRT A 3 A_CheckFloor("TouchesFloor")
+	Wait
+TouchesFloor:
+	HHRT A 0 A_SpawnItemEx("MCBloodFXMain",0,0,random(5,16),0,0,0,0,32)
+	HHRT A 3
+	Wait
+}
+}
+
+Actor HearthBlood
+{
+	Projectile
+	Speed 0
+	-NOGRAVITY
+	Scale 0.1
+	Gravity 0.4
+	+DONTSPLASH
+	+DONTBLAST
+	States
+	{
+	Spawn:
+		BLD1 ABCD 6
+		Stop
+	}
+}
+
+
+//Modern soul harvesting	
+Actor SoulHarvested : HealthBonus //Health
+{
+	+NOTELESTOMP
++FLOATBOB
++VISIBILITYPULSE
+Scale 0.48
+Inventory.Amount 10	//was 15, but due to the additive nature, is too much.
+Inventory.MaxAmount 500
+Inventory.PickupMessage "You harvested some soul energy"
+Health.LowMessage 25, "You harvested some soul energy that you really needed!"
+Inventory.PickupSound "reilsss/health/soul"
+RenderStyle Translucent
+States
+{
+Spawn:
+	RH03 A 0 NoDelay Thing_ChangeTID(0,22007)
+	Cont:
+	RH03 ABCD 3 Bright
+	Loop
+}
+}
+
+//--------------------------------------------------------------------
+
+ACTOR FSoulSphere : UpgradeStamina
+{
+	+NOTELESTOMP
++FLOATBOB
++VISIBILITYPULSE
+Inventory.Amount 20
+Inventory.MaxAmount 100
+Inventory.PickupMessage "You found a mystic Soul Sphere"
+Inventory.PickupSound "reilsss/health/soulsphere"
+RenderStyle Translucent
+Scale 0.75
+States
+{
+Spawn:
+	RH04 ABCD 6 Bright
+	Loop
+}
+}
+
+//--------------------------------------------------------------------
+
+//Megasphere
+
+ACTOR MegaHeart : HealthBonus //Health 
+{
+	+NOTELESTOMP
+Scale 0.62
++COUNTITEM
++INVENTORY.AUTOACTIVATE
+//+INVENTORY.ALWAYSPICKUP
++INVENTORY.FANCYPICKUPSOUND
+Inventory.Amount 150
+Inventory.MaxAmount 500
+Inventory.PickupMessage "You ate a demonic heart"
+Inventory.PickupSound "reilsss/health/megaheart"
+
+States
+{
+Spawn:
+	BHRT A 4 Bright A_PlaySound("hearthbeat", CHAN_AUTO, 0.35, 0)
+	BHRT B 5 Bright
+	BHRT C 4 Bright A_PlaySound("hearthbeat", CHAN_AUTO, 0.15, 0)
+	BHRT D 5 Bright
+	BHRT A 4 Bright 
+	BHRT B 5 Bright A_PlaySound("hearthbeat", CHAN_AUTO, 0.35, 0)
+	BHRT C 4 Bright 
+	BHRT D 5 Bright A_PlaySound("hearthbeat", CHAN_AUTO, 0.15, 0)
+	BHRT A 4 Bright 
+	BHRT B 5 Bright 
+	BHRT C 4 Bright A_PlaySound("hearthbeat", CHAN_AUTO, 0.35, 0)
+	BHRT D 5 Bright 
+	BHRT A 4 Bright A_PlaySound("hearthbeat", CHAN_AUTO, 0.15, 0)
+	BHRT B 5 Bright 
+	BHRT C 4 Bright 
+	BHRT D 5 Bright A_PlaySound("hearthbeat", CHAN_AUTO, 0.35, 0)
+	BHRT A 4 Bright 
+	BHRT B 5 Bright A_PlaySound("hearthbeat", CHAN_AUTO, 0.15, 0)
+	BHRT C 4 Bright 
+	BHRT D 5 Bright 
+	Loop
+}
+}
+
+//--------------------------------------------------------------------
+
+ACTOR FMegaSphere : CustomInventory
+{ 
+	+NOTELESTOMP
++COUNTITEM
++INVENTORY.ALWAYSPICKUP
++FLOATBOB
++VISIBILITYPULSE
+Inventory.PickupMessage "You found the Mega Sphere!"
+Inventory.PickupSound "reilsss/health/megasphere"
+RenderStyle Translucent
+States
+{ 
+Spawn:
+	RH05 ABCD 5 Bright
+	Loop
+Pickup:
+	TNT1 A 0 A_GiveInventory("FMegaSphereArmor", 1)
+	TNT1 A 0 A_GiveInventory("FMegaSphereHealth", 1)
+	Stop
+} 
+}
+
+ACTOR FMegaSphereHealth : HealthBonus //Health
+{
+	+NOTELESTOMP
++INVENTORY.ALWAYSPICKUP
+Inventory.Amount 200
+Inventory.MaxAmount 500
+}
+
+Actor FMegaSphereArmor : BasicArmorBonus //BasicArmorPickup
+{
+	+NOTELESTOMP
++INVENTORY.ALWAYSPICKUP
+Armor.SaveAmount 200
+Armor.Savepercent 100
+Armor.Maxsaveamount 500
+}
+
+//--------------------------------------------------------------------
+
+// This one is only dropped by "PD"
+ACTOR BossHealth : HealthBonus //Health
+{
+	+NOTELESTOMP
+	Scale 0.72
+	+INVENTORY.AUTOACTIVATE
+	+INVENTORY.ALWAYSPICKUP
+	+INVENTORY.FANCYPICKUPSOUND
+	+VISIBILITYPULSE
+	Inventory.Amount 666
+	Inventory.MaxAmount 666
+	Inventory.PickupMessage "You got... an strange health bottle."
+	Inventory.PickupSound "reilsss/health/megasphere"
+	Translation "176:191=112:124", "32:47=122:127"
+	RenderStyle Add
+	Alpha 0.9
+	States
+	{
+	Spawn:
+		HBTT A -1 Bright
+		Loop
+	}
+}
+
+//--------------------------------------------------------------------
+
+
+

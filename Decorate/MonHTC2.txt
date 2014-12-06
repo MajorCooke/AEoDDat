@@ -1,0 +1,4706 @@
+/*==============================================================================
+	Happy Time Circus 2
+	Created by ShtBag
+	Modified by Major Cooke for use in AEoD v6
+	Added with permission.
+================================================================================
+
+================================================================================
+	Fluffy
+================================================================================
+	One of Pennywise's top ranking lieutenants, he is on equal level (if not
+	higher than) with Jericho and Bertha as the triple Unholy Leaders. 
+	Fluffy is responsible for turning into the nightmares of the victims
+	and ensuring those who refuse to join Pennywise's army receive death.
+	He can move through objects as if they were nothing but fog, and won't
+	hesitate to mutilate his victims. */
+
+ACTOR HTC2Fluffy	//spider mastermind
+{
+	DropItem "Mana1BigAmmo" 
+	DropItem "Mana1BigAmmo" 128
+	DropItem "Mana2BigAmmo" 
+	DropItem "Mana2BigAmmo" 128
+	DropItem "MegaHeart" 210
+	DropItem "PowerslaveSpawner" 28
+	DropItem "PowerupSpawner" 8
+	Health 7000
+	Radius 25
+	Height 56
+	Speed 40
+	Mass 0x7FFFFFFF
+	PainChance 80
+	MONSTER
+	+FLOORCLIP
+	+BOSS
+	+BOSSDEATH
+	+NOICEDEATH
+	+DONTMORPH
+	+NOTARGETSWITCH
+	+MISSILEMORE
+	+MISSILEEVENMORE
+	SeeSound "BHIT1"
+	PainSound "BHIT5"
+	DeathSound "BTALK3"
+	ActiveSound "BTALK7"
+	MeleeSound "BCHOMP"
+	Obituary "%o now knows Fluffy is responsible for all those cursed skulls."
+	HitObituary "%o was turned into mutated carrot food by Fluffy."
+	MeleeRange 80
+	PainChance "Charm", 0
+	PainChance "Terror", 0
+	PainChance "Defile", 0
+	PainChance "Drain", 40
+	PainChance "Chaos", 255
+	DamageFactor "ChaosExpl1", 0
+	DamageFactor "ChaosExpl2", 0
+//Undead
+	DamageFactor "AEPoison", 0.5
+	DamageFactor "AEBullet", 0.75
+	DamageFactor "Holy", 1.5
+	DamageFactor "Unholy", 0.5
+	DamageFactor "UnholyDisint", 0.5
+	DamageFactor "AEMagic", 1.25
+	States 
+	{
+	Pain.Chaos:
+		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+		Goto See
+	Pain.ChaosExpl1:
+		TNT1 A 0 A_ClearTarget
+		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+		Goto Spawn
+	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
+	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
+	
+	Spawn:
+		N026 A 2 A_Look
+		Loop
+	See:
+		N026 ABCBJ 2 A_Chase
+		N026 KL 1   
+		N026 M 1 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,32)
+		N026 M 1 A_PlaySound("SPLAT5")
+		N026 LK 1
+		N026 J 1
+		Goto See
+	Missile:   
+		N026 AB 2 A_FaceTarget
+		TNT1 A 0 A_Jump(128,2)
+		TNT1 A 0 A_CustomMissile("FluffySkullSeeker", 28, 0, random(1,360), 1)
+		N026 C 2 A_CustomMissile("FluffySkullSeeker", 28, 0, random(1,360), 1)
+		N026 B 4 A_FaceTarget
+		TNT1 A 0 A_Jump(128,2)
+		TNT1 A 0 A_CustomMissile("FluffySkullSeeker", 28, 0, random(1,360), 1)
+		N026 C 2 A_CustomMissile("FluffySkullSeeker", 28, 0, random(1,360), 1)
+		Goto See 
+	Pain:
+		N026 C 0 A_Jump(16,"Ouch")
+		Goto PainCont
+	Pain.AntiClown:
+		"####" "#" 0 A_DamageSelf(666)
+	PainCont:
+		N026 C 2
+		N026 C 3 A_Pain
+		Goto See 
+	Ouch:
+		N026 A 0 A_ChangeFlag("NOPAIN",1)
+		N026 AAAAA 0 A_SpawnItemEx("SpecialExploSpawner",0,random(-5,5),random(16,24),0,0,0,0,32)
+		N026 A 0 A_Quake(3,15,0,5000)//Radius_Quake(3,15,0,1024,0)
+		N026 A 0 A_FaceTarget
+		N026 A 0 A_ChangeVelocity(-10,0,0,3)
+		N026 JKLM 1
+		N026 N 35
+		N026 MMMMMMMMMMMMMMMMMLLLLLLLLLLLLLLLLLLL 2 //A_SpawnItemEx("ClownFireSpawner",frandom(0,4),0,0,frandom(3,6),0,0,random(0,359),32)
+		N026 MMLLMM 2 A_SpawnItemEx("ClownFireSpawner",frandom(0,12),0,0,frandom(3,15),0,0,random(0,359),32)
+		N026 LLLLLLLLLLLLLLLLL 2 A_SpawnItemEx("ClownFireSpawner",frandom(0,12),0,0,frandom(3,15),0,0,random(0,359),32)
+		N026 LLLKKKJJJ 2 A_SpawnItemEx("ClownFireSpawner",frandom(0,12),0,0,frandom(3,15),0,0,random(0,359),32)
+		N026 J 0 A_ChangeFlag("NOPAIN",0)
+		Goto See
+	Melee:
+		N026 ABC 4  
+		N026 B  6 A_CustomMeleeAttack(random(40,200),"BCHOMP")
+		Goto See
+	Death:
+		N026 N 0 A_GiveInventory("IDied",1)
+		N026 N 0 A_PlaySound("Pennywise/DeathPop",CHAN_AUTO|CHAN_MAYBE_LOCAL,1,0,ATTN_NONE)
+		N026 N 0 A_SpawnItemEx("FluffyHellboundSoul",0,0,0,0,0,10,0,32)
+		N026 N 300 A_Quake(1,300,0,8000,"")
+		N026 J 0 A_Fall
+		N026 J 0 A_Quake(2,120,0,8000,"")
+		//N026 NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN 3 A_SpawnItemEx("SpecialExploSpawner",random(0,100),0,random(0,115),0,0,0,random(0,359),32)
+		//N026 NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN 3 A_SpawnItemEx("SpecialExploSpawner",random(0,100),0,random(0,115),0,0,0,random(0,359),32)
+		N026 K 0 A_PlaySound("Wheatley/Explosion",CHAN_VOICE,1,0,ATTN_NONE)
+		N026 KKKKKKKKKKK 3 A_SpawnItemEx("FlingerGibExplosion",random(0,20),0,random(10,40),random(0,15),0,random(0,15),random(0,359),32,128)
+		N026 K 2 A_SpawnItemEx("FlingerGibExplosion",random(0,20),0,random(0,40),random(0,15),0,random(0,15),random(0,359),32,128)
+		N026 NNNNNNNNNNN 0 A_SpawnItemEx("SpecialExploSpawner2",random(0,80),0,random(10,100),0,0,0,random(0,359),32)
+		TNT1 A 0 A_PlaySound("other/gibdeath")
+		TNT1 AAA 0 A_SpawnItemEx("SpecialExploSpawner",0,0,0,0,0,0,0,32)
+		TNT1 AAAAAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,33)
+		TNT1 A 35
+		TNT1 A 0 A_KillMaster
+		Stop
+	Death.UnholyDisint:
+	Death.PlasmaDisint:
+	Disintegrate:
+		"####" "#" 0 Thing_SetTranslation(0,50)
+		"####" "#" 0 A_KillMaster
+		"####" "#" 1 A_FadeOut(0.015)
+		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
+		"####" "#" 0 A_Stop    
+		"####" "#" 0 A_Fall
+		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowBig",0,0,45,0,0,0,0,32)
+		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksBig",0,0,45,0,0,0,0,32)
+		"####" "##" 2 A_FadeOut(0.03)
+		Goto Disintegrate+7
+    }
+}
+
+actor FluffySkullSeeker
+{
+    Radius 8
+    Height 6
+    Speed 15
+    Damage 3
+    Scale 0.5
+    +SEEKERMISSILE
+    PROJECTILE
+    SeeSound "BHIT5"
+    DeathSound "BHIT3"
+    States
+    {
+    Spawn:
+        X131 AB 4 A_SeekerMissile (5,20)
+        Loop
+    Death:
+        X131 CDEFG 4 Bright
+        Stop
+    }
+}
+
+Actor FluffyHellboundSoul
+{
+	Projectile
+	+NOINTERACTION
+	RenderStyle Add
+	Alpha 0.8
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		N026 JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ 1 A_ScaleVelocity(0.90) //38
+		N026 JJJJJJJJJJJJJJJJJJJJJJJJJJJJJ 1 A_ScaleVelocity(0.8) //29
+		N026 JJJJJJJJJJJJJJJJJJJJJJJJJ 1 A_ScaleVelocity(0.75) //25
+		N026 J 0 A_ScaleVelocity(-1)
+		N026 JJJ 35 A_Stop //92+(35*3)
+		N026 B 3 A_PlaySound("SjasDeath",5,1,0,ATTN_NONE) //200
+		N026 C 17 bright A_Quake(4,5000,0,35) //235
+		N026 C 16 bright A_PlaySound("brain/pain",6,1,0,ATTN_NONE)
+		N026 CCCCCCBBBBBBJJJJJJ 1 A_ChangeVelocity(0,0,0.05,1)
+		N026 B 0 A_ScaleVelocity(-1)
+		N026 JJJJJJKKKKKKLLLLLLMMMMMM 1 A_ScaleVelocity(1.04) //289
+		N026 N 1 A_FadeOut(0.02)
+		Wait
+	}
+}
+
+Actor FluffyTarget : Inventory
+{	Inventory.MaxAmount 3	}
+
+//==============================================================================
+//	Mini Fluffy
+//==============================================================================
+//	The horrible Fluffy has his own miniature-sized army, although they are
+//	meant more to terrorize and horrify than to be of a true threat. These lil'
+//	terrors are rather fickle and weak, so a shotgun blast to the face will
+//	wipe them out in a heartbeat.
+
+ACTOR HTC2MiniFluffy //demon
+{
+	DropItem "Mana1Ammo" 192
+	DropItem "HealthHeart" 210
+	DropItem "PowerslaveSpawner" 28
+	DropItem "PowerupSpawner" 8
+    Health 150
+    Radius 20
+    Height 40
+    Speed 18
+    Mass 40
+    PainChance 80
+    MONSTER
+    +FLOORCLIP
+    SeeSound "BHIT1"
+    PainSound "BHIT5"
+    DeathSound "BTALK3"
+    ActiveSound "BTALK7"
+    MeleeSound "BCHOMP"
+    Scale 1.4
+	PainChance "Charm", 255
+	PainChance "Terror", 255
+	PainChance "Defile", 255
+	PainChance "Drain", 153
+	PainChance "Chaos", 255
+	PainChance "ChaosExpl1", 255
+	PainChance "ChaosExpl2", 255
+//Flesh
+	DamageFactor "Electric", 1.25
+	DamageFactor "AEPoison", 1.25
+	DamageFactor "AEBullet", 1.5
+    HitObituary "%o was unlucky enough to have the last bite on him come from miniature Fluffy."
+    States 
+    {
+	Pain.Chaos:
+		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+		Goto See
+	Pain.ChaosExpl1:
+		TNT1 A 0 A_ClearTarget
+		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+		Goto Spawn
+	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
+	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
+	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
+	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
+	Pain.Defile:		TNT1 A 0 A_GiveInventory("DefileCheck",1)			Goto See 
+	
+    Spawn:
+        RAIN B 5 A_Look
+        Loop
+    See:
+		N016 HHHHIIIJJ 3
+	Chasing:
+		"####" "#" 0 A_JumpIfInventory("PennywiseMaster",1,1,AAPTR_MASTER)
+		Goto Chase2
+		"####" "#" 0 A_TransferPointer(AAPTR_MASTER,AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_TARGET)
+	Chase2:
+		N016 ABCCB 1 A_Chase
+		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDecide")
+		GoTo Chasing
+	DefileDecide:
+		TNT1 A 0 A_Jump(10,1)
+		Goto Chasing
+		TNT1 A 0 A_Die
+		Wait
+    Pain:
+	  N016 D 4 A_Pain
+	  N016 D 4
+	  TNT1 A 0 A_Jump(80,"Ouch")
+	  Goto Chasing
+	Ouch:
+		N016 E 8 A_UnSetShootable
+		TNT1 A 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,32)
+		TNT1 AAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,32,64)
+		TNT1 A 0 A_Jump(210,2,3,4,5,6)
+		N016 FFFFFFFFFF 20
+		N016 E 8
+		N016 D 8 A_SetShootable
+		Goto Chasing
+/*	Ouch:
+	  TNT1 A 0 A_ChangeFlag("NOPAIN",1)
+        N016 E 8 A_ChangeFlag("NODAMAGE",1)
+	  TNT1 A 0 A_Jump(210,2,3,4,5,6)
+        N016 FFFFFFFFFF 20
+        N016 E 8 
+	  TNT1 A 0 A_ChangeFlag("NOPAIN",0)
+        N016 D 8 A_ChangeFlag("NODAMAGE",0)
+        Goto See + 10*/
+	Melee:
+        N016 ABC 4  
+        N016 B  6 A_CustomMeleeAttack(random(10,40),"BCHOMP")
+        Goto Chasing
+	Pain.AntiClown:
+		"####" "#" 1
+		"####" "#" 0 A_DamageSelf(666)
+		Goto Pain
+	Death:
+		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDeath")
+   		TNT1 A 0 A_Fall
+		TNT1 A 0 A_PlaySound("other/gibdeath")
+		TNT1 A 0 A_SpawnItemEx("SpecialExploSpawner",0,0,0,0,0,0,0,32)//A_SpawnItemEx("specialexplospawner",0,0,0,0,0,0,0,32)
+		TNT1 AAAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
+      	Stop  
+	DefileDeath:
+		TNT1 A 0 A_Die
+		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
+		Goto Death+1
+	Death.UnholyDisint:
+	Death.PlasmaDisint:
+	Disintegrate:
+		"####" "#" 0 Thing_SetTranslation(0,50)
+		"####" "#" 1 A_FadeOut(0.015)
+		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
+		"####" "#" 0 A_Stop    
+		"####" "#" 0 A_Fall
+		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowSmallMedium",0,0,18,0,0,0,0,32)
+		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksSmallMedium",0,0,18,0,0,0,0,32)
+		"####" "##" 2 A_FadeOut(0.03)
+		Goto Disintegrate+6
+    } 
+}
+//==============================================================================
+//	The Jumping Skulls
+//==============================================================================
+//	Similar to the miniature fluffies in general, these are the bottom-line
+//	uncared for souls who were slain in Derry. You can relieve them of their
+//	torment by destroying the skulls they are trapped within. Pennywise holds
+//	them hostage for the sole reason of growing an army.
+
+ACTOR HTC2JumpingSkull //zombieman
+{
+	DropItem "Mana1Ammo" 128
+	DropItem "HealthHeart" 210
+	DropItem "PowerSlaveSpawnerMonsterAmmo" 128
+	DropItem "PowerupSpawner" 8
+    Health 40
+    Radius 18
+    Height 48
+    Speed 15
+    Mass 20
+    PainChance 90
+    MONSTER 
+    +FLOORCLIP +RANDOMIZE  
+    MELEEDAMAGE 2
+    SeeSound "LAUGH1"
+    PainSound "SKULPN2"
+    DeathSound "JDIE"
+    ActiveSound "LAUGH1"
+    MeleeSound "SKULBITE"
+    HitObituary "%o was bitten by a jumping skull."
+	PainChance "Charm", 255
+	PainChance "Terror", 255
+	PainChance "Defile", 255
+	PainChance "Drain", 160
+	PainChance "Chaos", 255
+	PainChance "ChaosExpl1", 255
+	PainChance "ChaosExpl2", 255
+//Flesh
+	DamageFactor "Electric", 1.25
+	DamageFactor "AEPoison", 1.25
+	DamageFactor "AEBullet", 1.5
+    States
+    {
+	Pain.Chaos:
+		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+		Goto See
+	Pain.ChaosExpl1:
+		TNT1 A 0 A_ClearTarget
+		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+		Goto Spawn
+	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
+	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
+	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
+	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
+	Pain.Defile:		TNT1 A 0 A_GiveInventory("DefileCheck",1)			Goto See 
+	
+    Spawn:
+        N024 A 4 A_Look
+        Loop
+	See:
+		N024 ABCB 2 A_Chase
+		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDecide")
+		Loop
+	DefileDecide:
+		TNT1 A 0 A_Jump(10,1)
+		Goto See
+		TNT1 A 0 A_Die
+		Wait
+    Pain:
+        N024 B 4 A_Pain
+        Goto See
+    Melee:
+        N024 A 3 A_FaceTarget 
+        N024 B 3 A_FaceTarget 
+        N024 C 4 A_MeleeAttack
+        N024 B 3 A_FaceTarget 
+        Goto See
+	Pain.AntiClown:
+		"####" "#" 1
+		"####" "#" 0 A_DamageSelf(666)
+		Goto Pain
+    Death:
+		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDeath")
+   		TNT1 A 0 A_Fall
+		TNT1 A 0 A_PlaySound("other/gibdeath")
+		TNT1 AAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
+      	Stop
+	DefileDeath:
+		TNT1 A 0 A_Die
+		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
+		Goto Death+1
+	Death.UnholyDisint:
+	Death.PlasmaDisint:
+	Disintegrate:
+		"####" "#" 0 Thing_SetTranslation(0,50)
+		"####" "#" 1 A_FadeOut(0.015)
+		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
+		"####" "#" 0 A_Stop    
+		"####" "#" 0 A_Fall
+		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowSmall",0,0,10,0,0,0,0,32)
+		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksSmall",0,0,10,0,0,0,0,32)
+		"####" "##" 2 A_FadeOut(0.03)
+		Goto Disintegrate+6
+    }
+}
+//==============================================================================
+//	Ghost Skulls
+//==============================================================================
+//	Those who joined the ranks of Pennywise on purpose were given a test --
+//	Slaughter all within Derry and meet a certain quota. Many succeeded and
+//	grew into the unholy form of the Draedic Ghost.
+
+ACTOR HTC2GhostSkull : HTC2JumpingSkull //shotguy
+{
+	DropItem "Mana2Ammo" 192
+	DropItem "HealthHeart" 210
+	DropItem "PowerSlaveSpawnerShotgunner" 210
+	DropItem "PowerupSpawner" 8
+    Health 60
+    Speed 16
+    Radius 18
+    Height 48
+    MeleeDamage 4
+    MeleeSound "BCHOMP"
+    Scale 1.2
+    RenderStyle Translucent
+    Alpha 0.67
+	PainChance "Charm", 255
+	PainChance "Terror", 255
+	PainChance "Defile", 0
+	PainChance "Drain", 160
+	PainChance "Chaos", 255
+	PainChance "ChaosExpl1", 255
+	PainChance "ChaosExpl2", 255
+//Ethereal
+	DamageFactor "Electric", 1.25
+	DamageFactor "AEPoison", 0.75
+	DamageFactor "AEBullet", 0.5
+	DamageFactor "Holy", 0.75
+	DamageFactor "Unholy", 1.25
+	DamageFactor "UnholyDisint", 1.25
+	DamageFactor "AEMagic", 1.25
+	DamageFactor "Plasma", 1.25
+	DamageFactor "PlasmaDisint", 1.25
+    States
+    {
+	Pain.Chaos:
+		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+		Goto See
+	Pain.ChaosExpl1:
+		TNT1 A 0 A_ClearTarget
+		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+		Goto Spawn
+	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
+	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
+	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
+	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
+	Pain.Defile:		TNT1 A 0 A_GiveInventory("DefileCheck",1)			Goto See 
+    
+    Spawn:
+        N024 A 4 A_Look
+        Loop
+    See:
+        N024 ABCB 3 A_Chase
+        N024 A 0 A_CustomMissile("PennywiseHead2",8,0,random(-180,180),2,random(0, 30))
+        Loop
+    Pain:
+        N024 B 4 A_Pain
+        Goto See
+    Missile:
+	  TNT1 A 0 A_Jump(128,"See")
+        N024 A 3 A_FaceTarget 
+        N024 B 3 A_FaceTarget 
+        N024 C 4 A_CustomMissile("SkullSeeker2",10,0,0)
+        N024 B 3 A_FaceTarget 
+        Goto See	  
+    Melee:
+        N024 A 3 A_FaceTarget 
+        N024 B 3 A_FaceTarget 
+        N024 C 4 A_MeleeAttack
+        N024 B 3 A_FaceTarget 
+        Goto See
+	Pain.AntiClown:
+		"####" "#" 1
+		"####" "#" 0 A_DamageSelf(666)
+		Goto Pain
+    Death:
+   		TNT1 A 0 A_Fall
+		TNT1 A 0 A_PlaySound("other/gibdeath")
+		TNT1 A 0 //A_SpawnItemEx("specialexplospawner",0,0,0,0,0,0,0,32)
+		TNT1 AAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
+      	Stop 
+	Death.UnholyDisint:
+	Death.PlasmaDisint:
+	Disintegrate:
+		"####" "#" 0 Thing_SetTranslation(0,50)
+		"####" "#" 1 A_FadeOut(0.015)
+		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
+		"####" "#" 0 A_Stop    
+		"####" "#" 0 A_Fall
+		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowSmall",0,0,10,0,0,0,0,32)
+		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksSmall",0,0,10,0,0,0,0,32)
+		"####" "##" 2 A_FadeOut(0.03)
+		Goto Disintegrate+6
+    }
+}
+
+//==============================================================================
+//	Bingo!
+//==============================================================================
+//	Bingo was once a poor soul who became a clown, not for money, but to just
+//	try and show the world that people shouldn't be afraid of clowns. He was
+//	tormented, spat on, beaten up, and generally cursed by the public, mainly
+//	due to their awareness of Pennywise's survival of the 1980s. IT, tired of
+//	the clown trying to be a holy person, shoved him off a bridge, killing him.
+
+//	Bingo resisted with all of his might to fall into Pennywise's evil regime.
+//	His spirit broke free and was redeemed, sweeping through the gates of
+//	Heaven. A furious IT created a twisted version of Bingo as a biomechanical
+//	flying entity, with Bingo's face and skull features implemented into it to
+//	serve as a reminder that Pennywise is the one and only clown who will
+//	destroy the world.
+
+ACTOR HTC2Bingo	//Revenant
+{ 
+	var int user_spawned;
+	DropItem "CellAmmo" 160
+	DropItem "CellAmmo" 160
+	DropItem "CellAmmo" 160
+	DropItem "AEoDGasLauncherItem" 64
+	DropItem "HealthHeart" 210
+	DropItem "PowerslaveSpawner" 28
+	DropItem "PowerupSpawner" 8
+	Health 400 
+	Speed 5 
+	Radius 18
+	Height 56
+	PainChance 128
+	Mass 300
+	Meleedamage 1 
+	REACTIONTIME 8 
+	MONSTER
+	+FLOORCLIP +NOGRAVITY +FLOAT +PUSHABLE
+	+FloatBob
+	scale 0.85
+	SeeSound "CHEDSEE"
+	PainSound "REVN3"
+	DeathSound ""
+	ActiveSound "CHEDLAF"
+	Obituary "%o couldn't handle the smell of the Bingo's Forsaken Clown Gas #128(TM)." 
+	MissileHeight 12
+	MissileType RevRocket
+	PainChance "Charm", 192
+	PainChance "Terror", 192
+	PainChance "Defile", 255
+	PainChance "Drain", 110
+	PainChance "Chaos", 255
+	PainChance "ChaosExpl1", 255
+	PainChance "ChaosExpl2", 255
+//Mechanic
+	DamageFactor "Fire", 1.25
+	DamageFactor "Ice", 0.75
+	DamageFactor "Electric", 1.5
+	DamageFactor "AEPoison", 0.5
+	DamageFactor "AEBullet", 0.75
+	DamageFactor "AEMagic", 0.75
+ 	DamageFactor "Plasma", 1.25
+ 	DamageFactor "PlasmaDisint", 1.25
+	States 
+	{
+	Pain.Chaos:
+		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+		Goto See
+	Pain.ChaosExpl1:
+		TNT1 A 0 A_ClearTarget
+		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+		Goto Spawn
+	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
+	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
+	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
+	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
+	Pain.Defile:		TNT1 A 0 A_GiveInventory("DefileCheck",1)			Goto See 
+	
+	Spawn:
+		N012 A 10 A_Look 
+		Loop 
+	See:
+		"####" "#" 0 A_JumpIfInventory("PennywiseMaster",1,1,AAPTR_MASTER)
+		Goto Chase2
+		"####" "#" 0 A_TransferPointer(AAPTR_MASTER,AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_TARGET)
+	Chase2:
+		N012 A 2 A_PlaySound("DRONE")
+		N012 A 2 A_CustomMissile("RFlame", -8, 0, 0, 1)  
+		N012 A 2   A_FastChase
+		N012 A 2 A_CustomMissile("RFlame", -8, 0, 0, 1)  
+		N012 A 2   A_FastChase
+		N012 A 2 A_CustomMissile("RFlame", -8, 0, 0, 1)  
+		N012 A 2   A_Chase
+		N012 A 2 A_CustomMissile("RFlame", -8, 0, 0, 1)  
+		N012 A 2   A_Chase
+		Goto See
+		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDecide")
+		Goto See
+	DefileDecide:
+		TNT1 A 0 A_Jump(10,1)
+		Goto See
+		TNT1 A 0 A_Die
+		Wait
+	Missile:   
+		N012 A 0 A_Jump(104,9)
+		N012 A 0 A_Jump(136,2) 
+		N012 A 0 A_Jump(88,13)
+		N012 A 4 A_FaceTarget 
+		N012 A 6 Bright A_ComboAttack
+		Goto See 
+		N012 A 2 Bright A_FaceTarget
+		N012 A 2 Bright A_CustomMissile("RevRocket", 12, -4, 0, 1)	//see WepClass4.AED
+		N012 A 4 
+		Goto See 
+		N012 A 2 Bright A_FaceTarget
+		N012 A 2 Bright A_CustomMissile("RevRocket", 12, -12, -60, 1)
+		N012 A 2 Bright A_FaceTarget
+		N012 A 2 Bright A_CustomMissile("RevRocket", 12, -4, 60, 1)
+		N012 A 4 
+		Goto See 
+		N012 A 4 Bright A_FaceTarget
+		N012 A 2 Bright A_CustomMissile("RevRocket", 12, 12, 0, 1)
+		N012 A 4 
+		Goto See 
+	Pain: 
+		N012 A 4  A_Pain 
+		Goto See 
+	Pain.AntiClown:
+		"####" "#" 1
+		"####" "#" 0 A_DamageSelf(666)
+		Goto Pain
+	Death:
+		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDeath")
+		TNT1 A 0 A_Fall
+		TNT1 A 0 A_PlaySound("other/gibdeath")
+		TNT1 A 0 A_SpawnItemEx("SpecialExploSpawner",0,0,0,0,0,0,0,32)//A_SpawnItemEx("specialexplospawner",0,0,0,0,0,0,0,32)
+		TNT1 AAAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
+		Stop
+	DefileDeath:
+		TNT1 A 0 A_Die
+		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
+		Goto Death+1
+	Death.UnholyDisint:
+	Death.PlasmaDisint:
+	Disintegrate:
+		TNT1 A 0 Thing_SetTranslation(0,50)	
+		N012 A 1 A_FadeOut(0.015)
+		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+		TNT1 a 0 A_Stop	
+		TNT1 a 0 A_Fall
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+		N012 AA 2 A_FadeOut(0.03)
+		Goto Disintegrate+6
+	} 
+}
+
+//==============================================================================
+//	Tiny Bingo!
+//==============================================================================
+//	This is the first phase the Bingo must go through to gain access to the
+//	Reverend rockets. Small and fragile, they must be crafty with their plasma
+//	pistols in order to impress it's superiors.
+
+ACTOR HTC2TinyBingo	//Zombieman
+{ 
+	DropItem "CellAmmo" 100
+	DropItem "HealthHeart" 210
+	DropItem "PowerSlaveSpawnerMonsterAmmo" 128
+	DropItem "PowerupSpawner" 8
+	Health 35 
+	Speed 6 
+	Radius 9
+	Height 24
+	PainChance 128
+	Mass 300
+	Meleedamage 1 
+	REACTIONTIME 8 
+	MONSTER
+	+FLOORCLIP +NOGRAVITY +FLOAT +PUSHABLE 
+	+FloatBob +SPAWNFLOAT 
+	scale 0.35
+	SeeSound "TINY2"
+	PainSound "TINYPAIN"
+	DeathSound "TINYDIE"
+	ActiveSound "TINYACT"
+	Obituary "%o was bullshocked to death by a Tiny Bingo." 
+	MissileHeight 12
+	MissileType MyBall
+	PainChance "Charm", 255
+	PainChance "Terror", 255
+	PainChance "Defile", 255
+	PainChance "Drain", 160
+	PainChance "Chaos", 255
+	PainChance "ChaosExpl1", 255
+	PainChance "ChaosExpl2", 255
+	//Mechanic
+	DamageFactor "Fire", 1.25
+	DamageFactor "Ice", 0.75
+	DamageFactor "Electric", 1.5
+	DamageFactor "AEPoison", 0.5
+	DamageFactor "AEBullet", 0.75
+	DamageFactor "AEMagic", 0.75
+	DamageFactor "Plasma", 1.25
+	DamageFactor "PlasmaDisint", 1.25
+	States 
+	{ 
+	Pain.Chaos:
+	TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+	TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+	Goto See
+	Pain.ChaosExpl1:
+	TNT1 A 0 A_ClearTarget
+	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+	Goto Spawn
+	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
+	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
+	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
+	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
+	Pain.Defile:		TNT1 A 0 A_GiveInventory("DefileCheck",1)			Goto See 
+
+	Spawn: 
+		N012 A 10  A_Look 
+		Loop 
+	See:
+		"####" "#" 0 A_JumpIfInventory("PennywiseMaster",1,1,AAPTR_MASTER)
+		Goto Chase2
+		"####" "#" 0 A_TransferPointer(AAPTR_MASTER,AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_TARGET)
+	Chase2:
+		N012 A 2 A_Chase
+		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDecide")
+		Goto See
+	DefileDecide:
+		TNT1 A 0 A_Jump(10,1)
+		Goto See
+		TNT1 A 0 A_Die
+		Wait
+	Missile:   
+		N012 A 4 A_FaceTarget 
+		N012 A 2 Bright A_CustomMissile("MyBall", 12, -4, 0, 1)
+		N012 A 4 
+		Goto See 
+	Pain.AntiClown:
+		"####" "#" 1
+		"####" "#" 0 A_DamageSelf(666)
+		Goto Pain
+	Pain: 
+		N012 A 4  A_Pain 
+		Goto See 
+	Death:
+		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDeath")
+		TNT1 A 0 A_Fall
+		TNT1 A 0 A_PlaySound("other/gibdeath")
+		TNT1 A 0 //A_SpawnItemEx("specialexplospawner",0,0,0,0,0,0,0,32)
+		TNT1 AA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
+		Stop
+	DefileDeath:
+		TNT1 A 0 A_Die
+		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
+		Goto Death+1
+	Death.UnholyDisint:
+	Death.PlasmaDisint:
+	Disintegrate:
+		"####" "#" 0 Thing_SetTranslation(0,50)
+		"####" "#" 1 A_FadeOut(0.015)
+		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
+		"####" "#" 0 A_Stop    
+		"####" "#" 0 A_Fall
+		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowSmallMedium",0,0,18,0,0,0,0,32)
+		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksSmallMedium",0,0,18,0,0,0,0,32)
+		"####" "##" 2 A_FadeOut(0.03)
+		Goto Disintegrate+6
+   } 
+}
+
+//==============================================================================
+//	The Draedic Clown Ghost
+//==============================================================================
+//	The souls of the Ghost Skulls receive a physical upgrade to the Draedic
+//	Dark Spirit forms should they succeed at meeting the requirements. These
+//	Ghosts are capable of shrinking down to nothing, harnessing the energy
+//	of the Clown Void and teleporting towards their targets. They can move
+//	through all forms of matter, yet are still able to be harmed by
+//	shooting them. They also have the ability to spit skulls at their victims.
+
+actor HTC2DraedicClownGhost	//Demon
+{ 
+	DropItem "Mana1Ammo" 210
+	DropItem "HealthHeart" 210
+	DropItem "PowerslaveSpawner" 28
+	DropItem "PowerupSpawner" 8
+	Health 150 
+	Speed 5 
+	Radius 20
+	Height 48
+	PainChance 128
+	Mass 0x7FFFFFFF
+	Meleedamage 1 
+	REACTIONTIME 8 
+	MONSTER
+	+DONTHARMCLASS
+	+FLOORCLIP  +NOGRAVITY +FLOAT +FloatBob
+	Species "ClownGhost"
+	RENDERSTYLE Translucent
+	ALPHA 0.67
+	SeeSound ""
+	PainSound "GHSTPAIN"	
+	DeathSound "GHSTDIE"
+	ActiveSound "GIDLE"  
+	MeleeSound "imp/melee"
+	Obituary "%o was devoured by a Draedic Dark Spirit." 
+	MissileHeight 12
+	MissileType SkullSeeker2 
+	PainChance "Charm", 255
+	PainChance "Terror", 255
+	PainChance "Defile", 0
+	PainChance "Drain", 153
+	PainChance "Chaos", 255
+	PainChance "ChaosExpl1", 255
+	PainChance "ChaosExpl2", 255
+//Ethereal
+	DamageFactor "Electric", 1.25
+	DamageFactor "AEPoison", 0.75
+	DamageFactor "AEBullet", 0.5
+	DamageFactor "Holy", 0.75
+	DamageFactor "Unholy", 1.25
+	DamageFactor "UnholyDisint", 1.25
+	DamageFactor "AEMagic", 1.25
+	DamageFactor "Plasma", 1.25
+	DamageFactor "PlasmaDisint", 1.25
+	States 
+	{ 
+	Pain.Chaos:
+		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+		Goto See
+	Pain.ChaosExpl1:
+		TNT1 A 0 A_ClearTarget
+		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+		Goto Spawn
+	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
+	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
+	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
+	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
+	Pain.Defile:		TNT1 A 0 A_GiveInventory("DefileCheck",1)			Goto See 
+	
+	Spawn:
+		N023 C 10  A_Look
+		Loop
+	See:
+		N023 DEF 3 A_Chase
+	Sight:
+		"####" "#" 0 A_JumpIfInventory("PennywiseMaster",1,1,AAPTR_MASTER)
+		Goto Chase2
+		"####" "#" 0 A_TransferPointer(AAPTR_MASTER,AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_TARGET)
+	Chase2:
+		N023 A 0 A_Jump(64,5)
+		N023 A 4 A_Chase
+		N023 A 4 A_Chase     
+		N023 A 4 A_Chase        
+		N023 A 4 A_Chase     
+		Goto See + 3
+		N023 F 0 A_ChangeFlag("NOPAIN",1)
+		N023 FED 2 A_FaceTarget
+		N023 CCCCCCC 2 A_SetScale(ScaleX-0.1)
+		N023 C 0 //A_SetInvulnerable
+		N023 CC 1 A_SetScale(ScaleX-0.1)
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_Chase("","",CHF_NOPLAYACTIVE)
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 1 A_Chase("","",CHF_NOPLAYACTIVE)
+		N023 CC 1 A_SetScale(ScaleX+0.1)
+		N023 C 0 //A_UnsetInvulnerable
+		N023 CCCCCCC 2 A_SetScale(ScaleX+0.1)
+		N023 D 0 A_SetScale(1)
+		N023 D 0 A_ChangeFlag("NOPAIN",0)
+		N023 DEF 3 A_FaceTarget
+		Goto Sight
+	Melee:
+		N023 A 4 A_FaceTarget  
+		N023 F 3 A_FaceTarget 
+		N023 G 3 A_MeleeAttack
+		N023 F 3 A_FaceTarget 
+		Goto Sight
+	Missile: 
+		N023 F 4 A_Jump (245,3)
+		N023 F 4 A_FaceTarget 
+		N023 G 6 A_ComboAttack
+		N023 F 1 A_Chase 
+		N023 G 1 A_Chase 
+		N023 G 1 A_Chase 
+		N023 G 1 A_Chase 
+		N023 G 1 A_Chase 
+		N023 G 1 A_Chase 
+		N023 G 1 A_Chase 
+		N023 F 1 A_Chase 
+		Goto Sight
+	Pain.AntiClown:
+		"####" "#" 1
+		"####" "#" 0 A_DamageSelf(666)
+		Goto Pain
+	Pain: 
+		N023 A 4  A_Pain 
+		Goto Sight
+	Death:
+		TNT1 A 0 A_Fall
+		TNT1 A 0 A_PlaySound("other/gibdeath")
+		TNT1 AAAAAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
+		TNT1 A 0 //A_SpawnItemEx("specialexplospawner",0,0,0,0,0,0,0,32)
+		Stop
+	Death.UnholyDisint:
+    Death.PlasmaDisint:
+	Disintegrate:
+		TNT1 A 0 Thing_SetTranslation(0,50)	
+		N023 A 1 A_FadeOut(0.015)
+		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+		TNT1 a 0 A_Stop	
+		TNT1 a 0 A_Fall
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+		N023 AA 2 A_FadeOut(0.03)
+		Goto Disintegrate+6
+   } 
+}
+
+//==============================================================================
+//	Vile Clown Ghost
+//==============================================================================
+//	The Draedics become unholy over time, seeking to unleash their fury
+//	all in the name of Pennywise. They begin to worship him at this stage,
+//	believing in no God and no Satan, and everyone who is not amongst the
+//	ranks of the hellish clown army are blasphemers who will be slaughtered
+//	or fed alive to Fluffy and Pennywise. They shoot fire and move faster,
+//	but cannot teleport anymore. They trade that ability for the fire power,
+//	as the Clown Void will have done what it needs to do to them -- hallow
+//	their souls out. They no longer feel pain, but they feel joy and pleasure
+//	while killing.
+
+Actor HTC2VileClownGhost	//Cacodemon
+{ 
+	DropItem "Mana1Ammo" 128
+	DropItem "Mana1Ammo" 128
+	DropItem "Mana1Ammo" 128
+	DropItem "HealthHeart" 210
+	DropItem "PowerslaveSpawner" 28
+	DropItem "PowerupSpawner" 8
+	Health 300
+	Speed 6 
+	Radius 16
+	Height 48
+	PainChance 128
+	Mass 0x7FFFFFFF
+	Meleedamage 3 
+	REACTIONTIME 8 
+	MONSTER
+	Species "ClownGhost2"
+	+FLOORCLIP 
+	+NOGRAVITY 
+	+FLOAT 
+	+FloatBob 
+	+NORADIUSDMG //+NOTARGET
+	RENDERSTYLE Translucent
+	ALPHA 0.67
+	SeeSound ""
+	PainSound "GHS2PAN"
+	DeathSound "GHS2PAN"
+	ActiveSound "GHS2ACT"
+	MeleeSound "imp/melee"
+	Obituary "%o was charred by the Vile Clown Ghost." 
+	MissileHeight 15
+	MissileType Ghost2Ball
+	PainChance "Charm", 255
+	PainChance "Terror", 255
+	PainChance "Defile", 0
+	PainChance "Drain", 128
+	PainChance "Chaos", 255
+	PainChance "ChaosExpl1", 255
+	PainChance "ChaosExpl2", 255
+//Ethereal
+	DamageFactor "Electric", 1.25
+	DamageFactor "AEPoison", 0.75
+	DamageFactor "AEBullet", 0.5
+	DamageFactor "Holy", 0.75
+	DamageFactor "Unholy", 1.25
+	DamageFactor "UnholyDisint", 1.25
+	DamageFactor "AEMagic", 1.25
+	DamageFactor "Plasma", 1.25
+	DamageFactor "PlasmaDisint", 1.25
+	States 
+	{ 
+	Pain.Chaos:
+		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+		Goto See
+	Pain.ChaosExpl1:
+		TNT1 A 0 A_ClearTarget
+		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+		Goto Spawn
+	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
+	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
+	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
+	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
+	Pain.Defile:		TNT1 A 0 A_GiveInventory("DefileCheck",1)			Goto See 
+	
+	Spawn: 
+		N020 AB 10  A_Look
+		Loop
+	See:
+		"####" "#" 0 A_JumpIfInventory("PennywiseMaster",1,1,AAPTR_MASTER)
+		Goto Chase2
+		"####" "#" 0 A_TransferPointer(AAPTR_MASTER,AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_TARGET)
+	Chase2:
+		N020 A 1 A_CheckSight(1)//A_JumpIfCloser(1500,5)
+		Goto SeeHF
+		N020 AABB 1 A_Chase 
+		Goto See
+	SeeHF:
+		N020 A 0 A_CustomMissile("HellFire2", 0, 0, 0)
+		N020 AABB 1 A_Chase
+        Goto See
+    Melee:
+		N020 A 4 A_FaceTarget  
+		N020 B 3 A_FaceTarget 
+		N020 C 3 A_MeleeAttack
+		N020 B 3 A_FaceTarget 
+		Goto See
+	Missile:
+		N020 B 4 A_FaceTarget 
+		N020 C 6 A_ComboAttack
+		N020 B 4 A_Chase 
+		Goto See
+	Pain.AntiClown:
+		"####" "#" 1
+		"####" "#" 0 A_DamageSelf(666)
+		Goto Pain
+	Pain: 
+      	N020 B 4  A_Pain 
+      	Goto See
+	Death:
+   		TNT1 A 0 A_Fall
+		TNT1 A 0 A_PlaySound("other/gibdeath")
+    	TNT1 AAAAAAAAAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
+		TNT1 A 0 //A_SpawnItemEx("specialexplospawner",0,0,0,0,0,0,0,32)
+      	Stop
+	Death.UnholyDisint:
+	Death.PlasmaDisint:
+	Disintegrate:
+		TNT1 A 0 Thing_SetTranslation(0,50)	
+		N020 A 1 A_FadeOut(0.015)
+		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+		TNT1 a 0 A_Stop	
+		TNT1 a 0 A_Fall
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+		N020 AA 2 A_FadeOut(0.03)
+		Goto Disintegrate+6
+   }
+}
+
+//==============================================================================
+//	Bulby
+//==============================================================================
+//	Souls of vengeance who seek to crawl back out of the grave due to unnatural
+//	deaths are granted the form of Bulby, to take vengeance against those who
+//	claimed their lives. Unlike the other minions of the Clown Void, these
+//	are the most passive of them all. They will not wake unless shot at.
+
+actor HTC2Bulby	//Cacodemon
+{ 
+	DropItem "Mana1Ammo" 128
+	DropItem "Mana2Ammo" 128
+	DropItem "Mana2Ammo" 128
+	DropItem "HealthHeart" 210
+	DropItem "PowerslaveSpawner" 28
+	DropItem "PowerupSpawner" 8
+	Health 350
+	Speed 5 
+	Radius 16
+	Height 32
+	PainChance 128
+	Mass 400
+	Meleedamage 1 
+	Scale .7
+	MONSTER
+	+FLOORCLIP +FLOAT //+NORADIUSDMG 
+	SeeSound "BOTTLE2"
+	PainSound "GHS2PAIN"
+	DeathSound "BOTTLE2"
+	ActiveSound "BULBSEE"  
+	MeleeSound "imp/melee"
+	Obituary "%o should have known that the Bulby is quite an expert at electricity." 
+	MissileType BulbyBall
+	PainChance "Charm", 255
+	PainChance "Terror", 255
+	PainChance "Defile", 0
+	PainChance "Drain", 128
+	PainChance "Chaos", 255
+	PainChance "ChaosExpl1", 255
+	PainChance "ChaosExpl2", 255
+//Unholy
+	DamageFactor "Holy", 1.5
+	DamageFactor "Unholy", 0.5
+	DamageFactor "UnholyDisint", 0.5
+	DamageFactor "Fire", 0.75
+	DamageFactor "Ice", 0.75
+	DamageFactor "AEPoison", 0.75
+	DamageFactor "AEMagic", 0.75
+	States 
+	{ 
+	Pain.Chaos:
+		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+		Goto See
+	Pain.ChaosExpl1:
+		TNT1 A 0 A_ClearTarget
+		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+		Goto Spawn
+	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
+	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
+	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
+	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
+	Pain.Defile:		TNT1 A 0 A_GiveInventory("DefileCheck",1)			Goto See
+	Spawn: 
+		N021 A 2 A_UnSetShootable
+		N021 A 2 A_LookEx(0,0,0,0,0,"Sight")
+      	Loop
+	Idle:
+		N021 G 2 A_Look
+		Loop
+	Sight:
+		NA21 A 16
+		NA21 B 7
+		NA21 C 7
+		N021 A 6 
+		N021 B 6 
+		N021 C 5
+		N021 D 5 
+		N021 E 4
+		N021 F 2 A_NoGravity 
+		N021 F 2 A_SetShootable
+	See:
+		"####" "#" 0 A_JumpIfInventory("PennywiseMaster",1,1,AAPTR_MASTER)
+		Goto Chase2
+		"####" "#" 0 A_TransferPointer(AAPTR_MASTER,AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_TARGET)
+	Chase2:
+		N021 G 2 A_Chase
+     	Loop
+	Melee: 
+		N021 G 3 A_FaceTarget 
+        N021 H 3 A_FaceTarget 
+        N021 I 3 A_MeleeAttack
+        N021 H 3 A_FaceTarget 
+     	Goto See
+	Missile:  
+		N021 G 3 A_Jump(88,6)
+    	N021 G 3 A_FaceTarget 
+    	N021 H 3 A_FaceTarget 
+        N021 I 0 A_PlaySound("BULBEXP2")
+        N021 I 2 Bright A_CustomMissile("BulbyBall", 12, -4, 0, 1)
+        N021 H 4 
+		Goto See
+        N021 G 4 A_FaceTarget 
+        N021 H 4 A_FaceTarget 
+        N021 I 1 A_PlaySound("BULBEXP2")
+        N021 I 3 Bright A_CustomMissile("BulbyBall2", 12, -4, 0, 1)
+        N021 H 4 
+		Goto See
+	Pain.AntiClown:
+		"####" "#" 1
+		"####" "#" 0 A_DamageSelf(666)
+		Goto Pain
+	Pain: 
+      	N021 J 4 A_Pain 
+      	Goto See
+	Death:
+   		TNT1 A 0 A_Fall
+		TNT1 A 0 A_PlaySound("other/gibdeath")
+    	TNT1 AAAAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
+		TNT1 A 0 //A_SpawnItemEx("specialexplospawner",0,0,0,0,0,0,0,32)
+      	Stop 
+	Death.UnholyDisint:
+    Death.PlasmaDisint:
+	Disintegrate:
+		TNT1 A 0 Thing_SetTranslation(0,50)	
+		N021 J 1 A_FadeOut(0.015)
+		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+		TNT1 a 0 A_Stop	
+		TNT1 a 0 A_Fall
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+		N021 JJ 2 A_FadeOut(0.03)
+		Goto Disintegrate+6
+   }    
+}
+
+//==============================================================================
+//	Mega Bulby
+//==============================================================================
+//	Bulbys (NOT a typo!) who festered on death and devoured many grew at a rapid
+//	rate. They are known for tanking far beyond what the average Ghost can take.
+
+actor HTC2MegaBulby : HTC2Bulby	//Mancubus
+{ 
+	DropItem "Mana2BigAmmo" 160
+	DropItem "Mana2BigAmmo" 160
+	DropItem "HealthHeart" 210
+	DropItem "PowerslaveSpawner" 28
+	DropItem "PowerupSpawner" 8
+	Health 650 
+	Speed 6 
+	Radius 32
+	Height 64
+	PainChance 64
+	Mass 400
+	Meleedamage 1 
+	Scale 1.5
+	MONSTER
+	+FLOORCLIP +FLOAT +NORADIUSDMG +NOGRAVITY +FloatBob //+NOTARGET
+	+BOSS
+	+DONTMORPH
+	SeeSound "GHSTPAIN"
+	PainSound "GHSTPAIN"
+	DeathSound "GHSTPAIN"
+	ActiveSound "GHSTATT"
+	MeleeSound "imp/melee"
+	Obituary "%o got killed by Mega Bulby." 
+	MissileType BulbyBall3
+	PainChance "Charm", 192
+	PainChance "Terror", 192
+	PainChance "Defile", 0
+	PainChance "Drain", 96
+	PainChance "Chaos", 255
+	PainChance "ChaosExpl1", 255
+	PainChance "ChaosExpl2", 255
+//Unholy
+	DamageFactor "Holy", 1.5
+	DamageFactor "Unholy", 0.5
+	DamageFactor "UnholyDisint", 0.5
+	DamageFactor "Fire", 0.75
+	DamageFactor "Ice", 0.75
+	DamageFactor "AEPoison", 0.75
+	DamageFactor "AEMagic", 0.75
+	States 
+	{ 
+	Pain.Chaos:
+		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+		Goto See
+	Pain.ChaosExpl1:
+		TNT1 A 0 A_ClearTarget
+		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+		Goto Spawn
+	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
+	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
+	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
+	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
+	Pain.Defile:		TNT1 A 0 A_GiveInventory("DefileCheck",1)			Goto See 
+	Spawn: 
+		N021 G 2 A_Look
+		Loop
+	See:
+		"####" "#" 0 A_JumpIfInventory("PennywiseMaster",1,1,AAPTR_MASTER)
+		Goto Chase2
+		"####" "#" 0 A_TransferPointer(AAPTR_MASTER,AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_TARGET)
+	Chase2:
+		N021 G 2 A_Chase
+		Goto See
+	Melee: 
+		N021 H 3 A_FaceTarget 
+		N021 I 3 A_MeleeAttack
+		N021 H 3 A_FaceTarget 
+		Goto See
+	Missile:  
+		N021 G 3 A_Jump(5,5)
+		N021 G 3 A_FaceTarget 
+		N021 H 3 A_FaceTarget 
+		N021 I 0 A_PlaySound("BULBEXP2")
+		N021 I 2 Bright A_CustomMissile("BulbyBall3", 24, -4,0, 1)
+		N021 H 4 
+		Goto See
+		N021 G 4 A_FaceTarget 
+		N021 H 4 A_FaceTarget 
+		N021 I 4 Bright A_CustomMissile("BulbyBall3", 24, -4, 0, 1)
+		N021 H 4 
+		Goto See
+	Ice:
+		"####" "#" 5 A_GenericFreezeDeath
+		"####" "#" 0 A_KillMaster
+		"####" "#" 1 A_FreezeDeathChunks
+		Wait
+	Pain: 
+      	N021 J 4 A_Pain 
+      	Goto See
+	Pain.AntiClown:
+		"####" "#" 1
+		"####" "#" 0 A_DamageSelf(666)
+		Goto Pain
+	Death:
+   		TNT1 A 0 A_Fall
+		TNT1 A 0 A_PlaySound("other/gibdeath")
+		TNT1 AAAAAAAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
+		TNT1 A 0 A_SpawnItemEx("SpecialExploSpawner",0,0,0,0,0,0,0,32)
+		TNT1 A 10 A_KillMaster 
+      	Stop 
+	Death.UnholyDisint:
+	Death.PlasmaDisint:
+	Disintegrate:
+		"####" "#" 0 Thing_SetTranslation(0,50)
+		"####" "#" 0 A_KillMaster 
+		"####" "#" 1 A_FadeOut(0.015)
+		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
+		"####" "#" 0 A_Stop    
+		"####" "#" 0 A_Fall
+		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,32)
+		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,32)
+		"####" "##" 2 A_FadeOut(0.03)
+		Goto Disintegrate+7
+   }    
+}
+
+//Summoned version by Pennywise. If A_KillMaster is called when his defences
+//are down, it will instantly destroy him. This fixes that little case.
+
+Actor HTC2MegaBulby2 : HTC2MegaBulby
+{
+	States
+	{
+	Ice:
+		"####" "#" 5 A_GenericFreezeDeath
+		"####" "#" 0 //A_KillMaster
+		"####" "#" 1 A_FreezeDeathChunks
+		Wait
+	Death:
+		TNT1 A 0 A_Fall
+		TNT1 A 0 A_PlaySound("other/gibdeath")
+		TNT1 AAAAAAAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
+		TNT1 A 0 A_SpawnItemEx("SpecialExploSpawner",0,0,0,0,0,0,0,32)//A_SpawnItemEx("specialexplospawner",0,0,0,0,0,0,0,32)
+		//TNT1 A 0 A_KillMaster
+      	Stop 
+	Death.UnholyDisint:
+	Death.PlasmaDisint:
+	Disintegrate:
+		"####" "#" 0 Thing_SetTranslation(0,50)
+		"####" "#" 1 A_FadeOut(0.015)
+		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
+		"####" "#" 0 A_Stop    
+		"####" "#" 0 A_Fall
+		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,32)
+		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,32)
+		"####" "##" 2 A_FadeOut(0.03)
+		Goto Disintegrate+6
+	}
+}
+//==============================================================================
+//	Beefy, Former Human
+//==============================================================================
+//	Those who failed to heed Pennywise's warning to leave Derry, yet survived
+//	either through being spared or by managing to hide well enough were encased
+//	within a Void Spectrum Ray chamber and turned insane by Pennywise's
+//	deadlights. They lost sentience to who they were, and are given great pain
+//	which can only be relieved by killing, although only momentarily.
+
+actor HTC2Beefy	//Imp
+{
+	DropItem "Mana1Ammo"
+	DropItem "HealthHeart" 210
+	DropItem "PowerslaveSpawner" 28
+	DropItem "PowerupSpawner" 8
+	Health 80
+	Radius 20
+	Height 56
+	Speed 8
+	PainChance 200
+	MONSTER 
+	+FLOORCLIP
+	SeeSound "BEEFSEE"
+	PainSound "GHS2PAN"
+	DeathSound "GHS2PAN"
+	ActiveSound "BEEFY"
+	MeleeSound "imp/melee"
+	Obituary "%o was killed by beefy."
+	HitObituary "%o was killed by beefy."
+	MissileHeight 32
+	MissileType MyBall2
+	PainChance "Charm", 255
+	PainChance "Terror", 255
+	PainChance "Defile", 255
+	PainChance "Drain", 160
+	PainChance "Chaos", 255
+	PainChance "ChaosExpl1", 255
+	PainChance "ChaosExpl2", 255
+//Flesh
+	DamageFactor "Electric", 1.25
+	DamageFactor "AEPoison", 1.25
+	DamageFactor "AEBullet", 1.5
+	States
+	{
+	Pain.Chaos:
+		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+		Goto See
+	Pain.ChaosExpl1:
+		TNT1 A 0 A_ClearTarget
+		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+		Goto Spawn
+	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
+	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
+	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
+	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
+	Pain.Defile:		TNT1 A 0 A_GiveInventory("DefileCheck",1)			Goto See 
+	
+	
+	Spawn:
+		N022 AB 10 A_Look
+		Loop
+	See:
+		N022 AABBCCDD 3 A_Chase
+		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDecide")
+		Loop
+	DefileDecide:
+		TNT1 A 0 A_Jump(10,1)
+		Goto See
+		TNT1 A 0 A_Die
+		Wait
+	Pain:
+		N022 L 2
+		N022 L 2 A_Pain
+		Goto See
+	Pain.AntiClown:
+		"####" "#" 1
+		"####" "#" 0 A_DamageSelf(666)
+		Goto Pain
+	Melee:
+		N022 J 8 A_FaceTarget
+		N022 K 6 A_ComboAttack
+		Goto See
+	Missile:
+		N022 J 0 A_Jump(128,4)
+		N022 J 9 A_FaceTarget
+		N022 K 9 A_CustomMissile("MyBall2", 32, 0, 0)
+		Goto See
+		N022 J 4 A_FaceTarget
+		N022 J 4 A_FaceTarget
+		N022 K 6 A_CustomMissile("MyBall2", 32, 0, 0)
+		N022 J 8 A_FaceTarget
+		N022 J 0 A_Jump(128,5)
+		N022 J 8 A_FaceTarget
+		N022 K 6 A_CustomMissile("MyBall3", 32, 0, 0)
+		N022 J 8 A_FaceTarget
+		Goto See
+		N022 J 4 A_FaceTarget
+		N022 J 4 A_FaceTarget
+		N022 K 9 A_CustomMissile("MyBall3", 32, 0, 0)
+		N022 J 8 A_FaceTarget
+		Goto See
+	Death:
+		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDeath")
+   		TNT1 A 0 A_Fall
+		TNT1 A 0 A_PlaySound("other/gibdeath")
+		TNT1 AAAAAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
+		TNT1 A 0 //A_SpawnItemEx("specialexplospawner",0,0,0,0,0,0,0,32)
+      	Stop
+	DefileDeath:
+		TNT1 A 0 A_Die
+		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
+		Goto Death+1
+	Death.UnholyDisint:
+	Death.PlasmaDisint:
+	Disintegrate:
+		TNT1 A 0 Thing_SetTranslation(0,50)	
+		N022 L 1 A_FadeOut(0.015)
+		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+		TNT1 a 0 A_Stop	
+		TNT1 a 0 A_Fall
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+		N022 LL 2 A_FadeOut(0.03)
+		Goto Disintegrate+6
+    }
+}
+//==============================================================================
+//	Black Bears
+//==============================================================================
+//	Pennywise has a mysterious past that lead up to him turning into IT and
+//	becoming the leader of the Clown Void. When he arrived on Earth, it was
+//	one hundred and fifty years before the invasion of Earth occurred by Hell.
+//	Every thirty years he awoke or slumbered, switching between the two which
+//	are eventfully marked with an incredible amount of violence. When he awoke
+//	at the time of the present, Hell had invaded and was losing to the Doom
+//	Marine. Just as he was about to kill the Icon of Sin, Pennywise snuck
+//	into Hell after seeing enormous benefits from consuming the Darkness and
+//	stole a tiny sliver, mutating it into his own desires. The outcomes are the
+//	tiny abominations from said tiny sliver, which explode upon contact with
+//	intruders and can move through matter like it's nothing. These black bears
+//	are undying and can only be returned to the portion of power lying within
+//	Pennywise himself. 
+
+//	Only by destroying Pennywise can the Darkness be banished
+//	once more.
+
+//	This guy is immune to the spells. I'd think the reason is obvious
+
+ACTOR HTC2BlackBear		//Shotguy
+{
+	DropItem "PowerSlaveSpawnerShotgunner" 220
+	DropItem "PowerupSpawner" 8
+	Health 8
+	Radius 8
+	Height 20
+	Speed 9
+	Mass 0x7FFFFFFF
+	PainChance 90
+	MONSTER 
+	+FLOORCLIP -NODROPOFF +DONTOVERLAP +NOICEDEATH
+	Scale 0.75
+	MELEEDAMAGE 1
+	SeeSound ""
+	PainSound ""
+	DeathSound ""
+	ActiveSound "BLACK"
+	MeleeSound ""
+	BloodColor "Black"
+	HitObituary "%o was blown up by a demonized teddy bear."
+	MeleeRange 12
+//Flesh
+	DamageFactor "Electric", 1.25
+	DamageFactor "AEPoison", 1.25
+	DamageFactor "AEBullet", 1.5
+    States
+    {
+    Spawn:
+        TNT1 A 0
+	  TNT1 A 0 A_Jump(210,2,3,4,5,6)
+	  TNT1 AAAAAAAAAAAA 0 A_SpawnItemEx("BerthaBear",random(10,-10),random(10,-10),0,0,0,0,0,32|SXF_TRANSFERPOINTERS)
+    Idle:
+        N018 AB 4 A_Look
+        Loop
+    See:
+		"####" "#" 0 A_JumpIfInventory("PennywiseMaster",1,1,AAPTR_MASTER)
+		Goto Chase2
+		"####" "#" 0 A_TransferPointer(AAPTR_MASTER,AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_TARGET)
+	Chase2:
+		N019 A 0 A_ChangeFlag("NOCLIP",1)
+        N018 ABCD 2 A_Chase
+        Goto See
+    Pain:
+        N018 B 4 A_Pain
+        Goto See
+    Melee:
+		TNT1 A 0 A_SpawnItemEx("SpecialExploSpawner",0,0,0,0,0,0,0,32)//A_SpawnItemEx("specialexplospawner",0,0,0,0,0,0,0,32)
+		N018 A 0 A_Explode(8,32,1,0,4)
+		TNT1 A 0 A_Die
+		Goto Death
+	Pain.AntiClown:
+		"####" "#" 1
+		"####" "#" 0 A_DamageSelf(666)
+		Goto Pain
+    Death:
+   		TNT1 A 0 A_Fall
+		TNT1 A 0 A_PlaySound("other/gibdeath")
+		TNT1 A 0 A_SpawnItemEx("BlackGibDropper",0,0,random(20,40),0,0,0,0,32)
+      	Stop
+	Death.UnholyDisint:
+	Death.PlasmaDisint:
+	Disintegrate:
+		"####" "#" 0 Thing_SetTranslation(0,50)
+		"####" "#" 1 A_FadeOut(0.015)
+		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
+		"####" "#" 0 A_Stop    
+		"####" "#" 0 A_Fall
+		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowSmall",0,0,10,0,0,0,0,32)
+		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksSmall",0,0,10,0,0,0,0,32)
+		"####" "##" 2 A_FadeOut(0.08)
+		Goto Disintegrate+6
+    }
+}
+
+Actor BerthaBear 
+{ 
+	DropItem "PowerSlaveSpawner" 8
+	Health 8
+	Radius 8
+	Height 20
+	Speed 9
+	Mass 0x7FFFFFFF
+	PainChance 90
+	MONSTER 
+	+FLOORCLIP 
+	-NODROPOFF
+	+DONTOVERLAP 
+	+NOICEDEATH
+	+THRUSPECIES
+	Species "Bertha"
+	Scale 0.75
+	MELEEDAMAGE 1
+	SeeSound ""
+	PainSound ""
+	DeathSound ""
+	ActiveSound "BLACK"
+	MeleeSound ""
+	BloodColor "Black"
+	HitObituary "%o was blown up by a demonized teddy bear."
+	MeleeRange 12
+//Flesh
+	DamageFactor "Electric", 1.25
+	DamageFactor "AEPoison", 1.25
+	DamageFactor "AEBullet", 1.5
+    States
+    {
+    Spawn:
+        TNT1 A 0
+    Idle:
+        N018 AB 4 A_Look
+        Loop
+    See:
+		"####" "#" 0 A_JumpIfInventory("PennywiseMaster",1,1,AAPTR_MASTER)
+		Goto Chase2
+		"####" "#" 0 A_TransferPointer(AAPTR_MASTER,AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_TARGET)
+	Chase2:
+		N018 A 0 A_ChangeFlag("NOCLIP",1)
+        N018 ABCD 2 A_Chase
+        Goto See
+    Pain:
+        N018 B 4 A_Pain
+        Goto See
+    Melee:
+		TNT1 A 0 A_SpawnItemEx("SpecialExploSpawner",0,0,0,0,0,0,0,32)//A_SpawnItemEx("specialexplospawner",0,0,0,0,0,0,0,32)
+		N018 A 0 A_Explode(8,32,1,0,4)
+		TNT1 A 0 A_Die
+		Goto Death
+	Pain.AntiClown:
+		"####" "#" 1
+		"####" "#" 0 A_DamageSelf(666)
+		Goto Pain
+    Death:
+   		TNT1 A 0 A_Fall
+		TNT1 A 0 A_PlaySound("other/gibdeath")
+		TNT1 A 0 A_SpawnItemEx("BlackGibDropper",0,0,random(20,40),0,0,0,0,32)
+      	Stop
+	Death.UnholyDisint:
+	Death.PlasmaDisint:
+	Disintegrate:
+		"####" "#" 0 Thing_SetTranslation(0,50)
+		"####" "#" 1 A_FadeOut(0.015)
+		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
+		"####" "#" 0 A_Stop    
+		"####" "#" 0 A_Fall
+		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowSmall",0,0,10,0,0,0,0,32)
+		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksSmall",0,0,10,0,0,0,0,32)
+		"####" "##" 2 A_FadeOut(0.08)
+		Goto Disintegrate+6
+	}
+}
+
+ACTOR BlackBear
+{
+    Health 8
+    Radius 8
+    Height 20
+    Speed 9
+    Mass 0x7FFFFFFF
+    PainChance 90
+    MONSTER 
+    +FLOORCLIP 
+	+NOCLIP 
+	+DONTOVERLAP 
+	-COUNTKILL
+	+THRUSPECIES
+	+NOICEDEATH
+	+DONTHARMSPECIES
+	Species "Bertha"
+    Scale 0.75
+    MELEEDAMAGE 1
+    SeeSound ""
+    PainSound ""
+    DeathSound ""
+    ActiveSound "BLACK"
+    MeleeSound ""
+    HitObituary "%o was blown up by a demonized teddy bear."
+	DropItem "PowerSlaveSpawner" 8
+    BloodColor Black
+	//Flesh
+	DamageFactor "Electric", 1.25
+	DamageFactor "AEPoison", 1.25
+	DamageFactor "AEBullet", 1.5
+	MeleeRange 12
+    States
+    {
+    Spawn:
+        N018 AB 4 A_Look
+        Loop
+    See:
+        N018 ABCD 2 A_Chase
+        Loop
+    Pain:
+        N018 B 4 A_Pain
+        Goto See
+    Melee:
+        //BBER A 1 A_MeleeAttack
+		N018 A 0 A_SpawnItemEx("SpecialExploSpawner",0,0,0,0,0,0,0,32)//A_SpawnItemEx("specialexplospawner",0,0,0,0,0,0,0,32)
+        N018 A 0 A_Explode(11,40,1)
+        Goto Death
+	Pain.AntiClown:
+		"####" "#" 1
+		"####" "#" 0 A_DamageSelf(666)
+		Goto Pain
+    Death:
+   		TNT1 A 0 A_Fall
+		TNT1 A 0 A_PlaySound("other/gibdeath")
+    	TNT1 A 0 A_SpawnItemEx("BlackGibDropper",0,0,random(20,40),0,0,0,0,1)
+      	Stop
+	Death.UnholyDisint:
+    Death.PlasmaDisint:
+	Disintegrate:
+		TNT1 A 0 Thing_SetTranslation(0,50)	
+		N018 A 1 A_FadeOut(0.015)
+		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+		TNT1 a 0 A_Stop	
+		TNT1 a 0 A_Fall
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+		N018 AA 2 A_FadeOut(0.03)
+		Goto Disintegrate+6
+    }
+}
+
+//==============================================================================
+//	Bertha
+//==============================================================================
+//	No one knows why they are called Bertha, but few have guessed it has
+//	something to do with the sound of the name... The possessed balloons
+//	are transformed after 90 days of service without being killed or
+//	popped by any means, whether accidentally or by being shot.
+//	The Bertha is faster and appears to have strengthened rubber material,
+//	almost as if it has become a skin of extremely resistant flesh. They
+//	are granted the ability of generating tidal waves of Darkness to swarm
+//	their victims with the unholy bears.
+
+ACTOR HTC2BigBertha		//Archvile
+{ 
+	DropItem "Mana1BigAmmo" 160
+	DropItem "Mana1BigAmmo" 160
+	DropItem "Mana2BigAmmo" 160
+	DropItem "Mana2BigAmmo" 160
+	DropItem "DarkMana" 160
+	DropItem "DarkMana" 120
+	DropItem "SmallDarkMana"
+	DropItem "SmallDarkMana" 160
+	DropItem "HealthHeart" 210
+	DropItem "PowerslaveSpawner" 28
+	DropItem "PowerupSpawner" 8
+	var int user_count;
+	Health 1000
+	Speed 12 
+	Radius 24
+	Height 64
+	Scale 0.75
+	PainChance 0
+	Mass 0x7FFFFFFF 
+	MONSTER
+	+FLOORCLIP +NOGRAVITY +FLOAT
+	+DONTMORPH
+	+NOICEDEATH
+	+NORADIUSDMG
+	+EXTREMEDEATH
+	scale 0.75
+	SeeSound "BIRTHA3"
+	PainSound "BIRTHA1"
+	DeathSound "BIRTHA1"
+	ActiveSound "BIRTHA2"
+	Obituary "%o touched big birtha's puke." 
+	HitObituary "%o was too slow to pull his head out of Bertha's maw."
+	BloodColor "Black"
+	PainChance "Charm", 96
+	PainChance "Terror", 96
+	PainChance "Drain", 64
+	PainChance "Defile", 0
+	PainChance "Chaos", 255
+	PainChance "ChaosExpl1", 128
+	PainChance "ChaosExpl2", 128
+//Unholy
+	DamageFactor "Holy", 1.5
+	DamageFactor "Unholy", 0.5
+	DamageFactor "UnholyDisint", 0.5
+	DamageFactor "Fire", 0.75
+	DamageFactor "Ice", 0.75
+	DamageFactor "AEPoison", 0.75
+	DamageFactor "AEMagic", 0.75
+	States 
+	{ 
+	Pain.Chaos:
+		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+		Goto See
+	Pain.ChaosExpl1:
+		TNT1 A 0 A_ClearTarget
+		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+		Goto Spawn
+	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
+	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
+	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
+	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
+	Pain.Defile:		TNT1 A 0 A_GiveInventory("DefileCheck",1)			Goto See 
+	
+	Spawn: 
+		N017 A 10 A_Look 
+		Loop 
+	See:
+		"####" "#" 0 A_JumpIfInventory("PennywiseMaster",1,1,AAPTR_MASTER)
+		Goto Chase2
+		"####" "#" 0 A_TransferPointer(AAPTR_MASTER,AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_TARGET)
+	Chase2:
+		N017 AAB 4 A_Chase
+		Goto See
+	Missile: 
+		N017 A 0 A_SetUserVar("user_count",0)
+		N017 A 8 A_FaceTarget 
+		N017 B 1 A_FaceTarget	 N017 A 0 A_SpawnItemEx("BlackSplatter2",frandom(12,16),frandom(-8,8),frandom(48,56),random(2,10),0,random(1,8),random(-25,25),32)
+		N017 B 1 A_FaceTarget	 N017 A 0 A_SpawnItemEx("BlackSplatter2",frandom(12,16),frandom(-8,8),frandom(48,56),random(2,10),0,random(1,8),random(-25,25),32)
+		N017 B 1 A_FaceTarget	 N017 A 0 A_SpawnItemEx("BlackSplatter2",frandom(12,16),frandom(-8,8),frandom(48,56),random(2,10),0,random(1,8),random(-25,25),32)
+		N017 B 1 A_FaceTarget	 N017 A 0 A_SpawnItemEx("BlackSplatter2",frandom(12,16),frandom(-8,8),frandom(48,56),random(2,10),0,random(1,8),random(-25,25),32)
+		N017 C 1 A_FaceTarget	 N017 AA 0 A_SpawnItemEx("BlackSplatter2",frandom(12,16),frandom(-8,8),frandom(48,56),random(2,10),0,random(1,8),random(-25,25),32)
+		N017 C 1 A_FaceTarget	 N017 AA 0 A_SpawnItemEx("BlackSplatter2",frandom(12,16),frandom(-8,8),frandom(48,56),random(2,10),0,random(1,8),random(-25,25),32)
+		N017 C 1 A_FaceTarget	 N017 AA 0 A_SpawnItemEx("BlackSplatter2",frandom(12,16),frandom(-8,8),frandom(48,56),random(2,10),0,random(1,8),random(-25,25),32)
+		N017 C 1 A_FaceTarget	 N017 AA 0 A_SpawnItemEx("BlackSplatter2",frandom(12,16),frandom(-8,8),frandom(48,56),random(2,10),0,random(1,8),random(-25,25),32)
+		N017 D 1 A_FaceTarget	 N017 AAA 0 A_SpawnItemEx("BlackSplatter2",frandom(12,16),frandom(-8,8),frandom(48,56),random(2,10),0,random(1,8),random(-25,25),32)
+		N017 D 1 A_FaceTarget	 N017 AAA 0 A_SpawnItemEx("BlackSplatter2",frandom(12,16),frandom(-8,8),frandom(48,56),random(2,10),0,random(1,8),random(-25,25),32)
+		N017 D 1 A_FaceTarget	 N017 AAA 0 A_SpawnItemEx("BlackSplatter2",frandom(12,16),frandom(-8,8),frandom(48,56),random(2,10),0,random(1,8),random(-25,25),32)
+		N017 D 1 A_FaceTarget	 N017 AAA 0 A_SpawnItemEx("BlackSplatter2",frandom(12,16),frandom(-8,8),frandom(48,56),random(2,10),0,random(1,8),random(-25,25),32)
+		//N017 CD 4 A_FaceTarget 
+		//N017 HEF 4 A_FaceTarget
+	Gargle:
+		N017 D 0 A_FaceTarget
+		N017 DDDD 0 A_SpawnItemEx("BlackSplatter2",frandom(12,16),frandom(-8,8),frandom(48,56),random(2,10),0,random(1,8),random(-25,25),32)
+		N017 D 1 A_SetUserVar("user_count",user_count+1)
+		N017 D 0 A_JumpIf(user_count>=15,"Spit")
+		Loop
+	Spit:
+		N017 D 4 A_CustomMissile("BerthaBallSpecial",42)
+		N017 CB 4 
+		N017 A 0 A_SetUserVar("user_count",0)
+		Goto See
+	Melee:
+		N017 ABCD 4 A_FaceTarget
+		N017 C 4 A_CustomMeleeAttack(8,"","")	N017 A 0 A_FaceTarget
+		N017 B 4 A_CustomMeleeAttack(12,"","")	N017 A 0 A_FaceTarget
+	MeleeChomp:
+		N017 A 4 A_CustomMeleeAttack(100,"imp/melee","")	N017 A 0 A_FaceTarget
+		Goto See
+	Pain: 
+		N017 A 4  A_Pain 
+		Goto See 
+	Pain.AntiClown:
+		"####" "#" 1
+		"####" "#" 0 A_DamageSelf(666)
+		Goto Pain
+	Death:
+		TNT1 A 0 A_Fall
+		N017 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 1 A_SpawnItemEx("SpecialExploSpawner",random(0,100),0,random(0,115),0,0,0,random(0,359),32)//A_CustomMissile("specialexplospawner",0,0,0+random(0,360),2,0+random(0,90))
+		TNT1 A 0 A_PlaySound("other/gibdeath")
+		TNT1 AAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BlackGibDropper",0,0,random(20,40),0,0,0,0,32)
+		TNT1 AAA 0 A_SpawnItemEx("BlackMassSpawner",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("SpecialExploSpawner",random(0,100),0,random(0,115),0,0,0,random(0,359),32)//A_SpawnItemEx("specialexplospawner",0,0,0,0,0,0,0,32)
+		Stop
+	Death.UnholyDisint:
+	Death.PlasmaDisint:
+	Disintegrate:
+		TNT1 A 0 Thing_SetTranslation(0,50)	
+		N017 A 1 A_FadeOut(0.015)
+		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+		TNT1 a 0 A_Stop	
+		TNT1 a 0 A_Fall
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+		N017 AA 2 A_FadeOut(0.03)
+		Goto Disintegrate+6
+	} 
+}
+
+Actor BlackMassSpawner
+{
+	Monster
+	-COUNTKILL
+	-SHOOTABLE
+	+NONSHOOTABLE
+	+NODAMAGE
+	+THRUACTORS
+	Translation "0:255=%[0,0,0]:[0.25,0.25,0.25]"
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 8 A_SpawnItemEx("Blood",0,0,0,0,0,-2,0,33)
+		TNT1 A 0 A_SpawnItemEx("BerthaBear",0,0,-16,0,0,0,0,32|SXF_TRANSFERPOINTERS)
+		Stop
+	}
+}
+
+Actor BlackGibDropper
+{
+	+NOINTERACTION
+	Translation "0:255=%[0,0,0]:[0.25,0.25,0.25]"
+	States
+	{
+    Spawn:
+	  TNT1 A 0
+	  TNT1 A 0 A_CheckSight("Simple")
+	  TNT1 A 0 A_Jump(180,"Drop2","Drop3","Drop4")
+	  TNT1 A 0 A_SpawnItemEx("HGib1",0,0,0,random(-8,8),0,0,random(1,359),1)
+	  TNT1 A 0 A_SpawnItemEx("HGib2",0,0,0,random(-8,8),0,0,random(1,359),1)
+	  TNT1 A 1
+	  Stop
+    Drop2:
+	  TNT1 A 0 A_SpawnItemEx("HGib1Mirr",0,0,0,random(-8,8),0,0,random(1,359),1)
+	  TNT1 A 0 A_SpawnItemEx("HGib2Mirr",0,0,0,random(-8,8),0,0,random(1,359),1)
+	  TNT1 A 1
+	  Stop
+    Drop3:
+	  TNT1 A 0 A_SpawnItemEx("HGib1",0,0,0,random(-8,8),0,0,random(1,359),1)
+	  TNT1 A 0 A_SpawnItemEx("HGib2Mirr",0,0,0,random(-8,8),0,0,random(1,359),1)
+	  TNT1 A 1
+	  Stop
+    Drop4:
+	  TNT1 A 0 A_SpawnItemEx("HGib1Mirr",0,0,0,random(-8,8),0,0,random(1,359),1)
+	  TNT1 A 0 A_SpawnItemEx("HGib2",0,0,0,random(-8,8),0,0,random(1,359),1)
+	  TNT1 A 1
+	  Stop
+    Simple:
+	  TNT1 A 0 A_SpawnItemEx("HGib1Small",0,0,0,random(-8,8),0,0,random(1,359),1)
+	  Stop
+	}
+}
+
+
+actor BirthaBall
+{
+    Radius 6
+    Height 4
+    Speed 15
+    Damage 8
+    scale 1
+    //+SEEKERMISSILE
+    PROJECTILE
+    //ALPHA 0.8
+    SeeSound ""
+    DeathSound "BIRFIRE"
+    States
+    {
+    Spawn:
+        X094 AB 0 A_SeekerMissile (10,10)  
+        X094 AB 2 bright A_CStaffMissileSlither 
+        Loop
+    Death:
+		X094 CCC 0 A_custommissile("BlackSplatter2", 6, 0, random(-180, 180), 2, random(0, 180))
+        X094 C 4 Bright A_Scream
+        X094 D 4 Bright A_Fall
+        X094 E 4 Bright 
+        Stop
+    }
+}
+
+actor BerthaBallSpecial
+{
+    Radius 8
+    Height 6
+    Speed 15
+    Damage 5
+    scale 2.0
+    //+SEEKERMISSILE
+    PROJECTILE
+	+MTHRUSPECIES
+	+THRUSPECIES
+	Species "Bertha"
+    //ALPHA 0.8
+    SeeSound ""
+    DeathSound "BIRFIRE"
+    States
+    {
+    Spawn:
+        //X094 AB 0 A_SeekerMissile (10,10) 
+		X094 A 0
+	Moving:
+        X094 A 1 bright A_CStaffMissileSlither	X094 AA 0 A_SpawnItemEx("BlackSplatter2",0,0,0,random(-4,4),random(-15,15),random(-5,10),0,32)
+		X094 AAA 0 bright A_SpawnItemEx("BerthaBear",0,0,0,random(5,15),0,random(-4,15),random(0,359),32|SXF_SETMASTER,200)
+		X094 A 1 bright A_SetScale(ScaleX-frandom(0.01,0.05))
+		X094 A 0 A_JumpIf(ScaleX<=0.5,"Death")
+		X094 B 1 bright A_CStaffMissileSlither	X094 AA 0 A_SpawnItemEx("BlackSplatter2",0,0,0,random(-4,4),random(-15,15),random(-5,10),0,32)
+		X094 AAA 0 bright A_SpawnItemEx("BerthaBear",0,0,0,random(5,15),0,random(-4,15),random(0,359),32|SXF_SETMASTER,200)
+		X094 B 1 bright A_SetScale(ScaleX-frandom(0.01,0.05))
+		X094 A 0 A_JumpIf(ScaleX<=0.5,"Death")
+        Loop
+    Death:
+		X094 C 0 A_Stop
+		X094 CCC 0 bright A_SpawnItemEx("BerthaBear",0,0,0,random(5,15),0,random(-4,15),random(0,359),32|SXF_SETMASTER)
+		X094 CCCCC 0 bright A_SpawnItemEx("BerthaBear",0,0,0,random(5,15),0,random(-4,15),random(0,359),32|SXF_SETMASTER,128)
+		X094 CCCCCCCC 0 bright A_SpawnItemEx("BerthaBear",0,0,0,random(5,15),0,random(-4,15),random(0,359),32|SXF_SETMASTER,192)
+		X094 CCCCCCCCCCCC 0 bright A_SpawnItemEx("BerthaBear",0,0,0,random(5,15),0,random(-4,15),random(0,359),32|SXF_SETMASTER,225)
+		X094 CCC 0 A_SpawnItemEx("BlackSplatter2",0,0,0,random(5,25),0,frandom(-10,20),random(0,359),32|SXF_TRANSFERPOINTERS)
+        X094 C 4 Bright A_Scream
+        X094 DE 4 Bright
+        Stop
+    }
+}
+
+ACTOR BlackSplatter1
+{   
+	Radius 5
+	Height 5
+	Speed 4
+	Projectile
+	-NOGRAVITY
+	+THRUACTORS
+	Gravity 0.125
+	SCALE 0.75
+	States
+	{
+	Spawn:
+		BBSH ABCD 2 
+		Loop
+ 	death:
+		BBSH E 0 A_custommissile("BlackSplatter3", 6, 0, 0, 2, 0)		
+ 		BBSH EFGHI 16
+ 		Stop
+	}
+} 
+ACTOR BlackSplatter2
+{   
+	Radius 5
+	Height 5
+	Speed 4
+	Projectile
+	+THRUACTORS
+	+NOTELEPORT
+	-NOGRAVITY
+	SCALE 0.75
+	States
+	{
+	Spawn:
+		BBSP ABC 2 
+		Loop
+ 	Death:
+		BBSP D 0 A_SpawnItemEx("BlackSplatter3",0,0,0,frandom(5,15),0,frandom(-5,10),random(0,359),32)	
+ 		BBSP DEF 16
+ 		Stop
+	}
+}
+
+ACTOR BlackSplatter3
+{   
+	Radius 5
+	Height 5
+	Speed 0
+	Projectile
+	+lowgravity
+	+NoBlockmap
+	+NoTeleport
+	+THRUACTORS
+	SCALE 0.75
+	States
+	{
+	Spawn:
+		BBSE ABC 2 
+		Stop
+	}
+} 
+ACTOR BlackBlob
+{    
+	Speed 0
+	Monster
+	+THRUACTORS
+	+FloorHugger
+	+NOCLIP
+	+INVULNERABLE
+	+NEVERTARGET
+	-COUNTKILL
+	Health 1000000
+	States
+	{
+	Spawn:
+		X096 A 4 A_Look
+		Loop
+	See:
+		X096 ABCD 2 A_Chase
+		X096 D 0 A_SpawnItemEx("HTC2BlackBear",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION | SXF_TRANSFERPOINTERS)
+		Stop
+	}
+}
+//==============================================================================
+//	Possessed Balloon
+//==============================================================================
+//	Pennywise claims everything floats... Well, he's right, except for the
+//	Black Bears. Those he doesn't really have all that much control over,
+//	and to prevent them from fleeing back to Hell, he refused to grant them
+//	flight.
+
+//	Whenever there's balloons around, Pennywise will choose those first over
+//	making skulls as balloons are much more plentiful and much easier to
+//	reproduce.
+
+ACTOR HTC2PossessedBalloon	//lost soul
+{
+	DropItem "Mana1Ammo" 160
+	DropItem "Mana1Ammo" 160
+	DropItem "HealthHeart" 210
+	DropItem "PowerslaveSpawner" 28
+	DropItem "PowerupSpawner" 8
+    Health 40
+    Radius 15
+    Height 40
+    Speed 4
+    Mass 20
+    PainChance 20
+    MONSTER 
+    +FLOORCLIP
+    +NOGRAVITY
+    +FLOAT
+    +PUSHABLE
+    +FloatBob
+    MELEEDAMAGE 3
+    SeeSound ""
+    PainSound "BOONBITE"
+    DeathSound ""
+    ActiveSound "BLOONACT"
+    MeleeSound "BOONBITE"
+    HitObituary "%o wanted to float with all the pretty balloons."
+	PainChance "Charm", 255
+	PainChance "Terror", 255
+	PainChance "Defile", 255
+	PainChance "Drain", 160
+	PainChance "Chaos", 255
+	PainChance "ChaosExpl1", 255
+	PainChance "ChaosExpl2", 255
+//Unholy
+	DamageFactor "Holy", 1.5
+	DamageFactor "Unholy", 0.5
+	DamageFactor "UnholyDisint", 0.5
+	DamageFactor "Fire", 0.75
+	DamageFactor "Ice", 0.75
+	DamageFactor "AEPoison", 0.75
+	DamageFactor "AEMagic", 0.75
+    States
+    {
+	Pain.Chaos:
+		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+		Goto See
+	Pain.ChaosExpl1:
+		TNT1 A 0 A_ClearTarget
+		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+		Goto Spawn
+	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
+	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
+	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
+	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
+	Pain.Defile:		TNT1 A 0 A_GiveInventory("DefileCheck",1)			Goto See 
+	
+	
+    Spawn:
+        N025 A 2 A_Look
+        Loop
+    See:
+        N025 A 2 A_Chase
+		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDecide")
+		Loop
+	DefileDecide:
+		TNT1 A 0 A_Jump(10,1)
+		Goto See
+		TNT1 A 0 A_Die
+		Wait
+    Pain:
+        N025 B 3 A_Pain
+        Goto See
+	Pain.AntiClown:
+		"####" "#" 1
+		"####" "#" 0 A_DamageSelf(666)
+		Goto Pain
+    Melee:
+        N025 BC 4
+        N025  D 4 A_MeleeAttack
+        N025  CB  4 
+       
+        Goto See
+    Death:
+		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDeath")
+   		TNT1 A 0 A_Fall
+		TNT1 A 0 A_PlaySound("other/gibdeath")
+		TNT1 AAAAAAAAAAAAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
+		TNT1 A 0 A_SpawnItemEx("SpecialExploSpawner",0,0,0,0,0,0,0,32)
+      	Stop
+	DefileDeath:
+		TNT1 A 0 A_Die
+		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
+		Goto Death+1
+	Death.UnholyDisint:
+	Death.PlasmaDisint:
+	Disintegrate:
+		"####" "#" 0 Thing_SetTranslation(0,50)
+		"####" "#" 1 A_FadeOut(0.015)
+		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
+		"####" "#" 0 A_Stop    
+		"####" "#" 0 A_Fall
+		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowSmallMedium",0,0,18,0,0,0,0,32)
+		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksSmallMedium",0,0,18,0,0,0,0,32)
+		"####" "##" 2 A_FadeOut(0.03)
+		Goto Disintegrate+6
+    }
+}
+
+actor LightBulb2
+{
+	Radius 5
+	Height 16
+	Health 2
+	+SOLID BloodType NoBloodPuff +SPAWNCEILING +NOGRAVITY +SHOOTABLE +NORADIUSDMG +NOCLIP
+	Speed 0
+	Mass 0x7FFFFFFF
+	Scale 0.2
+	PainChance 0
+	SeeSound ""
+	DeathSound ""
+	States
+	{
+	Spawn:
+		LBUB A 10  
+		Loop
+	Pain: 
+		LBUB A 4 A_Pain 
+		Goto Death
+	Death: 
+		LBUB A 0 A_Scream 
+		LBUB A 0 A_Fall 
+		LBUB A 0
+		LBUB A 0 A_SpawnItemEx("HTC2Bulby",0,0,0,0,0,-10,0,32) 
+		Stop 
+	}
+}
+
+//==============================================================================
+//	Evil Dead Hand
+//==============================================================================
+//	This is the fate of those who absolutely refuse to obey Pennywise. Their
+//	torment is greatest and are most feeble. End their misery and let the 
+//	souls be free. Their refusal to act with Pennywise will save them at
+//	the gates of judgement, and their suffering will not be in vain. They shall
+//	be redeemed and allowed to pass through the gates of Heaven for their
+//	sacrifice.
+//	Spell immune
+ACTOR HTC2EvilDeadHand	//Zombieman
+{
+	DropItem "PowerSlaveSpawnerMonsterAmmo" 210
+	DropItem "PowerupSpawner" 8
+    Health 20
+    Radius 8
+    Height 16
+    Speed 5
+    Mass 20
+    PainChance 200
+    MONSTER 
+   // +FLOORCLIP 
+    +RANDOMIZE 
+    scale 0.75
+    MELEEDAMAGE 2
+    SeeSound "HSEE"
+    PainSound "HAND1"
+    DeathSound "HAND3"
+    ActiveSound "HAND1"
+    MeleeSound "SKULBITE"
+    Obituary "%o was scratched by the Evil Dead Hand." 
+//Flesh
+	DamageFactor "Electric", 1.25
+	DamageFactor "AEPoison", 1.25
+	DamageFactor "AEBullet", 1.5
+    States
+    {
+    Spawn:
+        N019 A 4 A_Look
+        Loop
+    See:
+        N019 A 0 A_Jump(200,5)
+      	N019 A 0 A_CustomMissile("ZGut2", 0, 0, 180)  
+      	N019 A 0 A_Jump(250,2)
+      	N019 A 0 A_CustomMissile("ZGut3", 0, 0, 0)     
+      	N019 ABCB 2 A_Chase 
+        Loop
+    Pain:
+        N019 B 8 A_Pain 
+      	Goto See 
+    Melee:
+        N019 C 6 A_FaceTarget 
+      	N019 A 6 A_MeleeAttack
+      	N019 B 6
+      	Goto See 
+	Pain.AntiClown:
+		"####" "#" 1
+		"####" "#" 0 A_DamageSelf(666)
+		Goto Pain
+    Death:
+   		TNT1 A 0 A_Fall
+		TNT1 A 0 A_PlaySound("other/gibdeath")
+    	TNT1 AAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
+      	Stop
+	Death.UnholyDisint:
+	Death.PlasmaDisint:
+	Disintegrate:
+		"####" "#" 0 Thing_SetTranslation(0,50)
+		"####" "#" 1 A_FadeOut(0.015)
+		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
+		"####" "#" 0 A_Stop    
+		"####" "#" 0 A_Fall
+		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowVerySmall",0,0,8,0,0,0,0,32)
+		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksVerySmall",0,0,8,0,0,0,0,32)
+		"####" "##" 2 A_FadeOut(0.03)
+		Goto Disintegrate+6
+    }
+}
+
+//==============================================================================
+//	The Head of Pennywise
+//==============================================================================
+//	Pennywise directly controls these aberrations of himself as a beheaded
+//	flying avatar. This does nothing to him when harmed or killed. They are
+//	extraordinarily fast and shoot the same hellfire the Vile Ghosts throw
+//	around.
+
+actor HTC2PennywiseHead	//painelem
+{ 
+	DropItem "Mana1BigAmmo" 160
+	DropItem "Mana1BigAmmo" 160
+	DropItem "Mana2BigAmmo" 160
+	DropItem "Mana2BigAmmo" 160
+	DropItem "HealthHeart" 210
+	DropItem "PowerslaveSpawner" 28
+	DropItem "PowerupSpawner" 8
+	Health 600
+	Speed 11 
+	Radius 16
+	Height 48
+	PainChance 128
+	Mass 400
+	Meleedamage 5
+	REACTIONTIME 8 
+	MONSTER
+	+FLOORCLIP +NOGRAVITY +FLOAT +FloatBob +NORADIUSDMG
+	+DONTMORPH
+	+NOICEDEATH
+	SeeSound ""
+	PainSound ""
+	DeathSound ""
+	ActiveSound ""
+	MeleeSound "imp/melee"
+	Obituary "%o was burned by Pennywise's avatar." 
+	HitObituary "%o can hear Pennywise calling Fluffy to devour him..."
+	MissileHeight 15
+	MissileType Ghost2Ball
+	PainChance "Charm", 192
+	PainChance "Terror", 192
+	PainChance "Defile", 0
+	PainChance "Drain", 128
+	PainChance "Chaos", 255
+	PainChance "ChaosExpl1", 128
+	PainChance "ChaosExpl2", 128
+//Undead
+	DamageFactor "AEPoison", 0.5
+	DamageFactor "AEBullet", 0.75
+	DamageFactor "Holy", 1.5
+	DamageFactor "Unholy", 0.5
+	DamageFactor "UnholyDisint", 0.5
+	DamageFactor "AEMagic", 1.25
+	States 
+	{ 
+	Pain.Chaos:
+		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+		Goto See
+	Pain.ChaosExpl1:
+		TNT1 A 0 A_ClearTarget
+		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+		Goto Spawn
+	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
+	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
+	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
+	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
+	Pain.Defile:		TNT1 A 0 A_GiveInventory("DefileCheck",1)			Goto See 
+	
+	
+	Spawn: 
+		N011 A 10  A_Look
+		Loop
+	See:
+		"####" "#" 0 A_JumpIfInventory("PennywiseMaster",1,1,AAPTR_MASTER)
+		Goto Chase2
+		"####" "#" 0 A_TransferPointer(AAPTR_MASTER,AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_TARGET)
+	Chase2:
+		N011 AAAA 1 A_Chase 
+		Goto See
+	Melee:
+		N011 D 4 A_FaceTarget  
+		N011 E 3 A_FaceTarget 
+		N011 D 3 A_MeleeAttack
+		N011 A 3 A_FaceTarget 
+		Goto See
+	Missile:
+		N011 D 4 A_FaceTarget 
+       	N011 E 6 A_ComboAttack
+		N011 D 4 A_Chase 
+      	Goto See
+	Pain: 
+      	N011 E 4  A_Pain 
+      	Goto See
+	Pain.AntiClown:
+		"####" "#" 1
+		"####" "#" 0 A_DamageSelf(666)
+		Goto Pain
+	Death:
+   		TNT1 A 0 A_Fall
+		TNT1 A 0 A_PlaySound("other/gibdeath")
+		TNT1 AAAAAAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
+		TNT1 A 0 A_SpawnItemEx("SpecialExploSpawner",0,0,0,0,0,0,0,32)//A_SpawnItemEx("specialexplospawner",0,0,0,0,0,0,0,32)
+      	Stop 
+	Death.UnholyDisint:
+	Death.PlasmaDisint:
+	Disintegrate:
+		"####" "#" 0 Thing_SetTranslation(0,50)
+		"####" "#" 1 A_FadeOut(0.015)
+		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
+		"####" "#" 0 A_Stop    
+		"####" "#" 0 A_Fall
+		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowSmallMedium",0,0,18,0,0,0,0,32)
+		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksSmallMedium",0,0,18,0,0,0,0,32)
+		"####" "##" 2 A_FadeOut(0.03)
+		Goto Disintegrate+6
+	}
+}
+
+//==============================================================================
+//	Super Bertha, a.k.a. the Abominable Guard of Pennywise
+//==============================================================================
+//	This is one of the highest ranks of the clown army, on the balloon side. 
+//	Extremely powerful, these bad boys can summon the unholy void and spit fire... 
+//	Worse yet, the bears they summon could be poisonous. One can tell as the bears will
+//	be sludge greenish in color. These are few and far within the ranks of
+//	the Clown Army, but should never be underestimated. Chances are if one
+//	is seen, Pennywise may be near too.
+
+actor HTC2SuperBertha	//Cyberdemon
+{
+	DropItem "RandomWeaponPower" 
+	DropItem "MegaHeart" 210
+	DropItem "PowerslaveSpawner" 28
+	DropItem "PowerupSpawner" 8
+	var int user_count;
+	Health 6500 
+	Speed 7 
+	Radius 32
+	Height 100
+	PainChance 128
+	Mass 0x7FFFFFFF
+	Meleedamage 40 
+	REACTIONTIME 8 
+	MONSTER
+	+FLOORCLIP +NOGRAVITY +FLOAT +FloatBob
+	+BOSS
+	+BOSSDEATH
+	+NOICEDEATH
+	+DONTMORPH
+	+NORADIUSDMG
+	SeeSound ""
+	PainSound "GHSTPAIN"
+	DeathSound "GHSTDIE"
+	ActiveSound "BCLICK5"
+	MeleeSound "imp/melee"
+	Obituary "%o was consumed by the void of a Super Bertha." 
+	HitObituary "Super Bertha slowly chewed up %o and devoured him."
+	Scale 0.75
+	PainChance "Charm", 0
+	PainChance "Terror", 0
+	PainChance "Defile", 0
+	PainChance "Drain", 40
+	PainChance "Chaos", 255
+	DamageFactor "ChaosExpl1", 0
+	DamageFactor "ChaosExpl2", 0
+//Unholy
+	DamageFactor "Holy", 1.5
+	DamageFactor "Unholy", 0.5
+	DamageFactor "UnholyDisint", 0.5
+	DamageFactor "Fire", 0.75
+	DamageFactor "Ice", 0.75
+	DamageFactor "AEPoison", 0.75
+	DamageFactor "AEMagic", 0.75
+	States
+	{
+	Pain.Chaos:
+		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+		Goto See
+	Pain.ChaosExpl1:
+		TNT1 A 0 A_ClearTarget
+		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+		Goto Spawn
+	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
+	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
+	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
+	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
+	Pain.Defile:		TNT1 A 0 A_GiveInventory("DefileCheck",1)			Goto See 
+	
+	Spawn:
+		N014 C 2 A_Look
+		Loop
+	See:
+		N014 A 0 A_SetUserVar("user_count",0)
+		N014 C 2 A_Chase
+		Loop
+	Missile:   
+		N014 A 0 A_FaceTarget  
+		N014 CBA 4
+	Spam:
+		N014 A 0 A_FaceTarget
+		N014 A 0 A_CustomMissile("BirthaBall",38,0,frandom(-5,5))
+		N014 AA 0 A_SpawnItemEx("BlackMassSpawner",6,random(-10,10),32,0,0,0,0,32|SXF_TRANSFERPOINTERS|SXF_SETMASTER)
+		N014 A 1 A_SpawnItemEx("BlackMassSpawner",6,random(-10,10),32,0,0,0,0,32|SXF_TRANSFERPOINTERS|SXF_SETMASTER)
+		N014 A 0 A_SetUserVar("user_count",user_count+1)
+		N014 A 0 A_JumpIf(user_count>=20,"SpamEnd")
+		Loop
+	SpamEnd:
+		N014 A 0 A_SetUserVar("user_count",0)
+		N014 ABC 4
+		Goto See
+	Pain:
+		N014 C 1 A_SetUserVar("user_count",0)
+		N014 C 3 A_Pain
+		Goto See
+	Melee:
+		N014 BA 1 A_FaceTarget 
+		N014 C 4  A_MeleeAttack
+		N014 AB 4 A_FaceTarget 
+		Goto See
+	Pain.AntiClown:
+		"####" "#" 1
+		"####" "#" 0 A_DamageSelf(666)
+		Goto Pain
+	Death:
+		N014 B 3 A_Scream
+		N014 B 3 
+		N014 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 1 A_SpawnItemEx("SpecialExploSpawner",random(0,200),0,random(0,215),0,0,0,random(0,359),32)//A_CustomMissile("specialexplospawner",0,0,0+random(0,360),2,0+random(0,90))
+		TNT1 A 0 A_Fall
+		TNT1 A 0 A_PlaySound("other/gibdeath")
+		TNT1 AAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("GibDropper",random(0,50),0,random(0,200),0,0,0,random(0,359),32)
+		TNT1 A 35
+		TNT1 A 0 A_KillMaster
+		Stop
+	Death.UnholyDisint:
+	Death.PlasmaDisint:
+	Disintegrate:
+		"####" "#" 0 Thing_SetTranslation(0,50)
+		"####" "#" 0 A_KillMaster
+		"####" "#" 1 A_FadeOut(0.015)
+		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
+		"####" "#" 0 A_Stop    
+		"####" "#" 0 A_Fall
+		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowBig",0,0,45,0,0,0,0,32)
+		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksBig",0,0,45,0,0,0,0,32)
+		"####" "##" 2 A_FadeOut(0.03)
+		Goto Disintegrate+7
+	}
+}
+
+//==============================================================================
+//	Jericho the Bouncing Clown
+//==============================================================================
+/*	Pennywise sure puts the "laughter" in "slaughter", though there's nothing
+	really funny about this guy. Born from all the blood drained of the victims
+	found within Derry, this horrible abomination's purpose is to give life to
+	those who take it, by puking death to the living in terms of shrapnelized
+	flesh. It can also be considered one of the top beings responsible for all
+	the bloody walls and fleshy tendrils, as its 'tail' can be seen leaking
+	small amounts of blood. Bringer of the blood plague, he will be one of the
+	masterminds behind poisoning water supplies with the blood of the unholy
+	all across the world if he isn't stopped...	
+*/
+
+ACTOR HTC2BouncingClown		//cyberdemon
+{
+	DropItem "AEoDGutFlingerItem" 192
+	DropItem "MegaHeart" 210
+	DropItem "PowerslaveSpawner" 28
+	DropItem "PowerupSpawner" 8
+	var int user_count;
+	Health 5000
+	Radius 40
+	Height 100
+	Speed 21
+	Mass 2000
+	PainChance 25
+	MONSTER 
+	+BOSS +BOSSDEATH +NORADIUSDMG +FLOORCLIP +RANDOMIZE 
+	+NOICEDEATH
+	MELEEDAMAGE 3
+	SeeSound "GAURD11"
+	PainSound "GAURD12"
+	DeathSound "GAURD12"
+	ActiveSound "GAURD11"
+	MeleeSound "BCHOMP"
+	HitObituary "%o warped into human cotton candy by Jericho's clowny breath."
+	Obituary "%o was bombarded by Jericho's polluted blood."
+	MaxTargetRange 1024
+	PainChance "Charm", 0
+	PainChance "Terror", 0
+	PainChance "Defile", 0
+	PainChance "Drain", 40
+	PainChance "Chaos", 255
+	DamageFactor "ChaosExpl1", 0
+	DamageFactor "ChaosExpl2", 0
+//Undead
+	DamageFactor "AEPoison", 0.5
+	DamageFactor "AEBullet", 0.75
+	DamageFactor "Holy", 1.5
+	DamageFactor "Unholy", 0.5
+	DamageFactor "UnholyDisint", 0.5
+	DamageFactor "AEMagic", 1.25
+	States
+	{
+	Pain.Chaos:
+		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+		Goto See
+	Pain.ChaosExpl1:
+		TNT1 A 0 A_ClearTarget
+		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+		Goto Spawn
+	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
+	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
+	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
+	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
+	Pain.Defile:		TNT1 A 0 A_GiveInventory("DefileCheck",1)			Goto See 
+	
+	Spawn:
+		N027 AB 4 A_Look
+		Loop
+	See:
+		N027 A 2 A_SetUserVar("user_count",0)
+		N027 A 2 A_Chase
+		N027 B 2
+		N027 B 2 A_Chase
+		N027 CC 2 A_Chase
+		N027 B 4
+		N027 A 0 A_JumpIfCloser(1024,1)
+		Loop
+		N027 A 0 A_PlaySound("GAURD13")
+		N027 AAAAAAA 0 A_custommissile("BloodSpeck1", 8, 0, random(-180, 180), 2, random(0, 90))
+		Loop
+	Pain:
+		N027 D 5 A_Pain
+		N027 E 0 A_SetInvulnerable
+		N027 E 4
+		N027 FFFF 2 A_custommissile("BloodSpeck1", 8, 0, random(-180, 180), 2, random(0, 90))
+		N027 GGGGHHHHIIIIJJJJ 1 A_custommissile("BloodSpeck1", 8, 0, random(-180, 180), 2, random(0, 90))
+		N027 JJJJJ 10 
+		N027 JIHGFED 5
+		N027 D 0 A_UnSetInvulnerable
+		Goto See
+	Melee:
+		N027 A 3 A_FaceTarget 
+		N027 B 3 A_FaceTarget 
+		N027 C 4 A_MeleeAttack
+		N027 B 3 A_FaceTarget 
+		Goto See
+	Missile:
+		N027 CB 4 A_FaceTarget
+		N027 A 0 A_PlaySound("reilsss/weapons/darkflamestafffire",5,1.0,0)
+		N027 AAA 0 A_CustomMissile("JerichoGib",64,0,frandom(-10,10))
+		N027 A 0 A_SetUserVar("user_count",user_count+1)
+		N027 A 0 A_JumpIf(user_count>=random(4,7),"See")
+		N027 B 4 A_MonsterRefire(0,"See")
+		Loop
+	Pain.AntiClown:
+		"####" "#" 1
+		"####" "#" 0 A_DamageSelf(666,"None",DMSS_FOILINVUL)
+		Goto Pain
+	Death:
+   		TNT1 A 0 A_Fall
+		TNT1 A 0 A_PlaySound("other/gibdeath")
+		TNT1 AAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(10,80),0,0,0,0,32)
+		TNT1 A 35
+		TNT1 A 0 A_KillMaster
+      	Stop 
+	Death.UnholyDisint:
+	Death.PlasmaDisint:
+	Disintegrate:
+		"####" "#" 0 Thing_SetTranslation(0,50)
+		"####" "#" 0 A_KillMaster
+		"####" "#" 1 A_FadeOut(0.015)
+		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
+		"####" "#" 0 A_Stop    
+		"####" "#" 0 A_Fall
+		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowBig",0,0,45,0,0,0,0,32)
+		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksBig",0,0,45,0,0,0,0,32)
+		"####" "##" 2 A_FadeOut(0.03)
+		Goto Disintegrate+6
+    }
+}
+
+Actor JerichoGib
+{
+	Projectile
+	+SEEKERMISSILE
+	+DONTREFLECT
+	+FORCERADIUSDMG
+	+EXTREMEDEATH
+	-NOGRAVITY
+	+BOUNCEONWALLS
+	WallBounceFactor 1
+	Gravity 0.65
+	Scale 0.34
+	Damage 5
+	Speed 30
+	States
+	{
+	Spawn:
+		Q99B A 0
+		Q99B A 0 A_ChangeVelocity(0,0,2,1)
+		Q99B BBCCDDEEFFGGHHIIJJKKLLMMNN 1 A_SpawnItemEx("Blood",0,0,0,0,0,1,0,32)
+		Loop
+	Death:
+		TNT1 A 0 A_SpawnItemEx("FlingerGibExplosion",0,0,0,0,0,0,0,32|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_Explode(30,256,0)
+		Stop
+	}
+}
+
+//==============================================================================
+//	Baby Bouncing Clowns
+//==============================================================================
+/*	If Fluffy has minions, so does Jericho. However, these little warts aren't
+	nearly as dangerous, but they still bleed wherever they go and should be
+	vanquished to prevent their spread of blight.
+*/
+
+ACTOR HTC2BabyClown	//demon
+{
+	DropItem "Mana1Ammo" 190
+	DropItem "HealthHeart" 210
+	DropItem "PowerslaveSpawner" 28
+	DropItem "PowerupSpawner" 8
+    Health 200
+    Radius 20
+    Height 48
+    Speed 15
+    Mass 60
+    PainChance 200
+    MONSTER 
+    Scale 0.25
+    +FLOORCLIP +RANDOMIZE
+    MELEEDAMAGE 3
+    SeeSound ""
+    PainSound "BYHURT"
+    DeathSound "BYHURT"
+    ActiveSound "BYCLWN"
+    MeleeSound "CLWNBITE"
+    HitObituary "%o was swarmed by bouncing clowns."
+	PainChance "Charm", 255
+	PainChance "Terror", 255
+	PainChance "Defile", 255
+	PainChance "Drain", 153
+	PainChance "Chaos", 255
+	PainChance "ChaosExpl1", 255
+	PainChance "ChaosExpl2", 255
+//Undead
+	DamageFactor "AEPoison", 0.5
+	DamageFactor "AEBullet", 0.75
+	DamageFactor "Holy", 1.5
+	DamageFactor "Unholy", 0.5
+	DamageFactor "UnholyDisint", 0.5
+	DamageFactor "AEMagic", 1.25
+    States
+    {
+	Pain.Chaos:
+		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+		Goto See
+	Pain.ChaosExpl1:
+		TNT1 A 0 A_ClearTarget
+		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+		Goto Spawn
+	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
+	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
+	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
+	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
+	Pain.Defile:		TNT1 A 0 A_GiveInventory("DefileCheck",1)			Goto See 
+	
+    Spawn:
+        N027 AB 4 A_Look
+        Loop
+	See:
+		"####" "#" 0 A_JumpIfInventory("PennywiseMaster",1,1,AAPTR_MASTER)
+		Goto Chase2
+		"####" "#" 0 A_TransferPointer(AAPTR_MASTER,AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_TARGET)
+	Chase2:
+		N027 A 1
+		N027 A 2 
+		N027 B 1 A_Chase
+		N027 B 2 A_Chase
+		N027 CC 2 A_Chase
+		N027 B 2
+		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDecide")
+		Loop
+	DefileDecide:
+		TNT1 A 0 A_Jump(10,1)
+		Goto See
+		TNT1 A 0 A_Die
+		Wait
+    Pain:
+        N027 B 4 A_Pain
+        Goto See
+    Melee:
+        N027 A 3 A_FaceTarget 
+        N027 B 0 A_PlaySound("CLWNBITE")
+        N027 B 3 A_FaceTarget
+        N027 C 4 A_MeleeAttack
+        N027 B 3 A_FaceTarget
+        N027 B 0 A_PlaySound("CLWNBITE")
+        Goto See
+	Pain.AntiClown:
+		"####" "#" 1
+		"####" "#" 0 A_DamageSelf(666)
+		Goto Pain
+	Death:	
+		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDeath")
+   		TNT1 A 0 A_Fall
+		TNT1 A 0 A_PlaySound("other/gibdeath")
+		TNT1 AAAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
+		TNT1 A 10
+      	Stop 
+	DefileDeath:
+		TNT1 A 0 A_Die
+		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
+		Goto Death+1
+	Death.UnholyDisint:
+	Death.PlasmaDisint:
+	Disintegrate:
+		"####" "#" 0 Thing_SetTranslation(0,50)
+		"####" "#" 1 A_FadeOut(0.015)
+		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
+		"####" "#" 0 A_Stop    
+		"####" "#" 0 A_Fall
+		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowSmallMedium",0,0,18,0,0,0,0,32)
+		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksSmallMedium",0,0,18,0,0,0,0,32)
+		"####" "##" 2 A_FadeOut(0.03)
+		Goto Disintegrate+6
+    }
+}
+
+actor PennySeeker
+{
+    Radius 8
+    Height 6
+    Speed 12
+    Damage 6
+    Scale 1
+    +SEEKERMISSILE
+    PROJECTILE
+    //RENDERSTYLE ADD
+    //ALPHA 0.67
+    SeeSound ""
+    DeathSound "CBLAST2"
+    States
+    {
+    Spawn:
+        X095 AB 4 Bright A_SeekerMissile (5,20)
+        Loop
+    Death:
+        X095 C 4 Bright	A_custommissile("ClownSpark", 8, 0, random(-180, 180), 2, random(-180, 180))
+        X095 D 4 Bright	A_custommissile("ClownSpark", 8, 0, random(-180, 180), 2, random(-180, 180))
+        X095 E 4 Bright	A_custommissile("ClownSpark", 8, 0, random(-180, 180), 2, random(-180, 180))
+        X095 F 4 Bright	A_custommissile("ClownSpark", 8, 0, random(-180, 180), 2, random(-180, 180))
+        Stop
+    }
+}
+
+actor Deadlight
+{
+    Radius 8
+    Height 6
+    Speed 14
+    Damage 5
+    Scale 1
+    +SEEKERMISSILE
+    PROJECTILE
+    DeathSound "TRANEXP"
+    States
+    {
+    Spawn:
+        X091 A 1 Light("DeadWhite") A_SeekerMissile (30,40)
+        X091 B 1 Light("DeadRed") //A_CustomMissile("Deadlight2",0, 0, 0)
+        X091 C 1 Light("DeadGreen")
+        X091 D 1 Light("DeadBlue")
+        X091 A 1 Light("DeadWhite") //A_SeekerMissile (30,40)
+        X091 B 1 Light("DeadRed") //A_CustomMissile("Deadlight2",0, 0, 0)
+        X091 C 1 Light("DeadGreen")
+        X091 D 1 Light("DeadBlue")
+        Loop
+    Death:
+        X091 E 4 Bright 
+        X091 EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE 0 A_CustomMissile("Sparkles", 8, 0, random(-180, 180), 2, random(-180, 180))
+        X091 F 4 Bright A_Explode(96,12,0)
+        X091 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF 0 A_CustomMissile("Sparkles", 8, 0, random(-180, 180), 2, random(-180, 180))
+        X091 GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG  0 A_CustomMissile("Sparkles", 8, 0, random(-180, 180), 2, random(-180, 180))
+        X091 GHI 4 Bright
+		X087 JKL 4 Bright
+        Stop
+    }
+}
+
+Actor DeadLightWarp : DeadLight
+{
+	var int user_count[2];
+	var int user_angle[3];
+	//	[0] = Original angle
+	//	[1] = Positive addition
+	//	[2] = Negative addition
+	BounceFactor 1
+	WallBounceFactor 1
+	Height 16
+	+NOINTERACTION
+	+FORCERADIUSDMG
+	+STRIFEDAMAGE
+	+BOUNCEONWALLS
+	+BOUNCEONFLOORS
+	+BOUNCEONCEILINGS
+	Speed 12
+	Damage 1
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_GiveInventory("DeadLightCount",1,AAPTR_TARGET)
+		TNT1 A 0 A_SetUserArray("user_angle",0,angle)
+		TNT1 A 0 A_SetUserArray("user_angle",1,user_angle[0]+3)
+		TNT1 A 0 A_SetUserArray("user_angle",2,user_angle[0]-3)
+	PreMove:
+		X091 A 1 Light("DeadWhite") A_Explode(random(1,8),16,0)
+        X091 B 1 Light("DeadRed") A_Explode(random(1,8),16,0)
+        X091 C 1 Light("DeadGreen") A_Explode(random(1,8),16,0)
+        X091 D 1 Light("DeadBlue") A_Explode(random(1,8),16,0)
+		X091 D 0 A_SetUserArray("user_count",0,user_count[0]+1)
+		X091 D 0 A_JumpIf(user_count[0]>=2,"Warping")
+		Loop
+	Warping:
+		X091 A 0 A_Explode(random(1,8),16,0)
+		X091 A 1 Light("DeadWhite") A_Weave(0,1,0,10)	X091 A 0 A_SetAngle(user_angle[1])		X091 A 0 A_Warp(AAPTR_TARGET,92,0,32,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE|WARPF_USECALLERANGLE)
+		X091 B 0 A_Explode(random(1,8),16,0)
+		X091 B 1 Light("DeadRed") 	A_Weave(0,1,0,10)	X091 A 0 A_SetAngle(user_angle[1]+3)	X091 B 0 A_Warp(AAPTR_TARGET,92,0,32,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE|WARPF_USECALLERANGLE)
+		X091 C 0 A_Explode(random(1,8),16,0)
+		X091 C 1 Light("DeadGreen") A_Weave(0,1,0,10)	X091 A 0 A_SetAngle(user_angle[1]+6)	X091 C 0 A_Warp(AAPTR_TARGET,92,0,32,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE|WARPF_USECALLERANGLE)
+		X091 D 0 A_Explode(random(1,8),16,0)
+		X091 D 1 Light("DeadBlue") 	A_Weave(0,1,0,10)	X091 A 0 A_SetAngle(user_angle[1]+9)	X091 D 0 A_Warp(AAPTR_TARGET,92,0,32,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE|WARPF_USECALLERANGLE)
+		TNT1 A 0 A_SetUserArray("user_angle",1,user_angle[1]+12)
+		TNT1 A 0 A_JumpIfInventory("PennywiseDead",1,"Death",AAPTR_TARGET)
+		TNT1 A 0 A_JumpIfInventory("PennywiseTeleporting",1,"Death",AAPTR_TARGET)
+		Loop
+	Death:
+		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+		TNT1 A 0 A_Stop
+		TNT1 A 0 A_TakeInventory("DeadLightCount",1,0,AAPTR_TARGET)
+		Goto "Super::Death"
+	Ender:
+		TNT1 A 0
+		Stop
+	}
+}
+
+Actor DeadLightWarp2 : DeadLightWarp
+{
+	WeaveIndexZ 21
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_GiveInventory("DeadLightCount2",1,AAPTR_TARGET)
+		TNT1 A 0 A_SetUserArray("user_angle",0,angle)
+		TNT1 A 0 A_SetUserArray("user_angle",1,user_angle[0]+3)
+		TNT1 A 0 A_SetUserArray("user_angle",2,user_angle[0]-3)
+		Goto PreMove
+	Warping:
+		X091 A 0 A_Explode(random(1,8),16,0)
+		X091 A 1 Light("DeadWhite") A_Weave(0,1,0,10) 	X091 A 0 A_SetAngle(user_angle[2])		X091 A 0 Light("DeadWhite") A_Warp(AAPTR_TARGET,92,0,32,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE|WARPF_USECALLERANGLE)
+		X091 B 0 A_Explode(random(1,8),16,0)
+		X091 B 1 Light("DeadRed") 	A_Weave(0,1,0,10)	X091 A 0 A_SetAngle(user_angle[2]-3)	X091 B 0 Light("DeadRed") A_Warp(AAPTR_TARGET,92,0,32,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE|WARPF_USECALLERANGLE)
+		X091 C 0 A_Explode(random(1,8),16,0)
+		X091 C 1 Light("DeadGreen") A_Weave(0,1,0,10) 	X091 A 0 A_SetAngle(user_angle[2]-6)	X091 C 0 Light("DeadGreen") A_Warp(AAPTR_TARGET,92,0,32,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE|WARPF_USECALLERANGLE)
+		X091 D 0 A_Explode(random(1,8),16,0)
+		X091 D 1 Light("DeadBlue") 	A_Weave(0,1,0,10) 	X091 A 0 A_SetAngle(user_angle[2]-9)	X091 D 0 Light("DeadBlue") A_Warp(AAPTR_TARGET,92,0,32,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE|WARPF_USECALLERANGLE)
+		TNT1 A 0 A_SetUserArray("user_angle",2,user_angle[2]-12)
+		TNT1 A 0 A_JumpIfInventory("PennywiseDead",1,"Death",AAPTR_TARGET)
+		TNT1 A 0 A_JumpIfInventory("PennywiseTeleporting",1,"Death",AAPTR_TARGET)
+		Loop
+	Death:
+		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+		TNT1 A 0 A_Stop
+		TNT1 A 0 A_TakeInventory("DeadLightCount2",1,0,AAPTR_TARGET)
+		Goto "DeadLight::Death"
+	}
+}
+
+Actor PennywiseDead : Inventory
+{
+	Inventory.Amount 1
+	Inventory.MaxAmount 1
+}
+
+Actor DeadLightCount : Inventory
+{
+	Inventory.Amount 1
+	Inventory.MaxAmount 4
+}
+
+Actor DeadLightCount2 : Inventory
+{
+	Inventory.Amount 1
+	Inventory.MaxAmount 4
+}
+
+Actor PennywiseTeleporting : Inventory
+{
+	Inventory.Amount 1
+	Inventory.MaxAmount 1
+}
+
+Actor PennywiseHurt
+{
+	+NOINTERACTION
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 1 A_PlaySound("Pennywise/pain",CHAN_VOICE,1,0)
+		Stop
+	}
+}
+
+//==============================================================================
+//	Pennywise the Dancing Clown
+//==============================================================================
+/*	Float... They aaaaall float... and when you're down here with ME, fat boy!
+	YOU...
+	FLOAT...
+	TOO.
+
+	Very little is known about Pennywise, except that he is a leader of a dark
+	realm equivalent to Hell, called the Clown Void that he made for himself.
+	Some say he rebelled against being captive after his defeat and sentencing
+	to Hell. However, it is	assumed that what the apostles of the Death Bringer 
+	do know, they refuse to speak about it, possibly due to Thanatos' contempt 
+	for the clown.
+	
+	His attempts to conquer the world and remake it for himself and his evil
+	spawn have also been met with fierce resistance against both armies of
+	Heaven and Hell themselves. It knows how to take control the slow and steady
+	route, plotting his schemes and time with his damned minions, which often
+	works to Its favor.
+	
+	Rumor has it that he also possesses a weapon that, while not very intuitive
+	by itself, holds a special ability to always damage enemies no matter what
+	state they are in, shield or no shield, along with elemental mixtures hidden
+	deep within the kernels. */
+
+Actor PennywiseMaster : Inventory
+{	Inventory.MaxAmount 1	}
+
+actor HTC2PennywiseTDC //Spider Mastermind
+{
+	DropItem "AEoDPopcornGunItem"
+	DropItem "MediumWeaponPower" 
+	var int user_time;
+	var int user_spincount;
+	var int user_neardeathlevel;
+	var int user_count;
+	var int user_engaged;
+	var int user_spawnspotset;
+	var int user_spawnerslaunched;
+	var int user_explocount;
+	Health 4000
+	Radius 20
+	Height 52
+	Speed 8
+	PainChance 200
+	PainChance "Forcer", 256
+	DamageFactor "ClownImmune", 0.0
+	Mass 0x7FFFFFFF
+	MONSTER 
+	minmissilechance 40
+	scale 0.6
+	+FLOORCLIP 
+	+NORADIUSDMG 
+	+FULLVOLACTIVE 
+	+FULLVOLDEATH 
+	+DONTBLAST 
+	+DONTMORPH 
+	+NOICEDEATH
+	//+NOTELEFRAG
+	+BOSS
+	+BOSSDEATH
+	+NOTELESTOMP
+	SeeSound "Pennywise/sightsound"
+	PainSound "Pennywise/painsound"//"PENHURT"	
+	DeathSound "Pennywise/painsound"
+	ActiveSound "Pennywise/activesound"//"ITACTIVE"
+	MeleeSound "imp/melee"
+	Obituary "%o now floats like a balloon thanks to Pennywise the Dancing Clown."
+	PainChance "Charm", 0
+	PainChance "Terror", 0
+	PainChance "Defile", 0
+	PainChance "Drain", 40
+	PainChance "Chaos", 255
+	DamageFactor "ChaosExpl1", 0
+	DamageFactor "ChaosExpl2", 0
+//Unholy
+	DamageFactor "Holy", 1.5
+	DamageFactor "Unholy", 0.5
+	DamageFactor "UnholyDisint", 0.5
+	DamageFactor "Fire", 0.75
+	DamageFactor "Ice", 0.75
+	DamageFactor "AEPoison", 0.75
+	DamageFactor "AEMagic", 0.75
+	States
+	{
+	Pain.Chaos:
+		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
+		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
+		Goto See
+	Pain.ChaosExpl1:
+		TNT1 A 0 A_ClearTarget
+		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
+		Goto Spawn
+	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
+	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
+	
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_GiveInventory("PennywiseMaster",1)
+		TNT1 A 0 A_SetUserVar("user_neardeathlevel",0)
+		TNT1 A 0 A_SetUserVar("user_engaged",0)
+		TNT1 A 0 A_SetUserVar("user_spincount",0)
+		N015 A 0 A_ChangeFlag("NODAMAGE",1)
+		N015 A 0 A_ChangeFlag("NOPAIN",1)
+		TNT1 A 0 A_SetUserVar("user_spawnerslaunched",0)
+	Idle:
+		NA15 J 10 A_Look
+		Loop
+	See:
+		NA15 QPONMLJKIHGFEDCB 2
+	WarpDeadlight:
+		TNT1 A 0 A_CustomMissile("DeadLightWarp",48,0,0,2)
+		TNT1 A 0 A_CustomMissile("DeadLightWarp",48,0,90,2)
+		TNT1 A 0 A_CustomMissile("DeadLightWarp",48,0,180,2)
+		TNT1 A 0 A_CustomMissile("DeadLightWarp",48,0,270,2)
+		TNT1 A 0 A_CustomMissile("DeadLightWarp2",48,0,0,2)
+		TNT1 A 0 A_CustomMissile("DeadLightWarp2",48,0,90,2)
+		TNT1 A 0 A_CustomMissile("DeadLightWarp2",48,0,180,2)
+		TNT1 A 0 A_CustomMissile("DeadLightWarp2",48,0,270,2)
+	Chasing:
+		N015 A 0 A_TakeInventory("PennywiseTeleporting",1000)
+		N015 A 0 A_ChangeFlag("NODAMAGE",1)
+		N015 A 0 A_ChangeFlag("NOPAIN",1)
+		N015 A 0 A_SetInvulnerable
+		N015 A 0 A_SetUserVar("user_spincount",0)
+		N015 A 0 A_JumpIf(user_neardeathlevel==2,"Chasing3")
+		N015 A 0 A_JumpIf(user_neardeathlevel==1,"Chasing2")
+		N015 AABBCCDD 3 A_FastChase
+		N015 D 0 A_JumpIf(user_time>=10000,"Chasing")
+		N015 D 0 A_SetUserVar("user_time",user_time+8)
+		Goto Chasing
+	Chasing2:
+		N015 A 0 A_TakeInventory("PennywiseTeleporting",1000)
+		N015 AABBCCDD 3 A_FastChase
+		N015 D 0 A_JumpIf(user_time>=10000,"Chasing2")
+		N015 D 0 A_SetUserVar("user_time",user_time+16)
+		Loop
+	Chasing3:
+		N015 A 0 A_TakeInventory("PennywiseTeleporting",1000)
+		N015 AAAAAABBBBBBCCCCCCDDDDDD 1 Light("MegaRedLight") A_FastChase
+		N015 D 0 A_JumpIf(user_time>=10000,"Chasing3")
+		N015 D 0 A_SetUserVar("user_time",user_time+8)
+		Loop
+	Pain.AntiClown:
+		"####" "#" 1 A_ChangeFlag("NOPAIN",1)
+		"####" "#" 0 A_ChangeFlag("NODAMAGE",0)
+		"####" "#" 0 A_UnsetInvulnerable
+		"####" "#" 0 A_DamageSelf(666,"None",DMSS_FOILINVUL|DMSS_NOFACTOR)
+		Goto Pain
+	Pain:
+		N015 F 0 A_SpawnItemEx("PennywiseHurt",0,0,40,0,0,0,0,32) //PlaySound("Pennywise/pain",CHAN_VOICE,1,0)
+		N015 F 0 A_JumpIf(user_neardeathlevel==2,"Pain.Berserker")
+		N015 F 0 A_JumpIf(health<=1000,"ModeSwitch")
+		N015 F 0 A_JumpIf(user_neardeathlevel==1,"NormalPain")
+		N015 F 0 A_JumpIf(health<=2000,"ModeSwitch")
+		Goto "NormalPain"
+	ModeSwitch:
+		N015 F 0 A_ChangeFlag("NODAMAGE",1)
+		N015 F 0 A_ChangeFlag("NOPAIN",1)
+		N015 F 0 A_SetInvulnerable
+		NB15 A 0 A_SpawnItemEx("EvilPain",0,0,0,0,0,0,0,32)
+		NB15 A 0 A_JumpIf(health>1000,"MS1")
+	MS2:
+		NB15 A 0 A_SetUserVar("user_neardeathlevel",2)
+		Goto MSC
+	MS1:
+		NB15 A 0 A_SetUserVar("user_neardeathlevel",1)
+		Goto MSC
+	MSC:
+		NB15 A 0 A_FaceTarget
+		NB15 ABABABABABABABABABAB 1 bright A_SetScale(scaleX-0.03125)
+		TNT1 A 35
+		N015 EEEEEEEEEEEEEEEEEEEE 1 bright A_SetScale(scaleX+0.03125)
+		N015 E 0 A_JumpIf(user_neardeathlevel==2,"Chasing3")
+		Goto Chasing2
+		
+/*	BerserkMode:
+		N015 F 0 A_ChangeFlag("NODAMAGE",1)
+		N015 F 0 A_ChangeFlag("NOPAIN",1)
+		N015 F 0 A_SetInvulnerable
+		NB15 A 0 A_SpawnItemEx("EvilPain",0,0,0,0,0,0,0,32)
+		NB15 A 0 A_SetUserVar("user_neardeathlevel",2)
+		NB15 A 0 A_FaceTarget
+		NB15 ABABABABABABABABABAB 1 bright A_SetScale(scaleX-0.03125)
+		TNT1 A 35
+		N015 EEEEEEEEEEEEEEEEEEEE 1 bright A_SetScale(scaleX+0.03125)
+		Goto Chasing3 */
+		
+	Pain.Berserker:
+		N015 E 0 A_ChangeFlag("NOPAIN",1)
+		N015 E 0 A_ChangeFlag("NODAMAGE",1)
+		N015 E 0 A_SetInvulnerable
+		TNT1 A 0 A_Jump(250,"NormalPain")
+		N015 E 0 A_UnSetInvulnerable
+		N015 E 0 A_ChangeFlag("NODAMAGE",0)
+		NB15 ABABABABABABABABABAB 1 bright A_SpawnItemEx("ClownFireSpawner3",0,0,0,0,0,0,0,32)
+		N015 E 0 A_GiveInventory("PowerDamageNegator",1)
+		N015 E 15 Light("MegaRedLight2") A_SetAngle(angle+45)
+		N015 E 12 Light("MegaRedLight2") A_SetAngle(angle+45)
+		N015 E 8 Light("MegaRedLight2") A_SetAngle(angle+45)
+		N015 E 6 Light("MegaRedLight2") A_SetAngle(angle+45)
+		N015 E 4 Light("MegaRedLight2") A_SetAngle(angle+45)
+		N015 E 3 Light("MegaRedLight2") A_SetAngle(angle+45)
+		N015 EEE 2 Light("MegaRedLight2") A_SetAngle(angle+45)
+	SpinningTime:
+		N015 E 1 Light("MegaRedLight2") A_SetAngle(angle+45)
+		N015 E 0 Light("MegaRedLight2") A_SpawnItemEx("ClownFireSpawner3",0,0,0,0,0,0,0,32,192)
+		N015 E 0 Light("MegaRedLight2") HealThing(random(1,2))
+		N015 E 0 Light("MegaRedLight2") A_SpawnItemEx("HTC2SkullSeeker666",25,0,32,9,0,0,random(0,359),48,192)
+		N015 E 0 Light("MegaRedLight2") A_SetUserVar("user_spincount",user_spincount+1)
+		N015 E 0 Light("MegaRedLight2") A_JumpIf(user_spincount>=800,1)
+		Loop
+		N015 E 0 A_GiveInventory("PennywiseHP",1000)//HealThing(1000)
+		Goto NormalPain
+	NormalPain:
+		N015 F 0 A_TakeInventory("PowerDamageNegator",1000)
+		N015 F 0 A_ChangeFlag("NODAMAGE",1)
+		N015 F 0 A_ChangeFlag("NOPAIN",1)
+		N015 F 0 A_SetInvulnerable
+		NB15 A 0 A_SpawnItemEx("EvilPain",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_GiveInventory("PennywiseTeleporting",1)
+		TNT1 A 0 A_JumpIf(user_neardeathlevel==2,"NormalPainLit")
+		NB15 ABABABABABABABABABAB 1 bright A_SetScale(scaleX-0.03125)
+		Goto "NormalPainCont"
+	NormalPainLit:
+		NB15 A 0 A_SpawnItemEx("EvilPain2",0,0,0,0,0,0,0,32)
+		NB15 ABABABABABABABABABAB 1 Light("MegaRedLight") bright A_SetScale(scaleX-0.03125)
+	NormalPainCont:
+		TNT1 A 0 A_SpawnItemEx("TeleportFog",0,0,32,0,0,0,0,32)
+		TNT1 FFFFF 0 A_CustomMissile("HTC2SkullSeeker666",32,0,random(-180, 180),2,0) //A_SpawnItemEx("ClownMinionSummon",0,0,30,0,0,0,0,48)
+		//No longer needed. This has been hardcoded into the monsters to always seek out
+		//Pennywise's targets.
+		//N015 F 0 A_RadiusGive("HTCChildRedirector",32767,RGF_NOTARGET|RGF_MONSTERS,1)
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_Wander
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_Wander
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_Wander
+		TNT1 A 0 A_TakeInventory("PennywiseTeleporting",1)
+		TNT1 A 0 A_SpawnItemEx("TeleportFog",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_FaceTarget
+		TNT1 AAAAAAAAAAAAAAAAAAAA 1 A_SpawnItemEx("ClownFireSpawner3",0,0,0,0,0,0,0,32)
+		N015 E 0 A_JumpIfInventory("DeadLightCount",1,5)
+		N015 E 0 A_CustomMissile("DeadLightWarp",48,0,0,2)
+		N015 E 0 A_CustomMissile("DeadLightWarp",48,0,90,2)
+		N015 E 0 A_CustomMissile("DeadLightWarp",48,0,180,2)
+		N015 E 0 A_CustomMissile("DeadLightWarp",48,0,270,2)
+		N015 E 0 A_JumpIfInventory("DeadLightCount2",1,5)
+		TNT1 A 0 A_CustomMissile("DeadLightWarp2",48,0,0,2)
+		TNT1 A 0 A_CustomMissile("DeadLightWarp2",48,0,90,2)
+		TNT1 A 0 A_CustomMissile("DeadLightWarp2",48,0,180,2)
+		TNT1 A 0 A_CustomMissile("DeadLightWarp2",48,0,270,2)
+		TNT1 A 0 A_JumpIf(user_neardeathlevel==2,"NPGL") //normal pain grow light
+		N015 EEEEEEEEEEEEEEEEEEEE 1 bright A_SetScale(scaleX+0.03125)
+		Goto Chasing
+	NPGL:
+		N015 EEEEEEEEEEEEEEEEEEEE 1 Light("MegaRedLight") bright A_SetScale(scaleX+0.03125)
+		Goto Chasing
+		/*
+	NormalPainLit:
+		N015 F 0 A_TakeInventory("PowerDamageNegator",1)
+		N015 F 0 A_ChangeFlag("NODAMAGE",1)
+		N015 F 0 A_ChangeFlag("NOPAIN",1)
+		N015 F 0 A_SetInvulnerable
+		NB15 A 0 A_SpawnItemEx("EvilPain",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_GiveInventory("PennywiseTeleporting",1)
+		NB15 ABABABABABABABABABAB 1 Light("MegaRedLight") bright A_SetScale(scaleX-0.03125)
+		TNT1 A 0 A_SpawnItemEx("TeleportFog",0,0,0,0,0,0,0,32)
+		TNT1 FFFFF 0 A_custommissile("HTC2SkullSeeker666",32,0,random(-180, 180),2,0)
+		N015 F 0 A_RadiusGive("HTCChildRedirector",32767,RGF_NOTARGET|RGF_MONSTERS,1)
+		TNT1 A 0 A_ChangeFlag("THRUACTORS",1)
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_Wander
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_Wander
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_Wander
+		TNT1 A 0 A_ChangeFlag("NOBLOCKMAP",0)
+		TNT1 A 0 A_ChangeFlag("THRUACTORS",0)
+		TNT1 A 0 A_TakeInventory("PennywiseTeleporting",1)
+		TNT1 A 0 A_SpawnItemEx("TeleportFog",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_FaceTarget
+		TNT1 AAAAAAAAAAAAAAAAAAAA 1 Light("MegaRedLight") A_SpawnItemEx("ClownFireSpawner3",0,0,0,0,0,0,0,32)
+		N015 E 0 A_JumpIfInventory("DeadLightCount",1,5)
+		N015 E 0 A_CustomMissile("DeadLightWarp",48,0,0,2)
+		N015 E 0 A_CustomMissile("DeadLightWarp",48,0,90,2)
+		N015 E 0 A_CustomMissile("DeadLightWarp",48,0,180,2)
+		N015 E 0 A_CustomMissile("DeadLightWarp",48,0,270,2)
+		N015 E 0 A_JumpIfInventory("DeadLightCount2",1,5)
+		TNT1 A 0 A_CustomMissile("DeadLightWarp2",48,0,0,2)
+		TNT1 A 0 A_CustomMissile("DeadLightWarp2",48,0,90,2)
+		TNT1 A 0 A_CustomMissile("DeadLightWarp2",48,0,180,2)
+		TNT1 A 0 A_CustomMissile("DeadLightWarp2",48,0,270,2)
+		N015 EEEEEEEEEEEEEEEEEEEE 1 Light("MegaRedLight") bright A_SetScale(scaleX+0.03125)
+		Goto Chasing*/
+    Missile:
+		N015 E 0 A_FaceTarget
+		N015 E 0 A_ChangeFlag("NODAMAGE",0)
+		N015 F 0 A_ChangeFlag("NOPAIN",0)
+		N015 E 0 A_UnSetInvulnerable
+		N015 E 0 A_JumpIfInventory("DeadLightCount",1,5)
+		N015 E 0 A_CustomMissile("DeadLightWarp",48,0,0,2)
+		N015 E 0 A_CustomMissile("DeadLightWarp",48,0,90,2)
+		N015 E 0 A_CustomMissile("DeadLightWarp",48,0,180,2)
+		N015 E 0 A_CustomMissile("DeadLightWarp",48,0,270,2)
+		N015 E 0 A_JumpIfInventory("DeadLightCount2",1,5)
+		TNT1 A 0 A_CustomMissile("DeadLightWarp2",48,0,0,2)
+		TNT1 A 0 A_CustomMissile("DeadLightWarp2",48,0,90,2)
+		TNT1 A 0 A_CustomMissile("DeadLightWarp2",48,0,180,2)
+		TNT1 A 0 A_CustomMissile("DeadLightWarp2",48,0,270,2)
+		N015 E 0 A_JumpIf(user_neardeathlevel>=1,"SpinningMissile")
+		N015 E 9 A_FaceTarget
+		N015 E 4 A_CustomMissile("Deadlight", 48, 0, 0,1) 
+		N015 E 9 A_FaceTarget 
+		Goto Chasing
+		N015 E 9 A_FaceTarget
+		N015 E 4 A_CustomMissile("Deadlight", 48, 0, 0,1)
+		N015 E 9 A_FaceTarget
+		Goto Chasing
+	SpinningMissile:
+		N015 E 0 A_FaceTarget
+		N015 EEEEEEEE 1 A_SetAngle(angle+45)
+		N015 E 0 A_FaceTarget
+		N015 EE 1 A_SpawnItemEx("ClownFireSpawner3",0,0,0,0,0,0,0,32)
+		N015 F 0 A_JumpIf(user_neardeathlevel==2,"SpinningMissileLit")
+		N015 F 0 A_CustomMissile("DeadLightFastSpawner1",48,0,0,CMF_AIMDIRECTION)
+		N015 F 0 A_CustomMissile("DeadLightFastSpawner2",48,0,0,CMF_AIMDIRECTION)
+		N015 E 8 A_SpawnItemEx("ClownFireSpawner3",0,0,0,0,0,0,0,32)
+		Goto Chasing
+	SpinningMissileLit:
+		N015 F 0 Light("MegaRedLight") A_FaceTarget
+		N015 F 0 A_CustomMissile("DeadLightFastSpawner1",48,0,0,CMF_AIMDIRECTION)
+		N015 F 0 A_CustomMissile("DeadLightFastSpawner2",48,0,0,CMF_AIMDIRECTION)
+		N015 E 8 Light("MegaRedLight") A_SpawnItemEx("ClownFireSpawner3",0,0,0,0,0,0,0,32)
+		Goto Chasing
+	Death:
+		N015 G 0 A_ChangeFlag("NOTIMEFREEZE",1)
+		N015 G 0 A_GiveInventory("PowerTimeStopBase",1,AAPTR_PLAYER1)
+		N015 G 0 A_GiveInventory("VictoryFlash",1,AAPTR_PLAYER1)
+		N015 G 0 A_PlaySound("Pennywise/DeathPop",CHAN_AUTO|CHAN_MAYBE_LOCAL|CHAN_NOPAUSE,1,0,ATTN_NONE)
+		N015 G 70
+		N015 G 0 A_TakeInventory("PowerTimeStopBase",1,0,AAPTR_PLAYER1)
+		N015 G 0 A_GiveInventory("PennywiseDead",1)
+		N015 G 0 A_KillChildren("Disintegrate")
+		N015 G 8 A_Scream
+		N015 GGGG 8
+		N015 H 8 A_SetUserVar("user_explocount",0)
+		N015 IJ 8
+		N015 K 0 A_KillChildren("Disintegrate")
+		N015 K 8 A_Fall 
+		N015 LLLLLLLL 2 A_SpawnItemEx("ClownFireSpawner2",0,0,0,0,0,0,0,32)
+		N015 MMMMMMMMM 2 A_SpawnItemEx("ClownFireSpawner2",0,0,0,0,0,0,0,32)
+		N015 NNNNNNNNNNN 2 A_SpawnItemEx("ClownFireSpawner2",0,0,0,0,0,0,0,32)
+		N015 OOOOOOOOOOOO 2 A_SpawnItemEx("ClownFireSpawner2",0,0,0,0,0,0,0,32) 
+		N015 PPPPPPPPPPPPPPPPPPPP 2 A_SpawnItemEx("ClownFireSpawner2",0,0,0,0,0,0,0,32)
+		N015 QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ 1 A_SpawnItemEx("ClownFireSpawner3",0,0,0,0,0,0,0,32)
+		N015 RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR 1 A_SpawnItemEx("ClownFireSpawner3",0,0,0,0,0,0,0,32)
+		N015 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS 1 A_SpawnItemEx("ClownFireSpawner3",0,0,0,0,0,0,0,32)
+		N015 TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT 1 A_SpawnItemEx("ClownFireSpawner3",0,0,0,0,0,0,0,32)
+		N015 UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU 1 A_SpawnItemEx("ClownFireSpawner3",0,0,0,0,0,0,0,32)
+		N015 VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV 1 A_SpawnItemEx("ClownFireSpawner3",0,0,0,0,0,0,0,32)
+		N015 WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW 1 A_SpawnItemEx("ClownFireSpawner3",0,0,0,0,0,0,0,32)
+		N015 XXXXXXXXXXXXXXXX 1 A_SpawnItemEx("ClownFireSpawner3",0,0,0,0,0,0,0,32)
+	DeathExplosions:
+		N015 X 2 A_SpawnItemEx("SpecialExploSpawner",random(0,100),0,random(0,115),0,0,0,random(0,359),32)//A_CustomMissile("GhoulSpecialExplo",0,0,0+random(0,360),2,0+random(0,90))
+		N015 X 0 Radius_Quake(2,35,0,120,0)
+		N015 X 0 A_SetUserVar("user_explocount",user_explocount+1)
+		N015 X 0 A_JumpIf(user_explocount>=112,1)
+		Loop
+		N015 Y 0 A_SetUserVar("user_explocount",0)
+	DeathExplosions2:
+		N015 Y 1 A_SpawnItemEx("SpecialExploSpawner",random(0,100),0,random(0,115),0,0,0,random(0,359),32)//A_CustomMissile("GhoulSpecialExplo",0,0,0+random(0,360),2,0+random(0,90))
+		N015 Y 0 Radius_Quake(2,35,0,120,0)
+		N015 Y 0 A_SetUserVar("user_explocount",user_explocount+1)
+		N015 Y 0 A_JumpIf(user_explocount>=350,1)
+		Loop
+		TNT1 A 0 A_PlaySound("other/gibdeath")
+		TNT1 A 0 A_PlaySound("Wheatley/Explosion",CHAN_VOICE,1,0,ATTN_NONE)
+		N015 YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY 1 A_SpawnItemEx("SpecialExploSpawner",random(0,100),0,random(0,115),0,0,0,random(0,359),32)
+		TNT1 A 0 A_SpawnItemEx("InquisitorExplosion",0,0,5,0,0,0,0,32)
+		//TNT1 A 0 A_SpawnItemEx("SpecialExploShockwave",0,0,16,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("QuakeGibDropper",0,0,random(20,40),0,0,0,0,32)
+		TNT1 AAAAAAAA 0 A_SpawnItemEx("GibDropper",random(0,20),0,random(30,80),0,0,0,0,32)
+		TNT1 AAA 35
+		TNT1 A 10 A_KillMaster
+      	Stop 
+    }
+}
+
+//First, make sure they haven't been converted to the player's side. Next, make 
+//sure their master is alive, and belongs to Pennywise only. Currently, there is
+//no A_RadiusGive flag to check for friend flags so it must be done here.
+Actor HTCChildRedirector : CustomInventory
+{
+	+INVENTORY.ALWAYSPICKUP
+	+INVENTORY.AUTOACTIVATE
+	States
+	{
+	Use:
+		TNT1 A 0 A_CheckFlag("FRIENDLY","End")
+		TNT1 A 0 A_JumpIfInventory("PennywiseMaster",1,1,AAPTR_MASTER)
+		Stop
+		TNT1 A 0 A_JumpIfInventory("PennywiseSpawned",1,2)
+		TNT1 A 0 A_GiveInventory("PennywiseSpawned",1)
+		TNT1 A 0 A_TransferPointer(AAPTR_MASTER,AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_TARGET)
+		Stop
+	End:
+		TNT1 A 0
+		Stop
+	}
+}
+
+Actor PennywiseSpawned : Inventory
+{	Inventory.MaxAmount 1	}
+
+ACTOR EvilPain
+{
+	+NOINTERACTION
+	RenderStyle None
+	States
+	{
+	Spawn:
+		TNT1 A 1 NoDelay A_PlaySound("bosshit")//("brain/pain")
+		Stop
+	}
+}
+
+Actor EvilPain2
+{
+	+NOINTERACTION
+	RenderStyle None
+	States
+	{
+	Spawn:
+		TNT1 A 1 NoDelay A_PlaySound("brain/pain")//("brain/pain")
+		Stop
+	}
+}
+
+Actor DeadlightFastSpawner1
+{
+	var int user_move;
+	Projectile
+	+SEEKERMISSILE
+	+NOINTERACTION
+	Speed 0
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SetUserVar("user_move",0)
+		TNT1 A 0 A_SeekerMissile(90,90)
+		TNT1 A 0 A_FaceTracer
+	Weaving:
+		TNT1 A 0 A_Weave(2,0,5,0)
+		TNT1 A 1 A_SpawnItemEx("DeadLightFast",0,0,0,cos(-pitch)*65,0,sin(-pitch)*65,0,32|SXF_TRANSFERPOINTERS|SXF_TRANSFERPITCH)
+		TNT1 A 0 A_SetUserVar("user_move",user_move+1)
+		TNT1 A 0 A_JumpIf(user_move>=(35*3),1)
+		Loop
+		TNT1 A 0
+		Stop
+	}
+}
+
+Actor DeadlightFastSpawner2 : DeadlightFastSpawner1
+{
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SetUserVar("user_move",0)
+	Weaving:
+		TNT1 A 0 A_SeekerMissile(90,90)
+		TNT1 A 0 A_FaceTracer
+		TNT1 A 0 A_Weave(-2,0,5,0)
+		TNT1 A 1 A_SpawnItemEx("DeadLightFast",0,0,0,cos(-pitch)*65,0,sin(-pitch)*65,0,32|SXF_TRANSFERPOINTERS|SXF_TRANSFERPITCH)
+		TNT1 A 0 A_SetUserVar("user_move",user_move+1)
+		TNT1 A 0 A_JumpIf(user_move>=(35*3),1)
+		Loop
+		TNT1 A 0
+		Stop
+	}
+}
+
+actor DeadlightFast : FastProjectile
+{
+    Radius 8
+    Height 6
+    Speed 65
+    Damage 3
+    Scale 1
+	+STRIFEDAMAGE
+    +SEEKERMISSILE
+    PROJECTILE
+    SeeSound ""
+    //DeathSound "TRANEXP"
+    States
+    {
+    Spawn:
+        X091 A 1 NoDelay bright A_SeekerMissile(2,4)
+        X091 B 1 bright A_SeekerMissile(2,4)
+        X091 C 1 bright A_SeekerMissile(2,4)
+        X091 D 1 bright A_SeekerMissile(2,4)
+        Loop
+    Death:
+        "####" "####################" 1 A_SetScale((ScaleX-0.05))
+        Stop
+    }
+}
+
+Actor DebuggerShot
+{
+	Projectile
+	+NOINTERACTION
+	+FORCERADIUSDMG
+	DamageType "Debugger"
+	States
+	{
+	Spawn:
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 1 A_Explode(1,2048,0,0,2048)
+		Stop
+	}
+}
+
+actor HTC2SkullSeeker666
+{
+    Radius 64
+    Height 18
+    Speed 9
+    Damage 0
+    Scale 0.5
+    PROJECTILE
+	+DONTREFLECT
+	+ALLOWBOUNCEONACTORS
+	+BOUNCEONWALLS
+	+BOUNCEONACTORS
+	+THRUACTORS
+    SeeSound ""	
+    DeathSound "MISCCHOOSER"
+    States
+    {
+    Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_Jump(192,1)
+		Stop
+		TNT1 A 0 A_PlaySound("brain/spit")
+        X131 ABAB 4 //A_SeekerMissile (5,20)
+    Death:
+		TNT1 A 0 A_Stop
+		TNT1 A 0 A_Scream
+		TNT1 A 0 A_SpawnItemEx("TeleportFog",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_SETMASTER)
+		//TNT1 A 0 A_RadiusGive("HTCChildRedirector",32767,RGF_MONSTERS,1)
+		TNT1 A 0 A_RadiusGive("ClownMinionTelefrag",64,RGF_MONSTERS,1)
+		TNT1 A 0 A_Jump(2,"BigBerthaSpawn")
+		TNT1 A 0 A_Jump(16,"BingoSpawn")
+		TNT1 A 0 A_Jump(64,"MegaBulbySpawn","MiniFluffySpawn")
+		TNT1 A 0 A_Jump(128,"ClownGhost2Spawn","BulbySpawn","BlackBearSpawn")
+		TNT1 A 0 A_Jump(255,"ClownGhostSpawn")
+		//TNT1 A 0 A_Jump(255,"PossessedBalloonSpawn")
+	ClownGhostSpawn:
+        TNT1 A 0 A_SpawnItemEx("HTC2DraedicClownGhost",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_SETMASTER)
+		TNT1 AA 0 A_SpawnItemEx("HTC2DraedicClownGhost",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_SETMASTER,192)
+		Stop
+	ClownGhost2Spawn:
+		TNT1 A 0 A_SpawnItemEx("HTC2VileClownGhost",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_SETMASTER)
+		Stop
+	PossessedBalloonSpawn:
+		TNT1 A 0 A_SpawnItemEx("HTC2PossessedBalloon",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_SETMASTER)
+		TNT1 AAAA 0 A_SpawnItemEx("HTC2PossessedBalloon",10,0,0,10,0,0,random(0,359),SXF_TRANSFERPOINTERS|SXF_SETMASTER,64)
+		Stop
+	BulbySpawn:
+		TNT1 A 0 A_SpawnItemEx("HTC2Bulby",15,0,0,10,0,0,0,SXF_TRANSFERPOINTERS|SXF_SETMASTER)
+		TNT1 A 0 A_SpawnItemEx("HTC2Bulby",15,0,0,10,0,0,180,SXF_TRANSFERPOINTERS|SXF_SETMASTER,128)
+		Stop
+	MegaBulbySpawn:
+		TNT1 A 0 A_SpawnItemEx("HTC2MegaBulby2",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_SETMASTER)
+		Stop
+	BlackBearSpawn:
+		TNT1 AAA 0 A_SpawnItemEx("HTC2BlackBear",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_SETMASTER)
+		TNT1 AAAAAA 0 A_SpawnItemEx("HTC2BlackBear",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_SETMASTER,192)
+		Stop
+	MiniFluffySpawn:
+		TNT1 A 0 A_SpawnItemEx("HTC2MiniFluffy",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_SETMASTER)
+		TNT1 A 0 A_SpawnItemEx("HTC2MiniFluffy",10,0,0,10,0,0,random(0,359),SXF_TRANSFERPOINTERS|SXF_SETMASTER,128)
+		TNT1 A 0 A_SpawnItemEx("HTC2MiniFluffy",-10,0,0,-10,0,0,random(0,359),SXF_TRANSFERPOINTERS|SXF_SETMASTER,192)
+		Stop
+	BingoSpawn:
+		TNT1 A 0 A_SpawnItemEx("HTC2Bingo",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_SETMASTER)
+		Stop
+	TinyBingoSpawn:
+		TNT1 A 0 A_SpawnItemEx("HTC2TinyBingo",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_SETMASTER)
+		TNT1 A 0 A_SpawnItemEx("HTC2TinyBingo",10,0,0,10,0,0,random(0,359),SXF_TRANSFERPOINTERS|SXF_SETMASTER,128)
+		TNT1 A 0 A_SpawnItemEx("HTC2TinyBingo",10,0,0,10,0,0,random(0,359),SXF_TRANSFERPOINTERS|SXF_SETMASTER,192)
+		Stop
+	JumpingSkullSpawn:
+		TNT1 A 0 A_SpawnItemEx("HTC2JumpingSkull",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_SETMASTER)
+		TNT1 AAAA 0 A_SpawnItemEx("HTC2JumpingSkull",10,0,0,10,0,0,random(0,359),SXF_TRANSFERPOINTERS|SXF_SETMASTER,128)
+        Stop
+	BigBerthaSpawn:
+		TNT1 A 0 A_SpawnItemEx("HTC2BigBertha",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_TRANSFERPOINTERS)
+		Stop
+    }
+}
+
+Actor ClownMinionTelefrag : CustomInventory
+{
+	+INVENTORY.ALWAYSPICKUP
+	+INVENTORY.AUTOACTIVATE
+	States
+	{
+	Use:
+		TNT1 A 0 A_JumpIfInventory("PennywiseSpawned",1,1)
+		Stop
+	Telefragit:
+		TNT1 A 0 A_Die("Telefrag")
+		Stop
+	}
+}
+
+Actor PowerDamageNegator : PowerProtection
+{
+	DamageFactor "Normal", 0.1
+}
+
+Actor PennywiseHP : HealthBonus
+{
+	Inventory.Amount 1
+	Inventory.MaxAmount 4000
+}
+
+Actor VictoryFlash : CustomInventory
+{
+	+NOTIMEFREEZE
+	+AUTOACTIVATE
+	States
+	{
+	Use:
+		TNT1 A 0 A_SetBlend("LightGreen",1,35)
+		Stop
+	}
+}
+
+Actor ClownFire
+{
+	Projectile
+	+NOINTERACTION
+	RenderStyle Translucent
+	Alpha 0.75
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_Jump(128,2)
+		TNT1 A 0 A_FireCrackle
+		FIRE AAABBBCCCDDDEEEFFFGGGHHH 1 bright A_ScaleVelocity(0.8)
+		Stop
+	}
+}
+
+Actor ClownFire1 : ClownFire
+{
+	Translation "0:255=%[0,0,0]:[1,0,0]"
+}
+
+Actor ClownFire2 : ClownFire
+{
+	Translation "0:255=%[0,0,0]:[0.75,0.25,0]"
+}
+
+Actor ClownFire3 : ClownFire
+{
+	Translation "0:255=%[0,0,0]:[0.5,0.5,0]"
+}
+
+Actor ClownFire4 : ClownFire
+{
+	Translation "0:255=%[0,0,0]:[0.25,0.75,0]"
+}
+
+Actor ClownFire5 : ClownFire
+{
+	Translation "0:255=%[0,0,0]:[0,1,0]"
+}
+
+Actor ClownFire6 : ClownFire
+{
+	Translation "0:255=%[0,0,0]:[0,0.75,0.25]"
+}
+
+Actor ClownFire7 : ClownFire
+{
+	Translation "0:255=%[0,0,0]:[0,0.5,0.5]"
+}
+
+Actor ClownFire8 : ClownFire
+{
+	Translation "0:255=%[0,0,0]:[0,0.25,0.75]"
+}
+
+Actor ClownFire9 : ClownFire
+{
+	Translation "0:255=%[0,0,0]:[0,0,1]"
+}
+
+Actor ClownFire10 : ClownFire
+{
+	Translation "0:255=%[0,0,0]:[0.25,0,0.75]"
+}
+
+Actor ClownFire11 : ClownFire
+{
+	Translation "0:255=%[0,0,0]:[0.5,0,0.5]"
+}
+
+Actor ClownFire12 : ClownFire
+{
+	Translation "0:255=%[0,0,0]:[0.75,0,0.25]"
+}
+
+Actor ClownFireSpawner
+{
+	+NOINTERACTION
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_Jump(256,"F1","F2","F3","F4","F5","F6","F7","F8","F9","F10","F11","F12")
+	F1:
+		TNT1 A 0 A_SpawnItemEx("ClownFire1",random(0,20),0,0,random(3,15),0,0,random(0,359),32)
+		Stop
+	F2:
+		TNT1 A 0 A_SpawnItemEx("ClownFire2",random(0,20),0,0,random(3,15),0,0,random(0,359),32)
+		Stop
+	F3:
+		TNT1 A 0 A_SpawnItemEx("ClownFire3",random(0,20),0,0,random(3,15),0,0,random(0,359),32)
+		Stop
+	F4:
+		TNT1 A 0 A_SpawnItemEx("ClownFire4",random(0,20),0,0,random(3,15),0,0,random(0,359),32)
+		Stop
+	F5:
+		TNT1 A 0 A_SpawnItemEx("ClownFire5",random(0,20),0,0,random(3,15),0,0,random(0,359),32)
+		Stop
+	F6:
+		TNT1 A 0 A_SpawnItemEx("ClownFire6",random(0,20),0,0,random(3,15),0,0,random(0,359),32)
+		Stop
+	F7:
+		TNT1 A 0 A_SpawnItemEx("ClownFire7",random(0,20),0,0,random(3,15),0,0,random(0,359),32)
+		Stop
+	F8:
+		TNT1 A 0 A_SpawnItemEx("ClownFire8",random(0,20),0,0,random(3,15),0,0,random(0,359),32)
+		Stop
+	F9:
+		TNT1 A 0 A_SpawnItemEx("ClownFire9",random(0,20),0,0,random(3,15),0,0,random(0,359),32)
+		Stop
+	F10:
+		TNT1 A 0 A_SpawnItemEx("ClownFire10",random(0,20),0,0,random(3,15),0,0,random(0,359),32)
+		Stop
+	F11:
+		TNT1 A 0 A_SpawnItemEx("ClownFire11",random(0,20),0,0,random(3,15),0,0,random(0,359),32)
+		Stop
+	F12:
+		TNT1 A 0 A_SpawnItemEx("ClownFire12",random(0,20),0,0,random(3,15),0,0,random(0,359),32)
+		Stop
+	}
+}
+
+Actor ClownFireSpawner2
+{
+	Projectile
+	+NOINTERACTION
+	var int user_count;
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SetUserVar("user_count",0)
+	Picker:
+		TNT1 A 0 A_JumpIf(user_count<=7,1)
+		Stop
+		TNT1 A 0 A_JumpIf(user_count==1,2)
+		TNT1 A 0 A_Jump(128,"CountPlus")
+		TNT1 A 0 A_Jump(256,"F1","F2","F3","F4","F5","F6","F7","F8","F9","F10","F11","F12")
+	F1:
+		TNT1 A 0 A_SpawnItemEx("ClownFire1",random(0,40),0,random(0,10),random(3,15),0,0,random(0,359),32)
+		Goto CountPlus
+	F2:
+		TNT1 A 0 A_SpawnItemEx("ClownFire2",random(0,40),0,random(0,10),random(3,15),0,0,random(0,359),32)
+		Goto CountPlus
+	F3:
+		TNT1 A 0 A_SpawnItemEx("ClownFire3",random(0,40),0,random(0,10),random(3,15),0,0,random(0,359),32)
+		Goto CountPlus
+	F4:
+		TNT1 A 0 A_SpawnItemEx("ClownFire4",random(0,40),0,random(0,10),random(3,15),0,0,random(0,359),32)
+		Goto CountPlus
+	F5:
+		TNT1 A 0 A_SpawnItemEx("ClownFire5",random(0,40),0,random(0,10),random(3,15),0,0,random(0,359),32)
+		Goto CountPlus
+	F6:
+		TNT1 A 0 A_SpawnItemEx("ClownFire6",random(0,40),0,random(0,10),random(3,15),0,0,random(0,359),32)
+		Goto CountPlus
+	F7:
+		TNT1 A 0 A_SpawnItemEx("ClownFire7",random(0,40),0,random(0,10),random(3,15),0,0,random(0,359),32)
+		Goto CountPlus
+	F8:
+		TNT1 A 0 A_SpawnItemEx("ClownFire8",random(0,40),0,random(0,10),random(3,15),0,0,random(0,359),32)
+		Goto CountPlus
+	F9:
+		TNT1 A 0 A_SpawnItemEx("ClownFire9",random(0,40),0,random(0,10),random(3,15),0,0,random(0,359),32)
+		Goto CountPlus
+	F10:
+		TNT1 A 0 A_SpawnItemEx("ClownFire10",random(0,40),0,random(0,10),random(3,15),0,0,random(0,359),32)
+		Goto CountPlus
+	F11:
+		TNT1 A 0 A_SpawnItemEx("ClownFire11",random(0,40),0,random(0,10),random(3,15),0,0,random(0,359),32)
+		Goto CountPlus
+	F12:
+		TNT1 A 0 A_SpawnItemEx("ClownFire12",random(0,40),0,random(0,10),random(3,15),0,0,random(0,359),32)
+		Goto CountPlus
+	CountPlus:
+		TNT1 A 0 A_SetUserVar("user_count",user_count+1)
+		Goto Picker
+	}
+}
+
+Actor ClownFireSpawner3 : ClownFireSpawner2
+{
+	States
+	{
+	Picker:
+		TNT1 A 0 A_JumpIf(user_count<=3,1)
+		Stop
+		TNT1 A 0 A_JumpIf(user_count==1,2)
+		TNT1 A 0 A_Jump(128,"CountPlus")
+		TNT1 A 0 A_Jump(256,"F1","F2","F3","F4","F5","F6","F7","F8","F9","F10","F11","F12")
+		Goto F1
+	}
+}
+
+actor Deadlight2
+{
+	scale 2
+	Speed 1
+	RENDERSTYLE Translucent
+	+NOINTERACTION
+        ALPHA 0.05
+	PROJECTILE
+	States
+    	{
+   	Spawn:
+   	  X086 ABCDCB 1
+   	  X086 ABCDCB 2
+   	  X086 ABCDCB 3
+   	  X086 ABCDCB 3
+   	  X086 ABCD 4	
+   	  Stop
+   	Death:
+          X086 ABCD 4 Bright 
+          Stop
+        }
+}		
+
+//==============================================================================
+//==============================================================================
+//EFFECTS AND CRAP HERE!
+//==============================================================================
+//==============================================================================
+
+actor Ghost2Ball
+{
+    Radius 8
+    Height 6
+    Speed 10
+    Damage 10
+    scale 1
+    //+SEEKERMISSILE 
+    PROJECTILE
+	+MTHRUSPECIES
+    ALPHA 0.8
+    SeeSound "BULBEXP2"
+    DeathSound "imp/shotx"
+    States
+    {
+    Spawn:
+        X097 A 2 bright
+        Goto Spawn
+    Death:
+        X097 B 0 Bright A_Scream
+        //X097 B 0 Bright A_Fall
+        //X097 B 4 Bright A_CustomMissile("HellFire", 0, 0, 0)
+        X097 B 0 Bright A_CustomMissile("Sparkles", 8, 0, random(-180, 180), 2, random(-180, 180))
+        X097 B 0 Bright A_CustomMissile("Sparkles", 8, 0, random(-180, 180), 2, random(-180, 180))
+        X097 B 0 Bright A_CustomMissile("Sparkles", 8, 0, random(-180, 180), 2, random(-180, 180))
+        X097 B 0 Bright A_CustomMissile("Sparkles", 8, 0, random(-180, 180), 2, random(-180, 180))
+        X097 B 0 Bright A_CustomMissile("Sparkles", 8, 0, random(-180, 180), 2, random(-180, 180))
+        X097 B 0 Bright A_CustomMissile("Sparkles", 8, 0, random(-180, 180), 2, random(-180, 180))
+        X097 C 2 Bright //A_CustomMissile("HellFire", 0, -32, -300)
+        X097 CCCCCCCCCCC 0 Bright A_CustomMissile("Sparkles", 8, 0, random(-180, 180), 2, random(-180, 180))
+        X097 C 2 Bright //A_CustomMissile("HellFire", 0, 32, -120)
+        X097 CCCCCCCCCCC 0 Bright A_CustomMissile("Sparkles", 8, 0, random(-180, 180), 2, random(-180, 180))
+        X097 D 4 Bright 
+        X097 DDDDDDDDDD 0 Bright A_CustomMissile("Sparkles", 8, 0, random(-180, 180), 2, random(-180, 180))
+        X097 EEEEE 0 Bright A_CustomMissile("Sparkles", 8, 0, random(-180, 180), 2, random(-180, 180))
+        X097 E 4 Bright 
+        Stop      
+    }
+}
+actor MyBall2
+{
+    Radius 8
+    Height 6
+    Speed 10
+    Damage 3
+    scale 0.8
+    //+SEEKERMISSILE
+    PROJECTILE
+    ALPHA 0.8
+    SeeSound "imp/attack"
+    DeathSound "CBLAST1"
+    States
+    {
+    Spawn:
+        X128 AB 0   
+        X128 AB 0   
+        X128 AB 2 bright
+        Goto Spawn + 2
+    Death:
+        X128 C 4 Bright A_Scream
+  	X128 DDDDDDDDDDDD 0 A_CustomMissile("Sparkles", 8, 0, random(-180, 180), 2, random(-180, 180))
+        X128 D 4 Bright A_Fall
+        X128 E 4 Bright 
+        X128 EEEEEEEEEEEEE 0 A_CustomMissile("Sparkles", 8, 0, random(-180, 180), 2, random(-180, 180))
+        X128 FFFFFFFFFF 0 A_CustomMissile("Sparkles", 8, 0, random(-180, 180), 2, random(-180, 180))
+        X128 F 4 A_CustomMissile("Sparkles", 8, 0, random(-180, 180), 2, random(-180, 180))
+        X128 G 4 A_CustomMissile("Sparkles", 8, 0, random(-180, 180), 2, random(-180, 180))
+        X128 GGGGGGG 0 A_CustomMissile("Sparkles", 8, 0, random(-180, 180), 2, random(-180, 180))
+        X128 H 4 
+        X128 I 4 
+        Stop
+    }
+}
+ACTOR Sparkles
+{   
+	Radius 5
+	Height 5
+	Speed 10
+	Projectile
+	-NOGRAVITY
+	+DONTSPLASH
+	SCALE 0.25
+	States
+	{
+	Spawn:
+		X091 ABCDABCDABCDABCDABCD 1 Bright 
+		Stop
+ 	death:
+ 		X091 E 2 A_Scream
+       		X091 F 2 A_Fall
+       		X091 GHI 2
+ 		Stop
+	}
+} 
+
+ACTOR JSkull_Image1
+{    
+	Speed 8
+	+FloatBob +NOGRAVITY 
+	+NOINTERACTION
+	MELEEDAMAGE 1
+	RENDERSTYLE Translucent
+	ALPHA 0.67
+	States
+	{
+	Spawn:
+		N024 A 60 A_Look
+		N024 A 0 A_Jump(200,2)  
+		Stop
+		Loop
+	See:
+		N024 ABCBABCBABCB  2 A_Chase
+		N024 A 0 A_CustomMissile("JSkull_Image2", 0, 0, 0) 
+		Stop
+	Melee:
+		N024 A 3 A_FaceTarget 
+		N024 C 4 A_MeleeAttack
+		STOP 
+	}
+}
+ACTOR JSkull_Image2
+{    
+	Speed 8
+	+FloatBob +NOGRAVITY 
+	+NOINTERACTION
+	MELEEDAMAGE 1
+	RENDERSTYLE Translucent
+	ALPHA 0.5
+	States
+	{
+	Spawn:
+		N024 A 60 A_Look
+		N024 A 0 A_Jump(200,2)  
+		Stop
+		Loop
+	See:
+		N024 ABCBABCBABCB  2 A_Chase
+		N024 A 0 A_CustomMissile("JSkull_Image3", 0, 0, 0) 
+		Stop
+	Melee:
+		N024 A 3 A_FaceTarget 
+		N024 C 4 A_MeleeAttack
+		STOP 
+	}
+}
+ACTOR JSkull_Image3
+{    
+	Speed 8
+	+FloatBob +NOGRAVITY 
+	+NOINTERACTION
+	MELEEDAMAGE 1
+	RENDERSTYLE Translucent
+   	ALPHA 0.33
+	States
+	{
+	Spawn:
+		N024 A 60 A_Look
+		N024 A 0 A_Jump(200,2)  
+		Stop
+		Loop
+	See:
+		N024 ABCBABCBABCB  2 A_Chase
+		Stop
+	Melee:
+		N024 A 3 A_FaceTarget 
+		N024 C 4 A_MeleeAttack
+		STOP 
+	}
+}
+
+actor PennywiseHead2 
+{ 
+	Health 2
+	Speed 2 
+	+FloatBob +NOGRAVITY 
+	+NOINTERACTION
+	MELEEDAMAGE 1
+	RENDERSTYLE Translucent
+	ALPHA 0.25
+	scale 0.25
+	MeleeSound ""
+	Obituary "%o got killed by an evil spirit." 
+	States 
+	{ 
+	Spawn: 
+		N011 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFGHIJKLMN 4  A_Look
+		Stop
+	See: 
+		N011 ADED 3 A_Chase
+		N011 ADED 3 A_CStaffMissileSlither 
+		N011 ADED 3  A_BishopMissileWeave
+		N011 ADED 3 A_Chase
+		N011 ADED 3  A_CStaffMissileSlither
+		N011 ADED 3 A_Wander
+		N011 ADED 3  A_BishopMissileWeave
+		N011 ADED 3  A_CStaffMissileSlither
+		N011 ADED 3 A_Chase
+		N011 ADED 3  A_BishopMissileWeave
+		N011 ADED 3 A_Wander
+		N011 ADED 3  A_CStaffMissileSlither
+		N011 FGHIJKLMN 4
+		Stop
+	Melee:
+		N011 D 4 A_FaceTarget  
+		N011 E 3 A_FaceTarget 
+		N011 D 3 A_MeleeAttack
+		N011 A 3 A_FaceTarget 
+		N011 FGHIJKLMN 4
+		Stop
+	}
+}
+
+actor RevTrail
+{
+    PROJECTILE
+    RENDERSTYLE ADD
+    +NOCLIP
+	+NOINTERACTION
+    Scale .5
+    ALPHA 0.4
+    States
+    {
+    Spawn:
+        RAIN B 0
+        X139 EEDDCCBBAA 2 Bright
+        Stop
+    }
+}
+actor RFlame
+{
+    +NOCLIP
+    Speed 0
+    PROJECTILE
+	+NOINTERACTION
+    RENDERSTYLE ADD
+    ALPHA 0.4
+    Scale .8
+    SeeSound ""
+    DeathSound ""
+    MissileHeight 0
+    States
+    {
+    Spawn:
+        X130 AB 4 Bright A_CustomMissile("RevTrail", 15, 0, 0, 1)
+        stop
+    Death:
+        X130 A 1 A_Scream
+        X130 A 1 A_Fall
+        stop
+    }
+}
+
+actor HappyCloud
+{
+	var int user_count;
+    Radius 32 
+    Height 32 
+    Speed 3 
+    Damage (random(0,1))
+    +STRIFEDAMAGE 
+    +RIPPER
+	+RANDOMIZE
+	+DONTSPLASH
+    PROJECTILE 
+    +BLOODLESSIMPACT
+    RENDERSTYLE Translucent 
+    ALPHA 0.3
+	Scale 0
+    States 
+    { 
+    Spawn: 
+        X132 A 0
+		X132 AAAAAAAAAAAAAAAAAA 1 A_SetScale((ScaleX+0.03))
+	Moving:
+		X132 AAA 1 A_SetScale((ScaleX+0.02))
+		X132 AA 1 A_SetScale((ScaleX+0.01))
+		X132 A 15
+		X132 AA 1 A_SetScale((ScaleX-0.01))
+		X132 AAA 1 A_SetScale((ScaleX-0.02))
+		X132 AAAAAAAA 1 A_SetScale((ScaleX-0.03))
+		X132 AAA 1 A_SetScale((ScaleX-0.02))
+		X132 AA 1 A_SetScale((ScaleX-0.01))
+		X132 A 15
+		X132 AA 1 A_SetScale((ScaleX+0.01))
+		X132 AAA 1 A_SetScale((ScaleX+0.02))
+		X132 AAAAAAAA 1 A_SetScale((ScaleX+0.03))
+		X132 A 0 A_SetUserVar("user_count",user_count+1)
+		X132 A 0 A_JumpIf(user_count>=random(5,8),"End")
+        Loop
+	Death:
+	End:
+		X132 AAAAAAAAAA 1 A_SetScale((ScaleX-0.01))
+		X132 AAAAA 1 A_SetScale((ScaleX-0.02))
+	Shrink:
+		X132 A 1 A_SetScale((ScaleX-0.04))
+		X132 A 0 A_JumpIf(ScaleX<=(0.00),1)
+		Loop
+		TNT1 A 0
+		Stop
+    } 
+} 
+
+//=========================================================================
+actor ZGut
+{
+    +DOOMBOUNCE
+    Speed 2
+    scale 1.0
+    States
+    {
+    Spawn:
+        PUDL AAAAABBBBCCCC 5
+        Stop
+    }
+}
+//=========================================================================
+actor SkullSeeker
+{
+    Radius 8
+    Height 6
+    Speed 9
+    Damage 6
+    Scale 0.3
+    +SEEKERMISSILE
+    PROJECTILE
+    //RENDERSTYLE ADD
+    //ALPHA 0.67
+    SeeSound "BHIT5"
+    DeathSound "BHIT3"
+    States
+    {
+    Spawn:
+        X131 AB 4 A_SeekerMissile (5,20)
+        Loop
+    Death:
+        X131 CDEFG 4 Bright
+        Stop
+    }
+}
+actor SkullSeeker2 : SkullSeeker
+{
+	Damage 2
+    SeeSound "X131ATT"
+    +MTHRUSPECIES
+    States
+    {
+    Spawn:
+        X131 AB 4 A_SeekerMissile (5,20)
+        Loop
+    Death:
+        X131 CDEFG 4 Bright
+        Stop
+    }
+}
+
+//==============================================================================
+actor BSplatter
+{   
+    +Nogravity
+    +NOCLIP
+    States
+    {
+    Spawn:
+        BBLD ABCDE 4
+        Stop
+    }
+}
+actor MyBall
+{
+    Radius 8
+    Height 6
+    Speed 15
+    Damage 1
+    scale 0.5
+    //+SEEKERMISSILE
+    PROJECTILE
+    ALPHA 0.8
+    SeeSound "TINY"
+    DeathSound "imp/shotx"
+    States
+    {
+    Spawn:
+        X127 AB 0 A_SeekerMissile (10,10)  
+        X127 AB 0   
+        X127 AB 2 bright A_CStaffMissileSlither 
+        Goto Spawn + 2
+    Death:
+        X127 C 4 Bright A_Scream
+        X127 D 4 Bright A_Fall
+        X127 E 4 Bright 
+        Stop
+    }
+}
+actor BulbyBall
+{
+    Radius 8
+    Height 6
+    Speed 10
+    Damage 2
+    //+SEEKERMISSILE
+    PROJECTILE
+    ALPHA 0.8
+    SeeSound ""
+    DeathSound "BULBEXP"
+    ExplosionRadius 48
+    ExplosionDamage 16
+    States
+    {
+    Spawn:
+        X100 A 2 bright A_CustomMissile("bsmoke", 6, 0, 0, 0)
+        X100 A 2 bright A_CustomMissile("bsmoke", 6, 0, 0, 0) 
+        X100 B 2 bright A_CustomMissile("bsmoke", 6, 0, 0, 0)
+        X100 B 2 bright A_CustomMissile("bsmoke", 6, 0, 0, 0)
+        X100 C 2 bright A_CustomMissile("bsmoke", 6, 0, 0, 0)
+        X100 C 2 bright A_CustomMissile("bsmoke", 6, 0, 0, 0)
+        X100 B 2 bright A_CustomMissile("bsmoke", 6, 0, 0, 0)
+        X100 B 2 bright A_CustomMissile("bsmoke", 6, 0, 0, 0)
+        Loop
+    Death:
+    	X100 D 1 Bright A_Fall
+        X100 D 4 Bright A_Explode
+        X100 E 4 Bright A_Scream
+        X100 FG 4 Bright 
+        Stop
+    }
+}
+actor BulbyBall2
+{
+    Radius 8
+    Height 6
+    Speed 10
+    Damage 3
+    scale .9
+    +SEEKERMISSILE 
+    PROJECTILE
+    ALPHA 0.8
+    DeathSound "BULBEXP"
+    ExplosionRadius 64
+    ExplosionDamage 24
+    States
+    {
+    Spawn:
+    	X100 A 2 A_SeekerMissile (5,5)
+    	X100 A 2 bright A_CustomMissile("bsmoke", 6, 0, 0, 1)
+        X100 B 2 bright A_CustomMissile("bsmoke", 6, 0, 0, 1)
+        X100 B 2 bright A_CustomMissile("bsmoke", 6, 0, 0, 1) 
+        X100 C 2 bright A_CustomMissile("bsmoke", 6, 0, 0, 1)
+        X100 C 2 bright A_CustomMissile("bsmoke", 6, 0, 0, 1)
+        X100 B 2 bright A_CustomMissile("bsmoke", 6, 0, 0, 1)
+        X100 B 2 bright A_CustomMissile("bsmoke", 6, 0, 0, 1) 
+        Loop
+    Death:
+    	X100 D 1 Bright A_Fall
+        X100 D 4 Bright A_Explode
+        X100 E 4 Bright A_Scream
+        X100 FG 4 Bright 
+        Stop
+    }
+}
+actor BulbyBall3
+{
+    Radius 16
+    Height 16
+    Speed 12
+    Damage 3
+    scale 1.4
+    +SEEKERMISSILE
+    PROJECTILE
+    ALPHA 0.8
+    SeeSound "GHSTATT"
+    DeathSound "BULBEXP"
+    ExplosionRadius 96
+    ExplosionDamage 32
+    States
+    {
+    Spawn:
+    	X100 A 2 A_SeekerMissile (10,10)
+    	X100 A 2 bright A_CustomMissile("bsmoke", 6, 0, 0, 1)
+        X100 B 2 bright A_CustomMissile("bsmoke", 6, 0, 0, 1)
+        X100 B 2 bright A_CustomMissile("bsmoke", 6, 0, 0, 1) 
+        X100 C 2 bright A_CustomMissile("bsmoke", 6, 0, 0, 1)
+        X100 C 2 bright A_CustomMissile("bsmoke", 6, 0, 0, 1)
+        X100 B 2 bright A_CustomMissile("bsmoke", 6, 0, 0, 1)
+        X100 B 2 bright A_CustomMissile("bsmoke", 6, 0, 0, 1) 
+        Loop
+    Death:
+    	X100 D 1 Bright A_Fall
+        X100 D 4 Bright A_Explode
+        X100 E 4 Bright A_Scream
+        X100 FG 4 Bright 
+        Stop
+    }
+}
+
+actor bsmoke
+{
+    PROJECTILE
+    RENDERSTYLE ADD
+    +NOINTERACTION
+    Scale 1.0
+    ALPHA 0.4
+    States
+    {
+    Spawn:
+        RAIN A 4 A_Look 
+        X134 CBA 7 
+        Stop
+    }
+}
+
+actor MyBall3
+{
+    Radius 8
+    Height 6
+    Speed 5
+    Damage 4
+    scale 1.0
+    +SEEKERMISSILE
+    PROJECTILE
+    ALPHA 0.8
+    SeeSound "imp/attack"
+    DeathSound "EXPLODE"
+    ExplosionRadius 48
+    ExplosionDamage 20
+    States
+    {
+    Spawn:
+    	X128 A 2 A_SeekerMissile (5,5)
+        X128 B 2 bright A_CustomMissile("RevTrail", 0, 0, 0, 1)
+        
+        Loop
+    Death:
+        X129 A 4 Bright A_Scream
+        X129 B 4 Bright A_Fall
+        X129 C 4 Bright 
+        X129 DEFGH 4
+        Stop
+    }
+}
+
+actor ZGut3
+{
+    +DOOMBOUNCE
+    Radius 2
+    Height 2
+    Speed 2
+    scale 0.4
+    States
+    {
+    Spawn:
+        GUTT AABBCCDDEEFFGGFFGGHHGGHHGGHHGG 5
+        GUTT HHHH 30
+        Stop
+    }
+}
+
+actor ZGut2
+{
+    +DOOMBOUNCE
+    Radius 2
+    Height 2
+    Speed 2
+    scale 0.4
+    States
+    {
+    Spawn:
+        GUT2 AABBCCDDEEFFGGFFGGFFGGFFGGFF 5
+        GUT2 GGGG 30
+        Stop
+    }
+}
+
+actor SpiralBall
+{
+    Radius 8
+    Height 6
+    Speed 14
+    Damage 5
+    scale 1
+    +SEEKERMISSILE +FloatBob 
+    PROJECTILE
+    ALPHA 0.8
+    SeeSound "TINY"
+    DeathSound "imp/shotx"
+    States
+    {
+    Spawn:
+        X127 AB 1 bright A_CStaffMissileSlither 
+        Goto Spawn
+     Death:
+        X127 C 4 Bright A_Scream
+        X127 D 4 Bright A_Fall
+        X127 E 4 Bright 
+        Stop
+    }
+}
+
+ACTOR ClownSpark
+{   
+	renderstyle add
+	Radius 5
+	Height 5
+	Speed 5
+	Projectile
+	+NOINTERACTION
+	SCALE 0.6
+	States
+	{
+	Spawn:
+		X092 AAAAAAAAAAAAAAAAAAA 2 Bright 
+		Stop
+ 	death:
+ 		X139 A 4
+ 		Stop
+	}
+} 
+ACTOR SoulAttack
+{   
+	renderstyle add
+	Radius 6
+	Height 10
+	Speed 6
+	Damage 5
+	+Missile
+	+lowgravity
+	+NoBlockmap
+	+NoTeleport
+	+NODAMAGETHRUST
+	RENDERSTYLE Translucent
+  	ALPHA 0.5
+	SCALE 0.6
+	States
+	{
+	Spawn:
+		Seek AAAAAAAAAAAAAAAAAAAAAA 2 Bright 
+		X129 B 1 Bright 
+		X129 A 3 Bright A_Scream
+        	X129 H 3 Bright A_Fall
+		Stop
+ 	death:
+ 		X129 B 1 Bright 
+		X129 A 3 Bright A_Scream
+		X129 H 3 Bright A_Fall
+ 		Stop
+	}
+} 
+ACTOR BloodSpeck1
+{   
+	Radius 5
+	Height 5
+	Speed 5
+	scale 0.75
+	DontHurtShooter
+        //RENDERSTYLE Translucent
+  	//ALPHA 0.67
+	//+Missile
+	+lowgravity
+	+NoBlockmap
+	+NoTeleport
+	+NOCLIP
+	+NODAMAGETHRUST
+	-ACTIVATEIMPACT
+	States
+	{
+	Spawn:
+		BDRP CCCCCCCCCCCCCCCCBBBBBBBBBBBBBBBBBBBBBBBAAAAAAAAAAAAAAAAAAAA 2
+		BDRP AAAAAAAAAAAAAAAAAAA 2
+		Stop
+ 	death:
+ 		BDRP A 4
+ 		Stop
+	}
+} 
+ACTOR BloodSpeck2 : BloodSpeck1
+{   
+	States
+	{
+	Spawn:
+		BDRP BBBBBBBBBBBBBBBBBBB 2
+		BDRP BBBBBBBBBBBBBBBBBBB 2
+		Stop
+ 	death:
+ 		BDRP B 4
+ 		Stop
+	}
+} 
+ACTOR BloodSpeck3 : BloodSpeck1
+{   
+	States
+	{
+	Spawn:
+		BDRP CCCCCCCCCCCCCCCCCCC 2
+		BDRP CCCCCCCCCCCCCCCCCCC 2
+		Stop
+ 	death:
+ 		BDRP C 4 
+ 		Stop
+	}
+} 
+actor FlyingGut
+{
+    Radius 8
+    Height 6
+    Speed 13
+    Damage 5
+    Scale .8
+    +Missile
+    +Lowgravity
+    DropItem Blood
+    DropItem Blood
+    DropItem Blood
+    DropItem Blood
+    ExplosionRadius 80
+    ExplosionDamage 48
+    DeathSound "splat11"
+    States
+    {
+    Spawn:
+        SPLT ABCDEF 3 
+        Loop
+    Death:
+    	BBLD A 2 A_Explode
+	BBLD A 0 A_custommissile("BloodSpeck2", 8, 0, random(-180, 180), 2, random(-180, 180))
+	BBLD A 0 A_custommissile("BloodSpeck2", 8, 0, random(-180, 180), 2, random(-180, 180))
+        BBLD AB  2 A_CustomMissile("ZGut2", 0, 0, 180) 
+        BBLD B 0 A_custommissile("BloodSpeck2", 8, 0, random(-180, 180), 2, random(-180, 180))
+        BBLD B 0 A_custommissile("BloodSpeck2", 8, 0, random(-180, 180), 2, random(-180, 180))
+        BBLD BC  2 A_CustomMissile("ZGut3", 0, 0, 180) 
+        BBLD C 0 A_custommissile("BloodSpeck2", 8, 0, random(-180, 180), 2, random(-180, 180))
+        BBLD C 0 A_custommissile("BloodSpeck2", 8, 0, random(-180, 180), 2, random(-180, 180))
+        BBLD D 4 
+        BBLD D 0 A_custommissile("BloodSpeck2", 8, 0, random(-180, 180), 2, random(-180, 180))
+        BBLD D 0 A_custommissile("BloodSpeck2", 8, 0, random(-180, 180), 2, random(-180, 180))
+        BBLD D 0 A_custommissile("BloodSpeck2", 8,0, random(-180, 180), 2, random(-180, 180))
+        BBLD E 2 
+        BBLD E 0 A_custommissile("BloodSpeck2", 8, 0, random(-180, 180), 2, random(-180, 180))
+        BBLD E 0 A_custommissile("BloodSpeck2", 8, 0, random(-180, 180), 2, random(-180, 180))
+        BBLD E 0 A_custommissile("BloodSpeck2", 8, 0, random(-180, 180), 2, random(-180, 180))
+        BBLD E 0 A_custommissile("BloodSpeck2", 8, 0, random(-180, 180), 2, random(-180, 180))
+        BBLD E 3 
+        Stop
+    }
+}
+
+//-------------------------------------------------------------------------
+//-------------------------------------------------------------------------
+//Had to keep this guys here at the bottom because of the inheritances.
+// but this are used in WepClass9.AED in the AEoDPopcornGun
+Actor HostileBabyClown : HTC2BabyClown
+{
+	-FRIENDLY
+	+LOOKALLAROUND
+}
+
+Actor HostileBlackBear : HTC2BlackBear 
+{
+	-FRIENDLY
+	+LOOKALLAROUND
+}

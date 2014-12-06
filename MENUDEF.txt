@@ -1,0 +1,314 @@
+//-------------------------------------------------------------------------------------------
+//
+// Controls Menu
+//
+//-------------------------------------------------------------------------------------------
+OptionMenu "OptionsMenu"
+{
+   Title "OPTIONS"
+   Submenu "AEoD game type selection",   "AEGameConfig"
+   StaticText " "
+   Submenu "Customize Controls",      "CustomizeControls"
+   Submenu "Mouse options",         "MouseOptions"
+   Submenu "Joystick options",         "JoystickOptions"
+   StaticText " "
+   Submenu "Player Setup",            "PlayerMenu"
+   Submenu "Gameplay Options",         "GameplayOptions"
+   Submenu "Compatibility Options",   "CompatibilityOptions"
+   Submenu "Automap Options",         "AutomapOptions"
+   Submenu "HUD Options",            "HUDOptions"
+   Submenu "Miscellaneous Options",   "MiscOptions"
+   Submenu "Sound Options",         "SoundOptions"
+   Submenu "Display Options",         "VideoOptions"
+   Submenu "Set video mode",         "VideoModeMenu"
+   StaticText " "
+   SafeCommand "Reset to defaults",   "reset2defaults"
+   SafeCommand   "Reset to last saved",   "reset2saved"
+   Command "Go to console",         "menuconsole"
+}
+
+OptionMenu "AEGameConfig"
+{
+	Title "AEoD Game Types"
+	StaticText "Game Modes", 1
+	StaticText "These override customized monsters below.", 0
+	Option "Left 4 Dead Mode",				"user_L4DMode", "OnOff"
+	StaticText			"Choose your game monsters.", 1
+	Option "Doom",							"user_Doom", "OnOff"
+	Option "Blood", 						"user_Blood", "OnOff"
+	Option "Duke Nukem 3D", 				"user_Duke", "OnOff"
+	Option "Half Life", 					"user_HL", "OnOff"
+	Option "Half Life 2", 					"user_HL2", "OnOff"
+	Option "Heretic", 						"user_Heretic", "OnOff"
+	Option "Hexen", 						"user_Hexen", "OnOff"
+	Option "Hexen 2", 						"user_Hexen2", "OnOff"
+	Option "Might & Magic", 				"user_MM", "OnOff"
+	Option "Powerslave", 					"user_Powerslave", "OnOff"
+	Option "Quake", 						"user_Quake1", "OnOff"
+	Option "Quake 2", 						"user_Quake2", "OnOff"
+	Option "Quake 4", 						"user_Quake4", "OnOff"
+	Option "Shadow Warrior", 				"user_SW", "OnOff"
+	Option "Strife", 						"user_Strife", "OnOff"
+	Option "Left 4 Dead",					"user_L4DMon", "OnOff"
+	Option "Joke",							"user_Joke", "OnOff"
+	StaticText			"Directors", 1
+	StaticText	"Directors spawn enemies where you least expect them.", 0
+	StaticText	"Infected spawns zombies, monster spawns doom-classed enemies.",0
+	Option "Infected Director",				"user_L4DDir", "OnOff"
+	Option "Monster Director",				"user_NorDir", "OnOff"
+	Option "Infected Mayhem",				"user_MonsterMayhem", "OnOff"
+}
+
+/*
+OptionMenu "AEGameConfig"
+{
+		Title "AEoD game type selection"
+		StaticText			"Choose the type of monsters you want", 1
+		StaticText			"the game to spawn.", 1
+		StaticText			"", 0
+		StaticText			"Generalized themes:", 0
+		Command "Demonesque", 					"set AEGtValues 1"
+		Command "Dark Sci-Fi", 				"set AEGtValues 2"
+		Command "Fantasy/Magic", 				"set AEGtValues 3"
+		Command "High-Tech", 					"set AEGtValues 4"
+		Command "Aliens", 					"set AEGtValues 5"
+		StaticText			"", 0
+		StaticText			"Game-Specific themes:", 0
+		Command "Doom", 					"set AEGtValues 11"
+		Command "Blood", 					"set AEGtValues 12"
+		Command "Duke Nukem 3D", 			"set AEGtValues 13"
+		Command "Half Life", 				"set AEGtValues 14"
+		Command "Half Life 2", 				"set AEGtValues 15"
+		Command "Heretic", 					"set AEGtValues 16"
+		Command "Hexen", 					"set AEGtValues 17"
+		Command "Hexen 2", 					"set AEGtValues 18"
+		Command "Might & Magic", 			"set AEGtValues 19"
+		Command "Powerslave", 				"set AEGtValues 20"
+		Command "Quake", 					"set AEGtValues 21"
+		Command "Quake 2", 					"set AEGtValues 22"
+		Command "Quake 4", 					"set AEGtValues 23"
+		Command "Shadow Warrior", 			"set AEGtValues 24"
+		Command "Strife", 					"set AEGtValues 25"
+		StaticText			"", 0
+		StaticText			"Special modes:", 0
+		Command "Classic AEoD", 					"set AEGtValues 0"
+		Command "Left 4 Dead", 						"set AEGtValues 26"
+		Command "Portal Run",						"set AEGtValues 7"
+		Command "Joke Mode",						"set AEGtValues 6"
+		Command "Chaos Capital",					"set AEGtValues 27"
+}*/
+
+OptionMenu GameplayOptions
+{
+	Title 	"GAMEPLAY OPTIONS"
+	//Indent 222
+	StaticText " "
+	StaticText "Anti cheat system",1
+	Command "Enable system",	"set AEAntiCheatOff 0"
+	Command "Disable system",	"set AEAntiCheatOff 1"
+	
+	StaticText " "
+	StaticText " "
+	Option "Teamplay",				"teamplay",	"OnOff"
+	Slider	"Team damage scalar",	"teamdamage", 0, 1, 0.05
+	StaticText " "
+	Option "Smart Autoaim",			"sv_smartaim", "SmartAim"
+	StaticText " "
+	Option "Falling damage",		"sv_fallingdamage", "FallingDM"
+	Option "Drop weapon",			"sv_weapondrop", "YesNo"
+	Option "Double ammo",			"sv_doubleammo", "YesNo"
+	Option "Infinite ammo",			"sv_infiniteammo", "YesNo"
+	Option "Infinite inventory",	"sv_infiniteinventory", "YesNo"
+	Option "No monsters",			"sv_nomonsters", "YesNo"
+	Option "No monsters to exit",	"sv_killallmonsters", "YesNo"
+	Option "Monsters respawn",		"sv_monsterrespawn", "YesNo"
+	Option "No respawn",			"sv_norespawn", "YesNo"
+	Option "Items respawn",			"sv_itemrespawn", "YesNo"
+	Option "Big powerups respawn",	"sv_respawnsuper", "YesNo"
+	Option "Fast monsters",			"sv_fastmonsters", "YesNo"
+	Option "Degeneration",			"sv_degeneration", "YesNo"
+	Option "Allow Autoaim",			"sv_noautoaim", "NoYes"
+	Option "Allow Suicide",			"sv_disallowsuicide", "NoYes"
+	Option "Allow jump",			"sv_jump", "JumpCrouch"
+	Option "Allow crouch",			"sv_crouch", "JumpCrouch"
+	Option "Allow freelook",		"sv_nofreelook", "NoYes"
+	Option "Allow FOV",				"sv_nofov", "NoYes"
+	Option "Allow BFG aiming",		"sv_nobfgaim", "NoYes"
+	Option "Allow automap",			"sv_noautomap", "NoYes"
+	Option "Automap allies",		"sv_noautomapallies", "NoYes"
+	Option "Allow spying",			"sv_disallowspying", "NoYes"
+	Option "Chasecam cheat",		"sv_chasecam", "YesNo"
+	Option "Check ammo for weapon switch",	"sv_dontcheckammo", "NoYes"
+	Option "Killing Romero kills all his spawns",	"sv_killbossmonst", "YesNo"
+
+	StaticText " "
+	StaticText "Deathmatch Settings",1
+	Option "Weapons stay",			"sv_weaponstay", "YesNo"
+	Option "Allow powerups",		"sv_noitems", "NoYes"
+	Option "Allow health",			"sv_nohealth", "NoYes"
+	Option "Allow armor",			"sv_noarmor", "NoYes"
+	Option "Spawn farthest",		"sv_spawnfarthest", "YesNo"
+	Option "Same map",				"sv_samelevel", "YesNo"
+	Option "Force respawn",			"sv_forcerespawn", "YesNo"
+	Option "Allow exit",			"sv_noexit", "NoYes"
+	Option "Barrels respawn",		"sv_barrelrespawn", "YesNo"
+	Option "Respawn protection",	"sv_respawnprotect", "YesNo"
+	Option "Lose frag if fragged",	"sv_losefrag", "YesNo"
+	Option "Keep frags gained",		"sv_keepfrags", "YesNo"
+	Option "No team switching",		"sv_noteamswitch", "YesNo"
+
+	StaticText " "
+	StaticText "Cooperative Settings",1
+	Option "Spawn multi. weapons", 	"sv_noweaponspawn", "NoYes"
+	Option "Lose entire inventory",	"sv_cooploseinventory", "YesNo"
+	Option "Keep keys",				"sv_cooplosekeys", "NoYes"
+	Option "Keep weapons",			"sv_cooploseweapons", "NoYes"
+	Option "Keep armor",			"sv_cooplosearmor", "NoYes"
+	Option "Keep powerups",			"sv_cooplosepowerups", "NoYes"
+	Option "Keep ammo",				"sv_cooploseammo", "NoYes"
+	Option "Lose half ammo",		"sv_coophalveammo", "YesNo"
+	Option "Spawn where died",		"sv_samespawnspot", "YesNo"
+	
+	Class "GameplayMenu"
+}
+
+//-------------------------------------------------------------------------------------------
+//
+// Controls Menu
+//
+//-------------------------------------------------------------------------------------------
+ 
+OptionMenu "CustomizeControls"
+{
+        Title "CUSTOMIZE CONTROLS"
+        ScrollTop 2
+        StaticTextSwitchable    "ENTER to change, BACKSPACE to clear", "Press new key for control, ESC to cancel", "ControlMessage"
+        StaticText      ""
+        StaticText      "Controls", 3
+        Control         "Fire",                                 "+attack"
+        Control         "Secondary Fire",               "+altattack"
+		Control 	"Weapon Reload",			"+reload"
+		Control 	"Weapon Zoom",				"+zoom"
+        Control         "Use / Open",                   "+use"
+        Control         "Move forward",                 "+forward"
+        Control         "Move backward",                "+back"
+        Control         "Strafe left",                  "+moveleft"
+        Control         "Strafe right",                 "+moveright"
+        Control         "Turn left",                    "+left"
+        Control         "Turn right",                   "+right"
+        Control         "Jump",                         "+jump"
+        Control         "Crouch",                       "+crouch"
+        Control         "Crouch Toggle",                "crouch"
+        Control         "Fly / Swim up",                "+moveup"
+        Control         "Fly / Swim down",              "+movedown"
+        Control         "Stop flying",                  "land"
+        Control         "Mouse look",                   "+mlook"
+        Control         "Keyboard look",                "+klook"
+        Control         "Look up",						"+lookup"
+        Control         "Look down",                    "+lookdown"
+        Control         "Center view",                  "centerview"
+        Control         "Zoom",                         "Zoom" //will need to make this work a bit better...
+        Control         "Run",                          "+speed"
+        Control         "Strafe",                       "+strafe"
+        Control         "Show Scoreboard",              "+showscores"
+        StaticText      ""
+        StaticText      "Chat", 1
+        Control         "Say",                          "messagemode"
+        Control         "Team say",                     "messagemode2"
+        StaticText      ""
+        StaticText      "Weapons", 1
+        Control         "Next weapon",                  "weapnext"
+        Control         "Previous weapon",              "weapprev"
+        Control         "AEOD Drop Weapon",             "pukename s800"
+        Control         "Toggle Weapon Limits", 		"pukename WeaponSlotToggle"
+        StaticText      ""
+        StaticText      "Inventory", 1
+        Control         "Activate item",                "invuse"
+        Control         "Activate all items",   		"invuseall"
+        Control         "Next item",                    "invnext"
+        Control         "Previous item",                "invprev"
+        Control         "Drop item",                    "invdrop"
+        Control         "Query item",                   "invquery"
+        StaticText      ""
+		StaticText      "AEons of Death Spells", 1
+		Control         "Use selected spell",           "pukename s654"
+        Control         "Next spell",                   "pukename s652"
+		Control         "Previous spell",               "pukename s653"
+		Control		"Quick Chaos Spell",				"pukename s656 1"
+		Control		"Quick Charm Spell",				"pukename s656 2"
+		Control		"Quick Defile Spell",				"pukename s656 3"
+		Control		"Quick Drain Spell",				"pukename s656 4"
+		Control		"Quick Morph Spell",				"pukename s656 5"
+		Control		"Quick Raise Spell",				"pukename s656 6"
+		Control		"Quick Terror Spell",				"pukename s656 7"
+	  
+		StaticText      ""
+        StaticText      "AEons of Death Items/Other", 1
+		Control         "Left 4 Dead kill count display",	"pukename s915"
+        Control         "Boom Bunny",                   "use AEodTNTBunny"
+        Control         "Medikit",                      "use HealthBottle"
+        Control         "Armor Bracers",                "use Bracers"
+        Control         "Radiation Suit",               "use radsuititem"
+        Control         "Rune of Fear",                 "use FearRune"
+        Control         "Rune of Life Drain",   		"use DrainRune"
+        Control         "Rune of Invisibility", 		"use InvisibilityRune"
+        Control         "Rune of Time",                 "use TimeRune"
+        Control         "Symbol of Fire",               "use FireSymbol"
+        Control         "Symbol of Air",                "use AirSymbol"
+        Control         "Symbol of Earth",              "use EarthSymbol"
+        Control         "Symbol of Water",              "use WaterSymbol"
+        Control         "Stone of Temperance",  		"use StoneOfTemperance"
+        Control         "Stone of Quickening",  		"use StoneOfQuickening"
+        Control         "Stone of Restoration", 		"use StoneOfRestoration"
+        Control         "Diabolical Dice",              "use DiabolicalDice"
+        Control         "Icon of Summoning",    		"use IconOfSummoning"
+        Control         "Mana Cup",                     "use CupOfMana"
+        Control         "Life Urn",                     "use LifeUrn"
+        Control         "Ice Shield",                   "use IceShield"
+        Control         "ThunderStorm Rune",    		"use ThunderstormRune"
+        Control         "Pentagram of Protection",      "use PentagramOfProtection"
+        StaticText      ""
+        StaticText      "Other", 1
+        Control         "Toggle automap",               "togglemap"
+        Control         "Chasecam",                     "chase"
+        Control         "Coop spy",                     "spynext"
+        Control         "Screenshot",                   "screenshot"
+        Control         "Open console",                 "toggleconsole"
+		Control         "AEoD emergency exit (see readme)",                 "kill ArachnotronReplacer; kill FatsoReplacer; kill BaronOfHellReplacer; kill CyberdemonReplacer; kill SpiderMastermindReplacer"
+}
+ 
+//=========================================================
+//=========================================================
+//The following were adjusted simply to reflect the max
+//values of AEons of Death statistics.
+//=========================================================
+//=========================================================
+OptionMenu "AltHUDOptions"
+{
+        Title "Alternative HUD"
+        //Indent 220
+        Option "Enable alternative HUD",						"hud_althud", "OnOff"
+        Option "Show secret count",                             "hud_showsecrets", "OnOff"
+        Option "Show monster count",                            "hud_showmonsters", "OnOff"
+        Option "Show item count",                               "hud_showitems", "OnOff"
+        Option "Show stamina and accuracy",                     "hud_showstats", "OnOff"
+        Slider "Red ammo display below %",                      "hud_ammo_red", 0, 500, 1, 0
+        Slider "Yellow ammo display below %",                   "hud_ammo_yellow", 0, 500, 1, 0
+        Slider "Red health display below",                      "hud_health_red", 0, 500, 1, 0
+        Slider "Yellow health display below",                   "hud_health_yellow", 0, 500, 1, 0
+        Slider "Green health display below",                    "hud_health_green", 0, 500, 1, 0
+        Slider "Red armor display below",                       "hud_armor_red", 0, 500, 1, 0
+        Slider "Yellow armor display below",                    "hud_armor_yellow", 0, 500, 1, 0
+        Slider "Green armor display below",                     "hud_armor_green", 0, 500, 1, 0
+        StaticText " "
+        StaticText "Alternative Automap HUD", 1
+        option "Map title color",                               "hudcolor_titl", "TextColors"
+        option "Hub time color",                                "hudcolor_time", "TextColors"
+        option "Map time color",                                "hudcolor_ltim", "TextColors"
+        option "Total title color",                             "hudcolor_ttim", "TextColors"
+        option "Coordinate color",                              "hudcolor_xyco", "TextColors"
+        option "Coordinate mode",                               "map_point_coordinates", "AMCoordinates"
+        option "Map title color",                               "hudcolor_titl", "TextColors"
+        option "Statistics name color",                         "hudcolor_statnames", "TextColors"
+        option "Statistics color",                              "hudcolor_stats", "TextColors"
+}
