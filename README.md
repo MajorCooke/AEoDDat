@@ -7,7 +7,7 @@ The ones who are allowed to submit directly to this repository are:
 - DBThanatos
 - Major Cooke
 
-If account is not on the list above, you must submit via pull request to contribute. You must NOT accept the pull request for me.
+If your account is not on the list above, you must submit via pull request to contribute. You must NOT accept the pull request for me.
 
 Rules for submitting to this repository:
 
