@@ -501,12 +501,6 @@ ACTOR FUziGuy 7418		//imp
     Raise: 
 	GUYY PONMLKJIHG 5 
 	Goto See 
-    Burn:
-	TNT1 A 0
-	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"Death")
-	TNT1 A 0 A_Fall
-	TNT1 A 0 A_SpawnItemEx("GenericHumanBurn",0,0,0,0,0,0,0,32)
-	Stop
     Death.UnholyDisint:
     Death.PlasmaDisint:
     Disintegrate:
@@ -636,22 +630,6 @@ ACTOR FCommander 7420	// chaingun guy
 	DamageFactor "AEBullet", 0.5
     States
     {
-    Pain.DarkSyphon:
-	TNT1 A 0 A_Jump(64,"Pain")
-	TNT1 A 0 A_SpawnItemEx("DarkMana",0,0,0,0,0,0,0,32)
-	Goto Pain
-    Pain.RedSyphon:
-	TNT1 A 0 A_Jump(105,"Pain")
-	TNT1 A 0 A_SpawnItemEx("RedMana",0,0,0,0,0,0,0,32)
-	Goto Pain
-    Pain.GreenSyphon:
-	TNT1 A 0 A_Jump(179,"Pain")
-	TNT1 A 0 A_SpawnItemEx("GreenMana",0,0,0,0,0,0,0,32)
-	Goto Pain
-    Pain.BlueSyphon:
-	TNT1 A 0 A_Jump(203,"Pain")
-	TNT1 A 0 A_SpawnItemEx("BlueMana",0,0,0,0,0,0,0,32)
-	Goto Pain
     Pain.Chaos:
 	TNT1 A 0
 	TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
@@ -719,11 +697,8 @@ ACTOR FCommander 7420	// chaingun guy
 	LEAD QQQQQQQQQQQ 0 A_TossGib
 	LEAD Q 5 A_NoBlocking 
 	LEAD RSTUVW 5
+	"####" "#" 0 A_QueueCorpse
 	LEAD X -1 
-	Stop
-    Burn:
-	TNT1 A 0 A_Fall
-	TNT1 A 0 A_SpawnItemEx("GenericHumanBurn",0,0,0,0,0,0,0,32)
 	Stop
     Death.UnholyDisint:
     Death.PlasmaDisint:
@@ -1505,6 +1480,7 @@ ACTOR Thoth 7425	// cyberdemon
   	TNT1 AAAAAAAAAAAAA 0 A_TossGib
 	PDED P 5 A_SpawnItem("FAlien",30)
 	PDED QRS 5
+	"####" "#" 0 A_QueueCorpse
 	PDED T -1 A_KillMaster
 	Stop
     Death.UnholyDisint:

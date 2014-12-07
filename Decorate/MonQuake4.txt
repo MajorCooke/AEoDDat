@@ -2062,6 +2062,7 @@ Actor Q4Harvester		//spidermastermind
 		Q08D ABCD 4 A_SpawnItemEx("BossDeathExplosion",random(30,-30),random(30,-30),random(20,80),0,0,0,0,32)
 		TNT1 A 0 A_PlaySound("quake4/Misc/Body/Metal",5)
 		Q08D EFGHI 4
+		"####" "#" 0 A_QueueCorpse
 		Q08D i -1 A_KillMaster
 		Stop
 	Death.UnholyDisint:
@@ -3083,6 +3084,7 @@ Actor Q4Makron		//Makron (stage1)
 		Q12D FFFFFFFFFFFFFFFFFFFF 4 A_SpawnItemEx("BossDeathExplosion",random(30,-30),random(30,-30),random(20,80),0,0,0,0,32)
 		TNT1 AAAA 0 A_SpawnItemEx("BossDeathExplosion",random(30,-30),random(30,-30),random(20,80),0,0,0,0,32)
 		TNT1 A 0 A_SpawnItemEx("Q4Makron2",0,0,20,0,0,3,0,32|SXF_TRANSFERSPECIAL|SXF_CLEARCALLERSPECIAL|SXF_CLEARCALLERTID|SXF_TRANSFERPOINTERS,0,tid)
+		"####" "#" 0 A_QueueCorpse
 		Q12D G -1
 		Stop
 	Death.Massacre:
@@ -3095,6 +3097,7 @@ Actor Q4Makron		//Makron (stage1)
 		TNT1 AAAA 0 A_SpawnItemEx("BossDeathExplosion",random(30,-30),random(30,-30),random(20,80),0,0,0,0,32)
 		Q12D G 1 A_SpawnItemEx("Q4Makron2",0,0,20,0,0,3,0,32|SXF_TRANSFERSPECIAL|SXF_CLEARCALLERSPECIAL|SXF_CLEARCALLERTID|SXF_SETMASTER,0,tid)
 		Q12D G 0 A_KillChildren
+		"####" "#" 0 A_QueueCorpse
 		Q12D G -1 A_KillMaster
 		Stop
 	Death.UnholyDisint:
@@ -3576,6 +3579,7 @@ Actor Q4Makron2		//special
 		TNT1 A 0 A_PlaySound("quake4/Misc/Body/Metal",5)
 		TNT1 a 0 A_Fall
 		Q13D EFGH 4
+		"####" "#" 0 A_QueueCorpse
 		Q13D I -1 A_KillMaster
 		Stop
 	Death.UnholyDisint:
@@ -3719,22 +3723,6 @@ Actor Q4NetworkGuardian		//spidermaster
 	DamageFactor "AEBullet", 0.5
 	States
 	{
-    Pain.DarkSyphon:
-	TNT1 A 0 A_Jump(64,"See")
-	TNT1 A 0 A_SpawnItemEx("DarkMana",0,0,0,0,0,0,0,32)
-	Goto Pain
-    Pain.RedSyphon:
-	TNT1 A 0 A_Jump(105,"See")
-	TNT1 A 0 A_SpawnItemEx("RedMana",0,0,0,0,0,0,0,32)
-	Goto Pain
-    Pain.GreenSyphon:
-	TNT1 A 0 A_Jump(179,"See")
-	TNT1 A 0 A_SpawnItemEx("GreenMana",0,0,0,0,0,0,0,32)
-	Goto Pain
-    Pain.BlueSyphon:
-	TNT1 A 0 A_Jump(203,"See")
-	TNT1 A 0 A_SpawnItemEx("BlueMana",0,0,0,0,0,0,0,32)
-	Goto Pain
     Pain.Chaos:
 	TNT1 A 0
 	TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
@@ -3848,6 +3836,7 @@ Actor Q4NetworkGuardian		//spidermaster
 		"####" "#" 0 A_JumpIfInventory("DisintegrateToken",1,"DisintegrateCont")
 		Q14D F 1 A_StopSound(6)
 		Q14D F 2 A_PlaySound("halflife/monsters/gonarch/step",6)
+		"####" "#" 0 A_QueueCorpse
 		Q14D G -1 A_KillMaster
 		Stop
 	Death.UnholyDisint:
@@ -4820,23 +4809,7 @@ Actor Q4StreamProtector		//spidermaster (FUCKING OFFSETS!! I HATE THEM NOW D:< )
  	DamageFactor "PlasmaDisint", 1.25
 	States
 	{
-    Pain.DarkSyphon:
-	TNT1 A 0 A_Jump(64,"See")
-	TNT1 A 0 A_SpawnItemEx("DarkMana",0,0,0,0,0,0,0,32)
-	Goto Pain
-    Pain.RedSyphon:
-	TNT1 A 0 A_Jump(105,"See")
-	TNT1 A 0 A_SpawnItemEx("RedMana",0,0,0,0,0,0,0,32)
-	Goto Pain
-    Pain.GreenSyphon:
-	TNT1 A 0 A_Jump(179,"See")
-	TNT1 A 0 A_SpawnItemEx("GreenMana",0,0,0,0,0,0,0,32)
-	Goto Pain
-    Pain.BlueSyphon:
-	TNT1 A 0 A_Jump(203,"See")
-	TNT1 A 0 A_SpawnItemEx("BlueMana",0,0,0,0,0,0,0,32)
-	Goto Pain
-    Pain.Chaos:
+	Pain.Chaos:
 	TNT1 A 0
 	TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
 	TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
@@ -4940,6 +4913,7 @@ Actor Q4StreamProtector		//spidermaster (FUCKING OFFSETS!! I HATE THEM NOW D:< )
 		Q19D A 0 A_Scream
 		Q19D ABCDEFGH 3
 		Q19D A 0 A_Fall
+		"####" "#" 0 A_QueueCorpse
 		Q19D I -1 A_KillMaster
 		Stop 
 	XDeath:
@@ -4948,6 +4922,7 @@ Actor Q4StreamProtector		//spidermaster (FUCKING OFFSETS!! I HATE THEM NOW D:< )
 		Q19D ABCDE 3 A_SpawnItemEx("BossDeathExplosion",random(30,-30),random(30,-30),random(20,80),0,0,0,0,32)
 		Q19D FGH 3
 		Q19D A 0 A_Fall
+		"####" "#" 0 A_QueueCorpse
 		Q19D I -1 A_KillMaster
 		Stop
 	Death.UnholyDisint:
@@ -5234,22 +5209,6 @@ Actor Q4LightGuard		//zombieman
 	DamageFactor "AEBullet", 0.5
 	States
 	{
-    Pain.DarkSyphon:
-	TNT1 A 0 A_Jump(64,"See")
-	TNT1 A 0 A_SpawnItemEx("DarkMana",0,0,0,0,0,0,0,32)
-	Goto Pain
-    Pain.RedSyphon:
-	TNT1 A 0 A_Jump(105,"See")
-	TNT1 A 0 A_SpawnItemEx("RedMana",0,0,0,0,0,0,0,32)
-	Goto Pain
-    Pain.GreenSyphon:
-	TNT1 A 0 A_Jump(179,"See")
-	TNT1 A 0 A_SpawnItemEx("GreenMana",0,0,0,0,0,0,0,32)
-	Goto Pain
-    Pain.BlueSyphon:
-	TNT1 A 0 A_Jump(203,"See")
-	TNT1 A 0 A_SpawnItemEx("BlueMana",0,0,0,0,0,0,0,32)
-	Goto Pain
     Pain.Chaos:
 	TNT1 A 0
 	TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
@@ -5321,6 +5280,7 @@ Actor Q4LightGuard		//zombieman
 		Q21D A 0 A_Scream
 		Q21D ACD 3
 		Q21D A 0 A_Fall
+		"####" "#" 0 A_QueueCorpse
 		Q21D F -1 A_PlaySound("quake4/Misc/Body/Small")
 		Stop
 	XDeath:
@@ -5402,22 +5362,6 @@ Actor Q4MachinegunGuard	//chainguy
 	DamageFactor "AEBullet", 0.5
 	States
 	{
-    Pain.DarkSyphon:
-	TNT1 A 0 A_Jump(64,"See")
-	TNT1 A 0 A_SpawnItemEx("DarkMana",0,0,0,0,0,0,0,32)
-	Goto Pain
-    Pain.RedSyphon:
-	TNT1 A 0 A_Jump(105,"See")
-	TNT1 A 0 A_SpawnItemEx("RedMana",0,0,0,0,0,0,0,32)
-	Goto Pain
-    Pain.GreenSyphon:
-	TNT1 A 0 A_Jump(179,"See")
-	TNT1 A 0 A_SpawnItemEx("GreenMana",0,0,0,0,0,0,0,32)
-	Goto Pain
-    Pain.BlueSyphon:
-	TNT1 A 0 A_Jump(203,"See")
-	TNT1 A 0 A_SpawnItemEx("BlueMana",0,0,0,0,0,0,0,32)
-	Goto Pain
     Pain.Chaos:
 	TNT1 A 0
 	TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
@@ -5481,6 +5425,7 @@ Actor Q4MachinegunGuard	//chainguy
 		Q22D A 0 A_Scream
 		Q22D ACD 3
 		Q22D A 0 A_Fall
+		"####" "#" 0 A_QueueCorpse
 		Q22D F -1 A_PlaySound("quake4/Misc/Body/Small")
 		Stop
 	XDeath:
@@ -5550,23 +5495,7 @@ Actor Q4ShotgunGuard		//shotguy
 	DamageFactor "AEBullet", 0.5
 	States
 	{
-    Pain.DarkSyphon:
-	TNT1 A 0 A_Jump(64,"See")
-	TNT1 A 0 A_SpawnItemEx("DarkMana",0,0,0,0,0,0,0,32)
-	Goto Pain
-    Pain.RedSyphon:
-	TNT1 A 0 A_Jump(105,"See")
-	TNT1 A 0 A_SpawnItemEx("RedMana",0,0,0,0,0,0,0,32)
-	Goto Pain
-    Pain.GreenSyphon:
-	TNT1 A 0 A_Jump(179,"See")
-	TNT1 A 0 A_SpawnItemEx("GreenMana",0,0,0,0,0,0,0,32)
-	Goto Pain
-    Pain.BlueSyphon:
-	TNT1 A 0 A_Jump(203,"See")
-	TNT1 A 0 A_SpawnItemEx("BlueMana",0,0,0,0,0,0,0,32)
-	Goto Pain
-    Pain.Chaos:
+	Pain.Chaos:
 	TNT1 A 0
 	TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
 	TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
@@ -5631,6 +5560,7 @@ Actor Q4ShotgunGuard		//shotguy
 		Q23D A 0 A_Scream
 		Q23D ACD 3
 		Q23D A 0 A_Fall
+		"####" "#" 0 A_QueueCorpse
 		Q23D F -1 A_PlaySound("quake4/Misc/Body/Small")
 		Stop
 	XDeath:
@@ -5701,22 +5631,6 @@ Actor Q4HyperBlasterTactical		//revenant
 	DamageFactor "AEBullet", 0.5
 	States
 	{
-    Pain.DarkSyphon:
-	TNT1 A 0 A_Jump(64,"See")
-	TNT1 A 0 A_SpawnItemEx("DarkMana",0,0,0,0,0,0,0,32)
-	Goto Pain
-    Pain.RedSyphon:
-	TNT1 A 0 A_Jump(105,"See")
-	TNT1 A 0 A_SpawnItemEx("RedMana",0,0,0,0,0,0,0,32)
-	Goto Pain
-    Pain.GreenSyphon:
-	TNT1 A 0 A_Jump(179,"See")
-	TNT1 A 0 A_SpawnItemEx("GreenMana",0,0,0,0,0,0,0,32)
-	Goto Pain
-    Pain.BlueSyphon:
-	TNT1 A 0 A_Jump(203,"See")
-	TNT1 A 0 A_SpawnItemEx("BlueMana",0,0,0,0,0,0,0,32)
-	Goto Pain
     Pain.Chaos:
 	TNT1 A 0
 	TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
@@ -6115,6 +6029,7 @@ Actor Q4TeleportDropper		//archvile
 		Q26D A 0 A_Scream
 		Q26D ABCD 3
 		Q26D A 0 A_Fall
+		"####" "#" 0 A_QueueCorpse
 		Q26D E -1 A_PlaySound("quake4/Misc/Body/Beefy",7)
 		Stop
 	XDeath:

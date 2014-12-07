@@ -2562,6 +2562,7 @@ Actor NihCounter : Inventory
 //************************************************
 actor NihilantVul
 {
+	var int user_dmg;
     Monster
     -COUNTKILL
 //    -Solid		//i removed it to make nihilant get stuck, in that way he wont move, not even with the arc of death
@@ -2572,7 +2573,7 @@ actor NihilantVul
     Radius 50
     Height 56
     PainChance 255
-    RenderStyle Add
+    RenderStyle None
     Scale 3.9
     DamageFactor "Normal", 1.5
     PainSound "halflife/monsters/nihilant/pain"
@@ -2590,7 +2591,7 @@ actor NihilantVul
     States
     {
     Spawn:
-	TNT1 A 0
+	TNT1 A 0 NoDelay A_SetUserVar("user_dmg",health)
 	TNT1 A 0 A_UnSetShootable			//while it appears, wont be shootable
 	TNT1 A 10 
 	TNT1 A 0 A_SetShootable				//only when appeared fully, will be shootable
@@ -2601,71 +2602,13 @@ actor NihilantVul
     Pain:
 	TNT1 A 0 A_JumpIfInventory("PainCounter",8,"PainStopDamage")
 	TNT1 A 0 A_GiveInventory("PainCounter",1)
-	TNT1 A 2 A_Pain
+	TNT1 A 4 A_Pain
     PainStopDamage:
+	TNT1 A 0 A_ChangeFlag("NOPAIN",1)
 	TNT1 A 0 A_UnSetShootable
-	TNT1 A 0 A_JumpIfHealthLower(300,"Damage1700")		//might be hacks, but they somehow work :S
-	TNT1 A 0 A_JumpIfHealthLower(700,"Damage1300")
-	TNT1 A 0 A_JumpIfHealthLower(1000,"Damage1000")
-	TNT1 A 0 A_JumpIfHealthLower(1300,"Damage700")
-	TNT1 A 0 A_JumpIfHealthLower(1500,"Damage500")
-	TNT1 A 0 A_JumpIfHealthLower(1700,"Damage300")
-	TNT1 A 0 A_JumpIfHealthLower(1750,"Damage250")
-	TNT1 A 0 A_JumpIfHealthLower(1800,"Damage200")
-	TNT1 A 0 A_JumpIfHealthLower(1850,"Damage150")
-	TNT1 A 0 A_JumpIfHealthLower(1900,"Damage100")
-	TNT1 A 0 A_JumpIfHealthLower(1950,"Damage50")
-	Goto "Damage20"
-    Damage20:
-	TNT1 A 0 A_DamageMaster(20,"NihDamage")
-	TNT1 A 0 A_Die
-	Goto Death2
-    Damage50:
-	TNT1 A 0 A_DamageMaster(50,"NihDamage")
-	TNT1 A 0 A_Die
-	Goto Death2
-    Damage100:
-	TNT1 A 0 A_DamageMaster(100,"NihDamage")
-	TNT1 A 0 A_Die
-	Goto Death2
-    Damage150:
-	TNT1 A 0 A_DamageMaster(150,"NihDamage")
-	TNT1 A 0 A_Die
-	Goto Death2
-    Damage200:
-	TNT1 A 0 A_DamageMaster(200,"NihDamage")
-	TNT1 A 0 A_Die
-	Goto Death2
-    Damage250:
-	TNT1 A 0 A_DamageMaster(250,"NihDamage")
-	TNT1 A 0 A_Die
-	Goto Death2
-    Damage300:
-	TNT1 A 0 A_DamageMaster(300,"NihDamage")
-	TNT1 A 0 A_Die
-	Goto Death2
-    Damage500:
-	TNT1 A 0 A_DamageMaster(500,"NihDamage")
-	TNT1 A 0 A_Die
-	Goto Death2
-    Damage700:
-	TNT1 A 0 A_DamageMaster(700,"NihDamage")
-	TNT1 A 0 A_Die
-	Goto Death2
-    Damage1000:
-	TNT1 A 0 A_DamageMaster(1000,"NihDamage")
-	TNT1 A 0 A_Die
-	Goto Death2
-    Damage1300:
-	TNT1 A 0 A_DamageMaster(1300,"NihDamage")
-	TNT1 A 0 A_Die
-	Goto Death2
-    Damage1700:
-	TNT1 A 0 A_DamageMaster(1700,"NihDamage")
-	TNT1 A 0 A_Die
-	Goto Death2
-    Death:
-	TNT1 A 50 A_DamageMaster(2000,"NihDamage")
+	Death:
+	TNT1 A 0 A_SetUserVar("user_dmg",user_dmg-health)
+	TNT1 A 50 A_DamageMaster(user_dmg,"NihDamage",DMSS_NOFACTOR|DMSS_FOILINVUL)
 	Stop
     Death2:
 	TNT1 A 50
