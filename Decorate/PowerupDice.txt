@@ -1783,9 +1783,9 @@ ACTOR 2DiceRoll6Giver : 1DieRoll1Giver
     Missile:
         TNT1 A 50
 	TNT1 A 0 A_TakeFromTarget("DiceRolled",1)
-	TNT1 A 0 A_Print("6 - infrared goggles!")
+	TNT1 A 0 A_Print("6 - Aww, aren't they cute?")
 	TNT1 A 0 A_GiveToTarget("2DiceRoll6Effect",1)
-	TNT1 A 0 A_GiveToTarget("2DiceRoll6Sound",1)
+	//TNT1 A 0 A_GiveToTarget("2DiceRoll6Sound",1)
         Stop
     }
 }
@@ -2331,8 +2331,9 @@ ACTOR 3DiceRoll6Giver : 1DieRoll1Giver
     Missile:
         TNT1 A 50
 	TNT1 A 0 A_TakeFromTarget("DiceRolled",1)
-	TNT1 A 0 A_Print("6 - Awwww, aren't they cute?")
+	TNT1 A 0 A_Print("6 - Your teddy bear army has arrived!")
 	TNT1 A 0 A_GiveToTarget("3DiceRoll6Effect",1)
+	TNT1 A 0 A_GiveInventory("3DiceRoll6Sound",1,AAPTR_TARGET)
         Stop
     }
 }
@@ -3020,27 +3021,51 @@ ACTOR 2DiceRoll5Sound : CustomInventory
 
 //------------------------------------------------ Roll 6
 
-ACTOR 2DiceRoll6Effect : InfraredItem2
-{
-    +INVENTORY.AUTOACTIVATE
-    -INVENTORY.FANCYPICKUPSOUND
-    -INVENTORY.INVBAR
-    -COUNTITEM
-    Inventory.PickupMessage ""
-    Inventory.Icon "ARTDICEA"
-    Inventory.MaxAmount 1
-    Powerup.Type "LightAmp"
-    Powerup.Duration 4200
-}
-
-ACTOR 2DiceRoll6Sound : CustomInventory
+ACTOR 2DiceRoll6Effect : CustomInventory
 {
     +AUTOACTIVATE
     +NOTIMEFREEZE
     States
     {
     Pickup:
-	TNT1 A 0 A_PlaySound("reilsss/powerup/automap")
+	TNT1 A 0 A_PlaySound("diablo2/amazoncast/fistofares")
+	TNT1 A 0 A_SetBlend("HotPink",0.5,40)
+	TNT1 A 0 A_SpawnItemEx("AOEMorphSpell2",0,0,16,0,0,0,0,32,0)
+	Stop
+    }
+}
+
+
+
+ACTOR AOEMorphSpell2 : MorphProjectile
+{
+    Radius 8
+    Height 48
+    Speed 10
+    Damage 0
+    MorphProjectile.MonsterClass "LilCalebMorphSpawner"
+    States
+    {
+    Spawn:
+	TNT1 A 1
+	TNT1 A 0 A_Explode(1,1000,0,0,1)
+	Stop
+    }
+}
+
+ACTOR LilCalebMorphSpawner : MorphedMonster
+{
+    Radius 10
+    Height 16
+    States
+    {
+    Spawn:
+	TNT1 A 1
+	TNT1 AA 0 A_SpawnItemEx("LilCaleb",0,0,0,random(2,-2),random(2,-2),random(1,2),random(1,360),32,0)
+	TNT1 A 0 A_Jump(192,2)
+	TNT1 A 0 A_SpawnItemEx("LilCaleb",0,0,0,random(2,-2),random(2,-2),random(1,2),random(1,360),32,0)
+	Goto Spawn+5
+	TNT1 A 0
 	Stop
     }
 }
@@ -3440,51 +3465,50 @@ ACTOR VileFake3 : VileFake
 
 //------------------------------------------------ Roll 6
 
-ACTOR 3DiceRoll6Effect : CustomInventory
+ACTOR 3DiceRoll6Effect : PowerupGiver
+{
+    +INVENTORY.AUTOACTIVATE
+    -INVENTORY.FANCYPICKUPSOUND
+    -INVENTORY.INVBAR
+    -COUNTITEM
+    Inventory.PickupMessage ""
+    Inventory.Icon "ARTDICEA"
+    Inventory.MaxAmount 1
+    Powerup.Type "BearConverter"
+    Powerup.Duration -60
+}
+
+Actor PowerBearConverter : PowerProtection
+{	DamageFactor "Normal", 1.0	}
+
+ACTOR 3DiceRoll6Sound : CustomInventory
 {
     +AUTOACTIVATE
     +NOTIMEFREEZE
     States
     {
     Pickup:
-	TNT1 A 0 A_PlaySound("diablo2/amazoncast/fistofares")
-	TNT1 A 0 A_SetBlend("HotPink",0.5,40)
-	TNT1 A 0 A_SpawnItemEx("AOEMorphSpell2",0,0,16,0,0,0,0,32,0)
+	TNT1 A 0 A_PlaySound("reilsss/powerup/automap")
+	TNT1 A 0 A_SpawnItemEx("BearSummoner",0,0,0,0,0,0,0,32)
 	Stop
     }
 }
 
-ACTOR AOEMorphSpell2 : MorphProjectile
+Actor BearSummoner
 {
-    Radius 8
-    Height 48
-    Speed 10
-    Damage 0
-    MorphProjectile.MonsterClass "LilCalebMorphSpawner"
-    States
-    {
-    Spawn:
-	TNT1 A 1
-	TNT1 A 0 A_Explode(1,1000,0,0,1)
-	Stop
-    }
-}
-
-ACTOR LilCalebMorphSpawner : MorphedMonster
-{
-    Radius 10
-    Height 16
-    States
-    {
-    Spawn:
-	TNT1 A 1
-	TNT1 AA 0 A_SpawnItemEx("LilCaleb",0,0,0,random(2,-2),random(2,-2),random(1,2),random(1,360),32,0)
-	TNT1 A 0 A_Jump(192,2)
-	TNT1 A 0 A_SpawnItemEx("LilCaleb",0,0,0,random(2,-2),random(2,-2),random(1,2),random(1,360),32,0)
-	Goto Spawn+5
-	TNT1 A 0
-	Stop
-    }
+	Projectile
+	+NOINTERACTION
+	RenderStyle None
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_Warp(AAPTR_PLAYER1,0,0,16,0,WARPF_NOCHECKPOSITION)
+		TNT1 AAAAAAAAAA 0 A_SpawnItemEx("HTC2SuperBear",0,0,0,random(10,25),0,random(-20,20),random(0,359),32,192)
+		TNT1 A 9
+		TNT1 A 0 A_JumpIfInventory("PowerBearConverter",1,"Spawn",AAPTR_PLAYER1)
+		TNT1 A 0 A_JumpIfInventory("3DiceRoll6Effect",1,"Spawn",AAPTR_PLAYER1)
+		Stop
+	}
 }
 
 //------------------------------------------------ Roll Triple 2
