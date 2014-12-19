@@ -2202,6 +2202,7 @@ ACTOR 3DiceRoll4Giver : 1DieRoll1Giver
     Missile:
         TNT1 A 50
 	TNT1 A 0 A_TakeFromTarget("DiceRolled",1)
+	TNT1 A 0 A_JumpIfInventory("PowerDemonMorph",1,"Immune",AAPTR_TARGET)
 	TNT1 A 0 A_Print("4 - Dispelled!")
 	TNT1 A 0 A_GiveToTarget("3DiceRoll4Effect",1)
 	TNT1 A 0 A_TakeFromTarget("PowerLightamp",1)
@@ -2236,6 +2237,8 @@ ACTOR 3DiceRoll4Giver : 1DieRoll1Giver
 	TNT1 A 0 A_TakeFromTarget("NoMorphTimer",1)
 	TNT1 A 0 A_TakeFromTarget("NoMorphPalette",1)
         Stop
+	Immune:
+		TNT1 A 0 A_Print("Immune.")
     }
 }
 
@@ -2357,10 +2360,13 @@ ACTOR 3DiceRoll7Giver : 1DieRoll1Giver
     {
     Missile:
         TNT1 A 50
-	TNT1 A 0 A_TakeFromTarget("DiceRolled",1)
-	TNT1 A 0 A_Print("7 - quarter health!")
-	TNT1 A 1 A_GiveToTarget("QuarterHealth",1)
+		TNT1 A 0 A_TakeFromTarget("DiceRolled",1)
+		TNT1 A 0 A_JumpIfInventory("PowerDemonMorph",1,"Immune",AAPTR_TARGET)
+		TNT1 A 0 A_Print("7 - quarter health!")
+		TNT1 A 1 A_GiveToTarget("QuarterHealth",1)
         Stop
+	Immune:
+		TNT1 A 0 A_Print("Immune.")
     }
 }
 
@@ -2410,7 +2416,7 @@ ACTOR 3DiceRoll10Giver : 1DieRoll1Giver
     Missile:
         TNT1 A 50
 	TNT1 A 0 A_TakeFromTarget("DiceRolled",1)
-	TNT1 A 0 A_Print("10 - Enemies slowed!")
+	TNT1 A 0 A_Print("10 - Reflecting projectiles!")
 	TNT1 A 0 A_GiveToTarget("3DiceRoll10Effect",1)
         Stop
     }
@@ -2422,14 +2428,22 @@ ACTOR 3DiceRoll11Giver : 1DieRoll1Giver
     {
     Missile:
         TNT1 A 50
-	TNT1 A 0 A_TakeFromTarget("DiceRolled",1)
-	TNT1 A 0 A_Print("11 - Stop...Hammer Time!")
-	TNT1 A 0 A_GiveToTarget("3DiceRoll11Effect1",1)
-	TNT1 A 0 A_GiveToTarget("3DiceRoll11Effect2",1)
-	TNT1 A 0 A_GiveToTarget("3DiceRoll11Effect3",1)
-	TNT1 A 0 A_GiveToTarget("HammerTimeHammer",1)
-	TNT1 A 0 A_GiveToTarget("HammerSelector",1)
-	Stop
+		TNT1 A 0 A_TakeFromTarget("DiceRolled",1)
+		TNT1 A 0 A_JumpIfInventory("PowerDemonMorph",1,"Waiting")
+	Cont:
+		TNT1 A 0 A_Print("11 - Stop...Hammer Time!")
+		TNT1 A 0 A_GiveToTarget("3DiceRoll11Effect1",1)
+		TNT1 A 0 A_GiveToTarget("3DiceRoll11Effect2",1)
+		TNT1 A 0 A_GiveToTarget("3DiceRoll11Effect3",1)
+		TNT1 A 0 A_GiveToTarget("HammerTimeHammer",1)
+		TNT1 A 0 A_GiveToTarget("HammerSelector",1)
+		Stop
+	Waiting:
+		TNT1 A 0 A_Print("Wait for it...")
+	W2:
+		TNT1 A 35 
+		TNT1 A 0 A_JumpIfInventory("PowerDemonMorph",1,"W2")
+		Goto Cont
     }
 }
 
@@ -4064,7 +4078,9 @@ ACTOR 3DiceRoll10Effect : CustomInventory
     Pickup:
 	TNT1 A 0 A_PlaySound("mephisto/cast")
 	TNT1 A 0 A_SetBlend("Ivory2",0.5,40)
-	TNT1 A 0 A_SpawnItemEx("AOESlowSpell",0,0,16,0,0,0,0,32,0)
+	TNT1 A 0 A_ChangeFlag("REFLECTIVE",1)
+	TNT1 A 0 A_ChangeFlag("AIMREFLECT",1)
+	//TNT1 A 0 A_SpawnItemEx("AOESlowSpell",0,0,16,0,0,0,0,32,0)
 	Stop
     }
 }
