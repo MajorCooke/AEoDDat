@@ -3747,7 +3747,61 @@ Actor NewBossEye : BossEye replaces BossEye
 		TNT1 A 181 A_BrainAwake
 		Goto Spitting
 	Spitting:
-		TNT1 A 150 A_BrainSpit
+		TNT1 A 150 A_BrainSpit("AESpawnShot")
+		Wait
+	}
+}
+
+Actor AESpawnShot : SpawnShot replaces SpawnShot
+{
+	DropItem "ArachnotronReplacer2" 255 20
+	DropItem "ArchvileReplacer2"	255 2
+	DropItem "BaronofHellReplacer2"	255 10
+	DropItem "CacoReplacer2"	255 30
+	DropItem "DemonReplacer2"		255 40
+	DropItem "FatsoReplacer2"		255 30
+	DropItem "HellKnightReplacer2"	255 24
+	DropItem "ImpReplacer2"			255 50
+	DropItem "PainReplacer2"		255 10
+	DropItem "RevenantReplacer2"	255 10
+	States
+	{
+	Spawn:
+		BOSF A 0 bright A_SpawnSound
+		BOSF A 0 bright A_SpawnItemEx("SpawnShotShadow",0,0,0,0,0,0,0,32,0,0)
+		BOSF A 3 bright A_SpawnFly("TeleportFog")
+		BOSF B 0 bright A_SpawnItemEx("SpawnShotShadow",0,0,0,0,0,0,0,32,0,1)
+		BOSF B 3 bright A_SpawnFly("TeleportFog")
+		BOSF C 0 bright A_SpawnItemEx("SpawnShotShadow",0,0,0,0,0,0,0,32,0,2)
+		BOSF C 3 bright A_SpawnFly("TeleportFog")
+		BOSF D 0 bright A_SpawnItemEx("SpawnShotShadow",0,0,0,0,0,0,0,32,0,3)
+		BOSF D 3 bright A_SpawnFly("TeleportFog")
+		Loop
+	}
+}
+
+Actor SpawnShotShadow
+{
+	var int user_id;
+	+NOINTERACTION
+	RenderStyle Add
+	States
+	{
+	Spawn:
+		BOSF A 0 NoDelay A_SetUserVar("user_id",tid)
+		BOSF A 0 Thing_ChangeTID(0,0)
+		BOSF A 0 A_JumpIf(user_id == 1, "S1")
+		BOSF A 0 A_JumpIf(user_id == 2, "S2")
+		BOSF A 0 A_JumpIf(user_id == 3, "S3")
+		Goto Playoff
+	S1:
+		BOSF B 0 A_Jump(256,"Playoff")
+	S2:
+		BOSF C 0 A_Jump(256,"Playoff")
+	S3:
+		BOSF D 0 A_Jump(256,"Playoff")
+	Playoff:
+		"####" "#" 1 bright A_FadeOut(0.05)
 		Wait
 	}
 }
