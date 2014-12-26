@@ -26,26 +26,27 @@ str Weaps2[11][2]={{"Empty","Nothing"},
 		{"AEoDScythe","ScytheDrop"},
 		{"AEoDSpyKnife","SpyKnifeDrop"}};			
 
-str Weaps3[20][2]={{"Empty","Nothing"},
+str Weaps3[14][2]={{"Empty","Nothing"},
 		{"AEoDShellShocker","ShellShockerDrop"},		// 6125
 		{"AEoDDesertEagle","DesertEagleDrop"},			// 6036
 		{"AEoDGoldenColts","GoldenColtsDrop"},			// 6037
 		{"AEoDMac10","Mac10Drop"},				// 6101
-		{"AEoDPistol","PistolDrop"},				// 6067
+		//{"AEoDPistol","PistolDrop"},				// 6067
 		{"AEoDSPASShotgun","SPASShotgunDrop"},			// 6068
 		{"AEoDMP5","MP5Drop"},					// 6005
-		{"AEoDRubinWand","RubinWandDrop"},			// 6003
+		//{"AEoDRubinWand","RubinWandDrop"},			// 6003
 		{"AEoDTekbow","TekbowDrop"},				// 6043
 		{"AEoDFlareGun","FlareGunDrop"},			// 6114
 		{"AEoDCrossbow","CrossbowDrop"},			// 6007
-		{"AEoDElfWand","ElfWandDrop"},				// 6130
+		//{"AEoDElfWand","ElfWandDrop"},				// 6130
 		{"AEoDBeretta","BerettaDrop"},				// 6129
 		{"AEoDGargoyleWand","GargoyleWandDrop"},		// 6100
-		{"AEoDRifle","RifleDrop"},				// 6099
+		//{"AEoDRifle","RifleDrop"},				// 6099
 		{"AEoDBlaster","BlasterDrop"},				// 6097
-		{"AEoD357","357Drop"},					// 6098
+		//{"AEoD357","357Drop"},					// 6098
 		{"AEoDAssaultShotgun","AssaultShotgunDrop"},		// 6187
-		{"AEoDFiveSevenPistol","FiveSevenPistolDrop"}};		// 6045
+		//{"AEoDFiveSevenPistol","FiveSevenPistolDrop"} // 6045
+		};		
 
 str Weaps4[23][2]={{"Empty","Nothing"},
 		{"AEoDAWP","AWPDrop"},					// 6194
@@ -89,7 +90,7 @@ str Weaps5[17][2]={{"Empty","Nothing"},
 		{"AEoDGaussGun","GaussGunDrop"},			// 6163
 		{"AEoDPeaceMaker","PeaceMakerDrop"}};
 
-str Weaps6[16][2]={{"Empty","Nothing"},
+str Weaps6[15][2]={{"Empty","Nothing"},
 		{"AEoDHowitzer","HowitzerDrop"},			// 6117
 		{"AEoDChickenLauncher","ChickenLauncherDrop"},		// 6089
 		{"AEoDFireStormSpell","FireStormSpellDrop"},		// 6017
@@ -101,7 +102,7 @@ str Weaps6[16][2]={{"Empty","Nothing"},
 		{"AEoDRocketLauncher","RocketLauncherDrop"},		// 6061
 		{"AEoDScarabStaff","ScarabStaffDrop"},			// 6077
 		{"AEoDMissileLauncher","MissileLauncherDrop"},		// 6062
-		{"AEoDEnlightenmentStaff","EnlightenmentStaffDrop"},	// 6132
+		//{"AEoDEnlightenmentStaff","EnlightenmentStaffDrop"},	// 6132
 		{"AEoDPMFLayer","PMFLayerDrop"},			// 6189
 		{"AEoDScreamer","ScreamerDrop"},
 		{"AEoDCowMangler","CowManglerDrop"}};
@@ -502,21 +503,22 @@ script "s800" (void)		//this one, well, is another part of the dropping script
 	|| (CheckWeapon("AEoDDesertEagle"))
 	|| (CheckWeapon("AEoDGoldenColts"))
 	|| (CheckWeapon("AEoDMac10"))
-	|| (CheckWeapon("AEoDPistol"))
+	//|| (CheckWeapon("AEoDPistol"))
 	|| (CheckWeapon("AEoDSPASShotgun"))
 	|| (CheckWeapon("AEoDMP5"))
-	|| (CheckWeapon("AEoDRubinWand"))
+	//|| (CheckWeapon("AEoDRubinWand"))
 	|| (CheckWeapon("AEoDTekbow"))
 	|| (CheckWeapon("AEoDFlareGun"))
 	|| (CheckWeapon("AEoDCrossbow"))
-	|| (CheckWeapon("AEoDElfWand"))
+	//|| (CheckWeapon("AEoDElfWand"))
 	|| (CheckWeapon("AEoDBeretta"))
 	|| (CheckWeapon("AEoDGargoyleWand"))
-	|| (CheckWeapon("AEoDRifle"))
+	//|| (CheckWeapon("AEoDRifle"))
 	|| (CheckWeapon("AEoDBlaster"))
-	|| (CheckWeapon("AEoD357"))
+	//|| (CheckWeapon("AEoD357"))
 	|| (CheckWeapon("AEoDAssaultShotgun"))
-	|| (CheckWeapon("AEoDFiveSevenPistol")))
+	//|| (CheckWeapon("AEoDFiveSevenPistol"))
+	)
 	{
 		int weapon3number=wepidentif;
 		if(CheckWeapon("AEoDMac10"))
@@ -525,15 +527,6 @@ script "s800" (void)		//this one, well, is another part of the dropping script
 			{
 				GiveInventory("Mac10DropCheck",1);
 				UseInventory("Mac10Drop");
-				terminate;
-			}
-		}
-		else if(CheckWeapon("AEoDPistol"))
-		{
-			if(CheckInventory("Doom3PistolCount")==2)
-			{
-				GiveInventory("PistolDropCheck",1);
-				UseInventory("PistolDrop");
 				terminate;
 			}
 		}
@@ -552,24 +545,6 @@ script "s800" (void)		//this one, well, is another part of the dropping script
 			{
 				GiveInventory("BerettaDropCheck",1);
 				UseInventory("BerettaDrop");
-				terminate;
-			}
-		}
-		else if(CheckWeapon("AEoDMK32Pistol"))
-		{
-			if(CheckInventory("AEoDMK32PistolCount")==2)
-			{
-				GiveInventory("MK32PistolDropCheck",1);
-				UseInventory("MK32PistolDrop");
-				terminate;
-			}
-		}
-		else if(CheckWeapon("AEoDFiveSevenPistol"))
-		{
-			if(CheckInventory("AEoDFiveSevenPistolCount")==2)
-			{
-				GiveInventory("FiveSevenPistolDropCheck",1);
-				UseInventory("FiveSevenPistolDrop");
 				terminate;
 			}
 		}
@@ -592,10 +567,6 @@ script "s800" (void)		//this one, well, is another part of the dropping script
 		{
 			SetWeapon("AEoDMac10");
 		}
-		if(CheckInventory("AEoDPistol"))
-		{
-			SetWeapon("AEoDPistol");
-		}
 		if(CheckInventory("AEoDSPASShotgun"))
 		{
 			SetWeapon("AEoDSPASShotgun");
@@ -603,10 +574,6 @@ script "s800" (void)		//this one, well, is another part of the dropping script
 		if(CheckInventory("AEoDMP5"))
 		{
 			SetWeapon("AEoDMP5");
-		}
-		if(CheckInventory("AEoDRubinWand"))
-		{
-			SetWeapon("AEoDRubinWand");
 		}
 		if(CheckInventory("AEoDTekbow"))
 		{
@@ -620,10 +587,6 @@ script "s800" (void)		//this one, well, is another part of the dropping script
 		{
 			SetWeapon("AEoDCrossbow");
 		}
-		if(CheckInventory("AEoDElfWand"))
-		{
-			SetWeapon("AEoDElfWand");
-		}
 		if(CheckInventory("AEoDBeretta"))
 		{
 			SetWeapon("AEoDBeretta");
@@ -632,25 +595,13 @@ script "s800" (void)		//this one, well, is another part of the dropping script
 		{
 			SetWeapon("AEoDGargoyleWand");
 		}
-		if(CheckInventory("AEoDRifle"))
-		{
-			SetWeapon("AEoDRifle");
-		}
 		if(CheckInventory("AEoDBlaster"))
 		{
 			SetWeapon("AEoDBlaster");
 		}
-		if(CheckInventory("AEoD357"))
-		{
-			SetWeapon("AEoD357");
-		}
 		if(CheckInventory("AEoDAssaultShotgun"))
 		{
 			SetWeapon("AEoDAssaultShotgun");
-		}
-		if(CheckInventory("AEoDFiveSevenPistol"))
-		{
-			SetWeapon("AEoDFiveSevenPistol");
 		}
 	}
 	if((CheckWeapon("AEoDAWP"))
