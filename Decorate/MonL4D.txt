@@ -52,6 +52,7 @@ Actor SkillCountSetter : CustomInventory
 Actor L4DTank //cyberdemon
 {
 	var int user_skill;
+	DropItem DMSoulFragment
 	Monster
 	+BOSS
 	+BOSSDEATH
@@ -389,8 +390,9 @@ Actor L4DCommonMale1
 		N041 A 8
 		Goto See
 	Death:
+		"####" "#" 0 A_DropItem("DMSoulFragment",1,1)
 		"####" "#" 0 A_GiveInventory("L4DCommonScore",1,AAPTR_PLAYER1)
-	Death.NoCount:
+	Death.NoCount: //Don't drop souls if it doesn't count.
 		N041 L 4 A_Fall
 		N041 MNOPQRST 4
 		TNT1 A 0 A_Jump(256,1,2,3,4,5,6)
@@ -398,6 +400,7 @@ Actor L4DCommonMale1
 		N041 U 2 A_FadeOut(0.08)
 		Wait
 	XDeath:
+		"####" "#" 0 A_DropItem("DMSoulFragment",1,1)
 		"####" "#" 0 A_GiveInventory("L4DCommonScore",1,AAPTR_PLAYER1)
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 A 0 A_SpawnItemEx("QuakeSmallGibDropper",0,0,random(20,40),velx,vely,velz,0,33|SXF_ABSOLUTEMOMENTUM)
@@ -406,6 +409,7 @@ Actor L4DCommonMale1
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
+		"####" "#" 0 A_DropItem("DMSoulFragment",1,1)
 		"####" "#" 0 A_GiveInventory("L4DCommonScore",1,AAPTR_PLAYER1)
 		"####" "#" 0 Thing_SetTranslation(0,50)
 		"####" "#" 1 A_FadeOut(0.015)
@@ -417,6 +421,7 @@ Actor L4DCommonMale1
 		"####" "##" 2 A_FadeOut(0.03)
 		Goto Disintegrate+7
 	Ice:
+		"####" "#" 0 A_DropItem("DMSoulFragment",1,1)
 		"####" "#" 5 A_GenericFreezeDeath
 		"####" "#" 0 A_GiveInventory("L4DCommonScore",1,AAPTR_PLAYER1)
 		"####" "#" 1 A_FreezeDeathChunks
@@ -521,6 +526,7 @@ Actor L4DCommonMale2
 		N042 A 8
 		Goto See
 	Death:
+		"####" "#" 0 A_DropItem("DMSoulFragment",1,1)
 		"####" "#" 0 A_GiveInventory("L4DCommonScore",1,AAPTR_PLAYER1)
 	Death.NoCount:
 		N042 L 4 A_Fall
@@ -530,6 +536,7 @@ Actor L4DCommonMale2
 		N042 R 2 A_FadeOut(0.08)
 		Wait
 	XDeath:
+		"####" "#" 0 A_DropItem("DMSoulFragment",1,1)
 		"####" "#" 0 A_GiveInventory("L4DCommonScore",1,AAPTR_PLAYER1)
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 A 0 A_SpawnItemEx("QuakeSmallGibDropper",0,0,random(20,40),velx,vely,velz,0,33|SXF_ABSOLUTEMOMENTUM)
@@ -538,6 +545,7 @@ Actor L4DCommonMale2
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
+		"####" "#" 0 A_DropItem("DMSoulFragment",1,1)
 		"####" "#" 0 A_GiveInventory("L4DCommonScore",1,AAPTR_PLAYER1)
 		"####" "#" 0 Thing_SetTranslation(0,50)
 		"####" "#" 1 A_FadeOut(0.015)
@@ -549,6 +557,7 @@ Actor L4DCommonMale2
 		"####" "##" 2 A_FadeOut(0.03)
 		Goto Disintegrate+7
 	Ice:
+		"####" "#" 0 A_DropItem("DMSoulFragment",1,1)
 		"####" "#" 5 A_GenericFreezeDeath
 		"####" "#" 0 A_GiveInventory("L4DCommonScore",1,AAPTR_PLAYER1)
 		"####" "#" 1 A_FreezeDeathChunks
@@ -658,6 +667,7 @@ Actor L4DCommonFemale1
 		N045 A 8
 		Goto See
 	Death:
+		"####" "#" 0 A_DropItem("DMSoulFragment",1,1)
 		"####" "#" 0 A_GiveInventory("L4DCommonScore",1,AAPTR_PLAYER1)
 	Death.NoCount:
 		N045 L 4 A_Fall
@@ -675,6 +685,7 @@ Actor L4DCommonFemale1
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
+		"####" "#" 0 A_DropItem("DMSoulFragment",1,1)
 		"####" "#" 0 A_GiveInventory("L4DCommonScore",1,AAPTR_PLAYER1)
 		"####" "#" 0 Thing_SetTranslation(0,50)
 		"####" "#" 1 A_FadeOut(0.015)
@@ -686,6 +697,7 @@ Actor L4DCommonFemale1
 		"####" "##" 2 A_FadeOut(0.03)
 		Goto Disintegrate+7
 	Ice:
+		"####" "#" 0 A_DropItem("DMSoulFragment",1,1)
 		"####" "#" 5 A_GenericFreezeDeath
 		"####" "#" 0 A_GiveInventory("L4DCommonScore",1,AAPTR_PLAYER1)
 		"####" "#" 1 A_FreezeDeathChunks
@@ -790,11 +802,13 @@ Actor L4DCommonFemale2
 		N046 A 8
 		Goto See
 	Ice:
+		"####" "#" 0 A_DropItem("DMSoulFragment",1,1)
 		"####" "#" 5 A_GenericFreezeDeath
 		"####" "#" 0 A_GiveInventory("L4DCommonScore",1,AAPTR_PLAYER1)
 		"####" "#" 1 A_FreezeDeathChunks
 		Wait
 	Death:
+		"####" "#" 0 A_DropItem("DMSoulFragment",1,1)
 		"####" "#" 0 A_GiveInventory("L4DCommonScore",1,AAPTR_PLAYER1)
 	Death.NoCount:
 		N046 L 4 A_Fall
@@ -804,6 +818,7 @@ Actor L4DCommonFemale2
 		N046 R 2 A_FadeOut(0.08)
 		Wait
 	XDeath:
+		"####" "#" 0 A_DropItem("DMSoulFragment",1,1)
 		"####" "#" 0 A_GiveInventory("L4DCommonScore",1,AAPTR_PLAYER1)
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 A 0 A_SpawnItemEx("QuakeSmallGibDropper",0,0,random(20,40),velx,vely,velz,0,33|SXF_ABSOLUTEMOMENTUM)
@@ -812,6 +827,7 @@ Actor L4DCommonFemale2
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
+		"####" "#" 0 A_DropItem("DMSoulFragment",1,1)
 		"####" "#" 0 A_GiveInventory("L4DCommonScore",1,AAPTR_PLAYER1)
 		"####" "#" 0 Thing_SetTranslation(0,50)
 		"####" "#" 1 A_FadeOut(0.015)
@@ -853,6 +869,7 @@ Actor L4DCommonFemale2NA : L4DCommonFemale2
 //======================================================================================
 Actor L4DSpitter
 {
+	DropItem "DMSoulFragment" 64
 	var int user_skill;
 	Monster
 	Health 450
@@ -1085,6 +1102,7 @@ Actor SpitterAcidGas : AntlionSpawnerGas
 //======================================================================================
 Actor L4DSmoker
 {
+	DropItem "DMSoulFragment" 64
 	var int user_skill;
 	Monster
 	Health 450
@@ -2180,6 +2198,7 @@ Actor SmokerTongueTrail
 //======================================================================================
 Actor L4DBoomer
 {
+	DropItem "DMSoulFragment" 64
 	var int user_skill;
 	var int user_angle;
 	Monster
@@ -2443,6 +2462,7 @@ Actor PukeObscureVision : CustomInventory
 //======================================================================================
 Actor L4DJockey
 {
+	DropItem "DMSoulFragment" 64
 	var int user_skill;
 	var int user_countermain;
 	var int user_countersecondary;
@@ -2642,6 +2662,7 @@ Actor JockeyRideHack2: CustomInventory
 //======================================================================================
 Actor L4DHunter
 {
+	DropItem "DMSoulFragment" 64
 	var int user_skill;
 	var int user_type;
 	Monster
@@ -2810,6 +2831,7 @@ Actor HunterObscureVision : CustomInventory
 //======================================================================================
 Actor L4DWitchWander
 {
+	DropItem "DMSoulFragment"
 	var int user_skill;
 	Monster
 	Health 2500
@@ -2937,6 +2959,7 @@ Actor L4DWitchWander
 }
 Actor L4DWitchSitting
 {
+	DropItem "DMSoulFragment"
 	var int user_skill;
 	Monster
 	Health 2500
@@ -3089,6 +3112,7 @@ Actor L4DWitchSitting
 //======================================================================================
 Actor L4DCharger
 {
+	DropItem "DMSoulFragment" 64
 	var int user_skill;
 	var int user_count;
 	var int user_angle;
