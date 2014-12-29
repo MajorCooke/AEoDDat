@@ -225,23 +225,27 @@ Actor HearthBlood
 Actor SoulHarvested : HealthBonus //Health
 {
 	+NOTELESTOMP
-+FLOATBOB
-+VISIBILITYPULSE
-Scale 0.48
-Inventory.Amount 10	//was 15, but due to the additive nature, is too much.
-Inventory.MaxAmount 500
-Inventory.PickupMessage "You harvested some soul energy"
-Health.LowMessage 25, "You harvested some soul energy that you really needed!"
-Inventory.PickupSound "reilsss/health/soul"
-RenderStyle Translucent
-States
-{
-Spawn:
-	RH03 A 0 NoDelay Thing_ChangeTID(0,22007)
-	Cont:
-	RH03 ABCD 3 Bright
-	Loop
-}
+	+FLOATBOB
+	+VISIBILITYPULSE
+	Scale 0.48
+	Inventory.Amount 10	//was 15, but due to the additive nature, is too much.
+	Inventory.MaxAmount 500
+	Inventory.PickupMessage "You harvested some soul energy"
+	Health.LowMessage 25, "You harvested some soul energy that you really needed!"
+	Inventory.PickupSound "reilsss/health/soul"
+	RenderStyle Translucent
+	States
+	{
+	Spawn:
+		RH03 A 0 NoDelay A_Jump(128,"Spec")
+		RH03 A 0 Thing_ChangeTID(0,22007)
+		Cont:
+		RH03 ABCD 3 Bright
+		Loop
+	Spec:
+		TNT1 A 0 A_SpawnItemEx("DMSoulFragment",0,0,0,0,0,0,0,32)
+		Stop
+	}
 }
 
 //--------------------------------------------------------------------
