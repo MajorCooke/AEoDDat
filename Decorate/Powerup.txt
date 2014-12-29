@@ -3969,13 +3969,14 @@ Actor DMSoulFragment : CustomInventory
 	+BRIGHT
 	RenderStyle Add
 	Inventory.PickupSound "reilsss/health/soul"
+	Scale 0.1
 	States
 	{
 	Spawn:
 		X099 A 0 NoDelay A_Stop
 		"####" "#" 0 A_Warp(AAPTR_DEFAULT,0,0,3,0,WARPF_NOCHECKPOSITION)
 	Scaling:
-		"####" "#" 1 A_SetScale((sin(user_scale)*0.1)+0.1)
+		"####" "#" 1 A_SetScale((sin(user_scale)*0.05)+0.05)
 		"####" "#" 0 A_SetUserVar("user_scale",user_scale+5)
 		"####" "#" 0 A_JumpIf((user_count >= 35*10) && (ScaleX <= 0.0),"End")
 		"####" "#" 0 A_JumpIf(user_count >= 35*10,2)
@@ -3989,12 +3990,15 @@ Actor DMSoulFragment : CustomInventory
 		Stop
 	Use:
 		TNT1 A 0 ACS_NamedExecuteAlways("AESoulCount",0,0,0,0)
-		TNT1 A 0 A_GiveInventory("DMSoulCount",random(1,4))
+		TNT1 A 0 A_GiveInventory("DMSoulCount",random(1,6))
 		TNT1 A 0 A_GiveInventory("DMSoulHealth",1)
 		TNT1 A 0 A_JumpIfInventory("DMSoulCount",666,"Check")
 		Stop
 	Check:
 		TNT1 A 0 A_TakeInventory("DMSoulCount",666,0)
+		TNT1 A 0 A_SetBlend("Grey",1,17)
+		TNT1 A 0 A_PlaySound("DemonMorph/Grow",5|CHAN_NOPAUSE,1,0,ATTN_NONE)
+		TNT1 A 0 A_PlaySound("DemonMorph/Start",6|CHAN_NOPAUSE,1,0,ATTN_NONE)
 		TNT1 A 0 A_JumpIfInventory("PowerDemonMorph",1,"G2")
 	G1:
 		TNT1 A 0 A_GiveInventory("DemonMorphPowerup",1)
@@ -4010,8 +4014,8 @@ Actor DMSoulCount : Inventory
 {	
 	+IGNORESKILL
 	Inventory.Amount 1
-	Inventory.MaxAmount 666
-	Inventory.InterHubAmount 666
+	Inventory.MaxAmount 1000
+	Inventory.InterHubAmount 1000
 }
 
 Actor DMSoulHealth : HealthBonus
@@ -4086,10 +4090,8 @@ Actor DemonMorphPowerup : CustomInventory
 	Simple:
 		QPEI A 4 A_SetUserVar("user_tick",user_tick+2)
 		Goto S2
-	Pickup:
-		TNT1 A 0 A_JumpIfInventory("PowerDemonMorph",1,"Failure")
-		Goto Use
 	Use:
+		TNT1 A 0 A_JumpIfInventory("PowerDemonMorph",1,"Adding")
 		TNT1 A 0 A_StopSound(CHAN_AUTO)
 		TNT1 A 0 A_StopSound(CHAN_WEAPON)
 		TNT1 A 0 A_StopSound(CHAN_VOICE)
@@ -4098,8 +4100,19 @@ Actor DemonMorphPowerup : CustomInventory
 		TNT1 A 0 A_StopSound(7)
 		TNT1 A 0 A_TakeInventory("PowerLightAmp",1000,0)
 		TNT1 A 0 A_GiveInventory("DemonMorphGiver",1)
+		TNT1 A 0 A_SetInvulnerable
 		TNT1 A 0 A_SpawnItemEx("DemonMorphScreams",0,0,0,0,0,0,0,32)
 		TNT1 A 0 A_SpawnItemEx("DemonMorphDisabler",0,0,0,0,0,0,0,32|SXF_SETMASTER) //Needed because, unfortunately, the weapon never hits its deselect state.
+		Stop
+	Adding:
+		TNT1 A 0 A_SetBlend("Grey",1,17)
+		TNT1 A 0 A_StopSound(5)
+		TNT1 A 0 A_StopSound(6)
+		TNT1 A 0 A_PlaySound("DemonMorph/Grow",5|CHAN_NOPAUSE,1,0,ATTN_NONE)
+		TNT1 A 0 A_PlaySound("DemonMorph/Start",6|CHAN_NOPAUSE,1,0,ATTN_NONE)
+		TNT1 A 0 A_GiveInventory("DemonMorphGiver",1)
+		TNT1 A 0 A_GiveInventory("DemonMorphFullBright",1)
+		TNT1 A 0 A_SetInvulnerable
 		Stop
 	Failure:
 		TNT1 A 0
@@ -4200,7 +4213,7 @@ Actor AEoDDemonMorphHand : Weapon
 		M666 A 1 A_SetBlend("White",0.875,10)
 		M666 A 0 A_SetBlend("White",1.0,10)
 		M666 A 0 ACS_NamedExecuteAlways("InvisibleItemToggle",0,1,0,0)
-		M666 A 0 A_GiveInventory("DemonMorphScreen",1)
+		//M666 A 0 A_GiveInventory("DemonMorphScreen",1)
 		M666 A 0 A_GiveInventory("DemonMorphFullBright",1)
 	Ready2:
 		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(5)*0.095),ZOOM_NOSCALETURNING)
@@ -4494,6 +4507,7 @@ Actor DemonMorphFullBright : PowerupGiver
 	+INVENTORY.ADDITIVETIME
     Powerup.Type "LightAmp"
     Powerup.Duration 1225
+	Inventory.MaxAmount 0
 }
 
 Actor DemonMorphScreams
