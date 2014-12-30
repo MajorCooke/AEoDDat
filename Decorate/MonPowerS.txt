@@ -148,8 +148,8 @@ Actor RedMite 7330
     scale 0.35
     speed 6
     radius 8
-    height 6
-    health 20
+    height 12
+    health 10
     painchance 255
     meleedamage 2
     meleerange 10
@@ -395,7 +395,7 @@ Actor AnubisZombie 7331		//DoomImp
     health 90
     radius 16
     height 56
-    speed 8
+    speed 14
     scale 0.48
     mass 400
     meleedamage 4
@@ -454,7 +454,7 @@ Actor AnubisZombie 7331		//DoomImp
 	ANUB A 2 A_Look
 	loop
     See:
-	ANUB AABBCCDD 2 A_ExtChase(256,128)
+	ANUB ABCD 4 A_Chase
 	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,2)
 	TNT1 A 0
 	Loop
@@ -906,7 +906,7 @@ Actor Bastet 7334	//demon
     height 52
     mass 400
     painchance 32
-    speed 8
+    speed 14
     meleedamage 1
     seesound "monster/bastet/sight"
     painsound "monster/bastet/pain"
@@ -975,13 +975,13 @@ Actor Bastet 7334	//demon
 	Loop
     See:
 	BAST A 0 A_JumpIfInventory("BastetInTeleport",1,12)
-	BAST AABBCCDD 1 A_ExtChase(256,0)
+	BAST AABBCCDD 2 A_ExtChase(256,0)
 	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,2)
 	TNT1 A 0
 	Loop
 	TNT1 A 0 A_Jump(15,"Death")
 	Loop
-	BAST AABBCCDD 1 A_ExtChase(0,256)
+	BAST AABBCCDD 2 A_ExtChase(0,256)
 	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,2)
 	TNT1 A 0
 	Loop
@@ -990,9 +990,9 @@ Actor Bastet 7334	//demon
     Melee:
 	BAST J 0 A_PlaySound("monster/bastet/melee")
 	BAST J 2 A_FaceTarget
-	BAST KL 1 A_FaceTarget
-	BAST M 1 A_MeleeAttack
-	BAST N 1 A_FaceTarget
+	BAST KL 2 A_FaceTarget
+	BAST M 2 A_MeleeAttack
+	BAST N 2 A_FaceTarget
 	Goto See
     Missile:
 	BAST E 0 A_PlaySound("monster/bastet/warpin")
@@ -1143,7 +1143,8 @@ Actor BastetMaster : Bastet 7335	//revenant
     hitobituary "%o got surprisibus surprisibus'd by a Bastet Master."
     health 400
     painchance 48
-    meleedamage 4
+    meleedamage 2
+    Speed 16
     PainChance "Charm", 192
     PainChance "Terror", 192
     PainChance "Defile", 255
@@ -1155,7 +1156,7 @@ Actor BastetMaster : Bastet 7335	//revenant
     states
     {
     See:
-	BAST AABBCCDD 1 A_Chase
+	BAST AABBCCDD 2 A_Chase
 	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,2)
 	TNT1 A 0
 	Loop
@@ -1165,9 +1166,9 @@ Actor BastetMaster : Bastet 7335	//revenant
 	TNT1 A 0 A_TakeInventory("BastetInTeleport",1)
 	BAST J 0 A_PlaySound("monster/bastet/melee")
 	BAST J 2 A_FaceTarget
-	BAST KL 1 A_FaceTarget
+	BAST KL 2 A_FaceTarget
 	BAST M 1 A_MeleeAttack
-	BAST N 1 A_FaceTarget
+	BAST N 2 A_FaceTarget
 	Goto See
     Missile:
 	BAST J 0 A_JumpIfInventory("BastetInTeleport",1,"Missile")
@@ -1927,7 +1928,8 @@ Actor OmenWaspSuper : OmenWasp 7339	//cacodemon
     meleerange 32
     meleedamage 6
     mass 500
-    speed 7
+    speed 16
+    MinMissileChance 24
     painsound "monster/omenwasp/attack"
     PainChance "Charm", 255
     PainChance "Terror", 255
@@ -1939,7 +1941,15 @@ Actor OmenWaspSuper : OmenWasp 7339	//cacodemon
 	DamageFactor "AEBullet", 1.5
     states
     {
+    See:
+  	OWDE A 0 A_ChangeFlag(FLOATBOB,0)
+  	OWDE A 0 A_PlaySound("monster/omenwasp/flying")
+  	OWDE A 3 A_Chase
+  	OWDE B 0 A_PlaySound("monster/omenwasp/flying")
+  	OWDE B 3 A_Chase
+  	loop
     Missile:
+	TNT1 A 0 A_Jump(128,"See")
 	OWDE CD 5 A_FaceTarget
 	OWDE E 7 Bright A_CustomMissile("BaronBall",45,0,0)
 	goto See
@@ -2341,7 +2351,7 @@ Actor KilmaatSoldier 7340	//zombieman
 	KILM A 1 A_Look
 	loop
     See:
-	KILM ABCD 2 A_Chase
+	KILM ABCD 3 A_Chase
 	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,2)
 	TNT1 A 0
 	Loop
@@ -2538,7 +2548,7 @@ Actor SmallKilmaatikhan 7342	//archvile
     obituary "%o was blasted by a Kilmaat Leader-to-be."
     health 1250
     painchance 40
-    speed 5
+    speed 8
     radius 20
     height 56
     scale 0.4
@@ -2598,16 +2608,18 @@ Actor SmallKilmaatikhan 7342	//archvile
 	KBOS AABBCCDDEE 2 A_Chase
 	loop
     Missile:
-	KBOS A 0 A_Jump(25,2) //Spawnless spit (explodes immediately and does half damage as Kilmaatikhan's.)
-	KBOS A 0 A_Jump(50,6) //Acid Spit
-	goto Missile
+	TNT1 A 0 A_JumpIfCloser(190,"Spit")
+    Spit:
+	TNT1 A 0 A_Jump(128,"Acid")
 	KBOS IJ 3 A_FaceTarget
+	KBOS KKKKKKKKKKK 0 Bright A_CustomMissile("miniKilmaatikhanspit",15,random(-5,5),random(-10,10),2,random(0,35))
 	KBOS K 6 Bright A_CustomMissile("miniKilmaatikhanspit",15,random(-5,5),random(-10,10),2,random(0,35))
 	KBOS JI 3 A_Facetarget
 	goto See
+    Acid:
 	KBOS IL 5 A_FaceTarget
-	KBOS C 0 A_CustomMissile("SerpentFX",50,0,0)  
-	KBOS C 5 A_CustomMissile("SerpentFX",50,0,0)
+	KBOS CCCCCCCCCCCC 1 A_CustomMissile("SerpentFXKilmaat",50,0,random(20,-20))  
+	KBOS C 1 A_CustomMissile("SerpentFXKilmaat",50,0,0)
 	KBOS I 5 A_FaceTarget
 	goto See
     Pain:
@@ -2638,6 +2650,12 @@ Actor SmallKilmaatikhan 7342	//archvile
 	KBOS AA 2 A_FadeOut(0.03)
 	Goto Disintegrate+6
     }
+}
+
+Actor SerpentFXKilmaat : SerpentFX
+{
+	Speed 22
+	Damage 10
 }
 
 Actor miniKilmaatikhanguts1
@@ -2746,9 +2764,9 @@ Actor miniKilmaatikhanspit
 {
     radius 4
     height 8
-    speed 14
+    speed 20
     scale 0.2
-    damage 5
+    damage 10
     PROJECTILE
     +MISSILE
     +STRIFEDAMAGE
@@ -3494,10 +3512,10 @@ ACTOR SetMinion : Set				// fatso
 	PSET D 0 A_TakeInventory("SetLightningCheck",50)
 	PSET D 0 A_UnSetInvulnerable
 	PSET D 0 A_PlaySound("monster/set/move")
-	PSET DDDEEE 2 A_Chase
+	PSET DDEE 3 A_Chase
 	PSET L 0 A_ChangeFlag(DROPOFF,0)  
 	PSET D 0 A_PlaySound("monster/set/move")
-	PSET FFFGGG 2 A_Chase
+	PSET FFGG 3 A_Chase
 	loop
     Missile:
 	PSET D 0 A_Jump(15,"Jump")
@@ -3676,9 +3694,6 @@ ACTOR SetMinion : Set				// fatso
 	Goto See
     Lightning:
 	PSET N 4 A_FaceTarget
-	PSET O 0 Bright A_PlaySound("reilsss/weapons/ligthingrodfire")
-	PSET O 5 Bright A_CustomMissile("SetMinionLightning",24,0)
-	PSET O 8 A_FaceTarget
 	PSET O 0 Bright A_PlaySound("reilsss/weapons/ligthingrodfire")
 	PSET O 5 Bright A_CustomMissile("SetMinionLightning",24,0)
 	PSET O 8 A_FaceTarget
@@ -5911,6 +5926,7 @@ Actor Jon : JonWeak 7350	//cyberdemon
     health 5500
     +BOSS
     +NOFEAR
+    Scale 0.6
     DamageFactor "Wormwood", 0.2
     PainChance "Charm", 0
     PainChance "Terror", 0
@@ -6139,7 +6155,7 @@ Actor SelkisMinion 		//chaingunner
 	DropItem "PowerupSpawner" 8
     obituary "%o was eradicated by Selkis."
     hitobituary "%o was pincer'd by Selkis."
-    health 150
+    health 120
     radius 20
     height 56
     speed 5
