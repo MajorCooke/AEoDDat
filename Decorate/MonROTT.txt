@@ -20,7 +20,7 @@ ACTOR LowGuard		// zombie
     PainSound "lowguard/pain"
     DeathSound "lowguard/death"
     Scale 0.6
-    MONSTER
+    Monster	RipLevelMin 1
     +FLOORCLIP
     Obituary "%o was shot by a Low Guard."
     PainChance "Charm", 255
@@ -166,7 +166,7 @@ ACTOR HighGuard		// chaingun guy
     PainSound "highguard/pain"
     DeathSound "highguard/death"
     Scale 0.6
-    MONSTER
+    Monster	RipLevelMin 1
     +FLOORCLIP
     Obituary "%o was killed by a High Guard."
     PainChance "Charm", 255
@@ -313,7 +313,7 @@ ACTOR LightningGuard	// chaingun guy
     PainSound "lightningguard/pain"
     DeathSound "lightningguard/death"
     Scale 0.6
-    MONSTER
+    Monster	RipLevelMin 1
     +FLOORCLIP
     Obituary "%o was caught by a Lightning Guard."
     PainChance "Charm", 255
@@ -505,7 +505,7 @@ ACTOR StrikeTeam	// shotgun guy
     PainSound "striketeam/pain"
     DeathSound "striketeam/death"
     Scale 0.6
-    MONSTER
+    Monster	RipLevelMin 1
 	+VULNERABLE
     +FLOORCLIP
     +MISSILEMORE
@@ -681,7 +681,7 @@ ACTOR Overpatrol	// imp
     PainSound "overpatrol/pain"
     DeathSound "overpatrol/death"
     Scale 0.6
-    MONSTER
+    Monster	RipLevelMin 1
     +FLOORCLIP
     Obituary "%o was stopped by the Overpatrol."
     PainChance "Charm", 255
@@ -979,7 +979,7 @@ ACTOR RobotPatrol	// baron of hell
     ActiveSound "nme/see"
     DeathSound "nme/fireball"
     Scale 0.6
-    MONSTER
+    Monster	RipLevelMin 1
     +BOSS
     +BOSSDEATH
     +DONTMORPH
@@ -1269,7 +1269,7 @@ ACTOR TriadEnforcer	// mancubus
     PainSound "triad/pain"
     DeathSound "triad/death"
     Scale 0.6
-    MONSTER
+    Monster	RipLevelMin 1
     +BOSS
     +BOSSDEATH
     +FLOORCLIP
@@ -1477,7 +1477,7 @@ ACTOR SpinningBlade	// demon
     Speed 4
     Mass 0xFFFFFFFFFF
     Scale 0.6
-    MONSTER
+    Monster	RipLevelMin 1
     -SOLID
     -SHOOTABLE
     -COUNTKILL
@@ -1663,9 +1663,9 @@ Actor GeneralDarian //Cyberdemon
 	Radius 27
 	Height 57
 	Health 4000
-	Mass 999999999
+	+DONTTHRUST
 	Speed 12
-	Monster
+	Monster	RipLevelMin 1
 	+BOSS
 	+BOSSDEATH
 	+FULLVOLDEATH
@@ -1853,9 +1853,9 @@ Actor SebastianKrist //Spider mastermind
 	Radius 35
 	Height 37
 	Health 5000
-	Mass 999999999
+	+DONTTHRUST
 	Speed 14
-	Monster
+	Monster	RipLevelMin 1
 	+BOSS
 	+BOSSDEATH
 	+FULLVOLDEATH
@@ -2072,28 +2072,28 @@ ACTOR NME
 	DropItem "HealthHeart" 210
 	DropItem "PowerslaveSpawner" 28
 	DropItem "PowerupSpawner" 8
-        var int user_damagephase;
-        var int user_fireballcount;
-        Scale .55
-        Radius 25
-        Height 37
-        Health 5000 //8266
-        Mass 99999999999
-        Speed 12
-        Monster
-        +BOSS
-        +BOSSDEATH
-        +LOOKALLAROUND
-        +QUICKTORETALIATE
-        +NOICEDEATH
-        +NORADIUSDMG
-        BloodType NoBloodPuff
-        +NOPAIN
-        +NOBLOCKMONST
-        +DONTMORPH
-        SeeSound "nme/see"
-        DeathSound "nme/fireball"
-        ActiveSound "nme/see"
+	var int user_damagephase;
+	var int user_fireballcount;
+	Scale .55
+	Radius 25
+	Height 37
+	Health 5000 //8266
+	+DONTTHRUST
+	Speed 12
+	Monster	RipLevelMin 1
+	+BOSS
+	+BOSSDEATH
+	+LOOKALLAROUND
+	+QUICKTORETALIATE
+	+NOICEDEATH
+	+NORADIUSDMG
+	BloodType NoBloodPuff
+	+NOPAIN
+	+NOBLOCKMONST
+	+DONTMORPH
+	SeeSound "nme/see"
+	DeathSound "nme/fireball"
+	ActiveSound "nme/see"
     DamageFactor "Wormwood", 0.2
 //Mechanic
         DamageFactor "Fire", 1.25
@@ -2435,7 +2435,7 @@ Actor ROTTExploFX
 //===========================================================================
 //===========================================================================
 //                       El Oscuro
-//      Made by Major Cooke
+//      			Made by Major Cooke
 //Thanks to Bouncy for helping me, as this was my first official monster ever made.
 //Sprites from Rise of the Triad
 //        No type
@@ -2447,9 +2447,9 @@ ACTOR OscuroHelper
         Height 56
         Speed 12
         PainChance 255
-        Mass 999999999
+        +DONTTHRUST
         Scale .65
-        MONSTER
+        Monster	RipLevelMin 666
         +BOSS
         +BOSSDEATH
         //+NODAMAGE
@@ -2933,7 +2933,7 @@ ACTOR FlameRetaliation
         PROJECTILE
         +FORCERADIUSDMG
         +FLOORHUGGER
-        +RIPPER
+        +RIPPER	RipperLevel 1
         +DONTSPLASH
         +NODAMAGETHRUST
         DamageType "Fire"
@@ -3063,6 +3063,8 @@ ACTOR Oscuro : OscuroHelper
     -CANTSEEK
 	+NOICEDEATH
 	-NOTELEPORT
+	-DONTRIP
+	RipLevelMin 3
     DamageFactor "OscuroHelper", 1
     DamageFactor "Normal", 1
     DamageFactor "TempestLightning", 1
@@ -3074,30 +3076,6 @@ ACTOR Oscuro : OscuroHelper
     DamageFactor "ChaosExpl2", 0
     States
     {
-    Pain.DarkSyphon:
-        TNT1 A 0 A_Jump(64,"See")
-        TNT1 A 0 A_Jump(245,2)
-        TNT1 A 0 A_SpawnItemEx("DarkMana",0,0,0,0,0,0,0,32)
-        Goto See
-        TNT1 A 0 A_SpawnItemEx("DarkMana",0,0,0,0,0,0,0,32)
-        Goto See+16
-    Pain.RedSyphon:
-        TNT1 A 0 A_Jump(105,"See")
-        TNT1 A 0 A_SpawnItemEx("RedMana",0,0,0,0,0,0,0,32)
-        Goto See+16
-    Pain.GreenSyphon:
-        TNT1 A 0 A_Jump(179,"See")
-        TNT1 A 0 A_SpawnItemEx("GreenMana",0,0,0,0,0,0,0,32)
-        Goto See+16
-    Pain.BlueSyphon:
-        TNT1 A 0 A_Jump(203,"See")
-        TNT1 A 0 A_SpawnItemEx("BlueMana",0,0,0,0,0,0,0,32)
-        Goto See+16
-    Pain.Chaos:
-        TNT1 A 0
-        TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
-        TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
-        Goto See
     Pain.Drain:
         TNT1 A 0
         TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
@@ -3433,7 +3411,7 @@ Actor ExperimentalFlameLevithian //EFLBoss //cyberdemon
         +NOICEDEATH
         +NOGRAVITY
         +VISIBILITYPULSE
-        +DONTRIP
+		RipLevelMin 2
         MinMissileChance 164
         DamageFactor "TempestLightning", 0.7
         DamageFactor "Normal", 0.8

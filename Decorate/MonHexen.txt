@@ -8,8 +8,10 @@ Actor FEttin : Ettin 7080	// demon
 	DropItem "HealthHeart" 210
 	DropItem "PowerslaveSpawner" 28
 	DropItem "PowerupSpawner" 8
+	Monster
     +FLOORCLIP
     -TELESTOMP
+	RipLevelMin 1
     Scale 0.88
     height 56
     Radius 20
@@ -165,6 +167,8 @@ Actor FCentaur : Centaur 7081	// demon
 	DropItem "HealthHeart" 210
 	DropItem "PowerslaveSpawner" 28
 	DropItem "PowerupSpawner" 8
+	Monster
+	RipLevelMin 1
     +FLOORCLIP
     -TELESTOMP
     Scale 0.88
@@ -315,6 +319,8 @@ Actor FCentaurLeader : CentaurLeader 7082	// chainguy
 	DropItem "AEoDDragonClawItem" 64
 	DropItem "PowerSlaveSpawnerMonsterAmmo" 128
 	DropItem "PowerupSpawner" 8
+	Monster
+	RipLevelMin 1
     +FLOORCLIP
     -TELESTOMP
     Scale 0.88
@@ -472,6 +478,8 @@ Actor FWraith : Wraith 7083	// cacodemon
 	DropItem "HealthHeart" 210
 	DropItem "PowerslaveSpawner" 28
 	DropItem "PowerupSpawner" 8
+	Monster
+	RipLevelMin 1
     +FLOORCLIP
     +MISSILEMORE
     -TELESTOMP
@@ -625,6 +633,8 @@ Actor FIceGuy : IceGuy 7084		// mancubus
 	DropItem "HealthHeart" 210
 	DropItem "PowerslaveSpawner" 28
 	DropItem "PowerupSpawner" 8
+	Monster
+	RipLevelMin 1
     +FLOORCLIP
     -TELESTOMP
     Scale 0.9
@@ -726,6 +736,8 @@ Actor FDemon1 : Demon1 7085		// revenant
 	DropItem "HealthHeart" 210
 	DropItem "PowerslaveSpawner" 28
 	DropItem "PowerupSpawner" 8
+	Monster
+	RipLevelMin 1
     +FLOORCLIP
     -TELESTOMP
     Health 400
@@ -849,6 +861,8 @@ Actor FDemon2 : Demon2 7086		// hellknight
 	DropItem "HealthHeart" 210
 	DropItem "PowerslaveSpawner" 28
 	DropItem "PowerupSpawner" 8
+	Monster
+	RipLevelMin 1
     +FLOORCLIP
     -TELESTOMP
     Health 700
@@ -987,6 +1001,8 @@ Actor FBishop : Bishop replaces Bishop 7087	// cacodemon
 	DropItem "HealthHeart" 210
 	DropItem "PowerslaveSpawner" 28
 	DropItem "PowerupSpawner" 8
+	Monster
+	RipLevelMin 1
     +FLOORCLIP
     -NOBLOOD
     -TELESTOMP
@@ -1220,7 +1236,7 @@ ACTOR FWyvern 7089	// spider mastermind
     PainChance 100
     Mass 400
     REACTIONTIME 8 
-    MONSTER
+    Monster	RipLevelMin 1
     +BOSSDEATH
     +BOSS
     +NOGRAVITY
@@ -1354,7 +1370,7 @@ ACTOR Baratus : FighterBoss 7090		// archvile
     Speed 15
     PainChance 50
     Mass 200
-    MONSTER 
+    Monster	RipLevelMin 1 
     -TELESTOMP
     +FLOORCLIP
     +MISSILEEVENMORE
@@ -1563,11 +1579,12 @@ actor FSwordFireTrail
     Projectile
     ExplosionDamage 12
     ExplosionRadius 12
-    +Ripper
+    +RIPPER	RipperLevel 1
     RenderStyle Add
     States
     {
     Spawn:
+		FSFX N 0 NoDelay A_CheckFloor("Death")
 		FSFX NOPQRST 4 Bright A_LowGravity
 		Loop
     Death:
@@ -1592,6 +1609,8 @@ Actor Parias : ClericBoss 7091	// archvile
 	DropItem "PowerslaveSpawner" 28
 	DropItem "PowerupSpawner" 
     Health 1000
+	Monster
+	RipLevelMin 1
     +MISSILEEVENMORE
     +MISSILEMORE
     MinMissileChance 1
@@ -1766,6 +1785,8 @@ Actor Daedolon : MageBoss 7092		// archvile
 	DropItem "PowerslaveSpawner" 28
 	DropItem "PowerupSpawner" 
 	Health 900
+	Monster
+	RipLevelMin 1
 	+MISSILEEVENMORE
 	+MISSILEMORE
 	MinMissileChance 1
@@ -2060,6 +2081,7 @@ Actor FHeresiarch : Heresiarch 7093	// cyberdemon
 	DropItem "HealthHeart" 210
 	DropItem "PowerslaveSpawner" 28
 	DropItem "PowerupSpawner" 
+	Monster
 	-TELESTOMP
 	+FLOORCLIP
 	+BOSS
@@ -2068,12 +2090,12 @@ Actor FHeresiarch : Heresiarch 7093	// cyberdemon
 	+NOICEDEATH
 	+BOSSDEATH
 	+DONTMORPH
-	+DONTRIP
 	+NOFEAR
+	RipLevelMin 2
 	Mass 5000
 	Health 6000		//this guy is important remember?
 	BloodColor Purple
-	Obituary "%o understand why the Heresiarch is feared." 
+	Obituary "%o understands why the Heresiarch is feared." 
 	PainChance "Drain", 40
 	PainChance "Chaos", 255
 	PainChance "HCloneDead", 255
@@ -2514,6 +2536,7 @@ Actor FKorax : Korax 7094	// spider mastermind
     +MISSILEMORE
     +MISSILEEVENMORE
     +NOFEAR
+	RipLevelMin 1
     PainChance 5
     Health 6700
     BloodColor DarkGreen
@@ -2750,7 +2773,7 @@ Actor FKorax : Korax 7094	// spider mastermind
 Actor HolyMissileS : HolyMissile
 {
     DamageType "DBT"
-    +RIPPER
+    +RIPPER	RipperLevel 1
     +NOTIMEFREEZE
     States
     {
@@ -3487,7 +3510,7 @@ actor GodsWrath3
     Obituary "%o felt the tiny flame, a small taste of the Death Bringer's power through his servant." 
     PROJECTILE
     +FIREDAMAGE
-    +RIPPER
+    +RIPPER	RipperLevel 1
     +FLOORHUGGER
     +DONTSPLASH
     RENDERSTYLE ADD
@@ -4145,7 +4168,7 @@ ACTOR FlameCentaurFX1
     Height 16
     Damage 2
     PROJECTILE
-    +RIPPER
+    +RIPPER	RipperLevel 1
     +NODAMAGETHRUST
     +FLOORHUGGER
     +FIREDAMAGE
@@ -4168,7 +4191,7 @@ ACTOR FlameCentaurFX2
     Height 16
     Damage 2
     PROJECTILE
-    +RIPPER
+    +RIPPER	RipperLevel 1
     +NODAMAGETHRUST
     +FLOORHUGGER
     +FIREDAMAGE
@@ -4535,7 +4558,7 @@ ACTOR FLesserWraith : Wraith 7103	// shotgun guy
     +NOICEDEATH
     +DONTFALL
     BloodType NoBloodPuff
-    //+NOTARGET
+	-NOTARGET
     +COUNTKILL
     PainChance "Charm", 255
     PainChance "Terror", 255
@@ -5651,7 +5674,7 @@ ACTOR WyvernFlameEnem
 {
 PROJECTILE
 +STRIFEDAMAGE
-+RIPPER
++RIPPER	RipperLevel 1
 +DONTSPLASH
 +BLOODLESSIMPACT
 +FIREDAMAGE
@@ -5758,7 +5781,7 @@ ACTOR Zedek : FighterBoss //once archvile, now cyberdemon
     +DONTMORPH
     +BOSS
     -TELESTOMP
-    //+NOTARGET
+    -NOTARGET
     +BOSSDEATH
     +DONTHARMSPECIES
     SeeSound ""
