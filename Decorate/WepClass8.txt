@@ -8012,9 +8012,8 @@ ACTOR AEoDStakeGun : Weapon
 	Fire:
 		TNT1 A 0 A_PlaySound("painkiller/weapon/StakeGun/StakeShoot",6)
 		TNT1 A 0 A_RailAttack(50,7,0,None,None,RGF_SILENT,0,"ZombieRidder",0,0,128)
-		D008 A 1 A_FireCustomMissile("StakeGunRipper",0,0,7)
 		D008 A 0 A_FireCustomMissile("StakeGunStake",0,1,7)
-		D008 A 0 A_SetPitch(pitch-4)
+		D008 A 1 A_SetPitch(pitch-4)
 		D008 B 2
 		D008 BBBBBBBB 1 A_SetPitch(pitch+0.5)
 		D008 CCCCCCDD 1
@@ -8102,7 +8101,6 @@ Actor StakeGunStake : FastProjectile
 		D008 P 1 ThrustThingZ(0,-1,0,1) TNT1 A 0 A_Explode(30,24,0,0,24)
 		D008 P 1 A_Explode(30,24,0,0,24)
 		Loop
-		
 	Crash:
 		TNT1 A 0 A_JumpIf(user_onfire == 1,"ExtraDamageCrash")
 		TNT1 A 0 A_PlaySound("painkiller/weapon/StakeGun/StakeCrash")
@@ -8110,7 +8108,7 @@ Actor StakeGunStake : FastProjectile
 		TNT1 A 0 A_SpawnItemEx("StakeGunStakeStoke",0,0,0,0,0,0,0,32|SXF_TRANSFERPOINTERS)
 		Stop
 	ExtraDamageCrash:
-		TNT1 A 0 A_Explode(random(50,300),12,0,0,12)
+		TNT1 A 0 A_Explode(random(100,600),12,0,0,12)
 		Goto Crash+1
 		
 	XDeath:
