@@ -9384,6 +9384,8 @@ ACTOR AEoDHellHeavenHandItem : CustomInventory 6066
     }
 }
 
+
+
 ACTOR AEoDHellHeavenHand : Weapon // 6066
 { 
 	+FLOORCLIP
@@ -9430,6 +9432,7 @@ ACTOR AEoDHellHeavenHand : Weapon // 6066
 		UNK1 B 1 A_WeaponReady //Protection side lit
 		Goto Ready3
 	Deselect:
+		UNK2 B 0 A_RemoveChildren(1,RMVF_EVERYTHING,"HHHAmmoTaker")
 		UNK1 A 0 A_StopSound(CHAN_WEAPON)
 		UNK1 A 0 A_StopSound(CHAN_LISTENERZ)
 		TNT1 A 0 ACS_NamedExecute("s799",0,0,0,0)
@@ -9477,7 +9480,7 @@ ACTOR AEoDHellHeavenHand : Weapon // 6066
 		UNK1 A 0 A_JumpIfInventory("RedMana",1,1)
 		Goto Ready
 		UNK1 A 0 A_JumpIfInventory("PowerInvulBase",1,2)
-		UNK1 A 0 A_SetInvulnerable //testing purposes only
+		UNK1 A 0 A_SetInvulnerable
 		UNK1 A 0 A_GiveInventory("PowerEternalTimeFreeze",1)
 		UNK1 A 0 A_PlaySound("hhh/charge1",CHAN_WEAPON | CHAN_LISTENERZ | CHAN_NOPAUSE,1,0)
 		UNK1 EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE 1 bright A_FireCustomMissile("HHHKnowledgePSpawnerSingle",0,0,0,0)
@@ -9555,47 +9558,21 @@ ACTOR AEoDHellHeavenHand : Weapon // 6066
 		UNK1 FGE 5 bright
 		Goto Ready
 	FireProtection:
+		UNK2 A 0 A_JumpIfInventory("PowerEconomizer",1,3)
+		UNK2 A 0 A_JumpIfInventory("InfiniteAmmo",1,2)
 		UNK2 A 0 A_JumpIfInventory("DarkMana",1,1)
 		Goto Ready
-		UNK2 B 0 //A_CheckReload
+		UNK2 B 0 A_SpawnItemEx("HHHAmmoTaker",0,0,0,0,0,0,0,32|SXF_SETMASTER)
 		UNK2 B 0 A_PlaySound("hhh/fire2",CHAN_WEAPON | CHAN_LISTENERZ,1,1)
-		UNK2 B 0 bright A_GiveInventory("PGrounder",1)
-		UNK2 B 0 A_JumpIfInventory("PowerInvulBase",1,3)
-		UNK2 B 0 A_SetReflectiveInvulnerable
-		UNK2 B 0 A_Jump(256,2)
-		UNK2 B 0 A_SetReflective
-		UNK2 B 0 A_JumpIfInventory("PowerNoSeek",1,3)
-		UNK2 B 0 A_ChangeFlag("DONTRIP",1)
-		UNK2 B 0 A_ChangeFlag("NORADIUSDMG",1)
-		UNK2 B 0 A_ChangeFlag("NODAMAGE",1)
-		UNK2 B 4 Bright A_ChangeFlag("DONTTHRUST",1)
-		UNK2 B 0 A_JumpIfInventory("PowerEconomizer",1,3)
-		UNK2 B 0 A_JumpIfInventory("InfiniteAmmo",1,2)
-		UNK2 B 0 A_TakeInventory("DarkMana",1,1)
-		UNK2 B 0 A_FireCustomMissile("HHHPentagramEffect",0,0,0,0)
-		UNK2 B 0 A_FireCustomMissile("ProtectionShover", 0, 0, 0, 0)
-		UNK2 B 0 A_GiveInventory("HHHHealth",1)
-		UNK2 B 0 A_JumpIfInventory("BasicArmor",664,3)
-		UNK2 B 0 A_GiveInventory("HHHArmor",2)
-		UNK2 B 0 A_Jump(256,2)
-		UNK2 B 0 A_GiveInventory("UltimateArmor",1)
-		UNK2 B 9 Bright 
+		UNK2 B 4 Bright A_GiveInventory("HHHProtectionOn",1)
+		UNK2 B 9 Bright A_FireCustomMissile("ProtectionShover", 0, 0, 0, 0)
 		UNK2 B 0 A_JumpIfInventory("PowerEconomizer",1,3)
 		UNK2 B 0 A_JumpIfInventory("InfiniteAmmo",1,2)
 		UNK2 B 0 A_JumpIfInventory("DarkMana",1,2)
 		UNK2 B 0 A_ReFire("ProtectionHold")
-		UNK2 B 0 A_ChangeFlag("DONTTHRUST",0)
 		UNK2 B 0 A_StopSound(CHAN_WEAPON)
 		UNK2 B 0 A_StopSound(CHAN_LISTENERZ)
-		UNK2 B 0 A_JumpIfInventory("PowerNoSeek",1,3)
-		UNK2 B 0 A_ChangeFlag("DONTRIP",0)
-		UNK2 B 0 A_ChangeFlag("NORADIUSDMG",0)
-		UNK2 B 0 A_ChangeFlag("NODAMAGE",0)
-		UNK2 B 0 A_ChangeFlag("DONTTHRUST",0)
-		UNK2 B 0 A_JumpIfInventory("PowerInvulBase",1,2)
-		UNK2 B 0 A_UnSetReflectiveInvulnerable
-		UNK2 B 0 bright A_TakeInventory("PowerPlayerGrounder",1)
-		UNK2 B 0 bright A_TakeInventory("PGrounder",1)
+		UNK2 B 0 A_GiveInventory("HHHProtectionOff",1)
 		Goto Ready
 		UNK2 B 0 //A_UnSetReflective
 		goto Ready 
@@ -9604,52 +9581,17 @@ ACTOR AEoDHellHeavenHand : Weapon // 6066
 		UNK2 B 0 A_JumpIfInventory("InfiniteAmmo",1,2)
 		UNK2 B 0 A_JumpIfInventory("DarkMana",1,1)
 		Goto Ready
-		UNK2 B 0 //A_CheckReload
-		UNK2 B 0 A_JumpIfInventory("PowerPlayerGrounder",1,2)
-		UNK2 B 0 A_GiveInventory("PGrounder",1)
-		UNK2 B 0 A_SetReflectiveInvulnerable
-		UNK2 B 0 A_JumpIfInventory("PowerNoSeek",1,2)
-		UNK2 B 0 A_ChangeFlag("DONTRIP",1)
-		UNK2 B 0 A_ChangeFlag("NOTELEFRAG",1)
-		UNK2 B 0 A_ChangeFlag("NODAMAGE",1)
-		UNK2 B 4 Bright A_ChangeFlag("DONTTHRUST",1)
-		UNK2 B 0 Bright A_JumpIfInventory("HHHCheck",3,9)
 		UNK2 B 0 Bright A_FireCustomMissile("ProtectionShover", 0, 0, 0, 0)
-		UNK2 B 0 bright A_GiveInventory("HHHHealth",1)
-		UNK2 B 0 Bright A_JumpIfInventory("BasicArmor",664,3)
-		UNK2 B 0 bright A_GiveInventory("HHHArmor",2)
-		UNK2 B 0 Bright A_Jump(256,2)
-		UNK2 B 0 Bright A_GiveInventory("UltimateArmor",1)
-		UNK2 B 0 Bright A_GiveInventory("HHHCheck",1)
-		UNK2 B 0 Bright A_Jump(256,11)
-		UNK2 B 0 bright A_JumpIfInventory("PowerEconomizer",1,3)
-		UNK2 B 0 bright A_JumpIfInventory("InfiniteAmmo",1,2)
-		UNK2 B 0 bright A_TakeInventory("DarkMana",1)
-		UNK2 B 0 Bright A_FireCustomMissile("ProtectionShover", 0, 0, 0, 0)
-		UNK2 B 0 bright A_GiveInventory("HHHHealth",1)
-		UNK2 B 0 Bright A_JumpIfInventory("BasicArmor",664,3)
-		UNK2 B 0 bright A_GiveInventory("HHHArmor",2)
-		UNK2 B 0 Bright A_Jump(256,2)
-		UNK2 B 0 Bright A_GiveInventory("UltimateArmor",1)
-		UNK2 B 0 Bright A_TakeInventory("HHHCheck",3)
+		UNK2 B 4 bright A_GiveInventory("HHHProtectionOn",1)
 		UNK2 B 5 Bright 
 		UNK2 B 4 Bright
 		UNK2 B 0 A_ReFire("ProtectionHold")
 		UNK2 B 0 A_StopSound(CHAN_WEAPON)
 		UNK2 B 0 A_StopSound(CHAN_LISTENERZ)
-		UNK2 B 0 A_TakeInventory("HHHCheck",3)
-		UNK2 B 0 A_JumpIfInventory("PowerNoSeek",1,4)
-		UNK2 B 0 A_ChangeFlag("DONTRIP",0)
-		UNK2 B 0 A_ChangeFlag("NORADIUSDMG",0)
-		UNK2 A 0 A_ChangeFlag("NOTELEFRAG",0)
-		UNK2 B 0 A_ChangeFlag("NODAMAGE",0)
-		UNK2 B 0 A_ChangeFlag("DONTTHRUST",0)
-		UNK2 B 0 A_JumpIfInventory("PowerInvulBase",1,2)
-		TNT1 C 0 A_UnSetReflectiveInvulnerable
-		UNK2 B 0 bright A_TakeInventory("PowerPlayerGrounder",1)
-		UNK2 B 0 bright A_TakeInventory("PGrounder",1)
+		UNK2 B 0 A_GiveInventory("HHHProtectionOff",1)
+		UNK2 B 0 A_RemoveChildren(1,RMVF_EVERYTHING,"HHHAmmoTaker")
 		Goto Ready
-		UNK2 B 0 //A_UnSetReflective
+		UNK2 B 0 A_RemoveChildren(1,RMVF_EVERYTHING,"HHHAmmoTaker")
 		goto Ready
 	FireStrength:
 		UNK1 A 0 A_Light1
@@ -9700,6 +9642,65 @@ ACTOR AEoDHellHeavenHand : Weapon // 6066
 		UNK1 C 8 Bright Offset(0,35)
 		UNK1 C 0
 		goto Ready
+	}
+}
+
+Actor HHHAmmoTaker
+{
+	+NOINTERACTION
+	States
+	{
+	Spawn:
+		TNT1 A 35
+		TNT1 A 0 A_JumpIfInventory("InfiniteAmmo",1,"Spawn",AAPTR_MASTER)
+		TNT1 A 0 A_JumpIfInventory("PowerEconomizer",1,"Spawn",AAPTR_MASTER)
+		TNT1 A 0 A_TakeInventory("DarkMana",1,1,AAPTR_MASTER)
+		Loop
+	}
+}
+
+Actor HHHProtectionOn : CustomInventory
+{
+	+INVENTORY.ALWAYSPICKUP
+	+INVENTORY.AUTOACTIVATE
+	States
+	{
+	Use:
+		TNT1 A 0 A_SetReflectiveInvulnerable
+		TNT1 A 0 A_ChangeFlag("NOPAIN",1)
+		TNT1 A 0 A_ChangeFlag("NODAMAGE",1)
+		TNT1 A 0 A_ChangeFlag("DONTTHRUST",1)
+		TNT1 A 0 A_SetMass(0x7FFFFFFF)
+		TNT1 A 0 A_ChangeFlag("DONTRIP",1)
+		TNT1 A 0 A_JumpIfInventory("HHHCheck",1,2)
+		TNT1 A 0 A_GiveInventory("HHHCheck",1)
+		TNT1 A 0 A_GiveInventory("HHHHealth",1)
+		TNT1 A 0 A_JumpIfInventory("BasicArmor",664,2)
+		TNT1 A 0 A_GiveInventory("HHHArmor",2)
+		Stop
+		TNT1 A 0 A_GiveInventory("UltimateArmor",1)
+		Stop
+	}
+}
+
+Actor HHHProtectionOff : CustomInventory
+{
+	+INVENTORY.ALWAYSPICKUP
+	+INVENTORY.AUTOACTIVATE
+	States
+	{
+	Use:
+		TNT1 A 0 A_ChangeFlag("NODAMAGE",0)
+		TNT1 A 0 A_ChangeFlag("NOPAIN",0)
+		TNT1 A 0 A_ChangeFlag("DONTTHRUST",0)
+		TNT1 A 0 A_SetMass(100)
+		TNT1 A 0 A_JumpIfInventory("PowerInvulBase",1,2)
+		TNT1 A 0 A_UnsetInvulnerable
+		TNT1 A 0 A_UnsetReflective
+		TNT1 A 0 A_JumpIfInventory("PowerNoSeek",1,2)
+		TNT1 A 0 A_ChangeFlag("DONTRIP",0)
+		TNT1 A 0 A_TakeInventory("HHHCheck",10000)
+		Stop
 	}
 }
 
@@ -10058,6 +10059,7 @@ ACTOR HHHCheck : Inventory
 {
     Inventory.Amount 1
     Inventory.MaxAmount 3
+	Inventory.InterHubAmount 0
 }
 
 Actor HHHModeChecker : Inventory
