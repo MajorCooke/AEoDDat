@@ -354,26 +354,53 @@ script "s915" (void)
 	GiveInventory("L4DCountToggler",1);
 }
 
+#define number_of_games_and_cvars 17
+
+str CVarsToGames[number_of_games_and_cvars][3] = {
+		// Arrays hold:
+		// cvar name, game mode ch, exceptions
+		// Exceptions are:
+		//		0 -- activate normal theme
+		// 		1 -- activate magic theme
+		//		2 -- activate tech theme
+		//		3 -- reserved for future major theme
+		//		4 -- not increment ThemeMix
+		//		5 -- same as above AND give JokeToken AND activate joke theme
+		{"user_Doom",		"Doom",		"0"},
+		{"user_Blood",		"Blood",	"0"},
+		{"user_Duke",		"DN3D",		"0"},
+		{"user_HL",			"HL",		"2"},
+		{"user_HL2",		"HL2",		"2"},
+		{"user_Heretic",	"Heretic",	"1"},
+		{"user_Hexen",		"Hexen",	"1"},
+		{"user_Hexen2",		"Hexen2",	"1"},
+		{"user_MM",			"MM",		"1"},
+		{"user_Powerslave","Powerslave","0"},
+		{"user_Quake1",		"Quake1",	"0"},
+		{"user_Quake2",		"Quake2",	"2"},
+		{"user_Quake4",		"Quake4",	"2"},
+		{"user_SW",		"ShadowWarr",	"0"},
+		{"user_Strife",		"Strife",	"2"},
+		{"user_L4DMon",		"L4DMon",	"4"},
+		{"user_Joke",		"JokeMode",	"5"}
+		};
+
+
 Script "SpawnerSetup" enter
 {
 	if (!(ScriptSetup))
 	{
-		L4DMode = false;
-		L4DDir = false;
-		NorDir = false;
-		NormalTheme = false;
-		TechTheme = false;
-		MagicTheme = false;
-		JokeTheme = false;
-		MonsterMayhem = false;
-		ActiveCount = 0;
-		ThemeMix = 0;
-		if (GetCvar("user_MonsterMayhem"))
-			MonsterMayhem = true;
-		if (GetCvar("user_NorDir"))
-			NorDir = true;
-		if (GetCvar("user_L4DDir"))
-			L4DDir = true;
+		// modes
+		L4DMode = false;		MonsterMayhem = false;
+		// directors
+		L4DDir = false;			NorDir = false;
+		// themes
+		NormalTheme = false;	TechTheme = false;
+		MagicTheme = false;		JokeTheme = false;
+		// counters
+		ActiveCount = 0;		ThemeMix = 0;
+		
+		
 		if (GetCvar("user_MonsterMayhem"))
 			MonsterMayhem = true;
 		if (GetCvar("user_L4DMode"))
@@ -387,125 +414,33 @@ Script "SpawnerSetup" enter
 			ScriptSetup = true;
 			Terminate; //Really, no point in bothering with the rest.
 		}
-		if (GetCvar("user_Doom"))
-		{
-			GameModeCh[ActiveCount] = "Doom";
-			ActiveCount++;
-			ThemeMix++;
-			NormalTheme = true;
-		}
-		if (GetCvar("user_Blood"))
-		{
-			GameModeCh[ActiveCount] = "Blood";
-			ActiveCount++;
-			ThemeMix++;
-			NormalTheme = true;
-		}
-		if (GetCvar("user_Duke"))
-		{
-			GameModeCh[ActiveCount] = "DN3D";
-			ActiveCount++;
-			ThemeMix++;
-			NormalTheme = true;
-		}
-		if (GetCvar("user_HL"))
-		{
-			GameModeCh[ActiveCount] = "HL";
-			ActiveCount++;
-			ThemeMix++;
-			NormalTheme = true;
-		}
-		if (GetCvar("user_HL2"))
-		{
-			GameModeCh[ActiveCount] = "HL2";
-			ActiveCount++;
-			ThemeMix++;
-			TechTheme = true;
-		}
-		if (GetCvar("user_Heretic"))
-		{
-			GameModeCh[ActiveCount] = "Heretic";
-			ActiveCount++;
-			ThemeMix++;
-			MagicTheme = true;
-		}
-		if (GetCvar("user_Hexen"))
-		{
-			GameModeCh[ActiveCount] = "Hexen";
-			ActiveCount++;
-			ThemeMix++;
-			MagicTheme = true;
-		}
-		if (GetCvar("user_Hexen2"))
-		{
-			GameModeCh[ActiveCount] = "Hexen2";
-			ActiveCount++;
-			ThemeMix++;
-			MagicTheme = true;
-		}
-		if (GetCvar("user_MM"))
-		{
-			GameModeCh[ActiveCount] = "MM";
-			ActiveCount++;
-			ThemeMix++;
-			MagicTheme = true;
-		}
-		if (GetCvar("user_Powerslave"))
-		{
-			GameModeCh[ActiveCount] = "Powerslave";
-			ActiveCount++;
-			ThemeMix++;
-			NormalTheme = true;
-		}
-		if (GetCvar("user_Quake1"))
-		{
-			GameModeCh[ActiveCount] = "Quake1";
-			ActiveCount++;
-			ThemeMix++;
-			NormalTheme = true;
-		}
-		if (GetCvar("user_Quake2"))
-		{
-			GameModeCh[ActiveCount] = "Quake2";
-			ActiveCount++;
-			ThemeMix++;
-			TechTheme = true;
-		}
-		if (GetCvar("user_Quake4"))
-		{
-			GameModeCh[ActiveCount] = "Quake4";
-			ActiveCount++;
-			ThemeMix++;
-			TechTheme = true;
-		}
-		if (GetCvar("user_SW"))
-		{
-			GameModeCh[ActiveCount] = "ShadowWarr";
-			ActiveCount++;
-			ThemeMix++;
-			NormalTheme = true;
-		}
-		if (GetCvar("user_Strife"))
-		{
-			GameModeCh[ActiveCount] = "Strife";
-			ActiveCount++;
-			ThemeMix++;
-			TechTheme = true;
-		}
-		if (GetCvar("user_L4DMon"))
-		{
-			GameModeCh[ActiveCount] = "L4DMon";
-			ActiveCount++;
-			//ThemeMix++;
-			//NormalTheme = true;
-		}
-		if (GetCvar("user_Joke"))
-		{
-			GameModeCh[ActiveCount] = "JokeMode";
-			ActiveCount++;
-			JokeTheme = true;
-			GiveInventory("JokeToken",1);
-		}
+		if (GetCvar("user_NorDir"))
+			NorDir = true;
+		if (GetCvar("user_L4DDir"))
+			L4DDir = true;
+
+		
+		for(int i=0; i<number_of_games_and_cvars; i++)
+			if (GetCvar(CVarsToGames[i][0]))
+			{
+				GameModeCh[ActiveCount] = CVarsToGames[i][1];
+				ActiveCount++;
+				ThemeMix++;
+				
+				// Select Case
+				if(!(StrCmp(CVarsToGames[i][2],"0")))	NormalTheme = true;
+				if(!(StrCmp(CVarsToGames[i][2],"1")))	MagicTheme = true;
+				if(!(StrCmp(CVarsToGames[i][2],"2")))	TechTheme = true;
+				
+				if(!(StrCmp(CVarsToGames[i][2],"4")))	ThemeMix--;
+				if(!(StrCmp(CVarsToGames[i][2],"5")))
+				{	
+					JokeTheme = true;	
+					GiveInventory("JokeToken",1);
+					ThemeMix--;
+				}
+			}
+
 		ScriptSetup = true;
 	}
 }
