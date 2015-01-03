@@ -132,14 +132,14 @@ Script "s901" enter
 			//HUDMessage(s:"AEoD: ",l:GameTypesText[AEoDThemeType],s:"."; HUDMSG_TYPEON| HUDMSG_LOG,0,CR_GREEN,0.5,0.1,6.0,0.1,1.0);
 		}
 		if(L4DMode || L4DDir)				//if L4D or chaos capital when entering a level
-	{
-		if(CheckInventory("FearRune")==0)	//and player has no fear rune
-			GiveInventory("FearRune",1);	//i will give one
-			
-		ACS_NamedExecute("s914",0,0,0,0);	//Start up the body count script.
-		GiveInventory("L4DMode",1);
-		GiveInventory("L4DCountHudToken",1);
-	}
+		{
+			if(CheckInventory("FearRune")==0)	//and player has no fear rune
+				GiveInventory("FearRune",1);	//i will give one
+				
+			ACS_NamedExecute("s914",0,0,0,0);	//Start up the body count script.
+			GiveInventory("L4DMode",1);
+			GiveInventory("L4DCountHudToken",1);
+		}
 	
 	
 	int diff = GameSkill();
@@ -294,8 +294,30 @@ script "s913" (void)
 	HUDMessage(s:"Console variable is: ",d:GetCVar("AEGtValues"); HUDMSG_PLAIN,6,CR_GREEN,0.5,0.9,2.0);
 }
 
+Script "L4DCountHudSwitcher" (void)
+{
+	if (CheckInventory("L4DCountHudToken"))
+	{
+		ACS_NamedTerminate("s914",0);
+		for (int zz = 666; zz < 690; zz++)
+		{
+			HudMessage(s:""; HUDMSG_PLAIN,zz,0,0,0,1,0);
+		}
+		TakeInventory("L4DCountHudToken",10000);
+	}
+	else
+	{
+		GiveInventory("L4DCountHudToken",1);
+		ACS_NamedExecuteAlways("s914",0,0,0,0);
+	}
+}
+
 script "s914" (int hudsizex, int hudsizey)
 {
+	if (!CheckInventory("L4DCountHudToken"))
+	{
+		Terminate;
+	}
 	int commoncount = CheckInventory("L4DCommonCount");
 	int tankcount = CheckInventory("L4DTankCount");
 	int witchcount = CheckInventory("L4DWitchCount");
@@ -311,34 +333,32 @@ script "s914" (int hudsizex, int hudsizey)
 	int hudyoffset = 200.0;
 
 	SetHudSize(1024,768,0);
-	HudMessage(s:"Common:"; HUDMSG_PLAIN,666,CR_BROWN,100.1,hudyoffset+25.1,0.15);
-	HudMessage(s:"Tanks:"; HUDMSG_PLAIN,667,CR_BROWN,100.1,hudyoffset+35.1,0.15);
-	HudMessage(s:"Witches:"; HUDMSG_PLAIN,668,CR_BROWN,100.1,hudyoffset+45.1,0.15);
-	HudMessage(s:"Jockeys:"; HUDMSG_PLAIN,669,CR_BROWN,100.1,hudyoffset+55.1,0.15);
-	HudMessage(s:"Spitters:"; HUDMSG_PLAIN,670,CR_BROWN,100.1,hudyoffset+65.1,0.15);
-	HudMessage(s:"Hunters:"; HUDMSG_PLAIN,671,CR_BROWN,100.1,hudyoffset+75.1,0.15);
-	HudMessage(s:"Boomers:"; HUDMSG_PLAIN,672,CR_BROWN,100.1,hudyoffset+85.1,0.15);
-	HudMessage(s:"Chargers:"; HUDMSG_PLAIN,673,CR_BROWN,100.1,hudyoffset+95.1,0.15);
-	HudMessage(s:"Smokers:"; HUDMSG_PLAIN,674,CR_BROWN,100.1,hudyoffset+105.1,0.15);
-	HudMessage(s:"Map Total:"; HUDMSG_PLAIN,675,CR_BROWN,100.1,hudyoffset+125.1,0.15);
-	HudMessage(s:"Current Total:"; HUDMSG_PLAIN,676,CR_BROWN,100.1,hudyoffset+135.1,0.15);
-	HudMessage(s:"30000 Kills x"; HUDMSG_PLAIN,677,CR_BROWN,100.1,hudyoffset+145.1,0.15);
+	HudMessage(s:"Common:"; HUDMSG_PLAIN,666,CR_BROWN,100.1,hudyoffset+25.1,0);
+	HudMessage(s:"Tanks:"; HUDMSG_PLAIN,667,CR_BROWN,100.1,hudyoffset+35.1,0);
+	HudMessage(s:"Witches:"; HUDMSG_PLAIN,668,CR_BROWN,100.1,hudyoffset+45.1,0);
+	HudMessage(s:"Jockeys:"; HUDMSG_PLAIN,669,CR_BROWN,100.1,hudyoffset+55.1,0);
+	HudMessage(s:"Spitters:"; HUDMSG_PLAIN,670,CR_BROWN,100.1,hudyoffset+65.1,0);
+	HudMessage(s:"Hunters:"; HUDMSG_PLAIN,671,CR_BROWN,100.1,hudyoffset+75.1,0);
+	HudMessage(s:"Boomers:"; HUDMSG_PLAIN,672,CR_BROWN,100.1,hudyoffset+85.1,0);
+	HudMessage(s:"Chargers:"; HUDMSG_PLAIN,673,CR_BROWN,100.1,hudyoffset+95.1,0);
+	HudMessage(s:"Smokers:"; HUDMSG_PLAIN,674,CR_BROWN,100.1,hudyoffset+105.1,0);
+	HudMessage(s:"Map Total:"; HUDMSG_PLAIN,675,CR_BROWN,100.1,hudyoffset+125.1,0);
+	HudMessage(s:"Current Total:"; HUDMSG_PLAIN,676,CR_BROWN,100.1,hudyoffset+135.1,0);
+	HudMessage(s:"30000 Kills x"; HUDMSG_PLAIN,677,CR_BROWN,100.1,hudyoffset+145.1,0);
 	
-	HudMessage(i:commoncount; HUDMSG_PLAIN,678,CR_BROWN,300.1,hudyoffset+25.1,0.15);
-	HudMessage(i:tankcount; HUDMSG_PLAIN,679,CR_BROWN,300.1,hudyoffset+35.1,0.15);
-	HudMessage(i:witchcount; HUDMSG_PLAIN,680,CR_BROWN,300.1,hudyoffset+45.1,0.15);
-	HudMessage(i:jockeycount; HUDMSG_PLAIN,681,CR_BROWN,300.1,hudyoffset+55.1,0.15);
-	HudMessage(i:spittercount; HUDMSG_PLAIN,682,CR_BROWN,300.1,hudyoffset+65.1,0.15);
-	HudMessage(i:huntercount; HUDMSG_PLAIN,683,CR_BROWN,300.1,hudyoffset+75.1,0.15);
-	HudMessage(i:boomercount; HUDMSG_PLAIN,684,CR_BROWN,300.1,hudyoffset+85.1,0.15);
-	HudMessage(i:chargercount; HUDMSG_PLAIN,685,CR_BROWN,300.1,hudyoffset+95.1,0.15);
-	HudMessage(i:smokercount; HUDMSG_PLAIN,686,CR_BROWN,300.1,hudyoffset+105.1,0.15);
-	HudMessage(i:maptotal; HUDMSG_PLAIN,687,CR_BROWN,300.1,hudyoffset+125.1,0.15);
-	HudMessage(i:currenttotal; HUDMSG_PLAIN,688,CR_BROWN,300.1,hudyoffset+135.1,0.15);
-	HudMessage(i:ccm; HUDMSG_PLAIN,689,CR_BROWN,300.1,hudyoffset+145.1,0.15);
+	HudMessage(i:commoncount; HUDMSG_PLAIN,678,CR_BROWN,300.1,hudyoffset+25.1,0);
+	HudMessage(i:tankcount; HUDMSG_PLAIN,679,CR_BROWN,300.1,hudyoffset+35.1,0);
+	HudMessage(i:witchcount; HUDMSG_PLAIN,680,CR_BROWN,300.1,hudyoffset+45.1,0);
+	HudMessage(i:jockeycount; HUDMSG_PLAIN,681,CR_BROWN,300.1,hudyoffset+55.1,0);
+	HudMessage(i:spittercount; HUDMSG_PLAIN,682,CR_BROWN,300.1,hudyoffset+65.1,0);
+	HudMessage(i:huntercount; HUDMSG_PLAIN,683,CR_BROWN,300.1,hudyoffset+75.1,0);
+	HudMessage(i:boomercount; HUDMSG_PLAIN,684,CR_BROWN,300.1,hudyoffset+85.1,0);
+	HudMessage(i:chargercount; HUDMSG_PLAIN,685,CR_BROWN,300.1,hudyoffset+95.1,0);
+	HudMessage(i:smokercount; HUDMSG_PLAIN,686,CR_BROWN,300.1,hudyoffset+105.1,0);
+	HudMessage(i:maptotal; HUDMSG_PLAIN,687,CR_BROWN,300.1,hudyoffset+125.1,0);
+	HudMessage(i:currenttotal; HUDMSG_PLAIN,688,CR_BROWN,300.1,hudyoffset+135.1,0);
+	HudMessage(i:ccm; HUDMSG_PLAIN,689,CR_BROWN,300.1,hudyoffset+145.1,0);
 	SetHudSize(0,0,0);
-	delay(5);
-	restart;
 }
 
 script "AESoulCount" (void)
