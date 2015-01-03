@@ -268,6 +268,7 @@ script "s799" (int wepnumber)		//identifies which weapon(of the arrangement) bei
 				if (!CheckInventory(Weaps[slot][wep][1])) // but not the drop
 				{
 					scriptactivation=1;		// prepare your ears
+					ACS_NamedExecute("s689",0,0,0,0);
 					slot=10;wep=33;	// cycles end
 				}
 }
@@ -320,29 +321,45 @@ script "WeaponSlotToggle" (void)		//the script that changes the Limits to "on" o
 
 
 
+int sectColors[256];
 
-
-script "s689" enter	//this one is the main cheat detector. using the result given by script 799
+script "s689" (void)	//this one is the main cheat detector. using the result given by script 799
 {			//which changes "scriptactivation" to "1" if player is caught getting a weapon and not it's item.
+	if (!GetCvar("user_cheat"))
+		Terminate;
     int q, active=1;
-    while(1)
+	int r, g, b, d, l;
+	bool tripped = false;
+    while(GetCvar("user_cheat"))
     {
-	if(scriptactivation==1&&GetCVar("AEAntiCheatOff")==0)
-	{
-		HUDMessage(s:"Cheating makes life easy. Easy life is pink.\nPink you said?";
-			HUDMSG_PLAIN,1,10,0.5,0.0,0);
-		for(q=0;q<256;q++)
+		if(scriptactivation==1 && GetCVar("user_cheat"))
 		{
-		Light_ChangeToValue(q,255);
-		Sector_SetColor(q,255,94,146,10);
-		}	
-		while(1)
-		{
-			AmbientSound("HellHeavenHand/UbberThing",127);
-			Delay(35*15);
+			tripped = true;
+			HUDMessage(s:"Cheating makes life easy. Easy life is pink.\nPink you said?";
+				HUDMSG_PLAIN,1,10,0.5,0.0,0);
+			for(q=0;q<256;q++)
+			{
+				sectColors[q] = GetSectorLightLevel(q);
+				Light_ChangeToValue(q,255);
+				Sector_SetColor(q,255,94,146,10);
+			}	
+			while(GetCvar("user_cheat"))
+			{
+				AmbientSound("HellHeavenHand/UbberThing",127);
+				Delay(35*15);
+			}
 		}
-	}
-	delay(8);
+		delay(8);
+		if (tripped && !GetCvar("user_cheat"))
+		{
+			HudMessage(s:"";HUDMSG_PLAIN,1,0,0,0,1,0);
+			for(q=0;q<256;q++)
+			{
+				Light_ChangeToValue(q,sectColors[q]);
+				Sector_SetColor(q,255,255,255,0);
+			}
+			tripped = false;
+		}
     }
 }
 

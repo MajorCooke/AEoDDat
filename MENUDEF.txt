@@ -6,8 +6,12 @@
 OptionMenu "OptionsMenu"
 {
    Title "OPTIONS"
-   Submenu "AEoD game type selection",   "AEGameConfig"
-   StaticText " "
+   StaticText "AEons of Death Configuration", 1
+   Submenu "Game Modes",		"AEGameModeConfig"
+   Submenu "Theme Selection",	"AEThemeConfig"
+   Submenu "Extra Monsters",	"AEExtraConfig"
+   Submenu "Directors",		"AEDirectorConfig"
+   StaticText "ZDoom Options", 1
    Submenu "Customize Controls",      "CustomizeControls"
    Submenu "Mouse options",         "MouseOptions"
    Submenu "Joystick options",         "JoystickOptions"
@@ -27,13 +31,23 @@ OptionMenu "OptionsMenu"
    Command "Go to console",         "menuconsole"
 }
 
-OptionMenu "AEGameConfig"
+OptionMenu "AEGameModeConfig"
 {
-	Title "AEoD Game Types"
-	StaticText "Game Modes", 1
-	StaticText "These override customized monsters below.", 1
+	Title "AEoD Game Modes"
+	StaticText "Enabling game modes will override any theme settings you", 0
+	StaticText "currently have enabled. No regular monsters will be", 0
+	StaticText "available but zombies are always spawning. Enable Joke", 0
+	StaticText "Theme to have a chance at finding the joke weapons too!", 0
+	StaticText " "
 	Option "Left 4 Dead Mode",				"user_L4DMode", "OnOff"
-	StaticText			"Choose your game monsters.", 1
+}
+
+OptionMenu "AEThemeConfig"
+{
+	Title "AEoD Theme Types"
+	StaticText "At least one theme must be enabled.", 0
+	StaticText "Having no/all themes is classic AEoD.", 0
+	StaticText " "
 	Option "Doom",							"user_Doom", "OnOff"
 	Option "Blood", 						"user_Blood", "OnOff"
 	Option "Duke Nukem 3D", 				"user_Duke", "OnOff"
@@ -49,15 +63,38 @@ OptionMenu "AEGameConfig"
 	Option "Quake 4", 						"user_Quake4", "OnOff"
 	Option "Shadow Warrior", 				"user_SW", "OnOff"
 	Option "Strife", 						"user_Strife", "OnOff"
+	StaticText " "
+	StaticText	"Check out extra monsters when finished!", 1
+}
+
+OptionMenu "AEExtraConfig"
+{
+	Title "Extra Monsters"
+	StaticText 	"These are not themes, but extras to spawn with them."
+	StaticText	" "	
+	Option "Doom 64",						"user_Doom64", "OnOff"
+	Option "Hellspawn",						"user_Hellspawn", "OnOff"
+	Option "Rise of the Triad",				"user_ROTT", "OnOff"
 	Option "Left 4 Dead Monsters",			"user_L4DMon", "OnOff"
 	Option "Joke",							"user_Joke", "OnOff"
-	StaticText			"Directors", 1
-	StaticText	"Directors spawn enemies where you least expect them.", 0
-	StaticText	"Infected spawns zombies, monster spawns doom-classed enemies.",0
+}
+
+OptionMenu "AEDirectorConfig"
+{
+	Title "Directors"
+	StaticText	"Directors spawn enemies where you least expect them.", 1
+	StaticText	"Infected director spawns zombies.", 0
+	StaticText	"Monster director spawns doom-classed enemies.", 0
+	StaticText	" "
 	Option "Infected Director",				"user_L4DDir", "OnOff"
 	Option "Monster Director",				"user_NorDir", "OnOff"
+	StaticText	" "
+	StaticText	"Want more zombies to fight?", 1
+	StaticText	"Common infected are weaker, but spawn much more.", 1
+	StaticText	" "
 	Option "Infected Mayhem",				"user_MonsterMayhem", "OnOff"
 }
+
 
 /*
 OptionMenu "AEGameConfig"
@@ -103,9 +140,9 @@ OptionMenu GameplayOptions
 	Title 	"GAMEPLAY OPTIONS"
 	//Indent 222
 	StaticText " "
-	StaticText "Anti cheat system",1
-	Command "Enable system",	"set AEAntiCheatOff 0"
-	Command "Disable system",	"set AEAntiCheatOff 1"
+	Option "Anti-Cheat System",	"user_ACSystem", "OnOff"
+	//Command "Enable system",	"set AEAntiCheatOff 0"
+	//Command "Disable system",	"set AEAntiCheatOff 1"
 	
 	StaticText " "
 	StaticText " "
