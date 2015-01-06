@@ -1563,7 +1563,12 @@ ACTOR HTC2BlackBear		//Shotguy
 	Mass 0x7FFFFFFF
 	PainChance 90
 	MONSTER 
-	+FLOORCLIP -NODROPOFF +DONTOVERLAP +NOICEDEATH +NODAMAGETHRUST
+	+FLOORCLIP -NODROPOFF +DONTOVERLAP +NOICEDEATH +NODAMAGETHRUST -SOLID
+	+DROPOFF
+	-NODROPOFF
+	+NOBLOCKMONST
+	+MBFBOUNCER
+	MaxStepHeight 32767
 	Scale 0.75
 	MELEEDAMAGE 1
 	SeeSound ""
@@ -1642,6 +1647,8 @@ ACTOR HTC2BlackBear		//Shotguy
 
 Actor BerthaBear 
 { 
+	TeleFogSourceType None
+	TeleFogDestType None
 	DropItem "PowerSlaveSpawner" 8
 	Health 8
 	Radius 8
@@ -1649,13 +1656,21 @@ Actor BerthaBear
 	Speed 9
 	Mass 0x7FFFFFFF
 	PainChance 90
-	MONSTER 
+	MONSTER
+	+NOTELESTOMP
+	+ALWAYSTELEFRAG
 	+FLOORCLIP 
 	-NODROPOFF
 	+DONTOVERLAP 
 	+NOICEDEATH
 	+THRUSPECIES
 	+NODAMAGETHRUST
+	-SOLID
+	-NODROPOFF
+	+DROPOFF
+	+NOBLOCKMONST
+	+MBFBOUNCER
+	MaxStepHeight 32767
 	Species "Bertha"
 	Scale 0.75
 	MELEEDAMAGE 1
@@ -1733,6 +1748,8 @@ Actor BerthaBear
 
 ACTOR BlackBear
 {
+	TeleFogSourceType None
+	TeleFogDestType None
     Health 8
     Radius 8
     Height 20
@@ -1741,13 +1758,20 @@ ACTOR BlackBear
     PainChance 90
     MONSTER 
     +FLOORCLIP 
-	+NOCLIP 
+	+ALWAYSTELEFRAG
+	+NOTELESTOMP
 	+DONTOVERLAP 
 	-COUNTKILL
 	+THRUSPECIES
 	+NOICEDEATH
 	+DONTHARMSPECIES
 	+NODAMAGETHRUST
+	-SOLID
+	-NODROPOFF
+	+DROPOFF
+	+NOBLOCKMONST
+	+MBFBOUNCER
+	MaxStepHeight 32767
 	Species "Bertha"
     Scale 0.75
     MELEEDAMAGE 1
@@ -4897,12 +4921,19 @@ actor FlyingGut
 // but this are used in WepClass9.AED in the AEoDPopcornGun
 Actor HostileBabyClown : HTC2BabyClown
 {
+	+NOTELESTOMP
+	+ALWAYSTELEFRAG
 	-FRIENDLY
 	+LOOKALLAROUND
 }
 
 Actor HostileBlackBear : HTC2BlackBear 
 {
+	TeleFogSourceType None
+	TeleFogDestType None
+	+NOTELESTOMP
+	+ALWAYSTELEFRAG
 	-FRIENDLY
 	+LOOKALLAROUND
+	-SOLID
 }
