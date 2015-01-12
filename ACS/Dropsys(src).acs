@@ -231,7 +231,7 @@ str Weaps[10][32][4]=
 		{"AEoDPenetrator","PenetratorDrop",			"Nothing","Nothing"}}	// 6055
 	};
 	
-int wepidentif=0;
+//int wepidentif=0;	// this variable is never used
 int togglescript=1;
 int scriptactivation=0;
 
@@ -257,7 +257,8 @@ script "s798" (int slotmsg)		//slot x full
 
 script "s799" (int wepnumber)		//identifies which weapon(of the arrangement) being is used 
 {
-	wepidentif=wepnumber;
+	/*
+	wepidentif=wepnumber;	// this number is never used
 	
 	//And from here, it starts checking if player has a weapon but not it's item, if so, then player got it
 	//by cheating. See script 689 at the bottom of this same file
@@ -271,6 +272,10 @@ script "s799" (int wepnumber)		//identifies which weapon(of the arrangement) bei
 					ACS_NamedExecute("s689",0,0,0,0);
 					slot=10;wep=33;	// cycles end
 				}
+	*/
+				
+	// Does nothing instead.
+	// Anti-cheat system is disabled for now.
 }
 
 // weapon drop scripts
@@ -282,24 +287,19 @@ script "s800" (void)		//this one, well, is another part of the dropping script
 	for(int slot=0; slot<=9; slot++)	// cycling through weapon slots
 		for(int wep=1; wep<32; wep++)	// cycling through weapons of each slot
 			if(CheckWeapon(Weaps[slot][wep][0]))	// if player's holding it--
-			
+			{
 				if(Weaps[slot][wep][2] != Weaps[0][0][1] &&	// if the akimbo counter isn't "nothing"
 				   CheckInventory(Weaps[slot][wep][2]) > 1) // AND if you have more than one...
-				{
-					GiveInventory(Weaps[slot][wep][3],1); // give akimbo-drop-checker
-					// DON'T take weapon--it's gonna change by itself
-					// DON'T take token--multi-wieldables count for one gun
-					UseInventory(Weaps[slot][wep][1]); // use dropper
-					slot=10;wep=33;	// no need to cycle anymore!
-				}	
+						GiveInventory(Weaps[slot][wep][3],1); // give akimbo-drop-checker
 				else	// if that multi-wieldable was the last one, OR
-				// if the akimbo counter is "nothing" (weapon isn't dual-wieldable)
-				{
+				{		// if the akimbo counter is "nothing" (weapon isn't dual-wieldable)
 					TakeInventory(Weaps[slot][wep][0], 1);	// take weapon
 					TakeInventory(strparam(s:"Weapon", d:(slot+1) ,s:"Count"),1);	// take token
-					UseInventory(Weaps[slot][wep][1]);		// use dropper
-					slot=10;wep=33;	// go away
 				}
+				GiveInventory(Weaps[slot][wep][1],1); 	// get dropper
+				UseInventory(Weaps[slot][wep][1]);		// use dropper
+				slot=10;wep=33;	// go away
+			}
 }
 
 
