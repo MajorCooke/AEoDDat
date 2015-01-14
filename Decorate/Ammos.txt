@@ -1,236 +1,217 @@
-/********************************** 
- *	       AEons of Death					*
- *	       	Version 5.0						*
- *        	 Ammo Code					  *
- **********************************/
+/************************************ 
+ *			 AEons of Death			*
+ *			  Version 6.03			*
+ *				Ammo Code			*
+ ************************************/
 
 
 //====================================================
 // Classic Doom Weapon Ammo
 //====================================================
 
-actor AEClip : Ammo 
+Actor AEClip : Ammo 
 {
 	+NOTELESTOMP
-+FLOORCLIP
--TELESTOMP
-	spawnid 11
-	radius 20
-	height 16
-	inventory.pickupmessage "Picked up a 12mm clip."
-	inventory.icon "IEBCA0"
-	inventory.pickupsound "reilsss/ammo/bulletclip"
-	inventory.amount 12 
-	inventory.maxamount 300 
-	ammo.backpackamount 32
-	ammo.backpackmaxamount 600
+	+FLOORCLIP
+	-TELESTOMP
+	SpawnID 11
+	Radius 20
+	Height 16
 	Scale 0.7
-	states
+	
+	Inventory.PickupMessage "Picked up a 12mm clip."
+	Inventory.Icon "IEBCA0"
+	Inventory.PickupSound "reilsss/ammo/bulletclip"
+	Inventory.Amount 12 
+	Inventory.MaxAmount 300 
+	Ammo.BackpackAmount 32
+	Ammo.BackpackMaxAmount 600
+	States
 	{
 	Spawn:
 		AEBC A -1 NoDelay Thing_ChangeTID(0,22005)
-		stop
+		Stop
 	}
 }
 
 
-actor AEClipBox : AEClip 
+Actor AEClipBox : AEClip 
 {
-	+NOTELESTOMP
-+FLOORCLIP
--TELESTOMP
-	spawnid 139
-	radius 20
-	height 16
-	inventory.pickupmessage "Picked up a box of 12mm bullets."
-	inventory.amount 80 // 50
-	inventory.pickupsound "reilsss/ammo/bulletbox"
 	Scale 0.65
-	states
+	SpawnID 139
+	Inventory.PickupMessage "Picked up a box of 12mm bullets."
+	Inventory.Amount 80 // 50
+	Inventory.PickupSound "reilsss/ammo/bulletbox"
+	States
 	{
 	Spawn:
 		AEBB A -1 NoDelay Thing_ChangeTID(0,22005)
-		stop
+		Stop
 	}
 }
 
 Actor AEClipOrb : AEClip
 {
-	+NOTELESTOMP
-	-TELESTOMP
 	+INVENTORY.IGNORESKILL
 	Inventory.Amount 1
 }
+
 //***************************************************************
 //***************************************************************
-actor AEShell : Ammo 
+
+Actor AEShell : Ammo 
 {
 	+NOTELESTOMP
--TELESTOMP
-+FLOORCLIP
-	spawnid 12
-	radius 20
-	height 16
-	inventory.pickupmessage "Picked up some shotgun shells."
-	inventory.icon "IESCA0"
-	inventory.amount 4 // 4
-	inventory.maxamount 80 // 50
-	inventory.pickupsound "reilsss/ammo/shellclip"
-	ammo.backpackamount 8
-	ammo.backpackmaxamount 160 // 100
+	-TELESTOMP
+	+FLOORCLIP
+	SpawnID 12
+	Radius 20
+	Height 16
 	Scale 0.75
-	states
+	
+	Inventory.PickupMessage "Picked up some shotgun shells."
+	Inventory.Icon "IESCA0"
+	Inventory.Amount 4 // 4
+	Inventory.MaxAmount 80 // 50
+	Inventory.PickupSound "reilsss/ammo/shellclip"
+	Ammo.BackpackAmount 8
+	Ammo.BackpackMaxAmount 160 // 100
+	States
 	{
 	Spawn:
 		AESC A -1 NoDelay Thing_ChangeTID(0,22005)
-		stop
+		Stop
 	}
 }
 
-actor AEShellBox : AEShell 
+Actor AEShellBox : AEShell 
 {
-	+NOTELESTOMP
--TELESTOMP
-+FLOORCLIP
-	spawnid 143
-	radius 20
-	height 16
-	inventory.pickupmessage "Picked up a box of shotgun shells."
-	inventory.amount 16 // 20
-	inventory.pickupsound "reilsss/ammo/shellbox"
+	SpawnID 143
 	Scale 0.7
-	states
+	Inventory.PickupMessage "Picked up a box of shotgun shells."
+	Inventory.Amount 16 // 20
+	Inventory.PickupSound "reilsss/ammo/shellbox"
+	States
 	{
 	Spawn:
 		AESB A -1 NoDelay Thing_ChangeTID(0,22005)
-		stop
+		Stop
 	}
 }
 
 Actor AEShellOrb : AEShell
 {
-	+NOTELESTOMP
-	-TELESTOMP
 	+INVENTORY.IGNORESKILL
 	Inventory.Amount 1
 }
 
 Actor BDShells : AEShell
 {
-	+NOTELESTOMP
-	-TELESTOMP
 	+INVENTORY.IGNORESKILL
 	Inventory.Amount 1
-	inventory.pickupsound "reilsss/ammo/shellclip"
 	Inventory.PickupMessage "Picked up some shotgun shells."
 }
+
 //***************************************************************
 //***************************************************************
-actor AERocket : Ammo 
+
+Actor AERocket : Ammo 
 {
 	+NOTELESTOMP
-+FLOORCLIP
-+INVENTORY.IGNORESKILL
--TELESTOMP
-  spawnid 140
-  radius 20
-  height 26
-  inventory.pickupmessage "Picked up some rockets."
-  inventory.icon "IERCA0"
-  inventory.amount 1 
-  inventory.maxamount 50 
-  inventory.pickupsound "reilsss/ammo/rocketclip"
-  ammo.backpackamount 10 
-  ammo.backpackmaxamount 100 
-  Scale 0.7
-  states
-  {
-  Spawn:
-    AERC A -1 NoDelay Thing_ChangeTID(0,22005)
-    stop
-  }
+	+FLOORCLIP
+	+INVENTORY.IGNORESKILL
+	-TELESTOMP
+	SpawnID 140
+	Radius 20
+	Height 26
+	Scale 0.7
+	
+	Inventory.PickupMessage "Picked up some rockets."
+	Inventory.Icon "IERCA0"
+	Inventory.Amount 1 
+	Inventory.MaxAmount 50 
+	Inventory.PickupSound "reilsss/ammo/rocketclip"
+	Ammo.BackpackAmount 10 
+	Ammo.BackpackMaxAmount 100 
+	States
+	{
+	Spawn:
+		AERC A -1 NoDelay Thing_ChangeTID(0,22005)
+		Stop
+	}
 }
 
 Actor AERocketOrb : AERocket
 {
-	+NOTELESTOMP
-	+INVENTORY.IGNORESKILL
-	-TELESTOMP
 	Inventory.Amount 1
 }
 
-actor AERocketBox : AERocket
+Actor AERocketBox : AERocket
 {
-	+NOTELESTOMP
-+FLOORCLIP
--INVENTORY.IGNORESKILL
-  spawnid 141
-  radius 20
-  height 16
-  inventory.pickupmessage "Picked up a box of rockets."
-  inventory.amount 10 
-  inventory.pickupsound "reilsss/ammo/rocketbox"
-  Scale 0.7
-  states
-  {
-  Spawn:
-    AERB A -1 NoDelay Thing_ChangeTID(0,22005)
-    stop
-  }
+	-INVENTORY.IGNORESKILL
+	SpawnID 141
+	Height 16
+	Inventory.PickupMessage "Picked up a box of rockets."
+	Inventory.Amount 10 
+	Inventory.PickupSound "reilsss/ammo/rocketbox"
+	States
+	{
+	Spawn:
+		AERB A -1 NoDelay Thing_ChangeTID(0,22005)
+		Stop
+	}
 }
+
 //***************************************************************
 //***************************************************************
-actor AECell : Ammo 
+
+Actor AECell : Ammo 
 {
 	+NOTELESTOMP
-+FLOORCLIP
-  spawnid 75
-  radius 20
-  height 10
-  inventory.pickupmessage "Picked up an energy cell."
-  inventory.icon "IECCA0"
-  inventory.amount 20 
-  inventory.maxamount 400 
-  inventory.pickupsound "reilsss/ammo/cellclip"
-  ammo.backpackamount 40 
-  ammo.backpackmaxamount 600
-  Scale 0.75
-  states
-  {
-  Spawn:
+	+FLOORCLIP
+	SpawnID 75
+	Radius 20
+	Height 10
+	Scale 0.75
+	
+	Inventory.PickupMessage "Picked up an energy cell."
+	Inventory.Icon "IECCA0"
+	Inventory.Amount 20 
+	Inventory.MaxAmount 400 
+	Inventory.PickupSound "reilsss/ammo/cellclip"
+	Ammo.BackpackAmount 40 
+	Ammo.BackpackMaxAmount 600
+	States
+	{
+	Spawn:
 		AECC A 0 NoDelay Thing_ChangeTID(0,22005)
 	Cont:
 		AECC ABC 3
 		Loop
-  }
+	}
 }
 
 Actor AECellOrb : AECell
 {
-	+NOTELESTOMP
 	+INVENTORY.IGNORESKILL
 	Inventory.Amount 1
 }
 
-actor AECellBox : AECell
+Actor AECellBox : AECell
 {
-	+NOTELESTOMP
-+FLOORCLIP
-  spawnid 142
-  radius 20
-  height 18
-  inventory.pickupmessage "Picked up an energy cell pack."
-  inventory.amount 100 
-  inventory.pickupsound "reilsss/ammo/cellbox"
-  Scale 0.75
-  states
-  {
-  Spawn:
+	SpawnID 142
+	Height 18
+	Inventory.PickupMessage "Picked up an energy cell pack."
+	Inventory.Amount 100 
+	Inventory.PickupSound "reilsss/ammo/cellbox"
+	States
+	{
+	Spawn:
 		AECB A 0 NoDelay Thing_ChangeTID(0,22005)
 	Cont:
-      AECB ABC 3
-      Loop
-  }
+		AECB ABC 3
+		Loop
+	}
 }
 
 //====================================================
@@ -238,72 +219,72 @@ actor AECellBox : AECell
 //====================================================
 
 
-ACTOR DarkMana : Ammo 8508
+Actor DarkMana : Ammo 8508
 {
 	+NOTELESTOMP
-   +INVENTORY.IGNORESKILL
-   +FLOATBOB
-   Radius 20
-   Height 16
-   Inventory.Amount 2 
-   Inventory.MaxAmount 50 
-   Ammo.BackpackAmount 2
-   Inventory.pickupsound "ammo/darkmana/pickup"
-   RenderStyle Translucent
-   Alpha 0.9
-   Ammo.BackpackMaxAmount 100 
-   Inventory.PickupMessage "Picked up some dark mana."
-   Inventory.Icon "IEDMA0"
+	+INVENTORY.IGNORESKILL
+	+FLOATBOB
+	Radius 20
+	Height 16
+	RenderStyle Translucent
 	Scale 0.85
-   States
-   {
-   Spawn:
+	Alpha 0.9
+	
+	Inventory.PickupSound "ammo/darkmana/pickup"
+	Inventory.PickupMessage "Picked up some dark mana."
+	Inventory.Icon "IEDMA0"
+	Inventory.Amount 2 
+	Inventory.MaxAmount 50 
+	Ammo.BackpackAmount 2
+	Ammo.BackpackMaxAmount 100 
+	States
+	{
+	Spawn:
 		AEDM A 0 NoDelay Thing_ChangeTID(0,22005)
 		Cont:
-      AEDM ABCDEFGHIJKLMNOP 3 Bright
-      Loop
-   }
+		AEDM ABCDEFGHIJKLMNOP 3 Bright
+		Loop
+	}
 }
 
 
 Actor SmallDarkMana : DarkMana 8509
 {
-	+NOTELESTOMP
-	+INVENTORY.IGNORESKILL
 	Inventory.Amount 1 // 1
-	Inventory.pickupsound "ammo/darkmana/pickup"
 	Scale 0.6
 }
+
 //***************************************************************
 //***************************************************************
-ACTOR BlueMana : Ammo 8510
+
+Actor BlueMana : Ammo 8510
 {
 	+NOTELESTOMP
-   +FLOATBOB
-   Radius 20
-   Inventory.Amount 10
-   Inventory.MaxAmount 300 
-   Ammo.BackpackAmount 20 
-   Ammo.BackpackMaxAmount 600 
-   inventory.pickupsound "reilsss/ammo/bluemana"
-   RenderStyle Translucent
-   Alpha 0.9
-   Inventory.PickupMessage "Picked up some blue Mana."
-   Inventory.Icon "IEBMA0"
+	+FLOATBOB
+	Radius 20
+	RenderStyle Translucent
+	Alpha 0.9
 	Scale 0.65
-   States
-   {
-   Spawn:
+	
+	Inventory.PickupSound "reilsss/ammo/bluemana"
+	Inventory.PickupMessage "Picked up some blue Mana."
+	Inventory.Icon "IEBMA0"
+	Inventory.Amount 10
+	Inventory.MaxAmount 300 
+	Ammo.BackpackAmount 20 
+	Ammo.BackpackMaxAmount 600 
+	States
+	{
+	Spawn:
 		AEBM A 0 NoDelay Thing_ChangeTID(0,22005)
 	Cont:
-      AEBM ABCDEFGHIJKL 3 Bright
-      Loop
-   }
+		AEBM ABCDEFGHIJKL 3 Bright
+		Loop
+	}
 }
 
 Actor BigBlueMana : BlueMana 
 {
-	+NOTELESTOMP
 	Inventory.Amount 20
 	Scale 0.85
 	Radius 30
@@ -318,35 +299,36 @@ Actor BlueManaOrb : BlueMana
 
 //***************************************************************
 //***************************************************************
-ACTOR RedMana : Ammo 8512
+
+Actor RedMana : Ammo 8512
 {
 	+NOTELESTOMP
-   +FLOATBOB
-   +INVENTORY.IGNORESKILL
-   Radius 20
-   Inventory.Amount 4
-   Inventory.MaxAmount 100 
-   Ammo.BackpackAmount 10 
-   Ammo.BackpackMaxAmount 200 
-   inventory.pickupsound "reilsss/ammo/redmana"
-   RenderStyle Translucent
-   Alpha 0.9
-   Inventory.PickupMessage "Picked up some red Mana."
-   Inventory.Icon "IERMA0"
+	+FLOATBOB
+	+INVENTORY.IGNORESKILL
+	Radius 20
+	RenderStyle Translucent
+	Alpha 0.9
 	Scale 0.65
-   States
-   {
-   Spawn:
+	
+	Inventory.PickupSound "reilsss/ammo/redmana"
+	Inventory.PickupMessage "Picked up some red Mana."
+	Inventory.Icon "IERMA0"
+	Inventory.Amount 4
+	Inventory.MaxAmount 100 
+	Ammo.BackpackAmount 10 
+	Ammo.BackpackMaxAmount 200 
+	States
+	{
+	Spawn:
 		AERM A 0 NoDelay Thing_ChangeTID(0,22005)
 	Cont:
-      AERM ABCDEFGHIJ 3 Bright
-      Loop
-   }
+		AERM ABCDEFGHIJ 3 Bright
+		Loop
+	}
 }
 
 Actor BigRedMana : RedMana 
 {
-	+NOTELESTOMP
 	Inventory.Amount 8
 	Scale 0.85
 	Radius 30
@@ -354,42 +336,41 @@ Actor BigRedMana : RedMana
 
 Actor RedManaOrb : RedMana
 {
-	+NOTELESTOMP
-	+INVENTORY.IGNORESKILL
 	Inventory.Amount 1
 }
+
 //***************************************************************
 //***************************************************************
 
-ACTOR GreenMana : Ammo 8511
+Actor GreenMana : Ammo 8511
 {
 	+NOTELESTOMP
-   +FLOATBOB
-   Radius 20
-   Height 16
-   Inventory.Amount 6 // 14
-   Inventory.MaxAmount 200 // 300
-   Ammo.BackpackAmount 8 // 30
-   Ammo.BackpackMaxAmount 400 // 600
-   inventory.pickupsound "reilsss/ammo/greenmana"
-   RenderStyle Translucent
-   Alpha 0.9
-   Inventory.PickupMessage "Picked up some green Mana."
-   Inventory.Icon "IEGMA0"
+	+FLOATBOB
+	Radius 20
+	Height 16
+	RenderStyle Translucent
+	Alpha 0.9
 	Scale 0.65
-   States
-   {
-   Spawn:
+	
+	Inventory.PickupSound "reilsss/ammo/greenmana"
+	Inventory.PickupMessage "Picked up some green Mana."
+	Inventory.Icon "IEGMA0"
+	Inventory.Amount 6 // 14
+	Inventory.MaxAmount 200 // 300
+	Ammo.BackpackAmount 8 // 30
+	Ammo.BackpackMaxAmount 400 // 600
+	States
+	{
+	Spawn:
 		AEGM A 0 NoDelay Thing_ChangeTID(0,22005)
 	Cont:
-      AEGM ABCDEFGHIJKL 3 Bright
-      Loop
-   }
+		AEGM ABCDEFGHIJKL 3 Bright
+		Loop
+	}
 }
 
 Actor BigGreenMana : GreenMana
 {
-	+NOTELESTOMP
 	Inventory.Amount 12
 	Scale 0.85
 	Radius 30
@@ -398,7 +379,6 @@ Actor BigGreenMana : GreenMana
 
 Actor GreenManaOrb : GreenMana
 {
-	+NOTELESTOMP
 	+INVENTORY.IGNORESKILL
 	Inventory.Amount 1
 }
@@ -409,17 +389,18 @@ Actor GreenManaOrb : GreenMana
 Actor ASTF : Ammo
 {
 	+NOTELESTOMP
+	+FLOORCLIP
 	Radius 30
 	Height 25
+	Scale 0.56
+	
+	Inventory.PickupMessage "You got some ASTF Ammo."
+	Inventory.PickupSound "reilsss/ammo/rocketclip"
+	Inventory.Icon "ASTFC0"
 	Inventory.Amount 12
 	Inventory.MaxAmount 120
 	Ammo.BackpackAmount 12
 	Ammo.BackpackMaxAmount 240
-	Inventory.PickupMessage "You got some ASTF Ammo."
-	inventory.pickupsound "reilsss/ammo/rocketclip"
-	Inventory.Icon "ASTFC0"
-	+FLOORCLIP
-	Scale 0.56
 	States
 	{
 	Spawn:
@@ -430,12 +411,12 @@ Actor ASTF : Ammo
 
 Actor ASTFPack : ASTF 
 {
-	+NOTELESTOMP
 	Radius 40
 	Height 30
+	Scale 0.7
+	
 	Inventory.Amount 20
 	Inventory.PickupMessage "You picked a big box ASTF Ammo."
-	Scale 0.7
 	States
 	{
 	Spawn:
@@ -446,278 +427,277 @@ Actor ASTFPack : ASTF
 
 Actor ASTFOrb : ASTF
 {
-	+NOTELESTOMP
 	+INVENTORY.IGNORESKILL
 	Inventory.Amount 1
 }
-	
+
 //***************************************************************
 //***************************************************************
-ACTOR MiniRockets : Ammo 8516
+
+Actor MiniRockets : Ammo 8516
 {
 	+NOTELESTOMP
-   +FLOORCLIP
-   Inventory.Amount 8
-   Height 16
-   Radius 20
-   Inventory.MaxAmount 200 
-   Ammo.BackpackAmount 16 
-   Ammo.BackpackMaxAmount 400
-   Inventory.PickupMessage "Picked up some mini rockets."
-   inventory.pickupsound "reilsss/ammo/minirocketclip"
-   Inventory.Icon "IMRCA0"
-   Scale 0.4
-   States
-   {
-   Spawn:
-      AMRC A -1 NoDelay Thing_ChangeTID(0,22005)
-      Loop
-   }
+	+FLOORCLIP
+	Height 16
+	Radius 20
+	Scale 0.4
+	
+	Inventory.PickupMessage "Picked up some mini rockets."
+	Inventory.PickupSound "reilsss/ammo/minirocketclip"
+	Inventory.Icon "IMRCA0"
+	Inventory.Amount 8
+	Inventory.MaxAmount 200 
+	Ammo.BackpackAmount 16 
+	Ammo.BackpackMaxAmount 400
+	States
+	{
+	Spawn:
+		AMRC A -1 NoDelay Thing_ChangeTID(0,22005)
+		Loop
+	}
 }
 
-ACTOR MiniRocketBox : MiniRockets 8517
+Actor MiniRocketBox : MiniRockets 8517
 {
-	+NOTELESTOMP
-   +FLOORCLIP
-   //+ALWAYSPICKUP
-   Radius 30
-   Height 20
-   Inventory.Amount 32
-   inventory.pickupsound "reilsss/ammo/minirocketbox"
-   Inventory.PickupMessage "Picked up a box of mini rockets."
-   Scale 0.6
-   States
-   {
-   Spawn:
-      AMRB A -1 NoDelay Thing_ChangeTID(0,22005)
-      Loop
-   }
+	Radius 30
+	Height 20
+	Scale 0.6
+	
+	Inventory.Amount 32
+	Inventory.PickupSound "reilsss/ammo/minirocketbox"
+	Inventory.PickupMessage "Picked up a box of mini rockets."
+	States
+	{
+	Spawn:
+		AMRB A -1 NoDelay Thing_ChangeTID(0,22005)
+		Loop
+	}
 }
 
 Actor MiniRocketOrb : MiniRockets
 {
-	+NOTELESTOMP
 	+INVENTORY.IGNORESKILL
 	Inventory.Amount 1
 }
+
 //***************************************************************
 //***************************************************************
-ACTOR PlasmaRod : Ammo 8518
+
+Actor PlasmaRod : Ammo 8518
 {
 	+NOTELESTOMP
-    +FLOORCLIP
-    Radius 30
-    Height 16
-    Inventory.PickupMessage "Picked up a Plasma Rod."
-    Inventory.PickupSound "misc/i_pkup"
-    Inventory.Amount 50 
-    Inventory.MaxAmount 400
-    Ammo.BackpackAmount 32 
-    Ammo.BackpackMaxAmount 600
-    inventory.pickupsound "reilsss/ammo/plasmabox"
-    Inventory.Icon "IEPCA0"
-    Scale 0.75
-    States
-    {
-    Spawn:
+	+FLOORCLIP
+	Radius 30
+	Height 16
+	Scale 0.75
+	
+	Inventory.PickupMessage "Picked up a Plasma Rod."
+	Inventory.PickupSound "reilsss/ammo/plasmabox"
+	Inventory.Icon "IEPCA0"
+	Inventory.Amount 50 
+	Inventory.MaxAmount 400
+	Ammo.BackpackAmount 32 
+	Ammo.BackpackMaxAmount 600
+	States
+	{
+	Spawn:
 		AEPB A 0 NoDelay Thing_ChangeTID(0,22005)
-		Cont:
-       AEPB AB 5
-       Loop
-    }
+	Cont:
+		AEPB AB 5
+		Loop
+	 }
 }
 
 Actor PlasmaRodSmall : PlasmaRod 8519
 {
-	+NOTELESTOMP
-    +FLOORCLIP
-    Inventory.Amount 12
-    inventory.pickupsound "reilsss/ammo/plasmaclip"
-    Inventory.PickupMessage "Picked up an small Barnicle Plasma Rod."
-    Scale 0.75
-    States
-    {
-    Spawn:
+	Inventory.Amount 12
+	Inventory.PickupSound "reilsss/ammo/plasmaclip"
+	Inventory.PickupMessage "Picked up an small Barnicle Plasma Rod."
+	States
+	{
+	Spawn:
 		AEPC A 0 NoDelay Thing_ChangeTID(0,22005)
-		Cont:
-       AEPC AB 5
-       Loop
-    }
+	Cont:
+		AEPC AB 5
+		Loop
+	}
 }
 
 Actor PlasmaRodOrb : PlasmaRod
 {
-	+NOTELESTOMP
 	+INVENTORY.IGNORESKILL
 	Inventory.Amount 1
 }
+
 //***************************************************************
 //***************************************************************
-ACTOR BunnyAmmo : Ammo 8521 // 25045
+
+Actor BunnyAmmo : Ammo 8521 // 25045
 {
 	+NOTELESTOMP
-   +FLOORCLIP
-   +INVENTORY.IGNORESKILL
-   Inventory.Amount 1 
-   Radius 30
-   Inventory.MaxAmount 6
-   Ammo.BackpackAmount 0 
-   Ammo.BackpackMaxAmount 12
-   inventory.pickupsound "reilsss/ammo/explosivbunny"
-   Inventory.PickupMessage "You picked up an explosive bunny."
-   Inventory.Icon "XHBUNN2"
-   States
-   {
-   Spawn:
-      W008 H -1 NoDelay Thing_ChangeTID(0,22005)
-      Loop
-   }
+	+FLOORCLIP
+	+INVENTORY.IGNORESKILL
+	Radius 30
+	
+	Inventory.PickupSound "reilsss/ammo/explosivbunny"
+	Inventory.PickupMessage "You picked up an explosive bunny."
+	Inventory.Icon "XHBUNN2"
+	Inventory.Amount 1 
+	Inventory.MaxAmount 6
+	Ammo.BackpackAmount 0 
+	Ammo.BackpackMaxAmount 12
+	States
+	{
+	Spawn:
+		W008 H -1 NoDelay Thing_ChangeTID(0,22005)
+		Loop
+	}
 }
+
 //***************************************************************
 //***************************************************************
-ACTOR Mojo : Ammo 8524
+
+Actor Mojo : Ammo 8524
 {
 	+NOTELESTOMP
-    +FLOORCLIP
-    +INVENTORY.IGNORESKILL
-    Inventory.Amount 1
-    Inventory.MaxAmount 200
-    Inventory.pickupsound "reilsss/ammo/mojoclip"
-    Inventory.Icon "VDDLB0"
-    States
-    {
-    Spawn:
-        TNT1 A -1
-        Loop
-   }
+	+FLOORCLIP
+	+INVENTORY.IGNORESKILL
+	Inventory.PickupSound "reilsss/ammo/mojoclip"
+	Inventory.Icon "VDDLB0"
+	Inventory.Amount 1
+	Inventory.MaxAmount 200
+	States
+	{
+	Spawn:
+		TNT1 A -1
+		Loop
+	}
 }
+
 //***************************************************************
 //***************************************************************
-actor AEGrenade : Ammo 8527
+
+Actor AEGrenade : Ammo 8527
 {
 	+NOTELESTOMP
-  +FLOORCLIP
-  +INVENTORY.IGNORESKILL
-  radius 30
-  height 16
-  inventory.pickupmessage "Picked up some grenades."
-  inventory.icon "IGRCA0"
-  inventory.amount 2 
-  inventory.maxamount 50 
-  ammo.backpackamount 4 
-  ammo.backpackmaxamount 100 
-  inventory.pickupsound "ammo/grenade/pickup"
-  Scale 0.67
-  states
-  {
-  Spawn:
-    AGRC A -1 NoDelay Thing_ChangeTID(0,22005)
-    stop
-  }
+	+FLOORCLIP
+	+INVENTORY.IGNORESKILL
+	Radius 30
+	Height 16
+	Scale 0.67
+	
+	Inventory.PickupMessage "Picked up some grenades."
+	Inventory.PickupSound "ammo/grenade/pickup"
+	Inventory.Icon "IGRCA0"
+	Inventory.Amount 2 
+	Inventory.MaxAmount 50 
+	Ammo.BackpackAmount 4 
+	Ammo.BackpackMaxAmount 100 
+	States
+	{
+	Spawn:
+		AGRC A -1 NoDelay Thing_ChangeTID(0,22005)
+		Stop
+	}
 }
 
 Actor AEGrenadeOrb : AEGrenade
 {
-	+NOTELESTOMP
-	+INVENTORY.IGNORESKILL
 	Inventory.Amount 1
 }
 
-actor AEGrenadeBox : AEGrenade 8528
+Actor AEGrenadeBox : AEGrenade 8528
 {
-	+NOTELESTOMP
-  +FLOORCLIP
-  -INVENTORY.IGNORESKILL
-  radius 40
-  height 22
-  inventory.pickupmessage "Picked up a box of grenades."
-  inventory.amount 10 
-  inventory.pickupsound "ammo/grenadebox/pickup"
-  Scale 0.75
-  states
-  {
-  Spawn:
-    AGRB A -1 NoDelay Thing_ChangeTID(0,22005)
-    stop
-  }
-}
-//***************************************************************
-//***************************************************************
-actor AENails : Ammo 8531
-{
-	+NOTELESTOMP
-  +FLOORCLIP
-  radius 20
-  height 16
-  inventory.pickupmessage "Picked up some nails."
-  inventory.icon "IENCA0"
-  inventory.amount 10 
-  inventory.maxamount 200
-  ammo.backpackamount 20 
-  ammo.backpackmaxamount 400
-  inventory.pickupsound "reilsss/ammo/bulletclip"
-  Scale 0.8
-  states
-  {
-  Spawn:
-    AENC A -1 NoDelay Thing_ChangeTID(0,22005)
-    stop
-  }
+	-INVENTORY.IGNORESKILL
+	Radius 40
+	Height 22
+	Scale 0.75
+	
+	Inventory.PickupMessage "Picked up a box of grenades."
+	Inventory.PickupSound "ammo/grenadebox/pickup"
+	Inventory.Amount 10 
+	States
+	{
+	Spawn:
+		AGRB A -1 NoDelay Thing_ChangeTID(0,22005)
+		Stop
+	}
 }
 
-actor AENailsBox : AENails 8532
+Actor AEGrenadeAmmo : AEGrenade
+{
+	Inventory.PickupSound "reilsss/ammo/grenadeclip"
+	Inventory.PickupMessage "Picked up a handgrenade."
+	Inventory.Icon "IEHGR0"
+	Scale 0.5
+	States
+	{
+	Spawn:
+		R013 Y -1 NoDelay Thing_ChangeTID(0,22005)
+		Loop
+	}
+}
+
+//***************************************************************
+//***************************************************************
+
+Actor AENails : Ammo 8531
 {
 	+NOTELESTOMP
-  +FLOORCLIP
-  radius 30
-  height 22
-  inventory.pickupmessage "Picked up a box of nails."
-  inventory.amount 50 
-  inventory.pickupsound "reilsss/ammo/bulletbox"
-  Scale 0.75
-  states
-  {
-  Spawn:
-    AENB A -1 NoDelay Thing_ChangeTID(0,22005)
-    stop
-  }
+	+FLOORCLIP
+	Radius 20
+	Height 16
+	Scale 0.8
+	
+	Inventory.PickupSound "reilsss/ammo/bulletclip"
+	Inventory.PickupMessage "Picked up some nails."
+	Inventory.Icon "IENCA0"
+	Inventory.Amount 10 
+	Inventory.MaxAmount 200
+	Ammo.BackpackAmount 20 
+	Ammo.BackpackMaxAmount 400
+	States
+	{
+	Spawn:
+		AENC A -1 NoDelay Thing_ChangeTID(0,22005)
+		Stop
+	}
+}
+
+Actor AENailsBox : AENails 8532
+{
+	Radius 30
+	Height 22
+	Scale 0.75
+	
+	Inventory.PickupMessage "Picked up a box of nails."
+	Inventory.PickupSound "reilsss/ammo/bulletbox"
+	Inventory.Amount 50 
+	States
+	{
+	Spawn:
+		AENB A -1 NoDelay Thing_ChangeTID(0,22005)
+		stop
+	}
 }
 
 Actor AENailOrb : AENails
 {
-	+NOTELESTOMP
 	+INVENTORY.IGNORESKILL
 	Inventory.Amount 1
 }
-
-actor AEGrenadeAmmo : AEGrenade
-{
-	+NOTELESTOMP
-+FLOORCLIP
-Inventory.pickupsound "reilsss/ammo/grenadeclip"
-Inventory.pickupmessage "Picked up a handgrenade."
-Inventory.Icon "IEHGR0"
-Scale 0.5
-states
-{
-Spawn:
-	R013 Y -1 NoDelay Thing_ChangeTID(0,22005)
-	Loop
-}
-}
-
 
 //--------------------------------------------------------------------
 
 // From MonPowerS.AED Line 373
 
-actor ManaRecepticle : CustomInventory
+Actor ManaRecepticle : CustomInventory
 {
 	+NOTELESTOMP
-height 30
-radius 22
 	+FLOORCLIP
 	+FLOATBOB
+	Height 30
+	Radius 22
 	Scale 0.8
 	RENDERSTYLE NORMAL
 	Alpha 1
@@ -730,7 +710,7 @@ radius 22
 		PS01 A 0 NoDelay Thing_ChangeTID(0,22005)
 	Cont:
 		PS01 ABCDEF 6
-		loop
+		Loop
 	Pickup:
 		TNT1 A 0 A_GiveInventory("BlueMana",random(80,120))
 		TNT1 A 0 A_GiveInventory("RedMana",random(30,50))
@@ -739,29 +719,20 @@ radius 22
 	}
 }
 
-Actor DarkManaRecepticle : CustomInventory
+Actor DarkManaRecepticle : ManaRecepticle
 {
-	+NOTELESTOMP
-height 30
-radius 22
-	+FLOORCLIP
-	+FLOATBOB
-	Scale 0.8
-	RENDERSTYLE NORMAL
-	Alpha 1
-	+FANCYPICKUPSOUND	
+	+FANCYPICKUPSOUND
 	Translation "112:127=196:207","9:9=207:207"
 	Inventory.PickupMessage "You found a cup of Dark Mana Potion."
-	Inventory.PickupSound "misc/powerslave/recepticle"	
 	States
 	{
 	Spawn:
 		PS01 A 0 NoDelay Thing_ChangeTID(0,22005)
 	Cont:
 		PS01 ABCDEF 6
-		loop
+		Loop
 	Pickup:
 		TNT1 A 0 A_GiveInventory("DarkMana",random(15,30))
 		Stop
-	}	
+	}
 }

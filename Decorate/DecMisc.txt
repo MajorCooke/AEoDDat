@@ -39,11 +39,11 @@ Actor Counter : inventory		//general purpose couter
 Actor DisintegrateToken : inventory		//specific to handle crash states on monsters + disintegrate deaths
 {	Inventory.MaxAmount 1 }
 
-actor OldFog : TeleportFog // 4.0 - 5.25
+Actor OldFog : TeleportFog // 4.0 - 5.25
 {
 	+NOTIMEFREEZE
-	renderstyle None
-	states
+	RenderStyle None
+	States
 	{
 	Spawn:
 		PLAY AA 0 A_SpawnItemEx("TelFogXtra",6,30,32,0,0,random(1,3),0,0)
@@ -115,62 +115,62 @@ Actor NewFog replaces TeleportFog
 		TNT1 A 0
 		TNT1 A 0 A_PlaySound("misc/teleport")
 		X051 A 0 A_ChangeVelocity(0,0,3,3)
-		X051 AAAA 1 bright A_FadeIn(0.18)
+		X051 AAAA 1 Bright A_FadeIn(0.18)
 	FadingLoop:
 		X051 A 0 A_CheckSight("NoSight")
 		X051 A 0 A_SpawnItemEx("TeleSpark",0,0,0,random(8,16),0,random(-9,9),random(0,359),32,64)
 	NoSight:
-		X051 A 1 bright A_FadeOut(0.02)
+		X051 A 1 Bright A_FadeOut(0.02)
 		Goto "FadingLoop"
 	}
 }
 
 Actor TeleSpark
 {
-        Projectile
-        +NOINTERACTION
-        MissileType "TeleSparkTrail"
-        States
-        {
-        Spawn:
-                TNT1 A 0
-			TNT1 a 0 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,32)
-                TNT1 A 1 A_ChangeVelocity(random(0,10),0,random(-9,9),3)
-                TNT1 A 0 A_SetAngle(angle+random(-70,70))
-                TNT1 A 1 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,32)
-                TNT1 A 1 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,32)
+	Projectile
+	+NOINTERACTION
+	MissileType "TeleSparkTrail"
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,32)
+		TNT1 A 1 A_ChangeVelocity(random(0,10),0,random(-9,9),3)
+		TNT1 A 0 A_SetAngle(angle+random(-70,70))
+		TNT1 A 1 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,32)
+		TNT1 A 1 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,32)
 
-                TNT1 A 1 A_ChangeVelocity(random(0,10),0,random(-9,9),3)
-                TNT1 A 0 A_SetAngle(angle+random(-70,70))
-                TNT1 A 1 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,32)
-                TNT1 A 1 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,32)
+		TNT1 A 1 A_ChangeVelocity(random(0,10),0,random(-9,9),3)
+		TNT1 A 0 A_SetAngle(angle+random(-70,70))
+		TNT1 A 1 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,32)
+		TNT1 A 1 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,32)
 
-			TNT1 a 0 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,32)
-                TNT1 A 1 A_ChangeVelocity(random(0,10),0,random(-9,9),3)
-                TNT1 A 0 A_SetAngle(angle+random(-70,70))
-                TNT1 A 1 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,32)
-                TNT1 A 1 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,32)
+		TNT1 A 1 A_ChangeVelocity(random(0,10),0,random(-9,9),3)
+		TNT1 A 0 A_SetAngle(angle+random(-70,70))
+		TNT1 A 1 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,32)
+		TNT1 A 1 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,32)
 
-			TNT1 a 0 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,32)
-                TNT1 A 1 A_ChangeVelocity(random(0,10),0,random(-9,9),3)
-                TNT1 A 1 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,32)
-                TNT1 A 1 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,32)
-                Stop
-        }
+		TNT1 A 0 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,32)
+		TNT1 A 1 A_ChangeVelocity(random(0,10),0,random(-9,9),3)
+		TNT1 A 1 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,32)
+		TNT1 A 1 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,32)
+		Stop
+	}
 }
  
 Actor TeleSparkTrail
 {
-        +NOINTERACTION
-        RenderStyle Add
-        Alpha 0.5
-        Scale 0.07
-        States
-        {
-        Spawn:
-                X051 A 4 bright
-                Stop
-        }
+	+NOINTERACTION
+	RenderStyle Add
+	Alpha 0.5
+	Scale 0.07
+	States
+	{
+	Spawn:
+		X051 A 4 bright
+		Stop
+	}
 }
 
 Actor TelFogXtra
@@ -219,14 +219,14 @@ Actor NewPuff1
 {
 	Projectile
 	+NOINTERACTION
-	Vspeed 0
-	Speed 0
-	Damage 0
-	Scale 0.2
 	+PUFFONACTORS
-	DamageType "AEBullet"
+	VSpeed 0
+	Speed 0
+	Scale 0.2
 	RenderStyle Add
-	states
+	Damage 0
+	DamageType "AEBullet"
+	States
 	{
 	Spawn:
 		TNT1 A 0
@@ -248,7 +248,7 @@ Actor NewPuff1
 	SpawnFloorSmoke:
 		TNT1 A 0 A_SpawnItemEx("PuffFloorSmoke",0,0,0,0,0,0,0,32)
 		Goto Death+2
-	Xdeath:
+	XDeath:
 		TNT1 A 0 A_PlaySound("postal2/weapons/bullet_hitflesh",5,0.5)
 		Stop
 	Simple:
@@ -261,7 +261,7 @@ Actor NewPuff1
 
 Actor NewPuff1Silent : NewPuff1
 {
-	states
+	States
 	{
 	Spawn:
 		TNT1 A 0
@@ -293,13 +293,13 @@ Actor PuffWallSmoke
 	Spawn:
 		TNT1 A 0
 		TNT1 A 0 A_SetTranslucent(frandom(0.5,1.0),1)
-		TNT1 a 0 A_SetScale(frandom(0.05,0.13))
+		TNT1 A 0 A_SetScale(frandom(0.05,0.13))
 		X116 ABCDE 1
 		X116 FGHIJKLMNOPQRSTUVWXYZ 1 A_FadeOut(0.035)
 		Stop
 	}
 }
-		
+
 Actor PuffFloorSmoke
 {
 	+NOINTERACTION
@@ -311,17 +311,17 @@ Actor PuffFloorSmoke
 		TNT1 A 0 A_SetTranslucent(frandom(0.5,1.0),1)
 		TNT1 A 0 A_Jump(256,"Type1","Type2","Type3")
 	Type1:
-		TNT1 a 0 A_SetScale(frandom(0.07,0.16))
+		TNT1 A 0 A_SetScale(frandom(0.07,0.16))
 		X113 ABCDEFG 1
 		X113 HIJKLMNOPQRSTUVWX 2 A_FadeOut(0.03)
 		Wait
 	Type2:
-		TNT1 a 0 A_SetScale(frandom(0.07,0.16))
+		TNT1 A 0 A_SetScale(frandom(0.07,0.16))
 		X115 ABCDEFG 1
 		X115 HIJKLMNOPQRSTUVWXYZ 2 A_FadeOut(0.03)
 		Wait
 	Type3:
-		TNT1 a 0 A_SetScale(frandom(0.07,0.16))
+		TNT1 A 0 A_SetScale(frandom(0.07,0.16))
 		X117 ABCDEFG 1
 		X117 HIJKLMNOPQRSTUVWXYZ 2 A_FadeOut(0.03)
 		Wait
@@ -334,12 +334,12 @@ Actor PuffFloorSmoke
 Actor Puff2Spark : FastProjectile
 {
 	Projectile
+	+THRUACTORS
 	BounceType "Doom"
 	Radius 1
 	Height 1
-	BounceFactor 1
-	WallBounceFactor 1
-	+THRUACTORS
+	BounceFActor 1
+	WallBounceFActor 1
 	MissileType "Puff2Flare"
 	MissileHeight 7
 	States
@@ -389,6 +389,7 @@ Actor BulletDamagePuff : NewPuff1 replaces BulletPuff
 {
 	DamageType "AEBullet"
 }
+
 Actor PuffSmoke //: TT1
 {
 	Projectile
@@ -442,7 +443,7 @@ Actor MCBloodParticle : Blood //replaces BloodSplatter
 	+DONTBLAST
 	+NOTELESTOMP
 	//Translation "0:255=%[0,0,0]:[1,0,0]"
-	Renderstyle Translucent
+	RenderStyle Translucent
 	Radius 1
 	Height 1
 	Gravity 0.20
@@ -529,10 +530,10 @@ Actor MCBloodSplatter : MCBloodParticle replaces BloodSplatter
 
 Actor NewBlood : Blood //replaces Blood  //Blood as in v5.03, kept for compatability
 {
-	Scale 0.15
-	Gravity 0.44
 	+DONTSPLASH
 	+DONTBLAST
+	Scale 0.15
+	Gravity 0.44
 	States
 	{
 	Spawn:
@@ -543,6 +544,7 @@ Actor NewBlood : Blood //replaces Blood  //Blood as in v5.03, kept for compatabi
 		Stop
 	}
 }
+
 Actor ExtraBlood : NewBlood
 {
 	Scale 0.09
@@ -561,17 +563,18 @@ Actor ExtraBlood : NewBlood
 //*************************************************************************
 
 //*************************************************************************
+
 Actor GenericHumanBurn
 {
+	-SOLID
+	-COUNTKILL
+	+DONTSPLASH
+	+FLOORCLIP
 	Radius 20
 	Height 56
 	Speed 10
-	-Solid
-	-COUNTKILL
-	+DONTSPLASH
-	Painchance 0
+	PainChance 0
 	DamageType Fire
-	+FloorClip
 	HitObituary "%o melted."
 	States
 	{
@@ -652,16 +655,16 @@ Actor GenericHumanBurn
 
 Actor GenericHumanBurn1
 {
+	-SOLID
+	-COUNTKILL
+	+DONTSPLASH
+	+FLOORCLIP
 	Radius 20
 	Height 56
 	Speed 10
-	-Solid
-	-COUNTKILL
-	+DONTSPLASH
-	Painchance 0
+	PainChance 0
 	Scale 0.45
 	DamageType Fire
-	+FloorClip
 	HitObituary "%o melted."
 	States
 	{
@@ -669,7 +672,7 @@ Actor GenericHumanBurn1
 		TNT1 A 0
 		TNT1 A 0 A_PlaySound("bcultist/burned")
 
-		TNT1 a 0 A_JumpIfInventory("Counter",5,"ScreamandDecide")
+		TNT1 A 0 A_JumpIfInventory("Counter",5,"ScreamandDecide")
 		E16W A 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
 //		TNT1 A 0 A_SpawnItemEx("BurnMiniFlame",random(20,-20),random(20,-20),random(30,50),0,0,frandom(1.0,3.0),0,32)
@@ -783,17 +786,17 @@ Actor GenericHumanBurn1
 
 Actor HexenHumanBurn
 {
+	-SOLID
+	-COUNTKILL
+	+DONTSPLASH
+	+FLOORCLIP
 	Radius 20
 	Height 56
 	Speed 10
-	-Solid
-	-COUNTKILL
-	+DONTSPLASH
-	Painchance 0
+	PainChance 0
 	Scale 0.8
 	Scale 0.95
 	DamageType Fire
-	+FloorClip
 	HitObituary "%o melted."
 	States
 	{
@@ -821,8 +824,8 @@ Actor HexenHumanBurn
 
 Actor BurnSmoke
 {
-	Scale 0.3
 	+NOINTERACTION
+	Scale 0.3
 	Radius 2
 	Height 2
 	RenderStyle Translucent
@@ -855,16 +858,16 @@ Actor BurnSmokeSmall : BurnSmoke
 	Scale 0.15
 }
 
-ACTOR SmallHumanBurn : GenericHumanBurn1
+Actor SmallHumanBurn : GenericHumanBurn1
 {
-    Scale 0.2
-    States
-    {
-    Spawn:
+	Scale 0.2
+	States
+	{
+	Spawn:
 		TNT1 A 0
 		TNT1 A 0 A_PlaySound("lilcaleb/burn")
 
-		TNT1 a 0 A_JumpIfInventory("Counter",4,"ScreamandDecide")
+		TNT1 A 0 A_JumpIfInventory("Counter",4,"ScreamandDecide")
 		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,32)
 		E16W A 2 Bright A_Wander
 		TNT1 A 0 A_Explode(3,20)
@@ -970,21 +973,21 @@ ACTOR SmallHumanBurn : GenericHumanBurn1
 		E16D L 4 
 		E16D M -1
 		Stop
-    }
+	}
 }
 
 Actor BastetBurn : GenericHumanBurn1
 {
+	-SOLID
+	-COUNTKILL
+	+DONTSPLASH
+	+FLOORCLIP
 	Radius 20
 	Height 56
 	Speed 10
-	-Solid
-	-COUNTKILL
-	+DONTSPLASH
-	Painchance 0
+	PainChance 0
 	Scale 0.45
 	DamageType Fire
-	+FloorClip
 	HitObituary "%o melted."
 	States
 	{
@@ -992,7 +995,7 @@ Actor BastetBurn : GenericHumanBurn1
 		TNT1 A 0
 		TNT1 A 0 A_PlaySound("monster/bastet/death")
 
-		TNT1 a 0 A_JumpIfInventory("Counter",5,"ScreamandDecide")
+		TNT1 A 0 A_JumpIfInventory("Counter",5,"ScreamandDecide")
 		E16W A 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
 //		TNT1 A 0 A_SpawnItemEx("BurnMiniFlame",random(20,-20),random(20,-20),random(30,50),0,0,frandom(1.0,3.0),0,32)
@@ -1109,15 +1112,15 @@ Actor BastetBurn : GenericHumanBurn1
 
 Actor GenericHumanoidBurn : GenericHumanBurn
 {
+	-SOLID
+	-COUNTKILL
+	+DONTSPLASH
+	+FLOORCLIP
 	Radius 20
 	Height 56
 	Speed 10
-	-Solid
-	-COUNTKILL
-	+DONTSPLASH
-	Painchance 0
+	PainChance 0
 	DamageType Fire
-	+FloorClip
 	HitObituary "%o melted."
 	States
 	{
@@ -1198,16 +1201,16 @@ Actor GenericHumanoidBurn : GenericHumanBurn
 
 Actor SpycrabBurn : GenericHumanBurn1
 {
+	-SOLID
+	-COUNTKILL
+	+DONTSPLASH
+	+FLOORCLIP
 	Radius 20
 	Height 56
 	Speed 10
-	-Solid
-	-COUNTKILL
-	+DONTSPLASH
-	Painchance 0
+	PainChance 0
 	Scale 0.45
 	DamageType Fire
-	+FloorClip
 	HitObituary "%o melted."
 	States
 	{
@@ -1215,7 +1218,7 @@ Actor SpycrabBurn : GenericHumanBurn1
 		TNT1 A 0
 		TNT1 A 0 A_PlaySound("spycrab/fire")
 
-		TNT1 a 0 A_JumpIfInventory("Counter",5,"ScreamandDecide")
+		TNT1 A 0 A_JumpIfInventory("Counter",5,"ScreamandDecide")
 		E16W A 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
 //		TNT1 A 0 A_SpawnItemEx("BurnMiniFlame",random(20,-20),random(20,-20),random(30,50),0,0,frandom(1.0,3.0),0,32)
@@ -1338,20 +1341,20 @@ Actor SpycrabBurn : GenericHumanBurn1
 
 Actor NewMeat replaces Meat
 {
-	radius 6
-	height 5
 	-NOLIFTDROP
 	-SOLID
 	+DROPOFF
 	+NOTELEPORT
 	+CORPSE
 	+NOTELESTOMP
+	Radius 6
+	Height 5
 	States
 	{
 	Spawn:
 		TNT1 A 0
 		TNT1 A 0 A_Jump(255,"m1","m2","m3","m4","m5","m6","m7","m8","m9","m10","m11","m12","m13","m14","m15","m16","m17","m18","m19","m20")
-		stop
+		Stop
 	m1:
 		MEAT AA 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,1|SXF_USEBLOODCOLOR)
 		TNT1 A 0 A_CheckFloor("md1")
@@ -1774,150 +1777,150 @@ Actor PurpleGibSp : GreenGib
 
 Actor SmallGibDropper
 {
-    Speed 0
-    Projectile
-    RenderStyle None
-    States
-    {
-    Spawn:
-	  TNT1 A 0
-	  TNT1 A 0 A_CheckSight("Simple")
-	  TNT1 A 0 A_Jump(180,"Drop2","Drop3","Drop4")
-	  TNT1 A 0 A_SpawnItemEx("HGib1Small",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 0 A_SpawnItemEx("HGib2Small",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 0 A_SpawnItemEx("HGib3Small",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 1
-	  Stop
-    Drop2:
-	  TNT1 A 0 A_SpawnItemEx("HGib1SmallMirr",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 0 A_SpawnItemEx("HGib2SmallMirr",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 0 A_SpawnItemEx("HGib3SmallMirr",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 1
-	  Stop
-    Drop3:
-	  TNT1 A 0 A_SpawnItemEx("HGib1Small",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 0 A_SpawnItemEx("HGib2SmallMirr",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 0 A_SpawnItemEx("HGib3Small",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 1
-	  Stop
-    Drop4:
-	  TNT1 A 0 A_SpawnItemEx("HGib1SmallMirr",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 0 A_SpawnItemEx("HGib2Small",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 0 A_SpawnItemEx("HGib3SmallMirr",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 1
-	  Stop
-    Simple:
-	  TNT1 A 0 A_SpawnItemEx("HGib1Small",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  Stop
+	Speed 0
+	Projectile
+	RenderStyle None
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_CheckSight("Simple")
+		TNT1 A 0 A_Jump(180,"Drop2","Drop3","Drop4")
+		TNT1 A 0 A_SpawnItemEx("HGib1Small",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("HGib2Small",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("HGib3Small",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 1
+		Stop
+	Drop2:
+		TNT1 A 0 A_SpawnItemEx("HGib1SmallMirr",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("HGib2SmallMirr",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("HGib3SmallMirr",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 1
+		Stop
+	Drop3:
+		TNT1 A 0 A_SpawnItemEx("HGib1Small",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("HGib2SmallMirr",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("HGib3Small",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 1
+		Stop
+	Drop4:
+		TNT1 A 0 A_SpawnItemEx("HGib1SmallMirr",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("HGib2Small",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("HGib3SmallMirr",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 1
+		Stop
+	Simple:
+		TNT1 A 0 A_SpawnItemEx("HGib1Small",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		Stop
 	}
 }
 
-actor HGib1Small
+Actor HGib1Small
 {
-	BounceFactor 0.45
-    +DOOMBOUNCE
-    Speed 4
-    Projectile
-    -NOGRAVITY
-    -NOBLOCKMAP
-    Scale 0.07
-    States
-    {
-    Spawn:
-	  TNT1 A 0
-	  TNT1 A 1 ThrustThingZ(0,random(10,60),0,1)
-        GIB7 AABBCCDDEEFFGGHHIIJJKKLLMM 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
-        Goto Death
-    Death:
-        GIB7 M 350
-	  GIB7 M 2 A_FadeOut
-	  Wait
-    }
+	Projectile
+	+DOOMBOUNCE
+	-NOGRAVITY
+	-NOBLOCKMAP
+	BounceFActor 0.45
+	Speed 4
+	Scale 0.07
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 1 ThrustThingZ(0,random(10,60),0,1)
+		GIB7 AABBCCDDEEFFGGHHIIJJKKLLMM 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
+		Goto Death
+	Death:
+		GIB7 M 350
+		GIB7 M 2 A_FadeOut
+		Wait
+	}
 }
 
 
 Actor HGib1SmallMirr : HGib1Small
 {
-    Speed 5
+	Speed 5
 	States
 	{
-    Spawn:
-	  TNT1 A 0
-	  TNT1 A 1 ThrustThingZ(0,random(10,60),0,1)
-        GIB7 NNOOPPQQRRSSTTUUVVWWXXYYZZ 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
-        Goto Death
-    Death:
-        GIB7 Z 360
-	  GIB7 Z 2 A_FadeOut
-	  Wait
+	Spawn:
+		TNT1 A 0
+		TNT1 A 1 ThrustThingZ(0,random(10,60),0,1)
+		GIB7 NNOOPPQQRRSSTTUUVVWWXXYYZZ 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
+		Goto Death
+	Death:
+		GIB7 Z 360
+		GIB7 Z 2 A_FadeOut
+		Wait
 	}
 }
 
 Actor HGib2Small : HGib1Small
 {
-    Speed 6
+	Speed 6
 	States
 	{
-    Spawn:
-	  TNT1 A 0
-	  TNT1 A 1 ThrustThingZ(0,random(10,60),0,1)
-        GIB8 AABBCCDDEEFFGGHHIIJJKKLLMM 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
-        Goto Death
-    Death:
-        GIB8 M 340
-	  GIB8 M 2 A_FadeOut
-	  Wait
+	Spawn:
+		TNT1 A 0
+		TNT1 A 1 ThrustThingZ(0,random(10,60),0,1)
+		GIB8 AABBCCDDEEFFGGHHIIJJKKLLMM 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
+		Goto Death
+	Death:
+		GIB8 M 340
+		GIB8 M 2 A_FadeOut
+		Wait
 	}
 }
 
 Actor HGib2SmallMirr : HGib1Small
 {
-    Speed 3
+	Speed 3
 	States
 	{
-    Spawn:
-	  TNT1 A 0
-	  TNT1 A 1 ThrustThingZ(0,random(10,60),0,1)
-        GIB8 NNOOPPQQRRSSTTUUVVWWXXYYZZ 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
-        Goto Death
-    Death:
-        GIB8 Z 350
-	  GIB8 Z 2 A_FadeOut
-	  Wait
+	Spawn:
+		TNT1 A 0
+		TNT1 A 1 ThrustThingZ(0,random(10,60),0,1)
+		GIB8 NNOOPPQQRRSSTTUUVVWWXXYYZZ 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
+		Goto Death
+	Death:
+		GIB8 Z 350
+		GIB8 Z 2 A_FadeOut
+		Wait
 	}
 }
 
 Actor HGib3Small : HGib1Small
 {
-    Speed 2
+	Speed 2
 	States
 	{
-    Spawn:
-	  TNT1 A 0
-	  TNT1 A 1 ThrustThingZ(0,random(10,60),0,1)
-        GIB9 AABBCCDDEEFFGGHHIIJJKKLL 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
-        Goto Death
-    Death:
-        GIB9 L 360
-	  GIB9 L 2 A_FadeOut
-	  Wait
+	Spawn:
+		TNT1 A 0
+		TNT1 A 1 ThrustThingZ(0,random(10,60),0,1)
+		GIB9 AABBCCDDEEFFGGHHIIJJKKLL 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
+		Goto Death
+	Death:
+		GIB9 L 360
+		GIB9 L 2 A_FadeOut
+		Wait
 	}
 }
 
-ACTOR HGib3SmallMirr : HGib1Small
+Actor HGib3SmallMirr : HGib1Small
 {
-    Speed 4
+	Speed 4
 	States
 	{
-    Spawn:
-	  TNT1 A 0
-	  TNT1 A 1 ThrustThingZ(0,random(10,60),0,1)
-        GIB8 NNOOPPQQRRSSTTUUVVWWXXYYZZ 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
-        Goto Death
-    Death:
-        GIB9 Z 350
-	  GIB9 Z 2 A_FadeOut
-	  Wait
+	Spawn:
+		TNT1 A 0
+		TNT1 A 1 ThrustThingZ(0,random(10,60),0,1)
+		GIB8 NNOOPPQQRRSSTTUUVVWWXXYYZZ 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
+		Goto Death
+	Death:
+		GIB9 Z 350
+		GIB9 Z 2 A_FadeOut
+		Wait
 	}
 }
    
@@ -1926,149 +1929,149 @@ ACTOR HGib3SmallMirr : HGib1Small
 //***************************************************
 Actor GibDropper
 {
-    Speed 0
-    Projectile
-    RenderStyle None
-    States
-    {
-    Spawn:
-	  TNT1 A 0
-	  TNT1 A 0 A_CheckSight("Simple")
-	  TNT1 A 0 A_Jump(180,"Drop2","Drop3","Drop4")
-	  TNT1 A 0 A_SpawnItemEx("HGib1",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 0 A_SpawnItemEx("HGib2",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 0 A_SpawnItemEx("HGib3",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 1
-	  Stop
-    Drop2:
-	  TNT1 A 0 A_SpawnItemEx("HGib1Mirr",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 0 A_SpawnItemEx("HGib2Mirr",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 0 A_SpawnItemEx("HGib3Mirr",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 1
-	  Stop
-    Drop3:
-	  TNT1 A 0 A_SpawnItemEx("HGib1",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 0 A_SpawnItemEx("HGib2Mirr",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 0 A_SpawnItemEx("HGib3",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 1
-	  Stop
-    Drop4:
-	  TNT1 A 0 A_SpawnItemEx("HGib1Mirr",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 0 A_SpawnItemEx("HGib2",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 0 A_SpawnItemEx("HGib3Mirr",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 1
-	  Stop
-    Simple:
-	  TNT1 A 0 A_SpawnItemEx("HGib1Small",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  Stop
+	Speed 0
+	Projectile
+	RenderStyle None
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_CheckSight("Simple")
+		TNT1 A 0 A_Jump(180,"Drop2","Drop3","Drop4")
+		TNT1 A 0 A_SpawnItemEx("HGib1",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("HGib2",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("HGib3",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 1
+		Stop
+	Drop2:
+		TNT1 A 0 A_SpawnItemEx("HGib1Mirr",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("HGib2Mirr",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("HGib3Mirr",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 1
+		Stop
+	Drop3:
+		TNT1 A 0 A_SpawnItemEx("HGib1",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("HGib2Mirr",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("HGib3",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 1
+		Stop
+	Drop4:
+		TNT1 A 0 A_SpawnItemEx("HGib1Mirr",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("HGib2",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("HGib3Mirr",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 1
+		Stop
+	Simple:
+		TNT1 A 0 A_SpawnItemEx("HGib1Small",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		Stop
 	}
 }
 
-actor HGib1
+Actor HGib1
 {
-    +DOOMBOUNCE
-	BounceFactor 0.4
-    Speed 4
-    Projectile
-    -NOGRAVITY
-    -NOBLOCKMAP
-    Scale 0.1
-    States
-    {
-    Spawn:
-	  TNT1 A 0
-	  TNT1 A 1 ThrustThingZ(0,random(10,50),0,1)
-        GIB7 AABBCCDDEEFFGGHHIIJJKKLLMM 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
-        Goto Death
-    Death:
-        GIB7 M 340
-	  GIB7 M 2 A_FadeOut
-	  Wait
-    }
+	Projectile
+	-NOGRAVITY
+	-NOBLOCKMAP
+	+DOOMBOUNCE
+	BounceFActor 0.4
+	Speed 4
+	Scale 0.1
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 1 ThrustThingZ(0,random(10,50),0,1)
+		GIB7 AABBCCDDEEFFGGHHIIJJKKLLMM 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
+		Goto Death
+	Death:
+		GIB7 M 340
+		GIB7 M 2 A_FadeOut
+		Wait
+	}
 }
 Actor HGib1Mirr : HGib1
 {
-    Speed 5
+	Speed 5
 	States
 	{
-    Spawn:
-	  TNT1 A 0
-	  TNT1 A 1 ThrustThingZ(0,random(10,50),0,1)
-        GIB7 NNOOPPQQRRSSTTUUVVWWXXYYZZ 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
-        Goto Death
-    Death:
-        GIB7 Z 330
-	  GIB7 Z 2 A_FadeOut
-	  Wait
+	Spawn:
+		TNT1 A 0
+		TNT1 A 1 ThrustThingZ(0,random(10,50),0,1)
+		GIB7 NNOOPPQQRRSSTTUUVVWWXXYYZZ 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
+		Goto Death
+	Death:
+		GIB7 Z 330
+		GIB7 Z 2 A_FadeOut
+		Wait
 	}
 }
 
 Actor HGib2 : HGib1
 {
-    Speed 6
+	Speed 6
 	States
 	{
-    Spawn:
-	  TNT1 A 0
-	  TNT1 A 1 ThrustThingZ(0,random(10,50),0,1)
-        GIB8 AABBCCDDEEFFGGHHIIJJKKLLMM 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
-        Goto Death
-    Death:
-        GIB8 M 320
-	  GIB8 M 2 A_FadeOut
-	  Wait
+	Spawn:
+		TNT1 A 0
+		TNT1 A 1 ThrustThingZ(0,random(10,50),0,1)
+		GIB8 AABBCCDDEEFFGGHHIIJJKKLLMM 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
+		Goto Death
+	Death:
+		GIB8 M 320
+		GIB8 M 2 A_FadeOut
+		Wait
 	}
 }
 
 
 Actor HGib2Mirr : HGib1
 {
-    Speed 5
+	Speed 5
 	States
 	{
-    Spawn:
-	  TNT1 A 0
-	  TNT1 A 1 ThrustThingZ(0,random(10,50),0,1)
-        GIB8 NNOOPPQQRRSSTTUUVVWWXXYYZZ 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
-        Goto Death
-    Death:
-        GIB8 Z 350
-	  GIB8 Z 2 A_FadeOut
-	  Wait
+	Spawn:
+		TNT1 A 0
+		TNT1 A 1 ThrustThingZ(0,random(10,50),0,1)
+		GIB8 NNOOPPQQRRSSTTUUVVWWXXYYZZ 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
+		Goto Death
+	Death:
+		GIB8 Z 350
+		GIB8 Z 2 A_FadeOut
+		Wait
 	}
 }
 
 Actor HGib3 : HGib1
 {
-    Speed 6
+	Speed 6
 	States
 	{
-    Spawn:
-	  TNT1 A 0
-	  TNT1 A 1 ThrustThingZ(0,random(10,50),0,1)
-        GIB9 AABBCCDDEEFFGGHHIIJJKKLL 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
-        Goto Death
-    Death:
-        GIB9 L 370
-	  GIB9 L 2 A_FadeOut
-	  Wait
+	Spawn:
+		TNT1 A 0
+		TNT1 A 1 ThrustThingZ(0,random(10,50),0,1)
+		GIB9 AABBCCDDEEFFGGHHIIJJKKLL 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
+		Goto Death
+	Death:
+		GIB9 L 370
+		GIB9 L 2 A_FadeOut
+		Wait
 	}
 }
 
 Actor HGib3Mirr : HGib1
 {
-    Speed 5
+	Speed 5
 	States
 	{
-    Spawn:
-	  TNT1 A 0
-	  TNT1 A 1 ThrustThingZ(0,random(10,50),0,1)
-        GIB9 MMNNOOPPQQRRSSTTUUVVWWXX 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
-        Goto Death
-    Death:
-        GIB9 X 355
-	  GIB9 X 2 A_FadeOut
-	  Wait
+	Spawn:
+		TNT1 A 0
+		TNT1 A 1 ThrustThingZ(0,random(10,50),0,1)
+		GIB9 MMNNOOPPQQRRSSTTUUVVWWXX 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
+		Goto Death
+	Death:
+		GIB9 X 355
+		GIB9 X 2 A_FadeOut
+		Wait
 	}
 }
 
@@ -2087,57 +2090,57 @@ Actor GibBloodSmall : MCBloodParticle
 
 Actor QuakeGibDropper
 {
-    Speed 0
-    Projectile
-    RenderStyle None
-    States
-    {
-    Spawn:
-	  TNT1 A 0
-	  TNT1 A 0 A_CheckSight("Simple")
-	  TNT1 AAA 0 A_Jump(180,"Drop2","Drop3","Drop4")
-	  TNT1 AAA 0 A_SpawnItemEx("Gib1",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 0 A_SpawnItemEx("Gib2",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 0 A_SpawnItemEx("GibTorso",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 1
-	  Stop
-    Drop2:
-	  TNT1 AAA 0 A_SpawnItemEx("Gib1",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 AA 0 A_SpawnItemEx("Gib2",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 0 A_SpawnItemEx("GibTorso",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 1
-	  Stop
-    Drop3:
-	  TNT1 AA 0 A_SpawnItemEx("Gib1",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 AAA 0 A_SpawnItemEx("Gib2",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 0 A_SpawnItemEx("GibTorso",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 1
-	  Stop
-    Drop4:
-	  TNT1 AA 0 A_SpawnItemEx("Gib1",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 AA 0 A_SpawnItemEx("Gib2",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 0 A_SpawnItemEx("GibTorso",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 1
-	  Stop
-    Simple:
-	  TNT1 A 0 A_SpawnItemEx("Gib1",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  Stop
+	Speed 0
+	Projectile
+	RenderStyle None
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_CheckSight("Simple")
+		TNT1 AAA 0 A_Jump(180,"Drop2","Drop3","Drop4")
+		TNT1 AAA 0 A_SpawnItemEx("Gib1",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("Gib2",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("GibTorso",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 1
+		Stop
+	Drop2:
+		TNT1 AAA 0 A_SpawnItemEx("Gib1",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 AA 0 A_SpawnItemEx("Gib2",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("GibTorso",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 1
+		Stop
+	Drop3:
+		TNT1 AA 0 A_SpawnItemEx("Gib1",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 AAA 0 A_SpawnItemEx("Gib2",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("GibTorso",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 1
+		Stop
+	Drop4:
+		TNT1 AA 0 A_SpawnItemEx("Gib1",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 AA 0 A_SpawnItemEx("Gib2",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("GibTorso",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 1
+		Stop
+	Simple:
+		TNT1 A 0 A_SpawnItemEx("Gib1",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		Stop
 	}
 }
 //***********************************
-actor Gib1
+Actor Gib1
 {
-	BounceFactor 0.45
-	+DOOMBOUNCE
-	Speed 8
 	Projectile
-	Scale 0.34
 	-NOGRAVITY
 	-NOBLOCKMAP
 	-NOLIFTDROP
 	-SOLID
 	+DROPOFF
 	+THRUACTORS
+	+DOOMBOUNCE
+	BounceFActor 0.45
+	Speed 8
+	Scale 0.34
 	States
 	{
 	Spawn:
@@ -2152,7 +2155,7 @@ actor Gib1
 	}
 }
 
-actor GibTorso : Gib1
+Actor GibTorso : Gib1
 {
 	Speed 2
 	Scale 0.31
@@ -2170,7 +2173,7 @@ actor GibTorso : Gib1
 	}
 }
 
-actor Gib2 : Gib1
+Actor Gib2 : Gib1
 {
 	Speed 5
 	Scale 0.26
@@ -2191,48 +2194,48 @@ actor Gib2 : Gib1
 //==================================================================
 Actor QuakeSmallGibDropper
 {
-    Speed 0
-    Projectile
-    RenderStyle None
-    States
-    {
-    Spawn:
-	  TNT1 A 0
-	  TNT1 A 0 A_CheckSight("Simple")
-	  TNT1 AAA 0 A_Jump(180,"Drop2","Drop3","Drop4")
-	  TNT1 AAA 0 A_SpawnItemEx("SmallGib1",0,0,0,random(-8,8),0,0,random(0,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 0 A_SpawnItemEx("SmallGib2",0,0,0,random(-8,8),0,0,random(0,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 0 A_SpawnItemEx("SmallGibTorso",0,0,0,random(-8,8),0,0,random(0,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 1
-	  Stop
-    Drop2:
-	  TNT1 AAA 0 A_SpawnItemEx("SmallGib1",0,0,0,random(-8,8),0,0,random(0,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 AA 0 A_SpawnItemEx("SmallGib2",0,0,0,random(-8,8),0,0,random(0,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 0 A_SpawnItemEx("SmallGibTorso",0,0,0,random(-8,8),0,0,random(0,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 1
-	  Stop
-    Drop3:
-	  TNT1 AA 0 A_SpawnItemEx("SmallGib1",0,0,0,random(-8,8),0,0,random(0,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 AAA 0 A_SpawnItemEx("SmallGib2",0,0,0,random(-8,8),0,0,random(0,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 0 A_SpawnItemEx("SmallGibTorso",0,0,0,random(-8,8),0,0,random(0,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 1
-	  Stop
-    Drop4:
-	  TNT1 AA 0 A_SpawnItemEx("SmallGib1",0,0,0,random(-8,8),0,0,random(0,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 AA 0 A_SpawnItemEx("SmallGib2",0,0,0,random(-8,8),0,0,random(0,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 0 A_SpawnItemEx("SmallGibTorso",0,0,0,random(-8,8),0,0,random(0,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 1
-	  Stop
-	  Stop
+	Speed 0
+	Projectile
+	RenderStyle None
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_CheckSight("Simple")
+		TNT1 AAA 0 A_Jump(180,"Drop2","Drop3","Drop4")
+		TNT1 AAA 0 A_SpawnItemEx("SmallGib1",0,0,0,random(-8,8),0,0,random(0,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("SmallGib2",0,0,0,random(-8,8),0,0,random(0,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("SmallGibTorso",0,0,0,random(-8,8),0,0,random(0,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 1
+		Stop
+	Drop2:
+		TNT1 AAA 0 A_SpawnItemEx("SmallGib1",0,0,0,random(-8,8),0,0,random(0,359),1|SXF_USEBLOODCOLOR)
+		TNT1 AA 0 A_SpawnItemEx("SmallGib2",0,0,0,random(-8,8),0,0,random(0,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("SmallGibTorso",0,0,0,random(-8,8),0,0,random(0,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 1
+		Stop
+	Drop3:
+		TNT1 AA 0 A_SpawnItemEx("SmallGib1",0,0,0,random(-8,8),0,0,random(0,359),1|SXF_USEBLOODCOLOR)
+		TNT1 AAA 0 A_SpawnItemEx("SmallGib2",0,0,0,random(-8,8),0,0,random(0,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("SmallGibTorso",0,0,0,random(-8,8),0,0,random(0,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 1
+		Stop
+	Drop4:
+		TNT1 AA 0 A_SpawnItemEx("SmallGib1",0,0,0,random(-8,8),0,0,random(0,359),1|SXF_USEBLOODCOLOR)
+		TNT1 AA 0 A_SpawnItemEx("SmallGib2",0,0,0,random(-8,8),0,0,random(0,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("SmallGibTorso",0,0,0,random(-8,8),0,0,random(0,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 1
+		Stop
+		Stop
 
-    Simple:
-	  TNT1 A 0 A_SpawnItemEx("Gib1",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  Stop
+	Simple:
+		TNT1 A 0 A_SpawnItemEx("Gib1",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		Stop
 	}
 }
 
 //***********************************
-actor SmallGib1 : Gib1
+Actor SmallGib1 : Gib1
 {
 	Speed 8
 	Scale 0.27
@@ -2250,7 +2253,7 @@ actor SmallGib1 : Gib1
 	}
 }
 
-actor SmallGibTorso : SmallGib1 
+Actor SmallGibTorso : SmallGib1 
 {
 	Speed 2
 	Scale 0.23
@@ -2269,7 +2272,7 @@ actor SmallGibTorso : SmallGib1
 }
 
 
-actor SmallGib2 : SmallGib1 
+Actor SmallGib2 : SmallGib1 
 {
 	Speed 5
 	Scale 0.19
@@ -2300,152 +2303,145 @@ Actor GibBloodTrailMediumSize : MCBloodParticle
 
 Actor BloodGibDropper
 {
-    Speed 0
-    Projectile
-    RenderStyle None
-    States
-    {
-    Spawn:
-	  TNT1 A 0
-	  TNT1 A 0 A_CheckSight("Simple")
-	  TNT1 A 0 A_Jump(180,"Drop2","Drop3","Drop4")
-	  TNT1 AAAAAAAAAAAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,0,random(-7,7),random(-7,7),random(1,14),random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 AA 0 A_SpawnItemEx("BloodGib1",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 AA 0 A_SpawnItemEx("BloodGib2",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 AAA 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 1
-	  Stop
-    Drop2:
-	  TNT1 AAAAAAAAAAAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,0,random(-7,7),random(-7,7),random(1,14),random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 AA 0 A_SpawnItemEx("BloodGib1",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 AA 0 A_SpawnItemEx("BloodGib2",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 AA 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 AA 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 1
-	  Stop
-    Drop3:
-	  TNT1 AAAAAAAAAAAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,0,random(-7,7),random(-7,7),random(1,14),random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 0 A_SpawnItemEx("BloodGib1",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 AA 0 A_SpawnItemEx("BloodGib2",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 AAA 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 AA 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 1
-	  Stop
-    Drop4:
-	  TNT1 AAAAAAAAAAAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,0,random(-7,7),random(-7,7),random(1,14),random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 AA 0 A_SpawnItemEx("BloodGib1",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 0 A_SpawnItemEx("BloodGib2",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 AA 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 AAA 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 1
-	  Stop
-    Simple:
-	  TNT1 AAAA 0 A_SpawnItemEx("NewMeat",0,0,0,random(-7,7),random(-7,7),random(1,14),random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 0 A_SpawnItemEx("BloodGib1",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 0 A_SpawnItemEx("BloodGib2",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
-	  TNT1 A 1
-	  Stop
+	Speed 0
+	Projectile
+	RenderStyle None
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_CheckSight("Simple")
+		TNT1 A 0 A_Jump(180,"Drop2","Drop3","Drop4")
+		TNT1 AAAAAAAAAAAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,0,random(-7,7),random(-7,7),random(1,14),random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib1",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib2",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 AAA 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 1
+		Stop
+	Drop2:
+		TNT1 AAAAAAAAAAAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,0,random(-7,7),random(-7,7),random(1,14),random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib1",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib2",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 1
+		Stop
+	Drop3:
+		TNT1 AAAAAAAAAAAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,0,random(-7,7),random(-7,7),random(1,14),random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("BloodGib1",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib2",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 AAA 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 1
+		Stop
+	Drop4:
+		TNT1 AAAAAAAAAAAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,0,random(-7,7),random(-7,7),random(1,14),random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib1",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("BloodGib2",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 AAA 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 1
+		Stop
+	Simple:
+		TNT1 AAAA 0 A_SpawnItemEx("NewMeat",0,0,0,random(-7,7),random(-7,7),random(1,14),random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("BloodGib1",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("BloodGib2",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+		TNT1 A 1
+		Stop
 	}
 }
 
 //***************************************
 Actor BloodGib1		
 {
-	scale 0.6
-/*	radius 6
-	height 5
-	speed 5
-	+NOBLOCKMAP
-	+DROPOFF
-	+NOTELEPORT*/
-
-	radius 6
-	height 5
 	-NOLIFTDROP
 	-SOLID
 	+DROPOFF
 	+NOTELEPORT
 	+CORPSE
-	states
-	  {
-	  Spawn:
-		  TNT1 AAAA 0
-	        ANYG AAAA 1 ThrustThingZ(0,random(3,20),0,1)
-		  ANYG BBCCDD 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,1|SXF_USEBLOODCOLOR)
-		  ANYG AABBCCDD 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,1|SXF_USEBLOODCOLOR)
-		  Goto Spawn+11
-	  Crash:
-		  ANYG E 450 A_NoBlocking
-		  ANYG E 1 A_FadeOut
-		  Wait
+	Scale 0.6
+	Radius 6
+	Height 5
+	States
+	{
+	Spawn:
+		TNT1 AAAA 0
+		ANYG AAAA 1 ThrustThingZ(0,random(3,20),0,1)
+		ANYG BBCCDD 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,1|SXF_USEBLOODCOLOR)
+		ANYG AABBCCDD 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,1|SXF_USEBLOODCOLOR)
+		Goto Spawn+11
+	Crash:
+		ANYG E 450 A_NoBlocking
+		ANYG E 1 A_FadeOut
+		Wait
 	}
 }
 
 Actor BloodGib2 : BloodGib1		//eye
 {
-	scale 0.4
-	speed 7
-	states
-	  {
-	  Spawn:
-		  TNT1 AAAA 0
-	        ANYG FFFF 1 ThrustThingZ(0,random(3,20),0,1)
-		  ANYG GGHHII 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,1|SXF_USEBLOODCOLOR)
-		  ANYG FFGGHHII 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,1|SXF_USEBLOODCOLOR)
-		  Goto Spawn+11
-	  Crash:
-		  ANYG J 560 A_NoBlocking
-		  ANYG J 1 A_FadeOut
-		  Wait
+	Scale 0.4
+	Speed 7
+	States
+	{
+	Spawn:
+		TNT1 AAAA 0
+		ANYG FFFF 1 ThrustThingZ(0,random(3,20),0,1)
+		ANYG GGHHII 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,1|SXF_USEBLOODCOLOR)
+		ANYG FFGGHHII 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,1|SXF_USEBLOODCOLOR)
+		Goto Spawn+11
+	Crash:
+		ANYG J 560 A_NoBlocking
+		ANYG J 1 A_FadeOut
+		Wait
 	}
 }
 
 Actor BloodGib3 : BloodGib1		//liver
 {
-	scale 0.6
-	speed 7
-	states
-	  {
-	  Spawn:
-		  TNT1 AAAA 0
-	        ANYG KKKK 1 ThrustThingZ(0,random(3,20),0,1)
-		  ANYG LLMMNN 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,1|SXF_USEBLOODCOLOR)
-		  ANYG KKLLMMNN 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,1|SXF_USEBLOODCOLOR)
-		  Goto Spawn+11
-	  Crash:
-		  ANYG O 400 A_NoBlocking
-		  ANYG O 1 A_FadeOut
-		  Wait
+	Scale 0.6
+	Speed 7
+	States
+	{
+	Spawn:
+		TNT1 AAAA 0
+		ANYG KKKK 1 ThrustThingZ(0,random(3,20),0,1)
+		ANYG LLMMNN 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,1|SXF_USEBLOODCOLOR)
+		ANYG KKLLMMNN 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,1|SXF_USEBLOODCOLOR)
+		Goto Spawn+11
+	Crash:
+		ANYG O 400 A_NoBlocking
+		ANYG O 1 A_FadeOut
+		Wait
 	}
 }
 
 Actor BloodGib4 : BloodGib1		//bloodthinhg
 {
-	scale 0.6
-	speed 7
-	states
-	  {
-	  Spawn:
-		  TNT1 AAAA 0
-	        ANYG PPPP 1 ThrustThingZ(0,random(3,20),0,1)
-		  ANYG QQRRSS 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,1|SXF_USEBLOODCOLOR)
-		  ANYG PPQQRRSS 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,1|SXF_USEBLOODCOLOR)
-		  Goto Spawn+11
-	  Crash:
-		  ANYG T 500 A_NoBlocking
-		  ANYG T 1 A_FadeOut
-		  Wait
+	Scale 0.6
+	Speed 7
+	States
+	{
+	Spawn:
+		TNT1 AAAA 0
+		ANYG PPPP 1 ThrustThingZ(0,random(3,20),0,1)
+		ANYG QQRRSS 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,1|SXF_USEBLOODCOLOR)
+		ANYG PPQQRRSS 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,1|SXF_USEBLOODCOLOR)
+		Goto Spawn+11
+	Crash:
+		ANYG T 500 A_NoBlocking
+		ANYG T 1 A_FadeOut
+		Wait
 	}
 }
 
-ACtor ExploSmokeGeneral
+Actor ExploSmokeGeneral
 {
 	Projectile
-	Speed 0
 	+NOCLIP
+	Speed 0
 	RenderStyle Add
 	Alpha 0.8
 	Scale 1.3
@@ -2472,40 +2468,40 @@ Actor ExploSmokeGeneralBig : ExploSmokeGeneral
 	Scale 2.5
 }
 
-ACTOR GunSmallSmokeSpawner
+Actor GunSmallSmokeSpawner
 {
-    Radius 1
-    Height 1
-    Speed 14
-    PROJECTILE
-//    +NOCLIP
-    +NOTIMEFREEZE
-    States
-    {
-    Spawn:
-        TNT1 A 1
-        TNT1 A 0 A_Die
-        Goto Death
-    Death:
-		TNT1 A 0 A_CustomMissile("GunSmallSmoke",-2,0,0)	
-		TNT1 A 2
-        Stop
-    }
-}
-
-ACTOR GunSmallSmoke
-{
+	PROJECTILE
+//	+NOCLIP
+	+NOTIMEFREEZE
 	Radius 1
 	Height 1
+	Speed 14
+	States
+	{
+	Spawn:
+		TNT1 A 1
+		TNT1 A 0 A_Die
+		Goto Death
+	Death:
+		TNT1 A 0 A_CustomMissile("GunSmallSmoke",-2,0,0)	
+		TNT1 A 2
+		Stop
+	}
+}
+
+Actor GunSmallSmoke
+{
 	PROJECTILE
 	+NOGRAVITY
 	+FLOORCLIP
 	+NOBLOCKMAP
+	+FORCEXYBILLBOARD
+	Radius 1
+	Height 1
 	Alpha 0.33
 	Scale 0.16
 	Mass 0
 	RenderStyle Add
-	+FORCEXYBILLBOARD
 	States
 	{
 	Spawn:
@@ -2517,17 +2513,17 @@ ACTOR GunSmallSmoke
 	   Stop
 	}
 }
-ACTOR GunSmallSmoke2
+Actor GunSmallSmoke2
 {
-	Radius		1
-	Height		1
-	RenderStyle ADD
-	Alpha		.6
-	Scale		.05
 	+NOGRAVITY
 	+NOBLOCKMAP
 	+FLOORCLIP
 	+FORCEXYBILLBOARD
+	Radius		1
+	Height		1
+	RenderStyle Add
+	Alpha		.6
+	Scale		.05
 	States
 	{
 	Spawn:
@@ -2537,40 +2533,40 @@ ACTOR GunSmallSmoke2
 }
 
 
-ACTOR GunSmokeSpawner
+Actor GunSmokeSpawner
 {
-    Radius 1
-    Height 1
-    Speed 14
-    PROJECTILE
-//    +NOCLIP
-    +NOTIMEFREEZE
-    States
-    {
-    Spawn:
-        TNT1 A 1
-        TNT1 A 0 A_Die
-        Goto Death
-    Death:
-//        TNT1 A 0 A_CustomMissile("GunSmoke2",-2,0,0)
-        TNT1 A 0 A_CustomMissile("GunSmoke",-2,0,0)
-        Stop
-    }
-}
-
-ACTOR GunSmoke
-{
+	PROJECTILE
+//	+NOCLIP
+	+NOTIMEFREEZE
 	Radius 1
 	Height 1
+	Speed 14
+	States
+	{
+	Spawn:
+		TNT1 A 1
+		TNT1 A 0 A_Die
+		Goto Death
+	Death:
+//		TNT1 A 0 A_CustomMissile("GunSmoke2",-2,0,0)
+		TNT1 A 0 A_CustomMissile("GunSmoke",-2,0,0)
+		Stop
+	}
+}
+
+Actor GunSmoke
+{
 	PROJECTILE
 	+NOGRAVITY
 	+FLOORCLIP
 	+NOBLOCKMAP
+	+FORCEXYBILLBOARD
+	Radius 1
+	Height 1
 	Alpha 0.33
 	Scale 0.25
 	Mass 0
 	RenderStyle Add
-	+FORCEXYBILLBOARD
 	States
 	{
 	Spawn:
@@ -2582,17 +2578,17 @@ ACTOR GunSmoke
 	   Stop
 	}
 }
-ACTOR GunSmoke2
+Actor GunSmoke2
 {
-	Radius		1
-	Height		1
-	RenderStyle ADD
-	Alpha		.6
-	Scale		.09
 	+NOGRAVITY
 	+NOBLOCKMAP
 	+FLOORCLIP
 	+FORCEXYBILLBOARD
+	Radius		1
+	Height		1
+	RenderStyle Add
+	Alpha		.6
+	Scale		.09
 	States
 	{
 	Spawn:
@@ -2604,19 +2600,19 @@ ACTOR GunSmoke2
 //==========================================================
 //==========================================================
 
-ACTOR FBeggar 8001
+Actor FBeggar 8001
 {
+	Monster
+	-ISMONSTER
+	+FLOORCLIP
+	-COUNTKILL
+	-CANUSEWALLS
 	Health 20
 	Radius 20
 	Height 56
 	Mass 100
 	Speed 5
 	PainChance 255
-	Monster
-	-ISMONSTER
-	+FLOORCLIP
-	-COUNTKILL
-	-CANUSEWALLS
 	DeathSound "q2playermale/death"
 	PainSound "q2playermale/pain"
 	DropItem HealthHeart
@@ -2663,11 +2659,7 @@ ACTOR FBeggar 8001
 		BEGR F 5 A_Scream
 		BEGR G 5
 		BEGR H 5 A_NoBlocking
-		BEGR I 5
-		BEGR J 5 
-		BEGR K 5
-		BEGR L 5 
-		BEGR M 5
+		BEGR IJKLM 5
 		BEGR N -1
 		Stop
 	XDeath:
@@ -2689,25 +2681,31 @@ ACTOR FBeggar 8001
 		TNT1 A 0 A_Fall
 		TNT1 A 0 A_SpawnItemEx("GenericHumanBurn",0,0,0,0,0,0,0,32)
 		Stop
-    Death.UnholyDisint:
-    Death.PlasmaDisint:
-    Disintegrate:
-	TNT1 A 0 Thing_SetTranslation(0,50)	
-	BEGR A 1 A_FadeOut(0.015)
-	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-	TNT1 a 0 A_Stop	
-	TNT1 a 0 A_Fall
-	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
-	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
-	BEGR A 2 A_FadeOut(0.03)
-	Goto Disintegrate+6
+	Death.UnholyDisint:
+	Death.PlasmaDisint:
+	Disintegrate:
+		TNT1 A 0 Thing_SetTranslation(0,50)	
+		BEGR A 1 A_FadeOut(0.015)
+		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+		TNT1 A 0 A_Stop	
+		TNT1 A 0 A_Fall
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+		BEGR A 2 A_FadeOut(0.03)
+		Goto Disintegrate+6
 	}
 }
 //==========================================================
 //==========================================================
 
-ACTOR FPeasant 8002
+Actor FPeasant 8002
 {
+	Monster
+	+FLOORCLIP
+	+NOTARGET
+	-ISMONSTER
+	-COUNTKILL
+	-CANUSEWALLS
 	Health 20
 	Radius 20
 	Height 56
@@ -2715,12 +2713,6 @@ ACTOR FPeasant 8002
 	Speed 7
 	MeleeDamage 2
 	PainChance 255
-	Monster
-	+FLOORCLIP
-	+NOTARGET
-	-ISMONSTER
-	-COUNTKILL
-	-CANUSEWALLS
 	DeathSound "q2playermale/death"
 	PainSound "q2playermale/pain"
 	HitObituary "%o Must let live in peace the poor civilians."
@@ -2797,18 +2789,18 @@ ACTOR FPeasant 8002
 		TNT1 A 0 A_Fall
 		TNT1 A 0 A_SpawnItemEx("GenericHumanBurn",0,0,0,0,0,0,0,32)
 		Stop
-    Death.UnholyDisint:
-    Death.PlasmaDisint:
-    Disintegrate:
-	TNT1 A 0 Thing_SetTranslation(0,50)	
-	PEAS O 1 A_FadeOut(0.015)
-	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-	TNT1 a 0 A_Stop	
-	TNT1 a 0 A_Fall
-	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
-	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
-	PEAS O 2 A_FadeOut(0.03)
-	Goto Disintegrate+6
+	Death.UnholyDisint:
+	Death.PlasmaDisint:
+	Disintegrate:
+		TNT1 A 0 Thing_SetTranslation(0,50)	
+		PEAS O 1 A_FadeOut(0.015)
+		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+		TNT1 A 0 A_Stop	
+		TNT1 A 0 A_Fall
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+		PEAS O 2 A_FadeOut(0.03)
+		Goto Disintegrate+6
 	}
 }
 
@@ -2819,374 +2811,374 @@ ACTOR FPeasant 8002
 //
 //==========================================================
 
-ACTOR Spycrab 8003
+Actor Spycrab 8003
 {
-    Scale 0.166
-    Height 56
-    Radius 20
-    Speed 7
-    Health 50
-    PainChance 200
-    SeeSound "spycrab/see"
-    ActiveSound "spycrab/active"
-    PainSound "spycrab/pain"
-    DropItem HealthHeart
-    DropItem Q2BackPack
-    DropItem PowerupsSpawnerReal
-    DropItem PowerupsSpawnerReal 8
-    MONSTER
+	MONSTER
 	-ISMONSTER
-    +FLOORCLIP
-    -COUNTKILL
+	+FLOORCLIP
+	-COUNTKILL
 	-CANUSEWALLS
-    +DONTMORPH
-    +NOICEDEATH
-    States
-    {
-    Spawn:
-	SPYC A 0 A_JumpIfInventory("NoDeadRinger",1,6)
-	SPYC A 0 A_JumpIfInventory("DeadRinger",1,5)
-	SPYC A 0 A_Jump(170,3)
-	SPYC A 0 A_GiveInventory("DeadRinger",1)
-	SPYC A 0 A_Jump(256,2)
-	SPYC A 0 A_GiveInventory("NoDeadRinger",1)
-	SPYC AA 1 A_Look
-	Goto See
-    See:
-	SPYC ABCDEFGH 3 A_Wander
-	SPYC A 0 A_JumpIfInventory("DeadRinger",1,2)
-	SPYC A 0 A_Jump(16,"Cloak")
-	SPYC A 0 A_Jump(16,1)
-	Loop
-	SPYC A 0 A_PlaySound("spycrab/active")
-	SPYC ABCDEFGHABCDEFGH 3 A_Wander
-	Loop
-    SeeCloaked:
-	SPYC A 3 A_Wander
-	SPYC A 0 A_JumpIfInventory("SpycrabCloakActive",100,"Uncloak")
-	SPYC A 0 A_GiveInventory("SpycrabCloakActive",1)
-	SPYC B 3 A_Wander
-	SPYC A 0 A_JumpIfInventory("SpycrabCloakActive",100,"Uncloak")
-	SPYC A 0 A_GiveInventory("SpycrabCloakActive",1)
-	SPYC C 3 A_Wander
-	SPYC A 0 A_JumpIfInventory("SpycrabCloakActive",100,"Uncloak")
-	SPYC A 0 A_GiveInventory("SpycrabCloakActive",1)
-	SPYC D 3 A_Wander
-	SPYC A 0 A_JumpIfInventory("SpycrabCloakActive",100,"Uncloak")
-	SPYC A 0 A_GiveInventory("SpycrabCloakActive",1)
-	SPYC E 3 A_Wander
-	SPYC A 0 A_JumpIfInventory("SpycrabCloakActive",100,"Uncloak")
-	SPYC A 0 A_GiveInventory("SpycrabCloakActive",1)
-	SPYC F 3 A_Wander
-	SPYC A 0 A_JumpIfInventory("SpycrabCloakActive",100,"Uncloak")
-	SPYC A 0 A_GiveInventory("SpycrabCloakActive",1)
-	SPYC G 3 A_Wander
-	SPYC A 0 A_JumpIfInventory("SpycrabCloakActive",100,"Uncloak")
-	SPYC A 0 A_GiveInventory("SpycrabCloakActive",1)
-	SPYC H 3 A_Wander
-	SPYC A 0 A_JumpIfInventory("SpycrabCloakActive",100,"Uncloak")
-	SPYC A 0 A_GiveInventory("SpycrabCloakActive",1)
-	Loop
-    Cloak:
-	SPYC A 0 A_ChangeFlag("NOPAIN",1)
-	SPYC A 0 A_ChangeFlag("CANTSEEK",1)
-	SPYC A 0 A_PlaySound("spycrab/cloak")
-	SPYC A 3 A_Wander
-	SPYC A 0 A_FadeOut(0.1,0)
-	SPYC B 3 A_Wander
-	SPYC B 0 A_FadeOut(0.1,0)
-	SPYC C 3 A_Wander
-	SPYC C 0 A_FadeOut(0.1,0)
-	SPYC D 3 A_Wander
-	SPYC D 0 A_FadeOut(0.1,0)
-	SPYC E 3 A_Wander
-	SPYC E 0 A_FadeOut(0.1,0)
-	SPYC F 3 A_Wander
-	SPYC F 0 A_FadeOut(0.1,0)
-	SPYC G 3 A_Wander
-	SPYC G 0 A_FadeOut(0.1,0)
-	SPYC H 3 A_Wander
-	SPYC H 0 A_FadeOut(0.1,0)
-	SPYC A 3 A_Wander
-	SPYC A 0 A_FadeOut(0.1,0)
-	SPYC B 3 A_Wander
-	SPYC B 0 A_FadeOut(0.1,0)
-	SPYC A 0 A_GiveInventory("SpycrabCloakCheck",1)
-	SPYC A 0 A_ChangeFlag("NOPAIN",0)
-	Goto SeeCloaked+6
-    Uncloak:
-	SPYC A 0 A_ChangeFlag("NOPAIN",1)
-	SPYC A 0 A_PlaySound("spycrab/uncloak")
-	SPYC A 3 A_Wander
-	SPYC A 0 A_FadeIn
-	SPYC B 3 A_Wander
-	SPYC B 0 A_FadeIn
-	SPYC C 3 A_Wander
-	SPYC C 0 A_FadeIn
-	SPYC D 3 A_Wander
-	SPYC D 0 A_FadeIn
-	SPYC E 3 A_Wander
-	SPYC E 0 A_FadeIn
-	SPYC F 3 A_Wander
-	SPYC F 0 A_FadeIn
-	SPYC G 3 A_Wander
-	SPYC G 0 A_FadeIn
-	SPYC H 3 A_Wander
-	SPYC H 0 A_FadeIn
-	SPYC A 3 A_Wander
-	SPYC A 0 A_FadeIn
-	SPYC B 3 A_Wander
-	SPYC B 0 A_FadeIn
-	SPYC B 0 A_SetTranslucent(1,0)
-	SPYC A 0 A_TakeInventory("SpycrabCloakCheck",1)
-	SPYC A 0 A_TakeInventory("SpycrabCloakActive",100)
-	SPYC A 0 A_ChangeFlag("CANTSEEK",0)
-	SPYC A 0 A_ChangeFlag("NOPAIN",0)
-	Goto See+2
-    Death:
-	TNT1 A 0 A_JumpIfInventory("DeadRinger",1,"DeadRinger")
-	TNT1 A 0 A_PlaySound("other/gibdeath")
-	TNT1 AAAAAA 0 A_TossGib
-	TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,1|SXF_USEBLOODCOLOR)
-	TNT1 A 0 A_Fall
-	Stop
-    DeadRinger:
-	TNT1 A 0 A_SpawnItemEx("DRSpycrab",0,0,0,0,0,0,0,32,0)
-	TNT1 A 0 A_PlaySound("other/gibdeath")
-	TNT1 AAAAAA 0 A_TossGib
-	TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,1|SXF_USEBLOODCOLOR)
-	Stop
-    Pain:
-	SPYC H 3 A_Pain
-	SPYC H 0 A_JumpIfInventory("SpycrabCloakCheck",1,"SeeCloaked")
-	Goto See
-    Burn:
-	TNT1 A 0 A_JumpIfInventory("DeadRinger",1,"DRBurn")
-	TNT1 A 0 A_Fall
-	TNT1 A 0 A_SpawnItemEx("SpycrabBurn",0,0,0,0,0,0,0,32)
-	Stop
-    DRBurn:
-	TNT1 A 0 A_SpawnItemEx("DRSpycrab",0,0,0,0,0,0,0,32,0)
-	TNT1 A 0 A_SpawnItemEx("SpycrabBurn",0,0,0,0,0,0,0,32)
-	Stop
-    Death.UnholyDisint:
-    Death.PlasmaDisint:
-    Disintegrate:
-	TNT1 A 0 A_JumpIfInventory("DeadRinger",1,"DRDisintegrate")
-	TNT1 A 0 A_SetTranslucent(1.0,0)
-	TNT1 A 0 Thing_SetTranslation(0,50)	
-	SPYC H 1 A_FadeOut(0.015)
-	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-	TNT1 a 0 A_Stop	
-	TNT1 a 0 A_Fall
-	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
-	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
-	SPYC HH 2 A_FadeOut(0.03)
-	Goto Disintegrate+8
-    DRDisintegrate:
-	TNT1 A 0 A_SpawnItemEx("DRSpycrab",0,0,0,0,0,0,0,32,0)
-	TNT1 A 0 A_SetTranslucent(1.0,0)
-	TNT1 A 0 Thing_SetTranslation(0,50)	
-	SPYC H 1 A_FadeOut(0.015)
-	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-	TNT1 a 0 A_Stop	
-	TNT1 a 0 A_Fall
-	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
-	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
-	SPYC HH 2 A_FadeOut(0.03)
-	Goto DRDisintegrate+8
-    }
+	+DONTMORPH
+	+NOICEDEATH
+	Scale 0.166
+	Height 56
+	Radius 20
+	Speed 7
+	Health 50
+	PainChance 200
+	SeeSound "spycrab/see"
+	ActiveSound "spycrab/active"
+	PainSound "spycrab/pain"
+	DropItem HealthHeart
+	DropItem Q2BackPack
+	DropItem PowerupsSpawnerReal
+	DropItem PowerupsSpawnerReal 8
+	States
+	{
+	Spawn:
+		SPYC A 0 A_JumpIfInventory("NoDeadRinger",1,6)
+		SPYC A 0 A_JumpIfInventory("DeadRinger",1,5)
+		SPYC A 0 A_Jump(170,3)
+		SPYC A 0 A_GiveInventory("DeadRinger",1)
+		SPYC A 0 A_Jump(256,2)
+		SPYC A 0 A_GiveInventory("NoDeadRinger",1)
+		SPYC AA 1 A_Look
+		Goto See
+	See:
+		SPYC ABCDEFGH 3 A_Wander
+		SPYC A 0 A_JumpIfInventory("DeadRinger",1,2)
+		SPYC A 0 A_Jump(16,"Cloak")
+		SPYC A 0 A_Jump(16,1)
+		Loop
+		SPYC A 0 A_PlaySound("spycrab/active")
+		SPYC ABCDEFGHABCDEFGH 3 A_Wander
+		Loop
+	SeeCloaked:
+		SPYC A 3 A_Wander
+		SPYC A 0 A_JumpIfInventory("SpycrabCloakActive",100,"Uncloak")
+		SPYC A 0 A_GiveInventory("SpycrabCloakActive",1)
+		SPYC B 3 A_Wander
+		SPYC A 0 A_JumpIfInventory("SpycrabCloakActive",100,"Uncloak")
+		SPYC A 0 A_GiveInventory("SpycrabCloakActive",1)
+		SPYC C 3 A_Wander
+		SPYC A 0 A_JumpIfInventory("SpycrabCloakActive",100,"Uncloak")
+		SPYC A 0 A_GiveInventory("SpycrabCloakActive",1)
+		SPYC D 3 A_Wander
+		SPYC A 0 A_JumpIfInventory("SpycrabCloakActive",100,"Uncloak")
+		SPYC A 0 A_GiveInventory("SpycrabCloakActive",1)
+		SPYC E 3 A_Wander
+		SPYC A 0 A_JumpIfInventory("SpycrabCloakActive",100,"Uncloak")
+		SPYC A 0 A_GiveInventory("SpycrabCloakActive",1)
+		SPYC F 3 A_Wander
+		SPYC A 0 A_JumpIfInventory("SpycrabCloakActive",100,"Uncloak")
+		SPYC A 0 A_GiveInventory("SpycrabCloakActive",1)
+		SPYC G 3 A_Wander
+		SPYC A 0 A_JumpIfInventory("SpycrabCloakActive",100,"Uncloak")
+		SPYC A 0 A_GiveInventory("SpycrabCloakActive",1)
+		SPYC H 3 A_Wander
+		SPYC A 0 A_JumpIfInventory("SpycrabCloakActive",100,"Uncloak")
+		SPYC A 0 A_GiveInventory("SpycrabCloakActive",1)
+		Loop
+	Cloak:
+		SPYC A 0 A_ChangeFlag("NOPAIN",1)
+		SPYC A 0 A_ChangeFlag("CANTSEEK",1)
+		SPYC A 0 A_PlaySound("spycrab/cloak")
+		SPYC A 3 A_Wander
+		SPYC A 0 A_FadeOut(0.1,0)
+		SPYC B 3 A_Wander
+		SPYC B 0 A_FadeOut(0.1,0)
+		SPYC C 3 A_Wander
+		SPYC C 0 A_FadeOut(0.1,0)
+		SPYC D 3 A_Wander
+		SPYC D 0 A_FadeOut(0.1,0)
+		SPYC E 3 A_Wander
+		SPYC E 0 A_FadeOut(0.1,0)
+		SPYC F 3 A_Wander
+		SPYC F 0 A_FadeOut(0.1,0)
+		SPYC G 3 A_Wander
+		SPYC G 0 A_FadeOut(0.1,0)
+		SPYC H 3 A_Wander
+		SPYC H 0 A_FadeOut(0.1,0)
+		SPYC A 3 A_Wander
+		SPYC A 0 A_FadeOut(0.1,0)
+		SPYC B 3 A_Wander
+		SPYC B 0 A_FadeOut(0.1,0)
+		SPYC A 0 A_GiveInventory("SpycrabCloakCheck",1)
+		SPYC A 0 A_ChangeFlag("NOPAIN",0)
+		Goto SeeCloaked+6
+	Uncloak:
+		SPYC A 0 A_ChangeFlag("NOPAIN",1)
+		SPYC A 0 A_PlaySound("spycrab/uncloak")
+		SPYC A 3 A_Wander
+		SPYC A 0 A_FadeIn
+		SPYC B 3 A_Wander
+		SPYC B 0 A_FadeIn
+		SPYC C 3 A_Wander
+		SPYC C 0 A_FadeIn
+		SPYC D 3 A_Wander
+		SPYC D 0 A_FadeIn
+		SPYC E 3 A_Wander
+		SPYC E 0 A_FadeIn
+		SPYC F 3 A_Wander
+		SPYC F 0 A_FadeIn
+		SPYC G 3 A_Wander
+		SPYC G 0 A_FadeIn
+		SPYC H 3 A_Wander
+		SPYC H 0 A_FadeIn
+		SPYC A 3 A_Wander
+		SPYC A 0 A_FadeIn
+		SPYC B 3 A_Wander
+		SPYC B 0 A_FadeIn
+		SPYC B 0 A_SetTranslucent(1,0)
+		SPYC A 0 A_TakeInventory("SpycrabCloakCheck",1)
+		SPYC A 0 A_TakeInventory("SpycrabCloakActive",100)
+		SPYC A 0 A_ChangeFlag("CANTSEEK",0)
+		SPYC A 0 A_ChangeFlag("NOPAIN",0)
+		Goto See+2
+	Pain:
+		SPYC H 3 A_Pain
+		SPYC H 0 A_JumpIfInventory("SpycrabCloakCheck",1,"SeeCloaked")
+		Goto See
+	Death:
+		TNT1 A 0 A_JumpIfInventory("DeadRinger",1,"DeadRinger")
+		TNT1 A 0 A_PlaySound("other/gibdeath")
+		TNT1 AAAAAA 0 A_TossGib
+		TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_Fall
+		Stop
+	DeadRinger:
+		TNT1 A 0 A_SpawnItemEx("DRSpycrab",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_PlaySound("other/gibdeath")
+		TNT1 AAAAAA 0 A_TossGib
+		TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,1|SXF_USEBLOODCOLOR)
+		Stop
+	Burn:
+		TNT1 A 0 A_JumpIfInventory("DeadRinger",1,"DRBurn")
+		TNT1 A 0 A_Fall
+		TNT1 A 0 A_SpawnItemEx("SpycrabBurn",0,0,0,0,0,0,0,32)
+		Stop
+	DRBurn:
+		TNT1 A 0 A_SpawnItemEx("DRSpycrab",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("SpycrabBurn",0,0,0,0,0,0,0,32)
+		Stop
+	Death.UnholyDisint:
+	Death.PlasmaDisint:
+	Disintegrate:
+		TNT1 A 0 A_JumpIfInventory("DeadRinger",1,"DRDisintegrate")
+		TNT1 A 0 A_SetTranslucent(1.0,0)
+		TNT1 A 0 Thing_SetTranslation(0,50)	
+		SPYC H 1 A_FadeOut(0.015)
+		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+		TNT1 A 0 A_Stop	
+		TNT1 A 0 A_Fall
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+		SPYC HH 2 A_FadeOut(0.03)
+		Goto Disintegrate+8
+	DRDisintegrate:
+		TNT1 A 0 A_SpawnItemEx("DRSpycrab",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_SetTranslucent(1.0,0)
+		TNT1 A 0 Thing_SetTranslation(0,50)	
+		SPYC H 1 A_FadeOut(0.015)
+		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+		TNT1 A 0 A_Stop	
+		TNT1 A 0 A_Fall
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+		SPYC HH 2 A_FadeOut(0.03)
+		Goto DRDisintegrate+8
+	}
 }
 
-ACTOR DRSpycrab
+Actor DRSpycrab
 {
-    Scale 0.166
-    Height 56
-    Radius 20
-    Speed 7
-    Health 50
-    PainChance 200
-    ActiveSound "spycrab/active"
-    PainSound "spycrab/pain"
-    DropItem HealthHeart
-    DropItem Q2BackPack
-    DropItem PowerupsSpawnerReal
-    DropItem PowerupsSpawnerReal 8
-    RenderStyle None
-    MONSTER
+	MONSTER
 	-ISMONSTER
-    +FLOORCLIP
-	-CANUSEWALLS
-    -COUNTKILL
-    +DONTMORPH
-    +SPECTRAL
-    +NONSHOOTABLE
-    +CANTSEEK
-    +NOBLOOD
-    +NOICEDEATH
-    States
-    {
-    Spawn:
-	SPYC A 0 A_JumpIfInventory("DRSpycrabCheck",1,63)
-	SPYC AAAAAAAAAAAAAAA 0 A_Wander
-	SPYC AAAAAAAAAAAAAAAAAAAA 5 A_Wander
-	SPYC A 0 A_SetTranslucent(0.01,0)
-	SPYC A 0 A_PlaySound("spycrab/deadringer")
-	SPYC A 3 A_Wander
-	SPYC A 0 A_FadeIn
-	SPYC B 3 A_Wander
-	SPYC B 0 A_FadeIn
-	SPYC C 3 A_Wander
-	SPYC C 0 A_FadeIn
-	SPYC D 3 A_Wander
-	SPYC D 0 A_FadeIn
-	SPYC E 3 A_Wander
-	SPYC E 0 A_FadeIn
-	SPYC F 3 A_Wander
-	SPYC F 0 A_FadeIn
-	SPYC G 3 A_Wander
-	SPYC G 0 A_FadeIn
-	SPYC H 3 A_Wander
-	SPYC H 0 A_FadeIn
-	SPYC A 3 A_Wander
-	SPYC A 0 A_FadeIn
-	SPYC B 3 A_Wander
-	SPYC B 0 A_FadeIn
-	SPYC B 0 A_SetTranslucent(1,0)
-	SPYC B 0 A_SetShootable
-	SPYC B 0 A_ChangeFlag("CANTSEEK",0)
-	SPYC B 0 A_ChangeFlag("SPECTRAL",0)
-	SPYC B 0 A_ChangeFlag("NOBLOOD",0)
-	Goto See
-	SPYC AA 0 A_Look
-	Goto See
-    See:
-	SPYC ABCDEFGH 3 A_Wander
-	SPYC A 0 A_Jump(16,1)
-	Loop
-	SPYC A 0 A_PlaySound("spycrab/active")
-	SPYC ABCDEFGHABCDEFGH 3 A_Wander
-	Loop
-    Death:
-	TNT1 A 0 A_PlaySound("other/gibdeath")
-	TNT1 AAAAAA 0 A_TossGib
-	TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,1|SXF_USEBLOODCOLOR)
-	TNT1 A 1 A_Fall
-	Stop
-    Pain:
-	SPYC H 3 A_Pain
-	Goto See
-    Burn:
-	TNT1 A 0 A_Fall
-	TNT1 A 0 A_SpawnItemEx("SpycrabBurn",0,0,0,0,0,0,0,32)
-	Stop
-    Death.UnholyDisint:
-    Death.PlasmaDisint:
-    Disintegrate:
-	TNT1 A 0 Thing_SetTranslation(0,50)	
-	TNT1 A 0 A_SetTranslucent(1.0,0)
-	SPYC H 1 A_FadeOut(0.015)
-	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-	TNT1 a 0 A_Stop	
-	TNT1 a 0 A_Fall
-	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
-	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
-	SPYC HH 2 A_FadeOut(0.03)
-	Goto Disintegrate+7
-    }
-}
-
-ACTOR DeadRinger : Inventory
-{
-    Inventory.Amount 1
-    Inventory.MaxAmount 1
-}
-
-ACTOR NoDeadRinger : Inventory
-{
-    Inventory.Amount 1
-    Inventory.MaxAmount 1
-}
-
-ACTOR SpycrabCloakCheck : Inventory
-{
-    Inventory.Amount 1
-    Inventory.MaxAmount 1
-}
-
-ACTOR SpycrabCloakActive : Inventory
-{
-    Inventory.Amount 1
-    Inventory.MaxAmount 100
-}
-
-ACTOR DRSpycrabCheck : Inventory
-{
-    Inventory.Amount 1
-    Inventory.MaxAmount 1
-}
-
-//==========================================================
-//==========================================================
-ACTOR BVictim
-{
-    Scale 0.5
-    Height 56
-    Radius 20
-    Speed 12
-    Health 10
-    PainChance 255
-    SeeSound "bvictim/sight"
-    ActiveSound "bvictim/active"
-    PainSound "bvictim/pain"
-    DeathSound "bvictim/death"
-    DropItem HealthHeart
-    MONSTER
-	-ismonster
-    +FLOORCLIP
-    +FRIGHTENED
+	+FLOORCLIP
 	-CANUSEWALLS
 	-COUNTKILL
-    States
-    {
-    Spawn:
-      LOON AB 6 A_Look
-      Loop
-    See:
-      LOON CCDDEEFFGGHH 2 A_Chase
-      Loop
-    Pain:
-      LOON I 3
-      LOON I 3 A_Pain
-      Goto See
-    Death:
-      LOON J 3 A_Scream
-      LOON K 3 A_Fall
-      LOON LMNOPQ 3
-      LOON R -1
-      Stop
-    XDeath:
-	TNT1 A 0 A_PlaySound("other/gibdeath")
-	TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,1|SXF_USEBLOODCOLOR)
-	TNT1 A 1 A_Fall
-	Stop
-    Burn:
-	TNT1 A 0 A_Fall
-	TNT1 A 0 A_SpawnItemEx("GenericHumanBurn1",0,0,0,0,0,0,0,32)
-	Stop
-    Death.UnholyDisint:
-    Death.PlasmaDisint:
-    Disintegrate:
-	TNT1 A 0 Thing_SetTranslation(0,50)	
-	LOON I 1 A_FadeOut(0.015)
-	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-	TNT1 a 0 A_Stop	
-	TNT1 a 0 A_Fall
-	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
-	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
-	LOON I 2 A_FadeOut(0.03)
-	Goto Disintegrate+6
-    }
+	+DONTMORPH
+	+SPECTRAL
+	+NONSHOOTABLE
+	+CANTSEEK
+	+NOBLOOD
+	+NOICEDEATH
+	Scale 0.166
+	Height 56
+	Radius 20
+	Speed 7
+	Health 50
+	PainChance 200
+	ActiveSound "spycrab/active"
+	PainSound "spycrab/pain"
+	DropItem HealthHeart
+	DropItem Q2BackPack
+	DropItem PowerupsSpawnerReal
+	DropItem PowerupsSpawnerReal 8
+	RenderStyle None
+	States
+	{
+	Spawn:
+		SPYC A 0 A_JumpIfInventory("DRSpycrabCheck",1,63)
+		SPYC AAAAAAAAAAAAAAA 0 A_Wander
+		SPYC AAAAAAAAAAAAAAAAAAAA 5 A_Wander
+		SPYC A 0 A_SetTranslucent(0.01,0)
+		SPYC A 0 A_PlaySound("spycrab/deadringer")
+		SPYC A 3 A_Wander
+		SPYC A 0 A_FadeIn
+		SPYC B 3 A_Wander
+		SPYC B 0 A_FadeIn
+		SPYC C 3 A_Wander
+		SPYC C 0 A_FadeIn
+		SPYC D 3 A_Wander
+		SPYC D 0 A_FadeIn
+		SPYC E 3 A_Wander
+		SPYC E 0 A_FadeIn
+		SPYC F 3 A_Wander
+		SPYC F 0 A_FadeIn
+		SPYC G 3 A_Wander
+		SPYC G 0 A_FadeIn
+		SPYC H 3 A_Wander
+		SPYC H 0 A_FadeIn
+		SPYC A 3 A_Wander
+		SPYC A 0 A_FadeIn
+		SPYC B 3 A_Wander
+		SPYC B 0 A_FadeIn
+		SPYC B 0 A_SetTranslucent(1,0)
+		SPYC B 0 A_SetShootable
+		SPYC B 0 A_ChangeFlag("CANTSEEK",0)
+		SPYC B 0 A_ChangeFlag("SPECTRAL",0)
+		SPYC B 0 A_ChangeFlag("NOBLOOD",0)
+		Goto See
+		SPYC AA 0 A_Look
+		Goto See
+	See:
+		SPYC ABCDEFGH 3 A_Wander
+		SPYC A 0 A_Jump(16,1)
+		Loop
+		SPYC A 0 A_PlaySound("spycrab/active")
+		SPYC ABCDEFGHABCDEFGH 3 A_Wander
+		Loop
+	Death:
+		TNT1 A 0 A_PlaySound("other/gibdeath")
+		TNT1 AAAAAA 0 A_TossGib
+		TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,1|SXF_USEBLOODCOLOR)
+		TNT1 A 1 A_Fall
+		Stop
+	Pain:
+		SPYC H 3 A_Pain
+		Goto See
+	Burn:
+		TNT1 A 0 A_Fall
+		TNT1 A 0 A_SpawnItemEx("SpycrabBurn",0,0,0,0,0,0,0,32)
+		Stop
+	Death.UnholyDisint:
+	Death.PlasmaDisint:
+	Disintegrate:
+		TNT1 A 0 Thing_SetTranslation(0,50)	
+		TNT1 A 0 A_SetTranslucent(1.0,0)
+		SPYC H 1 A_FadeOut(0.015)
+		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+		TNT1 A 0 A_Stop	
+		TNT1 A 0 A_Fall
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+		SPYC HH 2 A_FadeOut(0.03)
+		Goto Disintegrate+7
+	}
+}
+
+Actor DeadRinger : Inventory
+{
+	Inventory.Amount 1
+	Inventory.MaxAmount 1
+}
+
+Actor NoDeadRinger : Inventory
+{
+	Inventory.Amount 1
+	Inventory.MaxAmount 1
+}
+
+Actor SpycrabCloakCheck : Inventory
+{
+	Inventory.Amount 1
+	Inventory.MaxAmount 1
+}
+
+Actor SpycrabCloakActive : Inventory
+{
+	Inventory.Amount 1
+	Inventory.MaxAmount 100
+}
+
+Actor DRSpycrabCheck : Inventory
+{
+	Inventory.Amount 1
+	Inventory.MaxAmount 1
+}
+
+//==========================================================
+//==========================================================
+Actor BVictim
+{
+	MONSTER
+	-ismonster
+	+FLOORCLIP
+	+FRIGHTENED
+	-CANUSEWALLS
+	-COUNTKILL
+	Scale 0.5
+	Height 56
+	Radius 20
+	Speed 12
+	Health 10
+	PainChance 255
+	SeeSound "bvictim/sight"
+	ActiveSound "bvictim/active"
+	PainSound "bvictim/pain"
+	DeathSound "bvictim/death"
+	DropItem HealthHeart
+	States
+	{
+	Spawn:
+		LOON AB 6 A_Look
+		Loop
+	See:
+		LOON CCDDEEFFGGHH 2 A_Chase
+		Loop
+	Pain:
+		LOON I 3
+		LOON I 3 A_Pain
+		Goto See
+	Death:
+		LOON J 3 A_Scream
+		LOON K 3 A_Fall
+		LOON LMNOPQ 3
+		LOON R -1
+		Stop
+	XDeath:
+		TNT1 A 0 A_PlaySound("other/gibdeath")
+		TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,1|SXF_USEBLOODCOLOR)
+		TNT1 A 1 A_Fall
+		Stop
+	Burn:
+		TNT1 A 0 A_Fall
+		TNT1 A 0 A_SpawnItemEx("GenericHumanBurn1",0,0,0,0,0,0,0,32)
+		Stop
+	Death.UnholyDisint:
+	Death.PlasmaDisint:
+	Disintegrate:
+		TNT1 A 0 Thing_SetTranslation(0,50)	
+		LOON I 1 A_FadeOut(0.015)
+		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+		TNT1 A 0 A_Stop	
+		TNT1 A 0 A_Fall
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+		LOON I 2 A_FadeOut(0.03)
+		Goto Disintegrate+6
+	}
 }
 
 
@@ -3195,110 +3187,111 @@ ACTOR BVictim
 
 
 //************************************
-ACTOR AmmoUser
+
+Actor AmmoUser
 {
-    PROJECTILE
-    Radius 0
-    Height 0
-    Speed 0
-    RenderStyle None
-    States
-    {
-    Spawn:
-	TNT1 A 0
-	Stop
-    }
+	PROJECTILE
+	Radius 0
+	Height 0
+	Speed 0
+	RenderStyle None
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		Stop
+	}
 }
 
-ACTOR LimitScriptActive : CustomInventory
+Actor LimitScriptActive : CustomInventory
 {
-    -INVENTORY.INVBAR
-    Inventory.InterHubAmount 1
-    Inventory.Amount 1
-    Inventory.MaxAmount 1
-    States
-    {
-    Use:
-	TNT1 A 0
-	Stop
-    }
+	-INVENTORY.INVBAR
+	Inventory.InterHubAmount 1
+	Inventory.Amount 1
+	Inventory.MaxAmount 1
+	States
+	{
+	Use:
+		TNT1 A 0
+		Stop
+	}
 }
 
-ACTOR LimitScriptCheck : CustomInventory
+Actor LimitScriptCheck : CustomInventory
 {
-    -INVENTORY.INVBAR
-    Inventory.InterHubAmount 1
-    Inventory.Amount 1
-    Inventory.MaxAmount 1
-    States
-    {
-    Use:
-	TNT1 A 0
-	Stop
-    }
+	-INVENTORY.INVBAR
+	Inventory.InterHubAmount 1
+	Inventory.Amount 1
+	Inventory.MaxAmount 1
+	States
+	{
+	Use:
+		TNT1 A 0
+		Stop
+	}
 }
 
-ACTOR TorchEffects : CustomInventory
+Actor TorchEffects : CustomInventory
 {
-    -INVENTORY.INVBAR
-    Inventory.InterHubAmount 1
-    Inventory.Amount 1
-    Inventory.MaxAmount 1
-    States
-    {
-    Use:
-	TNT1 A 0
-	Stop
-    }
+	-INVENTORY.INVBAR
+	Inventory.InterHubAmount 1
+	Inventory.Amount 1
+	Inventory.MaxAmount 1
+	States
+	{
+	Use:
+		TNT1 A 0
+		Stop
+	}
 }
 
-ACTOR InfiniteAmmo : CustomInventory
+Actor InfiniteAmmo : CustomInventory
 {
-    -INVENTORY.INVBAR
-    Inventory.InterHubAmount 1
-    Inventory.Amount 1
-    Inventory.MaxAmount 1
-    States
-    {
-    Use:
-	TNT1 A 0
-	Stop
-    }
+	-INVENTORY.INVBAR
+	Inventory.InterHubAmount 1
+	Inventory.Amount 1
+	Inventory.MaxAmount 1
+	States
+	{
+	Use:
+		TNT1 A 0
+		Stop
+	}
 }
 
-ACTOR NoWeaponSwitch : CustomInventory
+Actor NoWeaponSwitch : CustomInventory
 {
-    -INVENTORY.INVBAR
-    Inventory.InterHubAmount 1
-    Inventory.Amount 1
-    Inventory.MaxAmount 2
-    States
-    {
-    Use:
-	TNT1 A 0
-	Stop
-    }
+	-INVENTORY.INVBAR
+	Inventory.InterHubAmount 1
+	Inventory.Amount 1
+	Inventory.MaxAmount 2
+	States
+	{
+	Use:
+		TNT1 A 0
+		Stop
+	}
 }
 
-ACTOR PowerMakeVisible : PowerInvisibility
+Actor PowerMakeVisible : PowerInvisibility
 {}
 
-ACTOR MakeVisible : PowerupGiver
+Actor MakeVisible : PowerupGiver
 {
-    -COUNTITEM
-    -INVENTORY.INVBAR
-    +INVENTORY.AUTOACTIVATE
-    Inventory.InterHubAmount 1
-    Inventory.Amount 1
-    Inventory.MaxAmount 1
-    Powerup.Type "MakeVisible"
-    Powerup.Duration 1
-    States
-    {
-    Pickup:
-	TNT1 A 0
-	Stop
-    }
+	-COUNTITEM
+	-INVENTORY.INVBAR
+	+INVENTORY.AUTOACTIVATE
+	Inventory.InterHubAmount 1
+	Inventory.Amount 1
+	Inventory.MaxAmount 1
+	Powerup.Type "MakeVisible"
+	Powerup.Duration 1
+	States
+	{
+	Pickup:
+		TNT1 A 0
+		Stop
+	}
 }
 
 
@@ -3350,11 +3343,11 @@ Actor DisintegrateSpark
 
 }
 
-actor DisintegrateSparkBig : DisintegrateSpark
+Actor DisintegrateSparkBig : DisintegrateSpark
 { 	Scale 0.25 }
-actor DisintegrateSparkSmall : DisintegrateSpark
+Actor DisintegrateSparkSmall : DisintegrateSpark
 { 	Scale 0.05 }
-actor DisintegrateSparkMini : DisintegrateSpark
+Actor DisintegrateSparkMini : DisintegrateSpark
 { 	Scale 0.025 }
 
 // generic disintegrate death  
@@ -3685,10 +3678,10 @@ Actor CaveJohnsonSpeaker
 //Greeting (there are only 2 options, but still
 Actor CaveSaysHi : CustomInventory
 {
-+INVENTORY.AUTOACTIVATE
-Inventory.MaxAmount 1
-States
-{
+	+INVENTORY.AUTOACTIVATE
+	Inventory.MaxAmount 1
+	States
+	{
 	Spawn:
 		PLAY A -1 Bright
 		Stop
@@ -3701,7 +3694,7 @@ States
 Actor PlayCaveSaysHi
 {
 	+NOINTERACTION
-	radius 3
+	Radius 3
 	Height 3
 	States
 	{
@@ -3764,7 +3757,7 @@ Actor Dummy2
 Actor PlayCaveSays
 {
 	+NOINTERACTION
-	radius 3
+	Radius 3
 	Height 3
 	States
 	{
@@ -3795,7 +3788,7 @@ States
 Actor PlayCaveIsPissed
 {
 	+NOINTERACTION
-	radius 3
+	Radius 3
 	Height 3
 	States
 	{
@@ -3864,19 +3857,19 @@ Actor DummyMonsterBoss : DummyMonster
 //	To stop any sounds played by the weapons when they are dropped
 Actor WeaponSoundStopper : CustomInventory
 {
-    Inventory.MaxAmount 1
-    +INVENTORY.AUTOACTIVATE
-    States
-    {
-    Use:
-	TNT1 A 0
-	TNT1 A 0 A_StopSound(3)
-	TNT1 A 0 A_StopSound(4)
-	TNT1 A 0 A_StopSound(5)
-	TNT1 A 0 A_StopSound(6)
-	TNT1 A 0 A_StopSound(7)
-	Stop
-    }
+	Inventory.MaxAmount 1
+	+INVENTORY.AUTOACTIVATE
+	States
+	{
+	Use:
+		TNT1 A 0
+		TNT1 A 0 A_StopSound(3)
+		TNT1 A 0 A_StopSound(4)
+		TNT1 A 0 A_StopSound(5)
+		TNT1 A 0 A_StopSound(6)
+		TNT1 A 0 A_StopSound(7)
+		Stop
+	}
 }
 
 
@@ -4020,13 +4013,13 @@ Actor FancyPlasmaBall : PlasmaBall replaces PlasmaBall
    States
    {
    Spawn: //Temporarily save 'target' as 'master' and null the target field
-      TNT1 A 0 NoDelay A_RearrangePointers(AAPTR_NULL, AAPTR_TARGET)
-      TNT1 A 0 A_SpawnItemEx("FancyPlasmaBallEffect", 0,0,0, 0,0,0, 0)
-      TNT1 A 0 A_SpawnItemEx("FancyPlasmaBallEffect", 0,0,0, 0,0,0, 180)
-      TNT1 A 0 A_SpawnItemEx("FancyPlasmaBallEffect", 0,0,0, 0,0,0, 90)
-      TNT1 A 0 A_SpawnItemEx("FancyPlasmaBallEffect", 0,0,0, 0,0,0, -90)
-      TNT1 A 0 A_RearrangePointers(AAPTR_MASTER, AAPTR_NULL)
-      Goto Super::Spawn
+	  TNT1 A 0 NoDelay A_RearrangePointers(AAPTR_NULL, AAPTR_TARGET)
+	  TNT1 A 0 A_SpawnItemEx("FancyPlasmaBallEffect", 0,0,0, 0,0,0, 0)
+	  TNT1 A 0 A_SpawnItemEx("FancyPlasmaBallEffect", 0,0,0, 0,0,0, 180)
+	  TNT1 A 0 A_SpawnItemEx("FancyPlasmaBallEffect", 0,0,0, 0,0,0, 90)
+	  TNT1 A 0 A_SpawnItemEx("FancyPlasmaBallEffect", 0,0,0, 0,0,0, -90)
+	  TNT1 A 0 A_RearrangePointers(AAPTR_MASTER, AAPTR_NULL)
+	  Goto Super::Spawn
    }
 }
 
@@ -4037,11 +4030,11 @@ Actor FancyPlasmaBallEffect
    States
    {
    Spawn:
-      TNT1 A 0 A_Turn(10)
-      APLS A 1 Bright A_Warp(AAPTR_TARGET, 20,0,0, 0, WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE|WARPF_USECALLERANGLE)
-      APBX A 5 Bright A_CheckFlag("MISSILE", "Spawn", AAPTR_TARGET)//Check if missile hasn't exploded yet
-      APBX BCDE 5 BRIGHT
-      Stop
+	  TNT1 A 0 A_Turn(10)
+	  APLS A 1 Bright A_Warp(AAPTR_TARGET, 20,0,0, 0, WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE|WARPF_USECALLERANGLE)
+	  APBX A 5 Bright A_CheckFlag("MISSILE", "Spawn", AAPTR_TARGET)//Check if missile hasn't exploded yet
+	  APBX BCDE 5 BRIGHT
+	  Stop
    }
 }*/
 
