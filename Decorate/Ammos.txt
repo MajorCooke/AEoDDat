@@ -703,7 +703,6 @@ Actor ManaRecepticle : CustomInventory
 	Alpha 1
 	Translation "112:127=250:254","9:9=254:254"
 	Inventory.PickupMessage "You found a cup of Mana Potion."
-	Inventory.PickupSound "misc/powerslave/recepticle"
 	States
 	{
 	Spawn:
@@ -712,9 +711,13 @@ Actor ManaRecepticle : CustomInventory
 		PS01 ABCDEF 6
 		Loop
 	Pickup:
-		TNT1 A 0 A_GiveInventory("BlueMana",random(80,120))
-		TNT1 A 0 A_GiveInventory("RedMana",random(30,50))
-		TNT1 A 0 A_GiveInventory("GreenMana",random(50,80))
+		TNT1 A 0 A_Jump(256,1,2,3)
+		TNT1 AAAAAA 0 A_DropItem("BigBlueMana")
+		TNT1 A 0 A_Jump(256,1,2,3)
+		TNT1 AAAAAA 0 A_DropItem("BigRedMana")
+		TNT1 A 0 A_Jump(256,1,2,3,4)
+		TNT1 AAAAAAA 0 A_DropItem("BigGreenMana")
+		TNT1 A 0 A_PlaySound("misc/powerslave/recepticle",6)
 		Stop
 	}
 }
@@ -732,7 +735,9 @@ Actor DarkManaRecepticle : ManaRecepticle
 		PS01 ABCDEF 6
 		Loop
 	Pickup:
-		TNT1 A 0 A_GiveInventory("DarkMana",random(15,30))
+		TNT1 A 0 A_Jump(256,1,2,3,4,5,6,7,8)
+		TNT1 AAAAAAAAAAAAAAA 0 A_DropItem("DarkMana")
+		TNT1 A 0 A_PlaySound("misc/powerslave/recepticle",6)
 		Stop
 	}
 }
