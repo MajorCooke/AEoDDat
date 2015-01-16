@@ -5532,7 +5532,7 @@ Actor ShredderAltFX2
 		TNT1 A 0 A_JumpIf(user_failsafe>=6000,2)
 		TNT1 A 0 A_SpawnItemEx("ShredderBeamParticle",0,0,0,0,0,0,0,32)
 		TNT1 A 0 A_Warp(AAPTR_DEFAULT,velx,vely,velz,0,WARPF_ABSOLUTEOFFSET,1)
-		Goto Death
+		Stop
 		TNT1 A 0 A_Weave(1,1,1.5,1.5)
 		TNT1 A 0 A_SetUserVar("user_failsafe",user_failsafe+1)
 		TNT1 A 0 A_JumpIf(user_failsafe>=25000,"Death")
@@ -5547,15 +5547,15 @@ Actor ShredderAltFX3
 {
 	var int user_failsafe;
 	var int user_count;
+	var int user_s;
 	Projectile
 	+THRUACTORS
 	RenderStyle None
 	States
 	{
 	Spawn:
-		TNT1 A 0
-		TNT1 A 0 A_Jump(256,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,
-						21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,"Movement")
+		TNT1 A 0 NoDelay A_SetUserVar("user_s",random(1,36))
+		TNT1 A 0 A_Jump(256,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,"Movement")
 		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_Weave(1,1,1.5,1.5)
 	Movement:
 		TNT1 A 0 A_JumpIf(user_count!=5,2)
@@ -8074,7 +8074,6 @@ Actor StakeGunStake : FastProjectile
 	+DONTREFLECT
 	+BLOODSPLATTER
 	+HITTRACER
-	+STRIFEDAMAGE
 	+EXTREMEDEATH
 	+RIPPER
 	RipperLevel 0

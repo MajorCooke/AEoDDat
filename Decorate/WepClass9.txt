@@ -7848,26 +7848,26 @@ Actor HellRootWhiteCloud
 {
 	+NOINTERACTION
 	RENDERSTYLE ADD
-	Scale 1.5
+	Scale 1.0
 	ALPHA 0.0
 	States
 	{
 	Spawn:
-		X110 A 0
-		TNT1 A 0 
-		X110 ABCD 2 A_Fadeto(0.8,0.08)
-		TNT1 A 0 A_ScaleVelocity(0.7)
-		X110 EFGHI 2 A_Fadeto(0.8,0.08)
-		TNT1 A 0 A_ScaleVelocity(0.7)
-		X110 JKLMNOP 2 A_Fadeto(0.8,0.08)
-		TNT1 A 0 A_ScaleVelocity(0.6)
-		X110 QRSTUVWXY 2 A_FadeOut(0.02)
-		TNT1 A 0 A_ScaleVelocity(0.6)
-		X110 ABCDEFGHIJK 2 A_FadeOut(0.02)
-		TNT1 A 0 A_ScaleVelocity(0.6)
-		X110 LMNOPQRSTUVWXY 2 A_FadeOut(0.02)
+		X110 A 0 NoDelay A_SetScale(ScaleX*randompick(-1,1),ScaleY*randompick(-1,1))
+		X110 A 0 A_SetScale(ScaleX+frandom(-0.5,0.5))
+		X110 ABCD 1 A_Fadeto(0.4,0.04)
+		"####" "#" 0 A_ScaleVelocity(0.85)
+		X110 EFGHI 1 A_Fadeto(0.4,0.04)
+		TNT1 A 0 A_ScaleVelocity(0.85)
+		X110 JKLMNOP 1 A_Fadeto(0.4,0.04)
+		TNT1 A 0 A_ScaleVelocity(0.8)
+		X110 QRSTUVWXY 1 A_FadeOut(0.02)
+		TNT1 A 0 A_ScaleVelocity(0.8)
+		X110 ABCDEFGHIJK 1 A_FadeOut(0.02)
+		TNT1 A 0 A_ScaleVelocity(0.8)
+		X110 LMNOPQRSTUVWXY 1 A_FadeOut(0.02)
 	Outer:
-		X110 ABCDEFGHIJKLMNOPQRSTUVWXY 2 A_FadeOut(0.03)
+		X110 ABCDEFGHIJKLMNOPQRSTUVWXY 1 A_FadeOut(0.03)
 		Loop
 	}
 }
@@ -7910,7 +7910,7 @@ Actor HellRootShot1Explo
 	Speed 0
 	Damage 0
 	RenderStyle Add
-	Scale 0.5
+	Scale 1.0
 	States
 	{
 	Spawn:
@@ -11233,7 +11233,6 @@ Actor BouncerBall1
 		TNT1 A 0 A_ChangeFlag("PAINLESS",0)
 		TNT1 A 0 A_Explode(250,150,1)
 		TNT1 A 0 A_PlaySound("BS/Bouncer/Explode")
-		TNT1 A 0 A_TakeInventory("BouncerToken",1000,0,AAPTR_TARGET)
 		TNT1 A 1 A_SpawnItemEx("PBExplosionSpawnerDebrisless",0,0,0,0,0,0,0,32)//A_SpawnItemEx("BouncerBallExplosionBig",0,0,0,0,0,0,0,32)
 		Stop
 	}
@@ -11295,7 +11294,6 @@ Actor BouncerBall2
 		TNT1 A 0 A_ChangeFlag("PAINLESS",0)
 		TNT1 A 0 A_Explode(250,150,1)
 		TNT1 A 0 A_PlaySound("BS/Bouncer/Explode")
-		TNT1 A 0 A_TakeInventory("BouncerToken",1000,0,AAPTR_TARGET)
 		TNT1 A 0 A_SpawnItemEx("PBExplosionSpawnerDebrisless",0,0,0,0,0,0,0,32)
 		TNT1 A 0 A_JumpIf(user_bouncecount>=15,"End")
 		Goto Fling
@@ -11311,7 +11309,6 @@ Actor BouncerBall2
 		TNT1 A 0 A_ChangeFlag("PAINLESS",0)
 		TNT1 A 0 A_Explode(250,150,1)
 		TNT1 A 0 A_PlaySound("BS/Bouncer/Explode")
-		TNT1 A 0 A_TakeInventory("BouncerToken",1000,0,AAPTR_TARGET)
 		TNT1 A 0 A_SpawnItemEx("PBExplosionSpawnerDebrisless",0,0,0,0,0,0,0,32)
 		TNT1 A 0 A_JumpIf(user_bouncecount>=15,"End")
 		Goto Waiting3
