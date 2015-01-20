@@ -3665,6 +3665,7 @@ Actor RequiemBossBrainFinal replaces BossBrain/*: BossBrain*/ 6299
 		BBRN B 0 A_ChangeFlag("NOPAIN",0)
 		Goto Idle
 	Death:
+		BBRN A 0 A_GiveInventory("RemoveDirector",1,AAPTR_PLAYER1)
 		BBRN A 0 A_GiveInventory("IOSDestroyed",1,AAPTR_PLAYER1)
 		//BBRN A 0 A_GiveInventory("PowerPlayerWin",1,AAPTR_PLAYER1)
 		BBRN A 0 Thing_Remove(20001)
@@ -3678,7 +3679,7 @@ Actor RequiemBossBrainFinal replaces BossBrain/*: BossBrain*/ 6299
 		BBRN A 70 A_Quake(4,125,0,5000)
 		BBRN A 0 A_Quake(3,300,0,5000)
 		BBRN A 60 A_SpawnItemEx("FaceExploSpawner",-288,0,0,0,0,0,90,32)
-		BBRN A 0 Thing_Destroy(0,1)
+		BBRN A 0 A_RadiusGive("MonsterDestroyer",32767,RGF_MONSTERS|RGF_NOSIGHT,1)
 		BBRN A 0 A_SpawnItemEx("NukeFaceExploSpawner",-288,0,0,0,0,0,90,32)
 		//BBRN A 10 //A_BrainScream
 		BBRN A 200 A_PlaySound("brain/death",CHAN_AUTO,1,0,ATTN_NONE)
@@ -3708,6 +3709,29 @@ Actor RequiemBossBrainFinal replaces BossBrain/*: BossBrain*/ 6299
 	}
 }
 
+Actor MonsterDestroyer : CustomInventory
+{
+	+INVENTORY.AUTOACTIVATE
+	+INVENTORY.ALWAYSPICKUP
+	States
+	{
+	Use:
+		TNT1 A 0 A_JumpIf(CheckClass("PlayerPawn",AAPTR_DEFAULT,1),"End")
+		TNT1 A 0 A_CheckFlag("SHOOTABLE","Cont")
+		TNT1 A 0 A_JumpIf(health > 0,"Cont")
+		TNT1 A 0 A_SetShootable
+	Cont:
+		TNT1 A 0 A_CheckFlag("NOINTERACTION","End")
+		TNT1 A 0 A_CheckFlag("CANTLEAVEFLOORPIC","End")
+		TNT1 A 0 A_CheckFlag("FRIENDLY","End")
+		TNT1 A 0 A_Die("Extreme")
+		Stop
+	End:
+		TNT1 A 0
+		Stop
+	}
+}
+
 Actor FaceExploSpawner
 {
 	var int user_count;
@@ -3716,7 +3740,6 @@ Actor FaceExploSpawner
 	{
 	Spawn:
 		TNT1 A 0
-		TNT1 A 0 A_SetUserVar("user_count",0)
 	Looping:
 		TNT1 AAA 0 A_SpawnItemEx("SpecialExploSpawner",random(0,50),random(-300,300),random(-200,200),0,0,0,0,32)
 		TNT1 AAA 0 A_SpawnItemEx("GibDropper",random(0,50),random(-300,300),random(-150,200),0,0,0,0,32,250)
@@ -3741,7 +3764,7 @@ Actor NukeFaceExploSpawner
 	States
 	{
 	Spawn:
-		TNT1 A 0
+		TNT1 A 0 NoDelay A_RadiusGive("MonsterDestroyer",32767,RGF_MONSTERS|RGF_NOSIGHT,1)
 		TNT1 A 35 A_SpawnItemEx("InquisitorExplosionSpawner",random(0,50),random(-200,200),random(-200,0),0,0,0,0,32)
 		Loop
 	}
@@ -3785,19 +3808,34 @@ Actor AESpawnShot : SpawnShot replaces SpawnShot
 	DropItem "ImpReplacer2"			255 50
 	DropItem "PainReplacer2"		255 10
 	DropItem "RevenantReplacer2"	255 10
+	+VULNERABLE
+	+NOPAIN
+	+DONTTHRUST
 	States
 	{
 	Spawn:
 		BOSF A 0 Bright A_SpawnSound
 		BOSF A 0 Bright A_SpawnItemEx("SpawnShotShadow",0,0,0,0,0,0,0,32,0,0)
+		BOSF A 0 Bright A_JumpIfInventory("IOSDestroyed",1,"Death",AAPTR_PLAYER1)
 		BOSF AAA 1 Bright A_SpawnFly("TeleportFog")
 		BOSF B 0 Bright A_SpawnItemEx("SpawnShotShadow",0,0,0,0,0,0,0,32,0,1)
+		BOSF A 0 Bright A_JumpIfInventory("IOSDestroyed",1,"Death",AAPTR_PLAYER1)
 		BOSF BBB 1 Bright A_SpawnFly("TeleportFog")
 		BOSF C 0 Bright A_SpawnItemEx("SpawnShotShadow",0,0,0,0,0,0,0,32,0,2)
+		BOSF A 0 Bright A_JumpIfInventory("IOSDestroyed",1,"Death",AAPTR_PLAYER1)
 		BOSF CCC 1 Bright A_SpawnFly("TeleportFog")
 		BOSF D 0 Bright A_SpawnItemEx("SpawnShotShadow",0,0,0,0,0,0,0,32,0,3)
+		BOSF A 0 Bright A_JumpIfInventory("IOSDestroyed",1,"Death",AAPTR_PLAYER1)
 		BOSF DDD 1 Bright A_SpawnFly("TeleportFog")
 		Loop
+	Death:
+		TNT1 A 0 A_Stop
+		TNT1 A 0 A_SpawnItemEx("PBExplosionSpawnerDebrisless",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_PlaySound("HLExplosion",5,1,0)
+		TNT1 A 0 A_PlaySound("other/gibdeath",6,1,0)
+		TNT1 AAAA 0 A_SpawnItemEx("GibDropper",0,0,8,0,0,0,random(0,359),SXF_NOCHECKPOSITION)
+		TNT1 A 2
+		Stop
 	}
 }
 
