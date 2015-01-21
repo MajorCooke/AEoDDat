@@ -89,6 +89,11 @@ script "s848" Enter
 	fadeto (0, 0, 0, 0, 0.3);
 }
 
+Script "AEFadeToBlack" (void)
+{
+	FadeTo(0,0,0,1.0,5.0);
+}
+
 //	The main recoil script. Sure we have A_SetPitch and A_SetAngle, but this basically merges both in one call
 script "s850" (void)
 {
@@ -383,17 +388,17 @@ script "s952" enter
 	restart;
 }
 
-global bool wepsw = false;
+//global bool 18: wepsw;
 
 script "s953" enter
 {
-	if((GetCVar("neverswitchonpickup") == 1) && (CheckInventory("NoWeaponSwitch") < 1) && !(wepsw))
+	if((GetCVar("neverswitchonpickup") == 1) && (CheckInventory("NoWeaponSwitch") < 1))
 	{
-		wepsw = true;
 		GiveInventory("NoWeaponSwitch",1);
 	}
 	else if (GetCVar("neverswitchonpickup") == 0) 
 	{
+
 		TakeInventory("NoWeaponSwitch",1);
 	}
 	delay(35);
