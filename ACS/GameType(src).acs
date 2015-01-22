@@ -270,30 +270,6 @@ script "s906" (void)		//debug to print the actual level number
 	Log(s:"And you have played ",d:LevelsPlayed,s:" levels.");
 }
 
-
-
-
-
-
-script "s911" (void)	//called by the monster spawners.
-{
-	SetResultValue(AEoDThemeType);	//now im doing it backwards, first it will try to use that value
-	if(GameStarted==0)			//and if the game has not registered that it started already, then 
-		SetResultValue(GetCVar("AEGtValues"));	//pulls the console variable
-		
-}
-
-Script "s912" (void)
-{
-	SetResultValue(GetCVar("AEGtValues"));
-}
-
-script "s913" (void)
-{
-	HUDMessage(s:"ACS variable is: ",d:AEoDThemeType; HUDMSG_PLAIN,5,CR_GREEN,0.5,1.0,2.0);
-	HUDMessage(s:"Console variable is: ",d:GetCVar("AEGtValues"); HUDMSG_PLAIN,6,CR_GREEN,0.5,0.9,2.0);
-}
-
 Script "L4DCountHudSwitcher" (void)
 {
 	if (CheckInventory("L4DCountHudToken"))
@@ -374,7 +350,14 @@ script "s915" (void)
 	GiveInventory("L4DCountToggler",1);
 }
 
-#define number_of_games_and_cvars 17
+//==============================================================================
+//==============================================================================
+//				Monster Spawner Setup Scripts
+//==============================================================================
+//==============================================================================
+
+
+#define number_of_games_and_cvars 20
 
 str CVarsToGames[number_of_games_and_cvars][3] = {
 		// Arrays hold:
@@ -383,33 +366,41 @@ str CVarsToGames[number_of_games_and_cvars][3] = {
 		//		0 -- activate normal theme
 		// 		1 -- activate magic theme
 		//		2 -- activate tech theme
-		//		3 -- reserved for future major theme
+		//		3 -- non-theme mixed game monsters
 		//		4 -- not increment ThemeMix
 		//		5 -- same as above AND give JokeToken AND activate joke theme
-		{"user_Doom",		"Doom",		"0"},
-		{"user_Blood",		"Blood",	"0"},
-		{"user_Duke",		"DN3D",		"0"},
-		{"user_HL",			"HL",		"2"},
-		{"user_HL2",		"HL2",		"2"},
-		{"user_Heretic",	"Heretic",	"1"},
-		{"user_Hexen",		"Hexen",	"1"},
-		{"user_Hexen2",		"Hexen2",	"1"},
-		{"user_MM",			"MM",		"1"},
-		{"user_Powerslave","Powerslave","0"},
-		{"user_Quake1",		"Quake1",	"0"},
-		{"user_Quake2",		"Quake2",	"2"},
-		{"user_Quake4",		"Quake4",	"2"},
-		{"user_SW",		"ShadowWarr",	"0"},
-		{"user_Strife",		"Strife",	"2"},
-		{"user_L4DMon",		"L4DMon",	"4"},
-		{"user_Joke",		"JokeMode",	"5"}
-		};
+		{"user_Doom",		"Doom",			"0"},
+		{"user_Doom64",		"Doom64",		"3"},
+		{"user_Blood",		"Blood",		"0"},
+		{"user_Duke",		"DN3D",			"0"},
+		{"user_HL",			"HL",			"2"},
+		{"user_HL2",		"HL2",			"2"},
+		{"user_Hellspawn",	"Hellspawn",	"3"},
+		{"user_Heretic",	"Heretic",		"1"},
+		{"user_Hexen",		"Hexen",		"1"},
+		{"user_Hexen2",		"Hexen2",		"1"},
+		{"user_MM",			"MM",			"1"},
+		{"user_Powerslave",	"Powerslave",	"0"},
+		{"user_Quake1",		"Quake1",		"0"},
+		{"user_Quake2",		"Quake2",		"2"},
+		{"user_Quake4",		"Quake4",		"2"},
+		{"user_ROTT",		"ROTT",			"3"},
+		{"user_SW",			"ShadowWarr",	"0"},
+		{"user_Strife",		"Strife",		"2"},
+		{"user_L4DMon",		"L4DMon",		"3"},
+		{"user_Joke",		"JokeMode",		"5"}
+};
 
+#define monTypes 5
+str MiniMode[monTypes][2]; 
+Int MiniCount;
+bool MiniThemeEnabled;
 
 Script "SpawnerSetup" enter
 {
 	if (!(ScriptSetup))
 	{
+		MiniThemeEnabled = false;
 		// modes
 		L4DMode = false;		MonsterMayhem = false;
 		// directors
@@ -420,11 +411,15 @@ Script "SpawnerSetup" enter
 		// counters
 		ActiveCount = 0;		ThemeMix = 0;
 		
-		
 		if (GetCvar("user_MonsterMayhem"))
 			MonsterMayhem = true;
 		if (GetCvar("user_L4DMode"))
 		{
+			if (GetCvar("user_JokeMode"))
+			{
+				GiveInventory("JokeToken",1);
+				JokeTheme = true;
+			}
 			L4DMode = true;
 			L4DDir = true;
 			NormalTheme = true;
@@ -449,18 +444,31 @@ Script "SpawnerSetup" enter
 				
 				// Select Case
 				if(!(StrCmp(CVarsToGames[i][2],"0")))	NormalTheme = true;
-				if(!(StrCmp(CVarsToGames[i][2],"1")))	MagicTheme = true;
-				if(!(StrCmp(CVarsToGames[i][2],"2")))	TechTheme = true;
-				
-				if(!(StrCmp(CVarsToGames[i][2],"4")))	ThemeMix--;
-				if(!(StrCmp(CVarsToGames[i][2],"5")))
+				else if(!(StrCmp(CVarsToGames[i][2],"1")))	MagicTheme = true;
+				else if(!(StrCmp(CVarsToGames[i][2],"2")))	TechTheme = true;
+				else if(!(StrCmp(CVarsToGames[i][2],"3")))	
+				{
+					MiniMode[MiniCount][0] = CVarsToGames[i][0];
+					MiniMode[MiniCount][1] = CVarsToGames[i][1];
+					MiniThemeEnabled = true;
+					MiniCount++;
+					ActiveCount--;
+					ThemeMix--;
+					GameModeCh[ActiveCount] = "";
+				}
+				else if(!(StrCmp(CVarsToGames[i][2],"4")))	ThemeMix--;
+				else if(!(StrCmp(CVarsToGames[i][2],"5")))
 				{	
 					JokeTheme = true;	
 					GiveInventory("JokeToken",1);
+					MiniMode[MiniCount][0] = CVarsToGames[i][0];
+					MiniMode[MiniCount][1] = CVarsToGames[i][1];
+					ActiveCount--;
 					ThemeMix--;
+					GameModeCh[ActiveCount] = "";
 				}
 			}
-
+		
 		ScriptSetup = true;
 	}
 }
@@ -471,7 +479,11 @@ Script "SpawnDeployMonster" (int nojoke)
 	// 1 = No joke monsters available
 	// 2 = No L4D monsters available
 	// 3 = both 1 and 2
-	int roll;	
+	int roll = 0; 
+	int miniroll = 0;
+	int timeout = 0;
+	bool stateSet = false;
+	bool NoMoreMini = false;
 	
 	if (!ScriptSetup)
 		Delay(1);
@@ -481,8 +493,53 @@ Script "SpawnDeployMonster" (int nojoke)
 		SetActorState(0,"L4D",1);
 		Terminate;
 	}
+	else if ((ThemeMix + MiniCount) >= 19 || !(ThemeMix))
+	{
+		if (JokeTheme)
+			SetActorState(0,"Joke",1);
+		else
+			SetActorState(0,"ClassicAEoD",1);
+		Terminate;
+	}
 	else
 	{
+		while (timeout < 100)
+		{
+			//Because that'd be retarded to have to go through the script over a 
+			//hundred fucking times.
+			//NO THANK YOU.
+			if (timeout >= 95)
+				NoMoreMini = true; 
+			//Give up trying to roll the mini. It's stupid to not land on it properly.
+				
+			if (MiniThemeEnabled && !NoMoreMini)
+				roll = random(0,(ThemeMix+MiniCount));
+			else
+				roll = random(0,ThemeMix);
+				
+			if (roll > ThemeMix)
+			{
+				miniroll = roll - ThemeMix;
+				//We NEED this if statement. SetActorState returns a number of 
+				//those who were affected. Without it, it might not spawn a monster.
+				if ((SetActorState(0,MiniMode[miniroll][1],1))) 
+				{
+					Terminate;
+				}
+			}
+			else
+			{
+				SetActorState(0,GameModeCh[roll],1);
+				Terminate;
+			}
+			timeout++;
+		}
+		//Shouldn't ever happen, but just in case. What with memory corruption or
+		//something, better to be safe than sorry.
+		if (timeout >= 100)
+			SetActorState(0,"ClassicAEoD",1);
+	}
+	/*{
 		if ((nojoke == 1) && (ThemeMix == 1) && (JokeTheme))
 			roll = 0;
 		else if ((nojoke == 1) && (ThemeMix > 1) && (JokeTheme))
@@ -516,7 +573,7 @@ Script "SpawnDeployMonster" (int nojoke)
 			}
 			SetActorState(0,GameModeCh[roll],1);
 		}
-	}
+	}*/
 }
 
 //I cannot believe I had to resort to such methods.
