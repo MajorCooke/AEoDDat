@@ -463,6 +463,7 @@ Script "SpawnerSetup" enter
 					GiveInventory("JokeToken",1);
 					MiniMode[MiniCount][0] = CVarsToGames[i][0];
 					MiniMode[MiniCount][1] = CVarsToGames[i][1];
+					MiniCount++;
 					ActiveCount--;
 					ThemeMix--;
 					GameModeCh[ActiveCount] = "";
@@ -475,14 +476,13 @@ Script "SpawnerSetup" enter
 
 Script "SpawnDeployMonster" (int nojoke)
 {
-	// nojoke
+	// nojoke - No longer used.
 	// 1 = No joke monsters available
 	// 2 = No L4D monsters available
 	// 3 = both 1 and 2
 	int roll = 0; 
 	int miniroll = 0;
 	int timeout = 0;
-	bool stateSet = false;
 	bool NoMoreMini = false;
 	
 	if (!ScriptSetup)
@@ -519,7 +519,7 @@ Script "SpawnDeployMonster" (int nojoke)
 				
 			if (roll > ThemeMix)
 			{
-				miniroll = roll - ThemeMix;
+				miniroll = random(0,MiniCount);
 				//We NEED this if statement. SetActorState returns a number of 
 				//those who were affected. Without it, it might not spawn a monster.
 				if ((SetActorState(0,MiniMode[miniroll][1],1))) 
@@ -537,9 +537,16 @@ Script "SpawnDeployMonster" (int nojoke)
 		//Shouldn't ever happen, but just in case. What with memory corruption or
 		//something, better to be safe than sorry.
 		if (timeout >= 100)
-			SetActorState(0,"ClassicAEoD",1);
+		{
+			if (JokeTheme)
+				SetActorState(0,"Joke",1);
+			else
+				SetActorState(0,"ClassicAEoD",1);
+		}
 	}
-	/*{
+}
+
+/*{
 		if ((nojoke == 1) && (ThemeMix == 1) && (JokeTheme))
 			roll = 0;
 		else if ((nojoke == 1) && (ThemeMix > 1) && (JokeTheme))
@@ -574,7 +581,6 @@ Script "SpawnDeployMonster" (int nojoke)
 			SetActorState(0,GameModeCh[roll],1);
 		}
 	}*/
-}
 
 //I cannot believe I had to resort to such methods.
 Script "SpawnDeployWeapons" (int nojoke)
