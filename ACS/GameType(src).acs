@@ -410,6 +410,7 @@ Script "SpawnerSetup" enter
 		MagicTheme = false;		JokeTheme = false;
 		// counters
 		ActiveCount = 0;		ThemeMix = 0;
+		MiniCount = 0;
 		
 		if (GetCvar("user_MonsterMayhem"))
 			MonsterMayhem = true;
@@ -438,11 +439,7 @@ Script "SpawnerSetup" enter
 		for(int i=0; i<number_of_games_and_cvars; i++)
 		{
 			if (GetCvar(CVarsToGames[i][0]))
-			{
-				GameModeCh[ActiveCount] = CVarsToGames[i][1];
-				ActiveCount++;
-				ThemeMix++;
-				
+			{				
 				// Select Case
 				if(!(StrCmp(CVarsToGames[i][2],"0")))
 				{
@@ -477,6 +474,7 @@ Script "SpawnerSetup" enter
 					JokeTheme = true;	
 					GiveInventory("JokeToken",1);
 					MiniMode[MiniCount] = CVarsToGames[i][1];
+					MiniThemeEnabled = true;
 					MiniCount++;
 				}
 			}
@@ -495,7 +493,6 @@ Script "SpawnDeployMonster" (int nojoke)
 	int roll = 0; 
 	int miniroll = 0;
 	int timeout = 0;
-	bool NoMoreMini = false;
 	
 	if (!ScriptSetup)
 		Delay(1);
@@ -515,8 +512,8 @@ Script "SpawnDeployMonster" (int nojoke)
 	}
 	else
 	{
-		if (MiniThemeEnabled && !NoMoreMini)
-			roll = random(0,(ThemeMix+MiniCount));
+		if (MiniThemeEnabled)
+			roll = random(0,(ThemeMix+MiniCount)-1);
 		else
 			roll = random(0,ThemeMix);
 		if (roll > ThemeMix)
