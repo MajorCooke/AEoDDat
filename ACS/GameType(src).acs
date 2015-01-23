@@ -392,7 +392,7 @@ str CVarsToGames[number_of_games_and_cvars][3] = {
 };
 
 #define monTypes 5
-str MiniMode[monTypes][2]; 
+str MiniMode[monTypes]; 
 Int MiniCount;
 bool MiniThemeEnabled;
 
@@ -436,6 +436,7 @@ Script "SpawnerSetup" enter
 
 		
 		for(int i=0; i<number_of_games_and_cvars; i++)
+		{
 			if (GetCvar(CVarsToGames[i][0]))
 			{
 				GameModeCh[ActiveCount] = CVarsToGames[i][1];
@@ -443,37 +444,48 @@ Script "SpawnerSetup" enter
 				ThemeMix++;
 				
 				// Select Case
-				if(!(StrCmp(CVarsToGames[i][2],"0")))	NormalTheme = true;
-				else if(!(StrCmp(CVarsToGames[i][2],"1")))	MagicTheme = true;
-				else if(!(StrCmp(CVarsToGames[i][2],"2")))	TechTheme = true;
+				if(!(StrCmp(CVarsToGames[i][2],"0")))
+				{
+					GameModeCh[ActiveCount] = CVarsToGames[i][1];
+					ActiveCount++;
+					ThemeMix++;
+					NormalTheme = true;
+				}
+				else if(!(StrCmp(CVarsToGames[i][2],"1")))	
+				{
+					GameModeCh[ActiveCount] = CVarsToGames[i][1];
+					ActiveCount++;
+					ThemeMix++;
+					MagicTheme = true;
+				}
+				else if(!(StrCmp(CVarsToGames[i][2],"2")))	
+				{
+					GameModeCh[ActiveCount] = CVarsToGames[i][1];
+					ActiveCount++;
+					ThemeMix++;
+					TechTheme = true;
+				}
 				else if(!(StrCmp(CVarsToGames[i][2],"3")))	
 				{
-					MiniMode[MiniCount][0] = CVarsToGames[i][0];
-					MiniMode[MiniCount][1] = CVarsToGames[i][1];
+					MiniMode[MiniCount] = CVarsToGames[i][1];
 					MiniThemeEnabled = true;
 					MiniCount++;
-					ActiveCount--;
-					ThemeMix--;
-					GameModeCh[ActiveCount] = "";
 				}
-				else if(!(StrCmp(CVarsToGames[i][2],"4")))	ThemeMix--;
+				//else if(!(StrCmp(CVarsToGames[i][2],"4")))	ThemeMix--;
 				else if(!(StrCmp(CVarsToGames[i][2],"5")))
 				{	
 					JokeTheme = true;	
 					GiveInventory("JokeToken",1);
-					MiniMode[MiniCount][0] = CVarsToGames[i][0];
-					MiniMode[MiniCount][1] = CVarsToGames[i][1];
+					MiniMode[MiniCount] = CVarsToGames[i][1];
 					MiniCount++;
-					ActiveCount--;
-					ThemeMix--;
-					GameModeCh[ActiveCount] = "";
 				}
 			}
-		
+		}
 		ScriptSetup = true;
 	}
 }
 
+#define timeout_max 50
 Script "SpawnDeployMonster" (int nojoke)
 {
 	// nojoke - No longer used.
@@ -503,46 +515,35 @@ Script "SpawnDeployMonster" (int nojoke)
 	}
 	else
 	{
-		while (timeout < 100)
+		if (MiniThemeEnabled && !NoMoreMini)
+			roll = random(0,(ThemeMix+MiniCount));
+		else
+			roll = random(0,ThemeMix);
+		if (roll > ThemeMix)
 		{
-			//Because that'd be retarded to have to go through the script over a 
-			//hundred fucking times.
-			//NO THANK YOU.
-			if (timeout >= 95)
-				NoMoreMini = true; 
-			//Give up trying to roll the mini. It's stupid to not land on it properly.
-				
-			if (MiniThemeEnabled && !NoMoreMini)
-				roll = random(0,(ThemeMix+MiniCount));
-			else
-				roll = random(0,ThemeMix);
-				
-			if (roll > ThemeMix)
+			while (timeout < timeout_max)
 			{
-				miniroll = random(0,MiniCount);
-				//We NEED this if statement. SetActorState returns a number of 
-				//those who were affected. Without it, it might not spawn a monster.
-				if ((SetActorState(0,MiniMode[miniroll][1],1))) 
+				//Give up trying to roll the mini. It's stupid to not land on it properly.
+				if (timeout >= timeout_max-1)
 				{
-					Terminate;
+					roll = random(0,ThemeMix);
+					timeout = timeout_max;
+				}
+				else
+				{
+					miniroll = random(0,MiniCount);
+					//We NEED this if statement. SetActorState returns a number of 
+					//those who were affected. Without it, it might not spawn a monster.
+					if ((SetActorState(0,MiniMode[miniroll],1))) 
+					{
+						Terminate;
+					}
+					timeout++;
 				}
 			}
-			else
-			{
-				SetActorState(0,GameModeCh[roll],1);
-				Terminate;
-			}
-			timeout++;
 		}
-		//Shouldn't ever happen, but just in case. What with memory corruption or
-		//something, better to be safe than sorry.
-		if (timeout >= 100)
-		{
-			if (JokeTheme)
-				SetActorState(0,"Joke",1);
-			else
-				SetActorState(0,"ClassicAEoD",1);
-		}
+		//Fallback in case if the miniroll fails to find an appropriate state.
+		SetActorState(0,GameModeCh[roll],1);		
 	}
 }
 
