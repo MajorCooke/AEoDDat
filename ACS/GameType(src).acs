@@ -493,9 +493,13 @@ Script "SpawnDeployMonster" (int nojoke)
 	int roll = 0; 
 	int miniroll = 0;
 	int timeout = 0;
+	int tm = 0;
+	int mc = 0;
 	
 	if (!ScriptSetup)
 		Delay(1);
+	
+	
 	
 	if (L4DMode) //Overrides everything else. L4DMode calls priority.
 	{
@@ -512,23 +516,27 @@ Script "SpawnDeployMonster" (int nojoke)
 	}
 	else
 	{
+		tm = ThemeMix-1;
 		if (MiniThemeEnabled)
-			roll = random(0,(ThemeMix+MiniCount)-1);
+		{
+			mc = MiniCount-1;
+			roll = random(0,(tm+mc));
+		}
 		else
-			roll = random(0,ThemeMix);
-		if (roll > ThemeMix)
+			roll = random(0,tm);
+		if (roll > tm)
 		{
 			while (timeout < timeout_max)
 			{
 				//Give up trying to roll the mini. It's stupid to not land on it properly.
 				if (timeout >= timeout_max-1)
 				{
-					roll = random(0,ThemeMix);
+					roll = random(0,tm);
 					timeout = timeout_max;
 				}
 				else
 				{
-					miniroll = random(0,MiniCount);
+					miniroll = random(0,mc);
 					//We NEED this if statement. SetActorState returns a number of 
 					//those who were affected. Without it, it might not spawn a monster.
 					if ((SetActorState(0,MiniMode[miniroll],1))) 
