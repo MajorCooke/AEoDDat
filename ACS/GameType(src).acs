@@ -357,7 +357,7 @@ script "s915" (void)
 //==============================================================================
 
 
-#define number_of_games_and_cvars 20
+#define number_of_games_and_cvars 21
 
 str CVarsToGames[number_of_games_and_cvars][3] = {
 		// Arrays hold:
@@ -367,10 +367,11 @@ str CVarsToGames[number_of_games_and_cvars][3] = {
 		// 		1 -- activate magic theme
 		//		2 -- activate tech theme
 		//		3 -- non-theme mixed game monsters
-		//		4 -- not increment ThemeMix
+		//		4 -- reserved for future use
 		//		5 -- same as above AND give JokeToken AND activate joke theme
 		{"user_Doom",		"Doom",			"0"},
 		{"user_Doom64",		"Doom64",		"3"},
+		{"user_Dm64",		"Dm64",			"3"},
 		{"user_Blood",		"Blood",		"0"},
 		{"user_Duke",		"DN3D",			"0"},
 		{"user_HL",			"HL",			"2"},
@@ -391,7 +392,7 @@ str CVarsToGames[number_of_games_and_cvars][3] = {
 		{"user_Joke",		"JokeMode",		"5"}
 };
 
-#define monTypes 5
+#define monTypes 6
 str MiniMode[monTypes]; 
 Int MiniCount;
 bool MiniThemeEnabled;
@@ -468,7 +469,7 @@ Script "SpawnerSetup" enter
 					MiniThemeEnabled = true;
 					MiniCount++;
 				}
-				//else if(!(StrCmp(CVarsToGames[i][2],"4")))	ThemeMix--;
+				//else if(!(StrCmp(CVarsToGames[i][2],"4")))	do something;
 				else if(!(StrCmp(CVarsToGames[i][2],"5")))
 				{	
 					JokeTheme = true;	
@@ -498,7 +499,6 @@ Script "SpawnDeployMonster" (int nojoke)
 	
 	if (!ScriptSetup)
 		Delay(1);
-	
 	
 	
 	if (L4DMode) //Overrides everything else. L4DMode calls priority.
