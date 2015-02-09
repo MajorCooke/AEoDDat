@@ -357,7 +357,7 @@ script "s915" (void)
 //==============================================================================
 
 
-#define number_of_games_and_cvars 21
+#define number_of_games_and_cvars 20
 
 str CVarsToGames[number_of_games_and_cvars][3] = {
 		// Arrays hold:
@@ -367,11 +367,11 @@ str CVarsToGames[number_of_games_and_cvars][3] = {
 		// 		1 -- activate magic theme
 		//		2 -- activate tech theme
 		//		3 -- non-theme mixed game monsters
-		//		4 -- not increment ThemeMix
+		//		4 -- Unused.
 		//		5 -- same as above AND give JokeToken AND activate joke theme
 		{"user_Doom",		"Doom",			"0"},
-		{"user_Doom64",		"Doom64",		"3"},
 		{"user_Dm64",		"Dm64",			"3"},
+//		{"user_Doom64",		"Doom64",		"3"},
 		{"user_Blood",		"Blood",		"0"},
 		{"user_Duke",		"DN3D",			"0"},
 		{"user_HL",			"HL",			"2"},
@@ -392,7 +392,7 @@ str CVarsToGames[number_of_games_and_cvars][3] = {
 		{"user_Joke",		"JokeMode",		"5"}
 };
 
-#define monTypes 6
+#define monTypes 5
 str MiniMode[monTypes]; 
 global Int 18: MiniCount;
 global bool 19: MiniThemeEnabled;
@@ -500,8 +500,6 @@ Script "SpawnDeployMonster" (int nojoke)
 	if (!ScriptSetup)
 		Delay(1);
 	
-	
-	
 	if (L4DMode) //Overrides everything else. L4DMode calls priority.
 	{
 		SetActorState(0,"L4D",1);
@@ -552,42 +550,6 @@ Script "SpawnDeployMonster" (int nojoke)
 		SetActorState(0,GameModeCh[roll],1);		
 	}
 }
-
-/*{
-		if ((nojoke == 1) && (ThemeMix == 1) && (JokeTheme))
-			roll = 0;
-		else if ((nojoke == 1) && (ThemeMix > 1) && (JokeTheme))
-			roll = random(0,ActiveCount-2); //Don't roll joke chance. I'm doing it this way
-		else //because joke mode is conveniently at the end of the list.
-			roll = random(0,ActiveCount-1); //Roll joke chance.
-		if (ThemeMix == 0 || ((ThemeMix >= 15) && (!(JokeTheme)))) //Don't let zero themes dominate. Will cause nasty issues otherwise.
-		{
-			SetActorState(0,"ClassicAEoD",1);
-		}
-		else if ((ThemeMix >= 15) && (JokeTheme) && (nojoke != 1) && (nojoke != 3)) //Don't bother rolling.
-		{
-			SetActorState(0,"Joke",1);
-		}
-		else
-		{
-			if (nojoke == 2)
-			{
-				while (GameModeCh[roll] == "L4DMon")
-					roll = random(0,ActiveCount-1); //Reroll until we get anything but L4DMon.
-			}
-			else if (nojoke == 1)
-			{
-				if (ThemeMix == 1)
-					roll = 0;
-				else
-				{
-					while (GameModeCh[roll] == "JokeMode")
-						roll = random(0,ActiveCount-2); //Reroll until we get anything but JokeMode.
-				}
-			}
-			SetActorState(0,GameModeCh[roll],1);
-		}
-	}*/
 
 //I cannot believe I had to resort to such methods.
 Script "SpawnDeployWeapons" (int nojoke)
