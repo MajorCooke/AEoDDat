@@ -357,6 +357,7 @@ script "s915" (void)
 //==============================================================================
 
 
+
 #define number_of_games_and_cvars 20
 
 str CVarsToGames[number_of_games_and_cvars][3] = {
@@ -551,22 +552,31 @@ Script "SpawnDeployMonster" (int nojoke)
 	}
 }
 
-//I cannot believe I had to resort to such methods.
-
 Script "SpawnDeployWeapons" (int nojoke)
 {
+	if (L4DMode || (ThemeMix >= 15) || !(ThemeMix) || ((NormalTheme) && (MagicTheme) && (TechTheme)))
+	{
+		if (JokeTheme)
+		{
+			if (!(SetActorState(0,"Joke",1)))
+				SetActorState(0,"C_AEoD",1);
+		}
+		else
+			SetActorState(0,"C_AEoD",1);
+		Terminate;
+	}
+	bool reloop = true;
+	bool jk = JokeTheme;
 	//							log(s:". . . . SpawnDeployWeapons");
-	int roll = random(1,24); 	// Why 24 I hear you asking?
+	int roll = random(1,6); 	// Why 24 I hear you asking?
 				// I needed anything significantly greater than 2, 3 and 4, so
 				// 2 * 3 * 4 seemed viable. I could go for 255 or 666 or anything.
 	//							log(s:"roll = ",d:roll);
 	
 	if (!ScriptSetup)
 		Delay(1);
-		
+	
 	int bf = 	// Bit Field
-			L4DMode 	<< 4 +
-			JokeTheme 	<< 3 +
 			TechTheme 	<< 2 +
 			MagicTheme	<< 1 +
 			NormalTheme << 0;
@@ -574,13 +584,6 @@ Script "SpawnDeployWeapons" (int nojoke)
 			
 	// Bitfield can be 0..31 as it represents 5 bits.
 	// Bitfield > 15 (or, in other words, 16..31) signifies L4D mode.
-	if (bf > 15 && bf < 32)
-		if (bf > 23)
-			if (!SetActorState(0,"Joke",1))		// if there's no Joke state,
-				SetActorState(0,"C_AEoD",1);	// resort to CAE.
-		else
-			SetActorState(0,"C_AEoD",1);
-	else
 		switch(bf)
 		{
 			// Here, I use %= (assign remainder) operation to get uniformly 
@@ -596,116 +599,71 @@ Script "SpawnDeployWeapons" (int nojoke)
 			// For our example, roll becomes 0.
 			
 				// zeroes
-			
-			case  0:	// Nothing nothing nothing! How comes?
+				
+			case 0:	// Nothing nothing nothing! How comes?
+				// I'll tell you why, Michaelis. It's cause no themes selected.
 				// Default to Classic AEoD
 				SetActorState(0,"C_AEoD",1);
-				break;
+				Terminate;
 				
 				// ones
 				
-			case  1:	// Only Normal theme.
-				SetActorState(0,"Normal",1);
-				break;
+			case 1:	// Only Normal theme.
+				roll = random(0,JokeTheme);
+				if (roll && SetActorState(0,"JokeMode",1))
+					Terminate;
+				else SetActorState(0,"Normal",1);
+				Terminate;
 			case  2:	// Only Magic theme.
-				SetActorState(0,"Magic",1);
-				break;
+				roll = random(0,JokeTheme);
+				if (roll && SetActorState(0,"JokeMode",1))
+					Terminate;
+				else SetActorState(0,"Magic",1);
+				Terminate;
 			case  4:	// Only Tech theme.
-				SetActorState(0,"Tech",1);
-				break;
-			case  8:	// Only Joke theme.
-				if (!SetActorState(0,"Joke",1))		// if there's no Joke state, it's CAE
-					SetActorState(0,"C_AEoD",1);	
-				break;
-				
+				roll = random(0,JokeTheme);
+				if (roll && SetActorState(0,"JokeMode",1))
+					Terminate;
+				else SetActorState(0,"Tech",1);
+				Terminate;				
 				// twos
 				
 			case  3:	// Magic + Normal
-				roll %= 2;
-				if(!roll)	SetActorState(0,"Magic",1);
-				else		SetActorState(0,"Normal",1);
-				break;
+				while (reloop)
+				{
+					if (!jk)	reloop = false;
+					roll = random(0,(1+jk));
+					if(roll == 0)	SetActorState(0,"Magic",1);
+					if(roll == 1)	SetActorState(0,"Normal",1);
+					if(roll >= 2 && (SetActorState(0,"JokeMode",1)))	
+						Terminate;
+					jk = false;
+				}
+				Terminate;
 			case  5:	// Tech + Normal
-				roll %= 2;
-				if(!roll)	SetActorState(0,"Tech",1);
-				else		SetActorState(0,"Normal",1);
-				break;
+				while (reloop)
+				{
+					if (!jk)	reloop = false;
+					roll = random(0,(1+jk));
+					if(roll == 0)	SetActorState(0,"Tech",1);
+					if(roll == 1)	SetActorState(0,"Normal",1);
+					if(roll >= 2 && (SetActorState(0,"JokeMode",1)))	
+						Terminate;
+					jk = false;
+				}
+				Terminate;
 			case  6:	// Tech + Magic
-				roll %= 2;
-				if(!roll)	SetActorState(0,"Tech",1);
-				else		SetActorState(0,"Magic",1);
-				break;
-			case  9:	// Joke + Normal
-				roll %= 2;
-				if(!roll)
-					if (!SetActorState(0,"Joke",1))		// if there's no Joke state, it's Normal
-						SetActorState(0,"Normal",1);	
-				if(roll == 1)	SetActorState(0,"Normal",1);
-				break;
-			case 10:	// Joke + Magic
-				roll %= 2;
-				if(!roll)
-					if (!SetActorState(0,"Joke",1))		// if there's no Joke state, it's Magic
-						SetActorState(0,"Magic",1);	
-				if(roll == 1)	SetActorState(0,"Magic",1);
-				break;
-			case 12:	// Joke + Tech
-				roll %= 2;
-				if(!roll)
-					if (!SetActorState(0,"Joke",1))		// if there's no Joke state, it's Tech
-						SetActorState(0,"Tech",1);	
-				if(roll == 1)
-					SetActorState(0,"Tech",1);
-				break;
-				
-				// threes
-				
-			case  7:	// All three!
-				roll %= 3;
-				if(roll == 0) SetActorState(0,"Tech",1);
-				if(roll == 1) SetActorState(0,"Magic",1);
-				if(roll == 2) SetActorState(0,"Normal",1);
-				break;
-			case 11:	// Joke + Magic + Normal
-				roll %= 3;
-				if(!roll)
-					if (!SetActorState(0,"Joke",1))		// if there's no Joke state,
-						if (random(0,1))				// pick Magic or Normal
-							 SetActorState(0,"Magic",1);
-						else SetActorState(0,"Normal",1);
-				if(roll == 1) SetActorState(0,"Magic",1);
-				if(roll == 2) SetActorState(0,"Normal",1);
-				break;
-			case 13:	// Joke + Tech + Normal
-				roll %= 3;
-				if(!roll)
-					if (!SetActorState(0,"Joke",1))		// if there's no Joke state,
-						if (random(0,1))				// pick Tech or Normal
-							 SetActorState(0,"Tech",1);
-						else SetActorState(0,"Normal",1);
-				if(roll == 1) SetActorState(0,"Tech",1);
-				if(roll == 2) SetActorState(0,"Normal",1);
-				break;
-			case 14:	// Joke + Tech + Magic
-				roll %= 3;
-				if(!roll)
-					if (!SetActorState(0,"Joke",1))		// if there's no Joke state,
-						if (random(0,1))				// pick Tech or Magic
-							 SetActorState(0,"Tech",1);
-						else SetActorState(0,"Magic",1);
-				if(roll == 1) SetActorState(0,"Tech",1);
-				if(roll == 2) SetActorState(0,"Magic",1);
-				break;
-			case 15:	// All four!
-				roll %= 4;
-				if(!roll)
-					if (!SetActorState(0,"Joke",1))		// if there's no Joke state,
-						if (!random(0,2))				// pick any other
-							 SetActorState(0,"Tech",1);
-						else SetActorState(0,"Magic",1);
-				if(roll == 1) SetActorState(0,"Tech",1);
-				if(roll == 2) SetActorState(0,"Magic",1);
-				break;
+				while (reloop)
+				{
+					if (!jk)	reloop = false;
+					roll = random(0,(1+jk));
+					if(roll == 0)	SetActorState(0,"Magic",1);
+					if(roll == 1)	SetActorState(0,"Tech",1);
+					if(roll >= 2 && (SetActorState(0,"JokeMode",1)))	
+						Terminate;
+					jk = false;
+				}
+				Terminate;
 				
 				// wtfs
 				
