@@ -1,7 +1,8 @@
 ACTOR DirectorSpawner : CustomInventory
 {
-	+INVENTORY.AUTOACTIVATE
-	Inventory.MaxAmount 1
+	+AUTOACTIVATE
+	+ALWAYSPICKUP
+	Inventory.MaxAmount 0
 	States
 	{
 	Spawn:
@@ -27,7 +28,9 @@ Actor RemoveDirector : Inventory
 
 Actor LargeCooldown : CustomInventory
 {
-	+INVENTORY.AUTOACTIVATE
+	+AUTOACTIVATE
+	+ALWAYSPICKUP
+	Inventory.MaxAmount 0
 	States
 	{
 	Use:
@@ -38,7 +41,9 @@ Actor LargeCooldown : CustomInventory
 
 Actor MediumCooldown : CustomInventory
 {
-	+INVENTORY.AUTOACTIVATE
+	+AUTOACTIVATE
+	+ALWAYSPICKUP
+	Inventory.MaxAmount 0
 	States
 	{
 	Use:
@@ -49,7 +54,9 @@ Actor MediumCooldown : CustomInventory
 
 Actor SmallCooldown : CustomInventory
 {
-	+INVENTORY.AUTOACTIVATE
+	+AUTOACTIVATE
+	+ALWAYSPICKUP
+	Inventory.MaxAmount 0
 	States
 	{
 	Use:
@@ -60,7 +67,9 @@ Actor SmallCooldown : CustomInventory
 
 Actor CooldownEnable1 : CustomInventory
 {
-	+INVENTORY.ALWAYSPICKUP
+	+AUTOACTIVATE
+	+ALWAYSPICKUP
+	Inventory.MaxAmount 0
 	States
 	{
 	Pickup:
@@ -71,7 +80,9 @@ Actor CooldownEnable1 : CustomInventory
 
 Actor CooldownEnable2 : CustomInventory
 {
-	+INVENTORY.ALWAYSPICKUP
+	+AUTOACTIVATE
+	+ALWAYSPICKUP
+	Inventory.MaxAmount 0
 	States
 	{
 	Pickup:
@@ -82,7 +93,9 @@ Actor CooldownEnable2 : CustomInventory
 
 Actor CooldownDisable1 : CustomInventory
 {
-	+INVENTORY.ALWAYSPICKUP
+	+AUTOACTIVATE
+	+ALWAYSPICKUP
+	Inventory.MaxAmount 0
 	States
 	{
 	Pickup:
@@ -93,7 +106,9 @@ Actor CooldownDisable1 : CustomInventory
 
 Actor CooldownDisable2 : CustomInventory
 {
-	+INVENTORY.ALWAYSPICKUP
+	+AUTOACTIVATE
+	+ALWAYSPICKUP
+	Inventory.MaxAmount 0
 	States
 	{
 	Pickup:
@@ -250,7 +265,6 @@ Actor MCLargeMobRunner
 	var int user_boss[2];
 	//[0] = Cyberdemon or Spider Mastermind?
 	//[1] = Have we chosen to spawn the big baddies above?
-	var int user_check[3];
 	var int user_dlimit;
 	var int user_x[3];
 	var int user_y[3];
@@ -281,8 +295,8 @@ Actor MCLargeMobRunner
 	MaxDropOffHeight 128
 	MaxStepHeight 128
 	Speed 7
-	Radius 50
-	Height 50
+	Radius 100
+	Height 100
 	Health 1000000
 	DamageFactor "Normal", 0.0
 	DamageFactor "DirectorKiller", 32767
@@ -302,9 +316,6 @@ Actor MCLargeMobRunner
 		TNT1 A 0 A_SetUserArray("user_x",0,x)
 		TNT1 A 0 A_SetUserArray("user_y",0,y)
 	Wanderbout:
-		TNT1 A 0 Thing_ChangeTID(0,32666)
-		TNT1 A 0 A_SetUserArray("user_check",0,0)
-		TNT1 A 0 A_SetUserArray("user_check",1,0)
 		TNT1 A 0 A_JumpIfInventory("DirectorIsLeaving",1,"Death",AAPTR_MASTER)
 		TNT1 A 0 A_JumpIfInventory("RemoveDirector",1,"Death",AAPTR_TARGET)
 		TNT1 A 0 A_JumpIfInventory("FreezeDirector",1,"Frozen",AAPTR_TARGET)
@@ -329,35 +340,32 @@ Actor MCLargeMobRunner
 		TNT1 A 0 A_JumpIf(user_boss[0]==1,"CyberdemonSpawn")
 		Goto SpiderMasterMindSpawn
 	CyberdemonSpawn:
-		TNT1 A 0 //A_Log("Cyberdemon")
-		TNT1 A 0 A_SpawnItemEx("CyberdemonReplacer",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID)
-		TNT1 A 0 A_JumpIf(tid!=0,"Wanderbout") //Means the actor failed to spawn.
-		TNT1 A 0 //A_Log("Good")
+		TNT1 A 0 Thing_ChangeTID(0,32666)
+		TNT1 A 0 A_SpawnItemEx("CyberdemonReplacer",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID)
+		TNT1 A 0 A_JumpIf(tid!=0,"See") //Means the actor failed to spawn.
 		Goto Vanish //One-hit wonder. We really don't need these things spawning more than one.
 	SpiderMasterMindSpawn:
-		TNT1 A 0 //A_Log("Spider Mastermind")
-		TNT1 A 0 A_SpawnItemEx("SpiderMastermindReplacer",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID)
-		TNT1 A 0 A_JumpIf(tid!=0,"Wanderbout")
-		TNT1 A 0 //A_Log("Good")
+		TNT1 A 0 Thing_ChangeTID(0,32666)
+		TNT1 A 0 A_SpawnItemEx("SpiderMastermindReplacer",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID)
+		TNT1 A 0 A_JumpIf(tid!=0,"See")
 		Goto Vanish
 	ArchvileSpawn:
-		TNT1 A 0 //A_Log("Archvile")
-		TNT1 A 0 A_SpawnItemEx("ArchvileReplacer",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID)
-		TNT1 A 0 A_JumpIf(tid!=0,"Wanderbout")
+		TNT1 A 0 Thing_ChangeTID(0,32666)
+		TNT1 A 0 A_SpawnItemEx("ArchvileReplacer",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID)
+		TNT1 A 0 A_JumpIf(tid!=0,"See")
 		Goto CountUp
 	CountUp:
-		TNT1 A 0 //A_Log("Good")
 		TNT1 A 0 A_SetUserVar("user_dlimit",user_dlimit+1)
 		TNT1 A 0 A_JumpIf(user_dlimit>=4,"Vanish")
-		Goto Wanderbout
+		Goto See
 	Vanish:
 		TNT1 A 0 //A_Log("Big Loot")
 		TNT1 A 0 A_GiveInventory("CooldownDisable1",1,AAPTR_MASTER)
 		TNT1 A 0 A_GiveInventory("LargeCooldown",1,AAPTR_MASTER)
 		TNT1 A 0 A_DropItem("AEoD6SpellSpawner",1,4)
-		TNT1 A 0 A_DropItem("BFGReplacer",1,76)
-		TNT1 A 0 A_DropItem("PlasmaRifleReplacer",1,116)
-		TNT1 A 0 A_DropItem("RocketLauncherReplacer",1,116)
+		TNT1 A 0 A_DropItem("BFGReplacer",1,128)
+		TNT1 A 0 A_DropItem("PlasmaRifleReplacer",1,128)
+		TNT1 A 0 A_DropItem("RocketLauncherReplacer",1,128)
 		TNT1 A 0 A_DropItem("ChaingunReplacer",1,128)
 		TNT1 A 0 A_DropItem("SSGReplacer",1,128)
 		TNT1 A 0 A_DropItem("ShotgunReplacer",1,128)
@@ -373,7 +381,6 @@ Actor MCLargeMobRunner
 		Stop
 	Stuck:
 		TNT1 A 0 A_GiveInventory("CooldownDisable1",1,AAPTR_MASTER)
-		TNT1 A 0 //ACS_NamedExecuteAlways("DirectorLimiter",0,4,0)
 		Stop
 	Frozen:
 		TNT1 A 35 A_Stop
@@ -392,7 +399,6 @@ Actor MCMediumMobRunner
 {
 	Radius 64
 	Height 40
-	var int user_check[2];
 	var int user_dlimit;
 	var int user_x[2];
 	var int user_y[2];
@@ -500,7 +506,7 @@ Actor MCMediumMobRunner
 		TNT1 A 0 A_JumpIfInventory("FreezeDirector",1,"Frozen",AAPTR_TARGET)
 		Goto See
 	Death:
-		TNT1 A 0 //ACS_NamedExecuteAlways("DirectorLimiter",0,4,0)
+		TNT1 A 0
 		Stop
 	}
 }
@@ -509,7 +515,6 @@ Actor MCSmallMobRunner
 {
 	Radius 30
 	Height 56
-	var int user_check[2];
 	var int user_dlimit;
 	var int user_x[2];
 	var int user_y[2];
@@ -555,8 +560,6 @@ Actor MCSmallMobRunner
 		Loop
 	See:
 	Wandering:
-		TNT1 A 0 A_SetUserArray("user_check",0,0)
-		TNT1 A 0 A_SetUserArray("user_check",1,0)
 		TNT1 A 0 A_JumpIfInventory("RemoveDirector",1,"Death",AAPTR_TARGET)
 		TNT1 A 0 A_JumpIfInventory("DirectorIsLeaving",1,"Death",AAPTR_MASTER)
 		TNT1 A 0 A_JumpIfInventory("FreezeDirector",1,"Frozen",AAPTR_TARGET)
@@ -596,7 +599,6 @@ Actor MCSmallMobRunner
 		TNT1 A 0 A_DropItem("SoulSphere",0,16)
 		TNT1 AAAAA 0 A_DropItem("Medikit",0,128)
 		TNT1 AAA 0 A_DropItem("PowerupsSpawnerReal",0,48)
-		TNT1 A 0 //ACS_NamedExecuteAlways("DirectorLimiter",0,2,0)
 		Stop
 	Frozen:
 		TNT1 A 35 A_Stop
@@ -605,7 +607,7 @@ Actor MCSmallMobRunner
 		TNT1 A 0 A_JumpIfInventory("FreezeDirector",1,"Frozen",AAPTR_TARGET)		
 		Goto See
 	Death:
-		TNT1 A 1 //ACS_NamedExecuteAlways("DirectorLimiter",0,2,0)
+		TNT1 A 1
 		Stop
 	}
 }
