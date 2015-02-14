@@ -340,10 +340,71 @@ script "s914" (int hudsizex, int hudsizey)
 script "AESoulCount" (void)
 {
 	int soulcount = CheckInventory("DMSoulCount");
-	SetHudSize(1024,768,0);
-	HudMessage(i:soulcount,s:"/666"; HUDMSG_PLAIN,766,CR_BROWN,512.1,10.1,0);
+	
+	if (soulcount >= 633)
+	{
+		ACS_NamedExecute("AESoulCountFlasher",0,0,0,0);		
+	}
+	else if (soulcount >= 600)
+	{
+		SetHudSize(1024,768,0);
+		ACS_NamedTerminate("AESoulCountFlasher",0);
+		SetFont("BIGFONT");
+		HudMessage(i:soulcount,s:"/666"; HUDMSG_PLAIN,765,CR_RED,512.0,10.0,0.5);
+		HudMessage(i:soulcount,s:"/666"; HUDMSG_PLAIN,766,CR_WHITE,512.0,10.0,0);
+	}
+	else
+	{
+		SetHudSize(1024,768,0);
+		ACS_NamedTerminate("AESoulCountFlasher",0);
+		SetFont("SMALLFONT");
+		HudMessage(i:soulcount,s:"/666"; HUDMSG_PLAIN,766,CR_GOLD,512.0,10.0,0);
+		HudMessage(s:""; HUDMSG_PLAIN,765,CR_UNTRANSLATED,0,0,1);
+	}
 	SetHudSize(0,0,0);
 }
+
+bool soulflasher = false;
+Script "AESoulCountFlasher" (void)
+{
+	int loopcount;
+	if (soulflasher && (CheckInventory("DMSoulCount") < 633))
+	{
+		soulflasher = false;
+		Terminate;
+	}
+	SetFont("BIGFONT");
+	soulflasher = true;
+	int soulcount = CheckInventory("DMSoulCount");
+	SetHudSize(1024,768,0);
+	HudMessage(i:soulcount,s:"/666"; HUDMSG_PLAIN,766,CR_WHITE,512.0,10.0,0);
+	
+	while ((CheckInventory("DMSoulCount") >= 633) && (soulflasher))
+	{
+		SetHudSize(1024,768,0);
+		int a = 0.0;
+		while ((a < 1.0) && (CheckInventory("DMSoulCount") >= 633) && (soulflasher))
+		{
+			a += 0.25;
+			HudMessage(i:soulcount,s:"/666"; HUDMSG_PLAIN|HUDMSG_ALPHA,765,CR_RED,512.0,10.0,0.1,a);
+			if (a > 1.0)	a = 1.0;
+			Delay(2);
+		}
+		while ((a > 0.0) && (CheckInventory("DMSoulCount") >= 633) && (soulflasher))
+		{
+			
+			HudMessage(i:soulcount,s:"/666"; HUDMSG_PLAIN|HUDMSG_ALPHA,765,CR_RED,512.0,10.0,0.1,a);
+			a -= 0.2;
+			if (a < 0.0)	a = 0.0;
+			Delay(2);
+		}
+		HudMessage(s:""; HUDMSG_PLAIN,765,CR_UNTRANSLATED,0,0,1);
+		Delay(17);
+	}
+	soulflasher = false;
+}
+
+
 
 script "s915" (void)
 {
