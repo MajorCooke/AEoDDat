@@ -1586,9 +1586,9 @@ ACTOR HTC2BlackBear		//Shotguy
     States
     {
     Spawn:
-        TNT1 A 0
-	  TNT1 A 0 A_Jump(210,2,3,4,5,6)
-	  TNT1 AAAAAAAAAAAA 0 A_SpawnItemEx("BerthaBear",random(10,-10),random(10,-10),0,0,0,0,0,32|SXF_TRANSFERPOINTERS)
+        TNT1 A 0 
+		TNT1 A 0 A_Jump(210,2,3,4,5,6)
+		TNT1 AAAAAAAAAAAA 0 A_SpawnItemEx("BerthaBear",random(10,-10),random(10,-10),0,0,0,0,0,32|SXF_TRANSFERPOINTERS,0,1)
     Idle:
 		N018 A 0 A_JumpIfInventory("PowerBearConverter",1,"Switch",AAPTR_PLAYER1)
 		N018 A 0 A_JumpIfInventory("3DiceRoll6Effect",1,"Switch",AAPTR_PLAYER1)
@@ -1601,7 +1601,6 @@ ACTOR HTC2BlackBear		//Shotguy
 	Chase2:
 		N018 A 0 A_JumpIfInventory("PowerBearConverter",1,"Switch",AAPTR_PLAYER1)
 		N018 A 0 A_JumpIfInventory("3DiceRoll6Effect",1,"Switch",AAPTR_PLAYER1)
-		N018 A 0 A_ChangeFlag("NOCLIP",1)
         N018 ABCD 2 A_Chase
         Goto See
 	Switch:
@@ -1654,7 +1653,7 @@ Actor BerthaBear
 	Radius 8
 	Height 20
 	Speed 9
-	Mass 0x7FFFFFFF
+	+DONTTHRUST
 	PainChance 90
 	MONSTER
 	+NOTELESTOMP
@@ -1702,7 +1701,6 @@ Actor BerthaBear
 	Chase2:
 		N018 A 0 A_JumpIfInventory("PowerBearConverter",1,"Switch",AAPTR_PLAYER1)
 		N018 A 0 A_JumpIfInventory("3DiceRoll6Effect",1,"Switch",AAPTR_PLAYER1)
-		N018 A 0 A_ChangeFlag("NOCLIP",1)
         N018 ABCD 2 A_Chase
         Goto See
 	Switch:
@@ -1746,7 +1744,7 @@ Actor BerthaBear
 	}
 }
 
-ACTOR BlackBear
+Actor HTC2SuperBear
 {
 	TeleFogSourceType None
 	TeleFogDestType None
@@ -1754,120 +1752,42 @@ ACTOR BlackBear
     Radius 8
     Height 20
     Speed 9
-    +DONTTHRUST
-    PainChance 90
     MONSTER 
-    +FLOORCLIP 
-	+ALWAYSTELEFRAG
+	Species "Bertha"
+    Scale 0.75
+    MELEEDAMAGE 1
+    ActiveSound "BLACK"
+    HitObituary "%o was blown up by a demonized teddy bear."
+    BloodColor White
+	MeleeRange 12
+	+FLOORCLIP 
 	+NOTELESTOMP
-	+DONTOVERLAP 
 	-COUNTKILL
-	+THRUSPECIES
 	+NOICEDEATH
-	+DONTHARMSPECIES
 	+NODAMAGETHRUST
 	-SOLID
 	-NODROPOFF
 	+DROPOFF
 	+NOBLOCKMONST
 	+MBFBOUNCER
-	MaxStepHeight 32767
-	Species "Bertha"
-    Scale 0.75
-    MELEEDAMAGE 1
-    SeeSound ""
-    PainSound ""
-    DeathSound ""
-    ActiveSound "BLACK"
-    MeleeSound ""
-    HitObituary "%o was blown up by a demonized teddy bear."
-	DropItem "PowerSlaveSpawner" 8
-    BloodColor Black
-	//Flesh
-	DamageFactor "Electric", 1.25
-	DamageFactor "AEPoison", 1.25
-	DamageFactor "AEBullet", 1.5
-	MeleeRange 12
-    States
-    {
-    Spawn:
-        N018 AB 4 A_Look
-		N018 A 0 A_JumpIfInventory("PowerBearConverter",1,"Switch",AAPTR_PLAYER1)
-		N018 A 0 A_JumpIfInventory("3DiceRoll6Effect",1,"Switch",AAPTR_PLAYER1)
-        Loop
-    See:
-		N018 A 0 A_JumpIfInventory("PowerBearConverter",1,"Switch",AAPTR_PLAYER1)
-		N018 A 0 A_JumpIfInventory("3DiceRoll6Effect",1,"Switch",AAPTR_PLAYER1)
-        N018 ABCD 2 A_Chase
-        Loop
-    Pain:
-        N018 B 4 A_Pain
-        Goto See
-	Switch:
-		N018 A 0 A_ChangeFlag("NODAMAGE",1)
-		N018 A 0 A_ChangeFlag("NOPAIN",1)
-		N018 A 0 A_CopyFriendliness(AAPTR_PLAYER1)
-		N018 A 0 A_ClearTarget
-		N018 A 0 A_ClearSoundTarget
-		N018 A 0 A_RearrangePointers(AAPTR_DEFAULT,AAPTR_PLAYER1,AAPTR_DEFAULT,4)
-		N018 A 0 A_SpawnItemEx("HTC2SuperBear",0,0,0,0,0,0,0,32|SXF_TRANSFERPOINTERS)
-		Stop
-    Melee:
-        //N018 A 1 A_MeleeAttack
-		N018 A 0 A_SpawnItemEx("SpecialExploSpawner",0,0,0,0,0,0,0,32)//A_SpawnItemEx("specialexplospawner",0,0,0,0,0,0,0,32)
-        N018 A 0 A_Explode(11,40,1)
-        Goto Death
-	Pain.AntiClown:
-		"####" "#" 1
-		"####" "#" 0 A_DamageSelf(666)
-		Goto Pain
-    Death:
-   		TNT1 A 0 A_Fall
-		TNT1 A 0 A_PlaySound("other/gibdeath")
-    	TNT1 A 0 A_SpawnItemEx("BlackGibDropper",0,0,random(20,40),0,0,0,0,1)
-      	Stop
-	Death.UnholyDisint:
-    Death.PlasmaDisint:
-	Disintegrate:
-		TNT1 A 0 Thing_SetTranslation(0,50)	
-		N018 A 1 A_FadeOut(0.015)
-		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-		TNT1 a 0 A_Stop	
-		TNT1 a 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
-		N018 AA 2 A_FadeOut(0.03)
-		Goto Disintegrate+6
-    }
-}
-
-Actor HTC2SuperBear : BlackBear
-{
 	+FRIENDLY
 	+LOOKALLAROUND
-	-SOLID
 	+MISSILEMORE
 	+MISSILEEVENMORE
 	+NOFEAR
 	+DONTMORPH
-	+FORCEPAIN
 	+FORCERADIUSDMG
 	+NOPAIN
 	-FLOORHUGGER
 	+MBFBOUNCER
 	+CANTSEEK
 	+NODAMAGE
-	+FORCERADIUSDMG
 	+NODAMAGETHRUST
 	+DONTTHRUST
-	+INVULNERABLE
-	-NODROPOFF
-	+DROPOFF
-	+NOBLOCKMONST
 	+THRUACTORS
 	+NONSHOOTABLE
-	-NOCLIP
 	+NEVERTARGET
+	+EXTREMEDEATH
 	MaxStepHeight 32767
 	Translation "0:255=%[0,0,0]:[2,2,2]"
 	RenderStyle Add
