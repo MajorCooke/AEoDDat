@@ -395,22 +395,27 @@ ACTOR AEoDKnife : Weapon // 6012
 	GRON A -1
 	Loop
     Ready:
-	KNFG A 0 A_TakeInventory("MacheteAttack",99)
-	KNFX DCBA 1 A_WeaponReady
-	TNT1 A 0 ACS_NamedExecute("s799",0,2,0,0)
-	KNFG A 1 A_WeaponReady
-	Goto Ready+6
+		KNFG A 0 A_TakeInventory("MacheteAttack",99)
+		KNFX DCBA 1 A_WeaponReady
+	Ready2:
+		KNFG A 1 A_WeaponReady
+		Loop
     Deselect:
-	TNT1 A 0 A_TakeInventory("MacheteAttack", 99)
-	//KNFX ABCDZZZZ 1 
-	KNFX Z 1 A_Lower
-	TNT1 A 0 ACS_NamedExecute("s799",0,0,0,0)
-	Loop
+		TNT1 A 0 A_TakeInventory("MacheteAttack", 99)
+		//KNFX ABCDZZZZ 1 
+		TNT1 A 0 ACS_NamedExecute("s799",0,0,0,0)
+	DesLoop:
+		KNFX Z 1 A_Lower
+		KNFX ZZ 0 A_Lower
+		Loop
     Select:
-	KNFX Z 1
-	KNFX ZZZZDCBA 1 
-	KNFX A 1 A_Lower
-	TNT1 A 0 ACS_NamedExecute("s799",0,2,0,0)
+		//KNFX Z 1
+		//KNFX ZZZZDCBA 1 
+		//KNFX A 1 A_Lower
+		TNT1 A 0 ACS_NamedExecute("s799",0,2,0,0)
+	SelLoop:
+		KNFX D 1 A_Raise
+		KNFX DD 0 A_Raise
 	Goto Select+7
     Fire:
 	TNT1 A 0 A_JumpIfInventory("MacheteAttack", 9, "Attack9")
@@ -439,7 +444,7 @@ ACTOR AEoDKnife : Weapon // 6012
 	TNT1 A 0 A_TakeInventory("MacheteAttack", 99)
 	TNT1 A 0 A_GiveInventory("MacheteAttack", 2) //Attack 2
 	TNT1 A 1 A_WeaponReady
- 	Goto Ready
+ 	Goto Ready2
     Attack2:
  	//Attack2: Left-angled Swipe
 	KNF2 A 1
@@ -451,7 +456,7 @@ ACTOR AEoDKnife : Weapon // 6012
 	TNT1 A 0 A_TakeInventory("MacheteAttack", 99)
 	TNT1 A 0 A_GiveInventory("MacheteAttack", 3) //Attack 3
 	TNT1 A 1 A_WeaponReady
- 	Goto Ready
+ 	Goto Ready2
     Attack3:
  	//Attack3: Overhand Chop (Finisher)
 	KNF7 A 1 A_Recoil(-1)
@@ -464,7 +469,7 @@ ACTOR AEoDKnife : Weapon // 6012
 	TNT1 A 0 A_TakeInventory("MacheteAttack", 99)
 	TNT1 A 0 A_GiveInventory("MacheteAttack", 4) //Attack 4
 	TNT1 A 3 A_WeaponReady
-	Goto Ready
+	Goto Ready2
     Attack4:
  	KNFX A 1
 	KNFX B 1
@@ -480,7 +485,7 @@ ACTOR AEoDKnife : Weapon // 6012
 	TNT1 A 0 A_TakeInventory("MacheteAttack", 99)
 	TNT1 A 0 A_GiveInventory("MacheteAttack", 5) //Attack 5
 	TNT1 A 1 A_WeaponReady
- 	Goto Ready
+ 	Goto Ready2
     Attack5:
  	//Attack5: Right-angled Swipe
  	KNFG B 1
@@ -491,7 +496,7 @@ ACTOR AEoDKnife : Weapon // 6012
 	TNT1 A 0 A_TakeInventory("MacheteAttack", 99)
 	TNT1 A 0 A_GiveInventory("MacheteAttack", 6) //Attack 6
 	TNT1 A 1 A_WeaponReady
- 	Goto Ready
+ 	Goto Ready2
     Attack6:
  	//Attack6: Diagonal Swing - Left
  	KNF3 A 1
@@ -503,7 +508,7 @@ ACTOR AEoDKnife : Weapon // 6012
 	TNT1 A 0 A_TakeInventory("MacheteAttack", 99)
 	TNT1 A 0 A_GiveInventory("MacheteAttack", 7) //Attack 7
 	TNT1 A 1 A_WeaponReady
- 	Goto Ready
+ 	Goto Ready2
     Attack7:
  	//Attack7: Overhand Chop 2 (Finisher)
 	KNF7 A 1 A_Recoil(-1)
@@ -516,7 +521,7 @@ ACTOR AEoDKnife : Weapon // 6012
 	TNT1 A 0 A_TakeInventory("MacheteAttack", 99)
 	TNT1 A 0 A_GiveInventory("MacheteAttack", 8) //Attack 8
 	TNT1 A 3 A_WeaponReady
- 	Goto Ready
+ 	Goto Ready2
     Attack8:
 	//Attack8: Slice N' Dice
  	TNT1 A 0 A_Recoil(-1)
@@ -543,12 +548,12 @@ ACTOR AEoDKnife : Weapon // 6012
 	KNF6 E 1
 	TNT1 A 0 A_GiveInventory("MacheteSkewerStage", 1)
 	TNT1 A 1 A_WeaponReady
-	Goto Ready
+	Goto Ready2
 	TNT1 A 0
 	TNT1 A 0 A_TakeInventory("MacheteSkewerStage", 99)
 	TNT1 A 0 A_GiveInventory("MacheteAttack", 9)
 	TNT1 A 1 A_WeaponReady
-	Goto Ready
+	Goto Ready2
     Attack9:
  	//Attack9: Slice N' Dice (Finisher)
 	KNF6 E 1 A_Recoil(-2)
@@ -561,7 +566,7 @@ ACTOR AEoDKnife : Weapon // 6012
 	TNT1 A 0 A_TakeInventory("MacheteSkewerStage", 99)
 	TNT1 A 0 A_GiveInventory("MacheteAttack", 1)
 	TNT1 A 1 A_WeaponReady
- 	Goto Ready
+ 	Goto Ready2
     AttackB:
 	//AttackB: Block Finisher
 	KNF6 A 1 A_Recoil(-1)
@@ -570,7 +575,7 @@ ACTOR AEoDKnife : Weapon // 6012
 	KNF6 C 1 A_CustomPunch(4, 0, 0, "KnifePuff", 96)
 	KNF6 DE 1
 	TNT1 A 3 A_WeaponReady
- 	Goto Ready
+ 	Goto Ready2
     AltFire:
 	KNF5 A 1 A_JumpIfInventory("KnifeBlockSeq",1,29)
 	KNF5 B 1 A_GiveInventory("KnifeBlockSeq",1)

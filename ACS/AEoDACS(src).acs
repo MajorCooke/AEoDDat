@@ -26,7 +26,7 @@ Uses scripts 797(enter), 798, 799, 800, 801 for the script system.
 /*
 	"GameType" contains the scripts used in the game type/theme selection.
 
-Uses scripts 901(enter), 911, 912(unused), 913(debug only), 914 (body count tracker), 915(L4D counter switch)
+Uses scripts 901(enter), 912(unused), 913(debug only), 914 (body count tracker), 915(L4D counter switch)
 
 */
 
@@ -58,7 +58,7 @@ So, re-counting, spells used in the other files are
 650,651,652,653,654,655
 689, 690, 691
 797,798,799,800,801
-901,911,912,913,914
+901,912,913,914
 957,958
 
 //------------------------------------------------------------------------
@@ -564,6 +564,67 @@ Script "InvisItemLoop" (void)
 	Restart;
 }
 
+Script "AEPreviousWeapon" (int mode)
+{
+	// Valid mode properties:
+	// 0: Switch the weapon with the previous slot.
+	// 1: Don't change the previous weapon 'slot'.
+	// 2: Don't change the current weapon 'slot'.
+	// 3: Empty previous weapon slot.
+	// 4: Empty current weapon slot.
+	// 5: 3 and 4.
+	// 6: 1, but use previousweapon.
+	// 7: 2, but use previousweapon.
+	// By slot, it means recorded weapon.
+	str truecurweap;
+	str curweap;
+	str prevweap;
+	switch(mode)
+	{
+	case 0:
+		if ((GetWeapon() == "AEoDDemonMorphHand") || (GetWeapon() == "HammerTimeHammer") || !(GetWeapon()))
+			Terminate;
+		truecurweap = GetWeapon();	
+		curweap = GetCvarString("user_currentWeapon");
+		prevweap = GetCvarString("user_previousWeapon");
+		SetWeapon(prevweap);
+		delay(12);
+		SetUserCvarString(0,"user_previousWeapon",curweap);
+		SetUserCvarString(0,"user_currentWeapon",prevweap);
+		Terminate;
+	case 1:
+		if ((GetWeapon() == "AEoDDemonMorphHand") || (GetWeapon() == "HammerTimeHammer") || !(GetWeapon()))
+			Terminate;
+		SetUserCvar(0,"user_currentWeapon",GetWeapon());
+		Terminate;
+	case 2:
+		if ((GetWeapon() == "AEoDDemonMorphHand") || (GetWeapon() == "HammerTimeHammer") || !(GetWeapon()))
+			Terminate;
+		SetUserCvar(0,"user_previousWeapon",GetWeapon());
+		Terminate;
+	case 3:
+		SetUserCvar(0,"user_currentWeapon","");
+		Terminate;
+	case 4:
+		SetUserCvar(0,"user_previousWeapon","");
+		Terminate;
+	case 5:
+		SetUserCvar(0,"user_currentWeapon","");
+		SetUserCvar(0,"user_previousWeapon","");
+		Terminate;
+	case 6:
+		if ((GetWeapon() == "AEoDDemonMorphHand") || (GetWeapon() == "HammerTimeHammer") || !(GetWeapon()))
+			Terminate;
+		SetUserCvar(0,"user_currentWeapon",GetWeapon());
+		Terminate;
+	case 7:
+		if ((GetWeapon() == "AEoDDemonMorphHand") || (GetWeapon() == "HammerTimeHammer") || !(GetWeapon()))
+			Terminate;
+		SetUserCvar(0,"user_previousWeapon",GetWeapon());
+		Terminate;
+	}
+}
+
 //------------------------------------------------------------------------
 /*
 So, at the end, this are all the scripts used in the mod. 
@@ -575,7 +636,7 @@ numbers have been used:
 797,798,799,800,801
 848,850,851,852,853,854,855,857
 870,871
-901,908,910,911,912,913,914,915
+901,908,910,912,913,914,915
 952,953,957,958,959
 960-965
 
