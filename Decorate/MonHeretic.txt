@@ -1495,7 +1495,7 @@ Actor FSorcerer2FX1 : Sorcerer2FX1 replaces Sorcerer2FX1
 //=====================================================================================
 //=====================================================================================
 
-Actor FIronLich : IronLich 7060		// mancubus
+Actor FIronLich //: IronLich 7060		// mancubus
 {
 	DropItem "Mana2Ammo"
 	DropItem "PowerslaveSpawner" 64
@@ -1504,7 +1504,6 @@ Actor FIronLich : IronLich 7060		// mancubus
     Radius 40
     Height 64
     Health 600
-    -NOBLOOD
     PainChance "Charm", 192
     PainChance "Terror", 192
     PainChance "Defile", 255
@@ -1512,6 +1511,22 @@ Actor FIronLich : IronLich 7060		// mancubus
     PainChance "Chaos", 255
     PainChance "ChaosExpl1", 255
     PainChance "ChaosExpl2", 255
+    
+  Mass 325
+  Speed 6
+  PainChance 32
+  Monster
+  +DONTMORPH
+  +DONTSQUASH
+  +BOSSDEATH
+  SeeSound "ironlich/sight"
+  AttackSound "ironlich/attack"
+  PainSound "ironlich/pain"
+  DeathSound "ironlich/death"
+  ActiveSound "ironlich/active"
+  Obituary "$OB_IRONLICH"
+  HitObituary "$OB_IRONLICHHIT"
+    
 //Mechanic                               //who knows :P
 	DamageFactor "Fire", 1.25
 	DamageFactor "Ice", 0.75
@@ -1539,6 +1554,9 @@ Actor FIronLich : IronLich 7060		// mancubus
 	TNT1 A 0
 	TNT1 A 0 A_GiveInventory("DefileCheck",1)
 	Goto See
+    Spawn:
+	LICH A 10 A_Look
+	Loop
     See:
 	LICH A 4 A_Chase
 	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,2)
@@ -1548,7 +1566,27 @@ Actor FIronLich : IronLich 7060		// mancubus
 	Loop
     Missile:
 	LICH A 5 A_FaceTarget
-	LICH B 20 A_LichAttack
+	TNT1 A 0 A_Jump(255,"FireAtt","IceAtt")
+	
+    FireAtt:
+	TNT1 A 0 A_PlaySound("ironlich/attack1")
+	LICH B 0 A_CustomMissile("HeadFX3DMG",48,0,0)
+	LICH B 2 A_CustomMissile("HeadFX3DMG",64,0,0)
+	LICH B 0 A_CustomMissile("HeadFX3DMG",32,0,0)
+	LICH B 2 A_CustomMissile("HeadFX3DMG",80,0,0)
+	LICH B 0 A_CustomMissile("HeadFX3DMG",16,0,0)
+	LICH B 2 A_CustomMissile("HeadFX3DMG",96,0,0)
+	LICH B 2 A_CustomMissile("HeadFX3DMG",56,0,0)
+	LICH B 0 A_CustomMissile("HeadFX3DMG",56,-20,0)	
+	LICH B 2 A_CustomMissile("HeadFX3DMG",56,20,0)
+	LICH B 0 A_CustomMissile("HeadFX3DMG",56,-40,0)
+	LICH B 2 A_CustomMissile("HeadFX3DMG",56,40,0)
+	LICH B 8 
+	Goto See
+    IceAtt:
+      TNT1 A 0 A_PlaySound("ironlich/attack2")
+      LICH B 20 A_CustomMissile("HeadFX1DMG",24,0,0)
+	LICH B 10 A_CustomMissile("HeadFX1DMG",24,0,0)
 	Goto See
     Death:
 	TNT1 A 0
@@ -1597,6 +1635,53 @@ Actor FIronLich : IronLich 7060		// mancubus
 	Goto Disintegrate+7
     }
 }
+
+ACTOR HeadFX3DMG
+{
+  Radius 14
+  Height 12
+  Speed 10
+  FastSpeed 18
+  Damage 3
+  Projectile
+  +WINDTHRUST
+  -ACTIVATEIMPACT
+  -ACTIVATEPCROSS
+  -NOBLOCKMAP
+  RenderStyle Add
+  DamageType "Fire"
+  States
+  {
+ Spawn:
+/*    FX06 A 4 Bright 
+    FX06 B 4 Bright A_CustomMissile("HeadFX3Extra",16,0,180,CMF_ABSOLUTEPITCH||CMF_SAVEPITCH,0)
+    FX06 C 4 Bright A_CustomMissile("HeadFX3Extra",32,0,180,CMF_ABSOLUTEPITCH||CMF_SAVEPITCH,0)
+    FX06 A 4 Bright A_CustomMissile("HeadFX3Extra",48,0,180,CMF_ABSOLUTEPITCH||CMF_SAVEPITCH,0)
+    FX06 B 4 Bright A_CustomMissile("HeadFX3Extra",64,0,180,CMF_ABSOLUTEPITCH||CMF_SAVEPITCH,0)
+    FX06 C 4 Bright A_CustomMissile("HeadFX3Extra",80,0,180,CMF_ABSOLUTEPITCH||CMF_SAVEPITCH,0)
+  SpawnLoop:*/
+   FX06 ABC 4 Bright 
+    Loop
+  NoGrow:
+    FX06 ABC 5 Bright
+    Loop
+  Death:
+    FX06 DEFG 5 Bright
+    Stop
+  }
+}
+ACTOR HeadFX3Extra : HeadFX3DMG
+{
+  States
+  {
+  Spawn:
+    FX06 ABC 4 Bright 
+    Loop
+  }
+}
+
+
+
 Actor HeadFX1DMG : HeadFX1 replaces HeadFX1
 {
 	DamageType "Ice"
@@ -1604,10 +1689,6 @@ Actor HeadFX1DMG : HeadFX1 replaces HeadFX1
 Actor HeadFX2DMG : HeadFX2 replaces HeadFX2
 {
 	DamageType "Ice"
-}
-Actor HeadFX3DMG : HeadFX3 replaces HeadFX3
-{
-	DamageType "Fire"
 }
 
 //=============================================================================
