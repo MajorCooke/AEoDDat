@@ -571,7 +571,10 @@ Script "SpawnDeployMonster" (int nojoke)
 	}
 	else if ((ThemeMix + MiniCount) >= 19 || !(ThemeMix))
 	{
-		if (JokeTheme && !(SetActorState(0,"Joke",1)))
+		if (JokeTheme)
+			if (!(SetActorState(0,"Joke",1)))
+				SetActorState(0,"ClassicAEoD",1);
+		else
 			SetActorState(0,"ClassicAEoD",1);
 		Terminate;
 	}
