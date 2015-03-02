@@ -569,11 +569,13 @@ Script "SpawnDeployMonster" (int nojoke)
 		SetActorState(0,"L4D",1);
 		Terminate;
 	}
-	else if ((ThemeMix + MiniCount) >= 19 || !(ThemeMix))
+	else if (((ThemeMix + MiniCount) >= 19) || !(ThemeMix))
 	{
 		if (JokeTheme)
+		{
 			if (!(SetActorState(0,"Joke",1)))
 				SetActorState(0,"ClassicAEoD",1);
+		}
 		else
 			SetActorState(0,"ClassicAEoD",1);
 		Terminate;
@@ -603,7 +605,7 @@ Script "SpawnDeployMonster" (int nojoke)
 					miniroll = random(0,mc);
 					//We NEED this if statement. SetActorState returns a number of 
 					//those who were affected. Without it, it might not spawn a monster.
-					if ((SetActorState(0,MiniMode[miniroll],1))) 
+					if ((SetActorState(0,MiniMode[miniroll],1) > 0)) 
 					{
 						Terminate;
 					}
