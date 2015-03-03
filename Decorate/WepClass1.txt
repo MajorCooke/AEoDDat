@@ -2329,7 +2329,7 @@ Weapon.AmmoType1 "BunnyAmmo"
 Weapon.AmmoType2 "BunnyAmmo"
 Weapon.AmmoGive1 1
 Weapon.AmmoUse1 1
-Weapon.AmmoUse2 2
+Weapon.AmmoUse2 1
 +WEAPON.NOALERT
 Inventory.PickupMessage "Run Bunny, Run!"
 Inventory.PickupSound "misc/w_pkup"
@@ -2368,7 +2368,11 @@ Fire:
 	W008 G 10 A_FireCustomMissile("BunnyEgg",0,1,0,0)
 	Goto Ready
 AltFire:
+	TNT1 A 0 A_JumpIfInventory("BunnyAmmo",2,"AltSuccess")
+	Goto Fire
+AltSuccess:
 	W008 DEF 5 
+	TNT1 A 0 A_TakeInventory("BunnyAmmo",1)
 	W008 G 10 A_FireCustomMissile("BunnyEgg2",0,1,0,0)
 	Goto Ready
 }
