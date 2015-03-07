@@ -4045,7 +4045,37 @@ Actor DMSoulCheckMaster : CustomInventory
 		Stop
 	}
 }
-		
+
+Actor SoulSeekOn : CustomInventory
+{
+	+ALWAYSPICKUP
+	States
+	{
+	Pickup:
+		TNT1 A 0 A_JumpIf(CheckClass("DMSoulTarget",AAPTR_DEFAULT,0),"Trigger")
+		Stop
+	Trigger:
+		TNT1 A 0 A_SetShootable
+		TNT1 A 0 A_ChangeFlag("CANTSEEK",0)
+		Stop
+	}
+}
+
+Actor SoulSeekOff : CustomInventory
+{
+	+ALWAYSPICKUP
+	States
+	{
+	Pickup:
+		TNT1 A 0 A_JumpIf(CheckClass("DMSoulTarget",AAPTR_DEFAULT,0),"Trigger")
+		Stop
+	Trigger:
+		TNT1 A 0 A_UnSetShootable
+		TNT1 A 0 A_ChangeFlag("CANTSEEK",1)
+		Stop
+	}
+}
+
 Actor DMSoulTarget
 {
 	var int user_count;
@@ -4075,17 +4105,20 @@ Actor DMSoulTarget
 	Spawn:
 		TNT1 A 0 NoDelay A_JumpIf(z >= floorz,2)
 		TNT1 A 0 A_Warp(AAPTR_DEFAULT,0,0,0,0,WARPF_TOFLOOR|WARPF_NOCHECKPOSITION)
-		TNT1 A 5 A_Stop
-		TNT1 A 0 A_JumpIfInventory("SoulReaperToken",1,1,AAPTR_PLAYER1)
-		Loop
+		TNT1 A 0 A_Stop
+		TNT1 A 0 A_JumpIfInventory("SoulReaperAltToken",1,"Setup",AAPTR_PLAYER1)
+		Goto W1
+	Setup:
 		TNT1 A 0 A_SetShootable
 		TNT1 A 0 A_ChangeFlag("CANTSEEK",0)
-	Waiting:
-		TNT1 A 5 A_Stop
-		TNT1 A 0 A_JumpIfInventory("SoulReaperToken",1,"Waiting",AAPTR_PLAYER1)
-		TNT1 A 0 A_UnSetShootable
-		TNT1 A 0 A_ChangeFlag("CANTSEEK",1)
-		Goto Spawn
+	W1:
+		TNT1 A 35 A_SetUserVar(user_count,1)
+		TNT1 A 0 A_JumpIf(user_count > 10,"End")
+		TNT1 A 0 A_JumpIfInventory("SoulReaperAltToken",1,"Setup",AAPTR_PLAYER1)
+		Loop
+	End:
+		TNT1 A 0
+		Stop
 	Pain.SoulReaperPull:
 		TNT1 A 0 A_ChangeFlag("NOPAIN",1)
 		TNT1 A 0 A_UnSetShootable
