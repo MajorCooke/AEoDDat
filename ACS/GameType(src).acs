@@ -15,6 +15,9 @@ global Bool 14:JokeTheme;
 global Bool 15:ScriptSetup;
 global str 16:GameModeCh[]; 
 global bool 17:MonsterMayhem;
+global Int 18: MiniCount;
+global bool 19: MiniThemeEnabled;
+global str 20:MiniMode[]; 
 
 str GameTypesText[28]={"Classic",	//0
 		"Doom/demon-esque",	//1		
@@ -450,9 +453,6 @@ str CVarsToGames[number_of_games_and_cvars][3] = {
 };
 
 #define monTypes 5
-str MiniMode[monTypes]; 
-global Int 18: MiniCount;
-global bool 19: MiniThemeEnabled;
 
 Script "SpawnerSetup" enter
 {
@@ -598,7 +598,8 @@ Script "SpawnDeployMonster" (int nojoke)
 					miniroll = random(0,mc);
 					//We NEED this if statement. SetActorState returns a number of 
 					//those who were affected. Without it, it might not spawn a monster.
-					if ((SetActorState(0,MiniMode[miniroll],1) > 0)) 
+					int state = SetActorState(0,MiniMode[miniroll],1);
+					if (state != 0) 
 					{
 						Terminate;
 					}
