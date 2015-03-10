@@ -16,11 +16,9 @@ Actor HordeModeTest : Inventory
 ACTOR L4DDirectorSpawner : CustomInventory
 {
 	+ALWAYSPICKUP
-	+AUTOACTIVATE
-	Inventory.MaxAmount 0
 	States
 	{
-	Use:
+	Pickup:
 		TNT1 A 0 A_SpawnItemEx("TheDirectorL4D",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_NOPOINTERS|SXF_SETTARGET)
 		Stop
 	}
@@ -33,11 +31,9 @@ Actor BuildupToken : CustomInventory
 {
 	var int user_buildup;
 	+ALWAYSPICKUP
-	+AUTOACTIVATE
-	Inventory.MaxAmount 0
 	States
 	{
-	Use:
+	Pickup:
 		TNT1 A 0 A_SetUserVar("user_buildup",user_buildup+1)
 		Stop
 	}
@@ -137,26 +133,27 @@ Actor TheDirectorL4D
 		Loop
 	Cooling:
 		TNT1 A 0 A_JumpIf(user_nightmare == 1, "Cooling2")
-		TNT1 A random(200,600) A_Jump(240,"Chasing")
+		TNT1 A random(350,800) A_Jump(240,"Chasing")
 		Goto Chasing
 	Cooling2:
-		TNT1 A random(350,800) A_Jump(250,"Chasing")
+		TNT1 A random(200,600) A_Jump(250,"Chasing")
 		Goto Chasing
 	See:
-		TNT1 AAA 350 A_JumpIfInventory("RemoveDirector",1,"Death",AAPTR_PLAYER1) //The original director has 60 seconds. This one is 30.
+		TNT1 AAA 35 A_JumpIfInventory("RemoveDirector",1,"Death",AAPTR_PLAYER1) //The original director has 60 seconds. This one is 30.
 		TNT1 A 0 A_JumpIfInventory("NightmareToken",1,"EnableNightmare",AAPTR_PLAYER1)
+	SeeCont:
 		TNT1 A 0 A_JumpIfInventory("PFirstTimeToken2",1,"FirstTime",AAPTR_PLAYER1)
 		Goto Chasing
 	//Nightmare mode effectively causes regular zombies to spawn roughly twice as fast.
 	EnableNightmare:
 		TNT1 A 0 A_SetUserVar("user_nightmare",1)
-		Goto See+4
+		Goto SeeCont
 	FirstTime:
 		TNT1 A 0 A_TakeInventory("PFirstTimeToken2",1,0,AAPTR_PLAYER1)
 		TNT1 A 0 A_GiveInventory("SmallSpawnTokenTwo",50,AAPTR_PLAYER1)
 	Chasing:
-		TNT1 A 0 A_JumpIf(IsPointerEqual(AAPTR_TARGET,AAPTR_PLAYER1),2)
-		TNT1 A 0 A_RearrangePointers(AAPTR_PLAYER1,AAPTR_DEFAULT,AAPTR_DEFAULT,4) //Always ensure the player is the target.
+		//TNT1 A 0 A_JumpIf(IsPointerEqual(AAPTR_TARGET,AAPTR_PLAYER1),2)
+		//TNT1 A 0 A_RearrangePointers(AAPTR_PLAYER1,AAPTR_DEFAULT,AAPTR_DEFAULT,4) //Always ensure the player is the target.
 		TNT1 A 0 A_JumpIfInventory("HordeModeTest",1,"HordeModeForce",AAPTR_PLAYER1)
 		TNT1 AAA 2 A_Chase
 		TNT1 A 0 A_JumpIfInventory("RemoveDirector",1,"Death",AAPTR_TARGET)
@@ -181,6 +178,7 @@ Actor TheDirectorL4D
 		TNT1 A 0 A_PlaySound("Director/Horde",5,1,0,ATTN_NONE)
 		TNT1 A 0 A_Stop
 		TNT1 A 0 A_GiveInventory("HordeToken",1)
+		TNT1 A 0 A_PrintBold("Horde")
 		TNT1 AAAAAA 0 A_SpawnItemEx("L4DSmallMobRunner",0,0,0,0,0,0,random(0,359),32|SXF_SETMASTER|SXF_TRANSFERPOINTERS)
 		TNT1 A 0 A_SetUserArray("user_cooldown",3,35*random(15,45))
 		TNT1 A 0 A_JumpIf(user_nightmare == 0,2)
@@ -208,7 +206,6 @@ Actor TheDirectorL4D
 		TNT1 A 0 A_JumpIf(user_cooldown[1]>=1,"Chasing")
 		TNT1 A 0 A_TakeInventory("SmallSpawnTokenTwo",1,0,AAPTR_PLAYER1)
 		TNT1 A 0 A_FaceTarget
-		Goto SmallMobShoot
 		TNT1 A 1 A_SpawnItemEx("L4DSmallMobRunner",0,0,1,0,0,0,0,SXF_SETMASTER|SXF_TRANSFERPOINTERS)
 		//Note that this cooldown is exclusive and runs individually unlike the other.
 		TNT1 A 0 A_SetUserArray("user_cooldown",1,random(75,200)) 
@@ -286,8 +283,7 @@ Actor L4DPopulater
 		TNT1 A 0 A_JumpIfInventory("FreezeDirector",1,"Frozen",AAPTR_PLAYER1)
 		TNT1 A 0 A_SetUserVar("user_wander",0)
 		TNT1 A 0 A_JumpIfCloser(250,"NoPop")
-		TNT1 A 0 A_CheckSight(1)
-		Goto NoPop
+		TNT1 A 0 A_JumpIfTargetInLOS("NoPop",360)
 		TNT1 A 1 A_SpawnItemEx("L4DCommonSpawner",random(60,-60),random(-60,60),0,0,0,0,random(0,359),SXF_TRANSFERPOINTERS,210)
 		TNT1 A 0 A_Warp(AAPTR_DEFAULT,random(15,150),0,0,random(0,359))
 		TNT1 A 0 A_Jump(256,1,2,3,4,5,6,7,8,9,10)
@@ -365,8 +361,7 @@ Actor L4DLargeMobRunner
 		TNT1 A 0 A_GiveInventory("CooldownEnable1",1,AAPTR_MASTER)
 	Idle:
 		TNT1 A 0 A_ChangeFlag("FRIENDLY",0)
-		TNT1 A 0 A_ClearTarget
-		TNT1 A 0 A_RearrangePointers(AAPTR_PLAYER1,AAPTR_NULL,AAPTR_DEFAULT)
+		TNT1 A 0 A_PrintBold("Large")
 		TNT1 AAAAA 1 A_Look
 		Loop
 	See:
@@ -427,7 +422,7 @@ Actor L4DLargeMobRunner
 		TNT1 A 0 A_JumpIfInventory("FreezeDirector",1,"Frozen",AAPTR_TARGET)
 		Goto See
 	Stuck:
-		TNT1 A 0 A_GiveInventory("CooldownDisable1",1,AAPTR_MASTER)
+		TNT1 A 1 A_GiveInventory("CooldownDisable1",1,AAPTR_MASTER)
 		Stop
 	Death:
 	End:
@@ -489,8 +484,7 @@ Actor L4DMediumMobRunner
 		TNT1 A 0 A_SetUserVar("user_limit",random(1,2))
 	Idle:
 		TNT1 A 0 A_ChangeFlag("FRIENDLY",0)
-		TNT1 A 0 A_ClearTarget
-		TNT1 A 0 A_RearrangePointers(AAPTR_PLAYER1,AAPTR_NULL,AAPTR_DEFAULT)
+		TNT1 A 0 A_PrintBold("Medium")
 		TNT1 AAAAA 1 A_Look
 		Loop
 	See:
@@ -555,7 +549,7 @@ Actor L4DMediumMobRunner
 		TNT1 A 0 A_JumpIfInventory("FreezeDirector",1,"Frozen",AAPTR_TARGET)
 		Goto See
 	Stuck:
-		TNT1 A 0 A_JumpIf(user_dlimit > 0, "VanishC")
+		TNT1 A 1 A_JumpIf(user_dlimit > 0, "VanishC")
 		Stop
 	Death:
 	End:
@@ -614,7 +608,8 @@ Actor L4DSmallMobRunner
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay A_GiveInventory("SmallCDUp",1,AAPTR_MASTER)
+		TNT1 A 0 NoDelay A_PrintBold("Small")
+		//TNT1 A 0 A_GiveInventory("SmallCDUp",1,AAPTR_MASTER)
 		TNT1 A 0 A_SetUserVar("user_dlimit",0)
 		TNT1 A 0 A_SetUserVar("user_max",random(7,15))
 		TNT1 A 0 A_JumpIfInventory("NightmareToken",1,1,AAPTR_PLAYER1)
@@ -727,7 +722,7 @@ Actor L4DSmallMobRunner
 		TNT1 A 0
 		Stop
 	Stuck:
-		TNT1 A 0 A_JumpIf(user_dlimit >= (user_max / 2),"Vanish")
+		TNT1 A 0 //A_JumpIf(user_dlimit >= (user_max / 2),"Vanish")
 		Stop
 	Frozen:
 		TNT1 A 35 A_Stop
