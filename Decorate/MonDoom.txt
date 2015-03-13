@@ -3320,6 +3320,7 @@ Actor RequiemBossBrainFinal replaces BossBrain/*: BossBrain*/ 6299
 	var int user_heartexplo;
 	var int user_Type;
 	var int user_joke;
+	var int user_count;
 	Health 250
 	+DONTTHRUST
   	PainChance 255
@@ -3334,7 +3335,7 @@ Actor RequiemBossBrainFinal replaces BossBrain/*: BossBrain*/ 6299
 		TNT1 A 0
 		Stop
   	Spawn:
-		BBRN A 0
+		BBRN A 0 NoDelay A_SetUserVar(user_count, 26699)
 		//BBRN A 0 A_SetUserVar("user_Type",(CallACS("s911",0,0,0)))
    	 	BBRN A 5 ACS_NamedExecute("s870",0,0,0,0)
 		BBRN A 0 A_JumpIfInventory("JokeToken",1,"EnableJoke",AAPTR_PLAYER1)
@@ -3373,14 +3374,13 @@ Actor RequiemBossBrainFinal replaces BossBrain/*: BossBrain*/ 6299
 		BBRN A 0 A_PlaySound("Glados/IOSDeath",CHAN_WEAPON,1,0,ATTN_NONE)
 		BBRN A 0 A_PlaySound("BoneDuster/AltFire",CHAN_BODY,1,0,ATTN_NONE)
 		BBRN A 0 A_QuakeEx(4,4,0,125,0,5000,"",QF_SCALEDOWN)
-		BBRN AAAAAAAAAAAAAAAAAAAAAAAAA 5 A_RadiusGive("MonsterDestroyer",32767,RGF_MONSTERS|RGF_NOSIGHT)
+		BBRN AAAAAAAAAAAAAAAAAAAAAAAAA 5 A_RadiusGive("MonsterDestroyer",20000,RGF_MONSTERS|RGF_NOSIGHT)
 		BBRN A 0 A_QuakeEx(3,3,0,300,0,5000,"",QF_SCALEDOWN)
 		BBRN A 300 A_SpawnItemEx("FaceExploSpawner",-288,0,0,0,0,0,90,32)
-		BBRN A 0 A_RadiusGive("MonsterDestroyer",32767,RGF_MONSTERS|RGF_NOSIGHT,1)
 		BBRN A 0 A_SpawnItemEx("NukeFaceExploSpawner",-288,0,0,0,0,0,90,32)
 		//BBRN A 10 //A_BrainScream
 		BBRN A 35 A_PlaySound("brain/death",CHAN_AUTO,1,0,ATTN_NONE)
-		BBRN AAAAAAAAAA 35 A_RadiusGive("MonsterDestroyer",32767,RGF_MONSTERS|RGF_NOSIGHT)
+		BBRN AAAAAAAAAA 35 A_RadiusGive("MonsterDestroyer",20000,RGF_OBJECTS|RGF_MONSTERS|RGF_NOSIGHT)
 		BBRN AA 10
 		BBRN A 0 A_TakeInventory("IOSHurt",1000,0,AAPTR_PLAYER1)
 		BBRN A 0 A_TakeInventory("IOSDestroyed",1000,0,AAPTR_PLAYER1)
@@ -3391,7 +3391,7 @@ Actor RequiemBossBrainFinal replaces BossBrain/*: BossBrain*/ 6299
 		BBRN A 0 A_GiveInventory("IOSDestroyed",1,AAPTR_PLAYER1)
 		//BBRN A 0 A_GiveInventory("PowerPlayerWin",1,AAPTR_PLAYER1)
 		BBRN A 0 Thing_Remove(20001)
-		BBRN A 0 A_RadiusGive("MonsterDestroyer",32767,RGF_MONSTERS|RGF_NOSIGHT)
+		BBRN A 0 A_RadiusGive("MonsterDestroyer",20000,RGF_MONSTERS|RGF_NOSIGHT)
 		TNT1 A 0 A_PlaySound("IconOfSin/Screams",CHAN_VOICE,1,0,ATTN_NONE)
 		TNT1 A 0 ACS_NamedExecute("AEFadeToBlack",0,0,0,0)
 		TNT1 A 0 A_JumpIfInventory("JokeToken",1,2,AAPTR_PLAYER1)
@@ -3399,7 +3399,7 @@ Actor RequiemBossBrainFinal replaces BossBrain/*: BossBrain*/ 6299
 		BBRN A 0 A_SpawnItemEx("FaceExploSpawner",-288,0,0,0,0,0,90,32)
 		
 		BBRN A 0 A_PlaySound("BoneDuster/AltFire",CHAN_BODY,1,0,ATTN_NONE)
-		BBRN A 0 A_RadiusGive("MonsterDestroyer",32767,RGF_MONSTERS|RGF_NOSIGHT)
+		BBRN A 0 A_RadiusGive("MonsterDestroyer",20000,RGF_MONSTERS|RGF_NOSIGHT)
 		//BBRN A 10 //A_BrainScream
 		BBRN A 150 A_PlaySound("brain/death",CHAN_AUTO,1,0,ATTN_NONE)
 		BBRN A 0 A_TakeInventory("IOSHurt",1000,0,AAPTR_PLAYER1)
@@ -3412,9 +3412,10 @@ Actor RequiemBossBrainFinal replaces BossBrain/*: BossBrain*/ 6299
 Actor MonsterDestroyer : CustomInventory
 {
 	+INVENTORY.ALWAYSPICKUP
+	+INVENTORY.AUTOACTIVATE
 	States
 	{
-	Pickup:
+	Use:
 		TNT1 A 0 A_JumpIf(CheckClass("PlayerPawn",AAPTR_DEFAULT,1),"End")
 		TNT1 A 0 A_CheckFlag("SHOOTABLE","Cont")
 		TNT1 A 0 A_JumpIf(health > 0,"Cont")
@@ -3423,6 +3424,7 @@ Actor MonsterDestroyer : CustomInventory
 		TNT1 A 0 A_CheckFlag("NOINTERACTION","End")
 		TNT1 A 0 A_CheckFlag("CANTLEAVEFLOORPIC","End")
 		TNT1 A 0 A_CheckFlag("FRIENDLY","End")
+		TNT1 A 0 A_ChangeFlag("VULNERABLE",1)
 		TNT1 A 0 A_Die("Extreme")
 		Stop
 	End:
