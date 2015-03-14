@@ -11637,7 +11637,7 @@ Actor AEoDSoulReaper : weapon
 {
 	+WEAPON.ALT_AMMO_OPTIONAL
 	+WEAPON.NOAUTOAIM
-	Weapon.AmmoGive1 30
+	Weapon.AmmoGive1 45
 	Weapon.AmmoGive2 50
 	Weapon.AmmoType1 "ASTF"
 	Weapon.AmmoType2 "GreenMana"
@@ -11672,6 +11672,7 @@ Actor AEoDSoulReaper : weapon
 		Loop
 	Fire:
 		"####" A 0 A_JumpIfInventory("SoulReaperAltToken",1,"TCheck")
+	FireCont:
 		"####" A 0 A_FireCustomMissile("SoulReaperBlade",0,1,4)
 		"####" B 0 A_PlaySound("SoulReaper/Fire",CHAN_WEAPON,1)
 		"####" BBB 1 bright A_SetPitch(pitch-1)
@@ -11684,9 +11685,10 @@ Actor AEoDSoulReaper : weapon
 		"####" A 0 A_PlaySound("SoulReaper/soulbeamloop",CHAN_WEAPON,1,1)
 	AltHold:
 		"####" A 0 A_RadiusGive("SoulSeekOn",2048,RGF_MONSTERS|RGF_NOSIGHT)
-		"####" A 1 Offset(2,33) bright A_FireCustomMissile("SoulReaperBeam",0,0,9,2)
-		"####" A 1 Offset(1,32) bright A_FireCustomMissile("SoulReaperBeam",0,0,9,2)
-		"####" A 0 A_WeaponReady(WRF_NOSECONDARY|WRF_DISABLESWITCH)
+		"####" A 0 Offset(2,33) bright A_FireCustomMissile("SoulReaperBeam",0,0,9,2)
+		"####" A 1 Offset(2,33) bright A_WeaponReady(WRF_NOSECONDARY|WRF_DISABLESWITCH|WRF_NOBOB)
+		"####" A 0 Offset(1,32) bright A_FireCustomMissile("SoulReaperBeam",0,0,9,2)
+		"####" A 1 Offset(1,32) bright A_WeaponReady(WRF_NOSECONDARY|WRF_DISABLESWITCH|WRF_NOBOB)
 		"####" A 0 A_Refire("AltHold")
 		
 		"####" A 0 A_TakeInventory("SoulReaperAltToken",1000,0)
@@ -11696,11 +11698,11 @@ Actor AEoDSoulReaper : weapon
 	TCheck:
 		"####" A 0 A_TakeInventory("SoulReaperAltToken",1000,0)
 	TertiaryFire:
-		"####" "#" 0 A_JumpIfInventory("SRBConverterOut",1,"Fire")
+		"####" "#" 0 A_JumpIfInventory("SRBConverterOut",1,"FireCont")
 		"####" "#" 0 A_JumpIfInventory("PowerEconomizer",1,"TerFireSuccess")
 		"####" "#" 0 A_JumpIfInventory("InfiniteAmmo",1,"TerFireSuccess")
 		"####" "#" 0 A_JumpIfInventory("GreenMana",1,1)
-		Goto Fire
+		Goto FireCont
 	TerFireSuccess:
 		"####" B 0 A_GiveInventory("SRBConverterOut",1)
 		"####" B 0 A_FireCustomMissile("SoulReaperBladeConverter",0,1,4)
@@ -11809,6 +11811,8 @@ Actor SoulReaperBladeConverter
 		"####" "#" 0 A_JumpIf(user_strength >= 400,2)
 		"####" "#" 0 A_RadiusGive("SoulReaperConvertToken",128,RGF_MONSTERS,1)
 	ExplosionEffect:
+	Death:
+		"####" "#" 0 A_TakeInventory("SRBConverterOut",1000,0,AAPTR_TARGET)
 		"####" "#" 0 A_SpawnItemEx("PBExplosionDebrisless",0,0,0,0,0,0,0,32|SXF_TRANSFERTRANSLATION)
 		Stop
 	}
