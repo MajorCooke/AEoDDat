@@ -43,7 +43,6 @@ Actor TF2Demoman	//cyberdemon
 	Scale 0.35
 	Speed 6
 	PainChance 64
-	PainChance "Kaboom", 256
 	SeeSound "Demoman/See"
 	ActiveSound "Demoman/Active"
 	PainSound "Demoman/Pain"
@@ -88,18 +87,7 @@ Actor TF2Demoman	//cyberdemon
 		N001 A 0 A_SetUserVar("user_targetacquired",0)
 		N001 A 0 A_PlaySound("Demoman/Score",CHAN_WEAPON,1,0,ATTN_NONE)
 		Goto Idle
-	Resumer:
-		//N001 A 0 A_GiveInventory("DemomanPropsOff",1)
-		//N001 A 0 A_ChangeFlag("NODAMAGE",0)
-		//N001 A 0 A_SetShootable
-		N001 H 0 A_ChangeFlag("NONSHOOTABLE",0)
-		N001 H 0 A_ChangeFlag("NOPAIN",0)
-		//N001 H 0 A_ChangeFlag("NOCLIP",0)
-		N001 A 0 A_SetSolid
-		N001 A 0 A_JumpIfInventory("DemomanExploder",1,1)
-		Goto See
-		N001 A 0 A_TakeInventory("DemomanExploder",1)
-		N001 A 0 A_SpawnItemEx("RedeemerExplosion",0,0,0,0,0,0,0,48)
+		
 	ReloadChecker:
 		TNT1 A 0 A_JumpIf(user_count>=1,"Setter")
 	See:
@@ -212,7 +200,7 @@ Actor TF2Demoman	//cyberdemon
 		N001 H 0 A_FaceTarget
 		N001 H 0 A_SpawnItemEx("DemomanUllapool",12,0,21,1,0,0,0,32|SXF_SETMASTER)
 	UllapoolLooping:
-		N001 H 1 A_JumpIf(user_chargin==0,"Restore") //A_CheckLOF("Kaboom",CLOFF_NOAIM|CLOFF_JUMPENEMY|CLOFF_JUMPFRIEND|CLOFF_JUMPNONHOSTILE|CLOFF_SKIPOBJECT|CLOFF_MUSTBESHOOTABLE|CLOFF_ALLOWNULL|CLOFF_CHECKPARTIAL,36)
+		N001 H 1 A_JumpIf(user_chargin==0,"Restore") 
 		N001 H 0 A_ChangeVelocity(8,0,0,CVF_RELATIVE)
 		N001 H 1 A_JumpIf(user_chargin==0,"Restore")
 		N001 H 0 A_ChangeVelocity(8,0,0,CVF_RELATIVE)
@@ -232,31 +220,10 @@ Actor TF2Demoman	//cyberdemon
 		N001 H 0 A_JumpIf(user_distance>=5,"Restore")
 		Loop
 	Restore:
+		"####" "#" 0 A_RemoveChildren(1,RMVF_EVERYTHING,"DemomanUllapool")
 		"####" "#" 0 A_SetUserVar("user_chargin",0)
 		"####" "#" 0 A_SetUserVar("user_distance",0)
 		"####" "#" 0 A_ChangeFlag("NOPAIN",0)
-		Goto See
-	/*
-		N001 H 0 A_FaceTarget
-		N001 H 0 A_SpawnItemEx("UllapoolRangeChecker",0,0,1,10,0,0,0,49)
-		N001 H 0 A_UnsetSolid
-		N001 H 0 A_ChangeFlag("NOPAIN",1)
-		N001 H 0 A_ChangeFlag("NONSHOOTABLE",1)
-	WaitingToGo:
-		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAA 1 A_Teleport("Resumer","DemomanMover","NoFog")
-		TNT1 AAAAAAAAAAAAAAA 1 A_Teleport("Resumer","DemomanMover","NoFog")
-		//Should he fail to teleport because the teleporter is blocked...
-		//Nothing happens.
-		Goto Resumer
-	*/
-		//Loop
-	Pain.Kaboom:
-	Kaboom:
-		TNT1 A 0 A_SetUserVar("user_chargin",0)
-		TNT1 A 0 A_SpawnItemEx("RedeemerExplosionSpawner",0,0,0,0,0,0,0,48)
-		//TNT1 A 0 A_ChangeVelocity(-40,0,60,3) //If he lives, toss him around.
-		N001 A 0 A_Explode((1000*random(1,5)),16,XF_NOTMISSILE|XF_HURTSOURCE,0,8)
-		N001 A 1 A_ChangeFlag("NOPAIN",0)
 		Goto See
 	Death:
 		TNT1 A 0 A_SpawnItemEx("QuakeGibDropper",0,0,random(10,20),0,0,0,0,33)
@@ -264,7 +231,7 @@ Actor TF2Demoman	//cyberdemon
 		TNT1 AAAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,33)
 		TNT1 A 0 A_Scream
 		TNT1 A 0 A_Fall
-		TNT1 A 0 A_RemoveChildren
+		TNT1 A 0 A_KillChildren("Telefrag",KILS_KILLMISSILES|KILS_FOILINVUL)
 		TNT1 A 1 A_PlaySound("other/gibdeath",CHAN_AUTO,1)
 		TNT1 A 35 A_GiveInventory("IDied",1)
 		TNT1 A 0 A_KillMaster
@@ -272,17 +239,18 @@ Actor TF2Demoman	//cyberdemon
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
+		"####" "#" 0 A_RemoveChildren(1,RMVF_EVERYTHING)
 		"####" "#" 0 Thing_SetTranslation(0,50)
 		"####" "#" 0 A_KillMaster
-		"####" "#" 1 A_FadeOut(0.015)
+		"####" "#" 1 A_FadeOut(0.015,0)
 		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
 		"####" "#" 0 A_Stop    
 		"####" "#" 0 A_Fall
 		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,32)
+	DisLoop:
 		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,32)
 		"####" "##" 2 A_FadeOut(0.03)
-		Goto Disintegrate+7
-
+		Loop
 	Ice:
 		"####" "#" 5 A_GenericFreezeDeath
 		"####" "#" 0 A_KillMaster
@@ -295,13 +263,15 @@ Actor DemomanUllapool
 {
 	var int user_count;
 	Projectile
-	+SEEKERMISSILE
 	+DONTREFLECT
 	+SKYEXPLODE
 	+DONTSPLASH
 	+EXPLODEONWATER
 	+BOUNCEONFLOORS
 	+BOUNCEONCEILINGS
+	+HITTRACER
+	+FORCERADIUSDMG
+	+EXTREMEDEATH
 	Speed 5
 	Radius 30
 	Height 16
@@ -317,7 +287,7 @@ Actor DemomanUllapool
 		TNT1 A 0 A_JumpIfInventory("IDied",1,"End",AAPTR_TARGET)
 		TNT1 A 0 A_SetUserVar("user_count",user_count+1)
 		TNT1 A 1 A_JumpIf(user_count>=40,"Restore")
-		TNT1 A 0 A_Warp(AAPTR_TARGET,24,0,12,0,WARPF_INTERPOLATE|WARPF_NOCHECKPOSITION,"Looping")
+		TNT1 A 0 A_Warp(AAPTR_TARGET,24,0,12,0,WARPF_INTERPOLATE|WARPF_NOCHECKPOSITION|WARPF_COPYINTERPOLATION,"Looping")
 		TNT1 A 0 A_JumpIfHealthLower(1,"End",AAPTR_TARGET)
 	Checker:
 		TNT1 A 1
@@ -327,16 +297,15 @@ Actor DemomanUllapool
 		TNT1 A 0 A_GiveInventory("DemomanRestorer",1,AAPTR_TARGET)
 		Stop
 	Crash:
-		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-		TNT1 A 0 A_GiveInventory("DemomanRestorer",1,AAPTR_TARGET)
-		TNT1 A 0 A_SeekerMissile(90,90,SMF_LOOK|SMF_CURSPEED,256,1)
-		TNT1 A 0 A_CheckFlag("SHOOTABLE","Explode",AAPTR_TRACER)
-		Stop
 	XDeath:
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+		TNT1 A 0 A_GiveInventory("DemomanRestorer",1,AAPTR_TARGET)
+		TNT1 A 0 A_CheckFlag("ISMONSTER","Explode",AAPTR_TRACER)
+		Stop
 	Explode:
-		TNT1 A 0 A_SpawnItemEx("RedeemerExplosion",0,0,0,0,0,0,0,32|SXF_TRANSFERPOINTERS)
-		TNT1 A 0 A_DamageTarget(random(2000,6000),"Normal")
+		TNT1 A 0 A_Explode(random(2000,6000),768,1)
+		TNT1 A 0 A_SpawnItemEx("RedeemerExplosionSpawner",0,0,0,0,0,0,0,32|SXF_TRANSFERPOINTERS)
+		//TNT1 A 0 A_DamageMaster(random(2000,6000),"Normal")
 		Stop
 	End:
 		TNT1 A 0
@@ -348,6 +317,7 @@ Actor DemomanRestorer : CustomInventory
 {
 	+INVENTORY.ALWAYSPICKUP
 	+INVENTORY.AUTOACTIVATE
+	Inventory.MaxAmount 0
 	States
 	{
 	Use:
@@ -355,39 +325,18 @@ Actor DemomanRestorer : CustomInventory
 		Stop
 	}
 }
-
-Actor DemoDamager
-{
-	Projectile
-	+FORCERADIUSDMG
-	+NOINTERACTION
-	+EXTREMEDEATH
-	+NODAMAGETHRUST
-	RenderStyle None
-	DamageType "DemoDamager"
-	States
-	{
-	Spawn:
-		TNT1 A 0 NoDelay A_Explode(random(1,5),128,1,0,128)
-		Stop
-	}
-}
 		
 Actor DemomanReloadChecker
 {
-	Monster
-	+NONSHOOTABLE
-	-SHOOTABLE
-	+NODAMAGE
+	Projectile
 	+NOINTERACTION
-	-COUNTKILL
 	RenderStyle None
 	States
 	{
 	Spawn:
 		TNT1 A 0
 	Idle:
-		TNT1 A 0 A_JumpIfInventory("IDied",1,"Death",AAPTR_MASTER)
+		TNT1 A 0 A_JumpIfHealthLower(1,"Death",AAPTR_MASTER)
 		TNT1 A 5 A_JumpIfInventory("DemoReloadRequired",1,"ReloadSequencer",AAPTR_MASTER)
 		Loop
 	ReloadSequencer:
@@ -438,80 +387,13 @@ Actor ReloaderSound3 : CustomInventory
 	}
 }
 
-Actor UllapoolRangeChecker : FastProjectile
-{
-	var int user_life;
-	Projectile
-	-NOGRAVITY
-	+FORCERADIUSDMG
-	+BOUNCEONFLOORS
-	+CANBOUNCEWATER
-	//+EXPLODEONWATER
-	+SEEKERMISSILE
-	+BLOODLESSIMPACT
-	+DONTREFLECT
-	//+FLOORHUGGER
-	//+THRUACTORS
-	//+SLIDESONWALLS
-	//MissileHeight 64
-	DamageType "Kaboom"
-	BounceFactor 0
-	MaxStepHeight 64
-	Damage 0
-	Radius 30
-	Height 42
-	Speed 10
-	Scale 0.35
-	SeeSound "Demoman/Charge"
-	ReactionTime 25
-	States
-	{
-	Spawn:
-		TNT1 A 0
-		N001 H 1 A_PlaySound("Demoman/Charge",CHAN_AUTO,1,0)
-	FB:
-		N001 H 0 A_ChangeVelocity(2,0,0,1) N001 H 1 A_CountDown
-		N001 H 0 A_ChangeVelocity(2,0,0,1) N001 H 1 A_CountDown
-		N001 H 0 A_ChangeVelocity(2,0,0,1) N001 I 1 A_CountDown
-		N001 H 0 A_ChangeVelocity(2,0,0,1) N001 I 1 A_CountDown
-		N001 H 0 A_ChangeVelocity(2,0,0,1) N001 J 1 A_CountDown
-		N001 H 0 A_ChangeVelocity(2,0,0,1) N001 J 1 A_CountDown
-		N001 H 0 A_ChangeVelocity(2,0,0,1) N001 K 1 A_CountDown
-		N001 H 0 A_ChangeVelocity(2,0,0,1) N001 K 1 A_CountDown
-		Loop
-	Air:
-		N001 H 0 A_Gravity
-		N001 H 1 A_CheckFloor("FB")
-		N001 H 0 A_CountDown
-		Loop
-	Death:
-	NoHit:
-		//TNT1 A 0 A_Stop
-		N001 A 1 A_RadiusThrust(1024,128,0)
-		//TNT1 A 0 A_SpawnItemEx("DemomanMover",-25,0,3,0,0,0,0,48)
-		TNT1 A 0 A_SpawnItemEx("DemomanMover",0,0,3,0,0,0,0,48)
-		Stop
-	Crash:
-	XDeath:
-		//N001 A 1 A_RadiusThrust(1024,128,0)
-		TNT1 A 0 A_NoGravity
-		TNT1 A 0 A_SeekerMissile(90,90)
-		TNT1 A 0 A_Fire(32)
-		TNT1 A 0 A_FaceTracer
-		TNT1 A 1 A_SpawnItemEx("DemomanMover",0,0,3,3,0,0,0,48)
-		TNT1 A 0 A_SpawnItemEx("RedeemerExplosion",0,0,0,0,0,0,0,48)
-		//TNT1 A 0 A_GiveInventory("DemomanExploder",1,AAPTR_TARGET)
-		Stop
-	}
-}
-
 Actor DemomanExploder : CustomInventory
 { 
 	+AUTOACTIVATE
 	States
 	{
 	Use:
-		TNT1 A 0 A_SpawnItemEx("RedeemerExplosion",0,0,0,0,0,0,0,32|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("RedeemerExplosionSpawner",0,0,0,0,0,0,0,32|SXF_TRANSFERPOINTERS)
 		Stop
 	}
 }

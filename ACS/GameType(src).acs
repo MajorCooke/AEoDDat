@@ -542,12 +542,9 @@ Script "SpawnerSetup" enter
 }
 
 #define timeout_max 50
-Script "SpawnDeployMonster" (int nojoke)
+Script "SpawnDeployMonster" (int nomini)
 {
-	// nojoke - No longer used.
-	// 1 = No joke monsters available
-	// 2 = No L4D monsters available
-	// 3 = both 1 and 2
+	// nomini - used for the corpse spawners.
 	int roll = 0; 
 	int miniroll = 0;
 	int timeout = 0;
@@ -576,7 +573,7 @@ Script "SpawnDeployMonster" (int nojoke)
 	else
 	{
 		tm = ThemeMix-1;
-		if (MiniThemeEnabled)
+		if (MiniThemeEnabled && !(nomini))
 		{
 			mc = MiniCount;
 			roll = random(0,(tm+mc));
