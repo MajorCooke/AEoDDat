@@ -11810,8 +11810,7 @@ Actor SoulReaperBladeConverter
 	Convert:
 		"####" "#" 0 A_CheckFlag("ISMONSTER",1,AAPTR_TRACER)
 		Goto Destroy
-		"####" "#" 0 A_JumpIf(	CheckClass("FDeathBringerThanatos",AAPTR_TRACER,0) ||
-								CheckClass("SpyCrab",AAPTR_TRACER,1) || 
+		"####" "#" 0 A_JumpIf(	CheckClass("SpyCrab",AAPTR_TRACER,1) || 
 								CheckClass("HTC2BlackBear",AAPTR_TRACER,1) ||
 								CheckClass("BerthaBear",AAPTR_TRACER,1) ||
 								CheckClass("FBeggar",AAPTR_TRACER,1) ||
@@ -11825,12 +11824,7 @@ Actor SoulReaperBladeConverter
 								CheckClass("FMiniSpider1",AAPTR_TRACER,1) ||
 								CheckClass("FMiniSpider2",AAPTR_TRACER,1) ||
 								CheckClass("FMiniSpider3",AAPTR_TRACER,1) ||
-								CheckClass("LILCaleb",AAPTR_TRACER,1) ||
-								CheckClass("DBTVulnerableThing",AAPTR_TRACER,1) ||
-								CheckClass("DBTVulnerableDouble",AAPTR_TRACER,1) ||
-								CheckClass("DBTVulnerableThingSteel",AAPTR_TRACER,1), "Destroy")
-		"####" "#" 0 A_JumpIfHealthLower(50001,1,AAPTR_TRACER)
-		Goto Destroy
+								CheckClass("LILCaleb",AAPTR_TRACER,1), "Destroy")
 		"####" "#" 0 A_SpawnItemEx("SRBMaxController",0,0,0,0,0,0,0,32|SXF_TRANSFERPOINTERS)
 		Goto Explosion
 	ConvertSmall:
@@ -11857,11 +11851,11 @@ Actor SRMonsterDestroyer : CustomInventory
 	{
 	Use:
 		TNT1 A 0 A_CheckFlag("FRIENDLY","End")
-		TNT1 A 0 A_JumpIf(CheckClass("FDeathBringerThanatos",AAPTR_DEFAULT,0),"Specialty")
+		TNT1 A 0 A_JumpIf(CheckClass("FDeathBringerThanatos",AAPTR_DEFAULT,0),"End")
 		TNT1 A 0 A_JumpIf(CheckClass("PlayerPawn",AAPTR_DEFAULT,1),"End")
 		TNT1 A 0 A_CheckFlag("VULNERABLE","Cont")
 		TNT1 A 0 A_CheckFlag("NODAMAGE",1)
-		TNT1 A 0 A_SetHealth(1) //Last drop!
+		TNT1 A 0 A_SetHealth((health-100000)) //Last drop!
 		Goto Cont2
 	Cont:
 		TNT1 A 0 A_DamageSelf(100000,"Extreme",DMSS_FOILBUDDHA|DMSS_FOILINVUL|DMSS_NOFACTOR)
@@ -11873,9 +11867,6 @@ Actor SRMonsterDestroyer : CustomInventory
 		Stop
 	End:
 		TNT1 A 0
-		Stop
-	Specialty:
-		TNT1 A 0 A_GiveInventory("DBTDamageCounter",1000) //Equivalent to a tenth of his life.
 		Stop
 	}
 }
@@ -11921,9 +11912,11 @@ Actor SRBController
 		TNT1 A 0 A_CheckFlag("ISMONSTER",1,AAPTR_TRACER)
 		Goto DamageEnd
 	// Death Inc has written an angry letter about letting in too many petlings and slaves.
-	// The boss even came out and spoke how displeased he was, being 
-	// neuologically brainwashed into helping those he was trying to test.
-		"####" "#" 0 A_JumpIf(	CheckClass("FDeathBringerThanatos",AAPTR_TRACER,0) ||
+	// Also, it's unfair trying to convert the big boss when you dont have 400 mana. WORK FOR IT!
+		"####" "#" 0 A_JumpIf(	CheckClass("FDeathBringerThanatos",AAPTR_TRACER,1) ||
+								CheckClass("DBTVulnerableThing",AAPTR_TRACER,1) ||
+								CheckClass("DBTVulnerableDouble",AAPTR_TRACER,1) ||
+								CheckClass("DBTVulnerableThingSteel",AAPTR_TRACER,1) || 
 								CheckClass("SpyCrab",AAPTR_TRACER,1) || 
 								CheckClass("HTC2BlackBear",AAPTR_TRACER,1) ||
 								CheckClass("BerthaBear",AAPTR_TRACER,1) ||
@@ -11938,10 +11931,7 @@ Actor SRBController
 								CheckClass("FMiniSpider1",AAPTR_TRACER,1) ||
 								CheckClass("FMiniSpider2",AAPTR_TRACER,1) ||
 								CheckClass("FMiniSpider3",AAPTR_TRACER,1) ||
-								CheckClass("LILCaleb",AAPTR_TRACER,1) ||
-								CheckClass("DBTVulnerableThing",AAPTR_TRACER,1) ||
-								CheckClass("DBTVulnerableDouble",AAPTR_TRACER,1) ||
-								CheckClass("DBTVulnerableThingSteel",AAPTR_TRACER,1), "DamageEnd")
+								CheckClass("LILCaleb",AAPTR_TRACER,1), "DamageEnd")
 	Looping:
 		"####" "#" 0 A_JumpIfInventory("SoulReaperStrength",100,"Dec100",AAPTR_TRACER)
 		"####" "#" 0 A_JumpIfInventory("SoulReaperStrength",10,"Dec10",AAPTR_TRACER)
@@ -11997,17 +11987,24 @@ Actor SRBMaxController
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay A_SetUserVar(user_hp,CallACS("SoulReaperHealthCheck",0,0,0)) //Get their spawn health.
-		TNT1 A 0 A_JumpIf(user_hp > 30000,"DamageEnd") //Not from our mod!
+		TNT1 A 0 NoDelay A_JumpIf( 	CheckClass("DBTVulnerableThing",AAPTR_TRACER,1) ||
+									CheckClass("DBTVulnerableDouble",AAPTR_TRACER,1) ||
+									CheckClass("DBTVulnerableThingSteel",AAPTR_TRACER,1), "GetMasterToTracer")
+		TNT1 A 0 A_JumpIf(CheckClass("FDeathBringerThanatos",AAPTR_TRACER,0),"Looping")
+		TNT1 A 0 A_SetUserVar(user_hp,CallACS("SoulReaperHealthCheck",0,0,0)) //Get their spawn health.
+		TNT1 A 0 A_JumpIf(user_hp > 45000,"DamageEnd") //Not from our mod!
 	Looping:
 		TNT1 A 0 A_JumpIfHealthLower(1,"End",AAPTR_TRACER)
-		TNT1 A 35 A_GiveInventory("SRNoDamage",1,AAPTR_TRACER)
-		TNT1 A 0 A_JumpIf(user_timed[0] == 0,"Looping")
-		TNT1 A 0 A_SetUserArray(user_timed,1,user_timed[1]-1)
-		TNT1 A 0 A_JumpIf(user_timed[1] == 0,1)
+		TNT1 A 17 A_GiveInventory("SRNoDamage",1,AAPTR_TRACER)
+		//TNT1 A 0 A_JumpIf(user_timed[0] == 0,"Looping")
+		//TNT1 A 0 A_SetUserArray(user_timed,1,user_timed[1]-1)
+		//TNT1 A 0 A_JumpIf(user_timed[1] == 0,1)
 		Loop
-		TNT1 A 0 A_GiveInventory("MonsterDestroyer",1,AAPTR_TRACER)
-		Stop
+		//TNT1 A 0 A_GiveInventory("MonsterDestroyer",1,AAPTR_TRACER)
+		//Stop
+	GetMasterToTracer:
+		TNT1 A 0 A_TransferPointer(AAPTR_TRACER,AAPTR_DEFAULT,AAPTR_MASTER,AAPTR_TRACER,4)
+		Goto Looping
 	DamageEnd:
 		TNT1 A 0 A_DamageSelf(100000,"Extreme",DMSS_FOILBUDDHA|DMSS_FOILINVUL|DMSS_NOFACTOR)
 		Stop
@@ -12025,7 +12022,7 @@ Actor SRFriendly : CustomInventory
 	States
 	{
 	Use:
-		
+		TNT1 A 0 A_JumpIf(CheckClass("FDeathBringerThanatos",AAPTR_DEFAULT,0),2)
 		TNT1 A 0 Thing_SetTranslation(0,109)
 		TNT1 A 0 A_CheckFlag("FRIENDLY","End")
 		TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
@@ -12050,12 +12047,14 @@ Actor SRNoDamage : CustomInventory
 	States
 	{
 	Pickup:
+		TNT1 A 0 A_JumpIf(CheckClass("FDeathBringerThanatos",AAPTR_DEFAULT,0),2)
 		TNT1 A 0 Thing_SetTranslation(0,109)
 		TNT1 A 0 A_ChangeFlag("NODAMAGE",1)
 		TNT1 A 0 A_SetHealth(666666666)
 		TNT1 A 0 A_CheckFlag("FRIENDLY","End")
 		TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
 		TNT1 A 0 A_CopyFriendliness(AAPTR_PLAYER1)
+		TNT1 A 0 A_TakeInventory("DBTDamageCounter",10000,0)
 		Stop
 	End:
 		TNT1 A 0
@@ -12077,6 +12076,7 @@ Actor SoulReaperBeam
 	+HITTRACER
 	+PAINLESS
 	+SCREENSEEKER
+	+DONTSPLASH
 	Speed 20
 	Radius 4
 	Height 2
