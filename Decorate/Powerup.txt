@@ -2032,10 +2032,10 @@ ACTOR IconOfSummoning : ArtiDarkServant replaces ArtiDarkServant
     States
     {
     Spawn:
-	TNT1 A 0
-	TNT1 A 0 A_Warp(AAPTR_DEFAULT,0,0,0,0,WARPF_STOP|WARPF_TOFLOOR|WARPF_NOCHECKPOSITION)
-	SUMN A -1 Bright
-	Loop
+		TNT1 A 0
+		//TNT1 A 0 A_Warp(AAPTR_DEFAULT,0,0,0,0,WARPF_STOP|WARPF_TOFLOOR|WARPF_NOCHECKPOSITION)
+		SUMN A -1 Bright
+		Loop
     }
 }
 
@@ -2056,20 +2056,24 @@ ACTOR IconOfSummoning : ArtiDarkServant replaces ArtiDarkServant
 
 ACTOR DarkServantSummoner : SummoningDoll replaces SummoningDoll
 {
-	var int user_type;
     Scale 0.13
     States
     {
     Spawn:
-		SUMN A 0 NoDelay A_SetUserVar("user_type",26)
-		TNT1 A 0 A_JumpIfInventory("JokeToken",1,"Moving",AAPTR_PLAYER1)
-		TNT1 A 0 A_SetUserVar(user_type,0)
+		SUMN A 0
 	Moving:
 		SUMN A 4 bright
 		Loop
     Death:
 		SUMN AA 4 Bright
-		TNT1 A 0 A_JumpIf(user_type==26,"SummonSurvivor")
+		TNT1 A 0 A_JumpIfInventory("L4DMode",1,"SummonSurvivor",AAPTR_PLAYER1)
+		TNT1 A 0 A_JumpIfInventory("L4DDirToken",1,"Randomize",AAPTR_PLAYER1)
+		TNT1 A 0 A_JumpIfInventory("JokeMode",1,"Randomize",AAPTR_PLAYER1)
+		Goto SummonHeresiarch
+	Randomize:
+		TNT1 A 0 A_Jump(64,"SummonHeresiarch")
+		Goto SummonSurvivor
+	SummonHeresiarch:
 		SUMN A 4 Bright A_Summon
 		Stop
 	SummonSurvivor:
@@ -2092,6 +2096,7 @@ Actor SurvivorSpawner
 	Spawn:
 		TNT1 A 0
 		TNT1 A 0 A_RearrangePointers(AAPTR_PLAYER_GETTARGET,AAPTR_PLAYER1,AAPTR_DEFAULT,4)
+		TNT1 A 0 A_CopyFriendliness(AAPTR_PLAYER1)
 		TNT1 A 0 A_SpawnItemEx("TeleportFog",0,0,0,0,0,0,0,32)
 		TNT1 A 0 A_Jump(256,"S1","S2","S3","S4","S5","S6","S7")
 		//Not including Rochelle due to how much trouble she is with her chainsaw.
@@ -4247,8 +4252,8 @@ Actor DemonMorphPowerup : CustomInventory
 		Goto Spawn
 	Cont:
 		QPEI A 2 A_CheckSight("Simple")
-		QPEI A 0 A_SpawnItemEx("DMBlackParticle",0,0,10.5,frandom(2.0,4.0),0,0,random(0,359),32)
-		QPEI AAAA 0 A_SpawnItemEx("DMBlackParticle",0,0,10.5,frandom(2.0,4.0),0,0,random(0,359),32,192)
+		QPEI A 0 A_SpawnItemEx("DMBlackParticle",0,0,15.5,frandom(2.0,4.0),0,0,random(0,359),32)
+		QPEI AAAAAAAA 0 A_SpawnItemEx("DMBlackParticle",0,0,15.5,frandom(2.0,4.0),0,0,random(0,359),32,192)
 		Goto S2
 	Simple:
 		QPEI A 4 A_SetUserVar("user_tick",user_tick+2)

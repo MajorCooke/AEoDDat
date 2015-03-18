@@ -87,6 +87,9 @@ Script "s901" enter
 			AEoDThemeType = GetCVar("AEGtValues");	
 			giveinventory("AEoDKnife",1);
 			giveinventory("KnifeDrop",1);
+			
+			if (L4DMode)
+				GiveInventory("L4DMode",1);
 			if(L4DMode || L4DDir)		//if L4D gives special weapon and ammo
 			{
 				giveinventory("AEoDBerettaItem",1);
@@ -140,16 +143,17 @@ Script "s901" enter
 				GiveInventory("FearRune",1);	//i will give one
 				
 			ACS_NamedExecute("s914",0,0,0,0);	//Start up the body count script.
-			GiveInventory("L4DMode",1);
 			GiveInventory("L4DCountHudToken",1);
 		}
 	
 	
 	int diff = GameSkill();
 	
-	if (L4DDir)	//If chaos capital	
-		giveinventory("L4DDirectorSpawner",1); //spawn only the l4d director
-		
+	if (L4DDir)	//Left 4 Dead Director
+	{
+		GiveInventory("L4DDirectorSpawner",1); //spawn only the l4d director
+		GiveInventory("L4DDirToken",1);
+	}	
 	if (NorDir) //if monster mayhem mode
 		giveinventory("DirectorSpawner",1); //spawn the director
 	
@@ -332,6 +336,12 @@ script "s914" (int hudsizex, int hudsizey)
 	HudMessage(i:ccm; HUDMSG_PLAIN,689,CR_BROWN,300.1,hudyoffset+145.1,0);
 	SetHudSize(0,0,0);
 }
+
+//==============================================================================
+//								Soul Count
+//==============================================================================
+// Keeps track of souls for the player who has them and performs flashier
+// effects,the closer (s)he gets to 666.
 
 script "AESoulCount" (void)
 {
