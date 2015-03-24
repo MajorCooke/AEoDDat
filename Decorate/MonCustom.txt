@@ -6864,7 +6864,6 @@ Actor WeepingAngel
 	DistanceCheck:
 		//"####" "#" 0 A_FaceTarget
 		"####" "#" 0 A_CheckLOF("TargetNotLooking",CLOFF_SKIPOBSTACLES,1024,user_distance[1])
-		"####" "#" 0 A_CheckLOF("RAPE",CLOFF_SKIPOBSTACLES,user_distance[1])
 		Goto DC2
 	DC2:
 		"####" "#" 0 A_SetUserArray("user_distance",0,user_distance[0]+2)
@@ -6885,7 +6884,7 @@ Actor WeepingAngel
 		//Make sure not to attack from behind walls.
 		"####" "#" 0 A_CheckLOF(1,CLOFF_SKIPFRIEND|CLOFF_SKIPNONHOSTILE|CLOFF_JUMPENEMY|CLOFF_SKIPOBJECT,user_distance[1])
 		Goto Reset2
-		"####" "#" 0 A_JumpIf(CheckClass("PlayerPawn",AAPTR_TARGET,1),2)
+		"####" "#" 0 A_JumpIf(CheckClass("PlayerPawn",AAPTR_TARGET,1),1)
 		Goto MonsterSkip
 		//D'ohshit it sees us! STAHP
 		"####" "#" 0 A_JumpIfInTargetLOS("Reset2",120)

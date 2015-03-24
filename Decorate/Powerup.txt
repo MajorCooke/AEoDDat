@@ -2068,7 +2068,7 @@ ACTOR DarkServantSummoner : SummoningDoll replaces SummoningDoll
 		SUMN AA 4 Bright
 		TNT1 A 0 A_JumpIfInventory("L4DMode",1,"SummonSurvivor",AAPTR_PLAYER1)
 		TNT1 A 0 A_JumpIfInventory("L4DDirToken",1,"Randomize",AAPTR_PLAYER1)
-		TNT1 A 0 A_JumpIfInventory("JokeMode",1,"Randomize",AAPTR_PLAYER1)
+		TNT1 A 0 A_JumpIfInventory("JokeToken",1,"Randomize",AAPTR_PLAYER1)
 		Goto SummonHeresiarch
 	Randomize:
 		TNT1 A 0 A_Jump(64,"SummonHeresiarch")
@@ -4102,8 +4102,8 @@ Actor DMSoulTarget
 	PainChance "SoulReaperPull", 256
 	DamageFactor "Normal", 0
 	DamageFactor "SoulReaperPull", 1
-	Radius 12
-	Height 12
+	Radius 4
+	Height 4
 	RenderStyle None
 	States
 	{
@@ -4112,8 +4112,9 @@ Actor DMSoulTarget
 		TNT1 A 0 A_Warp(AAPTR_DEFAULT,0,0,0,0,WARPF_TOFLOOR|WARPF_NOCHECKPOSITION)
 		TNT1 A 0 A_Stop
 	W1:
-		TNT1 A 35 A_SetUserVar(user_count,1)
+		TNT1 A 35 A_SetUserVar(user_count,user_count+1)
 		TNT1 A 0 A_JumpIf(user_count > 10,"End")
+		TNT1 A 0 A_JumpIf(IsPointerEqual(AAPTR_MASTER,AAPTR_NULL),"End")
 		Loop
 	End:
 		TNT1 A 0
