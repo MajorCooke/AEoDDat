@@ -11960,6 +11960,7 @@ Actor SRBController
 		TNT1 A 0 A_DamageTracer((user_strength*(randompick(2^random(1,8),random(1,8),2,1,42,13,8,2,24,666)))) //I dunno. Randumb is randumb. :B
 		Stop
 	Restore: //Converts and/or restores health to convertees or monsters already friendly.
+		TNT1 A 0 A_ResetHealth(AAPTR_TRACER)
 		TNT1 A 0 A_SetHealth(user_hp*user_strength,AAPTR_TRACER)
 		TNT1 A 1 A_GiveInventory("SRFriendly",1,AAPTR_TRACER)
 		Stop
@@ -11999,6 +12000,7 @@ Actor SRBMaxController
 		//TNT1 A 0 A_GiveInventory("MonsterDestroyer",1,AAPTR_TRACER)
 		//Stop
 	Restore:
+		TNT1 A 0 A_ResetHealth(AAPTR_TRACER)
 		TNT1 A 0 A_SetUserVar(user_hp,CallACS("SoulReaperHealthCheck",0,0,0)) //Get their spawn health.
 		TNT1 A 0 A_SetHealth(user_hp*100,AAPTR_TRACER)
 		TNT1 A 0 A_GiveInventory("SRFriendly",1,AAPTR_TRACER)
@@ -12070,6 +12072,7 @@ Actor SoulReaperBeam
 	var int user_distance;
 	var int user_c;
 	var int user_t;
+	var int user_soultype;
 	Projectile
 	+SEEKERMISSILE
 	+DONTREFLECT
@@ -12113,10 +12116,11 @@ Actor SoulReaperBeam
 		TNT1 A 0 A_CheckFlag("SHOOTABLE","Dmg",AAPTR_TRACER)
 		Stop
 	Dmg:
-		TNT1 A 0 A_JumpIf(CheckClass("DMSoulTarget",AAPTR_TRACER,0),"Specialty")
+		TNT1 A 0 A_JumpIf(CheckClass("DMSoulTarget",AAPTR_TRACER,0),"Specialty")		
 		TNT1 A 0 A_JumpIfHealthLower(2,1,AAPTR_TRACER)
 		Goto SkipSoul
 		TNT1 A 0 A_CheckFlag("BUDDHA","SkipSoul",AAPTR_TRACER)
+		TNT1 A 0 A_CheckFlag("NODAMAGE","SkipSoul",AAPTR_TRACER)
 		TNT1 A 0 A_SpawnItemEx("DMSoulMissile",0,0,0,0,0,0,0,32|SXF_TRANSFERPOINTERS)
 	SkipSoul:
 		TNT1 A 0 A_DamageTracer(random(1,2),"Extreme",DMSS_FOILINVUL)
@@ -12129,9 +12133,9 @@ Actor SoulReaperBeam
 	Specialty:
 		TNT1 A 0 A_Warp(AAPTR_TRACER,0,0,0,0,WARPF_NOCHECKPOSITION)
 		TNT1 A 0 A_ChangeFlag("PAINLESS",0)
+		TNT1 A 0 A_TransferPointer(AAPTR_DEFAULT,AAPTR_TRACER,AAPTR_TARGET,AAPTR_TARGET,4)
 		TNT1 A 0 A_DamageTracer(1,"SoulReaperPull")
-		//TNT1 A 0 A_DamageTarget(-1)
-		TNT1 A 0 A_SpawnItemEx("DMSoulMissile",0,0,0,0,0,0,0,32|SXF_TRANSFERPOINTERS)
+		//TNT1 A 0 A_SpawnItemEx("DMSoulMissile",0,0,0,0,0,0,0,32|SXF_TRANSFERPOINTERS,0,user_soultype)
 		Stop
 	}
 }
