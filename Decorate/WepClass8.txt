@@ -5251,77 +5251,79 @@ ACTOR AEoDShredderStaffItem : CustomInventory 6106
 
 ACTOR AEoDShredderStaff : Weapon // 6106
 {
-+FLOORCLIP
-+INVENTORY.IGNORESKILL
-+CHEATNOTWEAPON
-+FLOATBOB
-Weapon.AmmoType1 "GreenMana"
-Weapon.AmmoType2 "GreenMana"
-Weapon.AmmoGive1 40
-Weapon.AmmoUse1 10
-Weapon.AmmoUse2 25
-Inventory.PickupMessage "You got the Shredder Staff!"
-Inventory.PickupSound "pickuppiece"
-weapon.upsound "weapons/draw"
-Scale 0.9
-Tag "Shredder staff"
-States
-{
-Spawn:
-	S4RO A 3 Bright
-	Loop
-Ready:
- 	//TNT1 A 0 A_PlaySound("reilsss/weapons/magicidle7", 6, 0.3, 1)
-	S04I ABCDEF 5 A_WeaponReady
-	Goto Ready+1
-Deselect:
- 	TNT1 A 0 A_StopSound(6)
-	TNT1 A 0 ACS_NamedExecute("s799",0,0,0,0)
-	S04I A 1 A_Lower
-	TNT1 AA 0 A_Lower
-	Goto Deselect+1
-Select:
-	TNT1 A 0 ACS_NamedExecute("s799",0,12,0,0)
-	S04I A 1 A_Raise
-	TNT1 AA 0 A_Raise
-	Loop
-Fire:
- 	TNT1 A 0 A_StopSound(CHAN_BODY)
-	TNT1 A 0 A_PlaySound("reilsss/weapons/shrederstafffire", CHAN_WEAPON, 1.0, 0)
-	S04I G 3
-	S04I H 2 A_SetBlend("OliveDrab4",0.6,10)
-	TNT1 A 0 ACS_NamedExecute("s851",0,35,random(-3,3),0)
-	S04I I 4 A_FireCustomMissile("ShredderCrystal",0,1)
-	TNT1 A 0 ACS_NamedExecute("s851",0,-35,random(-3,3),0)
-	S04I J 4
-	S04I CDEF 5
-	Goto Ready
-AltFire:
- 	TNT1 A 0 A_StopSound(CHAN_BODY)
-	S04I G 3 
-	S04I H 0 A_PlaySound("shredderstaff/altfire", CHAN_WEAPON, 1.0, 0)
-	TNT1 A 0 
-	TNT1 A 0 A_SetBlend("Green",0.5,3)
-	//S04I I 0 A_FireCustomMissile("ShredderRinger",0,0,0,5)
-	S04I I 0 A_FireCustomMissile("ShredderAltFXSpawner",0,0)
-	//S04I H 0 A_RailAttack(0,0,0,"green","green",RGF_SILENT,0,0,0,0,20000,0,4,0,"ShredderBeamMiniParticle")
-	//S04I H 0 A_RailAttack(0,0,0,"blue","blue",RGF_SILENT,0,0,0,0,20000,0,4,0,"ShredderBeamMiniParticle2")
-	//S04I H 0 A_RailAttack(0,0,0,"red","red",RGF_SILENT,0,0,0,0,20000,0,4,0,"ShredderBeamParticle")
-	S04I H 2 A_RailAttack(200,0,1,none,none,RGF_SILENT,0,"ShredderBlastPuff",0,0,20000)
-	S04I I 5 //A_FireBullets(0,0,1,150,"LanternExplosion",1)
-	S04I J 4
-	S04I FABCDE 5
-	Goto Ready
-}
+	+FLOORCLIP
+	+INVENTORY.IGNORESKILL
+	+CHEATNOTWEAPON
+	+FLOATBOB
+	+NOAUTOAIM
+	Weapon.AmmoType1 "GreenMana"
+	Weapon.AmmoType2 "GreenMana"
+	Weapon.AmmoGive1 40
+	Weapon.AmmoUse1 10
+	Weapon.AmmoUse2 25
+	Inventory.PickupMessage "You got the Shredder Staff!"
+	Inventory.PickupSound "pickuppiece"
+	weapon.upsound "weapons/draw"
+	Scale 0.9
+	Tag "Shredder staff"
+	States
+	{
+	Spawn:
+		S4RO A 3 Bright
+		Loop
+	Ready:
+		//TNT1 A 0 A_PlaySound("reilsss/weapons/magicidle7", 6, 0.3, 1)
+		S04I ABCDEF 5 A_WeaponReady
+		Goto Ready+1
+	Deselect:
+		S04I A 0 A_StopSound(6)
+		S04I A 0 ACS_NamedExecute("s799",0,0,0,0)
+		S04I A 1 A_Lower
+		S04I AA 0 A_Lower
+		Goto Deselect+1
+	Select:
+		S04I A 0 ACS_NamedExecute("s799",0,12,0,0)
+		S04I A 1 A_Raise
+		S04I AA 0 A_Raise
+		Loop
+	Fire:
+		S04I A 0 A_StopSound(CHAN_BODY)
+		S04I A 0 A_PlaySound("reilsss/weapons/shrederstafffire", CHAN_WEAPON, 1.0, 0)
+		S04I G 3
+		S04I H 2 A_SetBlend("OliveDrab4",0.6,10)
+		S04I I 4 A_FireCustomMissile("ShredderCrystal",0,1)
+		S04I J 4
+		S04I CDEF 5
+		Goto Ready
+	AltFire:
+		S04I A 0 A_StopSound(CHAN_BODY)
+		S04I G 3 
+		S04I H 0 A_PlaySound("shredderstaff/altfire", CHAN_WEAPON, 1.0, 0)
+		S04I A 0 
+		S04I A 0 A_SetBlend("Green",0.5,3)
+		//S04I I 0 A_FireCustomMissile("ShredderRinger",0,0,0,5)
+		S04I I 0 A_FireCustomMissile("ShredderAltFXSpawner",0,0)
+		//S04I H 0 A_RailAttack(0,0,0,"green","green",RGF_SILENT,0,0,0,0,20000,0,4,0,"ShredderBeamMiniParticle")
+		//S04I H 0 A_RailAttack(0,0,0,"blue","blue",RGF_SILENT,0,0,0,0,20000,0,4,0,"ShredderBeamMiniParticle2")
+		//S04I H 0 A_RailAttack(0,0,0,"red","red",RGF_SILENT,0,0,0,0,20000,0,4,0,"ShredderBeamParticle")
+		S04I H 0 A_RailAttack(200,0,1,none,none,RGF_SILENT,0,"ShredderBlastPuff",0,0,20000)
+		S04I H 2 A_FireBullets(0,0,1,200,"ShredderExplosion",FBF_NORANDOMPUFFZ)
+		S04I I 5 
+		S04I J 4
+		S04I FABCDE 5
+		Goto Ready
+	}
 }
 Actor ShredderAltFXSpawner
 {
+	var int user_s[4];
 	var int user_failsafe;
+	var int user_count;
 	Projectile
 	+THRUACTORS
 	+FORCERADIUSDMG
 	+EXTREMEDEATH
-	Speed 4
+	Speed 8
 	Radius 4
 	Height 4
 	RenderStyle Add
@@ -5332,28 +5334,65 @@ Actor ShredderAltFXSpawner
 	States
 	{
 	Spawn:
-		TNT1 A 0
-		//TNT1 A 0 A_ScaleVelocity(4)
-		TNT1 A 0 A_SpawnItemEx("ShredderAltFX2",0,0,10,velx,vely,velz,0,32|SXF_ABSOLUTEMOMENTUM)
-		TNT1 AAA 0 A_SpawnItemEx("ShredderAltFX3",0,0,10,velx,vely,velz,0,32|SXF_ABSOLUTEMOMENTUM)
+		TNT1 A 0 NoDelay A_SetUserArray(user_s,0,random(0,359))
+		TNT1 A 0 A_SetUserArray(user_s,1,random(0,359))
+		TNT1 A 0 A_SetUserArray(user_s,2,random(1,8))
+		TNT1 A 0 A_SetUserArray(user_s,3,random(1,8))
+		//TNT1 A 0 A_SpawnItemEx("ShredderAltFX2",0,0,10,velx,vely,velz,0,32|SXF_ABSOLUTEMOMENTUM|SXF_TRANSFERPITCH)
+		//TNT1 AAA 0 A_SpawnItemEx("ShredderAltFX3",0,0,10,velx,vely,velz,0,32|SXF_ABSOLUTEMOMENTUM|SXF_TRANSFERPITCH)
 		//TNT1 A 0 A_SpawnItemEx("ShredderAltMiniFX",0,0,4,velx,vely,velz,0,32|SXF_ABSOLUTEMOMENTUM)
 		//TNT1 A 0 A_SpawnItemEx("ShredderAltMiniFX",0,0,4,velx,vely,velz,0,32|SXF_ABSOLUTEMOMENTUM)
 	Movement:
-		TNT1 A 0 A_JumpIf(user_failsafe>=5000,2)
 		TNT1 A 0 A_SpawnItemEx("ShredderBeamParticle2",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_JumpIf(user_s[0] < 360,2)
+		TNT1 A 0 A_SetUserArray(user_s,0,user_s[0]-360)
+		TNT1 A 0 A_SetUserArray(user_s,0,user_s[0]+user_s[2])
+		TNT1 A 0 A_JumpIf(user_s[1] < 360,2)
+		TNT1 A 0 A_SetUserArray(user_s,1,user_s[1]-360)
+		TNT1 A 0 A_SetUserArray(user_s,1,user_s[1]+user_s[3])
+		//(sin(-pitch)*(user_d))*(sin(user_s+90)),(sin(user_s)*user_d),(cos(pitch)*user_d)*(cos(user_s))
+		TNT1 A 0 A_SpawnItemEx("ShredderBeamParticle",(sin(-pitch)*10)*sin(user_s[0]+90),(sin(user_s[0])*10),((cos(pitch)*10)*cos(user_s[0])),0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("ShredderBeamMiniParticle",(sin(-pitch)*10)*sin(user_s[0]+90),(sin(user_s[0])*10),((cos(pitch)*10)*cos(user_s[0])),0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("ShredderBeamMiniParticle2",(sin(-pitch)*10)*sin(user_s[1]+90),(sin(user_s[1])*10),((cos(pitch)*10)*cos(user_s[1])),0,0,0,0,32)
 		TNT1 A 0 A_Warp(AAPTR_DEFAULT,velx,vely,velz,0,WARPF_ABSOLUTEOFFSET,1)
-		Goto Death
-		TNT1 A 0 A_Warp(AAPTR_DEFAULT,velx,vely,velz,0,WARPF_ABSOLUTEOFFSET,1)
-		Goto Death
+		Stop
 		TNT1 A 0 A_SetUserVar("user_failsafe",user_failsafe+1)
-		TNT1 A 0 A_JumpIf(user_failsafe>=25000,"Death")
+		TNT1 A 0 A_JumpIf(user_failsafe>=5000,"Death")
 		Loop
 	Death:
-		TNT1 A 0 A_PlaySound("weapons/explode1")
+		TNT1 A 0 
+		Wait
+	}
+}
+
+Actor ShredderBeamMiniParticleSp
+{ }
+Actor ShredderBeamMiniParticleSp2
+{ }
+Actor ShredderExplosion
+{
+	+NOINTERACTION
+	+ALWAYSPUFF
+	+PUFFGETSOWNER
+	+THRUACTORS
+	+DONTSPLASH
+	+SKYEXPLODE
+	+EXPLODEONWATER
+	Radius 4
+	Height 4
+	RenderStyle Add
+	DamageType "AEMagic"
+	Alpha 1
+	//Translation "0:255=%[0,0,0]:[0.25,1,0.25]"
+	Translation "0:255=%[0.0,0.0,0.0]:[0.44,0.47,0.28]"
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_PlaySound("weapons/explode1")
 		TNT1 A 0 A_Explode(450,256,0,0,128)
 		SRBA FFFFGGGGHHHHIIII 1 bright A_FadeOut(0.02)
 		SRBA J 1 bright A_FadeOut(0.1)
-		Wait
+		Stop
 	}
 }
 
@@ -5528,13 +5567,12 @@ Actor ShredderAltFX2
 						21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,"Movement")
 		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_Weave(1,1,1.5,1.5)
 	Movement:
-		TNT1 A 0 A_JumpIf(user_failsafe>=6000,2)
 		TNT1 A 0 A_SpawnItemEx("ShredderBeamParticle",0,0,0,0,0,0,0,32)
 		TNT1 A 0 A_Warp(AAPTR_DEFAULT,velx,vely,velz,0,WARPF_ABSOLUTEOFFSET,1)
 		Stop
 		TNT1 A 0 A_Weave(1,1,1.5,1.5)
 		TNT1 A 0 A_SetUserVar("user_failsafe",user_failsafe+1)
-		TNT1 A 0 A_JumpIf(user_failsafe>=25000,"Death")
+		TNT1 A 0 A_JumpIf(user_failsafe>=5000,"Death")
 		Loop
 	Death:
 		TNT1 A 0
@@ -5567,7 +5605,7 @@ Actor ShredderAltFX3
 		TNT1 A 0 A_Weave(1,1,1.5,1.5)
 		TNT1 A 0 A_SetUserVar("user_failsafe",user_failsafe+1)
 		TNT1 A 0 A_SetUserVar("user_count",user_count+1)
-		TNT1 A 0 A_JumpIf(user_failsafe>=25000,"Death")
+		TNT1 A 0 A_JumpIf(user_failsafe>=5000,"Death")
 		Loop
 	Death:
 		TNT1 A 0
@@ -8197,8 +8235,9 @@ Actor StakeGunStakeStoke
 		TNT1 A 0 A_SetUserVar(user_z,user_z-z)
 		TNT1 A 0 A_Warp(AAPTR_TRACER,-15,0,user_z,user_angle,WARPF_NOCHECKPOSITION)
 	Warping:
+		D008 P 0 A_JumpIf(IsPointerEqual(AAPTR_TRACER,AAPTR_NULL),"Dropout")
 		D008 P 0 A_JumpIfHealthLower(1,"DropOut",AAPTR_TRACER)
-		D008 P 0 A_Warp(AAPTR_TRACER,-15,0,user_z,user_angle,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE|WARPF_ABSOLUTEOFFSET)
+		D008 P 0 A_Warp(AAPTR_TRACER,-15,0,user_z,user_angle[0],WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
 		D008 P 1 A_SetUserVar("user_count",user_count+1)
 		D008 P 0 A_JumpIf(user_count>=300,1)
 		Loop
