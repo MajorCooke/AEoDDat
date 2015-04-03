@@ -5468,7 +5468,148 @@ Actor AEoDVoodooDollNoAmmo : AEoDVoodooDollItem
 //==================================================================================
 //==================================================================================
 
-Actor AEoDBloodShotgun : Weapon 6186
+Actor AEoDBloodShotgunItem : CustomInventory 6186
+{
+	+FLOORCLIP
+	+INVENTORY.IGNORESKILL
+	Scale 0.195
+	Inventory.Amount 1
+	Inventory.PickupMessage "Picked up a sawed-off"
+	Inventory.PickupSound "BloodShotgun/Pickup"
+	States
+	{
+	Spawn:
+		WB2S A -1
+		Loop
+	Pickup:
+		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
+		Goto Pickup+2
+		TNT1 A 0 A_JumpIfInventory("Weapon4Count",3,"Nothing")
+		TNT1 A 0 A_JumpIfInventory("AEoDBloodShotgunCount",2,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("AEoDBloodShotgunCount",1,"Pickup2")
+		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
+		TNT1 A 0 A_GiveInventory("BloodShotgunDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDBloodShotgun",1)
+		TNT1 A 0 A_GiveInventory("AEoDBloodShotgunCount",1)
+		TNT1 A 0 ACS_NamedExecute("s799",0,7,0,0)
+		TNT1 A 0 A_JumpIfInventory("NoWeaponSwitch",1,2)
+		TNT1 A 0 A_SelectWeapon("AEoDBloodShotgun")
+		TNT1 A 0
+		Stop
+	Pickup2:
+		TNT1 A 0 A_GiveInventory("BloodShotgunDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDBloodShotgun",1)
+		TNT1 A 0 A_GiveInventory("AEoDBloodShotgunCount",1)
+		TNT1 A 0 ACS_NamedExecute("s799",0,7,0,0)
+		TNT1 A 0 A_JumpIfInventory("NoWeaponSwitch",1,2)
+		TNT1 A 0 A_SelectWeapon("AEoDBloodShotgun")
+		TNT1 A 0
+		Stop
+	Nothing:
+		TNT1 A 0 A_JumpIfInventory("AEoDBloodShotgunCount",2,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("AEoDBloodShotgunCount",1,"Pickup2")
+		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
+		Goto Pickup+2
+		TNT1 A 0 ACS_NamedExecute("s798",0,4,0,0)
+		Fail
+	Ammo:
+		TNT1 A 0 A_GiveInventory("AEoDBloodShotgun",1)
+		Stop
+	}
+}
+
+Actor AEoDBloodShotgunCount : Inventory
+{
+	Inventory.MaxAmount 2
+	Inventory.Amount 1
+}
+
+Actor BloodShotgunDropCheck : Inventory
+{
+	Inventory.Amount 1
+	Inventory.MaxAmount 1
+}
+
+Actor BloodShotgunDrop : CustomInventory
+{
+	Inventory.Amount 1
+	Inventory.MaxAmount 2
+	States
+	{
+	Use:
+		TNT1 A 0
+		TNT1 A 0 A_StopSound(6)
+		TNT1 A 0 A_SpawnItemEx("DroppedBloodShotgun",0,0,32,8,0,0,0,32,0)
+		TNT1 A 0 A_TakeInventory("AEoDBloodShotgunCount",1)
+		Stop
+	}
+}
+
+Actor DroppedBloodShotgun
+{
+	Radius 16
+	Height 20
+	Scale 0.195
+	States
+	{
+	Spawn:
+		WB2S A 15
+		TNT1 A 0 A_SpawnItemEx("AEoDBloodShotgunNoAmmo",0,0,0,0,0,0,0,48,0)
+		Stop
+	}
+}
+
+Actor AEoDBloodShotgunNoAmmo : AEoDBloodShotgunItem
+{
+	States
+	{
+	Pickup:
+		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
+		Goto Pickup+2
+		TNT1 A 0 A_JumpIfInventory("Weapon4Count",3,"Nothing")
+		TNT1 A 0 A_JumpIfInventory("AEShell",8,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("AEoDBloodShotgunCount",2,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("AEoDBloodShotgunCount",1,"Pickup2")
+		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
+		TNT1 A 0 A_GiveInventory("BloodShotgunDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDBloodShotgun",1)
+		TNT1 A 0 A_GiveInventory("AEoDBloodShotgunCount",1)
+		TNT1 A 0 A_TakeInventory("AEShell",8)
+		TNT1 A 0 ACS_NamedExecute("s799",0,7,0,0)
+		TNT1 A 0 A_JumpIfInventory("NoWeaponSwitch",1,2)
+		TNT1 A 0 A_SelectWeapon("AEoDBloodShotgun")
+		TNT1 A 0
+		Stop
+	Pickup2:
+		TNT1 A 0 A_JumpIfInventory("AEShell",8,"Ammo")
+		TNT1 A 0 A_GiveInventory("BloodShotgunDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDBloodShotgun",1)
+		TNT1 A 0 A_GiveInventory("AEoDBloodShotgunCount",1)
+		TNT1 A 0 A_TakeInventory("AEShell",8)
+		TNT1 A 0 ACS_NamedExecute("s799",0,7,0,0)
+		TNT1 A 0 A_JumpIfInventory("NoWeaponSwitch",1,2)
+		TNT1 A 0 A_SelectWeapon("AEoDBloodShotgun")
+		TNT1 A 0
+		Stop
+	Nothing:
+		TNT1 A 0 A_JumpIfInventory("AEoDBloodShotgunCount",2,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("AEoDBloodShotgunCount",1,"Pickup2")
+		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
+		Goto Pickup+2
+		TNT1 A 0 ACS_NamedExecute("s798",0,4,0,0)
+		Fail
+	Ammo:
+		TNT1 A 0 A_TakeInventory("AEShell",8)
+		TNT1 A 0 A_JumpIfInventory("AEoDBloodShotgunCount",1,2)
+		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
+		TNT1 A 0 A_GiveInventory("AEoDBloodShotgunCount",1)
+		TNT1 A 0 A_GiveInventory("BloodShotgunDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDBloodShotgun",1)
+		Stop
+	}
+}
+
+Actor AEoDBloodShotgun : Weapon
 {
 	+FLOORCLIP
 	+CHEATNOTWEAPON
@@ -5489,23 +5630,46 @@ Actor AEoDBloodShotgun : Weapon 6186
 	{
 	Spawn:
 		WB2S A 0
-		WB2S A 0 A_SpawnItem("GunsAkimbo")
+		WB2S A 0 A_SpawnItem("AEoDBloodShotgunItem")
 		Stop
 	Ready:
+		TNT1 A 0 A_TakeInventory("BloodShotgunDropCheck",1)
+		TNT1 A 0 A_JumpIfInventory("AEoDBloodShotgunCount",2,"Ready2")
 		BSG1 A 1 A_WeaponReady
+		Loop
+	Ready2:
+		TNT1 A 0 A_JumpIfInventory("BloodShotgunDropCheck",1,"Ready")
+		B2SG A 1 A_WeaponReady
 		Loop
 	ReadyNoAmmo:
 	Deselect:
 		TNT1 A 0 ACS_NamedExecute("s799",0,0,0,0)
+		TNT1 A 0 A_JumpIfInventory("AEoDBloodShotgunCount",2,"Deselect2")
 		BSG1 A 1 A_Lower
 		TNT1 AA 0 A_Lower
 		Loop
 	Select:
 		TNT1 A 0 ACS_NamedExecute("s799",0,13,0,0)
+		TNT1 A 0 A_JumpIfInventory("AEoDBloodShotgunCount",2,"Select2")
 		BSG1 A 1 A_Raise
 		TNT1 AA 0 A_Raise
 		Loop
+	Deselect2:
+		TNT1 A 0 A_TakeInventory("BloodShotgunToken",2)
+	DesLoop2:
+		TNT1 A 0 ACS_NamedExecute("s799",0,0,0,0)
+		B2SG A 1 A_Lower
+		TNT1 A 0 A_Lower
+		Loop
+	Select2:
+		TNT1 A 0 A_GiveInventory("BloodShotgunToken",2)
+	SelLoop2:
+		TNT1 A 0 ACS_NamedExecute("s799",0,14,0,0)
+		B2SG A 1 A_Raise
+		TNT1 A 0 A_Raise
+		Loop
 	Fire:
+		TNT1 A 0 A_JumpIfInventory("AEoDBloodShotgunCount",2,"Fire2")
 		BSG1 A 0 //A_JumpIfNoAmmo(1)
 		BSG1 A 0 A_JumpIfInventory("SpentShellI", 1, 13)
 		BSG1 A 0 A_GiveInventory("SpentShellI", 1)
@@ -5546,6 +5710,7 @@ Actor AEoDBloodShotgun : Weapon 6186
 		BSG1 A 0 A_SelectWeapon("AEoDWristBlade")
 		Goto Deselect
 	AltFire:
+		TNT1 A 0 A_JumpIfInventory("AEoDBloodShotgunCount",2,"AltFire2")
 		BSG1 A 0 A_JumpIfNoAmmo(1)
 		BSG1 A 0 A_JumpIfInventory("AEShell", 2, 1)
 		Goto Fire
@@ -5585,69 +5750,7 @@ Actor AEoDBloodShotgun : Weapon 6186
 		TNT1 A 1 A_Light1
 		TNT1 A 0 A_Light0
 		Stop
-	}
-}
-
-
-Actor SpentShellI : PuzzleItem
-{
-	-INVBAR
-	Inventory.MaxAmount 1
-	Inventory.Icon TNT1A0
-	States
-	{
-	Spawn:
-		TNT1 A 4
-		Loop
-	}
-}
-
-//--------------------------------------------------------------------
-
-Actor AEoDBloodShotgun2 : Weapon
-{
-	+FLOORCLIP
-	+CHEATNOTWEAPON
-	+INVENTORY.IGNORESKILL
-	Weapon.AmmoType "AEShell"
-	Weapon.AmmoType2 "AEShell"
-	Weapon.AmmoGive1 8
-	Weapon.AmmoUse 1
-	Weapon.AmmoUse2 1
-	Weapon.KickBack 65
-	Scale 0.195
-	Inventory.PickupSound "BloodShotgun/Pickup"
-	Inventory.PickupMessage "Picked up a sawed-off"
-	Weapon.UpSound "weapons/draw"
-	Tag "Blood shotgun"
-	States
-	{
-	Spawn:
-		WB2S A 1
-		WB2S A 0 A_SpawnItem("GunsAkimbo")
-		Stop
-	Ready:
-		B2SG A 1 A_WeaponReady
-		Loop
-	Deselect:
-		TNT1 A 0 A_TakeInventory("BloodShotgunToken",2)
-	DesLoop:
-		TNT1 A 0 ACS_NamedExecute("s799",0,0,0,0)
-		B2SG A 1 A_Lower
-		TNT1 A 0 A_Lower
-	Loop
-		TNT1 A 0 ACS_NamedExecute("s799",0,0,0,0)
-		TNT1 A 1 A_Lower
-		TNT1 AA 0 A_Lower
-		Goto Deselect+3
-	Select:
-		TNT1 A 0 A_GiveInventory("BloodShotgunToken",2)
-	SelLoop:
-		TNT1 A 0 ACS_NamedExecute("s799",0,14,0,0)
-		B2SG A 1 A_Raise
-		TNT1 A 0 A_Raise
-		Loop
-	Fire:
+	Fire2:
 		B2SG A 0 
 		B2SG A 0 A_JumpIfInventory("AEShell",3,3)
 		B2SG A 0 A_JumpIfInventory("AEShell",2,5)
@@ -5676,7 +5779,8 @@ Actor AEoDBloodShotgun2 : Weapon
 		B2SG RS 2 //ACS_NamedExecute("s851",0,-25,0,0)			//<-
 		B2SG Y 2
 		B2SG Z 2 A_JumpIfNoAmmo(42)
-		Goto Ready
+		B2SG Z 0 A_ReFire
+		Goto Ready2
 		B2SG A 0 A_JumpIfNoAmmo(1)
 		B2SG A 0 A_GunFlash				  // Fire left gun right barrel
 		TNT1 A 0 
@@ -5699,8 +5803,9 @@ Actor AEoDBloodShotgun2 : Weapon
 		B2SR E 2					 // Reload
 		BS2R F 2 A_PlaySound("Blood2Shotgun/Reload")
 		B2SR GHIJK 2
-		B2SG A 5
-		Goto Ready
+		B2SG A 2
+		B2SG A 3 A_ReFire
+		Goto Ready2
 		B2SG A 0 A_GunFlash				  // Fire right gun right barrel, no reload
 		TNT1 A 0 //ACS_NamedExecute("s851",0,50,random(-8,8),0)
 		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,10,6)
@@ -5710,7 +5815,8 @@ Actor AEoDBloodShotgun2 : Weapon
 		B2SG V 2 A_TakeInventory("FirstRound",1)
 		B2SG Y 2
 		B2SG Z 2 A_JumpIfNoAmmo(1)
-		Goto Ready
+		B2SG Z 0 A_ReFire
+		Goto Ready2
 		B2SG WX 2
 		B2SG A 0 A_SelectWeapon("AEoDFlail")
 		B2SG A 0 A_SelectWeapon("AEoDCultScythe")
@@ -5718,7 +5824,7 @@ Actor AEoDBloodShotgun2 : Weapon
 		B2SG A 0 A_SelectWeapon("AEoDSickle")
 		B2SG A 0 A_SelectWeapon("AEoDFist")
 		B2SG A 0 A_SelectWeapon("AEoDWristBlade")
-		Goto Deselect
+		Goto Deselect2
 		B2SG A 0 A_GunFlash				  // One shell remaining in right gun
 		TNT1 A 0 //ACS_NamedExecute("s851",0,50,random(-8,8),0)
 		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,8,6)
@@ -5734,8 +5840,8 @@ Actor AEoDBloodShotgun2 : Weapon
 		B2SG A 0 A_SelectWeapon("AEoDSickle")
 		B2SG A 0 A_SelectWeapon("AEoDFist")
 		B2SG A 0 A_SelectWeapon("AEoDWristBlade")
-		Goto Deselect
-	AltFire:
+		Goto Deselect2
+	AltFire2:
 		B2SG A 0 A_JumpIfNoAmmo(1)
 		B2SG A 0 A_JumpIfInventory("AEShell",4,4)
 		B2SG A 0 A_JumpIfInventory("AEShell",3,7)
@@ -5782,8 +5888,9 @@ Actor AEoDBloodShotgun2 : Weapon
 		B2SR E 2					 // Reload
 		B2SR F 2 A_PlaySound("Blood2Shotgun/Reload")
 		B2SR GHIJK 2
-		B2SG A 8
-		Goto Ready
+		B2SG A 5
+		B2SG A 3 A_ReFire
+		Goto Ready2
 		B2SG WX 2					 // Two shells left
 		B2SG A 0 A_SelectWeapon("AEoDFlail")
 		B2SG A 0 A_SelectWeapon("AEoDCultScythe")
@@ -5791,88 +5898,50 @@ Actor AEoDBloodShotgun2 : Weapon
 		B2SG A 0 A_SelectWeapon("AEoDSickle")
 		B2SG A 0 A_SelectWeapon("AEoDFist")
 		B2SG A 0 A_SelectWeapon("AEoDWristBlade")
-		Goto Deselect
+		Goto Deselect2
 		B2SG A 0					 // Used alt-fire after using primary fire once
-		Goto Fire+30
-		B2SG W 0 A_GiveInventory("OneShellInRightGun",1)	  // Three shells left
-		B2SG WX 2
-		Goto Ready
+		Goto Fire2+30
+		B2SG W 2 A_GiveInventory("OneShellInRightGun",1)	  // Three shells left
+		B2SG X 2 A_ReFire
+		Goto Ready2
 		B2SG A 0					 // One shell remaining in right gun
-		Goto Fire+79
+		Goto Fire2+79
 		B2SG A 0 A_SelectWeapon("AEoDFlail")
 		B2SG A 0 A_SelectWeapon("AEoDCultScythe")
 		B2SG A 0 A_SelectWeapon("AEoDDagger")
 		B2SG A 0 A_SelectWeapon("AEoDSickle")
 		B2SG A 0 A_SelectWeapon("AEoDFist")
 		B2SG A 0 A_SelectWeapon("AEoDWristBlade")		 // Four shells left
-		Goto Deselect
+		Goto Deselect2
 		TNT1 A 0					 // One shell left
-		Goto Fire+12
+		Goto Fire2+12
 		B2SG A 0 A_SelectWeapon("AEoDFlail")			// Empty
 		B2SG A 0 A_SelectWeapon("AEoDCultScythe")
 		B2SG A 0 A_SelectWeapon("AEoDDagger")
 		B2SG A 0 A_SelectWeapon("AEoDSickle")
 		B2SG A 0 A_SelectWeapon("AEoDFist")
 		B2SG A 0 A_SelectWeapon("AEoDWristBlade")
-		Goto Deselect+3
-	Flash:
-		TNT1 A 2 A_Light2
-		TNT1 A 1 A_Light1
-		TNT1 A 0 A_Light0
-		Stop
+		Goto Deselect2+3
+
 	}
 }
 
-Actor GunsAkimbo : CustomInventory 6295
+
+Actor SpentShellI : PuzzleItem
 {
-	Inventory.PickupMessage "Picked up a sawed-off"
-	Inventory.PickupSound "BloodShotgun/Pickup"
-	Scale 0.195
+	-INVBAR
+	Inventory.MaxAmount 1
+	Inventory.Icon TNT1A0
 	States
 	{
 	Spawn:
-		WB2S A -1
+		TNT1 A 4
 		Loop
-	Pickup:
-		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
-		Goto Pickup+2
-		TNT1 A 0 A_JumpIfInventory("Weapon4Count",3,"Nothing")
-		TNT1 A 0 A_JumpIfInventory("AEoDBloodShotgun2",1,"Ammo")
-		TNT1 A 0 A_JumpIfInventory("AEoDBloodShotgun",1,"Pickup2")
-		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
-		TNT1 A 0 A_GiveInventory("AEoDBloodShotgun",1)
-		TNT1 A 0 A_GiveInventory("GunsAkimboDrop",1)
-		TNT1 A 0 ACS_NamedExecute("s799",0,13,0,0)
-		TNT1 A 0 A_JumpIfInventory("NoWeaponSwitch",1,"End")
-		TNT1 A 0 A_SelectWeapon("AEoDBloodShotgun")
-	End:
-		TNT1 A 0
-		Stop
-	Pickup2:
-		TNT1 A 0 A_GiveInventory("GunsAkimboDrop",1)
-		TNT1 A 0 A_GiveInventory("AEoDBloodShotgun2",1)
-		TNT1 A 0 A_TakeInventory("AEoDBloodShotgun",1)
-		TNT1 A 0 ACS_NamedExecute("s799",0,13,0,0)
-		TNT1 A 0 A_JumpIfInventory("NoWeaponSwitch",1,"SwitchCheck")
-	SwitchCheck:
-		TNT1 A 0 A_JumpIfInventory("AEoDBloodShotgun2",1,2)	//Only perform the force switch if we have only one shotgun...
-		TNT1 A 0 A_JumpIfInventory("BloodShotgunToken",1,2) //...and only if the weapon is raised.
-		TNT1 A 0 A_JumpIfInventory("NoWeaponSwitch",1,"End")
-		TNT1 A 0 A_SelectWeapon("AEoDBloodShotgun")
-		TNT1 A 0 A_SelectWeapon("AEoDBloodShotgun2")
-		Stop
-	Nothing:
-		TNT1 A 0 A_JumpIfInventory("AEoDBloodShotgun2",1,"Ammo")
-		TNT1 A 0 A_JumpIfInventory("AEoDBloodShotgun",1,"Pickup2")
-		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
-		Goto Pickup+2
-		TNT1 A 0 ACS_NamedExecute("s798",0,4,0,0)
-		Fail
-	Ammo:
-		TNT1 A 0 A_GiveInventory("AEoDBloodShotgun2",1)
-		Stop
 	}
 }
+
+//--------------------------------------------------------------------
+
 
 
 Actor FirstRound : Inventory
@@ -5912,112 +5981,6 @@ Actor BloodShotgunToken : Inventory
 	Inventory.InterHubAmount 2
 }
 
-Actor GunsAkimboDrop : CustomInventory
-{
-	Inventory.MaxAmount 2
-	States
-	{
-	Use:
-		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DroppedGunsAkimbo",0,0,32,8,0,0,0,32,0)
-		TNT1 A 0 A_JumpIfInventory("GunsAkimboDrop",2,2)
-		TNT1 A 0 A_TakeInventory("AEoDBloodShotgun",1)
-		Stop
-		TNT1 A 0 A_JumpIfInventory("AEShell",8,9)
-		TNT1 A 0 A_GiveInventory("AEoDBloodShotgun",1)
-		TNT1 A 0 A_TakeInventory("AEoDBloodShotgun2",1)
-		TNT1 A 0 A_TakeInventory("AEShell",8)
-		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
-		TNT1 A 0 ACS_NamedExecute("s799",0,13,0,0)
-		TNT1 A 0 A_JumpIfInventory("NoWeaponSwitch",1,2)
-		TNT1 A 0 A_SelectWeapon("AEoDBloodShotgun")
-		TNT1 A 0
-		Stop
-		TNT1 A 0 A_TakeInventory("AEShell",8)
-		TNT1 A 0 A_GiveInventory("AEoDBloodShotgun",1)
-		TNT1 A 0 A_TakeInventory("AEoDBloodShotgun2",1)
-		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
-		TNT1 A 0 ACS_NamedExecute("s799",0,13,0,0)
-		TNT1 A 0 A_JumpIfInventory("NoWeaponSwitch",1,2)
-		TNT1 A 0 A_SelectWeapon("AEoDBloodShotgun")
-		TNT1 A 0
-		Stop
-	}
-}
-
-Actor DroppedGunsAkimbo
-{
-	Radius 16
-	Height 20
-	Scale 0.195
-	States
-	{
-	Spawn:
-		WB2S A 15
-		TNT1 A 0 A_SpawnItemEx("GunsAkimboNoAmmo",0,0,0,0,0,0,0,48,0)
-		Stop
-	}
-}
-
-Actor GunsAkimboNoAmmo : GunsAkimbo
-{
-	+FLOORCLIP
-	+INVENTORY.IGNORESKILL
-	Inventory.PickupMessage "Picked up a sawed-off"
-	Inventory.PickupSound "BloodShotgun/Pickup"
-	Scale 0.195
-	States
-	{
-	Spawn:
-		WB2S A -1
-		Loop
-	Pickup:
-		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
-		Goto Pickup+2
-		TNT1 A 0 A_JumpIfInventory("Weapon4Count",3,"Nothing")
-		TNT1 A 0 A_JumpIfInventory("AEShell",72,"Ammo")
-		TNT1 A 0 A_JumpIfInventory("AEoDBloodShotgun2",1,"Ammo")
-		TNT1 A 0 A_JumpIfInventory("AEoDBloodShotgun",1,"Pickup2")
-		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
-		TNT1 A 0 A_GiveInventory("GunsAkimboDrop",1)
-		TNT1 A 0 A_GiveInventory("AEoDBloodShotgun",1)
-		TNT1 A 0 A_TakeInventory("AEShell",8)
-		TNT1 A 0 ACS_NamedExecute("s799",0,13,0,0)
-		TNT1 A 0 A_SelectWeapon("AEoDBloodShotgun")
-		Stop
-	Pickup2:
-		TNT1 A 0 A_JumpIfInventory("AEShell",72,"Ammo")
-		TNT1 A 0 A_GiveInventory("GunsAkimboDrop",1)
-		TNT1 A 0 A_GiveInventory("AEoDBloodShotgun2",1)
-		TNT1 A 0 A_TakeInventory("AEoDBloodShotgun",1)
-		TNT1 A 0 A_TakeInventory("AEShell",8)
-		TNT1 A 0 ACS_NamedExecute("s799",0,13,0,0)
-		TNT1 A 0 A_SelectWeapon("AEoDBloodShotgun2")
-		Stop
-	Nothing:
-		TNT1 A 0 A_JumpIfInventory("AEoDBloodShotgun2",1,"Ammo")
-		TNT1 A 0 A_JumpIfInventory("AEoDBloodShotgun",1,"Pickup2")
-		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
-		Goto Pickup+2
-		TNT1 A 0 ACS_NamedExecute("s798",0,4,0,0)
-		Fail
-	Ammo:
-		TNT1 A 0 A_TakeInventory("AEShell",8)
-		TNT1 A 0 A_JumpIfInventory("AEoDBloodShotgun2",1,8)
-		TNT1 A 0 A_JumpIfInventory("AEoDBloodShotgun",1,4)
-		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
-		TNT1 A 0 A_GiveInventory("GunsAkimboDrop",1)
-		TNT1 A 0 A_GiveInventory("AEoDBloodShotgun",1)
-		Stop
-		TNT1 A 0 A_GiveInventory("GunsAkimboDrop",1)
-		TNT1 A 0 A_GiveInventory("AEoDBloodShotgun2",1)
-		TNT1 A 0 A_TakeInventory("AEoDBloodShotgun",1)
-		Stop
-		TNT1 A 0 A_GiveInventory("GunsAkimboDrop",1)
-		TNT1 A 0 A_GiveInventory("AEoDBloodShotgun2",1)
-		Stop
-	}
-}
 
 //==================================================================================
 //==================================================================================
