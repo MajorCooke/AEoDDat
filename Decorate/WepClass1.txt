@@ -7813,15 +7813,13 @@ ACTOR AEoDPortalGun : Weapon
 	Ready2:
 		N005 A 1 A_WeaponReady(WRF_ALLOWRELOAD)
 		Loop
-	Fire:
-		N005 A 0 A_RemoveChildren(1,RMVF_EVERYTHING,"AEPortal1FXAlt")
-		N005 A 1 A_RemoveChildren(1,RMVF_EVERYTHING,"Portal1Destination") 
+	Fire: 
 		N005 A 0 A_PlaySound("portal/portalgun/PortalBlueFire",1)
 		N005 A 0 A_SetBlend("SkyBlue",0.3,6)
 		N005 B 5 A_SpawnItemEx("AEPortal1",0,0,32,cos(-pitch)*10,0,sin(-pitch)*10,0,32|SXF_TRANSFERPITCH)//A_FireCustomMissile("AEPortal1",0,0,0)
 		N005 C 5
-		N005 A 20 A_WeaponReady(WRF_NOPRIMARY|WRF_ALLOWRELOAD)
-		N005 B 0 A_ReFire
+		N005 AAAAAAAAAAAAAAAAAAAA 1 A_WeaponReady(WRF_NOPRIMARY|WRF_ALLOWRELOAD)
+		N005 A 0 A_ReFire
 		Goto Ready2
 	AltHold:
 	Hold:
@@ -7829,57 +7827,18 @@ ACTOR AEoDPortalGun : Weapon
 		N005 A 0 A_ReFire
 		Goto Ready2
 	AltFire:
-		N005 A 0 A_RemoveChildren(1,RMVF_EVERYTHING,"AEPortal2FXAlt")
-		N005 A 1 A_RemoveChildren(1,RMVF_EVERYTHING,"Portal2Destination") 
 		N005 A 0 A_PlaySound("portal/portalgun/PortalOrangeFire",1)
 		N005 A 0 A_SetBlend("Orange",0.3,6)
 		N005 B 5 A_SpawnItemEx("AEPortal2",0,0,32,cos(-pitch)*10,0,sin(-pitch)*10,0,32|SXF_TRANSFERPITCH)//A_FireCustomMissile("AEPortal2",0,0,0)
 		N005 C 5
-		N005 A 20 A_WeaponReady(WRF_NOSECONDARY|WRF_ALLOWRELOAD)
-		N005 B 0 A_ReFire
+		N005 AAAAAAAAAAAAAAAAAAAA 1 A_WeaponReady(WRF_NOSECONDARY|WRF_ALLOWRELOAD)
+		N005 A 0 A_ReFire
 		Goto Ready2
 	Reload:
-		N005 A 1
-		N005 A 0 A_RemoveChildren(1,RMVF_EVERYTHING,"AEPortal1FXAlt")
-		N005 A 0 A_RemoveChildren(1,RMVF_EVERYTHING,"Portal1Destination") 
-		N005 A 0 A_RemoveChildren(1,RMVF_EVERYTHING,"AEPortal2FXAlt")
-		N005 A 0 A_RemoveChildren(1,RMVF_EVERYTHING,"Portal2Destination")
-		//N005 A 5 A_GiveToChildren("PortalRemover2",1)
+		N005 A 5 A_GiveInventory("RemovePortals",1)
 		Goto Ready2
 	Spawn:
 		N005 Z -1
-		Stop
-	}
-}
-
-Actor PortalRemover1 : CustomInventory
-{	
-	+INVENTORY.ALWAYSPICKUP
-	+INVENTORY.AUTOACTIVATE
-	States
-	{
-	Use:
-		TNT1 A 0 A_JumpIf(CheckClass("Portal1Destination",AAPTR_DEFAULT,0),"Removal")
-		TNT1 A 0 A_JumpIf(CheckClass("AEPortal1FXAlt",AAPTR_DEFAULT,0),"Removal")
-		Stop
-	Removal:
-		TNT1 A 0 A_Remove(AAPTR_DEFAULT,RMVF_EVERYTHING)
-		Stop
-	}
-}
-
-Actor PortalRemover2 : CustomInventory
-{	
-	+INVENTORY.ALWAYSPICKUP
-	+INVENTORY.AUTOACTIVATE
-	States
-	{
-	Use:
-		TNT1 A 0 A_JumpIf(CheckClass("Portal2Destination",AAPTR_DEFAULT,0),"Removal") 
-		TNT1 A 0 A_JumpIf(CheckClass("AEPortal2FXAlt",AAPTR_DEFAULT,0),"Removal")
-		Stop
-	Removal:
-		TNT1 A 0 A_Remove(AAPTR_DEFAULT,RMVF_EVERYTHING)
 		Stop
 	}
 }
@@ -7895,6 +7854,8 @@ Actor PortalGunDummyCheckOrange : Inventory
 ACTOR AEPortal1
 {
 	var int user_limit;
+	var int user_floorz;
+	var int user_ceilingz;
 	+THRUACTORS
 	+NOGRAVITY
 	+SKYEXPLODE
@@ -7919,9 +7880,24 @@ ACTOR AEPortal1
 		TNT1 A 0 A_JumpIf(user_limit>=4000,"End")
 		TNT1 A 0 A_Warp(AAPTR_DEFAULT,cos(-pitch)*2,0,sin(-pitch)*2,0,0,"Moving")
 	Death:
-		//TNT1 a 0 A_SpawnItemEx("AEPortal1FXAlt",0,0,6,0,0,0,32|SXF_TRANSFERPOINTERS)
-		//TNT1 A 0 A_CheckFloor("Floor")
-		//TNT1 A 0 A_CheckCeiling("Ceiling")
+		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+		TNT1 A 0 A_CheckCeiling("UnstickCeiling")
+		TNT1 A 0 A_CheckFloor("UnstickFloor")
+		Goto SpawnIn
+	UnstickCeiling:
+		TNT1 A 0 A_CheckFloor("LastCheck")
+		TNT1 A 0 A_Warp(AAPTR_DEFAULT,0,0,((ceilingz-floorz)-10),0,WARPF_NOCHECKPOSITION|WARPF_TOFLOOR,"SpawnIn")
+		Goto SpawnIn
+	UnstickFloor:
+		TNT1 A 0 A_Warp(AAPTR_DEFAULT,0,0,0,0,WARPF_NOCHECKPOSITION|WARPF_TOFLOOR,"SpawnIn")
+		Goto SpawnIn
+	LastCheck:
+		TNT1 A 0 A_SetUserVar(user_ceilingz,ceilingz)
+		TNT1 A 0 A_SetUserVar(user_floorz,floorz)
+		TNT1 A 0 A_JumpIf((user_ceilingz-user_floorz) >= 10,"SpawnIn")
+		Stop
+	SpawnIn:
+		TNT1 A 1 A_GiveInventory("RemoveP1",1,AAPTR_TARGET)
 		TNT1 A 1 A_SpawnItemEx("Portal1Destination",cos(-pitch)*-24,0,sin(pitch)*-24,0,0,0,0,32|SXF_TRANSFERTRANSLATION|SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_SETMASTER)
 		Stop
 	End:
@@ -7946,9 +7922,24 @@ ACTOR AEPortal2 :  AEPortal1
 		TNT1 A 0 A_JumpIf(user_limit>=4000,"End")
 		TNT1 A 0 A_Warp(AAPTR_DEFAULT,cos(-pitch)*2,0,sin(-pitch)*2,0,0,"Moving")
 	Death:
-		//TNT1 a 0 A_SpawnItemEx("AEPortal1FXAlt",0,0,6,0,0,0,32|SXF_TRANSFERPOINTERS)
-		//TNT1 A 0 A_CheckFloor("Floor")
-		//TNT1 A 0 A_CheckCeiling("Ceiling")
+		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+		TNT1 A 0 A_CheckCeiling("UnstickCeiling")
+		TNT1 A 0 A_CheckFloor("UnstickFloor")
+		Goto SpawnIn
+	UnstickCeiling:
+		TNT1 A 0 A_CheckFloor("LastCheck")
+		TNT1 A 0 A_Warp(AAPTR_DEFAULT,0,0,((ceilingz-floorz)-10),0,WARPF_NOCHECKPOSITION|WARPF_TOFLOOR,"SpawnIn")
+		Goto SpawnIn
+	UnstickFloor:
+		TNT1 A 0 A_Warp(AAPTR_DEFAULT,0,0,0,0,WARPF_NOCHECKPOSITION|WARPF_TOFLOOR,"SpawnIn") 
+		Goto SpawnIn
+	LastCheck:
+		TNT1 A 0 A_SetUserVar(user_ceilingz,ceilingz)
+		TNT1 A 0 A_SetUserVar(user_floorz,floorz)
+		TNT1 A 0 A_JumpIf((user_ceilingz-user_floorz) >= 10,"SpawnIn")
+		Stop
+	SpawnIn:
+		TNT1 A 1 A_GiveInventory("RemoveP2",1,AAPTR_TARGET)
 		TNT1 A 1 A_SpawnItemEx("Portal2Destination",cos(-pitch)*-24,0,sin(pitch)*-24,0,0,0,0,32|SXF_TRANSFERTRANSLATION|SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_SETMASTER)
 		Stop
 	End:
@@ -7964,45 +7955,47 @@ ACTOR AEPortal2 :  AEPortal1
 
 Actor Portal1Destination : SpecialSpot	//the actual teleporter
 {
+	TeleFogSourceType None
+	TeleFogDestType None
 	var int user_x;
 	var int user_ceilingz;
+	var int user_floorz;
 	var int user_z;
 	var int user_limit;
+	var int user_onceiling;
+	+THRUACTORS
+	+NONSHOOTABLE
+	+DONTSPLASH
 	-NOSECTOR
 	+NOGRAVITY
-	+NOTRIGGER
-	+NODAMAGE
 	+NOTIMEFREEZE
 	Radius 16
 	Height 10
 	RenderStyle None
+	Species "Portal1"
 	States
 	{
 	Spawn:
 		TNT1 A 0
-	CheckerCeiling:
 		TNT1 A 0 A_CheckCeiling("UnstickCeiling")
-		Goto CheckerFloor
-	UnstickCeiling:
-		TNT1 A 0 A_SetUserVar("user_limit",0)
-	UnstickCeiling2:
-		TNT1 A 0 A_SetUserVar("user_limit",user_limit+1)
-		TNT1 A 0 A_JumpIf(user_limit>=5000,"Failed")
-		TNT1 A 0 A_SetUserVar("user_ceilingz",user_ceilingz+1)
-		TNT1 A 0 A_Warp(AAPTR_DEFAULT,0,0,-user_ceilingz,0,0,"CheckerFloor")
-		Loop
-	CheckerFloor:
 		TNT1 A 0 A_CheckFloor("UnstickFloor")
+		Goto CheckerWall
+	UnstickCeiling:
+		TNT1 A 0 A_CheckFloor("LastCheck")
+		TNT1 A 0 A_SetUserVar(user_onceiling,1)
+		TNT1 A 0 A_SetUserVar("user_limit",0)
+		TNT1 A 0 A_Warp(AAPTR_DEFAULT,0,0,((ceilingz-floorz)-10),0,WARPF_NOCHECKPOSITION|WARPF_TOFLOOR,"CheckerWall")
 		Goto CheckerWall
 	UnstickFloor:
 		TNT1 A 0 A_ChangeFlag("MOVEWITHSECTOR",1)
 		TNT1 A 0 A_SetUserVar("user_limit",0)
-	UnstickFloor2:
-		TNT1 A 0 A_SetUserVar("user_limit",user_limit+1)
-		TNT1 A 0 A_JumpIf(user_limit>=5000,"Failed")
-		TNT1 A 0 A_SetUserVar("user_z",user_z+1)
-		TNT1 A 0 A_Warp(AAPTR_DEFAULT,0,0,user_z,0,0,"CheckerWall") 
-		Loop
+		TNT1 A 0 A_Warp(AAPTR_DEFAULT,0,0,0,0,WARPF_NOCHECKPOSITION|WARPF_TOFLOOR,"CheckerWall") 
+		Goto CheckerWall
+	LastCheck:
+		TNT1 A 0 A_SetUserVar(user_ceilingz,ceilingz)
+		TNT1 A 0 A_SetUserVar(user_floorz,floorz)
+		TNT1 A 0 A_JumpIf((user_ceilingz-user_floorz) >= 10,"CheckerWall")
+		Stop
 	CheckerWall:
 		TNT1 A 0 A_Warp(AAPTR_DEFAULT,-1,0,0,0,WARPF_TESTONLY,"Setup")
 	Unstick:
@@ -8017,22 +8010,24 @@ Actor Portal1Destination : SpecialSpot	//the actual teleporter
 		TNT1 A 0 A_TakeInventory("Portal1Token",1000,0,AAPTR_MASTER)
 		Stop
 	Setup:
-		TNT1 A 0 A_SpawnItemEx("AEPortal1FXAlt",0,0,0,0,0,0,0,32|SXF_SETMASTER|SXF_ORIGINATOR|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("AEPortal1FXAlt",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTRACER|SXF_TRANSFERPOINTERS)
 	ReLoop:
 		TNT1 A 0 A_TakeInventory("TeleToken",1,0,AAPTR_MASTER)
 	Looper:
+		TNT1 A 0 A_JumpIf(user_onceiling != 1,2)
+		TNT1 A 0 A_Warp(AAPTR_DEFAULT,0,0,((ceilingz-floorz)-10),0,WARPF_NOCHECKPOSITION|WARPF_TOFLOOR)
 		TNT1 A 2 A_JumpIfInventory("TeleToken",1,"DeactLoop",AAPTR_MASTER)
 		TNT1 A 0 A_JumpIfMasterCloser(32,"EndLoop")
 		Loop
 	EndLoop:
 		TNT1 A 1 A_JumpIfInventory("TeleToken",1,"TempDeactivate",AAPTR_MASTER)
 		TNT1 A 0 A_GiveInventory("teleport1",1,AAPTR_Master)	
-		//Goto Looper
-	Pain.Portal2:
 	TempDeactivate:
 		TNT1 A 0 A_PlaySound("portal/portalgun/PortalExit",6)
 	DeactLoop:
 		TNT1 A 2
+		TNT1 A 0 A_JumpIf(user_onceiling != 1,2)
+		TNT1 A 0 A_Warp(AAPTR_DEFAULT,0,0,((ceilingz-floorz)-10),0,WARPF_NOCHECKPOSITION|WARPF_TOFLOOR)
 		TNT1 A 0 A_JumpIfMasterCloser(32,"DeactLoop")
 		Goto ReLoop
 	}
@@ -8040,11 +8035,16 @@ Actor Portal1Destination : SpecialSpot	//the actual teleporter
 
 Actor Portal2Destination : SpecialSpot
 {
+	TeleFogSourceType None
+	TeleFogDestType None
 	var int user_x;
 	var int user_ceilingz;
+	var int user_floorz;
 	var int user_z;
 	var int user_limit;
-	+NOBLOCKMAP
+	var int user_onceiling;
+	+THRUACTORS
+	+NONSHOOTABLE
 	+DONTSPLASH
 	-NOSECTOR
 	+NOGRAVITY
@@ -8052,33 +8052,30 @@ Actor Portal2Destination : SpecialSpot
 	Radius 16
 	Height 10
 	RenderStyle None
+	Species "Portal2"
 	States
 	{
 	Spawn:
 		TNT1 A 0
-	CheckerCeiling:
 		TNT1 A 0 A_CheckCeiling("UnstickCeiling")
-		Goto CheckerFloor
-	UnstickCeiling:
-		TNT1 A 0 A_SetUserVar("user_limit",0)
-	UnstickCeiling2:
-		TNT1 A 0 A_SetUserVar("user_limit",user_limit+1)
-		TNT1 A 0 A_JumpIf(user_limit>=5000,"Failed")
-		TNT1 A 0 A_SetUserVar("user_ceilingz",user_ceilingz+1)
-		TNT1 A 0 A_Warp(AAPTR_DEFAULT,0,0,-user_ceilingz,0,0,"CheckerFloor")
-		Loop
-	CheckerFloor:
 		TNT1 A 0 A_CheckFloor("UnstickFloor")
+		Goto CheckerWall
+	UnstickCeiling:
+		TNT1 A 0 A_CheckFloor("LastCheck")
+		TNT1 A 0 A_SetUserVar(user_onceiling,1)
+		TNT1 A 0 A_SetUserVar("user_limit",0)
+		TNT1 A 0 A_Warp(AAPTR_DEFAULT,0,0,((ceilingz-floorz)-10),0,WARPF_NOCHECKPOSITION|WARPF_TOFLOOR,"CheckerWall")
 		Goto CheckerWall
 	UnstickFloor:
 		TNT1 A 0 A_ChangeFlag("MOVEWITHSECTOR",1)
 		TNT1 A 0 A_SetUserVar("user_limit",0)
-	UnstickFloor2:
-		TNT1 A 0 A_SetUserVar("user_limit",user_limit+1)
-		TNT1 A 0 A_JumpIf(user_limit>=5000,"Failed")
-		TNT1 A 0 A_SetUserVar("user_z",user_z+1)
-		TNT1 A 0 A_Warp(AAPTR_DEFAULT,0,0,user_z,0,0,"CheckerWall") 
-		Loop
+		TNT1 A 0 A_Warp(AAPTR_DEFAULT,0,0,0,0,WARPF_NOCHECKPOSITION|WARPF_TOFLOOR,"CheckerWall") 
+		Goto CheckerWall
+	LastCheck:
+		TNT1 A 0 A_SetUserVar(user_ceilingz,ceilingz)
+		TNT1 A 0 A_SetUserVar(user_floorz,floorz)
+		TNT1 A 0 A_JumpIf((user_ceilingz-user_floorz) >= 10,"CheckerWall")
+		Stop
 	CheckerWall:
 		TNT1 A 0 A_Warp(AAPTR_DEFAULT,-1,0,0,0,WARPF_TESTONLY,"Setup")
 	Unstick:
@@ -8093,10 +8090,12 @@ Actor Portal2Destination : SpecialSpot
 		TNT1 A 0 A_TakeInventory("Portal2Token",1000,0,AAPTR_MASTER)
 		Stop
 	Setup:
-		TNT1 A 2 A_SpawnItemEx("AEPortal2FXAlt",0,0,0,0,0,0,0,32|SXF_SETMASTER|SXF_TRANSFERPOINTERS)
+		TNT1 A 2 A_SpawnItemEx("AEPortal2FXAlt",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTRACER|SXF_TRANSFERPOINTERS)
 	ReLoop:
 		TNT1 A 0 A_TakeInventory("TeleToken",1,0,AAPTR_MASTER)
 	Looper:
+		TNT1 A 0 A_JumpIf(user_onceiling != 1,2)
+		TNT1 A 0 A_Warp(AAPTR_DEFAULT,0,0,((ceilingz-floorz)-10),0,WARPF_NOCHECKPOSITION|WARPF_TOFLOOR)
 		TNT1 A 2 A_JumpIfInventory("TeleToken",1,"TempDeactivate",AAPTR_MASTER)
 		TNT1 A 0 A_JumpIfMasterCloser(32,"EndLoop")	
 		Loop
@@ -8109,6 +8108,8 @@ Actor Portal2Destination : SpecialSpot
 		TNT1 A 0 A_PlaySound("portal/portalgun/PortalExit",6)
 	DeactLoop:
 		TNT1 A 2
+		TNT1 A 0 A_JumpIf(user_onceiling != 1,2)
+		TNT1 A 0 A_Warp(AAPTR_DEFAULT,0,0,((ceilingz-floorz)-10),0,WARPF_NOCHECKPOSITION|WARPF_TOFLOOR)
 		TNT1 A 0 A_JumpIfMasterCloser(32,"DeactLoop")
 		Goto ReLoop
 	}
@@ -8118,6 +8119,39 @@ Actor TeleToken : Inventory
 {	Inventory.MaxAmount 2
 	Inventory.InterHubAmount 0 }
 
+ACTOR RemoveP1 : CustomInventory		
+{
+	+INVENTORY.ALWAYSPICKUP
+	States
+	{
+	Pickup:
+		TNT1 A 0 A_RemoveChildren(1,RMVF_EVERYTHING,None,"Portal1")
+		Stop
+	}
+}
+
+ACTOR RemoveP2 : CustomInventory
+{
+	+INVENTORY.ALWAYSPICKUP
+	States
+	{
+	Pickup:
+		TNT1 A 0 A_RemoveChildren(1,RMVF_EVERYTHING,None,"Portal2")
+		Stop
+	}
+}
+
+ACTOR RemovePortals : CustomInventory
+{
+	+INVENTORY.ALWAYSPICKUP
+	States
+	{
+	Pickup:
+		TNT1 A 0 A_RemoveChildren(1,RMVF_EVERYTHING,None,"Portal1")
+		TNT1 A 0 A_RemoveChildren(1,RMVF_EVERYTHING,None,"Portal2")
+		Stop
+	}
+}
 
 ACTOR teleport1 : CustomInventory		//The one that triggers the teleporting
 {
@@ -8133,7 +8167,7 @@ ACTOR teleport1 : CustomInventory		//The one that triggers the teleporting
 		TNT1 A 0 A_TakeInventory("TeleToken",1000)
 		TNT1 A 0 A_GiveInventory("TeleToken",2)
 		TNT1 A 0 A_SpawnItemEx("PortalEnterSoundPlayer",0,0,0,0,0,0,0,32)
-		TNT1 A 0 A_Teleport(0,"Portal2Destination","TeleportFog",TF_TELEFRAG|TF_NOFOG|TF_NOJUMP|TF_KEEPORIENTATION|TF_USESPOTZ|TF_FORCED,0,0) //Teleport_NoFog(21004,0,0)
+		TNT1 A 0 A_Teleport(0,"Portal2Destination","TeleportFog",TF_NOFOG|TF_NOJUMP|TF_KEEPORIENTATION|TF_USESPOTZ|TF_FORCED,0,0) //Teleport_NoFog(21004,0,0)
 		Stop
 	} 
 }
@@ -8152,7 +8186,7 @@ ACTOR teleport2 : CustomInventory
 		TNT1 A 0 A_TakeInventory("TeleToken",1000)
 		TNT1 A 0 A_GiveInventory("TeleToken",2)
 		TNT1 A 0 A_SpawnItemEx("PortalEnterSoundPlayer",0,0,0,0,0,0,0,32) //because player channels are being used already
-		TNT1 A 0 A_Teleport(0,"Portal1Destination","TeleportFog",TF_TELEFRAG|TF_NOFOG|TF_NOJUMP|TF_KEEPORIENTATION|TF_USESPOTZ|TF_FORCED,0,0)//Teleport_NoFog(21003,0,0)
+		TNT1 A 0 A_Teleport(0,"Portal1Destination","TeleportFog",TF_NOFOG|TF_NOJUMP|TF_KEEPORIENTATION|TF_USESPOTZ|TF_FORCED,0,0)//Teleport_NoFog(21003,0,0)
 		Stop
 	}
 }
@@ -8172,28 +8206,19 @@ Actor AEPortal1FXAlt
 	Projectile
 	+NOINTERACTION
 	+NOTIMEFREEZE
+	Species "Portal1"
 	RenderStyle None
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay A_TransferPointer(AAPTR_MASTER,AAPTR_DEFAULT,AAPTR_MASTER,AAPTR_TRACER,4)
+		TNT1 A 0 //NoDelay A_TransferPointer(AAPTR_TRACER,AAPTR_DEFAULT,AAPTR_MASTER,AAPTR_MASTER,4)
 		TNT1 A 0 A_SetUserVar("user_x",0)
 		TNT1 A 0 A_SetUserVar("user_y",0)
 		TNT1 A 0 A_SetUserVar("user_z",0)
-		TNT1 A 0 A_GiveInventory("Portal1Token",1,AAPTR_TRACER)
-	/*Check:
-		TNT1 A 0 A_CheckCeiling("UnstickerCeiling")
-	UnstickerNormal:
-		TNT1 A 0 A_Warp(AAPTR_DEFAULT,-user_x,0,0,0,WARPF_STOP,"Looper")
-		TNT1 A 0 A_SetUserVar("user_x",user_x+1)
-		Loop
-	UnstickerCeiling:
-		TNT1 A 0 A_SetUserVar("user_z",user_z+1)
-		TNT1 A 0 A_Warp(AAPTR_DEFAULT,0,0,-user_z,0,WARPF_STOP,"Looper")
-		Loop*/
+		TNT1 A 0 A_GiveInventory("Portal1Token",1,AAPTR_MASTER)
 	Looper:
-		TNT1 A 0 A_Warp(AAPTR_MASTER,0,0,0,0,WARPF_NOCHECKPOSITION,2)
-		TNT1 A 0 A_JumpIf(IsPointerEqual(AAPTR_MASTER,AAPTR_NULL),"End")
+		TNT1 A 0 A_Warp(AAPTR_TRACER,0,0,5,0,WARPF_NOCHECKPOSITION,2)
+		TNT1 A 0 A_JumpIf(IsPointerEqual(AAPTR_TRACER,AAPTR_NULL),"End")
 		Stop
 		TNT1 AA 0 A_SpawnItemEx("Portal1ParticleAlt",0,0,6,random(-6,6),0,random(-9,9),random(0,359),32)
 		TNT1 AAA/*AAAAAA*/ 0 A_SpawnItemEx("Portal1ParticleAlt",0,0,6,random(-6,6),0,random(-9,9),random(0,359),32,128)
@@ -8204,11 +8229,11 @@ Actor AEPortal1FXAlt
 	LooperReal:
 		TNT1 AA 0 A_SpawnItemEx("Portal1ParticleAlt",0,0,6,random(-5,5),0,random(-8,8),random(0,359),32)
 		TNT1 AAA/*AAAAAA*/ 0 A_SpawnItemEx("Portal1ParticleAlt",0,0,6,random(-5,5),0,random(-8,8),random(0,359),32,128)
-		TNT1 A 2 A_JumpIfInventory("Portal1Token",2,"End",AAPTR_PLAYER1)
-		Loop
+		TNT1 A 2 A_JumpIfInventory("Portal1Token",2,"End",AAPTR_MASTER)
+		Goto Looper
 	Death:
 	End:
-		TNT1 A 0 A_TakeInventory("Portal1Token",1,0,AAPTR_TRACER)
+		TNT1 A 0 A_TakeInventory("Portal1Token",1,0,AAPTR_MASTER)
 		//TNT1 A 0 A_GiveInventory("P1WeaverTakedownToken",4,AAPTR_TARGET)
 		Stop
 	}
@@ -8224,31 +8249,34 @@ Actor AEPortal2FXAlt
 	Projectile
 	+NOINTERACTION
 	+NOTIMEFREEZE
+	Species "Portal2"
 	States
 	{
 	Spawn:
-		TNT1 A 0
+		TNT1 A 0 //NoDelay A_TransferPointer(AAPTR_TRACER,AAPTR_DEFAULT,AAPTR_MASTER,AAPTR_MASTER,4)
 		TNT1 A 0 A_SetUserVar("user_x",0)
 		TNT1 A 0 A_SetUserVar("user_y",0)
 		TNT1 A 0 A_SetUserVar("user_z",0)
-		TNT1 A 0 A_GiveInventory("Portal2Token",1,AAPTR_PLAYER1)
+		TNT1 A 0 A_GiveInventory("Portal2Token",1,AAPTR_MASTER)
 	Looper:
-		TNT1 A 0 A_Warp(AAPTR_MASTER,0,0,0,0,WARPF_NOCHECKPOSITION,2)
-		TNT1 A 0 A_JumpIf(IsPointerEqual(AAPTR_MASTER,AAPTR_NULL),"End")
+		TNT1 A 0 A_Warp(AAPTR_TRACER,0,0,5,0,WARPF_NOCHECKPOSITION,2)
+		TNT1 A 0 A_JumpIf(IsPointerEqual(AAPTR_TRACER,AAPTR_NULL),"End")
 		Stop
-		TNT1 AA 0 A_SpawnItemEx("Portal2ParticleAlt",0,0,6,random(-5,5),0,random(-8,8),random(0,359),32)
-		TNT1 AAA/*AAAAAA*/ 0 A_SpawnItemEx("Portal2ParticleAlt",0,0,6,random(-5,5),0,random(-8,8),random(0,359),32,128)
+		TNT1 AA 0 A_SpawnItemEx("Portal2ParticleAlt",0,0,6,random(-6,6),0,random(-9,9),random(0,359),32)
+		TNT1 AAA/*AAAAAA*/ 0 A_SpawnItemEx("Portal2ParticleAlt",0,0,6,random(-6,6),0,random(-9,9),random(0,359),32,128)
 		TNT1 A 2 A_SetUserVar("user_count",user_count+1)
 		TNT1 A 0 A_JumpIf(user_count>=10,"LooperReal")
+		//TNT1 A 1 A_JumpIfInventory("Portal1Token",2,"End",AAPTR_TARGET)
 		Loop
 	LooperReal:
 		TNT1 AA 0 A_SpawnItemEx("Portal2ParticleAlt",0,0,6,random(-5,5),0,random(-8,8),random(0,359),32)
 		TNT1 AAA/*AAAAAA*/ 0 A_SpawnItemEx("Portal2ParticleAlt",0,0,6,random(-5,5),0,random(-8,8),random(0,359),32,128)
-		TNT1 A 2 A_JumpIfInventory("Portal2Token",2,"End",AAPTR_PLAYER1)
-		Loop
+		TNT1 A 2 A_JumpIfInventory("Portal2Token",2,"End",AAPTR_MASTER)
+		Goto Looper
 	Death:
 	End:
-		TNT1 A 0 A_TakeInventory("Portal2Token",1,0,AAPTR_PLAYER1)
+		TNT1 A 0 A_TakeInventory("Portal2Token",1,0,AAPTR_MASTER)
+		//TNT1 A 0 A_GiveInventory("P1WeaverTakedownToken",4,AAPTR_TARGET)
 		Stop
 	}
 }
@@ -8428,28 +8456,9 @@ Actor Portal1Particle1
 	{
 	Spawn:
 		TNT1 A 0
-		TNT1 A 0 A_Jump(256,"S1","S2","S3","S4","S5","S6","S7","S8","S9","S10")
-	S1:				X006 C 0		
-	Goto Playoff
-	S2:				X006 F 0		
-	Goto Playoff
-	S3:				X006 I 0		
-	Goto Playoff
-	S4:				X006 L 0		
-	Goto Playoff
-	S5:				X007 D 0		
-	Goto Playoff
-	S6:				X007 G 0		
-	Goto Playoff
-	S7:				X033 B 0		
-	Goto Playoff
-	S8:				X033 C 0		
-	Goto Playoff
-	S9:				X033 E 0		
-	Goto Playoff
-	S10:			X033 H 0		
-	Goto Playoff
-	
+		X006 CFIL 0 A_JumpIf(random(1,10) == 10,"Playoff")
+		X007 DG 0 A_JumpIf(random(4,10) == 10,"Playoff")	
+		X033 BCEH 0 A_JumpIf(random(6,10) == 10,"Playoff")
 	Playoff:
 		"####" "#" 0 //A_Stop//A_ScaleVelocity(1.01)
 		"####" "#" 2 A_FadeOut(0.02)
@@ -8471,27 +8480,9 @@ Actor Portal1Particle2 : Portal1Particle1
 	{
 	Spawn:
 		TNT1 A 0
-		TNT1 A 0 A_Jump(256,"S1","S2","S3","S4","S5","S6","S7","S8","S9","S10")
-	S1:				X006 C 0		
-	Goto Playoff
-	S2:				X006 F 0		
-	Goto Playoff
-	S3:				X006 I 0		
-	Goto Playoff
-	S4:				X006 L 0		
-	Goto Playoff
-	S5:				X007 D 0		
-	Goto Playoff
-	S6:				X007 G 0		
-	Goto Playoff
-	S7:				X033 B 0		
-	Goto Playoff
-	S8:				X033 C 0		
-	Goto Playoff
-	S9:				X033 E 0		
-	Goto Playoff
-	S10:			X033 H 0		
-	Goto Playoff
+		X006 CFIL 0 A_JumpIf(random(1,10) == 10,"Playoff")
+		X007 DG 0 A_JumpIf(random(4,10) == 10,"Playoff")	
+		X033 BCEH 0 A_JumpIf(random(6,10) == 10,"Playoff")
 	Playoff:
 		"####" "#" 1 A_FadeIn(0.03)
 		"####" "#" 0 A_JumpIf(alpha>=0.75,"Shrink")
@@ -8523,27 +8514,9 @@ Actor Portal1ParticleAlt
 	{
 	Spawn:
 		TNT1 A 0
-		TNT1 A 0 A_Jump(256,"S1","S2","S3","S4","S5","S6","S7","S8","S9","S10")
-	S1:				X006 C 0		
-	Goto Playoff
-	S2:				X006 F 0		
-	Goto Playoff
-	S3:				X006 I 0		
-	Goto Playoff
-	S4:				X006 L 0		
-	Goto Playoff
-	S5:				X007 D 0		
-	Goto Playoff
-	S6:				X007 G 0		
-	Goto Playoff
-	S7:				X033 B 0		
-	Goto Playoff
-	S8:				X033 C 0		
-	Goto Playoff
-	S9:				X033 E 0		
-	Goto Playoff
-	S10:			X033 H 0		
-	Goto Playoff
+		X006 CFIL 0 A_JumpIf(random(1,10) == 10,"Playoff")
+		X007 DG 0 A_JumpIf(random(4,10) == 10,"Playoff")	
+		X033 BCEH 0 A_JumpIf(random(6,10) == 10,"Playoff")
 	Playoff:
 		"####" "#" 0 A_SetScale((ScaleX+0.035))
 		"####" "#" 0 A_FadeTo(0.65,0.1,0)
