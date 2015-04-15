@@ -235,11 +235,14 @@ int scriptactivation=0;
 
 script "s797" enter
 {
-	if(CheckInventory("LimitScriptCheck"))	
-		togglescript = CheckInventory("LimitScriptActive");
+	int plrnum = PlayerNumber();
+	if(!(GetUserCvar(plrnum,"user_WeaponSlotLimits")))
+	{
+		TakeInventory("LimitScriptCheck",1000);
+		TakeInventory("LimitScriptActive",1000);
+	}
 	else
 	{
-		togglescript = 1;
 		GiveInventory("LimitScriptCheck",1);
 		GiveInventory("LimitScriptActive",1);
 	}
@@ -303,17 +306,18 @@ script "s800" (void)		//this one, well, is another part of the dropping script
 
 script "WeaponSlotToggle" (void)		//the script that changes the Limits to "on" or "off". Activated through a bound key in the menu.
 {
-	if(!togglescript)
+	int plrnum = PlayerNumber();
+	if(!(GetUserCvar(plrnum,"user_WeaponSlotLimits")))
 	{
 		PrintBold(s:"weapon slot limits ON");
+		SetUserCvar(plrnum,"user_WeaponSlotLimits",1);
 		GiveInventory("LimitScriptActive",1);
-		togglescript=1;
 	}
 	else
 	{
 		PrintBold(s:"weapon slot limits OFF");
-		TakeInventory("LimitScriptActive",1);
-		togglescript=0;
+		SetUserCvar(plrnum,"user_WeaponSlotLimits",0);
+		TakeInventory("LimitScriptActive",1000);
 	}
 }
 

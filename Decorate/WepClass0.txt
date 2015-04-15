@@ -9249,25 +9249,54 @@ ACTOR AEoDRedeemerNoAmmo : AEoDRedeemerItem
 	Stop
     }
 }
-//---------------------------------------------------------------------
 
-//=================================================================
-//=================================================================
-//			HELL and HEAVEN's hand
-// Nobody was sure of its existance, some people thought it was a
-// myth, others said it was a rumor, but the only thing they were
-// sure of, was it's power. Histories of destruction and massacre
-// surrounds the name of this device. A half-sacred half-wretched
-// this weapon can protect the user and give to it an amazing
-// amount of destructive power. Has been said that only one being
-// was capable of using the true power of this weapon, a creature
-// that remains in the shadows, waiting for the moment to finally
-// arise.
-//=================================================================
-//=================================================================
-// Graphics edit by Major Coooke
-//=================================================================
-//=================================================================
+//==============================================================================
+//==============================================================================
+//							HELL and HEAVEN's hand
+// Nobody was sure of its existence, some people thought it was a myth, others 
+// said it was a rumor, but the only thing they were sure of, was it's power. 
+// Destruction and massacre surrounds the name, and the long history of this 
+// device. Being Half sacred and half wretched, this weapon can protect the 
+// user and give to it an amazing amount of destructive power. Rumors have it, 
+// only one being was capable of using the true power of this weapon, a creature
+// that remains in the shadows, waiting for the moment to finally arise.
+
+// Without one influence, the other would dominate and destroy the holder. Three
+// massive powers twist maddeningly inside the weapon, with its upholstry and
+// physical manifestations being that of Life. Constructed from bone, and flesh
+// of uncountable species throughout the universe, their essence of life is used
+// to hold within the third essence of Death while the purest holy and raw
+// unholy powers contend with each other. 
+
+// The Hand of God has shown that it is merely the smallest of gateways, touched 
+// by God Himself, which radiates with his wrath against the unruly. Apparently, 
+// this device manages to utilize that same ability to wrench open the gate a 
+// little further, allowing so much more of His anger out, slamming the heathen 
+// with unmatched and infinitely more terrifying strength. Only the purest of
+// beings will not be ravaged by His fury.
+
+// For the protection, only the Dark One has proven to know how to mitigate God's
+// Wrath (if even a little), as Lucifer was once a grand arch-angel. As the 
+// champion of Darkness, only God can get through his protective abilities. The
+// tiny drop of Darkness imbued within combines to further the user's protection,
+// reflecting most projectiles while completely rendering them invulnerable and
+// immortal, the sheer undefeatable object so long as the protection is present.
+// Lucifer's unholy gaze is directly on the user, bringing to bear pain to anyone
+// who gets too close.
+
+// Lastly, Death's aspect knows where to hit them where it hurts. By channelling 
+// spirits of vengeance with untold knowledge, they can penetrate through any
+// shield and cut down any foe, save for the one he gave this power to originally.
+
+// The Death Bringer's sigil can be switched at any time to change modes, and his
+// hand guides the user as if they have had all his experience with it. With only
+// the conscience of the wearer, (s)he alone will control the fate of the outcome
+// at long last...
+//==============================================================================
+//==============================================================================
+// Graphics edit by Major Cooke
+//==============================================================================
+//==============================================================================
 
 ACTOR AEoDHellHeavenHandItem : CustomInventory 6066
 {
@@ -9317,7 +9346,7 @@ ACTOR AEoDHellHeavenHand : Weapon // 6066
 	Weapon.AmmoGive2 100
 	Weapon.AmmoUse 50
 	Weapon.AmmoUse2 1
-	Weapon.UpSound "weapons/draw" //Weapon.upsound "Crazygun/Judgement"
+	Weapon.UpSound "weapons/draw"
 	+CHEATNOTWEAPON 
 	+FANCYPICKUPSOUND
 	+WEAPON.NOAUTOFIRE
@@ -9331,7 +9360,7 @@ ACTOR AEoDHellHeavenHand : Weapon // 6066
 		HELG A 10
 		Loop
 	Ready: 
-		UNK1 A 0
+		UNK1 A 0 A_TakeInventory("HHHAudioToken",1000,0)
 		UNK1 A 0 A_TakeInventory("HHHCheck",2)
 		UNK1 A 0 A_JumpIfInventory("PowerInvulBase",1,2)
 		UNK1 A 0 A_UnSetReflectiveInvulnerable
@@ -9491,7 +9520,7 @@ ACTOR AEoDHellHeavenHand : Weapon // 6066
 		Goto FireProtC
 	Audio2:
 		UNK2 B 0 A_TakeInventory("HHHAudioToken",1000)
-		UNK2 B 0 A_GiveInventory("HHHAUdioToken",2)
+		UNK2 B 0 A_GiveInventory("HHHAudioToken",2)
 	FireProtC:
 		UNK2 B 4 Bright A_GiveInventory("HHHProtectionOn",1)
 		UNK2 B 9 Bright A_FireCustomMissile("ProtectionShover", 0, 0, 0, 0)
@@ -9524,8 +9553,8 @@ ACTOR AEoDHellHeavenHand : Weapon // 6066
 		UNK2 C 0 A_PlaySound("hhh/fire1",7|CHAN_LISTENERZ|CHAN_NOPAUSE,1,0,ATTN_NONE)
 		UNK2 C 0 A_LightInverse
 		UNK2 C 0 Bright A_FireCustomMissile("GodsWrath", 0, 1, 0, 0)
-		UNK2 C 0 Bright A_FireCustomMissile("GodsWrath", 10, 1, 0, 0)
-		UNK2 C 0 Bright A_FireCustomMissile("GodsWrath", 20, 1, 0, 0)
+		UNK2 C 0 Bright A_FireCustomMissile("GodsWrath", 10, 0, 0, 0)
+		UNK2 C 0 Bright A_FireCustomMissile("GodsWrath", 20, 0, 0, 0)
 		UNK2 C 0 Bright A_FireCustomMissile("GodsWrath", 30, 0, 0, 0)
 		UNK2 C 0 Bright A_FireCustomMissile("GodsWrath", 40, 0, 0, 0)
 		UNK2 C 0 Bright A_FireCustomMissile("GodsWrath", 50, 0, 0, 0)
@@ -9581,7 +9610,9 @@ Actor HHHProtectionAudio
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay A_PlaySound("HHH/fire2",CHAN_AUTO,1,1)
+		TNT1 A 0 NoDelay A_PlaySound("HHH/fire2main",5,1,1)
+		TNT1 A 0 A_PlaySound("HHH/fire2chant",6,0.7,1)
+		TNT1 A 0 A_PlaySound("DemonMorph/Loop",7,0.6,1)
 		TNT1 A 0 A_SetUserVar(user_d,90)
 	MoveIn:
 		TNT1 A 0 A_Warp(AAPTR_MASTER,(user_d)-3000,0,16,180,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE|WARPF_COPYINTERPOLATION)
@@ -10313,7 +10344,13 @@ ACTOR AEoDHellHeavenHandNoAmmo : AEoDHellHeavenHandItem
 
 //==================================================================================
 //==================================================================================
-
+// "And I heard, as it were, the noise of thunder:
+// 	One of the four beasts saying: "Come and see." And I saw.
+// 	And behold, a white horse.
+// 	And I heard a voice in the midst of the four beasts,
+//	And I looked and behold: a pale horse.
+//	And his name, that sat on him, was Death...
+//	...and Hell followed with him."
 //==================================================================================
 //==================================================================================
 ACTOR AEoDDeathsHandItem : CustomInventory 6055
@@ -11215,6 +11252,7 @@ Actor PenetratorDrill : FastProjectile
 	+NOBOSSRIP
 	+SKYEXPLODE
 	+EXTREMEDEATH
+	+HITTRACER
 	Speed 70
 	Damage 35
 	Radius 6
@@ -11336,7 +11374,7 @@ Actor PenetratorDrillCharged : FastProjectile
 		R021 G 1
 		Loop
 	Death:
-		TNT1 A 0 A_SpawnItemEx("PenetratorDrillPhase2",0,0,0,0,0,0,0,32|SXF_TRANSFERPOINTERS)
+		TNT1 A 35 A_SpawnItemEx("PenetratorDrillPhase2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER|SXF_ORIGINATOR|SXF_TRANSFERPOINTERS)
 		Stop
 	}
 }
@@ -11379,25 +11417,27 @@ Actor PenetratorDrillPhase2
 	Speed 0
 	MissileType "PenetratorDrillTrail"
 	MissileHeight 8
+	FloatBobPhase 2
 	States
 	{
 	Spawn:
-		R021 G 0
-		R021 G 0 A_GiveInventory("PenetratorTargetToken",1,AAPTR_PLAYER1)
+		R021 G 0 NoDelay A_TransferPointer(AAPTR_MASTER,AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_TARGET,4)
+		R021 G 0 A_GiveInventory("PenetratorTargetToken",1,AAPTR_TARGET)
 		R021 G 0 A_SeekerMissile(0,0,2)
+		R021 G 0 A_SpawnItemEx("PenetratorImpacter",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_SETMASTER|SXF_ORIGINATOR)
 	Waiting:
 		R021 G 1 bright A_SetUserVar("user_count",user_count+1)
-		R021 G 0 A_SpawnItemEx("PenetratorImpacter",0,0,0,0,0,0,0,32|SXF_TRANSFERPOINTERS)
 		R021 G 0 A_JumpIf(user_count>=(35*5),2)
-		R021 G 0 A_JumpIfInventory("PenetratorTargetToken",1,"Waiting",AAPTR_PLAYER1)
+		R021 G 0 A_JumpIfInventory("PenetratorTargetToken",1,"Waiting",AAPTR_TARGET)
 		Goto Shot
-		R021 G 0 A_TakeInventory("PenetratorTargetToken",1000,0,AAPTR_PLAYER1)
+		R021 G 0 A_TakeInventory("PenetratorTargetToken",1000,0,AAPTR_TARGET)
 	Shot:
-		R021 G 1 bright A_GiveInventory("PenetratorTargetSpawner",1,AAPTR_PLAYER1)
-		R021 G 0 A_TransferPointer(AAPTR_PLAYER1,AAPTR_DEFAULT,AAPTR_TRACER,AAPTR_TRACER,4)
+		R021 G 0 A_RemoveChildren(1,RMVF_EVERYTHING,"PenetratorImpacter")
+		R021 G 1 bright A_GiveInventory("PenetratorTargetSpawner",1,AAPTR_TARGET)
+		R021 G 0 A_TransferPointer(AAPTR_TARGET,AAPTR_DEFAULT,AAPTR_TARGET|AAPTR_PLAYER_GETTARGET,AAPTR_TRACER,4)
 		R021 G 0 A_FaceTracer
 		R021 G 0 A_SeekerMissile(90,90,2)
-		R021 G 0 A_SpawnItemEx("PenetratorDrill2",1,0,0,0,0,0,0,32|SXF_TRANSFERPOINTERS)
+		R021 G 0 A_SpawnItemEx("PenetratorDrill2",1,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
 		Stop
 	}
 }
@@ -11406,21 +11446,22 @@ Actor PenetratorImpacter
 {
 	Projectile
 	+BLOODSPLATTER
-	+RIPPER	RipperLevel 1
+	+RIPPER	RipperLevel 666
 	+DONTREFLECT
 	+EXTREMEDEATH
 	+BOUNCEONFLOORS
 	+BOUNCEONWALLS
 	+BOUNCEONCEILINGS
 	+CANBOUNCEWATER
+	+FLOATBOB
 	Radius 8
 	Height 8
 	Damage 10
+	FloatBobPhase 2
 	States
 	{
 	Spawn:
-		TNT1 A 0
-		TNT1 A 1
+		TNT1 AAAAAA 35
 		Stop
 	}
 }
@@ -11452,14 +11493,12 @@ Actor PenetratorTargetSP
 	States
 	{
 	Spawn:
-	XDeath:
-		TNT1 A 0
+		TNT1 A 1 NoDelay A_SpawnItemEx("PenetratorTarget",0,0,0,0,0,0,0,32|SXF_TRANSFERPOINTERS)
 		TNT1 A 0 A_TransferPointer(AAPTR_TARGET,AAPTR_DEFAULT,AAPTR_PLAYER_GETTARGET|AAPTR_TARGET,AAPTR_TRACER,4)
 		TNT1 A 0 A_SetUserArray("user_z",0,z)
 		TNT1 A 0 A_Warp(AAPTR_TRACER,0,0,0,0,WARPF_NOCHECKPOSITION)
 		TNT1 A 0 A_SetUserArray("user_z",1,z)
 		TNT1 A 0 A_Warp(AAPTR_TRACER,0,0,user_z[0]-user_z[1],0,WARPF_NOCHECKPOSITION)
-		TNT1 A 0 A_SpawnItemEx("PenetratorTarget",0,0,0,0,0,0,0,32|SXF_TRANSFERPOINTERS)
 		Stop
 	}
 }
@@ -11471,7 +11510,6 @@ Actor PenetratorTarget
      +FORCEXYBILLBOARD
 //     +NOINTERACTION
 	Monster
-	+FRIENDLY
 	+NONSHOOTABLE
 	+NODAMAGE
 	+THRUACTORS
@@ -11542,7 +11580,7 @@ Actor PenetratorDrill2 : FastProjectile
 	States
 	{
 	Spawn:
-		R021 G 0
+		R021 G 0 NoDelay A_FaceTracer
 		//R021 G 1
 		R021 G 0 A_SeekerMissile(90,90,2)
 		R021 G 0 A_FaceTracer
