@@ -630,9 +630,13 @@ Script "SpawnDeployWeapons" (int nojoke)
 		
 	if (L4DMode || ((TechTheme) && (MagicTheme) && (NormalTheme)) || (ThemeMix >= 15) || !(ThemeMix))
 	{
-		if (!(SetActorState(0,"Joke",1)))
+		if (JokeTheme)
+		{
+			if (!(SetActorState(0,"Joke",1)))
+				SetActorState(0,"C_AEoD",1);
+		}
+		else
 			SetActorState(0,"C_AEoD",1);
-			
 	}
 	else if ((TechTheme) && (MagicTheme) && (!(NormalTheme)))
 	{

@@ -4279,7 +4279,6 @@ Actor DemonMorphPowerup : CustomInventory
 		TNT1 A 0 A_GiveInventory("DemonMorphGiver",1)
 		TNT1 A 0 A_SetInvulnerable
 		TNT1 A 0 A_SpawnItemEx("DemonMorphScreams",0,0,0,0,0,0,0,32)
-		//TNT1 A 0 A_SpawnItemEx("DemonMorphDisabler",0,0,0,0,0,0,0,32|SXF_SETMASTER) //Needed because, unfortunately, the weapon never hits its deselect state.
 		Stop
 	Adding:
 		TNT1 A 0 A_SetBlend("Grey",1,17)
@@ -4295,31 +4294,6 @@ Actor DemonMorphPowerup : CustomInventory
 	Failure:
 		TNT1 A 0
 		Fail
-	}
-}
-
-Actor DMKiller : CustomInventory
-{
-	+INVENTORY.ALWAYSPICKUP
-	States
-	{
-	Pickup:
-		TNT1 A 0 A_Die
-		Stop
-	}
-}
-
-Actor DMKillerSafe : CustomInventory
-{
-	+INVENTORY.ALWAYSPICKUP
-	States
-	{
-	Pickup:
-		TNT1 A 0 A_JumpIf(CheckClass("DemonPlayerMorph",AAPTR_DEFAULT,0),"Forced")
-		Stop
-	Forced:
-		TNT1 A 0 A_Die
-		Stop
 	}
 }
 
@@ -4374,11 +4348,16 @@ Actor AEoDDemonMorphHand : Weapon
 	States
 	{
 	Spawn:
-		M666 A -1
+		M666 A 0
+		Stop
+	Pickup:
+		M666 A 0 A_JumpIf(!CheckClass("DemonPlayerMorph",AAPTR_DEFAULT,0),"Remove")
 		Stop
 	Select:
+		M666 A 0 A_JumpIf(!CheckClass("DemonPlayerMorph",AAPTR_DEFAULT,0),"Remove")
 		M666 A 0 A_ChangeFlag("NOPAIN",1)
 		M666 A 0 A_SetInvulnerable
+		M666 A 0 A_ChangeFlag("INVULNERABLE",1)
 	SeleLoop:
 		M666 A 0 A_Raise
 		Loop
@@ -4387,12 +4366,10 @@ Actor AEoDDemonMorphHand : Weapon
 		M666 A 0 A_GiveInventory("DemonMorphRemoval",1)
 		M666 A 0 A_TakeInventory("DemonMorphActiveToken",1000,0)
 		M666 A 0 A_JumpIfInventory("PentagramIsOn",1,"Des2")
-		Goto Des3
+		Goto DesLoop
 	Des2:
+		M666 A 0 A_ChangeFlag("NODAMAGE",0)
 		M666 A 0 A_GiveInventory("PentagramDispelled",1)
-	Des3:
-		//M666 A 0 A_TakeInventory("PowerInvulBase",1,0)
-		//M666 A 0 A_TakeInventory("DemonMorphScreen",1000,0)
 	DesLoop:
 		M666 A 0 A_Lower
 		Loop
@@ -4495,6 +4472,7 @@ Actor AEoDDemonMorphHand : Weapon
 		Loop
 	AltFire:
 	Fire:
+		M666 A 0 A_JumpIf(!CheckClass("DemonPlayerMorph",AAPTR_DEFAULT,0),"Remove")
 		M666 A 0 A_RailAttack(20000,0,0,none,none,RGF_SILENT,0,"DeathTouchPuff",0,0,32766,0,16,0,"DemonMorphExploder")
 		M666 A 0 A_SpawnItemEx("DemonMorphShootingSound",0,0,0,0,0,0,0,32)//A_PlaySound("DemonMorph/Shoot",CHAN_WEAPON|CHAN_NOPAUSE,1,0)
 		M666 A 1 A_ZoomFactor(2.00,ZOOM_INSTANT|ZOOM_NOSCALETURNING)
@@ -4540,6 +4518,9 @@ Actor AEoDDemonMorphHand : Weapon
 		M666 A 1 A_ZoomFactor(1.04,ZOOM_INSTANT|ZOOM_NOSCALETURNING)*/
 		M666 A 0 A_Refire
 		Goto Ready2
+	Remove:
+		M666 A 1 A_TakeInventory("AEoDDemonMorphHand",1000,0)
+		Goto Deselect
 	}
 }
 
@@ -4613,45 +4594,8 @@ Actor DemonMorphFogOff
 	States
 	{
 	Spawn:
-		TNT1 A 1 NoDelay A_RadiusGive("DemonMorphRemoval",512,RGF_PLAYERS|RGF_NOSIGHT,1)
+		TNT1 A 1 NoDelay A_RadiusGive("DemonMorphRemoval",96,RGF_PLAYERS|RGF_NOSIGHT,1)
 		Stop
-	}
-}
-
-Actor DemonMorphDisabler
-{
-	var int user_once;
-	+NOINTERACTION
-	Monster
-	-FRIENDLY
-	-SHOOTABLE
-	+NONSHOOTABLE
-	+NODAMAGE
-	+SPECTRAL
-	+LOOKALLAROUND
-	+NOTIMEFREEZE
-	-COUNTKILL
-	RenderStyle None
-	States
-	{
-	Spawn:
-		TNT1 A 0 NoDelay A_ClearTarget
-		TNT1 A 0 A_ClearSoundTarget
-		TNT1 A 0 A_RearrangePointers(AAPTR_NULL,AAPTR_NULL,AAPTR_NULL,4)
-	Idle:
-		TNT1 A 1 A_Look
-		Loop
-	See:
-		TNT1 A 5
-		TNT1 A 0 A_JumpIfInventory("PowerDemonMorph",1,"See",AAPTR_TARGET)
-	//Removal:
-		//TNT1 A 0 A_GiveInventory("DemonMorphRemoval",1,AAPTR_TARGET)
-	DoubleCheck:
-		TNT1 A 35
-		TNT1 A 0 A_JumpIf(CheckClass("DemonPlayerMorph",AAPTR_TARGET,0),1)
-		Stop
-		TNT1 A 0 A_GiveInventory("DMKillerSafe",1,AAPTR_TARGET)
-		Loop
 	}
 }
 
@@ -4665,10 +4609,9 @@ Actor DemonMorphRemoval : CustomInventory
 		//TNT1 A 0 A_ZoomFactor(1.0)
 		TNT1 A 0 ACS_NamedExecuteAlways("InvisibleItemToggle",0,0,0,0)
 		TNT1 A 0 A_JumpIf(CheckClass("DemonPlayerMorph",AAPTR_DEFAULT,0),"ForceOutFirst")
-		//TNT1 A 0 A_JumpIfInventory("AEoDDemonMorphHand",1,"ForceOutFirst")
 		Goto Continue		
 	ForceOutFirst:
-		TNT1 A 0 ACS_NamedExecuteAlways("ForceUnmorph",0,0,0,0) //Since it's undo-by-death-saves, should work without killing the actual player, right?
+		TNT1 A 0 ACS_NamedExecuteAlways("ForceUnmorph",0,0,0,0)
 		Goto Continue
 	Continue:
 		TNT1 A 0 A_TakeInventory("DemonMorphActiveToken",1000,0)
@@ -4679,9 +4622,6 @@ Actor DemonMorphRemoval : CustomInventory
 		TNT1 A 0 A_PlaySound("DemonMorph/Stop",5,1,0,ATTN_NONE)
 		TNT1 A 0 A_RadiusGive("DMEndingExploder",2048,RGF_MONSTERS,1)
 		TNT1 A 0 A_GiveInventory("DemonMorphScreen",1)
-	//Des3:
-		//TNT1 A 0 A_TakeInventory("PowerInvulBase",1,0)
-		//TNT1 A 0 A_TakeInventory("DemonMorphScreen",1000,0)
 		Stop
 	}
 }
