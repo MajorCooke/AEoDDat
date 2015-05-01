@@ -1599,6 +1599,7 @@ Actor SOTEnd : CustomInventory
 		TNT1 A 0 A_JumpIf(CheckClass("DemonPlayerMorph",AAPTR_DEFAULT,0),"P1")
 		TNT1 A 0 A_JumpIfInventory("HHHAudioToken",1,"P1")
 		TNT1 A 0 A_ChangeFlag("DONTRIP",0)
+		TNT1 A 0 A_SetRipMin(1)
 	P1:
 		TNT1 A 0 A_ChangeFlag("NORADIUSDMG",0)
 	P2:
@@ -1626,7 +1627,7 @@ Actor NoSeekFlagger : CustomInventory
 	Pickup:
 		TNT1 A 0 A_ChangeFlag("NORADIUSDMG",1)
 		TNT1 A 0 A_ChangeFlag("CANTSEEK",1)
-		TNT1 A 0 A_ChangeFlag("DONTRIP",1)
+		TNT1 A 0 A_SetRipMin(666)
 		Stop
 	}
 }
@@ -4194,7 +4195,7 @@ Actor DMSoulMissile
 		Goto Looping
 	Looping:
 		X099 A 0 A_FaceTracer(0,0,0,0,FAF_TOP)
-		X099 A 1 A_ChangeVelocity(cos(-pitch)*10,0,sin(pitch)*10,CVF_RELATIVE|CVF_REPLACE)
+		X099 A 1 A_ChangeVelocity(cos(-pitch)*20,0,sin(pitch)*20,CVF_RELATIVE|CVF_REPLACE)
 		X099 A 0 A_JumpIfTracerCloser(32,"End")
 		Loop
 	Death:
@@ -4359,7 +4360,7 @@ Actor DemonPlayerMorph : DoomPlayer
 	+NODAMAGE
 	+NOPAIN
 	+DONTMORPH
-	+DONTRIP
+	RipLevelMin 666
 	+PICKUP
 	+NOTIMEFREEZE
 	+INVULNERABLE

@@ -29,8 +29,8 @@ ACTOR AEoDmarine : DoomPlayer
 	{
 	Spawn:
 		PLAY A 0
-		PLAY A 0 //A_JumpIfInventory("HHHCheck",1,2)
-		PLAY A 0 //A_GiveInventory("PlayerReset",1)
+		//PLAY A 0 //A_JumpIfInventory("HHHCheck",1,2)
+		//PLAY A 0 //A_GiveInventory("PlayerReset",1)
 	Waiting:
 		PLAY A -1
 		Loop
@@ -151,6 +151,7 @@ Actor PlayerReset : CustomInventory
 		TNT1 A 0 A_ChangeFlag("CANTSEEK",0)
 		TNT1 A 0 A_ChangeFlag("NORADIUSDMG",0)
 		TNT1 A 0 A_ChangeFlag("DONTRIP",0)
+		TNT1 A 0 A_SetRipMin(1)
 		TNT1 A 0 A_JumpIfInventory("NoMorphTimer",1,2)
 		TNT1 A 0 A_ChangeFlag("DONTMORPH",0)
 		TNT1 A 0 A_JumpIfInventory("HHHCheck",1,2)
@@ -163,6 +164,7 @@ Actor PlayerReset : CustomInventory
 
 ACTOR AEoDChickenPlayer : ChickenPlayer
 {
+	RipLevelMin 1
 	PainChance "ChaosExpl1", 0
 	PainChance "ChaosExpl2", 0
 	PainChance "TempestLightning", 0
