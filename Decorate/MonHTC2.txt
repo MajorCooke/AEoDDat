@@ -1560,15 +1560,16 @@ ACTOR HTC2BlackBear		//Shotguy
 	Radius 8
 	Height 20
 	Speed 9
-	Mass 0x7FFFFFFF
+	+DONTTHRUST
 	PainChance 90
 	MONSTER 
-	+FLOORCLIP -NODROPOFF +DONTOVERLAP +NOICEDEATH +NODAMAGETHRUST -SOLID 
+	+FLOORCLIP -NODROPOFF +NOICEDEATH +NODAMAGETHRUST -SOLID 
 	+DROPOFF
 	-NODROPOFF
 	+NOBLOCKMONST
 	+MBFBOUNCER
-	MaxStepHeight 32767
+	+THRUSPECIES
+	MaxStepHeight 32766
 	Scale 0.75
 	MELEEDAMAGE 1
 	SeeSound ""
@@ -1579,6 +1580,7 @@ ACTOR HTC2BlackBear		//Shotguy
 	BloodColor "Black"
 	HitObituary "%o was blown up by a demonized teddy bear."
 	MeleeRange 12
+	Species "Bertha"
 //Flesh
 	DamageFactor "Electric", 1.25
 	DamageFactor "AEPoison", 1.25
@@ -1587,7 +1589,7 @@ ACTOR HTC2BlackBear		//Shotguy
     {
     Spawn:
         TNT1 A 0 
-		TNT1 A 0 A_Jump(210,2,3,4,5,6)
+		TNT1 A 0 A_Jump(210,2,3,4,5,6,7,8,9,10)
 		TNT1 AAAAAAAAAAAA 0 A_SpawnItemEx("BerthaBear",random(10,-10),random(10,-10),0,0,0,0,0,32|SXF_TRANSFERPOINTERS,0,1)
     Idle:
 		N018 A 0 A_JumpIfInventory("PowerBearConverter",1,"Switch",AAPTR_PLAYER1)
@@ -1606,6 +1608,7 @@ ACTOR HTC2BlackBear		//Shotguy
 	Switch:
 		N018 A 0 A_ChangeFlag("NODAMAGE",1)
 		N018 A 0 A_ChangeFlag("NOPAIN",1)
+		N018 A 0 A_ChangeFlag("COUNTKILL",0)
 		N018 A 0 A_CopyFriendliness(AAPTR_PLAYER1)
 		N018 A 0 A_ClearTarget
 		N018 A 0 A_ClearSoundTarget
@@ -1659,8 +1662,7 @@ Actor BerthaBear
 	+NOTELESTOMP
 	+ALWAYSTELEFRAG
 	+FLOORCLIP 
-	-NODROPOFF
-	+DONTOVERLAP 
+	+MBFBOUNCER
 	+NOICEDEATH
 	+THRUSPECIES
 	+NODAMAGETHRUST
@@ -1670,7 +1672,9 @@ Actor BerthaBear
 	+NOBLOCKMONST
 	+MBFBOUNCER
 	-NOCLIP
-	MaxStepHeight 32767
+	+THRUSPECIES
+	+NOBLOCKMONST
+	MaxStepHeight 32766
 	Species "Bertha"
 	Scale 0.75
 	MELEEDAMAGE 1
@@ -1696,7 +1700,7 @@ Actor BerthaBear
         N018 AB 4 A_Look
         Loop
     See:
-		"####" "#" 0 A_JumpIfInventory("PennywiseMaster",1,1,AAPTR_MASTER)
+		"####" "#" 0 A_JumpIf(CheckClass("HTC2PennywiseTDC",AAPTR_MASTER,1),1)
 		Goto Chase2
 		"####" "#" 0 A_TransferPointer(AAPTR_MASTER,AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_TARGET)
 	Chase2:
@@ -1707,6 +1711,7 @@ Actor BerthaBear
 	Switch:
 		N018 A 0 A_ChangeFlag("NODAMAGE",1)
 		N018 A 0 A_ChangeFlag("NOPAIN",1)
+		N018 A 0 A_ChangeFlag("COUNTKILL",0)
 		N018 A 0 A_CopyFriendliness(AAPTR_PLAYER1)
 		N018 A 0 A_ClearTarget
 		N018 A 0 A_ClearSoundTarget
@@ -1789,6 +1794,7 @@ Actor HTC2SuperBear
 	+NONSHOOTABLE
 	+NEVERTARGET
 	+EXTREMEDEATH
+	+THRUSPECIES
 	MaxStepHeight 32767
 	Translation "0:255=%[2,2,2]:[0,0,0]"
 	DamageType "TempestLightning"
@@ -1810,7 +1816,7 @@ Actor HTC2SuperBear
 		N018 A 0 A_Recoil(-5)
 		N018 D 2 A_Chase
 		N018 A 0 A_Recoil(-5)
-		N018 A 0 A_Look
+		N018 A 0 A_Chase
 		//N018 A 0 A_FaceTarget
 		N018 A 0 A_JumpIfTargetInLOS("See",360,JLOSF_DEADNOJUMP)
 		N018 A 0 A_ClearTarget
@@ -1947,7 +1953,7 @@ ACTOR HTC2BigBertha		//Archvile
 	Height 64
 	Scale 0.75
 	PainChance 0
-	Mass 0x7FFFFFFF 
+	+DONTTHRUST
 	Monster	RipLevelMin 1
 	+FLOORCLIP +NOGRAVITY +FLOAT
 	+DONTMORPH
@@ -1960,7 +1966,7 @@ ACTOR HTC2BigBertha		//Archvile
 	DeathSound "BIRTHA1"
 	ActiveSound "BIRTHA2"
 	Obituary "%o touched big birtha's puke." 
-	HitObituary "%o was too slow to pull his head out of Bertha's maw."
+	HitObituary "%o was too slow to pull %g head out of Bertha's maw."
 	BloodColor "Black"
 	PainChance "Charm", 96
 	PainChance "Terror", 96
