@@ -5,7 +5,7 @@ global Int 1:AEoDThemeType;
 global Int 2:GameStarted;
 global Int 5:ThemeMix;
 global Int 7:ActiveCount;
-global Bool 8:L4DMode;
+global Int 8:AEoDGameMode;
 global Bool 9:L4DDir;
 global Bool 10:NorDir;
 global Bool 11:TechTheme;
@@ -88,9 +88,9 @@ Script "s901" enter
 			giveinventory("AEoDKnife",1);
 			giveinventory("KnifeDrop",1);
 			
-			if (L4DMode)
-				GiveInventory("L4DMode",1);
-			if(L4DMode || L4DDir)		//if L4D gives special weapon and ammo
+			if (AEoDGameMode)
+				GiveInventory("AEoDGameMode",1);
+			if(AEoDGameMode || L4DDir)		//if L4D gives special weapon and ammo
 			{
 				giveinventory("AEoDBerettaItem",1);
 				giveinventory("AEoDBerettaItem",1);
@@ -137,7 +137,7 @@ Script "s901" enter
 			//SetFont("BIGFONT");
 			//HUDMessage(s:"AEoD: ",l:GameTypesText[AEoDThemeType],s:"."; HUDMSG_TYPEON| HUDMSG_LOG,0,CR_GREEN,0.5,0.1,6.0,0.1,1.0);
 		}
-		if(L4DMode || L4DDir)				//if L4D or chaos capital when entering a level
+		if(AEoDGameMode == 1 || L4DDir)				//if L4D or chaos capital when entering a level
 		{
 			if(CheckInventory("FearRune")==0)	//and player has no fear rune
 				GiveInventory("FearRune",1);	//i will give one
@@ -163,12 +163,12 @@ Script "s901" enter
 	//on EACH map, because it will be stripped.
 		
 	
-	if((NorDir) || (L4DDir) || (L4DMode))	//If L4D or Chaos Capital...
+	if((NorDir) || (L4DDir) || (AEoDGameMode == 1))	//If L4D or Chaos Capital...
 	{	
 		if (GameSkill()==4 || MonsterMayhem)
 			giveinventory("NightmareToken",1);
 		
-		if (L4DDir || L4DMode)
+		if (L4DDir || AEoDGameMode == 1)
 			giveinventory("SkillCount",GameSkill());
 	}	
 		
@@ -371,6 +371,7 @@ script "AESoulCount" (void)
 }
 
 bool soulflasher = false;
+bool scterminate = false;
 Script "AESoulCountFlasher" (void)
 {
 	int loopcount;
@@ -470,7 +471,7 @@ Script "SpawnerSetup" enter
 	{
 		MiniThemeEnabled = false;
 		// modes
-		L4DMode = false;		MonsterMayhem = false;
+		AEoDGameMode = 0;		MonsterMayhem = false;
 		// directors
 		L4DDir = false;			NorDir = false;
 		// themes
@@ -482,14 +483,14 @@ Script "SpawnerSetup" enter
 		
 		if (GetCvar("user_MonsterMayhem"))
 			MonsterMayhem = true;
-		if (GetCvar("user_L4DMode"))
+		if (GetCvar("user_AEoDGameMode") == 1) //Left 4 Dead Mode
 		{
 			if (GetCvar("user_JokeMode"))
 			{
 				GiveInventory("JokeToken",1);
 				JokeTheme = true;
 			}
-			L4DMode = true;
+			AEoDGameMode = 1;
 			L4DDir = true;
 			NormalTheme = true;
 			TechTheme = true;
@@ -498,6 +499,14 @@ Script "SpawnerSetup" enter
 			ScriptSetup = true;
 			Terminate; //Really, no point in bothering with the rest.
 		}
+		/*
+		if (GetCvar("user_AEoDGameMode") == 2) //Skirmish Mode
+		{
+			GiveInventory("JokeToken",1);
+			GiveInventory("SkirmishToken",1);
+			AEoDGameMode = 2;
+		}
+		*/
 		if (GetCvar("user_NorDir"))
 			NorDir = true;
 		if (GetCvar("user_L4DDir"))
@@ -564,7 +573,7 @@ Script "SpawnDeployMonster" (int nomini)
 	if (!ScriptSetup)
 		Delay(1);
 	
-	if (L4DMode) //Overrides everything else. L4DMode calls priority.
+	if (AEoDGameMode == 1) //Overrides everything else. L4D mode calls priority.
 	{
 		SetActorState(0,"L4D",1);
 		Terminate;
@@ -628,7 +637,7 @@ Script "SpawnDeployWeapons" (int nojoke)
 	if (!ScriptSetup)
 		Delay(1);
 		
-	if (L4DMode || ((TechTheme) && (MagicTheme) && (NormalTheme)) || (ThemeMix >= 15) || !(ThemeMix))
+	if ((AEoDGameMode == 1) || ((TechTheme) && (MagicTheme) && (NormalTheme)) || (ThemeMix >= 15) || !(ThemeMix))
 	{
 		if (JokeTheme)
 		{

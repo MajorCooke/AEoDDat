@@ -11,6 +11,7 @@ OptionMenu "OptionsMenu"
    Submenu "Theme Selection",	"AEThemeConfig"
    Submenu "Extra Monsters",	"AEExtraConfig"
    Submenu "Directors",		"AEDirectorConfig"
+   Submenu "Weapon Slots Customization",	"AEWeaponConfig"
    StaticText "ZDoom Options", 1
    Submenu "Customize Controls",      "CustomizeControls"
    Submenu "Mouse options",         "MouseOptions"
@@ -31,15 +32,19 @@ OptionMenu "OptionsMenu"
    Command "Go to console",         "menuconsole"
 }
 
+OptionValue "AEoDGameMode"
+{
+	0, "None"
+	1, "Left 4 Dead"
+	2, "Skirmish"
+}
+
 OptionMenu "AEGameModeConfig"
 {
 	Title "AEoD Game Modes"
-	StaticText "Enabling game modes will override any theme settings you", 0
-	StaticText "currently have enabled. No regular monsters will be", 0
-	StaticText "available but zombies are always spawning. Enable Joke", 0
-	StaticText "Theme to have a chance at finding the joke weapons too!", 0
+	StaticText "Game modes override all theme settings.", 0
 	StaticText " "
-	Option "Left 4 Dead Mode",				"user_L4DMode", "OnOff"
+	Option "Game Mode",				"user_GameMode", "AEoDGameMode"
 }
 
 OptionMenu "AEThemeConfig"
@@ -95,45 +100,30 @@ OptionMenu "AEDirectorConfig"
 	Option "Infected Mayhem",				"user_MonsterMayhem", "OnOff"
 }
 
-
-/*
-OptionMenu "AEGameConfig"
+OptionMenu "AEWeaponConfig"
 {
-		Title "AEoD game type selection"
-		StaticText			"Choose the type of monsters you want", 1
-		StaticText			"the game to spawn.", 1
-		StaticText			"", 0
-		StaticText			"Generalized themes:", 0
-		Command "Demonesque", 					"set AEGtValues 1"
-		Command "Dark Sci-Fi", 				"set AEGtValues 2"
-		Command "Fantasy/Magic", 				"set AEGtValues 3"
-		Command "High-Tech", 					"set AEGtValues 4"
-		Command "Aliens", 					"set AEGtValues 5"
-		StaticText			"", 0
-		StaticText			"Game-Specific themes:", 0
-		Command "Doom", 					"set AEGtValues 11"
-		Command "Blood", 					"set AEGtValues 12"
-		Command "Duke Nukem 3D", 			"set AEGtValues 13"
-		Command "Half Life", 				"set AEGtValues 14"
-		Command "Half Life 2", 				"set AEGtValues 15"
-		Command "Heretic", 					"set AEGtValues 16"
-		Command "Hexen", 					"set AEGtValues 17"
-		Command "Hexen 2", 					"set AEGtValues 18"
-		Command "Might & Magic", 			"set AEGtValues 19"
-		Command "Powerslave", 				"set AEGtValues 20"
-		Command "Quake", 					"set AEGtValues 21"
-		Command "Quake 2", 					"set AEGtValues 22"
-		Command "Quake 4", 					"set AEGtValues 23"
-		Command "Shadow Warrior", 			"set AEGtValues 24"
-		Command "Strife", 					"set AEGtValues 25"
-		StaticText			"", 0
-		StaticText			"Special modes:", 0
-		Command "Classic AEoD", 					"set AEGtValues 0"
-		Command "Left 4 Dead", 						"set AEGtValues 26"
-		Command "Portal Run",						"set AEGtValues 7"
-		Command "Joke Mode",						"set AEGtValues 6"
-		Command "Chaos Capital",					"set AEGtValues 27"
-}*/
+	Title "AEoD Weapon Slot Config"
+	Submenu "Weapon Slot Limits",			"AEWeaponLimits"
+	//Submenu "Customize Line-up",			"AEWeaponLineup" //TO DO
+}
+
+OptionMenu "AEWeaponLimits"
+{
+	Title "AEoD Weapon Slot Limit Config"
+	Option "Weapon Slot Limits",		"user_WeaponSlotLimits", "OnOff"
+	StaticText " "
+	Slider "Slot 1", "user_MaxWeapons1", 1, 30, 1
+	Slider "Slot 2", "user_MaxWeapons2", 1, 30, 1
+	Slider "Slot 3", "user_MaxWeapons3", 1, 30, 1
+	Slider "Slot 4", "user_MaxWeapons4", 1, 30, 1
+	Slider "Slot 5", "user_MaxWeapons5", 1, 30, 1
+	Slider "Slot 6", "user_MaxWeapons6", 1, 30, 1
+	Slider "Slot 7", "user_MaxWeapons7", 1, 30, 1
+	Slider "Slot 8", "user_MaxWeapons8", 1, 30, 1
+	Slider "Slot 9", "user_MaxWeapons9", 1, 30, 1
+	Slider "Slot 10", "user_MaxWeapons0", 1, 30, 1
+}
+
 
 OptionMenu GameplayOptions
 {

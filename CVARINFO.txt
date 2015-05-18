@@ -1,54 +1,93 @@
 //==============================================================================
+//							Player Dependant Vars
+//==============================================================================
+//	The following are user variables, as it appears a few people have invested
+//	themselves in wishing to create multiplayer with AEoD. While we don't
+//	support multiplayer (yet), the least we can do is, from that day forth,
+//	minimize the work needed to be done.
+
+//	Determines whether to enable weapon slots or not.
+user bool user_WeaponSlotLimits = true;
+user int user_MaxWeapons0	= 3;
+user int user_MaxWeapons1	= 3;
+user int user_MaxWeapons2	= 3;
+user int user_MaxWeapons3	= 3;
+user int user_MaxWeapons4	= 3;
+user int user_MaxWeapons5	= 3;
+user int user_MaxWeapons6	= 3;
+user int user_MaxWeapons7	= 3;
+user int user_MaxWeapons8	= 3;
+user int user_MaxWeapons9	= 3;
+
+
+//==============================================================================
 //								  Game Modes
 //==============================================================================
-//Currently, only Left 4 Dead mode exists. It overrides all other themes,
-//monsters, and extras. The only two options that are considered are Joke, and 
-//Infected Mayhem.
-server bool user_L4DMode	= false;
+//	Currently, only Left 4 Dead mode exists. It overrides all other themes,
+//	monsters, and extras. The only two options that are considered are Joke,  
+//	and Infected Mayhem.
+server bool user_L4DMode		= false;
+server int user_GameMode 		= 0;
 
 //==============================================================================
 //									Themes
 //==============================================================================
+//	The bool values below are represented by true/false options. This is the
+//	settings used to determine the types of mix and match. By default, this is
+//	set up for classic AEoD.
+//	Having no themes is as good as turning on all themes.
+server bool user_Doom			= true;
+server bool user_Blood			= true;
+server bool user_Duke			= true;
+server bool user_HL				= true;
+server bool user_HL2			= true;
+server bool user_Heretic		= true;
+server bool user_Hexen			= true;
+server bool user_Hexen2			= true;
+server bool user_MM				= true;
+server bool user_Powerslave		= true;
+server bool user_Quake1			= true;
+server bool user_Quake2			= true;
+server bool user_Quake4			= true;
+server bool user_SW				= true;
+server bool user_Strife			= true;
 
-//The bool values below are represented by true/false options. This is the
-//settings used to determine the types of mix and match. By default, this is
-//set up for classic AEoD.
-
-//Having no themes is as good as turning on all themes.
-server bool user_Doom		= true;
-server bool user_Blood		= true;
-server bool user_Duke		= true;
-server bool user_HL			= true;
-server bool user_HL2		= true;
-server bool user_Heretic	= true;
-server bool user_Hexen		= true;
-server bool user_Hexen2		= true;
-server bool user_MM			= true;
-server bool user_Powerslave	= true;
-server bool user_Quake1		= true;
-server bool user_Quake2		= true;
-server bool user_Quake4		= true;
-server bool user_SW			= true;
-server bool user_Strife		= true;
-
-//These are "extras" that don't count as theme types. Whether it's from lack of
-//monsters to fit all the doom category spawns or if they just don't fit elsewhere,
-//it doesn't count as an actual theme.
-server bool user_Dm64		= true;
-server bool user_HellSpawn	= true;
-server bool user_ROTT		= true;
-server bool user_L4DMon		= true;
-server bool user_Joke		= false;
+//	These are "extras" that don't count as theme types. Whether it's from lack 
+//	of monsters to fit all the doom category spawns or if they just don't fit 
+//	elsewhere, it doesn't count as an actual theme.
+server bool user_Dm64			= true;
+server bool user_HellSpawn		= true;
+server bool user_ROTT			= true;
+server bool user_L4DMon			= true;
+server bool user_Joke			= false;
 
 //==============================================================================
 //								  Directors
 //==============================================================================
-server bool user_L4DDir		= false;
-server bool user_NorDir		= false;
-server bool user_MonsterMayhem = false;
+server bool user_L4DDir			= false;
+server bool user_NorDir			= false;
+server bool user_MonsterMayhem 	= false;
+server int user_L4DIntensity 	= 3;
+server int user_MonIntensity 	= 3;
 
+
+//==============================================================================
+//								  Incomplete
+//==============================================================================
+//	These are not yet complete, and therefore don't do anything.
+//	Used to help record the current and previous weapons for preservance.
+user string user_currentWeapon 	= "";
+user string user_previousWeapon = "";
+
+//==============================================================================
+//								  Deprecated
+//==============================================================================
+//	These features have been removed from AEoD. Who knows, though. They could
+//	be temporary, or they could be forever. In the case of temporary, they
+//	are left here for reference. Regardless of what setting they have, they 
+//	do nothing.
+
+//	Anti-Cheat Script has been removed.
+//	Are you happy now, cheaters? From now on, your reports of broken
+//	weapon systems via cheats are ignored.
 server bool user_cheat	= true;
-
-//Used to help record the current and previous weapons for preservance.
-server string user_currentWeapon = "";
-server string user_previousWeapon = "";
