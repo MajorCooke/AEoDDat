@@ -9,14 +9,17 @@ ACTOR DirectorSpawner : CustomInventory
 	}
 }
 
+Actor MonDirIntensity : Inventory
+{	Inventory.MaxAmount 666	}
+
 Actor DirSmallChildCount : Inventory
-{	Inventory.MaxAmount 20	}
+{	Inventory.MaxAmount 100	}
 
 Actor DirMediumChildCount : Inventory
-{	Inventory.MaxAmount 10	}
+{	Inventory.MaxAmount 100	}
 
 Actor DirLargeChildCount : Inventory
-{	Inventory.MaxAmount 5	}
+{	Inventory.MaxAmount 100	}
 
 Actor FreezeDirector : Inventory
 {
@@ -131,6 +134,26 @@ Actor SmallSpawnToken : Inventory
 
 Actor TheDirector
 {
+	var int user_bias[2];
+	//Biasity (#/256) to jump to the medium and large spawning categories.
+	//random(1,256) <= user_bias[#]
+	//[0] = Medium spawn chance
+	//[1] = Large spawn chance
+	var int user_cc[3];
+	//Max number of children allowed active at any time.
+	//Determined by script.
+	//[0] = Small spawners
+	//[1] = Medium spawners
+	//[2] = Large spawners
+	var int user_cd[7];
+	//Will be used by the script to determine current intensities.
+	//[0] = Small cooldown min
+	//[1] = Small cooldown max
+	//[2] = Medium cooldown min
+	//[3] = Medium cooldown max
+	//[4] = Large cooldown min
+	//[5] = Large cooldown max
+	//[6] = Random amount to add to cooldowns from 0 to [3]
 	var int user_cooldown[4];
 	//[0] = Normal cooldown
 	//[1] = Exclusive small child countdown
@@ -138,10 +161,6 @@ Actor TheDirector
 	//[3] = Bool [1] on cooldown
 	//[2] and [3] are basically checking if the spawners had successfully been
 	//deployed. If not, they stay at 0 and no cooldown is initialized.
-	var int user_largechildcount;
-	var int user_mediumchildcount;
-	var int user_smallchildcount;
-	var int user_Type;
 	Monster
 	+NEVERTARGET
 	-COUNTKILL
@@ -150,7 +169,7 @@ Actor TheDirector
 	+NORADIUSDMG
 	+THRUACTORS
 	+NOBLOOD
-	-NOTELEPORT
+	+NOTELEPORT
 	+FORCEPAIN
 	+LOOKALLAROUND
 	+NOTARGETSWITCH
@@ -181,7 +200,18 @@ Actor TheDirector
 	States
 	{
 	Spawn:
-		TNT1 A 0
+		TNT1 A 0 NoDelay A_SetUserArray(user_bias,0,48) //#/256 chance to spawn medium
+		TNT1 A 0 A_SetUserArray(user_bias,1,24) //^ large
+		TNT1 A 0 A_SetUserArray(user_cc,0,5) //max small children spawners
+		TNT1 A 0 A_SetUserArray(user_cc,1,4) //^ medium
+		TNT1 A 0 A_SetUserArray(user_cc,2,3) //^ large
+		TNT1 A 0 A_SetUserArray(user_cd,0,75) //Small cooldown min
+		TNT1 A 0 A_SetUserArray(user_cd,1,200) //Small cooldown max
+		TNT1 A 0 A_SetUserArray(user_cd,2,200) //Medium cooldown min
+		TNT1 A 0 A_SetUserArray(user_cd,3,450) //Medium cooldown max
+		TNT1 A 0 A_SetUserArray(user_cd,4,300) //Large cooldown min
+		TNT1 A 0 A_SetUserArray(user_cd,5,600) //Large cooldown max
+		TNT1 A 0 A_SetUserArray(user_cd,6,random(50,175))
 		Goto SCont
 	SCont:
 		TNT1 A 0 A_ChangeFlag("FRIENDLY",0)
@@ -205,13 +235,11 @@ Actor TheDirector
 		TNT1 AAA 2 A_Chase
 		TNT1 A 0 A_JumpIfInventory("RemoveDirector",1,"Death",AAPTR_TARGET)
 		TNT1 A 0 A_JumpIfInventory("FreezeDirector",1,"Frozen",AAPTR_TARGET)
-		TNT1 A 0 A_FaceTarget
 		TNT1 A 0 A_Recoil(-4)
 		TNT1 A 0 A_JumpIf(user_cooldown[0]<=0,2)
 		TNT1 A 0 A_SetUserArray("user_cooldown",0,user_cooldown[0]-1)
-		TNT1 A 0 A_JumpIf(user_cooldown[1]<=0,2)
+		TNT1 A 0 A_JumpIf(user_cooldown[1]<=0,"Chasing")
 		TNT1 A 0 A_SetUserArray("user_cooldown",1,user_cooldown[1]-1)
-		TNT1 A 0
 		Loop
 	Missile:
 		TNT1 A 0 A_JumpIf(IsPointerEqual(AAPTR_TARGET,AAPTR_PLAYER1),2)
@@ -219,49 +247,48 @@ Actor TheDirector
 		TNT1 A 0 A_Warp(AAPTR_TARGET,0,0,0,0,WARPF_NOCHECKPOSITION)
 		TNT1 A 0 A_JumpIfInventory("SmallSpawnToken",1,"SmallerMobPrep",AAPTR_PLAYER1)
 		TNT1 A 3 A_FaceTarget
-		TNT1 A 0 A_Jump(24,"LargeMobShoot")
-		TNT1 A 0 A_Jump(48,"MediumMobshoot")
+		TNT1 A 0 A_JumpIf(random(1,256) <= user_bias[1],"LargeMobShoot")
+		TNT1 A 0 A_JumpIf(random(1,256) <= user_bias[0],"MediumMobshoot")
 		Goto SmallerMobPrep
 	SmallerMobPrep:
-		TNT1 A 0 A_JumpIf(user_cooldown[3]==1,"Chasing")
-		TNT1 A 0 A_JumpIf(user_cooldown[1]>=1,"Chasing")
+		TNT1 A 0 A_JumpIf(user_cooldown[3]==1 || user_cooldown[1]>=1,"Chasing")
 		TNT1 A 0 A_TakeInventory("SmallSpawnToken",1,0,AAPTR_PLAYER1)
-		TNT1 A 0 A_FaceTarget
 		Goto SmallMobShoot
 	LargeMobshoot:
-		TNT1 A 0 A_JumpIf(user_cooldown[2]==1,"Chasing")
-		TNT1 A 0 A_JumpIf(user_cooldown[0]>=1,"Chasing")
-		TNT1 A 0 A_SetUserVar("user_largechildcount",0)
-		//TNT1 A 0 //A_Log("Big Mob")
-		TNT1 A 1 A_SpawnItemEx("MCLargeMobRunner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_TRANSFERPOINTERS)
-		//TNT1 A 0 //A_Log("Good")
-		TNT1 A 0 A_SetUserVar("user_largechildcount",3)
+		TNT1 A 0 A_JumpIf(user_cooldown[2]==1 || user_cooldown[0]>=1,"Chasing")
+		TNT1 A 0 A_JumpIfInventory("DirLargeChildCount",3,"Chasing")
+		TNT1 A 0 Thing_ChangeTID(0,32766)
+		TNT1 A 1 A_SpawnItemEx("MCLargeMobRunner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID)
+		TNT1 A 0 A_JumpIf(tid != 0,"Chasing")
+		TNT1 A 0 A_GiveInventory("DirLargeChildCount",1)
+		TNT1 A 0 A_SetUserArray(user_cooldown,0,random(user_cd[4],user_cd[5])+random(0,user_cd[6]))
 		Goto Chasing
 	MediumMobshoot:
-		TNT1 A 0 A_JumpIf(user_cooldown[2]==1,"Chasing")
-		TNT1 A 0 A_JumpIf(user_cooldown[0]>=1,"Chasing")
-		TNT1 A 0 A_SetUserVar("user_mediumchildcount",0)
-		//TNT1 A 0 //A_Log("Medium Mob")
-		TNT1 A 1 A_SpawnItemEx("MCMediumMobRunner",0,0,1,0,0,0,0,SXF_SETMASTER|SXF_TRANSFERPOINTERS)
-		//TNT1 A 0 //A_Log("Good")
-		TNT1 A 0 A_SetUserVar("user_mediumchildcount",5)
+		TNT1 A 0 A_JumpIf(user_cooldown[2]==1 || user_cooldown[0]>=1,"Chasing")
+		TNT1 A 0 A_JumpIfInventory("DirMediumChildCount",4,"Chasing")
+		TNT1 A 0 Thing_ChangeTID(0,32766)
+		TNT1 A 1 A_SpawnItemEx("MCMediumMobRunner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID)
+		TNT1 A 0 A_JumpIf(tid != 0,"Chasing")
+		TNT1 A 0 A_GiveInventory("DirMediumChildCount",1)
+		TNT1 A 0 A_SetUserArray(user_cooldown,0,random(user_cd[2],user_cd[3])+random(0,user_cd[6]))
 		Goto Chasing
 	SmallMobshoot:
-		TNT1 A 0 A_JumpIf(user_cooldown[3]==1,"Chasing")
-		TNT1 A 0 A_JumpIf(user_cooldown[1]>=1,"Chasing")
-		//TNT1 A 0 //A_Log("Small Mob")
-		TNT1 A 1 A_SpawnItemEx("MCSmallMobRunner",0,0,1,0,0,0,0,SXF_SETMASTER|SXF_TRANSFERPOINTERS)
-		//TNT1 A 0 //A_Log("Good")
-		TNT1 A 0 A_SetUserVar("user_smallchildcount",user_smallchildcount+5)
+		//TNT1 A 0 A_JumpIf(user_cooldown[3]==1,"Chasing")
+		//TNT1 A 0 A_JumpIf(user_cooldown[1]>=1,"Chasing")
+		TNT1 A 0 A_JumpIfInventory("DirSmallChildCount",5,"Chasing")
+		TNT1 A 0 Thing_ChangeTID(0,32766)
+		TNT1 A 1 A_SpawnItemEx("MCSmallMobRunner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID)
+		TNT1 A 0 A_JumpIf(tid != 0,"Chasing")
+		TNT1 A 0 A_GiveInventory("DirSmallChildCount",1)
 		//Note that this cooldown is exclusive and runs individually unlike the other.
-		TNT1 A 0 A_SetUserArray("user_cooldown",1,random(75,200)) 
+		TNT1 A 0 A_SetUserArray(user_cooldown,1,random(user_cd[0],user_cd[1])+random(0,user_cd[6])) 
 		Goto Chasing
 	Frozen:
 		TNT1 A 35 A_Stop
 		TNT1 A 0 A_JumpIfInventory("FreezeDirector",1,"Frozen",AAPTR_PLAYER1)
 		Goto Chasing
 	Death:
-		TNT1 A 35 A_RemoveChildren(1,RMVF_EVERYTHING,"None","Director")
+		TNT1 A 35 A_RemoveChildren(1,RMVF_EVERYTHING,None,"Director")
 		TNT1 A 0 A_TakeInventory("FreezeDirector",32767,0,AAPTR_PLAYER1)
 		TNT1 A 0 A_TakeInventory("RemoveDirector",32767,0,AAPTR_PLAYER1)
 		Stop
@@ -277,6 +304,9 @@ Actor MCLargeMobRunner
 	var int user_x[3];
 	var int user_y[3];
 	Monster
+	+THRUACTORS
+	+NOFEAR
+	+FRIGHTENED
 	+DONTTHRUST
 	-SOLID
 	+NEVERTARGET
@@ -284,7 +314,6 @@ Actor MCLargeMobRunner
 	+CANTSEEK
 	+FLOORHUGGER
 	+NORADIUSDMG
-	+THRUACTORS
 	+NOBLOOD
 	-TELESTOMP
 	+FORCEPAIN
@@ -299,6 +328,7 @@ Actor MCLargeMobRunner
 	+NOTRIGGER
 	+NOTELESTOMP
 	+DONTSPLASH
+	+NODAMAGE
 	Speed 7
 	Radius 100
 	Height 100
@@ -311,29 +341,31 @@ Actor MCLargeMobRunner
 	{
 	Spawn:
 		TNT1 A 0 //NoDelay //ACS_NamedExecuteAlways("DirectorLimiter",0,3,0)
-//Chooses between spider mastermind and cyberdemon.
+		//Chooses between spider mastermind and cyberdemon.
 		TNT1 A 0 A_SetUserArray("user_boss",0,random(0,1))
 		TNT1 A 0 A_SetUserVar("user_dlimit",0)
-		TNT1 A 0 A_GiveInventory("CooldownEnable1",1,AAPTR_MASTER)
+		//TNT1 A 0 A_GiveInventory("CooldownEnable1",1,AAPTR_MASTER)
 	Idle:
 		TNT1 AAAAA 1 A_Look
 		Loop
 	See:
+	Wanderbout:
 		TNT1 A 0 A_SetUserArray("user_x",0,x)
 		TNT1 A 0 A_SetUserArray("user_y",0,y)
-	Wanderbout:
 		TNT1 A 0 A_JumpIfInventory("DirectorIsLeaving",1,"Death",AAPTR_MASTER)
 		TNT1 A 0 A_JumpIfInventory("RemoveDirector",1,"Death",AAPTR_TARGET)
 		TNT1 A 0 A_JumpIfInventory("FreezeDirector",1,"Frozen",AAPTR_TARGET)
-		TNT1 A 1 A_Chase("","")
-		TNT1 AAAAAAAAAAAAAAAAAAAA 1 A_Wander
+		TNT1 AAAAAAAAAA 1 A_Chase("","")
+		TNT1 AAAAAAAAAA 1 A_Wander
 		TNT1 A 0 A_SetUserArray("user_x",1,x)
 		TNT1 A 0 A_SetUserArray("user_y",1,y)
 		TNT1 A 0 A_JumpIf((user_x[0]==user_x[1])&&(user_y[0]==user_y[1]),"Stuck")
 	Mobmaking:
 		TNT1 A 0 A_JumpIfTargetInLOS("Wanderbout",360)
 		TNT1 A 0 A_JumpIfCloser(250,"Wanderbout")
-		TNT1 A 0 A_JumpIf(user_boss[1]==1,"BossCheck")
+		TNT1 A 0 A_CheckSight(1)
+		Goto Wanderbout
+		TNT1 A 0 A_JumpIf(user_boss[1]==1,"SC1")
 		TNT1 A 0 A_Jump(64,"BossCheck")
 		Goto ArchvileSpawn
 	BossCheck:
@@ -349,7 +381,8 @@ Actor MCLargeMobRunner
 		TNT1 A 0 Thing_ChangeTID(0,32666)
 		TNT1 A 0 A_SpawnItemEx("CyberdemonReplacer",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID)
 		TNT1 A 2 A_JumpIf(tid!=0,"See") //Means the actor failed to spawn.
-		TNT1 A 0 A_GiveToSiblings("AEoDToken",1)
+		TNT1 A 0 A_TakeFromSiblings("AEoDToken",100) //These are needed for the soul reaper conversion to work.
+		TNT1 A 0 A_GiveToSiblings("AEoDToken",1) //Otherwise, it will just default to destroying them.
 		Goto Vanish //One-hit wonder. We really don't need these things spawning more than one.
 	SpiderMasterMindSpawn:
 		TNT1 A 0 Thing_ChangeTID(0,32666)
@@ -370,9 +403,9 @@ Actor MCLargeMobRunner
 		TNT1 A 0 A_JumpIf(user_dlimit>=4,"Vanish")
 		Goto See
 	Vanish:
-		TNT1 A 0 //A_Log("Big Loot")
-		TNT1 A 0 A_GiveInventory("CooldownDisable1",1,AAPTR_MASTER)
-		TNT1 A 0 A_GiveInventory("LargeCooldown",1,AAPTR_MASTER)
+		TNT1 A 0 A_TakeInventory("DirLargeChildCount",1,0,AAPTR_MASTER)
+		//TNT1 A 0 A_GiveInventory("CooldownDisable1",1,AAPTR_MASTER)
+		//TNT1 A 0 A_GiveInventory("LargeCooldown",1,AAPTR_MASTER)
 		TNT1 A 0 A_DropItem("AEoD6SpellSpawner",1,4)
 		TNT1 A 0 A_DropItem("BFGReplacer",1,128)
 		TNT1 A 0 A_DropItem("PlasmaRifleReplacer",1,128)
@@ -392,7 +425,8 @@ Actor MCLargeMobRunner
 		Stop
 	Stuck:
 		TNT1 A 0 A_GiveInventory("CooldownDisable1",1,AAPTR_MASTER)
-		TNT1 A 0 A_JumpIf(user_dlimit == 0, "Vanish")
+		TNT1 A 0 A_JumpIf(user_dlimit > 0, "Vanish")
+		TNT1 A 0 A_TakeInventory("DirLargeChildCount",1,0,AAPTR_MASTER)
 		Stop
 	Frozen:
 		TNT1 A 35 A_Stop
@@ -415,6 +449,9 @@ Actor MCMediumMobRunner
 	var int user_x[2];
 	var int user_y[2];
 	Monster
+	+THRUACTORS
+	+FRIGHTENED
+	+NOFEAR
 	+DONTTHRUST
 	-SOLID
 	+NEVERTARGET
@@ -422,7 +459,6 @@ Actor MCMediumMobRunner
 	+CANTSEEK
 	+FLOORHUGGER
 	+NORADIUSDMG
-	+THRUACTORS
 	+NOBLOOD
 	-TELESTOMP
 	+FORCEPAIN
@@ -449,22 +485,30 @@ Actor MCMediumMobRunner
 	{
 	Spawn:
 		TNT1 A 0
-		TNT1 A 0 //ACS_NamedExecuteAlways("DirectorLimiter",0,3,0)
+		//TNT1 A 0 //ACS_NamedExecuteAlways("DirectorLimiter",0,3,0)
 		TNT1 A 0 A_SetUserVar("user_dlimit",0)
-		TNT1 A 0 A_GiveInventory("CooldownEnable1",1,AAPTR_MASTER)
+		//TNT1 A 0 A_GiveInventory("CooldownEnable1",1,AAPTR_MASTER)
 	Idle:
 		TNT1 AAAAA 1 A_Look
 		Loop
 	See:
 	Wanderbout:
+		TNT1 A 0 A_SetUserArray("user_x",0,x)
+		TNT1 A 0 A_SetUserArray("user_y",0,y)
+		TNT1 A 0 Thing_ChangeTID(0,0)
 		TNT1 A 0 A_JumpIfInventory("RemoveDirector",1,"Death",AAPTR_TARGET)
 		TNT1 A 0 A_JumpIfInventory("DirectorIsLeaving",1,"Death",AAPTR_MASTER)
 		TNT1 A 0 A_JumpIfInventory("FreezeDirector",1,"Frozen",AAPTR_TARGET)
-		TNT1 A 1 A_Chase
-		TNT1 AAAAAAAAAAAAAAAAAAAA 1 A_Wander
+		TNT1 AAAAAAAAAA 1 A_Chase("","")
+		TNT1 AAAAAAAAAA 1 A_Wander
+		TNT1 A 0 A_SetUserArray("user_x",1,x)
+		TNT1 A 0 A_SetUserArray("user_y",1,y)
+		TNT1 A 0 A_JumpIf((user_x[0]==user_x[1])&&(user_y[0]==user_y[1]),"Stuck")
 	Mobmaking:
 		TNT1 A 0 A_JumpIfTargetInLOS("Wanderbout",360)
 		TNT1 A 0 A_JumpIfCloser(250,"Wanderbout")
+		TNT1 A 0 A_CheckSight(1)
+		Goto Wanderbout
 		TNT1 A 0 Thing_ChangeTID(0,32667) 
 		//The above call is used to check and see if the spawning worked.
 		//If it did, its TID is set to 0.
@@ -490,12 +534,12 @@ Actor MCMediumMobRunner
 		TNT1 A 0 A_GiveToSiblings("AEoDToken",1)
 		TNT1 A 0 //A_Log("Good")
 		TNT1 A 0 A_SetUserVar("user_dlimit",user_dlimit+1)
-		TNT1 A 0 A_JumpIf(user_dlimit>=4,"Vanish")
+		TNT1 A 0 A_JumpIf(user_dlimit >= 4,"Vanish")
 		Goto Wanderbout
 	Vanish:
-		//TNT1 A 0 //A_Log("Medium Loot")
-		TNT1 A 0 A_GiveInventory("CooldownDisable1",1,AAPTR_MASTER)
-		TNT1 A 0 A_GiveInventory("MediumCooldown",1,AAPTR_MASTER)
+		TNT1 A 0 A_TakeInventory("DirMediumChildCount",1,0,AAPTR_MASTER)
+		//TNT1 A 0 A_GiveInventory("CooldownDisable1",1,AAPTR_MASTER)
+		//TNT1 A 0 A_GiveInventory("MediumCooldown",1,AAPTR_MASTER)
 		TNT1 A 0 A_DropItem("AEoD6SpellSpawner",1,1)
 		TNT1 A 0 A_DropItem("BFGReplacer",1,16)
 		TNT1 A 0 A_DropItem("PlasmaRifleReplacer",1,66)
@@ -519,6 +563,11 @@ Actor MCMediumMobRunner
 		TNT1 A 0 A_JumpIfInventory("DirectorIsLeaving",1,"Death",AAPTR_MASTER)
 		TNT1 A 0 A_JumpIfInventory("FreezeDirector",1,"Frozen",AAPTR_TARGET)
 		Goto See
+	Stuck:
+		TNT1 A 0 A_GiveInventory("CooldownDisable1",1,AAPTR_MASTER)
+		TNT1 A 0 A_JumpIf(user_dlimit > 0, "Vanish")
+		TNT1 A 0 A_TakeInventory("DirMediumChildCount",1,0,AAPTR_MASTER)
+		Stop
 	Death:
 		TNT1 A 0
 		Stop
@@ -533,6 +582,9 @@ Actor MCSmallMobRunner
 	var int user_x[2];
 	var int user_y[2];
 	Monster
+	+THRUACTORS
+	+NOFEAR
+	+FRIGHTENED
 	+DONTTHRUST
 	-SOLID
 	+NEVERTARGET
@@ -540,7 +592,6 @@ Actor MCSmallMobRunner
 	+CANTSEEK
 	+FLOORHUGGER
 	+NORADIUSDMG
-	+THRUACTORS
 	+NOBLOOD
 	-TELESTOMP
 	+FORCEPAIN
@@ -573,15 +624,23 @@ Actor MCSmallMobRunner
 		TNT1 AAAAA 1 A_Look
 		Loop
 	See:
-	Wandering:
+	Wanderbout:
+		TNT1 A 0 A_SetUserArray("user_x",0,x)
+		TNT1 A 0 A_SetUserArray("user_y",0,y)
+		TNT1 A 0 Thing_ChangeTID(0,0)
 		TNT1 A 0 A_JumpIfInventory("RemoveDirector",1,"Death",AAPTR_TARGET)
 		TNT1 A 0 A_JumpIfInventory("DirectorIsLeaving",1,"Death",AAPTR_MASTER)
 		TNT1 A 0 A_JumpIfInventory("FreezeDirector",1,"Frozen",AAPTR_TARGET)
-		TNT1 A 1 A_Chase
-		TNT1 AAAAAAAAAAAAAAAAAAAA 1 A_Wander
+		TNT1 AAAAAAAAAA 1 A_Chase("","")
+		TNT1 AAAAAAAAAA 1 A_Wander
+		TNT1 A 0 A_SetUserArray("user_x",1,x)
+		TNT1 A 0 A_SetUserArray("user_y",1,y)
+		TNT1 A 0 A_JumpIf((user_x[0]==user_x[1])&&(user_y[0]==user_y[1]),"Stuck")
 	Mobmaking:
-		TNT1 A 0 A_JumpIfTargetInLOS("Wandering",360)
-		TNT1 A 0 A_JumpIfCloser(250,"Wandering")
+		TNT1 A 0 A_JumpIfTargetInLOS("Wanderbout",360)
+		TNT1 A 0 A_JumpIfCloser(250,"Wanderbout")
+		TNT1 A 0 A_CheckSight(1)
+		Goto Wanderbout
 		TNT1 A 0 Thing_ChangeTID(0,32668)
 		TNT1 A 0 A_Jump(256,1,2,3,4,5,6)
 		TNT1 A 0 A_SpawnItemEx("ZombieReplacer",0,0,5,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID)
@@ -597,13 +656,14 @@ Actor MCSmallMobRunner
 		TNT1 A 0 A_SpawnItemEx("DemonReplacer",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID)
 		Goto CountUp
 	CountUp:
-		TNT1 A 0 A_JumpIf(tid!=0,"Wandering")
+		TNT1 A 0 A_JumpIf(tid != 0,"Wanderbout")
 		TNT1 A 0 A_TakeFromSiblings("AEoDToken",100)
 		TNT1 A 0 A_GiveToSiblings("AEoDToken",1)
 		TNT1 A 0 A_SetUserVar("user_dlimit",user_dlimit+1)
 		TNT1 A 0 A_JumpIf(user_dlimit>=10,"Vanish")
-		Goto Wandering
+		Goto Wanderbout
 	Vanish:
+		TNT1 A 0 A_TakeInventory("DirSmallChildCount",1,0,AAPTR_MASTER)
 		TNT1 A 0 A_DropItem("RocketLauncherReplacer",1,16)
 		TNT1 A 0 A_DropItem("SSGReplacer",1,36)
 		TNT1 A 0 A_DropItem("ShotgunReplacer",1,76)
@@ -621,7 +681,11 @@ Actor MCSmallMobRunner
 		TNT1 A 0 A_JumpIfInventory("RemoveDirector",1,"Death",AAPTR_TARGET)
 		TNT1 A 0 A_JumpIfInventory("DirectorIsLeaving",1,"Death",AAPTR_MASTER)
 		TNT1 A 0 A_JumpIfInventory("FreezeDirector",1,"Frozen",AAPTR_TARGET)		
-		Goto See
+		Goto Wanderbout
+	Stuck:
+		TNT1 A 0 A_JumpIf(user_dlimit > 0, "Vanish")
+		TNT1 A 0 A_TakeInventory("DirSmallChildCount",1,0,AAPTR_MASTER)
+		Stop
 	Death:
 		TNT1 A 1
 		Stop
