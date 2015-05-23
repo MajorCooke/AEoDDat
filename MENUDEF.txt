@@ -12,6 +12,7 @@ OptionMenu "OptionsMenu"
    Submenu "Extra Monsters",	"AEExtraConfig"
    Submenu "Directors",		"AEDirectorConfig"
    Submenu "Weapon Slots Customization",	"AEWeaponConfig"
+   StaticText " "
    StaticText "ZDoom Options", 1
    Submenu "Customize Controls",      "CustomizeControls"
    Submenu "Mouse options",         "MouseOptions"
@@ -84,20 +85,35 @@ OptionMenu "AEExtraConfig"
 	Option "Joke",							"user_Joke", "OnOff"
 }
 
+OptionValue "AEoDDirIntensity"
+{
+	1, "1"
+	2, "2"
+	3, "3"
+	4, "4"
+	5, "5"
+	6, "6"
+	7, "7"
+	8, "8"
+	9, "9"
+	10, "10"
+	666, "BATSHIT INSANE" //God be with the blessed madmen that go this route. >:3
+}
+
 OptionMenu "AEDirectorConfig"
 {
 	Title "Directors"
 	StaticText	"Directors spawn enemies where you least expect them.", 1
-	StaticText	"Infected director spawns zombies.", 0
+	StaticText	"Infected director spawns L4D zombies.", 0
 	StaticText	"Monster director spawns doom-classed enemies.", 0
+	StaticText	"Intensity determines spawn rate multiplier.", 0
+	StaticText	"The higher it is, the more monsters spawn.", 1
 	StaticText	" "
 	Option "Infected Director",				"user_L4DDir", "OnOff"
 	Option "Monster Director",				"user_NorDir", "OnOff"
+	Option "Infected Intensity",			"user_L4DIntensity", "AEoDDirIntensity"
+	Option "Monster Intensity",				"user_MonIntensity", "AEoDDirIntensity"
 	StaticText	" "
-	StaticText	"Want more zombies to fight?", 1
-	StaticText	"Common infected are weaker, but spawn much more.", 1
-	StaticText	" "
-	Option "Infected Mayhem",				"user_MonsterMayhem", "OnOff"
 }
 
 OptionMenu "AEWeaponConfig"
@@ -112,16 +128,16 @@ OptionMenu "AEWeaponLimits"
 	Title "AEoD Weapon Slot Limit Config"
 	Option "Weapon Slot Limits",		"user_WeaponSlotLimits", "OnOff"
 	StaticText " "
-	Slider "Slot 1", "user_MaxWeapons1", 1, 30, 1
-	Slider "Slot 2", "user_MaxWeapons2", 1, 30, 1
-	Slider "Slot 3", "user_MaxWeapons3", 1, 30, 1
-	Slider "Slot 4", "user_MaxWeapons4", 1, 30, 1
-	Slider "Slot 5", "user_MaxWeapons5", 1, 30, 1
-	Slider "Slot 6", "user_MaxWeapons6", 1, 30, 1
-	Slider "Slot 7", "user_MaxWeapons7", 1, 30, 1
-	Slider "Slot 8", "user_MaxWeapons8", 1, 30, 1
-	Slider "Slot 9", "user_MaxWeapons9", 1, 30, 1
-	Slider "Slot 10", "user_MaxWeapons0", 1, 30, 1
+	Slider "Slot 1", 	"user_MaxWeapons1", 1, 30, 1
+	Slider "Slot 2", 	"user_MaxWeapons2", 1, 30, 1
+	Slider "Slot 3", 	"user_MaxWeapons3", 1, 30, 1
+	Slider "Slot 4", 	"user_MaxWeapons4", 1, 30, 1
+	Slider "Slot 5", 	"user_MaxWeapons5", 1, 30, 1
+	Slider "Slot 6", 	"user_MaxWeapons6", 1, 30, 1
+	Slider "Slot 7", 	"user_MaxWeapons7", 1, 30, 1
+	Slider "Slot 8", 	"user_MaxWeapons8", 1, 30, 1
+	Slider "Slot 9", 	"user_MaxWeapons9", 1, 30, 1
+	Slider "Slot 10",	"user_MaxWeapons0", 1, 30, 1
 }
 
 
@@ -207,101 +223,101 @@ OptionMenu GameplayOptions
  
 OptionMenu "CustomizeControls"
 {
-        Title "CUSTOMIZE CONTROLS"
-        ScrollTop 2
-        StaticTextSwitchable    "ENTER to change, BACKSPACE to clear", "Press new key for control, ESC to cancel", "ControlMessage"
-        StaticText      ""
-        StaticText      "Controls", 3
-        Control         "Fire",                                 "+attack"
-        Control         "Secondary Fire",               "+altattack"
-		Control 	"Weapon Reload",			"+reload"
-	Control 	"Weapon Zoom",				"+zoom"
-        Control         "Narrow / Broaden FOV",                  "Zoom" //will need to make this work a bit better...
-        Control         "Use / Open",                   "+use"
-        Control         "Move forward",                 "+forward"
-        Control         "Move backward",                "+back"
-        Control         "Strafe left",                  "+moveleft"
-        Control         "Strafe right",                 "+moveright"
-        Control         "Turn left",                    "+left"
-        Control         "Turn right",                   "+right"
-        Control         "Jump",                         "+jump"
-        Control         "Crouch",                       "+crouch"
-        Control         "Crouch Toggle",                "crouch"
-        Control         "Fly / Swim up",                "+moveup"
-        Control         "Fly / Swim down",              "+movedown"
-        Control         "Stop flying",                  "land"
-        Control         "Mouse look",                   "+mlook"
-        Control         "Keyboard look",                "+klook"
-        Control         "Look up",						"+lookup"
-        Control         "Look down",                    "+lookdown"
-        Control         "Center view",                  "centerview"
-        Control         "Run",                          "+speed"
-        Control         "Strafe",                       "+strafe"
-        Control         "Show Scoreboard",              "+showscores"
-        StaticText      ""
-        StaticText      "Chat", 1
-        Control         "Say",                          "messagemode"
-        Control         "Team say",                     "messagemode2"
-        StaticText      ""
-        StaticText      "Weapons", 1
-        Control         "Next weapon",                  "weapnext"
-        Control         "Previous weapon",              "weapprev"
-        Control         "AEOD Drop Weapon",             "pukename s800"
-        Control         "Toggle Weapon Limits", 		"pukename WeaponSlotToggle"
-        StaticText      ""
-        StaticText      "Inventory", 1
-        Control         "Activate item",                "invuse"
-        Control         "Activate all items",   		"invuseall"
-        Control         "Next item",                    "invnext"
-        Control         "Previous item",                "invprev"
-        Control         "Drop item",                    "invdrop"
-        Control         "Query item",                   "invquery"
-        StaticText      ""
-		StaticText      "AEons of Death Spells", 1
-		Control         "Use selected spell",           "pukename s654"
-        Control         "Next spell",                   "pukename s652"
-		Control         "Previous spell",               "pukename s653"
-		Control		"Quick Chaos Spell",				"pukename s656 1"
-		Control		"Quick Charm Spell",				"pukename s656 2"
-		Control		"Quick Defile Spell",				"pukename s656 3"
-		Control		"Quick Drain Spell",				"pukename s656 4"
-		Control		"Quick Morph Spell",				"pukename s656 5"
-		Control		"Quick Raise Spell",				"pukename s656 6"
-		Control		"Quick Terror Spell",				"pukename s656 7"
-	  
-		StaticText      ""
-        StaticText      "AEons of Death Items/Other", 1
-		Control         "Left 4 Dead kill count display",	"pukename L4DCountHudSwitcher"
-        Control         "Boom Bunny",                   "use AEodTNTBunny"
-        Control         "Medikit",                      "use HealthBottle"
-        Control         "Armor Bracers",                "use Bracers"
-        Control         "Radiation Suit",               "use radsuititem"
-        Control         "Rune of Fear",                 "use FearRune"
-        Control         "Rune of Life Drain",   		"use DrainRune"
-        Control         "Rune of Invisibility", 		"use InvisibilityRune"
-        Control         "Rune of Time",                 "use TimeRune"
-        Control         "Symbol of Fire",               "use FireSymbol"
-        Control         "Symbol of Air",                "use AirSymbol"
-        Control         "Symbol of Earth",              "use EarthSymbol"
-        Control         "Symbol of Water",              "use WaterSymbol"
-        Control         "Stone of Temperance",  		"use StoneOfTemperance"
-        Control         "Stone of Quickening",  		"use StoneOfQuickening"
-        Control         "Stone of Restoration", 		"use StoneOfRestoration"
-        Control         "Diabolical Dice",              "use DiabolicalDice"
-        Control         "Icon of Summoning",    		"use IconOfSummoning"
-        Control         "Mana Cup",                     "use CupOfMana"
-        Control         "Life Urn",                     "use LifeUrn"
-        Control         "Ice Shield",                   "use IceShield"
-        Control         "ThunderStorm Rune",    		"use ThunderstormRune"
-        Control         "Pentagram of Protection",      "use PentagramOfProtection"
-        StaticText      ""
-        StaticText      "Other", 1
-        Control         "Toggle automap",               "togglemap"
-        Control         "Chasecam",                     "chase"
-        Control         "Coop spy",                     "spynext"
-        Control         "Screenshot",                   "screenshot"
-        Control         "Open console",                 "toggleconsole"
-		Control         "AEoD emergency exit (see readme)",                 "kill ArachnotronReplacer; kill FatsoReplacer; kill BaronOfHellReplacer; kill CyberdemonReplacer; kill SpiderMastermindReplacer"
+	Title "CUSTOMIZE CONTROLS"
+	ScrollTop 2
+	StaticTextSwitchable    "ENTER to change, BACKSPACE to clear", "Press new key for control, ESC to cancel", "ControlMessage"
+	StaticText      ""
+	StaticText      "Controls", 3
+	Control         "Fire",                                 "+attack"
+	Control         "Secondary Fire",               "+altattack"
+	Control 		"Weapon Reload",			"+reload"
+	Control 		"Weapon Zoom",				"+zoom"
+	Control         "Narrow / Broaden FOV",                  "Zoom" //will need to make this work a bit better...
+	Control         "Use / Open",                   "+use"
+	Control         "Move forward",                 "+forward"
+	Control         "Move backward",                "+back"
+	Control         "Strafe left",                  "+moveleft"
+	Control         "Strafe right",                 "+moveright"
+	Control         "Turn left",                    "+left"
+	Control         "Turn right",                   "+right"
+	Control         "Jump",                         "+jump"
+	Control         "Crouch",                       "+crouch"
+	Control         "Crouch Toggle",                "crouch"
+	Control         "Fly / Swim up",                "+moveup"
+	Control         "Fly / Swim down",              "+movedown"
+	Control         "Stop flying",                  "land"
+	Control         "Mouse look",                   "+mlook"
+	Control         "Keyboard look",                "+klook"
+	Control         "Look up",						"+lookup"
+	Control         "Look down",                    "+lookdown"
+	Control         "Center view",                  "centerview"
+	Control         "Run",                          "+speed"
+	Control         "Strafe",                       "+strafe"
+	Control         "Show Scoreboard",              "+showscores"
+	StaticText      ""
+	StaticText      "Chat", 1
+	Control         "Say",                          "messagemode"
+	Control         "Team say",                     "messagemode2"
+	StaticText      ""
+	StaticText      "Weapons", 1
+	Control         "Next weapon",                  "weapnext"
+	Control         "Previous weapon",              "weapprev"
+	Control         "AEOD Drop Weapon",             "pukename s800"
+	Control         "Toggle Weapon Limits", 		"pukename WeaponSlotToggle"
+	StaticText      ""
+	StaticText      "Inventory", 1
+	Control         "Activate item",                "invuse"
+	Control         "Activate all items",   		"invuseall"
+	Control         "Next item",                    "invnext"
+	Control         "Previous item",                "invprev"
+	Control         "Drop item",                    "invdrop"
+	Control         "Query item",                   "invquery"
+	StaticText      ""
+	StaticText      "AEons of Death Spells", 1
+	Control         "Use selected spell",           "pukename s654"
+	Control         "Next spell",                   "pukename s652"
+	Control         "Previous spell",               "pukename s653"
+	Control			"Quick Chaos Spell",				"pukename s656 1"
+	Control			"Quick Charm Spell",				"pukename s656 2"
+	Control			"Quick Defile Spell",				"pukename s656 3"
+	Control			"Quick Drain Spell",				"pukename s656 4"
+	Control			"Quick Morph Spell",				"pukename s656 5"
+	Control			"Quick Raise Spell",				"pukename s656 6"
+	Control			"Quick Terror Spell",				"pukename s656 7"
+  
+	StaticText      ""
+	StaticText      "AEons of Death Items/Other", 1
+	Control         "Left 4 Dead kill count display",	"pukename L4DCountHudSwitcher"
+	Control         "Boom Bunny",                   "use AEodTNTBunny"
+	Control         "Medikit",                      "use HealthBottle"
+	Control         "Armor Bracers",                "use Bracers"
+	Control         "Radiation Suit",               "use radsuititem"
+	Control         "Rune of Fear",                 "use FearRune"
+	Control         "Rune of Life Drain",   		"use DrainRune"
+	Control         "Rune of Invisibility", 		"use InvisibilityRune"
+	Control         "Rune of Time",                 "use TimeRune"
+	Control         "Symbol of Fire",               "use FireSymbol"
+	Control         "Symbol of Air",                "use AirSymbol"
+	Control         "Symbol of Earth",              "use EarthSymbol"
+	Control         "Symbol of Water",              "use WaterSymbol"
+	Control         "Stone of Temperance",  		"use StoneOfTemperance"
+	Control         "Stone of Quickening",  		"use StoneOfQuickening"
+	Control         "Stone of Restoration", 		"use StoneOfRestoration"
+	Control         "Diabolical Dice",              "use DiabolicalDice"
+	Control         "Icon of Summoning",    		"use IconOfSummoning"
+	Control         "Mana Cup",                     "use CupOfMana"
+	Control         "Life Urn",                     "use LifeUrn"
+	Control         "Ice Shield",                   "use IceShield"
+	Control         "ThunderStorm Rune",    		"use ThunderstormRune"
+	Control         "Pentagram of Protection",      "use PentagramOfProtection"
+	StaticText      ""
+	StaticText      "Other", 1
+	Control         "Toggle automap",               "togglemap"
+	Control         "Chasecam",                     "chase"
+	Control         "Coop spy",                     "spynext"
+	Control         "Screenshot",                   "screenshot"
+	Control         "Open console",                 "toggleconsole"
+	Control         "AEoD emergency exit (see readme)",                 "kill ArachnotronReplacer; kill FatsoReplacer; kill BaronOfHellReplacer; kill CyberdemonReplacer; kill SpiderMastermindReplacer"
 }
  
 //=========================================================

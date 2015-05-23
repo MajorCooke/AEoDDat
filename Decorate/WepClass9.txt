@@ -10475,34 +10475,23 @@ actor Popcorn1
 	DmgFire:
 		TNT1 A 0 A_SetDamageType("Fire")
 		TNT1 A 0 A_SetUserVar("user_dmgtype",1)
-		TNT1 A 0 A_Jump(128,2)
-		TNT1 A 0 Thing_SetTranslation(0,random(58,62))
-		Goto AnimChoice
-		TNT1 A 0 Thing_SetTranslation(0,random(73,74))
+		TNT1 A 0 Thing_SetTranslation(0,randompick(random(58,62),random(73,74)))
 		Goto AnimChoice
 	DmgIce:
 		TNT1 A 0 A_SetDamageType("Ice")
 		TNT1 A 0 A_SetUserVar("user_dmgtype",2)
-		TNT1 A 0 A_Jump(128,2)
-		TNT1 A 0 Thing_SetTranslation(0,random(68,72))
-		Goto AnimChoice
-		TNT1 A 0 Thing_SetTranslation(0,random(92,93))
+		TNT1 A 0 Thing_SetTranslation(0,randompick(random(68,72),random(92,93)))
 		Goto AnimChoice
 	DmgPlasma:
 		TNT1 A 0 A_SetDamageType("Plasma")
 		TNT1 A 0 A_SetUserVar("user_dmgtype",3)
 		TNT1 A 0 A_Jump(128,2)
-		TNT1 A 0 Thing_SetTranslation(0,random(63,67))
-		Goto AnimChoice
-		TNT1 A 0 Thing_SetTranslation(0,random(81,82))
+		TNT1 A 0 Thing_SetTranslation(0,randompick(random(63,67),random(81,82)))
 		Goto AnimChoice
 	DmgElectric:
 		TNT1 A 0 A_SetDamageType("Electric")
 		TNT1 A 0 A_SetUserVar("user_dmgtype",4)
-		TNT1 A 0 A_Jump(128,2)
-		TNT1 A 0 Thing_SetTranslation(0,random(75,76))
-		Goto AnimChoice
-		TNT1 A 0 Thing_SetTranslation(0,random(83,84))
+		TNT1 A 0 Thing_SetTranslation(0,randompick(random(75,76),random(83,84)))
 		Goto AnimChoice
 	DmgHoly:
 		TNT1 A 0 A_SetDamageType("Holy")
@@ -10562,7 +10551,7 @@ actor Popcorn1
 							CheckClass("HTC2BouncingClown",AAPTR_TRACER,1) ||
 							CheckClass("HTC2BabyClown",AAPTR_TRACER,1),1)
 		Goto Death
-		X140 A 0 A_DamageTracer(666,"None",DMSS_FOILINVUL)
+		X140 A 0 A_DamageTracer(666,None,DMSS_FOILINVUL)
 	Death:
 	 	X140 A 0 A_Explode(random(4,10),64,0)
 		TNT1 A 0 A_JumpIf(user_dmgtype > 0, 2)
@@ -10736,6 +10725,7 @@ Actor PopcornNade
 	+DONTREFLECT
 	+FOILINVUL
 	+INVULNERABLE
+	+HITTRACER
 	PainType "AntiClown"
 	BounceType "Doom"
 	ReactionTime 30
@@ -10749,6 +10739,34 @@ Actor PopcornNade
 		X140 ABCDEFGH 2 //A_SeekerMissile(5,10,1)
 		X140 A 0 A_CountDown
 		Goto Spawn
+	Crash:
+	XDeath:
+		X140 A 0 A_CheckFlag("SHOOTABLE",1,AAPTR_TRACER)
+		Goto Death
+		X140 A 0 A_JumpIf(	CheckClass("HTC2Fluffy",AAPTR_TRACER,1) ||
+							CheckClass("HTC2MiniFluffy",AAPTR_TRACER,1) ||
+							CheckClass("HTC2JumpingSkull",AAPTR_TRACER,1) ||
+							CheckClass("HTC2GhostSkull",AAPTR_TRACER,1) ||
+							CheckClass("HTC2Bingo",AAPTR_TRACER,1) ||
+							CheckClass("HTC2TinyBingo",AAPTR_TRACER,1) ||
+							CheckClass("HTC2DraedicClownGhost",AAPTR_TRACER,1) ||
+							CheckClass("HTC2VileClownGhost",AAPTR_TRACER,1) ||
+							CheckClass("HTC2Bulby",AAPTR_TRACER,1) ||
+							CheckClass("HTC2MegaBulby",AAPTR_TRACER,1) ||
+							CheckClass("HTC2Beefy",AAPTR_TRACER,1) ||
+							CheckClass("HTC2BlackBear",AAPTR_TRACER,1) ||
+							CheckClass("BerthaBear",AAPTR_TRACER,1) ||
+							CheckClass("BlackBear",AAPTR_TRACER,1) ||
+							CheckClass("HTC2BigBertha",AAPTR_TRACER,1) ||
+							CheckClass("HTC2PossessedBalloon",AAPTR_TRACER,1) ||
+							CheckClass("HTC2EvilDeadHand",AAPTR_TRACER,1) ||
+							CheckClass("HTC2PennywiseHead",AAPTR_TRACER,1) ||
+							CheckClass("HTC2PennywiseTDC",AAPTR_TRACER,1) ||
+							CheckClass("HTC2SuperBertha",AAPTR_TRACER,1) ||
+							CheckClass("HTC2BouncingClown",AAPTR_TRACER,1) ||
+							CheckClass("HTC2BabyClown",AAPTR_TRACER,1),1)
+		Goto Death
+		X140 A 0 A_DamageTracer(666,None,DMSS_FOILINVUL)
 	Death:
 	 	X140 A 0 A_Explode(random(7,35),64,0)
 		TNT1 A 0 Thing_SetTranslation(0,random(47,98))
@@ -10784,6 +10802,34 @@ Actor PopcornSeeker : Popcorn1
 		X140 QRSTUVWX 2 A_SeekerMissile(2,10,3,256,10)
 		X140 X 0 A_ChangeFlag("BOUNCEONFLOORS",0)
 		Loop
+	Crash:
+	XDeath:
+		X140 A 0 A_CheckFlag("SHOOTABLE",1,AAPTR_TRACER)
+		Goto Death
+		X140 A 0 A_JumpIf(	CheckClass("HTC2Fluffy",AAPTR_TRACER,1) ||
+							CheckClass("HTC2MiniFluffy",AAPTR_TRACER,1) ||
+							CheckClass("HTC2JumpingSkull",AAPTR_TRACER,1) ||
+							CheckClass("HTC2GhostSkull",AAPTR_TRACER,1) ||
+							CheckClass("HTC2Bingo",AAPTR_TRACER,1) ||
+							CheckClass("HTC2TinyBingo",AAPTR_TRACER,1) ||
+							CheckClass("HTC2DraedicClownGhost",AAPTR_TRACER,1) ||
+							CheckClass("HTC2VileClownGhost",AAPTR_TRACER,1) ||
+							CheckClass("HTC2Bulby",AAPTR_TRACER,1) ||
+							CheckClass("HTC2MegaBulby",AAPTR_TRACER,1) ||
+							CheckClass("HTC2Beefy",AAPTR_TRACER,1) ||
+							CheckClass("HTC2BlackBear",AAPTR_TRACER,1) ||
+							CheckClass("BerthaBear",AAPTR_TRACER,1) ||
+							CheckClass("BlackBear",AAPTR_TRACER,1) ||
+							CheckClass("HTC2BigBertha",AAPTR_TRACER,1) ||
+							CheckClass("HTC2PossessedBalloon",AAPTR_TRACER,1) ||
+							CheckClass("HTC2EvilDeadHand",AAPTR_TRACER,1) ||
+							CheckClass("HTC2PennywiseHead",AAPTR_TRACER,1) ||
+							CheckClass("HTC2PennywiseTDC",AAPTR_TRACER,1) ||
+							CheckClass("HTC2SuperBertha",AAPTR_TRACER,1) ||
+							CheckClass("HTC2BouncingClown",AAPTR_TRACER,1) ||
+							CheckClass("HTC2BabyClown",AAPTR_TRACER,1),1)
+		Goto Death
+		X140 A 0 A_DamageTracer(666,None,DMSS_FOILINVUL)
 	Death:
 		//TNT1 A 0 Thing_SetTranslation(0,random(47,98))
 		TNT1 A 0 A_SpawnItemEx("TinyExplo",0,0,0,0,0,0,0,32|SXF_TRANSFERTRANSLATION)

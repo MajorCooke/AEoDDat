@@ -17,7 +17,9 @@ global str 16:GameModeCh[];
 global bool 17:MonsterMayhem;
 global Int 18: MiniCount;
 global bool 19: MiniThemeEnabled;
-global str 20:MiniMode[]; 
+global str 20:MiniMode[];
+global int 21:L4DIntensity;
+global int 22:MonIntensity;
 
 str GameTypesText[28]={"Classic",	//0
 		"Doom/demon-esque",	//1		
@@ -57,7 +59,7 @@ Script "s901" enter
 		Terminate;
 	ACS_NamedExecute("s650",0,0,0,0);		//starts the spells script
 	ACS_NamedExecute("s903",0,0,0,0);		//level checker
-	int NoWeapons;
+	int NoWeapons = 0;
 	
 	//This section below checks if at the beginning of the map, player has no weapons in slot 3, 4, 5, etc, 
 	if(CheckInventory("Weapon3Count")==0
@@ -88,10 +90,21 @@ Script "s901" enter
 			giveinventory("AEoDKnife",1);
 			giveinventory("KnifeDrop",1);
 			
-			if (AEoDGameMode)
-				GiveInventory("AEoDGameMode",1);
-			if(AEoDGameMode || L4DDir)		//if L4D gives special weapon and ammo
+			if (AEoDGameMode == 1)
+				GiveInventory("L4DMode",1);
+			if((AEoDGameMode == 1) || L4DDir)		//if L4D gives special weapon and ammo
 			{
+				//Zombie health is determined
+				int zhd = 1;
+				if (L4DIntensity > 3)
+					zhd++;
+				if (L4DIntensity > 6)
+					zhd++;
+				if (L4DIntensity > 9)
+					zhd++;
+				if (L4DIntensity == 666)
+					zhd = 5;
+				GiveInventory("ZombieHealthDivider",zhd);
 				giveinventory("AEoDBerettaItem",1);
 				giveinventory("AEoDBerettaItem",1);
 				giveinventory("AEClip",100);
@@ -469,6 +482,8 @@ Script "SpawnerSetup" enter
 {
 	if (!(ScriptSetup))
 	{
+		MonIntensity = GetCvar("user_MonIntensity");
+		L4DIntensity = GetCvar("user_L4DIntensity");
 		MiniThemeEnabled = false;
 		// modes
 		AEoDGameMode = 0;		MonsterMayhem = false;
@@ -723,4 +738,35 @@ Script "SpawnDeployWeapons" (int nojoke)
 	}
 	else
 		SetActorState(0,"C_AEoD",1);
+}
+
+Script "DirectorIntensity" (int type)
+{
+	//Type can be one of two things:
+	//1 = Monster director
+	//2 = L4D director
+	//Anything else will print some debug info.
+	
+	//Delay by 1 tic to ensure there's enough time given to acquire intensities.
+	if (!ScriptSetup)
+		Delay(1);	
+	
+	int res; //Just in case if that delay happens to screw with the result.
+	Switch (type)
+	{
+	Case 1:
+		//SetUserVariable(0,"user_multiplier",MonIntensity);
+		res = MonIntensity;
+		SetResultValue(res);
+		Terminate; //Don't bother with breaks, just end it.
+	Case 2:
+		//SetUserVariable(0,"user_multiplier",L4DIntensity);
+		res = L4DIntensity;
+		SetResultValue(res);
+		Terminate;
+	Default:
+		res = 0; //Should trigger the directors into giving a warning.
+		SetResultValue(res);
+		Terminate;
+	}
 }
