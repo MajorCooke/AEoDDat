@@ -341,15 +341,6 @@ Actor L4DCommonMale1
 	Obituary "%o couldn't keep the infected off of %g self."
 	States
 	{
-	Pain.Chaos:
-		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
-		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
-		Goto See
-	Pain.ChaosExpl1:
-		TNT1 A 0 A_ClearTarget
-		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
-		Goto Spawn
-	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
 	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
 	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
 	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
@@ -368,6 +359,8 @@ Actor L4DCommonMale1
 		TNT1 A 1 A_Die("NoCount")
 		Wait
 	See:
+		TNT1 A 0 A_ChangeFlag("NODAMAGE",0)
+		TNT1 A 0 A_ChangeFlag("NOPAIN",0)
 		N041 A 0 A_JumpIf(user_nightmare==1,"Chasing")
 		N041 A 0 A_JumpIfInventory("NightmareToken",1,2,AAPTR_PLAYER1)
 		N041 A 0 A_GiveInventory("L4DCommonHP",10)
@@ -388,6 +381,9 @@ Actor L4DCommonMale1
 		N041 K 4 A_CustomMeleeAttack(random(1,2),"quake4/Misc/MeleeHit","quake4/Misc/Swing","Normal",1)
 		Goto See
 	Pain:
+		N041 A 0 A_ChangeFlag("NODAMAGE",0)
+		N041 A 0 A_ChangeFlag("NOPAIN",0)
+		N041 A 0 A_UnSetInvulnerable
 		N041 A 8
 		Goto See
 	Death:
@@ -449,6 +445,8 @@ Actor L4DCommonMale2 : L4DCommonMale1
 		TNT1 A 0 A_JumpIf(user_timer>=2100,"Immadie")
 		Loop
 	See:
+		TNT1 A 0 A_ChangeFlag("NODAMAGE",0)
+		TNT1 A 0 A_ChangeFlag("NOPAIN",0)
 		N041 A 0 A_JumpIf(user_nightmare==1,"Chasing")
 		N041 A 0 A_JumpIfInventory("NightmareToken",1,2,AAPTR_PLAYER1)
 		N041 A 0 A_GiveInventory("L4DCommonHP",10)
@@ -507,6 +505,8 @@ Actor L4DCommonFemale1 : L4DCommonMale1
 		N045 A 0 A_JumpIf(user_timer>=2100,"Immadie")
 		Loop
 	See:
+		TNT1 A 0 A_ChangeFlag("NODAMAGE",0)
+		TNT1 A 0 A_ChangeFlag("NOPAIN",0)
 		N045 A 0 A_JumpIf(user_nightmare==1,"Chasing")
 		N045 A 0 A_JumpIfInventory("NightmareToken",1,2,AAPTR_PLAYER1)
 		N045 A 0 A_GiveInventory("L4DCommonHP",10)
@@ -556,6 +556,8 @@ Actor L4DCommonFemale2 : L4DCommonFemale1
 		TNT1 A 0 A_JumpIf(user_timer>=2100,"Immadie")
 		Loop
 	See:
+		TNT1 A 0 A_ChangeFlag("NODAMAGE",0)
+		TNT1 A 0 A_ChangeFlag("NOPAIN",0)
 		N041 A 0 A_JumpIf(user_nightmare==1,"Chasing")
 		N041 A 0 A_JumpIfInventory("NightmareToken",1,2,AAPTR_PLAYER1)
 		N041 A 0 A_GiveInventory("L4DCommonHP",10)
@@ -592,9 +594,11 @@ Actor L4DZombieHealthSetter : CustomInventory
 		TNT1 A 0 A_JumpIfInventory("ZombieHealthDivider",2,"S2",AAPTR_PLAYER1)
 		TNT1 A 0 A_JumpIfInventory("ZombieHealthDivider",1,"S1",AAPTR_PLAYER1)
 		TNT1 A 0 A_SetHealth(30)
+		Goto Vul
 	Vul:
 		TNT1 A 0 A_ChangeFlag("NOPAIN",0)
 		TNT1 A 0 A_ChangeFlag("NODAMAGE",0)
+		TNT1 A 0 A_UnsetInvulnerable
 		Stop
 	S5:		TNT1 A 0 A_SetHealth(5)			Goto Vul
 	S4:		TNT1 A 0 A_SetHealth(10)		Goto Vul
