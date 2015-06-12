@@ -177,12 +177,12 @@ Actor TheDirector
 		TNT1 A 0 A_SetUserArray(user_cc,1,2) //^ medium
 		TNT1 A 0 A_SetUserArray(user_cc,2,1) //^ large
 		TNT1 A 0 A_SetUserArray(user_cc,3,12) //Absolute maximum number of children at any time.
-		TNT1 A 0 A_SetUserArray(user_cd,0,75) //Small cooldown min
-		TNT1 A 0 A_SetUserArray(user_cd,1,200) //Small cooldown max
-		TNT1 A 0 A_SetUserArray(user_cd,2,200) //Medium cooldown min
-		TNT1 A 0 A_SetUserArray(user_cd,3,450) //Medium cooldown max
-		TNT1 A 0 A_SetUserArray(user_cd,4,300) //Large cooldown min
-		TNT1 A 0 A_SetUserArray(user_cd,5,600) //Large cooldown max
+		TNT1 A 0 A_SetUserArray(user_cd,0,750) //Small cooldown min
+		TNT1 A 0 A_SetUserArray(user_cd,1,2000) //Small cooldown max
+		TNT1 A 0 A_SetUserArray(user_cd,2,2000) //Medium cooldown min
+		TNT1 A 0 A_SetUserArray(user_cd,3,4500) //Medium cooldown max
+		TNT1 A 0 A_SetUserArray(user_cd,4,3000) //Large cooldown min
+		TNT1 A 0 A_SetUserArray(user_cd,5,6000) //Large cooldown max
 		TNT1 A 1 A_SetUserArray(user_cd,6,random(50,175))
 		TNT1 A 0 A_SetUserVar(user_mul,CallACS("DirectorIntensity",1))
 		TNT1 A 0 A_JumpIf(user_mul > 0,"SCont")
@@ -212,9 +212,9 @@ Actor TheDirector
 		TNT1 A 0 A_JumpIfInventory("RemoveDirector",1,"Death",AAPTR_TARGET)
 		TNT1 A 0 A_JumpIfInventory("FreezeDirector",1,"Frozen",AAPTR_TARGET)
 		TNT1 A 0 A_JumpIf(user_cooldown[0]<=0,2)
-		TNT1 A 0 A_SetUserArray("user_cooldown",0,user_cooldown[0]-user_mul)
+		TNT1 A 0 A_SetUserArray("user_cooldown",0,user_cooldown[0]-(user_mul*random(7,10)))
 		TNT1 A 0 A_JumpIf(user_cooldown[1]<=0,"Chasing")
-		TNT1 A 0 A_SetUserArray("user_cooldown",1,user_cooldown[1]-user_mul)
+		TNT1 A 0 A_SetUserArray("user_cooldown",1,user_cooldown[1]-(user_mul*random(7,10)))
 		Loop
 	Missile:
 		TNT1 A 0 A_JumpIf(IsPointerEqual(AAPTR_TARGET,AAPTR_PLAYER1),2)
@@ -226,8 +226,10 @@ Actor TheDirector
 		TNT1 A 0 A_Jump(256,"SmallMobShoot","MediumMobShoot","LargeMobShoot")
 		Goto SmallMobShoot
 	Missile2:
-		TNT1 A 0 A_JumpIf(random(1,256) <= (user_bias[1]+(user_mul*10)),"LargeMobShoot")
-		TNT1 A 0 A_JumpIf(random(1,256) <= (user_bias[0]+(user_mul*10)),"MediumMobShoot")
+		//The -# is needed because at a base of 1, it still adds on 4 and 6 to large/medium.
+		//Think of it in terms of n-1.
+		TNT1 A 0 A_JumpIf(random(1,2560) <= ((user_bias[1]+(user_mul*40))-40),"LargeMobShoot")
+		TNT1 A 0 A_JumpIf(random(1,2560) <= ((user_bias[0]+(user_mul*60))-60),"MediumMobShoot")
 		Goto SmallMobShoot
 	LargeMobShoot:
 		TNT1 A 0 A_JumpIf(user_cooldown[0] > 0,"Chasing")
