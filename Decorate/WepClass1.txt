@@ -7243,7 +7243,7 @@ ACTOR JackBomb
 		JBTH A 0 A_PlaySound("weapons/jackbomb",8,1.2,0)
 		//JBTH A 0 A_SpawnItemEx("JackBombChaos1",0,0,16,0,0,0,0,32,0)
 		//JBTH A 0 A_SpawnItemEx("JackBombChaos2",0,0,16,0,0,0,0,32,0)
-		JBTH A 0 A_SpawnItemEx("JackBombMonsterForcer",0,0,1,0,0,0,0,48)
+		JBTH A 0 A_SpawnItemEx("JackBombMonsterForcer",0,0,1,0,0,0,0,SXF_SETMASTER|SXF_NOCHECKPOSITION|SXF_ORIGINATOR)
 		JBTH B 5 bright A_SetUserVar(user_time,user_time+1)		"####" "#" 0 A_JumpIf(user_time >= 73,"LoopEnd")
 		JBTH C 5 bright A_SetUserVar(user_time,user_time+1)		"####" "#" 0 A_JumpIf(user_time >= 73,"LoopEnd")
 		JBTH D 5 bright A_SetUserVar(user_time,user_time+1)		"####" "#" 0 A_JumpIf(user_time >= 73,"LoopEnd")
@@ -7261,6 +7261,7 @@ ACTOR JackBomb
     Death:
 		TNT1 A 0 A_PlaySound("caleb/tnt/explode")
 		TNT1 A 0 Bright A_Explode(1000,350,1)
+		TNT1 A 0 A_RemoveChildren(1,RMVF_EVERYTHING,"JackBombMonsterForcer")
 		TNT1 A 0 A_SpawnItemEx("JackbombExplosion",0,0,0,0,0,0,0,32)
 		TNT1 A 0 A_CustomMissile("SuperRocketBit2I",0,0,45)
 		TNT1 A 0 A_CustomMissile("SuperRocketBit2I",0,0,90)
@@ -7293,7 +7294,6 @@ Actor JackBombMonsterForcer
 	+THRUACTORS
 	+FOILINVUL
 	-COUNTKILL
-	+NOBLOCKMAP
 	+NODAMAGE
 	+NODAMAGETHRUST
 	+OLDRADIUSDMG
