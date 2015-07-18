@@ -1,7 +1,6 @@
 #library "dropsys"
 #include "zcommon.acs"
 
-
 str Weaps[10][32][4]=
 
 	{	// behold, the first 3d array I encounter in ZDoom! [Ms]
@@ -104,7 +103,7 @@ str Weaps[10][32][4]=
 		{"AEoDNailGun","NailGunDrop",				"Nothing","Nothing"},	// 6020
 		{"AEoDPlasmaRifle","PlasmaRifleDrop",		"Nothing","Nothing"},	// 6072
 		{"AEoDWyvernHeart","WyvernHeartDrop",		"Nothing","Nothing"},	// 6090
-		{"AEoDAssaultRifle","AssaultRifleDrop",		"Nothing","Nothing"},	// 6069
+		//{"AEoDAssaultRifle","AssaultRifleDrop",		"Nothing","Nothing"},	// NO LONGER USED.
 		{"AEoDDemonStaff","DemonStaffDrop",			"Nothing","Nothing"},	// 6009
 		{"AEoDHyperblaster","HyperblasterDrop",		"Nothing","Nothing"},	// 6052
 		{"AEoDNailgunMK2","NailgunMK2Drop",			"Nothing","Nothing"},	// 6103
@@ -325,52 +324,82 @@ Script "WeaponSlotLimitCheck" (int class) //Checks to see what the current max o
 {
 	int plrnum = PlayerNumber();
 	
-	switch(class)
+	if (GetUserCvar(plrnum,"user_WeaponSlotLimits"))
 	{
-	case 0:
-		if (CheckInventory("Weapon0Slot") >= GetUserCvar(plrnum,"user_MaxWeapons0"))
-		{	SetResultValue(0);	Terminate;	}
-		Break;
-	case 1:
-		if (CheckInventory("Weapon1Slot") >= GetUserCvar(plrnum,"user_MaxWeapons1"))
-		{	SetResultValue(0);	Terminate;	}
-		Break;
-	case 2:
-		if (CheckInventory("Weapon2Slot") >= GetUserCvar(plrnum,"user_MaxWeapons2"))
-		{	SetResultValue(0);	Terminate;	}
-		Break;
-	case 3:
-		if (CheckInventory("Weapon3Slot") >= GetUserCvar(plrnum,"user_MaxWeapons3"))
-		{	SetResultValue(0);	Terminate;	}
-		Break;
-	case 4:
-		if (CheckInventory("Weapon4Slot") >= GetUserCvar(plrnum,"user_MaxWeapons4"))
-		{	SetResultValue(0);	Terminate;	}
-		Break;
-	case 5:
-		if (CheckInventory("Weapon5Slot") >= GetUserCvar(plrnum,"user_MaxWeapons5"))
-		{	SetResultValue(0);	Terminate;	}
-		Break;
-	case 6:
-		if (CheckInventory("Weapon6Slot") >= GetUserCvar(plrnum,"user_MaxWeapons6"))
-		{	SetResultValue(0);	Terminate;	}
-		Break;
-	case 7:
-		if (CheckInventory("Weapon7Slot") >= GetUserCvar(plrnum,"user_MaxWeapons7"))
-		{	SetResultValue(0);	Terminate;	}
-		Break;
-	case 8:
-		if (CheckInventory("Weapon8Slot") >= GetUserCvar(plrnum,"user_MaxWeapons8"))
-		{	SetResultValue(0);	Terminate;	}
-		Break;
-	case 9:
-		if (CheckInventory("Weapon9Slot") >= GetUserCvar(plrnum,"user_MaxWeapons9"))
-		{	SetResultValue(0);	Terminate;	}
-		Break;
+		switch(class)
+		{
+		case 0:
+			if (CheckInventory("Weapon0Slot") >= GetUserCvar(plrnum,"user_MaxWeapons0"))
+			{	SetResultValue(0);	Terminate;	}
+			Break;
+		case 1:
+			if (CheckInventory("Weapon1Slot") >= GetUserCvar(plrnum,"user_MaxWeapons1"))
+			{	SetResultValue(0);	Terminate;	}
+			Break;
+		case 2:
+			if (CheckInventory("Weapon2Slot") >= GetUserCvar(plrnum,"user_MaxWeapons2"))
+			{	SetResultValue(0);	Terminate;	}
+			Break;
+		case 3:
+			if (CheckInventory("Weapon3Slot") >= GetUserCvar(plrnum,"user_MaxWeapons3"))
+			{	SetResultValue(0);	Terminate;	}
+			Break;
+		case 4:
+			if (CheckInventory("Weapon4Slot") >= GetUserCvar(plrnum,"user_MaxWeapons4"))
+			{	SetResultValue(0);	Terminate;	}
+			Break;
+		case 5:
+			if (CheckInventory("Weapon5Slot") >= GetUserCvar(plrnum,"user_MaxWeapons5"))
+			{	SetResultValue(0);	Terminate;	}
+			Break;
+		case 6:
+			if (CheckInventory("Weapon6Slot") >= GetUserCvar(plrnum,"user_MaxWeapons6"))
+			{	SetResultValue(0);	Terminate;	}
+			Break;
+		case 7:
+			if (CheckInventory("Weapon7Slot") >= GetUserCvar(plrnum,"user_MaxWeapons7"))
+			{	SetResultValue(0);	Terminate;	}
+			Break;
+		case 8:
+			if (CheckInventory("Weapon8Slot") >= GetUserCvar(plrnum,"user_MaxWeapons8"))
+			{	SetResultValue(0);	Terminate;	}
+			Break;
+		case 9:
+			if (CheckInventory("Weapon9Slot") >= GetUserCvar(plrnum,"user_MaxWeapons9"))
+			{	SetResultValue(0);	Terminate;	}
+			Break;
+		}
+		SetResultValue(1);
+		Terminate;
 	}
-	SetResultValue(1);
+	else
+		SetResultValue(1);
 }
 
+
+//==============================================================================
+//	Weapon Slot Customization
+//	Developed by Major Cooke
+//==============================================================================
+
+Script "SelectAEoDWeapon" (int class)
+{
+	/*
+	int plrnum = PlayerNumber();
+	if ((GetActorProperty(0,APROP_Dormant)) || (GetActorProperty(0,APROP_HEALTH) <= 0)
+		|| CheckInventory("cammin") > 0)	Terminate;
+	Switch(class)
+	{
+	Case 
+	*/
+}
+
+//==============================================================================
+//==============================================================================
+// Defunct
+//==============================================================================
+//==============================================================================
+/*
 int sectColors[256];
 
 script "s689" (void)	//this one is the main cheat detector. using the result given by script 799
@@ -421,15 +450,4 @@ script "s691" (void)		//not even sure...
 {
 	acs_namedterminate("s689",0);
 }
-
-//==============================================================================
-//	Weapon Slot Customization
-//	Developed by Major Cooke
-//==============================================================================
-
-Script "SelectAEoDWeapon" (int class)
-{
-	Switch(class)
-	{
-	Case 
-}
+*/
