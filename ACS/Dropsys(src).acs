@@ -324,48 +324,50 @@ Script "WeaponSlotLimitCheck" (int class) //Checks to see what the current max o
 {
 	int plrnum = PlayerNumber();
 	
-	if (GetUserCvar(plrnum,"user_WeaponSlotLimits"))
+	if (GetUserCvar(plrnum,"user_WeaponSlotLimits") == 1)
 	{
+		if (!CheckInventory("LimitScriptActive"))
+			GiveInventory("LimitScriptActive",1);
 		switch(class)
 		{
 		case 0:
-			if (CheckInventory("Weapon0Slot") >= GetUserCvar(plrnum,"user_MaxWeapons0"))
+			if (CheckInventory("Weapon0Count") >= GetUserCvar(plrnum,"user_MaxWeapons0"))
 			{	SetResultValue(0);	Terminate;	}
 			Break;
 		case 1:
-			if (CheckInventory("Weapon1Slot") >= GetUserCvar(plrnum,"user_MaxWeapons1"))
+			if (CheckInventory("Weapon1Count") >= GetUserCvar(plrnum,"user_MaxWeapons1"))
 			{	SetResultValue(0);	Terminate;	}
 			Break;
 		case 2:
-			if (CheckInventory("Weapon2Slot") >= GetUserCvar(plrnum,"user_MaxWeapons2"))
+			if (CheckInventory("Weapon2Count") >= GetUserCvar(plrnum,"user_MaxWeapons2"))
 			{	SetResultValue(0);	Terminate;	}
 			Break;
 		case 3:
-			if (CheckInventory("Weapon3Slot") >= GetUserCvar(plrnum,"user_MaxWeapons3"))
+			if (CheckInventory("Weapon3Count") >= GetUserCvar(plrnum,"user_MaxWeapons3"))
 			{	SetResultValue(0);	Terminate;	}
 			Break;
 		case 4:
-			if (CheckInventory("Weapon4Slot") >= GetUserCvar(plrnum,"user_MaxWeapons4"))
+			if (CheckInventory("Weapon4Count") >= GetUserCvar(plrnum,"user_MaxWeapons4"))
 			{	SetResultValue(0);	Terminate;	}
 			Break;
 		case 5:
-			if (CheckInventory("Weapon5Slot") >= GetUserCvar(plrnum,"user_MaxWeapons5"))
+			if (CheckInventory("Weapon5Count") >= GetUserCvar(plrnum,"user_MaxWeapons5"))
 			{	SetResultValue(0);	Terminate;	}
 			Break;
 		case 6:
-			if (CheckInventory("Weapon6Slot") >= GetUserCvar(plrnum,"user_MaxWeapons6"))
+			if (CheckInventory("Weapon6Count") >= GetUserCvar(plrnum,"user_MaxWeapons6"))
 			{	SetResultValue(0);	Terminate;	}
 			Break;
 		case 7:
-			if (CheckInventory("Weapon7Slot") >= GetUserCvar(plrnum,"user_MaxWeapons7"))
+			if (CheckInventory("Weapon7Count") >= GetUserCvar(plrnum,"user_MaxWeapons7"))
 			{	SetResultValue(0);	Terminate;	}
 			Break;
 		case 8:
-			if (CheckInventory("Weapon8Slot") >= GetUserCvar(plrnum,"user_MaxWeapons8"))
+			if (CheckInventory("Weapon8Count") >= GetUserCvar(plrnum,"user_MaxWeapons8"))
 			{	SetResultValue(0);	Terminate;	}
 			Break;
 		case 9:
-			if (CheckInventory("Weapon9Slot") >= GetUserCvar(plrnum,"user_MaxWeapons9"))
+			if (CheckInventory("Weapon9Count") >= GetUserCvar(plrnum,"user_MaxWeapons9"))
 			{	SetResultValue(0);	Terminate;	}
 			Break;
 		}
@@ -373,7 +375,11 @@ Script "WeaponSlotLimitCheck" (int class) //Checks to see what the current max o
 		Terminate;
 	}
 	else
+	{
+		PrintBold(s:"Weapon Slots Off");
+		TakeInventory("LimitScriptActive",1000);
 		SetResultValue(1);
+	}
 }
 
 
