@@ -2264,7 +2264,7 @@ actor HLNihilant 7851			//cyberdemon(very rare)
 	DropItem "PowerupSpawner" 
     Monster	RipLevelMin 1
     Health 5040
-    Mass 0xFFFFFFF
+    +DONTTHRUST
     +FLOAT
     +NOGRAVITY
     Speed 6
@@ -2283,7 +2283,7 @@ actor HLNihilant 7851			//cyberdemon(very rare)
     SeeSound ""
     PainSound "halflife/monsters/nihilant/pain"
     DeathSound "halflife/monsters/nihilant/death"
-    ActiveSound ""
+    ActiveSound "halflife/monsters/nihilant/idle_sight"
     Obituary "%o just found out why Nihilant is feared."
     PainChance "Drain", 40
     PainChance "Chaos", 255
@@ -2291,120 +2291,140 @@ actor HLNihilant 7851			//cyberdemon(very rare)
     DamageFactor "ChaosExpl2", 0
     States
     {
-        Pain.Drain:
-	TNT1 A 0
-	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
-	Goto See
+    Pain.Drain:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+		Goto See
     Spawn:
-	TNT1 A 0
-	HLLI A 0 ACS_NamedTerminate("s853",0)
-	HLLI A 3 A_Look
-	Goto Spawn+2
+		TNT1 A 0 A_RemoveChildren(1,RMVF_EVERYTHING,"NihilanthVoice")
+		HLLI A 0 ACS_NamedTerminate("s853",0)
+		HLLI A 3 A_Look
+		Goto Spawn+2
     See:
-	TNT1 A 0 ACS_NamedExecute("s853",0,0,0,0)
-	HLLI AAAAAAAAAAAAA 3 A_Chase
-	Goto See+1
+		//TNT1 A 0 ACS_NamedExecute("s853",0,0,0,0)
+		HLLI A 0 A_SpawnItemEx("NihilanthVoice",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
+		HLLI AAAAAAAAAAAAA 3 A_Chase
+		Goto See+1
     Missile:
-	TNT1 A 0 A_Stop
-	TNT1 A 0 A_PlaySoundEx("halflife/monsters/nihilant/attackrandom","SoundSlot6")
-	TNT1 A 0 A_Jump(128,"Vulnerable")
-	TNT1 A 0 A_Jump(128,"Missile2")
-	HLLI A 5 A_FaceTarget
-	HLLM ABCD 7 A_FaceTarget
-	HLLM EEEE 4 A_FaceTarget
-	TNT1 A 0 A_CustomMissile("NihThunderBall",40,0,0)
-	HLLM FGH 7
-	Goto See+1
+		TNT1 A 0 A_Stop
+		TNT1 A 0 A_PlaySoundEx("halflife/monsters/nihilant/attackrandom","SoundSlot6")
+		TNT1 A 0 A_Jump(128,"Vulnerable")
+		TNT1 A 0 A_Jump(128,"Missile2")
+		HLLI A 5 A_FaceTarget
+		HLLM ABCD 7 A_FaceTarget
+		HLLM EEEE 4 A_FaceTarget
+		TNT1 A 0 A_CustomMissile("NihThunderBall",40,0,0)
+		HLLM FGH 7
+		Goto See+1
     Missile2:		//shower
-	HLLI A 5 A_FaceTarget
-	HLLM ABCD 7 A_FaceTarget
-	TNT1 A 0 A_PlaySoundEx("halflife/weapons/shockroachdischarge","SoundSlot5")
-	TNT1 A 0 A_JumpIfInventory("NihCounter",40,"Miss2End")
-	TNT1 A 0 A_GiveInventory("NihCounter",1)
-	TNT1 AA 0 A_CustomMissile("NihFireballSmallNoSound",random(30,80),random(20,-20),random(-5,5))
-	TNT1 AA 0 A_CustomMissile("NihFireballSmall",random(30,80),random(20,-20),random(-5,5))
-	HLLM E 4 A_FaceTarget 
-	Goto "Missile2"+6
+		HLLI A 5 A_FaceTarget
+		HLLM ABCD 7 A_FaceTarget
+		TNT1 A 0 A_PlaySoundEx("halflife/weapons/shockroachdischarge","SoundSlot5")
+		TNT1 A 0 A_JumpIfInventory("NihCounter",40,"Miss2End")
+		TNT1 A 0 A_GiveInventory("NihCounter",1)
+		TNT1 AA 0 A_CustomMissile("NihFireballSmallNoSound",random(30,80),random(20,-20),random(-5,5))
+		TNT1 AA 0 A_CustomMissile("NihFireballSmall",random(30,80),random(20,-20),random(-5,5))
+		HLLM E 4 A_FaceTarget 
+		Goto "Missile2"+6
     Miss2End:
-	TNT1 A 0 A_TakeInventory("NihCounter",100)
-	HLLM FGH 7
-	Goto See+1
+		TNT1 A 0 A_TakeInventory("NihCounter",100)
+		HLLM FGH 7
+		Goto See+1
     Vulnerable:
-	TNT1 A 0 A_Jump(128,"Vulnerable2")
-	HLLN ABCDE 6 A_FaceTarget
-	TNT1 A 0 A_SpawnItemEx("NihilantVulFX",10,0,110,0,0,0,0,48)
-	TNT1 A 0 A_SpawnItemEx("NihilantVulFX",-10,0,110,0,0,0,0,48)
-	TNT1 A 0 A_SpawnItemEx("NihilantVulFX",0,10,110,0,0,0,0,48)
-	TNT1 A 0 A_SpawnItemEx("NihilantVulFX",0,-10,110,0,0,0,0,48)
-	TNT1 A 0 A_SpawnItemEx("NihilantVul",0,0,80,0,0,0,0,48)
-	TNT1 A 0 A_CustomMissile("NihProjFake",60,-45,0)
-	TNT1 A 0 A_CustomMissile("NihProjFake",50,-30,0)
-	TNT1 A 0 A_CustomMissile("NihProjFake",40,-15,0)
-	TNT1 A 0 A_CustomMissile("NihProjFake",60,45,0)
-	TNT1 A 0 A_CustomMissile("NihProjFake",50,30,0)
-	TNT1 A 0 A_CustomMissile("NihProjFake",40,15,0)
-	HLLN FFFFFFF 3 A_FaceTarget
-	TNT1 A 0 A_CustomMissile("NihProjStrong",60,-45,0)
-	TNT1 A 0 A_CustomMissile("NihProjStrong",50,-30,0)
-	TNT1 A 0 A_CustomMissile("NihProjStrong",40,-15,0)
-	TNT1 A 0 A_CustomMissile("NihProjStrong",60,45,0)
-	TNT1 A 0 A_CustomMissile("NihProjStrong",50,30,0)
-	TNT1 A 0 A_CustomMissile("NihProjStrong",40,15,0)
-	HLLN GGGGGGGG 5 A_FaceTarget
-	HLLN HIJ 8
-	Goto See+1
+		TNT1 A 0 A_Jump(128,"Vulnerable2")
+		HLLN ABCDE 6 A_FaceTarget
+		TNT1 A 0 A_SpawnItemEx("NihilantVulFX",10,0,110,0,0,0,0,48)
+		TNT1 A 0 A_SpawnItemEx("NihilantVulFX",-10,0,110,0,0,0,0,48)
+		TNT1 A 0 A_SpawnItemEx("NihilantVulFX",0,10,110,0,0,0,0,48)
+		TNT1 A 0 A_SpawnItemEx("NihilantVulFX",0,-10,110,0,0,0,0,48)
+		TNT1 A 0 A_SpawnItemEx("NihilantVul",0,0,80,0,0,0,0,48)
+		TNT1 A 0 A_CustomMissile("NihProjFake",60,-45,0)
+		TNT1 A 0 A_CustomMissile("NihProjFake",50,-30,0)
+		TNT1 A 0 A_CustomMissile("NihProjFake",40,-15,0)
+		TNT1 A 0 A_CustomMissile("NihProjFake",60,45,0)
+		TNT1 A 0 A_CustomMissile("NihProjFake",50,30,0)
+		TNT1 A 0 A_CustomMissile("NihProjFake",40,15,0)
+		HLLN FFFFFFF 3 A_FaceTarget
+		TNT1 A 0 A_CustomMissile("NihProjStrong",60,-45,0)
+		TNT1 A 0 A_CustomMissile("NihProjStrong",50,-30,0)
+		TNT1 A 0 A_CustomMissile("NihProjStrong",40,-15,0)
+		TNT1 A 0 A_CustomMissile("NihProjStrong",60,45,0)
+		TNT1 A 0 A_CustomMissile("NihProjStrong",50,30,0)
+		TNT1 A 0 A_CustomMissile("NihProjStrong",40,15,0)
+		HLLN GGGGGGGG 5 A_FaceTarget
+		HLLN HIJ 8
+		Goto See+1
     Vulnerable2:
-	HLLN ABCDE 6 A_FaceTarget
-	TNT1 A 0 A_SpawnItemEx("NihilantVulFX",10,0,110,0,0,0,0,48)
-	TNT1 A 0 A_SpawnItemEx("NihilantVulFX",-10,0,110,0,0,0,0,48)
-	TNT1 A 0 A_SpawnItemEx("NihilantVulFX",0,10,110,0,0,0,0,48)
-	TNT1 A 0 A_SpawnItemEx("NihilantVulFX",0,-10,110,0,0,0,0,48)
-	TNT1 A 0 A_SpawnItemEx("NihilantVul",0,0,80,0,0,0,0,48)
-	HLLN FFFFFFF 3 A_FaceTarget
-	TNT1 A 0 A_CustomMissile("NihMonsterSpawner",60,0,60)
-	TNT1 A 0 A_CustomMissile("NihMonsterSpawner",60,0,-60)
-	TNT1 A 0 A_CustomMissile("NihMonsterSpawner",60,0,0)
-	HLLN GGGGGGGG 5 A_FaceTarget
-	HLLN HIJ 8
-	Goto See+1
+		HLLN ABCDE 6 A_FaceTarget
+		TNT1 A 0 A_SpawnItemEx("NihilantVulFX",10,0,110,0,0,0,0,48)
+		TNT1 A 0 A_SpawnItemEx("NihilantVulFX",-10,0,110,0,0,0,0,48)
+		TNT1 A 0 A_SpawnItemEx("NihilantVulFX",0,10,110,0,0,0,0,48)
+		TNT1 A 0 A_SpawnItemEx("NihilantVulFX",0,-10,110,0,0,0,0,48)
+		TNT1 A 0 A_SpawnItemEx("NihilantVul",0,0,80,0,0,0,0,48)
+		HLLN FFFFFFF 3 A_FaceTarget
+		TNT1 A 0 A_CustomMissile("NihMonsterSpawner",60,0,60)
+		TNT1 A 0 A_CustomMissile("NihMonsterSpawner",60,0,-60)
+		TNT1 A 0 A_CustomMissile("NihMonsterSpawner",60,0,0)
+		HLLN GGGGGGGG 5 A_FaceTarget
+		HLLN HIJ 8
+		Goto See+1
     Death:
-	TNT1 A 0 ACS_NamedTerminate("s853",0)
-	TNT1 a 0 A_KillMaster
-	TNT1 A 0 A_StopSoundEx("SoundSlot7")
-	TNT1 A 0 A_Scream
-	TNT1 A 0 A_Fall
-	TNT1 A 0 A_SpawnItemEx("NihDeathFX3",random(60,-60),random(60,-60),random(20,130),0,0,0,0,0)
-	TNT1 A 0 A_SpawnItemEx("NihDeathFX1",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0)
-	TNT1 A 0 A_SpawnItemEx("NihDeathFX2",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0)
-	HLLD A 4 A_FadeOut(0.01)
-	TNT1 A 0 A_SpawnItemEx("NihDeathFX1",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0)
-	TNT1 A 0 A_SpawnItemEx("NihDeathFX2",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0)
-	HLLD B 4 A_FadeOut(0.01)
-	TNT1 A 0 A_SpawnItemEx("NihDeathFX1",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0)
-	TNT1 A 0 A_SpawnItemEx("NihDeathFX2",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0)
-	HLLD C 4 A_FadeOut(0.01)
-	TNT1 A 0 A_SpawnItemEx("NihDeathFX3",random(60,-60),random(60,-60),random(20,130),0,0,0,0,0)
-	TNT1 A 0 A_SpawnItemEx("NihDeathFX1",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0)
-	TNT1 A 0 A_SpawnItemEx("NihDeathFX2",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0)
-	HLLD D 4 A_FadeOut(0.01)
-	TNT1 A 0 A_SpawnItemEx("NihDeathFX1",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0)
-	TNT1 A 0 A_SpawnItemEx("NihDeathFX2",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0)
-	HLLD E 4 A_FadeOut(0.01)
-	TNT1 A 0 A_SpawnItemEx("NihDeathFX1",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0)
-	TNT1 A 0 A_SpawnItemEx("NihDeathFX2",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0)
-	HLLD F 4 A_FadeOut(0.01)
-	TNT1 A 0 A_SpawnItemEx("NihDeathFX3",random(60,-60),random(60,-60),random(20,130),0,0,0,0,0)
-	TNT1 A 0 A_SpawnItemEx("NihDeathFX1",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0)
-	TNT1 A 0 A_SpawnItemEx("NihDeathFX2",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0)
-	HLLD G 4 A_FadeOut(0.01)
-	TNT1 A 0 A_SpawnItemEx("NihDeathFX1",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0)
-	TNT1 A 0 A_SpawnItemEx("NihDeathFX2",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0)
-	HLLD H 4 A_FadeOut(0.01)
-	TNT1 A 0 A_SpawnItemEx("NihDeathFX1",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0)
-	TNT1 A 0 A_SpawnItemEx("NihDeathFX2",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0)
-	HLLD I 4 A_FadeOut(0.01)
-	Goto Death+5
+		//TNT1 A 0 ACS_NamedTerminate("s853",0)
+		TNT1 A 0 A_RemoveChildren(1,RMVF_EVERYTHING,"NihilanthVoice")
+		TNT1 a 0 A_KillMaster
+		TNT1 A 0 A_StopSoundEx("SoundSlot7")
+		TNT1 A 0 A_Scream
+		TNT1 A 0 A_Fall
+		TNT1 A 0 A_SpawnItemEx("NihDeathFX3",random(60,-60),random(60,-60),random(20,130),0,0,0,0,0)
+		TNT1 A 0 A_SpawnItemEx("NihDeathFX1",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0)
+		TNT1 A 0 A_SpawnItemEx("NihDeathFX2",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0)
+		HLLD A 4 A_FadeOut(0.01)
+		TNT1 A 0 A_SpawnItemEx("NihDeathFX1",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0)
+		TNT1 A 0 A_SpawnItemEx("NihDeathFX2",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0)
+		HLLD B 4 A_FadeOut(0.01)
+		TNT1 A 0 A_SpawnItemEx("NihDeathFX1",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0)
+		TNT1 A 0 A_SpawnItemEx("NihDeathFX2",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0)
+		HLLD C 4 A_FadeOut(0.01)
+		TNT1 A 0 A_SpawnItemEx("NihDeathFX3",random(60,-60),random(60,-60),random(20,130),0,0,0,0,0)
+		TNT1 A 0 A_SpawnItemEx("NihDeathFX1",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0)
+		TNT1 A 0 A_SpawnItemEx("NihDeathFX2",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0)
+		HLLD D 4 A_FadeOut(0.01)
+		TNT1 A 0 A_SpawnItemEx("NihDeathFX1",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0)
+		TNT1 A 0 A_SpawnItemEx("NihDeathFX2",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0)
+		HLLD E 4 A_FadeOut(0.01)
+		TNT1 A 0 A_SpawnItemEx("NihDeathFX1",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0)
+		TNT1 A 0 A_SpawnItemEx("NihDeathFX2",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0)
+		HLLD F 4 A_FadeOut(0.01)
+		TNT1 A 0 A_SpawnItemEx("NihDeathFX3",random(60,-60),random(60,-60),random(20,130),0,0,0,0,0)
+		TNT1 A 0 A_SpawnItemEx("NihDeathFX1",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0)
+		TNT1 A 0 A_SpawnItemEx("NihDeathFX2",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0)
+		HLLD G 4 A_FadeOut(0.01)
+		TNT1 A 0 A_SpawnItemEx("NihDeathFX1",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0)
+		TNT1 A 0 A_SpawnItemEx("NihDeathFX2",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0)
+		HLLD H 4 A_FadeOut(0.01)
+		TNT1 A 0 A_SpawnItemEx("NihDeathFX1",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0)
+		TNT1 A 0 A_SpawnItemEx("NihDeathFX2",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0)
+		HLLD I 4 A_FadeOut(0.01)
+		Goto Death+5
     }
+}
+
+Actor NihilanthVoice
+{
+	+NOINTERACTION
+	RenderStyle None
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_Warp(AAPTR_MASTER,0,0,60,0,WARPF_NOCHECKPOSITION)
+		TNT1 A 0 A_PlaySound("halflife/monsters/nihilant/idle_sight",CHAN_AUTO,1,0)
+		TNT1 A 35 A_SetTics(35*random(12,20))
+		TNT1 A 0 A_JumpIf(IsPointerEqual(AAPTR_MASTER,AAPTR_NULL),"Death")
+		Loop
+	Death:
+		TNT1 A 0
+		Stop
+	}
 }
 
 Actor NihCounter : Inventory
