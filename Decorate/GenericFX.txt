@@ -70,6 +70,7 @@ Actor NewExploMediumSmoke
 
 Actor TT1 replaces NewExploMediumSmoke
 {
+	var int user_t;
 	+NOINTERACTION
 	RenderStyle Translucent
 	Alpha 0.57
@@ -77,12 +78,14 @@ Actor TT1 replaces NewExploMediumSmoke
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay A_SetScale(ScaleX*randompick(-1,1),ScaleY*randompick(-1,1))
-		TNT1 A 0 A_JumpIf(tid < 95,3)
+		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
+		TNT1 A 0 Thing_ChangeTID(0,0)
+		TNT1 A 0 A_SetScale(ScaleX*randompick(-1,1),ScaleY*randompick(-1,1))
+		TNT1 A 0 A_JumpIf(user_t < 95,3)
 		TNT1 A 0 Thing_ChangeTID(0,0)
 		TNT1 A 0 Thing_SetTranslation(0,random(58,94))
-		TNT1 A 0 A_JumpIf(tid == 0,3)
-		TNT1 A 0 Thing_SetTranslation(0,tid)
+		TNT1 A 0 A_JumpIf(user_t == 0,3)
+		TNT1 A 0 Thing_SetTranslation(0,user_t)
 		TNT1 A 0 Thing_ChangeTID(0,0)
 	Decide:
 	Choose1of4:
@@ -169,13 +172,15 @@ Actor ExploMediumBack2 : ExploMediumBack1 {}
 Actor NewExplosionMediumConcentrated
 {
 	var int user_angle;
+	var int user_t;
 	+NOINTERACTION
 	RenderStyle None
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay A_JumpIf(tid != 0,"Simple")
+		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
 		TNT1 A 0 Thing_ChangeTID(0,0)
+		TNT1 A 0 A_JumpIf(user_t != 0,"Simple")
 		TNT1 A 0 A_CheckSight("Simple")
 		TNT1 A 0 A_SpawnItemEx("ExploMediumBack1",0,0,0,0,0,0,0,32|SXF_TRANSFERTRANSLATION)
 		Goto Main
@@ -211,13 +216,15 @@ Actor NewExplosionMediumConcentrated
 Actor NewExplosionMediumBig
 {
 	var int user_angle;
+	var int user_t;
 	+NOINTERACTION
 	RenderStyle None
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay A_JumpIf(tid != 0,"Simple")
+		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
 		TNT1 A 0 Thing_ChangeTID(0,0)
+		TNT1 A 0 A_JumpIf(user_t != 0,"Simple")
 		TNT1 A 0 A_CheckSight("Simple")
 		TNT1 A 0 A_SpawnItemEx("ExploMediumBigBack1",0,0,0,0,0,0,0,32|SXF_TRANSFERTRANSLATION)
 		Goto Main
@@ -350,13 +357,15 @@ Actor ExploMediumBigBack2: ExploMediumBigBack1 {}
 Actor NewExplosionBig
 {
 	var int user_angle;
+	var int user_t;
 	+NOINTERACTION
 	RenderStyle None
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay A_JumpIf(tid != 0,"Simple")
+		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
 		TNT1 A 0 Thing_ChangeTID(0,0)
+		TNT1 A 0 A_JumpIf(user_t != 0,"Simple")
 		TNT1 A 0 A_SpawnItemEx("ExploBigBack1",0,0,0,0,0,0,0,32|SXF_TRANSFERTRANSLATION)
 	Simple:
 		TNT1 A 0 Thing_ChangeTID(0,0)
@@ -471,14 +480,16 @@ Actor ExploBigBack2 : ExploBigBack1 {}
 //************************************************************************************************
 Actor NewExplosionSmall
 {
+	var int user_t;
 	var int user_angle;
 	+NOINTERACTION
 	RenderStyle None
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay A_JumpIf(tid != 0,"Simple")
+		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
 		TNT1 A 0 Thing_ChangeTID(0,0)
+		TNT1 A 0 A_JumpIf(user_t != 0,"Simple")
 		TNT1 A 0 A_CheckSight("Simple")
 		TNT1 A 0 A_SpawnItemEx("ExploSmallBack1",0,0,0,0,0,0,0,32|SXF_TRANSFERTRANSLATION)
 		Goto Main
@@ -502,13 +513,15 @@ Actor NewExplosionSmall
 Actor NewExplosionSmallSimple
 {
 	var int user_angle;
+	var int user_t;
 	+NOINTERACTION
 	RenderStyle None
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay A_JumpIf(tid != 0,"Simple")
+		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
 		TNT1 A 0 Thing_ChangeTID(0,0)
+		TNT1 A 0 A_JumpIf(user_t != 0,"Simple")
 		TNT1 A 0 A_CheckSight("Simple")
 		TNT1 A 0 A_SpawnItemEx("ExploSmallBack1",0,0,0,0,0,0,0,32|SXF_TRANSFERTRANSLATION)
 		Goto Main
@@ -536,8 +549,9 @@ Actor NewExplosionSmallLittleBigger : NewExplosionSmall
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay A_JumpIf(tid != 0,"Simple")
+		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
 		TNT1 A 0 Thing_ChangeTID(0,0)
+		TNT1 A 0 A_JumpIf(user_t != 0,"Simple")
 		TNT1 A 0 A_CheckSight("Simple")
 		TNT1 A 0 A_SpawnItemEx("ExploSmallBack1",0,0,0,0,0,0,0,32|SXF_TRANSFERTRANSLATION)
 		Goto Main
@@ -652,20 +666,22 @@ Actor ExploSmallBack2 : ExploSmallBack1	{}	//No Lights
 Actor MonExplosionMedium 
 {
 	var int user_angle;
+	var int user_t;
 	+NOINTERACTION
 	RenderStyle None
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay A_JumpIf(tid != 0,"Simple")
+		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
 		TNT1 A 0 Thing_ChangeTID(0,0)
+		TNT1 A 0 A_JumpIf(user_t != 0,"Simple")
 		TNT1 A 0 A_CheckSight("Simple")
 		TNT1 A 0 A_SpawnItemEx("ExploMediumBack1",0,0,0,0,0,0,0,32|SXF_TRANSFERTRANSLATION)
 		Goto MainLoop
 	Simple:
 		TNT1 A 0 A_SpawnItemEx("ExploMediumBack2",0,0,0,0,0,0,0,32|SXF_TRANSFERTRANSLATION)
 	MainLoop:
-		TNT1 A 0 A_Jumpif(user_angle>=315,"CheckSpawnPos")
+		TNT1 A 0 A_Jumpif(user_angle>=360,"CheckSpawnPos")
 		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,frandom(0.5,1.8),0,0,user_angle,32|SXF_TRANSFERTRANSLATION)
 		TNT1 A 0 A_SetUserVar("user_angle",user_angle+45)
 		Loop
@@ -684,25 +700,24 @@ Actor MonExplosionMedium
 	}
 }
 
-
-
-
 Actor MonExplosionMediumSimple 
 {
 	var int user_angle;
+	var int user_t;
 	+NOINTERACTION
 	RenderStyle None
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay A_JumpIf(tid != 0,"Simple")
+		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
 		TNT1 A 0 Thing_ChangeTID(0,0)
+		TNT1 A 0 A_JumpIf(user_t != 0,"Simple")
 		TNT1 A 0 A_SpawnItemEx("ExploMediumBack1",0,0,0,0,0,0,0,32|SXF_TRANSFERTRANSLATION)
 		Goto Main
 	Simple:
 		TNT1 A 0 A_SpawnItemEx("ExploMediumBack2",0,0,0,0,0,0,0,32|SXF_TRANSFERTRANSLATION)
 	Main:
-		TNT1 A 0 A_Jumpif(user_angle>=315,"CheckSpawnPos")
+		TNT1 A 0 A_Jumpif(user_angle>=360,"CheckSpawnPos")
 		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,frandom(0.5,1.8),0,0,user_angle,32|SXF_TRANSFERTRANSLATION)
 		TNT1 A 0 A_SetUserVar("user_angle",user_angle+45)
 		Loop
@@ -721,22 +736,60 @@ Actor MonExplosionMediumSimple
 	}
 }
 
-Actor MonExplosionMediumConcentrated
+Actor MonExplosionMediumNoSmokeSimple 
 {
 	var int user_angle;
+	var int user_t;
 	+NOINTERACTION
 	RenderStyle None
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay A_JumpIf(tid != 0,"Simple")
+		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
 		TNT1 A 0 Thing_ChangeTID(0,0)
+		TNT1 A 0 A_JumpIf(user_t != 0,"Simple")
 		TNT1 A 0 A_SpawnItemEx("ExploMediumBack1",0,0,0,0,0,0,0,32|SXF_TRANSFERTRANSLATION)
 		Goto Main
 	Simple:
 		TNT1 A 0 A_SpawnItemEx("ExploMediumBack2",0,0,0,0,0,0,0,32|SXF_TRANSFERTRANSLATION)
 	Main:
-		TNT1 A 0 A_Jumpif(user_angle>=315,"CheckSpawnPos")
+		TNT1 A 0 A_Jumpif(user_angle>=360,"CheckSpawnPos")
+		TNT1 A 0 A_SpawnItemEx("ExplosionMediumSprite",0,0,0,frandom(0.5,1.8),0,0,user_angle,32|SXF_TRANSFERTRANSLATION)//|SXF_TRANSFERRENDERSTYLE)
+		TNT1 A 0 A_SetUserVar("user_angle",user_angle+45)
+		Loop
+	CheckSpawnPos:
+		TNT1 A 0 A_CheckFloor("InFloor")
+	InAir:
+		TNT1 AA 0 A_SpawnItemEx("ExplosionMediumSprite",0,0,0,frandom(0.1,1.3),0,frandom(-1.3,1.3),random(0,359),32|SXF_TRANSFERTRANSLATION)//|SXF_TRANSFERRENDERSTYLE)
+		TNT1 AAA 0 A_SpawnItemEx("ExplosionMediumSprite",0,0,0,frandom(0.1,1.8),0,frandom(-1.8,1.8),random(0,359),32|SXF_TRANSFERTRANSLATION)//|SXF_TRANSFERRENDERSTYLE)
+		TNT1 AAA 2 A_SpawnItemEx("ExplosionMediumSprite",0,0,0,frandom(0.1,1.3),0,frandom(-1.3,1.3),random(0,359),32|SXF_TRANSFERTRANSLATION)//|SXF_TRANSFERRENDERSTYLE)
+		Stop
+	InFloor:
+		TNT1 AA 0 A_SpawnItemEx("ExplosionMediumSprite",0,0,0,frandom(0.1,1.3),0,frandom(0.3,1.6),random(0,359),32|SXF_TRANSFERTRANSLATION)//|SXF_TRANSFERRENDERSTYLE)
+		TNT1 AAA 0 A_SpawnItemEx("ExplosionMediumSprite",0,0,0,frandom(0.1,1.8),0,frandom(0.3,1.9),random(0,359),32|SXF_TRANSFERTRANSLATION)//|SXF_TRANSFERRENDERSTYLE)
+		TNT1 AAA 2 A_SpawnItemEx("ExplosionMediumSprite",0,0,0,frandom(0.1,1.3),0,frandom(0.3,1.6),random(0,359),32|SXF_TRANSFERTRANSLATION)//|SXF_TRANSFERRENDERSTYLE)
+		Stop
+	}
+}
+
+Actor MonExplosionMediumConcentrated
+{
+	var int user_angle;
+	var int user_t;
+	+NOINTERACTION
+	RenderStyle None
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
+		TNT1 A 0 Thing_ChangeTID(0,0)
+		TNT1 A 0 A_JumpIf(user_t != 0,"Simple")
+		TNT1 A 0 A_SpawnItemEx("ExploMediumBack1",0,0,0,0,0,0,0,32|SXF_TRANSFERTRANSLATION)
+		Goto Main
+	Simple:
+		TNT1 A 0 A_SpawnItemEx("ExploMediumBack2",0,0,0,0,0,0,0,32|SXF_TRANSFERTRANSLATION)
+	Main:
+		TNT1 A 0 A_Jumpif(user_angle>=360,"CheckSpawnPos")
 		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,frandom(0.3,1.2),0,0,user_angle,32)
 		TNT1 A 0 A_SetUserVar("user_angle",user_angle+45)
 		Loop
@@ -758,19 +811,21 @@ Actor MonExplosionMediumConcentrated
 Actor MonExplosionMediumBig
 {
 	var int user_angle;
+	var int user_t;
 	+NOINTERACTION
 	RenderStyle None
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay A_JumpIf(tid != 0,"Simple")
+		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
 		TNT1 A 0 Thing_ChangeTID(0,0)
+		TNT1 A 0 A_JumpIf(user_t != 0,"Simple")
 		TNT1 A 0 A_SpawnItemEx("ExploMediumBigBack1",0,0,0,0,0,0,0,32|SXF_TRANSFERTRANSLATION)
 		Goto Main
 	Simple:
 		TNT1 A 0 A_SpawnItemEx("ExploMediumBigBack2",0,0,0,0,0,0,0,32|SXF_TRANSFERTRANSLATION)
 	Main:
-		TNT1 A 0 A_Jumpif(user_angle>=315,"CheckSpawnPos")
+		TNT1 A 0 A_Jumpif(user_angle>=360,"CheckSpawnPos")
 		TNT1 A 0 A_SpawnItemEx("NewExploMediumBigSmoke",0,0,0,frandom(0.5,2.6),0,0,user_angle,32|SXF_TRANSFERTRANSLATION)
 		TNT1 A 0 A_SetUserVar("user_angle",user_angle+45)
 		Loop
@@ -792,21 +847,22 @@ Actor MonExplosionMediumBig
 Actor MonExplosionBig
 {
 	var int user_angle;
+	var int user_t;
 	+NOINTERACTION
 	RenderStyle None
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay A_JumpIf(tid != 0,"Simple")
+		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
 		TNT1 A 0 Thing_ChangeTID(0,0)
+		TNT1 A 0 A_JumpIf(user_t != 0,"Simple")
 		TNT1 A 0 A_CheckSight("Simple")
 		TNT1 A 0 A_SpawnItemEx("ExploBigBack1",0,0,0,0,0,0,0,32|SXF_TRANSFERTRANSLATION)
 		Goto Main
 	Simple:
 		TNT1 A 0 A_SpawnItemEx("ExploBigBack2",0,0,0,0,0,0,0,32|SXF_TRANSFERTRANSLATION)
 	Main:
-	Main:
-		TNT1 A 0 A_Jumpif(user_angle>=330,"CheckSpawnPos")
+		TNT1 A 0 A_Jumpif(user_angle>=360,"CheckSpawnPos")
 		TNT1 A 0 A_SpawnItemEx("NewExploBigSmoke",0,0,0,frandom(0.5,5.0),0,0,user_angle,32|SXF_TRANSFERTRANSLATION)
 		TNT1 A 0 A_SetUserVar("user_angle",user_angle+30)
 		Loop
@@ -827,22 +883,23 @@ Actor MonExplosionBig
 
 Actor MonExplosionBigSimple
 {
+	var int user_t;
 	var int user_angle;
 	+NOINTERACTION
 	RenderStyle None
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay A_JumpIf(tid != 0,"Simple")
+		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
 		TNT1 A 0 Thing_ChangeTID(0,0)
+		TNT1 A 0 A_JumpIf(user_t != 0,"Simple")
 		TNT1 A 0 A_CheckSight("Simple")
 		TNT1 A 0 A_SpawnItemEx("ExploBigBack1",0,0,0,0,0,0,0,32|SXF_TRANSFERTRANSLATION)
 		Goto Main
 	Simple:
 		TNT1 A 0 A_SpawnItemEx("ExploBigBack2",0,0,0,0,0,0,0,32|SXF_TRANSFERTRANSLATION)
 	Main:
-	Main:
-		TNT1 A 0 A_Jumpif(user_angle>=330,"CheckSpawnPos")
+		TNT1 A 0 A_Jumpif(user_angle>=360,"CheckSpawnPos")
 		TNT1 A 0 A_SpawnItemEx("NewExploBigSmoke",0,0,0,frandom(0.5,5.0),0,0,user_angle,32|SXF_TRANSFERTRANSLATION)
 		TNT1 A 0 A_SetUserVar("user_angle",user_angle+30)
 		Loop
@@ -861,17 +918,55 @@ Actor MonExplosionBigSimple
 	}
 }
 
+Actor MonExplosionBigNoSmokeSimple
+{
+	var int user_t;
+	var int user_angle;
+	+NOINTERACTION
+	RenderStyle None //Translucent
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
+		TNT1 A 0 Thing_ChangeTID(0,0)
+		TNT1 A 0 A_JumpIf(user_t != 0,"Simple")
+		TNT1 A 0 A_CheckSight("Simple")
+		TNT1 A 0 A_SpawnItemEx("ExploBigBack1",0,0,0,0,0,0,0,32|SXF_TRANSFERTRANSLATION)
+		Goto Main
+	Simple:
+		TNT1 A 0 A_SpawnItemEx("ExploBigBack2",0,0,0,0,0,0,0,32|SXF_TRANSFERTRANSLATION)
+	Main:
+		TNT1 A 0 A_Jumpif(user_angle>=360,"CheckSpawnPos")
+		TNT1 A 0 A_SpawnItemEx("ExplosionBigSprite",0,0,0,frandom(0.5,5.0),0,0,user_angle,32|SXF_TRANSFERTRANSLATION)//|SXF_TRANSFERRENDERSTYLE)
+		TNT1 A 0 A_SetUserVar("user_angle",user_angle+30)
+		Loop
+	CheckSpawnPos:
+		TNT1 A 0 A_CheckFloor("InFloor")
+	InAir:
+		TNT1 AAAA 0 A_SpawnItemEx("ExplosionBigSprite",0,0,0,frandom(0.1,4.0),0,frandom(-4.0,4.0),random(0,359),32|SXF_TRANSFERTRANSLATION)//|SXF_TRANSFERRENDERSTYLE)
+		TNT1 AAAAAAA 0 A_SpawnItemEx("ExplosionBigSprite",0,0,0,frandom(0.5,5.0),0,frandom(-5.0,5.0),random(0,359),32|SXF_TRANSFERTRANSLATION)//|SXF_TRANSFERRENDERSTYLE)
+		TNT1 A 10 
+		Stop
+	InFloor:
+		TNT1 AAAA 0 A_SpawnItemEx("ExplosionBigSprite",0,0,0,frandom(0.1,4.0),0,frandom(0.3,4.0),random(0,359),32|SXF_TRANSFERTRANSLATION)//|SXF_TRANSFERRENDERSTYLE)
+		TNT1 AAAAAAA 0 A_SpawnItemEx("ExplosionBigSprite",0,0,0,frandom(5.0,5.0),0,frandom(0.6,5.5),random(0,359),32|SXF_TRANSFERTRANSLATION)//|SXF_TRANSFERRENDERSTYLE)
+		TNT1 A 10 
+		Stop
+	}
+}
 
 Actor MonExplosionSmallTooSimple
 {
 	var int user_angle;
+	var int user_t;
 	+NOINTERACTION
 	RenderStyle None
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay A_JumpIf(tid != 0,"Simple")
+		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
 		TNT1 A 0 Thing_ChangeTID(0,0)
+		TNT1 A 0 A_JumpIf(user_t != 0,"Simple")
 		TNT1 A 0 A_CheckSight("Simple")
 		TNT1 A 0 A_SpawnItemEx("ExploSmallBack1",0,0,0,0,0,0,0,32|SXF_TRANSFERTRANSLATION)
 		Goto Main
@@ -1470,273 +1565,6 @@ Actor BossDeathExplosionHuge : BossDeathExplosion
 	}
 }
 
-
-//==================================================================================
-//==================================================================================
-// New Dark Matter Gun FX - Major Cooke
-// Further edit by DBT
-//==================================================================================
-//==================================================================================
-
-Actor DMGExplosionFX
-{
-	var int user_angle;
-	var int user_count;
-	+NOINTERACTION
-	States
-	{
-	Spawn:
-		TNT1 A 0
-		TNT1 A 0 A_SetUserVar("user_angle",0)
-		TNT1 A 0 A_SetUserVar("user_count",0)
-		TNT1 A 0 A_SpawnItemEx("DMGSuction",0,0,0,0,0,0,0,32)
-	ShockEmission:
-		TNT1 A 0 A_SpawnItemEx("DMGShockwave1up",5,0,4,10,0,0,user_angle,32)
-		TNT1 A 0 A_SpawnItemEx("DMGShockwave1down",5,0,-4,10,0,0,user_angle+5,32)
-		TNT1 A 0 A_SetUserVar("user_angle",user_angle+10)
-		TNT1 A 0 A_JumpIf(user_angle>=359,"ParticleMaelstrom")
-		Loop
-	ParticleMaelstrom:
-		TNT1 AAAAAAA 0 A_SpawnItemEx("DMGParticle1",0,0,0,random(25,150),0,random(-150,150),random(0,359),32,210)
-		TNT1 A 1 A_SetUserVar("user_count",user_count+1)
-		TNT1 A 0 A_JumpIf(user_count>=125,1)
-		Loop
-		TNT1 A 0
-		Stop
-	}
-}
-
-Actor DMGShockwave1up
-{
-	var int user_scale;
-	+NOINTERACTION
-	RenderStyle Add
-	Scale 0.3
-	States
-	{
-	Spawn:
-		TNT1 A 0 NoDelay A_SetScale(ScaleX*randompick(-1,1),ScaleY*randompick(-1,1))
-		X048 A 0 A_SetUserVar("user_scale",scaleX*100)
-	Moving:
-		X048 A 1 Bright A_SetScale((user_scale*0.01))
-		X048 A 0 A_SetUserVar("user_scale",user_scale+1)
-		X048 A 0 A_FadeOut(0.02)
-		Loop
-	}
-}
-
-Actor DMGShockwave1down : DMGShockwave1up
-{ }
-//I'll be sober in the morning, ma! I swear!!! -M.C.
-Actor DMGParticle1
-{
-	var int user_count;
-	+NOINTERACTION
-	RenderStyle Add
-	Scale 0.15
-	Alpha 0
-	States
-	{
-	Spawn:
-		TNT1 A 0 NoDelay A_SetScale(ScaleX*randompick(-1,1),ScaleY*randompick(-1,1))
-		TNT1 A 0 A_Jump(255,"S1","S2","S3","S4","S5")
-	S1:
-		X048 A 0
-		Goto "Playoff"
-	S2:
-		X048 B 0
-		Goto "Playoff"
-	S3:
-		X048 C 0
-		Goto "Playoff"
-	S4:
-		X048 D 0
-		Goto "Playoff"
-	S5:
-		X048 E 0
-		Goto "Playoff"
-	Playoff:
-		"####" "#" 2
-		"####" "#" 0 A_ScaleVelocity(0.01)
-		"####" "#" 0 A_ScaleVelocity(-1)
-	Movement:
-		"####" "#" 0 Bright A_FadeIn(0.02)
-		"####" "#" 0 Bright A_ScaleVelocity(1.04) //I'm doing this wrong... Aren't I...
-		"####" "#" 0 Bright A_SetUserVar("user_count",user_count+1)
-		"####" "#" 1 Bright A_JumpIf(user_count>=50,1)
-		Loop
-	Freeflyer:
-		"####" "#" 15 Bright 
-		Stop
-	}
-}
-
-Actor DMGSuction
-{
-	var int user_angle;
-	+NOINTERACTION
-	RenderStyle Add
-	Alpha 0.0
-	Scale 4.0
-	States
-	{
-	Spawn:
-		TNT1 A 0 NoDelay A_SetScale(ScaleX*randompick(-1,1),ScaleY*randompick(-1,1))	//one hell of a big code, true, but in game, this looks very nice -DBT
-		Q27A AB 1 Bright Light("DMGDarkness") A_FadeIn(0.2)		TNT1 A 0 A_SetScale(3.96)
-		Q27A CD 1 Bright Light("DMGDarkness") A_FadeIn(0.2)		TNT1 A 0 A_SetScale(3.92)
-		Q27A EF 1 Bright Light("DMGDarkness") A_FadeIn(0.2)		TNT1 A 0 A_SetScale(3.88)
-		Q27A GH 1 Bright Light("DMGDarkness") A_FadeIn(0.2)		TNT1 A 0 A_SetScale(3.84)
-		Q27A IJ 1 Bright Light("DMGDarkness") A_FadeIn(0.2)		TNT1 A 0 A_SetScale(3.80)
-		Q27A KL 1 Bright Light("DMGDarkness") A_GetHurt			TNT1 A 0 A_SetScale(3.76)
-		Q27A MN 1 Bright Light("DMGDarkness") A_GetHurt			TNT1 A 0 A_SetScale(3.72)
-		Q27A OP 1 Bright Light("DMGDarkness") A_GetHurt			TNT1 A 0 A_SetScale(3.68)
-		Q27A QR 1 Bright Light("DMGDarkness") A_GetHurt			TNT1 A 0 A_SetScale(3.64)
-		Q27A ST 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(3.60)
-		Q27A UV 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(3.56)
-		Q27A WX 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(3.52)
-		Q27A YZ 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(3.48)
-		Q27B AB 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(3.44)
-		Q27B CD 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(3.40)
-		Q27B EF 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(3.36)
-		Q27B GH 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(3.32)
-		Q27B IJ 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(3.28)
-		Q27B KL 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(3.24)
-		Q27B MN 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(3.20)
-		Q27B OP 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(3.16)
-		Q27B QR 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(3.12)
-		Q27B ST 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(3.08)
-		Q27B UV 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(3.04)
-		Q27B WX 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(3.0)
-		Q27A AB 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(2.96)
-		Q27A CD 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(2.92)
-		Q27A EF 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(2.88)
-		Q27A GH 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(2.84)
-		Q27A IJ 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(2.80)
-		Q27A KL 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(2.76)
-		Q27A MN 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(2.72)
-		Q27A OP 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(2.68)
-		Q27A QR 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(2.64)
-		Q27A ST 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(2.60)
-		Q27A UV 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(2.56)
-		Q27A WX 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(2.52)
-		Q27A YZ 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(2.48)
-		Q27B AB 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(2.44)
-		Q27B CD 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(2.40)
-		Q27B EF 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(2.36)
-		Q27B GH 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(2.32)
-		Q27B IJ 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(2.28)
-		Q27B KL 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(2.24)
-		Q27B MN 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(2.20)
-		Q27B OP 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(2.16)
-		Q27B QR 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(2.12)
-		Q27B ST 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(2.08)
-		Q27B UV 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(2.04)
-		Q27B WX 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(2.0)
-		Q27A AB 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(1.96)
-		Q27A CD 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(1.92)
-		Q27A EF 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(1.88)
-		Q27A GH 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(1.84)
-		Q27A IJ 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(1.80)
-		Q27A KL 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(1.76)
-		Q27A MN 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(1.72)
-		Q27A OP 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(1.68)
-		Q27A QR 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(1.64)
-		Q27A ST 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(1.60)
-		Q27A UV 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(1.56)
-		Q27A WX 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(1.52)
-		Q27A YZ 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(1.48)
-		Q27B AB 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(1.44)
-		Q27B CD 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(1.40)
-		Q27B EF 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(1.36)
-		Q27B GH 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(1.32)
-		Q27B IJ 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(1.28)
-		Q27B KL 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(1.24)
-		Q27B MN 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(1.20)
-		Q27B OP 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(1.16)
-		Q27B QR 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(1.12)
-		Q27B ST 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(1.08)
-		Q27B UV 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(1.04)
-		Q27B WX 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(1.0)
-		Q27A AB 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(0.96)
-		Q27A CD 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(0.92)
-		Q27A EF 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(0.88)
-		Q27A GH 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(0.84)
-		Q27A IJ 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(0.80)
-		Q27A KL 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(0.76)
-		Q27A MN 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(0.72)
-		Q27A OP 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(0.68)
-		Q27A QR 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(0.64)
-		Q27A ST 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(0.60)
-		Q27A UV 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(0.56)
-		Q27A WX 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(0.52)
-		Q27A YZ 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(0.48)
-		Q27B AB 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(0.44)
-		Q27B CD 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(0.40)
-		Q27B EF 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(0.36)
-		Q27B GH 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(0.32)
-		Q27B IJ 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(0.28)
-		Q27B KL 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(0.24)
-		Q27B MN 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(0.20)
-		Q27B OP 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(0.16)
-		Q27B QR 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(0.12)
-		Q27B ST 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(0.08)
-		Q27B UV 1 Bright Light("DMGDarkness") A_GetHurt		TNT1 A 0 A_SetScale(0.04)
-		Q27B WX 1 Bright Light("DMGDarkness") A_GetHurt		
-		TNT1 AAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("DMGSuckPopper",0,0,0,frandom(7,-7),0,frandom(7,-7),random(0,359),32)
-		TNT1 AAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("DMGSuckPopper",0,0,0,frandom(7,-7),0,frandom(7,-7),random(0,359),32)
-		TNT1 A 1
-		Stop
-	}
-}
-
-Actor DMGSuckPopper
-{
-	var int user_scale;
-	+NOINTERACTION
-	Scale 0.6
-	Translation "0:255=%[0,0,0]:[1,1,1]"
-	RenderStyle Add
-	States
-	{
-	Spawn:
-		TNT1 A 0 NoDelay A_SetScale(ScaleX*randompick(-1,1),ScaleY*randompick(-1,1))
-		TNT1 A 0 A_Jump(255,"S1","S2","S3","S4","S5","S6","S7","S8","S9")
-	S1:
-		Q27B A 0
-		Goto "PreSizing"
-	S2:
-		Q27B E 0
-		Goto "PreSizing"
-	S3:
-		Q27B I 0
-		Goto "PreSizing"
-	S4:
-		Q27B L 0
-		Goto "PreSizing"
-	S5:
-		Q27B R 0
-		Goto "PreSizing"
-	S6:
-		Q27B V 0
-		Goto "PreSizing"
-	S7:
-		Q27A D 0
-		Goto "PreSizing"
-	S8:
-		Q27A F 0
-		Goto "PreSizing"
-	S9:
-		Q27A O 0
-		Goto "PreSizing"
-	PreSizing:
-		"####" "#" 0 A_SetUserVar("user_scale",scaleX*100)
-	Sizing:
-		"####" "#" 2 A_SetScale((user_scale*0.01))
-		"####" "#" 0 A_SetUserVar("user_scale",user_scale+6)
-		"####" "#" 0 A_FadeOut(0.03)
-		Loop
-	}
-}
 
 //============================================
 //============================================

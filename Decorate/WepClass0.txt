@@ -441,6 +441,7 @@ ACTOR OscuroPlayer
 		OFLY A 0 A_ClearTarget
         Goto ResetAndChase
     Melee:
+		TNT1 A 0 A_JumpIfHealthLower(1,"Chasing",AAPTR_TARGET)
         TNT1 A 0 A_Jump(128,"GoldFaceAttack")
 		TNT1 A 0 A_ChangeFlag("NOPAIN",1)
         TNT1 A 0 A_SetInvulnerable
@@ -6744,8 +6745,9 @@ actor DMGShotPlayer
 		TNT1 A 0 A_PlaySound("quake4/Weapons/DMG/EnergyLoop",6,1,1)
 		TNT1 A 0 A_Explode(512,384,0,0,256)
 		TNT1 A 0 A_SpawnItemEx("DMGExplosionFX",0,0,0,0,0,0,0,32)
-	Afterburner:  
-		TNT1 A 4 A_Explode(128,256,1,1,64)
+	Afterburner:
+		TNT1 AAAA 1 A_RadiusThrust(-100,(256+64),RTF_AFFECTSOURCE|RTF_NOIMPACTDAMAGE,64)
+		TNT1 A 0 A_Explode(128,256,1,1,64)
 		TNT1 A 0 A_SetUserVar("user_count",user_count+1)
 		TNT1 A 0 A_JumpIf(user_count>=50,"FinalExplo")
 		Loop
@@ -6805,7 +6807,6 @@ ACTOR DarkMatterProjectile
     +RANDOMIZE
     +EXTREMEDEATH
     +FORCERADIUSDMG
-    +DONTREFLECT
     RenderStyle Translucent
     Alpha 0.625
 	DamageType "PlasmaDisint"
@@ -6816,61 +6817,61 @@ ACTOR DarkMatterProjectile
     States
     {
     Spawn:
-      	BDMG A 0 A_PlaySoundEx("DMGBLOOP","soundslot5",1)
-	BDMG AA 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG A 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG AA 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG A 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG AA 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG A 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG BB 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG B 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG BB 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG B 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG BB 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG B 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG CC 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG C 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG CC 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG C 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG CC 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG C 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG DD 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG D 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG DD 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG D 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG DD 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG D 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG EE 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG E 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG EE 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG E 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG EE 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG E 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG FF 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG F 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG FF 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG F 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG FF 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG F 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG GG 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG G 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG GG 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG G 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG GG 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG G 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG HH 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG H 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG HH 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG H 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG HH 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	BDMG H 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
-	GoTo Spawn+1
+      	BDMG A 0 NoDelay A_PlaySound("DMGBLOOP",5,1,true)
+		BDMG AA 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG A 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG AA 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG A 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG AA 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG A 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG BB 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG B 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG BB 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG B 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG BB 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG B 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG CC 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG C 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG CC 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG C 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG CC 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG C 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG DD 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG D 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG DD 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG D 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG DD 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG D 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG EE 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG E 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG EE 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG E 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG EE 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG E 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG FF 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG F 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG FF 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG F 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG FF 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG F 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG GG 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG G 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG GG 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG G 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG GG 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG G 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG HH 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG H 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG HH 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG H 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG HH 0 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		BDMG H 1 Bright A_SpawnItemEx("DarkMatterGunProj1Trail",0,0,0,frandom(-1,1),frandom(-1,1),frandom(-1,1),0,32,0)
+		GoTo Spawn+1
     Death:
-	TNT1 A 0 A_SpawnItemEx("DMVaporSpawner",0,0,0,0,0,0,0,32)
-	TNT1 A 0 A_Explode(400,220,0)
-	TNT1 A 15 A_StopSoundEx("soundslot5")
-	Stop
+		TNT1 A 0 A_SpawnItemEx("DMVaporSpawner",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_Explode(400,220,0)
+		TNT1 A 15 A_StopSoundEx("soundslot5")
+		Stop
 	}
 }
 
@@ -6891,44 +6892,195 @@ ACTOR DarkMatterGunProj1Trail : DarkMatterTrail1
 
 ACTOR DMVaporSpawner
 {
-+NOINTERACTION
-RenderStyle none
-States
-{
-Spawn:
-	TNT1 A 0
-	TNT1 AAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("DMVapor",0,0,0,frandom(4,-4),frandom(4,-4),frandom(4,-4),random(0,359),32)
-	PLAY A 2
-	PLAY BCDEF 4
-	Stop
-}
+	+NOINTERACTION
+	RenderStyle none
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("DMVapor",0,0,0,frandom(4,-4),frandom(4,-4),frandom(4,-4),random(0,359),32)
+		PLAY A 2
+		PLAY BCDEF 4
+		Stop
+	}
 }
 
 ACTOR DMVapor
 {
-PROJECTILE
-+THRUACTORS
-+RANDOMIZE
-Damage 0
-Speed 0
-Radius 2
-Height 2
-renderstyle Translucent
-Scale 0.65
-Alpha 0.5
-BounceType "Doom"
-//Translation "0:255=%[2.0,1.0,2.0]:[0.01,0.0,0.01]" //"0:255=%[1.0,0.15,0.15]:[0.01,0.0,0.0]"
-	Translation "0:255=%[0.0,0.0,0.01]:[0.3,0.0,0.6]"
-States
+	PROJECTILE
+	+NOINTERACTION
+	+RANDOMIZE
+	Damage 0
+	Speed 0
+	Radius 2
+	Height 2
+	renderstyle Translucent
+	Scale 0.65
+	Alpha 0.5
+	BounceType "Doom"
+	//Translation "0:255=%[2.0,1.0,2.0]:[0.01,0.0,0.01]" //"0:255=%[1.0,0.15,0.15]:[0.01,0.0,0.0]"
+		Translation "0:255=%[0.0,0.0,0.01]:[0.3,0.0,0.6]"
+	States
+	{
+	Spawn:
+		PUF2 MNOPQRSTUVWXYZ 1 Bright A_FadeOut(0.018)
+		PUF3 ABC 2 A_FadeOut(0.018)
+		Stop
+	}
+}
+
+//==================================================================================
+//==================================================================================
+// New Dark Matter Gun FX - Major Cooke
+// Further edit by DBT
+//==================================================================================
+//==================================================================================
+
+Actor DMGExplosionFX
 {
-Spawn:
-	PUF2 MNOPQRSTUVWXYZ 1 Bright A_FadeOut(0.018)
-	PUF3 ABC 2 A_FadeOut(0.018)
-	Stop
-}
+	var int user_angle;
+	var int user_count;
+	+NOINTERACTION
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SetUserVar("user_angle",0)
+		TNT1 A 0 A_SetUserVar("user_count",0)
+		TNT1 A 0 A_SpawnItemEx("DMGSuction",0,0,0,0,0,0,0,32)
+	ShockEmission:
+		TNT1 A 0 A_SpawnItemEx("DMGShockwave1up",5,0,4,10,0,0,user_angle,32)
+		TNT1 A 0 A_SpawnItemEx("DMGShockwave1down",5,0,-4,10,0,0,user_angle+5,32)
+		TNT1 A 0 A_SetUserVar("user_angle",user_angle+10)
+		TNT1 A 0 A_JumpIf(user_angle>=359,"ParticleMaelstrom")
+		Loop
+	ParticleMaelstrom:
+		TNT1 AAAAAAA 0 A_SpawnItemEx("DMGParticle1",0,0,0,random(25,150),0,random(-150,150),random(0,359),32,210)
+		TNT1 A 1 A_SetUserVar("user_count",user_count+1)
+		TNT1 A 0 A_JumpIf(user_count>=125,1)
+		Loop
+		TNT1 A 0
+		Stop
+	}
 }
 
+Actor DMGShockwave1up
+{
+	var int user_scale;
+	+NOINTERACTION
+	RenderStyle Add
+	Scale 0.3
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_SetScale(ScaleX*randompick(-1,1),ScaleY*randompick(-1,1))
+		X048 A 0 A_SetUserVar("user_scale",scaleX*100)
+	Moving:
+		X048 A 1 Bright A_SetScale((user_scale*0.01))
+		X048 A 0 A_SetUserVar("user_scale",user_scale+1)
+		X048 A 0 A_FadeOut(0.02)
+		Loop
+	}
+}
 
+Actor DMGShockwave1down : DMGShockwave1up
+{ }
+
+Actor DMGParticle1
+{
+	var int user_count;
+	+NOINTERACTION
+	RenderStyle Add
+	Scale 0.15
+	Alpha 0
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_SetScale(ScaleX*randompick(-1,1),ScaleY*randompick(-1,1))
+		X048 ABCDE 0 A_JumpIf(random(1,5) == 1,"Playoff")
+	Playoff:
+		"####" "#" 2
+		"####" "#" 0 A_ScaleVelocity(0.01)
+		"####" "#" 0 A_ScaleVelocity(-1)
+	Movement:
+		"####" "#" 0 Bright A_FadeIn(0.02)
+		"####" "#" 0 Bright A_ScaleVelocity(1.04) //I'm doing this wrong... Aren't I...
+		"####" "#" 0 Bright A_SetUserVar("user_count",user_count+1)
+		"####" "#" 1 Bright A_JumpIf(user_count>=50,1)
+		Loop
+	Freeflyer:
+		"####" "#" 15 Bright 
+		Stop
+	}
+}
+
+Actor DMGSuctionSizer
+{
+	var int user_c;
+	var int user_x;
+	+NOINTERACTION
+	RenderStyle None
+	States
+	{
+	Spawn:
+		TNT1 A 1 NoDelay A_SetUserVar(user_x,400)
+	Waiting:
+		TNT1 A 0 A_SetUserVar(user_x,user_x-2)
+		TNT1 A 1 A_SetScale((user_x/100.0),0,AAPTR_MASTER)
+		TNT1 A 0 A_JumpIf(user_x > 0, "Waiting")
+		Stop
+	}
+}
+
+Actor DMGSuction
+{
+	var int user_angle;
+	+NOINTERACTION
+	RenderStyle Add
+	Alpha 0.0
+	Scale 4.0
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_SetScale(ScaleX*randompick(-1,1),ScaleY*randompick(-1,1))	//one hell of a big code, true, but in game, this looks very nice -DBT
+		Q27A A 0 A_SpawnItemEx("DMGSuctionSizer",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER|SXF_ORIGINATOR)
+		Q27A ABCDEFGHIJ 1 bright Light("DMGDarkness") A_FadeIn(0.1,FTF_CLAMP)
+		Q27A KLMNOPQRSTUVWXYZ 1 bright Light("DMGDarkness") A_JumpIf(ScaleX <= 0.0,"Death")
+	Looping:
+		Q27B ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 bright Light("DMGDarkness") A_JumpIf(ScaleX <= 0.0,"Death")
+		Q27A ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 bright Light("DMGDarkness") A_JumpIf(ScaleX <= 0.0,"Death")
+		Loop
+	Death:
+		TNT1 A 0 A_RemoveChildren(1,RMVF_EVERYTHING,"DMGSuctionSizer")
+		TNT1 AAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("DMGSuckPopper",0,0,0,frandom(7,-7),0,frandom(7,-7),random(0,359),32)
+		TNT1 AAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("DMGSuckPopper",0,0,0,frandom(7,-7),0,frandom(7,-7),random(0,359),32)
+		TNT1 A 1
+		Stop
+	}
+}
+
+Actor DMGSuckPopper
+{
+	var int user_scale;
+	+NOINTERACTION
+	Scale 0.6
+	Translation "0:255=%[0,0,0]:[1,1,1]"
+	RenderStyle Add
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_SetScale(ScaleX*randompick(-1,1),ScaleY*randompick(-1,1))
+		Q27B AEILRV 0 A_JumpIf(random(1,9) == 1,"PreSizing")
+		Q27A DFO 0 A_JumpIf(random(1,3) == 1, "PreSizing")
+	PreSizing:
+		"####" "#" 0 A_SetUserVar("user_scale",scaleX*100)
+	Sizing:
+		"####" "#" 2 A_SetScale((user_scale*0.01))
+		"####" "#" 0 A_SetUserVar("user_scale",user_scale+6)
+		"####" "#" 0 A_FadeOut(0.03)
+		Loop
+	}
+}
 
 Actor DarkMatterGunDrop : CustomInventory
 {

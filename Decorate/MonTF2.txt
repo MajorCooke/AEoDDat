@@ -231,8 +231,8 @@ Actor TF2Demoman	//cyberdemon
 		TNT1 AAAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,33)
 		TNT1 A 0 A_Scream
 		TNT1 A 0 A_Fall
-		TNT1 A 0 A_KillChildren("Telefrag",KILS_KILLMISSILES|KILS_FOILINVUL,"DemomanUllapool")
-		TNT1 A 0 A_KillChildren("Telefrag",KILS_KILLMISSILES|KILS_FOILINVUL,"DemomanReloadChecker")
+		TNT1 A 0 A_RemoveChildren(1,RMVF_EVERYTHING,"DemomanUllapool")
+		TNT1 A 0 A_RemoveChildren(1,RMVF_EVERYTHING,"DemomanReloadChecker")
 		TNT1 A 1 A_PlaySound("other/gibdeath",CHAN_AUTO,1)
 		TNT1 A 35 A_GiveInventory("IDied",1)
 		TNT1 A 0 A_KillMaster
@@ -240,7 +240,8 @@ Actor TF2Demoman	//cyberdemon
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
-		"####" "#" 0 A_RemoveChildren(1,RMVF_EVERYTHING)
+		TNT1 A 0 A_RemoveChildren(1,RMVF_EVERYTHING,"DemomanUllapool")
+		TNT1 A 0 A_RemoveChildren(1,RMVF_EVERYTHING,"DemomanReloadChecker")
 		"####" "#" 0 Thing_SetTranslation(0,50)
 		"####" "#" 0 A_KillMaster
 		"####" "#" 1 A_FadeOut(0.015,0)

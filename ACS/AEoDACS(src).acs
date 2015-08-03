@@ -361,13 +361,6 @@ script "s908" (void) //enter
 	}
 }
 
-//============================================================================================================
-//============================================================================================================
-
-//		Boss brain assignation of health in map30
-
-//============================================================================================================
-//============================================================================================================
 Script "s910" (void)
 {
 GiveInventory("Killers",1);
@@ -411,22 +404,6 @@ script "s953" enter
 	}
 	delay(35);
 	restart;
-}
-
-//============================================================================================================
-//============================================================================================================
-
-//		Used by the Joke mode weapon
-
-//============================================================================================================
-//============================================================================================================
-script "s959" (int TidToAffect)
-{
-	while(1)
-	{
-		SetActorAngle(TidToAffect,getactorangle(21000));
-		delay(3);
-	}
 }
 
 /*
@@ -548,7 +525,7 @@ script "s960" (void)
 		delay(1);
 	}
 	hudmessage(s:" "; 0, 600, -1, 320.0, 200.0, 1);
-	TakeActorInventory(21000, "cammin", 1);
+	TakeActorInventory(21000, "cammin", 1000);
 	setActorAngle(21000, origa);
 	setActorPitch(21000, origP);
 }
@@ -596,38 +573,6 @@ script "s963" (void)
 script "s964" (void)
 {
 	setcameratotexture(22001, "CAMERT", 90);
-}
-
-
-//Slaughter maps in particular are harder to view when demon morph is on. This
-//is aimed to fix that problem by forcing items to become invisible, minus any
-//powerup items and weapons. Too many weapons to bother with, really.
-Script "InvisibleItemToggle" (int check)
-{
-	if (check >= 1)
-	{
-		//Delay(8);
-		SetActorProperty(22005,APROP_RenderStyle,STYLE_None);
-		SetActorProperty(22006,APROP_RenderStyle,STYLE_None);
-		SetActorProperty(22007,APROP_RenderStyle,STYLE_None);
-		ACS_NamedExecute("InvisItemLoop",0,0,0,0);
-	}
-	else
-	{
-		ACS_NamedTerminate("InvisItemLoop",0);
-		SetActorProperty(22005,APROP_RenderStyle,STYLE_Normal);
-		SetActorProperty(22006,APROP_RenderStyle,STYLE_Add);
-		SetActorProperty(22007,APROP_RenderStyle,STYLE_Translucent);
-	}
-}
-
-Script "InvisItemLoop" (void)
-{
-	SetActorProperty(22005,APROP_RenderStyle,STYLE_None);
-	SetActorProperty(22006,APROP_RenderStyle,STYLE_None);
-	SetActorProperty(22007,APROP_RenderStyle,STYLE_None);
-	Delay(17);
-	Restart;
 }
 
 Script "AEPreviousWeapon" (int mode)
@@ -697,11 +642,27 @@ Script "SoulReaperHealthCheck" (void)
 	SetResultValue(GetActorProperty(0,APROP_SpawnHealth));
 }
 
+Script "DemonMorphMusic" (int swiitch)
+{
+	int plrnum = PlayerNumber();
+	//If the player allows demon morph music, or if the demon morph is wearing off
+	if (swiitch && GetUserCvar(plrnum,"user_AllowDemonMorphMusic") == 1)
+	{
+		LocalSetMusic("Music/Synthetic666.ogg");
+		SetUserCvar(plrnum,"user_dmmusic",1);
+	}
+	else if (!swiitch && GetUserCvar(plrnum,"user_dmmusic") == 1)
+	{
+		LocalSetMusic("*");
+		SetUserCvar(plrnum,"user_dmmusic",0);
+	}
+}
+
 //------------------------------------------------------------------------
 /*
 So, at the end, this are all the scripts used in the mod. 
 This list is not to know what they do, just to know which script
-numbers have been used:
+numbers/names have been used:
 610,614,615,616,617,618	//for the footsteps
 650,651,652,653,654,655
 689, 690, 691
@@ -711,6 +672,8 @@ numbers have been used:
 901,908,910,912,913,914,915
 952,953,957,958,959
 960-965
+ForceUnmorph
+SoulReaperHealthCheck
 
 //------------------------------------------------------------------------
 
