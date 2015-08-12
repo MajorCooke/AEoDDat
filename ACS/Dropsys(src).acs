@@ -397,6 +397,7 @@ Script "SelectAEoDWeapon" (int class)
 	str testconcat;
 	int wep;
 	int cycle = 0;
+	bool rep = 1;
 	Switch(class)
 	{
 	Case 0:
@@ -405,29 +406,29 @@ Script "SelectAEoDWeapon" (int class)
 		break;
 	}
 	//Now, populate it with the chosen slot's weapon names and numbers.
-	for (int t = 1; t <= slotmax; t++)
+	for (int t = 1; t < slotmax; t++)
 	{
 		testconcat = strparam(s:"user_",s:Weaps[class][t][0]);
 		wep = GetUserCvar(plrnum,testconcat);
-		if (wep)
-		{
-			Weaps[class][t][5] = wep;
-			if (GetWeapon() == Weaps[class][t][0])
-				cycle = wep;
-		}
+		Weaps[class][t][4] = wep;
+		if (GetWeapon() == Weaps[class][t][0])
+			cycle = wep;
 	}
 	str curWeap = GetWeapon();	
 	//Now try to go through.
 	//
 	//If the weapon id and the cycle match, attempt to switch.
-	for (int z = cycle + 1; z != cycle; z++)
+	for (int z = 0; z < (slotmax + 1); z++)
 	{
 		if (z > slotmax)
-			z = 1;
+		{
+			PrintBold(s:"Failed to find weapon or something broke.");
+			Terminate;
+		}
 		for (t = 1; t < slotmax; t++)
 		{
-			if (Weaps[class][z][5] == t)
-				if (SetWeapon(Weaps[class][z][0]))
+			if (Weaps[class][t][4] == z)
+				if (SetWeapon(Weaps[class][t][0]))
 					Terminate;
 		}
 	}
@@ -468,61 +469,3 @@ Function int Power (int num, int pwr)
       num *= n;
    return num;
 }
-
-//==============================================================================
-//==============================================================================
-// Defunct
-//==============================================================================
-//==============================================================================
-/*
-int sectColors[256];
-
-script "s689" (void)	//this one is the main cheat detector. using the result given by script 799
-{			//which changes "scriptactivation" to "1" if player is caught getting a weapon and not it's item.
-	if (!GetCvar("user_cheat"))
-		Terminate;
-    int q, active=1;
-	int r, g, b, d, l;
-	bool tripped = false;
-    while(GetCvar("user_cheat"))
-    {
-		if(scriptactivation==1 && GetCVar("user_cheat"))
-		{
-			tripped = true;
-			HUDMessage(s:"Cheating makes life easy. Easy life is pink.\nPink you said?";
-				HUDMSG_PLAIN,1,10,0.5,0.0,0);
-			for(q=0;q<256;q++)
-			{
-				sectColors[q] = GetSectorLightLevel(q);
-				Light_ChangeToValue(q,255);
-				Sector_SetColor(q,255,94,146,10);
-			}	
-			while(GetCvar("user_cheat"))
-			{
-				AmbientSound("HellHeavenHand/UbberThing",127);
-				Delay(35*15);
-			}
-		}
-		delay(8);
-		if (tripped && !GetCvar("user_cheat"))
-		{
-			HudMessage(s:"";HUDMSG_PLAIN,1,0,0,0,1,0);
-			for(q=0;q<256;q++)
-			{
-				Light_ChangeToValue(q,sectColors[q]);
-				Sector_SetColor(q,255,255,255,0);
-			}
-			tripped = false;
-		}
-    }
-}
-
-script "s690" (void)		//not even sure...
-{
-	acs_namedsuspend("s689",0);
-}
-script "s691" (void)		//not even sure...
-{
-	acs_namedterminate("s689",0);
-}
-*/
