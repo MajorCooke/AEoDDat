@@ -419,6 +419,7 @@ Script "SelectAEoDWeapon" (int class)
 			cycle = wep;
 	}
 	
+	log(s:"cycle = ",i:cycle,s:"\nslotmax = ",i:slotmax,s:"\nrep = ",i:rep,s:"\ncurslot = ",i:curslot);
 	//Now try to go through.
 	//
 	//If the weapon id and the cycle match, attempt to switch.
@@ -434,11 +435,15 @@ Script "SelectAEoDWeapon" (int class)
 			PrintBold(s:"Failed to find weapon or something broke.");
 			Terminate;
 		}
+		log(s:"  z = ",d:z,s:"    cycle = ",d:cycle);
 		for (t = 1; t < slotmax; t++)
 		{
+			log(s:"    t = ",d:t,s:"    slotmax = ",d:slotmax);
 			if (Weaps[curslot][t][4] == z)
 				if (SetWeapon(Weaps[curslot][t][0]))
 					Terminate;
+				else
+					log(s:"    setweapon failed!");
 		}
 	}
 }
