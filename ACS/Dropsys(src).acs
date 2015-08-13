@@ -1,7 +1,6 @@
 #library "dropsys"
 #include "zcommon.acs"
 
-int idGrab[32];
 str Weaps[10][32][6]=
 
 	{	// behold, the first 3d array I encounter in ZDoom! [Ms]
@@ -406,24 +405,17 @@ Script "SelectAEoDWeapon" (int class)
 		curslot = 9;
 		break;
 	}
-	
-	int plrnum = PlayerNumber();
-
-	
+	str weapOrder[32];
+	int idGrab[32];
+	int plrnum = PlayerNumber();	
 	bool slotSwitched = false;
 	bool rep = false;
 	//str testconcat;
 	int currentid = GetUserCvar(plrnum,"user_currentid");
 	int holdnumber;
 	int wep;
-	int index = 0;
 	
 	
-	//Step 1: Eliminate all IDs
-	for (int temp = 0; temp < 31; temp++)
-	{
-		idGrab[temp] = 0;
-	}
 	
 	if (class != GetUserCvar(plrnum,"user_previousSlot"))
 	{
@@ -434,32 +426,52 @@ Script "SelectAEoDWeapon" (int class)
 		holdnumber = slotmax;
 	}
 	
-	str curWeap = GetWeapon();
+	
+	
+	
+	
 	//Now, populate it with the chosen slot's weapon names and numbers.
+	//Go through the array's indexes. Find the corresponding matching numbers
+	//and populate another temp array based upon that.
+	//While at it, grab the current weapon's number and hold it.
+	str curWeap = GetWeapon();
+	int index = 1;
 	for (int t = slotmax; t > 0; t--)
 	{
+		if (!stricmp(Weaps[curslot][t][4],"Nothing") || 
+			!stricmp(Weaps[curslot][t][4],""))
+			break;
 		
-		//If it's nothing, skip it.
-		if (!stricmp(Weaps[curslot][t][0],"Nothing") || 
-			!stricmp(Weaps[curslot][t][0],""))
-			continue;
-		//testconcat = strparam(s:"user_",s:Weaps[curslot][t][0]);
-		idGrab[t] = GetUserCvar(plrnum,Weaps[curslot][t][4]);
+		if (curWeap == Weaps[curslot][t][0])
+			holdnumber = GetUserCvar(plrnum,Weaps[curslot][t][4]);
 		
-		if (!stricmp(curWeap,Weaps[curslot][t][0]))
+		if (GetUserCvar(plrnum,Weaps[curslot][t][4] == index))
 		{
-			holdnumber = idGrab[t];
+			weapOrder[index++] = Weaps[curslot][t][0];	
+			t = slotmax;
+			log(s:weapOrder[index-1], s:"\n");
+			continue;
 		}
+		
+		if (index > slotmax)
+			break;
+		else if (t == 0)
+			t = slotmax; //Keep it going until index has gone and done its duty.
 	}
 	
+	
+	
+	
+	
+	/*
 	log(s:"currentid = ",i:currentid,s:"\nslotmax = ",i:slotmax,s:"\nrep = ",i:rep,s:"\ncurslot = ",i:curslot);
 	
 	//Now try to go through.
-	if (holdnumber >= slotmax)
+	if (holdnumber >= slotmax) //>= needed because we don't want currentid to be the same as hold number.
 		currentid = 1;
 	else
 		currentid = holdnumber + 1;
-
+	
 	int timeloop = 0;
 	while (timeloop <= 500)
 	{
@@ -480,11 +492,13 @@ Script "SelectAEoDWeapon" (int class)
 		//Now find it.
 		for (t = 1; t <= slotmax; t++)
 		{
-			log(s:"t = ",d:t, s:"	", s:Weaps[curslot][t][0], s:"\n");
-
+			
 			//if the number contents of idGrab match currentid, attempt switching.
-			if (idGrab[t] == currentid)
+			
+			/*
+			if (weapOrder[currentid] == t)
 			{
+				log(s:"cid = ", d:currentid,s:"	t = ",d:t, s:"	", s:Weaps[curslot][currentid][0], s:"\n");
 				if (CheckInventory(Weaps[curslot][currentid][0]))
 				{
 					log (s:Weaps[curslot][currentid][0], s: " available. ");
@@ -507,12 +521,13 @@ Script "SelectAEoDWeapon" (int class)
 				}
 				
 			}
+			
 			//else
 				//log(s:"\n");
 		}
 		currentid++;
 		timeloop++;
-	}
+	}*/
 }
 /*
 Script "SelectAEoDWeapon" (int class)
