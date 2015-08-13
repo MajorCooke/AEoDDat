@@ -1,7 +1,7 @@
 #library "dropsys"
 #include "zcommon.acs"
 
-str Weaps[10][32][6]=
+str Weaps[10][32][5]=
 
 	{	// behold, the first 3d array I encounter in ZDoom! [Ms]
 	
@@ -323,53 +323,48 @@ script "WeaponSlotToggle" (void)		//the script that changes the Limits to "on" o
 Script "WeaponSlotLimitCheck" (int class) //Checks to see what the current max of the current category is.
 {
 	int plrnum = PlayerNumber();
-	
+	str wepcnt = StrParam(s:"Weapon",s:class,s:"Count");
+	str mx = StrParam(s:"user_MaxWeapons",s:class);
 	if (GetUserCvar(plrnum,"user_WeaponSlotLimits") == 1)
 	{
 		if (!CheckInventory("LimitScriptActive"))
 			GiveInventory("LimitScriptActive",1);
-		switch(class)
+		
+		if (class == 10)	class = 0;
+		
+		Switch(class)
 		{
-		case 0:
+		Case 0:
+		Case 10:
 			if (CheckInventory("Weapon0Count") >= GetUserCvar(plrnum,"user_MaxWeapons0"))
-			{	SetResultValue(0);	Terminate;	}
-			Break;
-		case 1:
-			if (CheckInventory("Weapon1Count") >= GetUserCvar(plrnum,"user_MaxWeapons1"))
-			{	SetResultValue(0);	Terminate;	}
-			Break;
-		case 2:
-			if (CheckInventory("Weapon2Count") >= GetUserCvar(plrnum,"user_MaxWeapons2"))
-			{	SetResultValue(0);	Terminate;	}
-			Break;
-		case 3:
-			if (CheckInventory("Weapon3Count") >= GetUserCvar(plrnum,"user_MaxWeapons3"))
-			{	SetResultValue(0);	Terminate;	}
-			Break;
-		case 4:
-			if (CheckInventory("Weapon4Count") >= GetUserCvar(plrnum,"user_MaxWeapons4"))
-			{	SetResultValue(0);	Terminate;	}
-			Break;
-		case 5:
-			if (CheckInventory("Weapon5Count") >= GetUserCvar(plrnum,"user_MaxWeapons5"))
-			{	SetResultValue(0);	Terminate;	}
-			Break;
-		case 6:
-			if (CheckInventory("Weapon6Count") >= GetUserCvar(plrnum,"user_MaxWeapons6"))
-			{	SetResultValue(0);	Terminate;	}
-			Break;
-		case 7:
-			if (CheckInventory("Weapon7Count") >= GetUserCvar(plrnum,"user_MaxWeapons7"))
-			{	SetResultValue(0);	Terminate;	}
-			Break;
-		case 8:
-			if (CheckInventory("Weapon8Count") >= GetUserCvar(plrnum,"user_MaxWeapons8"))
-			{	SetResultValue(0);	Terminate;	}
-			Break;
-		case 9:
+				{	SetResultValue(0);	Terminate;	}
+		Case 9:		
 			if (CheckInventory("Weapon9Count") >= GetUserCvar(plrnum,"user_MaxWeapons9"))
-			{	SetResultValue(0);	Terminate;	}
-			Break;
+				{	SetResultValue(0);	Terminate;	}
+		Case 8:		
+			if (CheckInventory("Weapon8Count") >= GetUserCvar(plrnum,"user_MaxWeapons8"))
+				{	SetResultValue(0);	Terminate;	}
+		Case 7:		
+			if (CheckInventory("Weapon7Count") >= GetUserCvar(plrnum,"user_MaxWeapons7"))
+				{	SetResultValue(0);	Terminate;	}
+		Case 6:		
+			if (CheckInventory("Weapon6Count") >= GetUserCvar(plrnum,"user_MaxWeapons6"))
+				{	SetResultValue(0);	Terminate;	}
+		Case 5:		
+			if (CheckInventory("Weapon5Count") >= GetUserCvar(plrnum,"user_MaxWeapons5"))
+				{	SetResultValue(0);	Terminate;	}
+		Case 4:		
+			if (CheckInventory("Weapon4Count") >= GetUserCvar(plrnum,"user_MaxWeapons4"))
+				{	SetResultValue(0);	Terminate;	}
+		Case 3:		
+			if (CheckInventory("Weapon3Count") >= GetUserCvar(plrnum,"user_MaxWeapons3"))
+				{	SetResultValue(0);	Terminate;	}
+		Case 2:		
+			if (CheckInventory("Weapon2Count") >= GetUserCvar(plrnum,"user_MaxWeapons2"))
+				{	SetResultValue(0);	Terminate;	}
+		Case 1:		
+			if (CheckInventory("Weapon1Count") >= GetUserCvar(plrnum,"user_MaxWeapons1"))
+				{	SetResultValue(0);	Terminate;	}
 		}
 		SetResultValue(1);
 		Terminate;
@@ -390,204 +385,172 @@ Script "WeaponSlotLimitCheck" (int class) //Checks to see what the current max o
 
 Script "SelectAEoDWeapon" (int class)
 {
-	if ((GetActorProperty(0,APROP_Dormant)) || (GetActorProperty(0,APROP_HEALTH) <= 0)
-		|| CheckInventory("cammin") > 0 || (GetWeapon() == "AEoDDemonMorphHand"))	Terminate;
-		
-	int curslot;
-	int slotmax;
 	
-	Switch(class)
+	str aew = StrParam(s:"user_AEWeaps",d:class);
+	int c = class;
+	if (class == 10) c = 0;
+	str wc = StrParam(s:"Weapon",d:c,s:"Count");
+	int slotmax = GetCvar(aew); //Get the current maximum number of weapons available in that category.
+	//if (!CheckInventory(wc))	Terminate;
+	/*Switch(class)
 	{
 	Case 10:
 	Case 0:
-		if (!CheckInventory("Weapon0Count"))	Terminate;	//No weapons, no switching.
-		slotmax = GetCvar("user_AEWeaps10"); //Get the current maximum number of weapons available in that category.	
-		curslot = 9;
-		break;
-	}
+		
+		if (!CheckInventory("Weapon0Count"))	
+		{
+			PrintBold(s:"Terminated 1");
+			Terminate;
+		}
+		slotmax = GetCvar("user_AEWeaps0");		break;
+	Case 9:
+		if (!CheckInventory("Weapon9Count"))	Terminate;
+		slotmax = GetCvar("user_AEWeaps9");		break;
+	Case 8:
+		if (!CheckInventory("Weapon8Count"))	Terminate;
+		slotmax = GetCvar("user_AEWeaps8");		break;
+	Case 7:
+		if (!CheckInventory("Weapon7Count"))	Terminate;
+		slotmax = GetCvar("user_AEWeaps7");		break;
+	Case 6:
+		if (!CheckInventory("Weapon6Count"))	Terminate;
+		slotmax = GetCvar("user_AEWeaps6");		break;
+	Case 5:
+		if (!CheckInventory("Weapon5Count"))	Terminate;
+		slotmax = GetCvar("user_AEWeaps5");		break;
+	Case 4:
+		if (!CheckInventory("Weapon4Count"))	Terminate;
+		slotmax = GetCvar("user_AEWeaps4");		break;
+	Case 3:
+		if (!CheckInventory("Weapon3Count"))	Terminate;
+		slotmax = GetCvar("user_AEWeaps3");		break;
+	Case 2:
+		if (!CheckInventory("Weapon2Count"))	Terminate;
+		slotmax = GetCvar("user_AEWeaps2");		break;
+	Case 1:
+		if (!CheckInventory("Weapon1Count"))	Terminate;
+		slotmax = GetCvar("user_AEWeaps1");		break;
+	}*/
+	
+	if ((GetActorProperty(0,APROP_Dormant)) || (GetActorProperty(0,APROP_HEALTH) <= 0)
+		|| CheckInventory("cammin") > 0 || (GetWeapon() == "AEoDDemonMorphHand"))	Terminate;
+		
+	int curslot = class - 1; //Goes from 1 to 10, not 0 to 9. And yet, the giant array at the top did not take that into account...
+	
+
 	str weapOrder[32];
-	int idGrab[32];
-	int plrnum = PlayerNumber();	
 	bool slotSwitched = false;
 	bool rep = false;
-	//str testconcat;
+	int plrnum = PlayerNumber();	
+	int prevslot = GetUserCvar(plrnum,"user_previousSlot");
 	int currentid = GetUserCvar(plrnum,"user_currentid");
 	int holdnumber;
 	int wep;
-	
-	
-	
-	if (class != GetUserCvar(plrnum,"user_previousSlot"))
+
+	if (class != prevslot)
 	{
 		slotSwitched = true;
 		SetUserCvar(plrnum,"user_previousSlot",class);
 		SetUserCvar(plrnum,"user_currentid",1);
 		currentid = 1;
-		holdnumber = slotmax;
+		holdnumber = 0;
 	}
 	
-	
-	
-	
-	
-	//Now, populate it with the chosen slot's weapon names and numbers.
-	//Go through the array's indexes. Find the corresponding matching numbers
-	//and populate another temp array based upon that.
 	//While at it, grab the current weapon's number and hold it.
 	str curWeap = GetWeapon();
 	int index = 1;
-	for (int t = slotmax; t > 0; t--)
-	{
-		if (!stricmp(Weaps[curslot][t][4],"Nothing") || 
-			!stricmp(Weaps[curslot][t][4],""))
+	int temp = 0;
+	int count;
+	
+
+	//Compare names and the cvars of the numbers of weapons.
+	
+	for (int t = 1; t <= slotmax; t++)
+	{	
+		if (index > slotmax)
+		{
+			//log(s: "Loop finished\n");
 			break;
+		}
+		//Don't let the loop run away.
+		
+		temp = GetUserCvar(plrnum,Weaps[curslot][t][4]);
+		
+		if (!stricmp(Weaps[curslot][t][0],"Nothing") || 
+			!stricmp(Weaps[curslot][t][0],""))
+			continue;//break;
 		
 		if (curWeap == Weaps[curslot][t][0])
-			holdnumber = GetUserCvar(plrnum,Weaps[curslot][t][4]);
-		
-		if (GetUserCvar(plrnum,Weaps[curslot][t][4] == index))
-		{
-			weapOrder[index++] = Weaps[curslot][t][0];	
-			t = slotmax;
-			log(s:weapOrder[index-1], s:"\n");
+			holdnumber = temp;
+		if (temp == index)
+		{	
+			weapOrder[index] = Weaps[curslot][t][0];	
+			t = 0;
+			//log(s: "Weapon: ", s:weapOrder[index], s:" in index ", d:index, s:"\n");
+			index++;
 			continue;
 		}
-		
-		if (index > slotmax)
-			break;
-		else if (t == 0)
-			t = slotmax; //Keep it going until index has gone and done its duty.
+		if (t > slotmax)
+			t = 0; //Keep it going until index has gone and done its duty.
 	}
 	
-	
-	
-	
-	
-	/*
-	log(s:"currentid = ",i:currentid,s:"\nslotmax = ",i:slotmax,s:"\nrep = ",i:rep,s:"\ncurslot = ",i:curslot);
-	
-	//Now try to go through.
-	if (holdnumber >= slotmax) //>= needed because we don't want currentid to be the same as hold number.
+	//Push the selector forward. If the selector's beyond slotmax, set it back
+	//to the beginning.
+	currentid = holdnumber + 1;
+	if (currentid > slotmax)
 		currentid = 1;
-	else
-		currentid = holdnumber + 1;
 	
 	int timeloop = 0;
-	while (timeloop <= 500)
+	//Check for conflicts.
+	int ticker = 0;	
+	//if (!slotSwitched && (CheckInventory(wc) == 1))
+		//Terminate; //They only have one weapon, the one they're holding now.
+	
+	//Loop through for a maximum of 3 times. Just to be safe.
+	while(timeloop <= (slotmax * 3))
 	{
-
+		if ((currentid > slotmax) || ((currentid == holdnumber) && (currentid == slotmax)))
+			currentid = 1;
+		else if (currentid == holdnumber)
+			currentid++;
 		
-		//If the id is at the end of the array, or the current id matches the hold number
-		//which happens to be at the end of the array...
-		if ((currentid > slotmax) || ((currentid >= slotmax) && (currentid == holdnumber)))
-		{	
-			currentid = 1;	//Make sure the current id doesn't go over the threshold.
-		}
-		if (currentid == holdnumber) //Otherwise, if the current id is the same as the hold number,
-		{
-			currentid++;	//skip it. we don't want to re-select our current weapon.
-		}
-		//else if (rep && (currentid > slotmax))	{	PrintBold(s:"Failed to find weapon or something broke.");	Terminate;	}
-
-		//Now find it.
-		for (t = 1; t <= slotmax; t++)
-		{
-			
-			//if the number contents of idGrab match currentid, attempt switching.
-			
-			/*
-			if (weapOrder[currentid] == t)
-			{
-				log(s:"cid = ", d:currentid,s:"	t = ",d:t, s:"	", s:Weaps[curslot][currentid][0], s:"\n");
-				if (CheckInventory(Weaps[curslot][currentid][0]))
+		
+		if (CheckInventory(weapOrder[currentid]))
+		{	//We have the weapon.
+			if (SetWeapon(weapOrder[currentid]))
+			{ 	//Switch to it and shut this down.
+				for (t = slotmax; t > 0; t--)
 				{
-					log (s:Weaps[curslot][currentid][0], s: " available. ");
-					if(SetWeapon(Weaps[curslot][currentid][0]))
+					if (GetUserCvar(plrnum,Weaps[curslot][t][4]) == currentid)
 					{
-						log (s:Weaps[curslot][currentid][0], 
-								s:" at currentid ", d:currentid,
-								s:" with t = ", d:t, s:"\n");
-						SetUserCvar(plrnum,"user_currentid",currentid);
-						Terminate;
-					}
-					else
-					{
-						log(s:"     Could not set weapon! \n");
+						ticker++;
+						if (ticker > 1)
+						{
+							PrintBold(s:"Conflicting weapon priority detected!\nChange this in the config options.\nPlacement number: ", d:currentid, s:"\nIn Slot: ", d:class);
+							Terminate;
+						}
 					}
 				}
-				else
-				{
-					log (s:Weaps[curslot][currentid][0], s: " Not found. ");
-				}
-				
+				Terminate;
 			}
-			
-			//else
-				//log(s:"\n");
+			else
+			{
+				for (t = slotmax; t > 0; t--)
+				{
+					if (GetUserCvar(plrnum,Weaps[curslot][t][4]) == currentid)
+					{
+						ticker++;
+						if (ticker > 1)
+						{
+							PrintBold(s:"Conflicting weapon priority detected!\nChange this in the config options.\nPlacement number: ", d:currentid, s:"\nIn Slot: ", d:class);
+							Break;
+						}
+					}
+				}
+			}
 		}
-		currentid++;
+			
 		timeloop++;
-	}*/
-}
-/*
-Script "SelectAEoDWeapon" (int class)
-{
-	if ((GetActorProperty(0,APROP_Dormant)) || (GetActorProperty(0,APROP_HEALTH) <= 0)
-		|| CheckInventory("cammin") > 0 || (GetWeapon() == "AEoDDemonMorphHand"))	Terminate;
-	
-	Switch(class)
-	{
-	Case 10:
-		if (!CheckInventory("Weapon0Count"))	Terminate;	//No weapons, no switching.
-		slotmax = GetCvar("user_AEWeaps10"); //Get the current maximum number of weapons available in that category.	
-		curslot = 9;
-		break;
-	Default:
-		Terminate;
+		currentid++;
 	}
-	
-	int index;
-	//Step 1: Clear out the IDs.
-	for (index = 0; index < 32; index++)
-	{
-		idGrab[index] = 0;
-		indexLocater[index] = 0;
-	}
-	//Step 2: Gather from 
-}*/
-
-Function int AToI (str s) //Courtesy of DaZombieKiller (or The Zombie Killer)
-{
-   str a = "";
-   int i, i2, n;
-   int l = StrLen(s);
-   for (i = 0; i < l; i++)
-   {
-      for (i2 = 0; i2 < 10; i2++)
-      {
-         a = StrParam(i:i2);
-         if (!StrCmpZan(StrParam(c:GetChar(s, i)), a))
-            n += i2 * Power(10, l - i - 1);
-      }
-   }
-   return n;
-}
-
-Function bool StrCmpZan (str s1, str s2)
-{
-   int c1 = GetChar(s1, 0);
-   int c2 = GetChar(s2, 0);
-   if (c1 == c2)
-      return false;
-   return true;
-}
-
-Function int Power (int num, int pwr)
-{
-   int n = num;
-   if (pwr == 0)
-      return 1;
-   for (int i = 1; i < pwr; i++)
-      num *= n;
-   return num;
 }
