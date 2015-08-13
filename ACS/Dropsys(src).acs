@@ -2,7 +2,7 @@
 #include "zcommon.acs"
 
 int idGrab[32];
-str Weaps[10][32][5]=
+str Weaps[10][32][6]=
 
 	{	// behold, the first 3d array I encounter in ZDoom! [Ms]
 	
@@ -388,6 +388,7 @@ Script "WeaponSlotLimitCheck" (int class) //Checks to see what the current max o
 //	Weapon Slot Customization
 //	Developed by Major Cooke
 //==============================================================================
+
 Script "SelectAEoDWeapon" (int class)
 {
 	if ((GetActorProperty(0,APROP_Dormant)) || (GetActorProperty(0,APROP_HEALTH) <= 0)
@@ -408,19 +409,23 @@ Script "SelectAEoDWeapon" (int class)
 	
 	int plrnum = PlayerNumber();
 
-	int prevslot = GetUserCvar(plrnum,"user_previousSlot");
-	int currentid = GetUserCvar(plrnum,"user_currentid");
+	
 	bool slotSwitched = false;
+	bool rep = false;
+	//str testconcat;
+	int currentid = GetUserCvar(plrnum,"user_currentid");
 	int holdnumber;
-	str testconcat;
 	int wep;
-	int cycle = 0;
-	bool rep = false;	
+	int index = 0;
 	
+	
+	//Step 1: Eliminate all IDs
 	for (int temp = 0; temp < 31; temp++)
+	{
 		idGrab[temp] = 0;
+	}
 	
-	if (class != prevslot)
+	if (class != GetUserCvar(plrnum,"user_previousSlot"))
 	{
 		slotSwitched = true;
 		SetUserCvar(plrnum,"user_previousSlot",class);
@@ -429,71 +434,112 @@ Script "SelectAEoDWeapon" (int class)
 		holdnumber = slotmax;
 	}
 	
-	str curWeap = GetWeapon();	
+	str curWeap = GetWeapon();
 	//Now, populate it with the chosen slot's weapon names and numbers.
-	for (int t = 1; t < slotmax; t++)
+	for (int t = slotmax; t > 0; t--)
 	{
 		
 		//If it's nothing, skip it.
 		if (!stricmp(Weaps[curslot][t][0],"Nothing") || 
 			!stricmp(Weaps[curslot][t][0],""))
 			continue;
-		
 		//testconcat = strparam(s:"user_",s:Weaps[curslot][t][0]);
-		wep = GetUserCvar(plrnum,Weaps[curslot][t][4]);
-		if (wep)
-		{
-			idGrab[t] = wep;
-			if (curWeap == Weaps[curslot][t][0])
-			{
-				holdnumber = wep;
-			}
-		}	
+		idGrab[t] = GetUserCvar(plrnum,Weaps[curslot][t][4]);
 		
+		if (!stricmp(curWeap,Weaps[curslot][t][0]))
+		{
+			holdnumber = idGrab[t];
+		}
 	}
 	
-	log(s:"cycle = ",i:cycle,s:"\nslotmax = ",i:slotmax,s:"\nrep = ",i:rep,s:"\ncurslot = ",i:curslot);
+	log(s:"currentid = ",i:currentid,s:"\nslotmax = ",i:slotmax,s:"\nrep = ",i:rep,s:"\ncurslot = ",i:curslot);
+	
 	//Now try to go through.
-	//
-	//If the weapon id and the cycle match, attempt to switch.
-	//currentid tracks the id + 1 in order to find the weapon, and increases if that weapon isn't available.
-	//t cycles the index through to find z.
-	if (holdnumber > slotmax)
+	if (holdnumber >= slotmax)
 		currentid = 1;
 	else
 		currentid = holdnumber + 1;
+
 	int timeloop = 0;
-	while (timeloop <= slotmax)
+	while (timeloop <= 500)
 	{
-		currentid++;
-		//Make sure the current id doesn't go over the threshold.
-		if (!rep && (currentid > slotmax))	{	currentid = 1;	rep = true;	}
-		else if (rep && (currentid > slotmax))	{	PrintBold(s:"Failed to find weapon or something broke.");	Terminate;	}
+
 		
-		//Now find it.
-		for (t = 0; t < slotmax; t++)
+		//If the id is at the end of the array, or the current id matches the hold number
+		//which happens to be at the end of the array...
+		if ((currentid > slotmax) || ((currentid >= slotmax) && (currentid == holdnumber)))
+		{	
+			currentid = 1;	//Make sure the current id doesn't go over the threshold.
+		}
+		if (currentid == holdnumber) //Otherwise, if the current id is the same as the hold number,
 		{
-			log(s:Weaps[curslot][currentid][0], s:" t = ",d:t, s:" \n");
+			currentid++;	//skip it. we don't want to re-select our current weapon.
+		}
+		//else if (rep && (currentid > slotmax))	{	PrintBold(s:"Failed to find weapon or something broke.");	Terminate;	}
+
+		//Now find it.
+		for (t = 1; t <= slotmax; t++)
+		{
+			log(s:"t = ",d:t, s:"	", s:Weaps[curslot][t][0], s:"\n");
 
 			//if the number contents of idGrab match currentid, attempt switching.
-			if ((idGrab[t] == currentid) && (curWeap != Weaps[curslot][currentid][0]))
+			if (idGrab[t] == currentid)
 			{
-				if (SetWeapon(Weaps[curslot][currentid][0]))
+				if (CheckInventory(Weaps[curslot][currentid][0]))
 				{
-					SetUserCvar(plrnum,"user_currentid",currentid);
-					Terminate;
+					log (s:Weaps[curslot][currentid][0], s: " available. ");
+					if(SetWeapon(Weaps[curslot][currentid][0]))
+					{
+						log (s:Weaps[curslot][currentid][0], 
+								s:" at currentid ", d:currentid,
+								s:" with t = ", d:t, s:"\n");
+						SetUserCvar(plrnum,"user_currentid",currentid);
+						Terminate;
+					}
+					else
+					{
+						log(s:"     Could not set weapon! \n");
+					}
 				}
 				else
 				{
-					
-					log(s:Weaps[curslot][currentid][0],s:"     setweapon failed! \n");
+					log (s:Weaps[curslot][currentid][0], s: " Not found. ");
 				}
 				
 			}
+			//else
+				//log(s:"\n");
 		}
+		currentid++;
 		timeloop++;
 	}
 }
+/*
+Script "SelectAEoDWeapon" (int class)
+{
+	if ((GetActorProperty(0,APROP_Dormant)) || (GetActorProperty(0,APROP_HEALTH) <= 0)
+		|| CheckInventory("cammin") > 0 || (GetWeapon() == "AEoDDemonMorphHand"))	Terminate;
+	
+	Switch(class)
+	{
+	Case 10:
+		if (!CheckInventory("Weapon0Count"))	Terminate;	//No weapons, no switching.
+		slotmax = GetCvar("user_AEWeaps10"); //Get the current maximum number of weapons available in that category.	
+		curslot = 9;
+		break;
+	Default:
+		Terminate;
+	}
+	
+	int index;
+	//Step 1: Clear out the IDs.
+	for (index = 0; index < 32; index++)
+	{
+		idGrab[index] = 0;
+		indexLocater[index] = 0;
+	}
+	//Step 2: Gather from 
+}*/
 
 Function int AToI (str s) //Courtesy of DaZombieKiller (or The Zombie Killer)
 {
