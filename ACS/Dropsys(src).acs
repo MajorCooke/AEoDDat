@@ -1,6 +1,7 @@
 #library "dropsys"
 #include "zcommon.acs"
 
+int idGrab[32];
 str Weaps[10][32][5]=
 
 	{	// behold, the first 3d array I encounter in ZDoom! [Ms]
@@ -209,23 +210,23 @@ str Weaps[10][32][5]=
 
 		// slot 0, super weapons
 
-		{{"Empty",				"Nothing",				"Nothing","Nothing"},
-		{"AEoDVolcanoCannon",	"VolcanoCannonDrop",	"Nothing","Nothing"},	// 6128
-		{"AEoDApocalypse",		"ApocalypseDrop",		"Nothing","Nothing"},	// 6075
-		{"AEoDBFG9000",			"BFG9000Drop",			"Nothing","Nothing"},	// 6073
-		{"AEoDBioForceGun",		"BioForceGunDrop",		"Nothing","Nothing"},	// 6058
-		{"AEoDDarkFlameStaff",	"DarkFlameStaffDrop",	"Nothing","Nothing"},	// 6087
-		{"AEoDNova",			"NovaDrop",				"Nothing","Nothing"},	// 6074
-		{"AEoDQSG",				"QSGDrop",				"Nothing","Nothing"},	// 6002
-		{"AEoDDarkMatterGun",	"DarkMatterGunDrop",	"Nothing","Nothing"},	// 6088
-		{"AEoDFusionCannon",	"FusionCannonDrop",		"Nothing","Nothing"},	// 6112
-		{"AEoDInferno",			"InfernoDrop",			"Nothing","Nothing"},	// 6111
-		{"AEoDRedeemer",		"RedeemerDrop",			"Nothing","Nothing"},	// 6071
-		{"AEoDHellHeavenHand",	"HellHeavenHandDrop",	"Nothing","Nothing"},	// 6066
-		{"AEoDHandOfGod",		"HandOfGodDrop",		"Nothing","Nothing"},	// 6124
-		{"AEoDDeathsHand",		"DeathsHandDrop",		"Nothing","Nothing"},
-		{"AEoDPenetrator",		"PenetratorDrop",		"Nothing","Nothing"},	// 6055
-		{"AEoDSoulReaper",		"SoulReaperDrop",		"Nothing","Nothing"}}
+		{{"Empty",				"Nothing",				"Nothing","Nothing", "Nothing"},
+		{"AEoDVolcanoCannon",	"VolcanoCannonDrop",	"Nothing","Nothing", "user_AEoDVolcanoCannon"},	// 6128
+		{"AEoDApocalypse",		"ApocalypseDrop",		"Nothing","Nothing", "user_AEoDApocalypse"},	// 6075
+		{"AEoDBFG9000",			"BFG9000Drop",			"Nothing","Nothing", "user_AEoDBFG9000"},	// 6073
+		{"AEoDBioForceGun",		"BioForceGunDrop",		"Nothing","Nothing", "user_AEoDBioForceGun"},	// 6058
+		{"AEoDDarkFlameStaff",	"DarkFlameStaffDrop",	"Nothing","Nothing", "user_AEoDDarkFlameStaff"},	// 6087
+		{"AEoDNova",			"NovaDrop",				"Nothing","Nothing", "user_AEoDNova"},	// 6074
+		{"AEoDQSG",				"QSGDrop",				"Nothing","Nothing", "user_AEoDQSG"},	// 6002
+		{"AEoDDarkMatterGun",	"DarkMatterGunDrop",	"Nothing","Nothing", "user_AEoDDarkMatterGun"},	// 6088
+		{"AEoDFusionCannon",	"FusionCannonDrop",		"Nothing","Nothing", "user_AEoDFusionCannon"},	// 6112
+		{"AEoDInferno",			"InfernoDrop",			"Nothing","Nothing", "user_AEoDInferno"},	// 6111
+		{"AEoDRedeemer",		"RedeemerDrop",			"Nothing","Nothing", "user_AEoDRedeemer"},	// 6071
+		{"AEoDHellHeavenHand",	"HellHeavenHandDrop",	"Nothing","Nothing", "user_AEoDHellHeavenHand"},	// 6066
+		{"AEoDHandOfGod",		"HandOfGodDrop",		"Nothing","Nothing", "user_AEoDHandOfGod"},	// 6124
+		{"AEoDDeathsHand",		"DeathsHandDrop",		"Nothing","Nothing", "user_AEoDDeathsHand"},
+		{"AEoDPenetrator",		"PenetratorDrop",		"Nothing","Nothing", "user_AEoDPenetrator"},	// 6055
+		{"AEoDSoulReaper",		"SoulReaperDrop",		"Nothing","Nothing", "user_AEoDSoulReaper"}}
 	};
 	
 //int wepidentif=0;	// this variable is never used
@@ -387,18 +388,14 @@ Script "WeaponSlotLimitCheck" (int class) //Checks to see what the current max o
 //	Weapon Slot Customization
 //	Developed by Major Cooke
 //==============================================================================
-
 Script "SelectAEoDWeapon" (int class)
 {
 	if ((GetActorProperty(0,APROP_Dormant)) || (GetActorProperty(0,APROP_HEALTH) <= 0)
 		|| CheckInventory("cammin") > 0 || (GetWeapon() == "AEoDDemonMorphHand"))	Terminate;
-	int plrnum = PlayerNumber();
+		
 	int curslot;
 	int slotmax;
-	str testconcat;
-	int wep;
-	int cycle = 0;
-	bool rep = false;
+	
 	Switch(class)
 	{
 	Case 10:
@@ -408,43 +405,93 @@ Script "SelectAEoDWeapon" (int class)
 		curslot = 9;
 		break;
 	}
+	
+	int plrnum = PlayerNumber();
+
+	int prevslot = GetUserCvar(plrnum,"user_previousSlot");
+	int currentid = GetUserCvar(plrnum,"user_currentid");
+	bool slotSwitched = false;
+	int holdnumber;
+	str testconcat;
+	int wep;
+	int cycle = 0;
+	bool rep = false;	
+	
+	for (int temp = 0; temp < 31; temp++)
+		idGrab[temp] = 0;
+	
+	if (class != prevslot)
+	{
+		slotSwitched = true;
+		SetUserCvar(plrnum,"user_previousSlot",class);
+		SetUserCvar(plrnum,"user_currentid",1);
+		currentid = 1;
+		holdnumber = slotmax;
+	}
+	
 	str curWeap = GetWeapon();	
 	//Now, populate it with the chosen slot's weapon names and numbers.
 	for (int t = 1; t < slotmax; t++)
 	{
-		testconcat = strparam(s:"user_",s:Weaps[curslot][t][0]);
-		wep = GetUserCvar(plrnum,testconcat);
-		Weaps[curslot][t][4] = wep;
-		if (curWeap == Weaps[curslot][t][0])
-			cycle = wep;
+		
+		//If it's nothing, skip it.
+		if (!stricmp(Weaps[curslot][t][0],"Nothing") || 
+			!stricmp(Weaps[curslot][t][0],""))
+			continue;
+		
+		//testconcat = strparam(s:"user_",s:Weaps[curslot][t][0]);
+		wep = GetUserCvar(plrnum,Weaps[curslot][t][4]);
+		if (wep)
+		{
+			idGrab[t] = wep;
+			if (curWeap == Weaps[curslot][t][0])
+			{
+				holdnumber = wep;
+			}
+		}	
+		
 	}
 	
 	log(s:"cycle = ",i:cycle,s:"\nslotmax = ",i:slotmax,s:"\nrep = ",i:rep,s:"\ncurslot = ",i:curslot);
 	//Now try to go through.
 	//
 	//If the weapon id and the cycle match, attempt to switch.
-	for (int z = cycle+1; z != cycle; z++)
+	//currentid tracks the id + 1 in order to find the weapon, and increases if that weapon isn't available.
+	//t cycles the index through to find z.
+	if (holdnumber > slotmax)
+		currentid = 1;
+	else
+		currentid = holdnumber + 1;
+	int timeloop = 0;
+	while (timeloop <= slotmax)
 	{
-		if (z > slotmax)
+		currentid++;
+		//Make sure the current id doesn't go over the threshold.
+		if (!rep && (currentid > slotmax))	{	currentid = 1;	rep = true;	}
+		else if (rep && (currentid > slotmax))	{	PrintBold(s:"Failed to find weapon or something broke.");	Terminate;	}
+		
+		//Now find it.
+		for (t = 0; t < slotmax; t++)
 		{
-			z = 1;
-			rep = true;
-		}
-		if (rep && (z > slotmax))
-		{
-			PrintBold(s:"Failed to find weapon or something broke.");
-			Terminate;
-		}
-		log(s:"  z = ",d:z,s:"    cycle = ",d:cycle);
-		for (t = 1; t < slotmax; t++)
-		{
-			log(s:"    t = ",d:t,s:"    slotmax = ",d:slotmax);
-			if (Weaps[curslot][t][4] == z)
-				if (SetWeapon(Weaps[curslot][t][0]))
+			log(s:Weaps[curslot][currentid][0], s:" t = ",d:t, s:" \n");
+
+			//if the number contents of idGrab match currentid, attempt switching.
+			if ((idGrab[t] == currentid) && (curWeap != Weaps[curslot][currentid][0]))
+			{
+				if (SetWeapon(Weaps[curslot][currentid][0]))
+				{
+					SetUserCvar(plrnum,"user_currentid",currentid);
 					Terminate;
+				}
 				else
-					log(s:"    setweapon failed!");
+				{
+					
+					log(s:Weaps[curslot][currentid][0],s:"     setweapon failed! \n");
+				}
+				
+			}
 		}
+		timeloop++;
 	}
 }
 
