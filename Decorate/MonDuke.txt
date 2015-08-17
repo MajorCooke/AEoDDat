@@ -23,7 +23,7 @@ Actor FWarLord 7210	// spider mastermind
 	Scale 0.8
 	Mass 5000
 	PainChance 64
-	Monster	RipLevelMin 1 
+	Monster	+DONTCORPSE RipLevelMin 1 
 	+BOSSDEATH
 	+FLOORCLIP
 	+BOSS
@@ -94,13 +94,14 @@ Actor FWarLord 7210	// spider mastermind
 		F03D C 7 A_Fall
 		F03D DE 6
 		"####" "#" 0 A_QueueCorpse
-		F03D F -1 A_KillMaster
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
+		F03D F -1 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		Stop
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
 		TNT1 A 0 Thing_SetTranslation(0,50)
-		TNT1 A 0 A_KillMaster
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		F03D A 1 A_FadeOut(0.015)
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 		TNT1 A 0 A_Stop	
@@ -111,7 +112,7 @@ Actor FWarLord 7210	// spider mastermind
 		Goto Disintegrate+7
 	Ice:
 		"####" "#" 5 A_GenericFreezeDeath
-		"####" "#" 0 A_KillMaster
+		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		"####" "#" 1 A_FreezeDeathChunks
 		Wait
 	}
@@ -186,7 +187,7 @@ Actor FDinoChaingun 7211	// chaingun guy
 	Speed 8
 	PainChance 150
 	Scale 0.8
-	Monster	RipLevelMin 1 
+	Monster	+DONTCORPSE RipLevelMin 1 
 	+FLOORCLIP
 	AttackSound "weapons/dnchaingun"
 	SeeSound "dnliztroop/active"
@@ -229,7 +230,7 @@ Actor FDinoChaingun 7211	// chaingun guy
 		Loop
 	See:
 		F09W AABBCCDD 4 A_Chase
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"Death")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"Defilement")
 		TNT1 A 0
 		Loop
 	Missile:
@@ -248,21 +249,22 @@ Actor FDinoChaingun 7211	// chaingun guy
 		F09M A 3 A_Pain
 		Goto See
 	Death:
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DeathDefile")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DeathDefile")
 		F09D A 5
 		F09D B 5 A_Scream
 		F09D C 5 A_Fall
 		F09D DE 5
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
 		F09D F -1
 		Stop
 	DeathDefile:
-		TNT1 A 0 A_Die
+		Defilement:
 		TNT1 A 0 A_NoBlocking
 		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
 		Goto XDeath+2
 	XDeath:
 		TNT1 A 0
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"Death")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"Defilement")
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 AAAAAAAAAAAA 0 A_TossGib
 		TNT1 A 0 A_CustomMissile("BloodGib3",random(20,50),0,random(0,359))
@@ -423,7 +425,7 @@ Actor FDinoBlaster 7212		// zombieman
 	Speed 8
 	PainChance 200
 	Scale 0.72
-	Monster	RipLevelMin 1
+	Monster	+DONTCORPSE RipLevelMin 1
 	+FLOORCLIP
 	AttackSound "dnmonsters/fire"
 	SeeSound "dnliztroop/active"
@@ -470,7 +472,7 @@ Actor FDinoBlaster 7212		// zombieman
 		TNT1 A 0 A_JumpIfHealthLower(15,"Knees")
 	Walk:
 		F06W AABBCCDD 4 A_Chase
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"Death")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"Defilement")
 		TNT1 A 0
 		Loop
 	Missile:
@@ -506,26 +508,27 @@ Actor FDinoBlaster 7212		// zombieman
 		F06D F 5
 		Goto See
 	IReallyDied:
-		TNT1 A 0 A_Die
+		Defilement:
 		Goto Death
 	Death:
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DeathDefile")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DeathDefile")
 		TNT1 A 0 A_JumpIfInventory("KneeToken2",1,2)
 		TNT1 A 0 A_JumpIfInventory("KneeToken",1,3)
 		F06D A 5
 		F06D B 5 A_Scream
 		F06D C 5 A_Fall
 		F06D D 5
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
 		F06D E -1
 		Stop
 	DeathDefile:
-		TNT1 A 0 A_Die
+		Defilement:
 		TNT1 A 0 A_NoBlocking
 		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
 		Goto XDeath+2
 	XDeath:
 		TNT1 A 0
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"Death")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"Defilement")
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 AAAAAAAAAAAAA 0 A_TossGib
 		TNT1 A 0 A_CustomMissile("BloodGib3",random(20,50),0,random(0,359))
@@ -701,7 +704,7 @@ Actor FOverLord 7213	// cyberdemon
 	Speed 16
 	Scale 0.8
 	PainChance 32
-	Monster	RipLevelMin 1 
+	Monster	+DONTCORPSE RipLevelMin 1 
 	+FLOORCLIP
 	+BOSS
 	+BOSSDEATH
@@ -759,13 +762,14 @@ Actor FOverLord 7213	// cyberdemon
 		F04D C 7 A_Fall
 		F04D DEFGHI 4
 		"####" "#" 0 A_QueueCorpse
-		F04D J -1 A_KillMaster
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
+		F04D J -1 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		Stop
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
 		TNT1 A 0 Thing_SetTranslation(0,50)
-		TNT1 A 0 A_KillMaster
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		F04P A 1 A_FadeOut(0.015)
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 		TNT1 A 0 A_Stop	
@@ -776,7 +780,7 @@ Actor FOverLord 7213	// cyberdemon
 		Goto Disintegrate+7
 	Ice:
 		"####" "#" 5 A_GenericFreezeDeath
-		"####" "#" 0 A_KillMaster
+		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		"####" "#" 1 A_FreezeDeathChunks
 		Wait
 	}
@@ -848,7 +852,7 @@ Actor FDNFinalBoss 7214		// cyberdemon
 	Scale 0.8
 	Mass 7000
 	PainChance 10
-	Monster	RipLevelMin 1 
+	Monster	+DONTCORPSE RipLevelMin 1 
 	+BOSSDEATH
 	+FLOORCLIP
 	+BOSS
@@ -965,13 +969,14 @@ Actor FDNFinalBoss 7214		// cyberdemon
 		F05D E 6 A_Fall
 		F05D FGH 5
 		"####" "#" 0 A_QueueCorpse
-		F05D I -1 A_KillMaster
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
+		F05D I -1 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		Stop
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
 		TNT1 A 0 Thing_SetTranslation(0,50)
-		TNT1 A 0 A_KillMaster
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		F05D A 1 A_FadeOut(0.015)
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 		TNT1 A 0 A_Stop	
@@ -982,7 +987,7 @@ Actor FDNFinalBoss 7214		// cyberdemon
 		Goto Disintegrate+7
 	Ice:
 		"####" "#" 5 A_GenericFreezeDeath
-		"####" "#" 0 A_KillMaster
+		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		"####" "#" 1 A_FreezeDeathChunks
 		Wait
 	}
@@ -1058,7 +1063,7 @@ Actor FMutantMother 7215	// spider mastermind
 	Speed 16
 	Scale 0.8
 	PainChance 32
-	Monster	RipLevelMin 1 
+	Monster	+DONTCORPSE RipLevelMin 1 
 	BloodColor Green
 	+BOSSDEATH
 	+FLOORCLIP
@@ -1152,13 +1157,14 @@ Actor FMutantMother 7215	// spider mastermind
 		F02D C 7 A_Fall
 		F02D DEFGHI 4
 		"####" "#" 0 A_QueueCorpse
-		F02D J -1 A_KillMaster
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
+		F02D J -1 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		Stop
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
 		TNT1 A 0 Thing_SetTranslation(0,50)	
-		TNT1 A 0 A_KillMaster
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		F02N A 1 A_FadeOut(0.015)
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 		TNT1 A 0 A_Stop	
@@ -1169,7 +1175,7 @@ Actor FMutantMother 7215	// spider mastermind
 		Goto Disintegrate+7
 	Ice:
 		"####" "#" 5 A_GenericFreezeDeath
-		"####" "#" 0 A_KillMaster
+		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		"####" "#" 1 A_FreezeDeathChunks
 		Wait
 	}
@@ -1264,7 +1270,7 @@ Actor FDNPig 7216	// shotgun guy
 	PainChance 200
 	Mass 200
 	Scale 0.8
-	Monster	RipLevelMin 1 
+	Monster	+DONTCORPSE RipLevelMin 1 
 	+FLOORCLIP
 	AttackSound "weapons/shtgn2fr"
 	SeeSound "dnpig/sight"
@@ -1308,7 +1314,7 @@ Actor FDNPig 7216	// shotgun guy
 		Loop
 	See:
 		F08W AABBCCDD 4 A_Chase
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,2)
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,2)
 		TNT1 A 0
 		Loop
 		TNT1 A 0 A_Jump(15,"Death")
@@ -1331,20 +1337,21 @@ Actor FDNPig 7216	// shotgun guy
 		F08D A 3 A_Pain
 		Goto See
 	Death:
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,7)
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,7)
 		F08D A 5
 		F08D B 5 A_Scream
 		F08D C 5 A_Fall
 		F08D DE 5
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
 		F08D F -1
 		Stop
-		TNT1 A 0 A_Die
+		Defilement:
 		TNT1 A 0 A_NoBlocking
 		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
 		Goto XDeath+2
 	XDeath:
 		TNT1 A 0
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"Death")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"Defilement")
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 AAAAAAAAAAAAAAA 0 A_TossGib
 		PLAY A 0 A_CustomMissile("BloodGib2",random(20,50),0,random(0,359))
@@ -1391,7 +1398,7 @@ Actor FOctoBrain 7217	// cacodemon
 	Meleedamage 4
 	REACTIONTIME 8 
 	Scale 0.75
-	Monster	RipLevelMin 1
+	Monster	+DONTCORPSE RipLevelMin 1
 	+NOGRAVITY
 	+FLOAT
 	SeeSound "dnbrains/sight"
@@ -1436,7 +1443,7 @@ Actor FOctoBrain 7217	// cacodemon
 		Loop 
 	See: 
 		F11W AABBCCBB 4 A_Chase 
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,2)
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,2)
 		TNT1 A 0
 		Loop
 		TNT1 A 0 A_Jump(5,"Death")
@@ -1455,20 +1462,21 @@ Actor FOctoBrain 7217	// cacodemon
 		Goto See 
 	Death: 
 		TNT1 A 0
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,7)
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,7)
 		F11D A 8 
 		F11D B 8 A_Scream 
 		F11D CD 8 
 		F11D E 8 A_Fall 
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
 		F11D F -1 A_SetFloorClip
 		Stop 
-		TNT1 A 0 A_Die
+		Defilement:
 		TNT1 A 0 A_NoBlocking
 		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
 		Goto XDeath+2
 	XDeath:
 		TNT1 A 0
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"Death")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"Defilement")
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 AAAAAAAAAAAAAAAA 0 A_TossGib
 		PLAY A 0 A_CustomMissile("BloodGib2",random(20,50),0,random(0,359))
@@ -1548,7 +1556,7 @@ Actor FDukeNukem 7218	// baron
 	PainChance 64
 	Mass 200
 	Scale 0.67
-	Monster	RipLevelMin 1 
+	Monster	+DONTCORPSE RipLevelMin 1 
 	+BOSSDEATH
 	+FLOORCLIP
 	+LONGMELEERANGE
@@ -1644,11 +1652,12 @@ Actor FDukeNukem 7218	// baron
 		F07D C 5 A_Fall
 		F07D DE 5
 		"####" "#" 0 A_QueueCorpse
-		F07D F -1 A_KillMaster
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
+		F07D F -1 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		Stop
 	Ice:
 		F07D A 5 A_GenericFreezeDeath
-		F07D A 0 A_KillMaster
+		F07D A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		F07D A 1 A_FreezeDeathChunks
 		Wait
 	XDeath:
@@ -1658,13 +1667,13 @@ Actor FDukeNukem 7218	// baron
 		TNT1 A 0 A_CustomMissile("DukeNukemArm",random(20,50),0,random(0,359))
 		TNT1 AA 0 A_CustomMissile("DukeNukemLeg",random(20,50),0,random(0,359))
 		TNT1 A 1 A_Fall
-		TNT1 A 1 A_KillMaster
+		TNT1 A 1 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		Stop
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
 		TNT1 A 0 Thing_SetTranslation(0,50)	
-		TNT1 A 0 A_KillMaster
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		F07D A 1 A_FadeOut(0.015)
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 		TNT1 A 0 A_Stop	
@@ -1808,7 +1817,7 @@ Actor FDNMutant 7219	// revenant
 	Mass 450
 	PainChance 128
 	Scale 0.8
-	Monster	RipLevelMin 1 
+	Monster	+DONTCORPSE RipLevelMin 1 
 	+FLOORCLIP
 	BloodColor Green
 	SeeSound "dnmutant/sight"
@@ -1853,7 +1862,7 @@ Actor FDNMutant 7219	// revenant
 		Loop
 	See:
 		F01W AABBCCDD 4 A_Chase
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,2)
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,2)
 		TNT1 A 0
 		Loop
 		TNT1 A 0 A_Jump(5,"Death")
@@ -1872,19 +1881,20 @@ Actor FDNMutant 7219	// revenant
 		F01D A 3 A_Pain
 		Goto See
 	Death:
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,9)
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,9)
 		F01D C 5
 		F01D D 5 A_Scream
 		F01D E 5 A_Fall
 		F01D FGHI 5
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
 		F01D J -1
 		Stop
-		TNT1 A 0 A_Die
+		Defilement:
 		TNT1 A 0 A_NoBlocking
 		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
 		Goto XDeathBlood
 	XDeath:
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"Death")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"Defilement")
 		TNT1 A 0 A_Jump(64,"XDeathBlood")
 		TNT1 AAAA 0 A_SpawnItemEx("GreenGib",0,0,random(1,5),0,0,0,0,32)
 		TNT1 AAAA 0 A_TossGib
@@ -1932,7 +1942,7 @@ Actor FFatRocketer 7220		// pain elemental
 	Meleedamage 3
 	REACTIONTIME 8 
 	Scale 0.75
-	Monster	RipLevelMin 1
+	Monster	+DONTCORPSE RipLevelMin 1
 	+NOGRAVITY
 	+FLOAT
 	+MISSILEEVENMORE
@@ -1997,6 +2007,7 @@ Actor FFatRocketer 7220		// pain elemental
 		F12D A 5 A_Scream 
 		F12D B 5 A_Fall 
 		F12D CDEFG 4
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
 		F12D H -1 A_SetFloorClip
 		Stop 
 	XDeath:
@@ -2046,7 +2057,7 @@ Actor FBrassCan 7221	// lost soul
 	Damage 0
 	Scale 0.5
 	PainChance 196
-	Monster	RipLevelMin 1
+	Monster	+DONTCORPSE RipLevelMin 1
 	+NOBLOOD
 	+FLOAT
 	+NOGRAVITY
@@ -2158,7 +2169,7 @@ Actor FDukeNukemEnhanced 7222	// cyberdemon
 	PainChance 64
 	Mass 200
 	Scale 0.67
-	Monster	RipLevelMin 1 
+	Monster	+DONTCORPSE RipLevelMin 1 
 	+BOSSDEATH
 	+BOSS
 	+NORADIUSDMG
@@ -2294,7 +2305,8 @@ Actor FDukeNukemEnhanced 7222	// cyberdemon
 		F07D C 5 A_Fall
 		F07D DE 5
 		"####" "#" 0 A_QueueCorpse
-		F07D F -1 A_KillMaster
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
+		F07D F -1 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		Stop
 	XDeath:
 		TNT1 A 0 A_PlaySound("other/gibdeath")
@@ -2302,14 +2314,14 @@ Actor FDukeNukemEnhanced 7222	// cyberdemon
 		TNT1 A 0 A_CustomMissile("DukeNukemTorso",random(20,50),0,random(0,359))
 		TNT1 A 0 A_CustomMissile("DukeNukemArm",random(20,50),0,random(0,359))
 		TNT1 AA 0 A_CustomMissile("DukeNukemLeg",random(20,50),0,random(0,359))
-		TNT1 A 0 A_KillMaster
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		TNT1 A 1 A_Fall
 		Stop
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
 		TNT1 A 0 Thing_SetTranslation(0,50)
-		TNT1 A 0 A_KillMaster
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		F07D A 1 A_FadeOut(0.015)
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 		TNT1 A 0 A_Stop	
@@ -2320,7 +2332,7 @@ Actor FDukeNukemEnhanced 7222	// cyberdemon
 		Goto Disintegrate+7
 	Ice:
 		"####" "#" 5 A_GenericFreezeDeath
-		"####" "#" 0 A_KillMaster
+		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		"####" "#" 1 A_FreezeDeathChunks
 		Wait
 	}
@@ -2346,7 +2358,7 @@ Actor Marauder 7223	// hell knight
 	Scale 0.6
 	Mass 200
 	PainChance 128
-	Monster	RipLevelMin 1 
+	Monster	+DONTCORPSE RipLevelMin 1 
 	+FLOORCLIP
 	SeeSound "scrag/sight"
 	PainSound "scrag/pain"
@@ -2389,7 +2401,7 @@ Actor Marauder 7223	// hell knight
 		Loop
 	See:
 		F03W AABBCCDD 4 A_Chase
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,2)
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,2)
 		TNT1 A 0
 		Loop
 		TNT1 A 0 A_Jump(5,"Death")
@@ -2413,18 +2425,19 @@ Actor Marauder 7223	// hell knight
 		F03D A 3 A_Pain
 		Goto See
 	Death:
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,7)
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"Defilement")
 		F03D B 6 A_Scream
 		F03D C 7 A_Fall
 		F03D DE 6
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
 		F03D F -1
 		Stop
-		TNT1 A 0 A_Die
+		Defilement:
 		TNT1 A 0 A_NoBlocking
 		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
 		Goto XDeathBlood
 	XDeath:
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"Death")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"Defilement")
 		TNT1 A 0 A_Jump(40,"XDeathBlood")
 		TNT1 AAAAAAAAA 0 A_TossGib
 		Goto Death
@@ -2470,7 +2483,7 @@ Actor DinoHyperBlaster 7224	// arachnotron
 	Speed 8
 	PainChance 64
 	Scale 0.8
-	Monster	RipLevelMin 1 
+	Monster	+DONTCORPSE RipLevelMin 1 
 	+FLOORCLIP
 	SeeSound "BigFallenOne/Attack"
 	PainSound "BigFallenOne/Pain"
@@ -2524,7 +2537,8 @@ Actor DinoHyperBlaster 7224	// arachnotron
 		F09D B 5 A_Scream
 		F09D C 5 A_Fall
 		F09D DE 5
-		F09D F -1 A_KillMaster
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
+		F09D F -1 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		Stop
 	XDeath:
 		TNT1 A 0 A_PlaySound("other/gibdeath")
@@ -2536,7 +2550,7 @@ Actor DinoHyperBlaster 7224	// arachnotron
 		TNT1 A 0 A_CustomMissile("LizardCGunnerHead",random(20,50),0,random(0,359))
 		TNT1 A 0 A_CustomMissile("LizardCGunnerArm",random(20,50),0,random(0,359))
 		TNT1 AA 0 A_CustomMissile("LizardCGunnerLeg",random(20,50),0,random(0,359))
-		TNT1 A 0 A_KillMaster
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		TNT1 A 1 A_Fall
 		Stop
 	Raise:
@@ -2546,7 +2560,7 @@ Actor DinoHyperBlaster 7224	// arachnotron
 	Death.PlasmaDisint:
 	Disintegrate:
 		TNT1 A 0 Thing_SetTranslation(0,50)	
-		TNT1 A 0 A_KillMaster
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		F09M A 1 A_FadeOut(0.015)
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 		TNT1 A 0 A_Stop	
@@ -2557,7 +2571,7 @@ Actor DinoHyperBlaster 7224	// arachnotron
 		Goto Disintegrate+7
 	Ice:
 		"####" "#" 5 A_GenericFreezeDeath
-		"####" "#" 0 A_KillMaster
+		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		"####" "#" 1 A_FreezeDeathChunks
 		Wait
 	}
@@ -2608,7 +2622,7 @@ Actor LizardTrooper2 7225	// doomimp
 	Speed 8
 	PainChance 200 
 	Scale 0.72
-	Monster	RipLevelMin 1
+	Monster	+DONTCORPSE RipLevelMin 1
 	+FLOORCLIP
 	-FRIGHTENED
 	+DONTSPLASH
@@ -2657,7 +2671,7 @@ Actor LizardTrooper2 7225	// doomimp
 		Goto Spawn+3
 	See:
 		ASCA AABBCCDD 4 A_ExtChase(0,1)
-	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,2)
+	TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,2)
 	TNT1 A 0
 	Loop
 	TNT1 A 0 A_Jump(15,"Death")
@@ -2711,21 +2725,21 @@ Actor LizardTrooper2 7225	// doomimp
 		ASCA A 3 A_Pain
 		Goto See
 	Death:
-	Death:
-	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,6)
+	TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,6)
 		ASCA K 5
 		ASCA L 5 A_Scream
 		ASCA M 5 A_Fall
 		ASCA N 5
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
 		ASCA O -1
 		Stop
-	TNT1 A 0 A_Die
+	Defilement:
 	TNT1 A 0 A_NoBlocking
 	TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
 	Goto XDeath+2
 	XDeath:
 	TNT1 A 0
-	TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"Death")
+	TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"Defilement")
 	TNT1 A 0 A_PlaySound("other/gibdeath")
 	TNT1 AAAAAAAAAAAAA 0 A_TossGib
 	TNT1 A 0 A_CustomMissile("BloodGib3",random(20,50),0,random(0,359))
@@ -2800,7 +2814,7 @@ Actor FDNMutant2 	// fatso
 	Mass 450
 	PainChance 40
 	Scale 0.66
-	Monster	RipLevelMin 1 
+	Monster	+DONTCORPSE RipLevelMin 1 
 	+FLOORCLIP
 	BloodColor Green
 	SeeSound "dnmutant/sight"
@@ -2847,13 +2861,12 @@ Actor FDNMutant2 	// fatso
 		Loop
 	See:
 		F01W AABBCCDD 4 A_Chase
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDecide")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDecide")
 		Loop
 	DefileDecide:
-		TNT1 A 0 A_Jump(15,1)
+		TNT1 A 0 A_Jump(15,"Defilement")
 		Goto See
-		TNT1 A 0 A_Die
-		Wait
+
 	Melee:
 	F01M A 6 A_FaceTarget
 	F01M BC 6 A_MeleeAttack
@@ -2872,19 +2885,20 @@ Actor FDNMutant2 	// fatso
 		F01D A 3 A_Pain
 		Goto See
 	Death:
-	  TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDeath")
+	  TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDeath")
 		F01D C 5
 		F01D D 5 A_Scream
 		F01D E 5 A_Fall
 		F01D FGHI 5
-		F01D J -1 A_KillMaster
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
+		F01D J -1 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		Stop
 	DefileDeath:
-		TNT1 A 0 A_Die
+		Defilement:
 		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
 		Goto XDeathBlood
 	XDeath:
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDeath")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDeath")
 		TNT1 A 0 A_Jump(64,"XDeathBlood")
 		TNT1 AAAA 0 A_SpawnItemEx("GreenGib",0,0,random(1,5),0,0,0,0,32)
 		TNT1 AAAA 0 A_TossGib
@@ -2893,7 +2907,7 @@ Actor FDNMutant2 	// fatso
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 AA 0 A_SpawnItemEx("GreenGibSp",0,0,random(20,40),0,0,0,0,32)
 		TNT1 AAAAAA 0 A_TossGib
-		TNT1 A 0 A_KillMaster
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		TNT1 A 1 A_Fall
 		Stop
 	Raise:
@@ -2903,7 +2917,7 @@ Actor FDNMutant2 	// fatso
 	Death.PlasmaDisint:
 	Disintegrate:
 		TNT1 A 0 Thing_SetTranslation(0,50)	
-		TNT1 A 0 A_KillMaster
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		F01D A 1 A_FadeOut(0.015)
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 		TNT1 A 0 A_Stop	
@@ -2914,7 +2928,7 @@ Actor FDNMutant2 	// fatso
 		Goto Disintegrate+7
 	Ice:
 		"####" "#" 5 A_GenericFreezeDeath
-		"####" "#" 0 A_KillMaster
+		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		"####" "#" 1 A_FreezeDeathChunks
 		Wait
 	}
@@ -2984,7 +2998,7 @@ Actor LizardGuardian 	// demon
 	Speed 16
 	Scale 0.35
 	PainChance 64
-	Monster	RipLevelMin 1 
+	Monster	+DONTCORPSE RipLevelMin 1 
 	+FLOORCLIP
 	SeeSound "FatDemon/Attack"
 	PainSound "FatDemon/Pain"
@@ -3031,13 +3045,11 @@ Actor LizardGuardian 	// demon
 		Loop
 	See:
 		F04W AABBCCDD 4 A_Chase
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDecide")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDecide")
 		Loop
 	DefileDecide:
-		TNT1 A 0 A_Jump(15,1)
+		TNT1 A 0 A_Jump(15,"Defilement")
 		Goto See
-		TNT1 A 0 A_Die
-		Wait
 	Missile:
 		TNT1 A 0 A_JumpIfCloser(270,"Continue")
 		F04M B 6
@@ -3054,21 +3066,23 @@ Actor LizardGuardian 	// demon
 		F04P A 3 A_Pain
 		Goto See
 	Death:
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDeath")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDeath")
 		F04D A 6
 		F04D B 6 A_Scream
 		F04D C 7 A_Fall
 		F04D DEFGHI 4
-		F04D J -1 A_KillMaster
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
+		F04D J -1 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		Stop
+	Defilement:
 	DefileDeath:
-		TNT1 A 0 A_Die
+		Defilement:
 		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
 		Goto XDeathBlood
 
 	XDeath:
 	XDeathBlood:
-		//TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDeath")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDeath")
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,1)
 		TNT1 AAAAAAA 0 A_TossGib
@@ -3123,7 +3137,7 @@ Actor DNBigMutant 	// baron
 	Speed 16
 	Scale 0.56
 	PainChance 40
-	Monster	RipLevelMin 1 
+	Monster	+DONTCORPSE RipLevelMin 1 
 	BloodColor Green
 	+BOSSDEATH
 	+FLOORCLIP
@@ -3187,13 +3201,14 @@ Actor DNBigMutant 	// baron
 		F02D B 6 A_Scream
 		F02D C 7 A_Fall
 		F02D DEFGHI 4
-		F02D J -1 A_KillMaster
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
+		F02D J -1 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		Stop
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
 		TNT1 A 0 Thing_SetTranslation(0,50)
-		TNT1 A 0 A_KillMaster
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		F02N A 1 A_FadeOut(0.015)
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 		TNT1 A 0 A_Stop	
@@ -3204,7 +3219,7 @@ Actor DNBigMutant 	// baron
 		Goto Disintegrate+7
 	Ice:
 		"####" "#" 5 A_GenericFreezeDeath
-		"####" "#" 0 A_KillMaster
+		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		"####" "#" 1 A_FreezeDeathChunks
 		Wait
 	}
@@ -3277,7 +3292,7 @@ Actor UbberLizard		//archvile
 	Speed 8
 	PainChance 64
 	Scale 0.78
-	Monster	RipLevelMin 1
+	Monster	+DONTCORPSE RipLevelMin 1
 	+FLOORCLIP
 	SeeSound "diablo2/bloodlord/attack"
 	PainSound "diablo2/bloodlord/pain"
@@ -3369,11 +3384,12 @@ Actor UbberLizard		//archvile
 		F06D B 5 A_Scream
 		F06D C 5 A_Fall
 		F06D D 5
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
 		F06D E -1
 		Stop
 	XDeath:
 		TNT1 A 0
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"Death")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"Defilement")
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 AAAAAAAAAAAAA 0 A_TossGib
 		TNT1 A 0 A_CustomMissile("BloodGib3",random(20,50),0,random(0,359))

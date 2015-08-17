@@ -28,7 +28,7 @@ ACTOR HTC2Fluffy	//spider mastermind
 	Radius 25
 	Height 56
 	Speed 40
-	+DONTTHRUST
+	Mass 8000
 	PainChance 80
 	Monster	RipLevelMin 1
 	+FLOORCLIP
@@ -63,15 +63,6 @@ ACTOR HTC2Fluffy	//spider mastermind
 	DamageFactor "AEMagic", 1.25
 	States 
 	{
-	Pain.Chaos:
-		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
-		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
-		Goto See
-	Pain.ChaosExpl1:
-		TNT1 A 0 A_ClearTarget
-		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
-		Goto Spawn
-	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
 	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
 	
 	Spawn:
@@ -139,13 +130,13 @@ ACTOR HTC2Fluffy	//spider mastermind
 		TNT1 AAA 0 A_SpawnItemEx("SpecialExploSpawner",0,0,0,0,0,0,0,32)
 		TNT1 AAAAAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,33)
 		TNT1 A 35
-		TNT1 A 0 A_KillMaster
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		Stop
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
 		"####" "#" 0 Thing_SetTranslation(0,50)
-		"####" "#" 0 A_KillMaster
+		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		"####" "#" 1 A_FadeOut(0.015)
 		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
 		"####" "#" 0 A_Stop    
@@ -250,15 +241,6 @@ ACTOR HTC2MiniFluffy //demon
     HitObituary "%o was unlucky enough to have the last bite on him come from miniature Fluffy."
     States 
     {
-	Pain.Chaos:
-		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
-		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
-		Goto See
-	Pain.ChaosExpl1:
-		TNT1 A 0 A_ClearTarget
-		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
-		Goto Spawn
-	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
 	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
 	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
 	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
@@ -275,13 +257,8 @@ ACTOR HTC2MiniFluffy //demon
 		"####" "#" 0 A_TransferPointer(AAPTR_MASTER,AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_TARGET)
 	Chase2:
 		N016 ABCCB 1 A_Chase
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDecide")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDecide")
 		GoTo Chasing
-	DefileDecide:
-		TNT1 A 0 A_Jump(10,1)
-		Goto Chasing
-		TNT1 A 0 A_Die
-		Wait
     Pain:
 	  N016 D 4 A_Pain
 	  N016 D 4
@@ -314,7 +291,7 @@ ACTOR HTC2MiniFluffy //demon
 		"####" "#" 0 A_DamageSelf(666)
 		Goto Pain
 	Death:
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDeath")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDeath")
    		TNT1 A 0 A_Fall
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 A 0 A_SpawnItemEx("SpecialExploSpawner",0,0,0,0,0,0,0,32)//A_SpawnItemEx("specialexplospawner",0,0,0,0,0,0,0,32)
@@ -380,15 +357,6 @@ ACTOR HTC2JumpingSkull //zombieman
 	DamageFactor "AEBullet", 1.5
     States
     {
-	Pain.Chaos:
-		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
-		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
-		Goto See
-	Pain.ChaosExpl1:
-		TNT1 A 0 A_ClearTarget
-		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
-		Goto Spawn
-	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
 	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
 	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
 	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
@@ -399,13 +367,8 @@ ACTOR HTC2JumpingSkull //zombieman
         Loop
 	See:
 		N024 ABCB 2 A_Chase
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDecide")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDecide")
 		Loop
-	DefileDecide:
-		TNT1 A 0 A_Jump(10,1)
-		Goto See
-		TNT1 A 0 A_Die
-		Wait
     Pain:
         N024 B 4 A_Pain
         Goto See
@@ -420,7 +383,7 @@ ACTOR HTC2JumpingSkull //zombieman
 		"####" "#" 0 A_DamageSelf(666)
 		Goto Pain
     Death:
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDeath")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDeath")
    		TNT1 A 0 A_Fall
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 AAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
@@ -484,15 +447,6 @@ ACTOR HTC2GhostSkull : HTC2JumpingSkull //shotguy
 	DamageFactor "PlasmaDisint", 1.25
     States
     {
-	Pain.Chaos:
-		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
-		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
-		Goto See
-	Pain.ChaosExpl1:
-		TNT1 A 0 A_ClearTarget
-		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
-		Goto Spawn
-	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
 	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
 	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
 	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
@@ -616,15 +570,6 @@ ACTOR HTC2Bingo	//Revenant
  	DamageFactor "PlasmaDisint", 1.25
 	States 
 	{
-	Pain.Chaos:
-		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
-		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
-		Goto See
-	Pain.ChaosExpl1:
-		TNT1 A 0 A_ClearTarget
-		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
-		Goto Spawn
-	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
 	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
 	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
 	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
@@ -648,13 +593,8 @@ ACTOR HTC2Bingo	//Revenant
 		N012 A 2 A_CustomMissile("RFlame", -8, 0, 0, 1)  
 		N012 A 2   A_Chase
 		Goto See
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDecide")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDecide")
 		Goto See
-	DefileDecide:
-		TNT1 A 0 A_Jump(10,1)
-		Goto See
-		TNT1 A 0 A_Die
-		Wait
 	Missile:   
 		N012 A 0 A_Jump(104,9)
 		N012 A 0 A_Jump(136,2) 
@@ -684,7 +624,7 @@ ACTOR HTC2Bingo	//Revenant
 		"####" "#" 0 A_DamageSelf(666)
 		Goto Pain
 	Death:
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDeath")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDeath")
 		TNT1 A 0 A_Fall
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 A 0 A_SpawnItemEx("SpecialExploSpawner",0,0,0,0,0,0,0,32)//A_SpawnItemEx("specialexplospawner",0,0,0,0,0,0,0,32)
@@ -758,16 +698,7 @@ ACTOR HTC2TinyBingo	//Zombieman
 	DamageFactor "Plasma", 1.25
 	DamageFactor "PlasmaDisint", 1.25
 	States 
-	{ 
-	Pain.Chaos:
-	TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
-	TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
-	Goto See
-	Pain.ChaosExpl1:
-	TNT1 A 0 A_ClearTarget
-	TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
-	Goto Spawn
-	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
+	{
 	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
 	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
 	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
@@ -782,13 +713,8 @@ ACTOR HTC2TinyBingo	//Zombieman
 		"####" "#" 0 A_TransferPointer(AAPTR_MASTER,AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_TARGET)
 	Chase2:
 		N012 A 2 A_Chase
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDecide")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDecide")
 		Goto See
-	DefileDecide:
-		TNT1 A 0 A_Jump(10,1)
-		Goto See
-		TNT1 A 0 A_Die
-		Wait
 	Missile:   
 		N012 A 4 A_FaceTarget 
 		N012 A 2 Bright A_CustomMissile("MyBall", 12, -4, 0, 1)
@@ -802,7 +728,7 @@ ACTOR HTC2TinyBingo	//Zombieman
 		N012 A 4  A_Pain 
 		Goto See 
 	Death:
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDeath")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDeath")
 		TNT1 A 0 A_Fall
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 A 0 //A_SpawnItemEx("specialexplospawner",0,0,0,0,0,0,0,32)
@@ -848,10 +774,11 @@ actor HTC2DraedicClownGhost	//Demon
 	Radius 20
 	Height 48
 	PainChance 128
-	Mass 0x7FFFFFFF
+	Mass 500
 	Meleedamage 1 
 	REACTIONTIME 8 
 	Monster	RipLevelMin 1
+	-SOLID
 	+DONTHARMCLASS
 	+FLOORCLIP  +NOGRAVITY +FLOAT +FloatBob
 	Species "ClownGhost"
@@ -883,16 +810,7 @@ actor HTC2DraedicClownGhost	//Demon
 	DamageFactor "Plasma", 1.25
 	DamageFactor "PlasmaDisint", 1.25
 	States 
-	{ 
-	Pain.Chaos:
-		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
-		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
-		Goto See
-	Pain.ChaosExpl1:
-		TNT1 A 0 A_ClearTarget
-		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
-		Goto Spawn
-	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
+	{
 	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
 	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
 	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
@@ -919,6 +837,7 @@ actor HTC2DraedicClownGhost	//Demon
 		N023 CCCCCCC 2 A_SetScale(ScaleX-0.1)
 		N023 C 0 //A_SetInvulnerable
 		N023 CC 1 A_SetScale(ScaleX-0.1)
+		TNT1 A 0 A_Stop
 		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_Chase("","",CHF_NOPLAYACTIVE)
 		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 1 A_Chase("","",CHF_NOPLAYACTIVE)
 		N023 CC 1 A_SetScale(ScaleX+0.1)
@@ -1001,11 +920,12 @@ Actor HTC2VileClownGhost	//Cacodemon
 	Radius 16
 	Height 48
 	PainChance 128
-	Mass 0x7FFFFFFF
+	Mass 500
 	Meleedamage 3 
 	REACTIONTIME 8 
 	Monster	RipLevelMin 1
 	Species "ClownGhost2"
+	-SOLID
 	+FLOORCLIP 
 	+NOGRAVITY 
 	+FLOAT 
@@ -1039,16 +959,7 @@ Actor HTC2VileClownGhost	//Cacodemon
 	DamageFactor "Plasma", 1.25
 	DamageFactor "PlasmaDisint", 1.25
 	States 
-	{ 
-	Pain.Chaos:
-		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
-		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
-		Goto See
-	Pain.ChaosExpl1:
-		TNT1 A 0 A_ClearTarget
-		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
-		Goto Spawn
-	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
+	{
 	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
 	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
 	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
@@ -1158,38 +1069,15 @@ actor HTC2Bulby	//Cacodemon
 	DamageFactor "AEPoison", 0.75
 	DamageFactor "AEMagic", 0.75
 	States 
-	{ 
-	Pain.Chaos:
-		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
-		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
-		Goto See
-	Pain.ChaosExpl1:
-		TNT1 A 0 A_ClearTarget
-		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
-		Goto Spawn
-	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
+	{
 	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
 	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
 	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
 	Pain.Defile:		TNT1 A 0 A_GiveInventory("DefileCheck",1)			Goto See
 	Spawn: 
-		N021 A 2 A_UnSetShootable
-		N021 A 2 A_LookEx(0,0,0,0,0,"Sight")
-      	Loop
 	Idle:
 		N021 G 2 A_Look
 		Loop
-	Sight:
-		NA21 A 16
-		NA21 B 7
-		NA21 C 7
-		N021 A 6 
-		N021 B 6 
-		N021 C 5
-		N021 D 5 
-		N021 E 4
-		N021 F 2 A_NoGravity 
-		N021 F 2 A_SetShootable
 	See:
 		"####" "#" 0 A_JumpIfInventory("PennywiseMaster",1,1,AAPTR_MASTER)
 		Goto Chase2
@@ -1266,7 +1154,7 @@ actor HTC2MegaBulby : HTC2Bulby	//Mancubus
 	Mass 400
 	Meleedamage 1 
 	Scale 1.5
-	Monster	RipLevelMin 1
+	Monster +DONTCORPSE	RipLevelMin 1
 	+FLOORCLIP +FLOAT +NORADIUSDMG +NOGRAVITY +FloatBob //+NOTARGET
 	+BOSS
 	+DONTMORPH
@@ -1293,16 +1181,7 @@ actor HTC2MegaBulby : HTC2Bulby	//Mancubus
 	DamageFactor "AEPoison", 0.75
 	DamageFactor "AEMagic", 0.75
 	States 
-	{ 
-	Pain.Chaos:
-		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
-		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
-		Goto See
-	Pain.ChaosExpl1:
-		TNT1 A 0 A_ClearTarget
-		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
-		Goto Spawn
-	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
+	{
 	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
 	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
 	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
@@ -1337,7 +1216,7 @@ actor HTC2MegaBulby : HTC2Bulby	//Mancubus
 		Goto See
 	Ice:
 		"####" "#" 5 A_GenericFreezeDeath
-		"####" "#" 0 A_KillMaster
+		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		"####" "#" 1 A_FreezeDeathChunks
 		Wait
 	Pain: 
@@ -1352,13 +1231,13 @@ actor HTC2MegaBulby : HTC2Bulby	//Mancubus
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 AAAAAAAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
 		TNT1 A 0 A_SpawnItemEx("SpecialExploSpawner",0,0,0,0,0,0,0,32)
-		TNT1 A 10 A_KillMaster 
+		TNT1 A 1 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
       	Stop 
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
 		"####" "#" 0 Thing_SetTranslation(0,50)
-		"####" "#" 0 A_KillMaster 
+		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner") 
 		"####" "#" 1 A_FadeOut(0.015)
 		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
 		"####" "#" 0 A_Stop    
@@ -1370,7 +1249,7 @@ actor HTC2MegaBulby : HTC2Bulby	//Mancubus
    }    
 }
 
-//Summoned version by Pennywise. If A_KillMaster is called when his defences
+//Summoned version by Pennywise. If A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner") is called when his defences
 //are down, it will instantly destroy him. This fixes that little case.
 
 Actor HTC2MegaBulby2 : HTC2MegaBulby
@@ -1379,7 +1258,7 @@ Actor HTC2MegaBulby2 : HTC2MegaBulby
 	{
 	Ice:
 		"####" "#" 5 A_GenericFreezeDeath
-		"####" "#" 0 //A_KillMaster
+		"####" "#" 0 //A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		"####" "#" 1 A_FreezeDeathChunks
 		Wait
 	Death:
@@ -1387,7 +1266,7 @@ Actor HTC2MegaBulby2 : HTC2MegaBulby
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 AAAAAAAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
 		TNT1 A 0 A_SpawnItemEx("SpecialExploSpawner",0,0,0,0,0,0,0,32)//A_SpawnItemEx("specialexplospawner",0,0,0,0,0,0,0,32)
-		//TNT1 A 0 A_KillMaster
+		//TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
       	Stop 
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
@@ -1467,13 +1346,8 @@ actor HTC2Beefy	//Imp
 		Loop
 	See:
 		N022 AABBCCDD 3 A_Chase
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDecide")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDecide")
 		Loop
-	DefileDecide:
-		TNT1 A 0 A_Jump(10,1)
-		Goto See
-		TNT1 A 0 A_Die
-		Wait
 	Pain:
 		N022 L 2
 		N022 L 2 A_Pain
@@ -1506,7 +1380,7 @@ actor HTC2Beefy	//Imp
 		N022 J 8 A_FaceTarget
 		Goto See
 	Death:
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDeath")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDeath")
    		TNT1 A 0 A_Fall
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 AAAAAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
@@ -2357,13 +2231,8 @@ ACTOR HTC2PossessedBalloon	//lost soul
         Loop
     See:
         N025 A 2 A_Chase
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDecide")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDecide")
 		Loop
-	DefileDecide:
-		TNT1 A 0 A_Jump(10,1)
-		Goto See
-		TNT1 A 0 A_Die
-		Wait
     Pain:
         N025 B 3 A_Pain
         Goto See
@@ -2378,7 +2247,7 @@ ACTOR HTC2PossessedBalloon	//lost soul
        
         Goto See
     Death:
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDeath")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDeath")
    		TNT1 A 0 A_Fall
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 AAAAAAAAAAAAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
@@ -2743,13 +2612,13 @@ actor HTC2SuperBertha	//Cyberdemon
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 AAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("GibDropper",random(0,50),0,random(0,200),0,0,0,random(0,359),32)
 		TNT1 A 35
-		TNT1 A 0 A_KillMaster
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		Stop
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
 		"####" "#" 0 Thing_SetTranslation(0,50)
-		"####" "#" 0 A_KillMaster
+		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		"####" "#" 1 A_FadeOut(0.015)
 		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
 		"####" "#" 0 A_Stop    
@@ -2878,13 +2747,13 @@ ACTOR HTC2BouncingClown		//cyberdemon
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 AAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(10,80),0,0,0,0,32)
 		TNT1 A 35
-		TNT1 A 0 A_KillMaster
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
       	Stop 
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
 		"####" "#" 0 Thing_SetTranslation(0,50)
-		"####" "#" 0 A_KillMaster
+		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		"####" "#" 1 A_FadeOut(0.015)
 		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
 		"####" "#" 0 A_Stop    
@@ -2996,13 +2865,8 @@ ACTOR HTC2BabyClown	//demon
 		N027 B 2 A_Chase
 		N027 CC 2 A_Chase
 		N027 B 2
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDecide")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDecide")
 		Loop
-	DefileDecide:
-		TNT1 A 0 A_Jump(10,1)
-		Goto See
-		TNT1 A 0 A_Die
-		Wait
     Pain:
         N027 B 4 A_Pain
         Goto See
@@ -3019,7 +2883,7 @@ ACTOR HTC2BabyClown	//demon
 		"####" "#" 0 A_DamageSelf(666)
 		Goto Pain
 	Death:	
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDeath")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDeath")
    		TNT1 A 0 A_Fall
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 AAAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
@@ -3614,7 +3478,7 @@ actor HTC2PennywiseTDC //Spider Mastermind
 		TNT1 A 0 A_SpawnItemEx("QuakeGibDropper",0,0,random(20,40),0,0,0,0,32)
 		TNT1 AAAAAAAA 0 A_SpawnItemEx("GibDropper",random(0,20),0,random(30,80),0,0,0,0,32)
 		TNT1 AAA 35
-		TNT1 A 10 A_KillMaster
+		TNT1 A 10 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
       	Stop 
     }
 }

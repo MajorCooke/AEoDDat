@@ -53,7 +53,7 @@ Actor L4DTank //cyberdemon
 {
 	var int user_skill;
 	DropItem DMSoulFragment
-	Monster RipLevelMin 1
+	Monster	+DONTCORPSE RipLevelMin 1
 	+BOSS
 	+BOSSDEATH
 	+DONTMORPH
@@ -188,6 +188,7 @@ Actor L4DTank //cyberdemon
 		NB29 FG 7
 		NB29 H 0 A_Fall
 		"####" "#" 0 A_QueueCorpse
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
 		NB29 H -1
 		Stop
 	XDeath:
@@ -204,7 +205,7 @@ Actor L4DTank //cyberdemon
 	Disintegrate:
 		"####" "#" 0 A_GiveInventory("L4DTankScore",1,AAPTR_PLAYER1)
 		"####" "#" 0 Thing_SetTranslation(0,50)
-		"####" "#" 0 A_KillMaster
+		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		"####" "#" 1 A_FadeOut(0.015)
 		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
 		"####" "#" 0 A_Stop    
@@ -1988,6 +1989,7 @@ Actor L4DBoomer
 	+BOSS
 	+DONTMORPH
 	-COUNTKILL
+	+FORCERADIUSDMG
 	MaxStepHeight 128
 	DamageFactor "SpitterAcid", 0.1
 //Undead
@@ -2009,10 +2011,6 @@ Actor L4DBoomer
 	HitObituary "The boomer was too fat for %o to handle."
 	States
 	{
-	Pain.Chaos:
-		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
-		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
-		Goto See
 	Pain.ChaosExpl1:
 		TNT1 A 0 A_ClearTarget
 		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
@@ -2063,7 +2061,7 @@ Actor L4DBoomer
 	Death:
 		"####" "#" 0 A_GiveInventory("L4DBoomerScore",1,AAPTR_PLAYER1)
 		TNT1 A 0 A_Scream
-		TNT1 A 0 A_Explode(128,128)
+		TNT1 A 0 A_Explode(128,128,XF_NOTMISSILE,0,64)
 		TNT1 A 0 A_SetUserVar("user_angle",0)
 	Looper:
 		TNT1 A 0 A_JumpIf(user_angle>=360,"EndLoop")
@@ -3053,6 +3051,7 @@ Actor AEL4DTank 		//cyberdemon
 	+DONTMORPH
 	+FULLVOLDEATH
 	+FLOORCLIP
+	+DONTCORPSE
 	Radius 40
 	Height 70
 	Speed 15
@@ -3082,17 +3081,7 @@ Actor AEL4DTank 		//cyberdemon
 	Obituary "%o was flattened by the Tank's rocks."
 	HitObituary "%o was unfortunate enough to be hulk smashed by a Tank."
 	States
-	{
-	Pain.Chaos:
-		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
-		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
-		Goto See
-	Pain.ChaosExpl1:
-		TNT1 A 0 A_ClearTarget
-		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
-		Goto Spawn
-	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
-	
+	{	
 	Spawn:
 		N029 A 2 A_Look
 		Loop
@@ -3168,29 +3157,31 @@ Actor AEL4DTank 		//cyberdemon
 		NB29 FG 7
 		NB29 H 0 A_Fall
 		"####" "#" 0 A_QueueCorpse
-		NB29 H -1 A_KillMaster
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
+		NB29 H -1 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		Stop
 	XDeath:
 		TNT1 A 0 A_PlaySound("other/gibdeath")
-		TNT1 AAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 AAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 A 0 A_SpawnItemEx("QuakeSmallGibDropper",0,0,random(20,40),0,0,0,0,1)
+		TNT1 AAAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,60),0,0,0,0,1)
+		TNT1 AAAAAAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,60),0,0,0,0,1)
+		TNT1 A 0 A_SpawnItemEx("QuakeSmallGibDropper",0,0,random(20,60),0,0,0,0,1)
 		TNT1 A 0 A_Fall
-		TNT1 A 1 A_KillMaster
+		TNT1 A 1 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		Stop
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
 		"####" "#" 0 Thing_SetTranslation(0,50)
-		"####" "#" 0 A_KillMaster
+		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		"####" "#" 1 A_FadeOut(0.015)
 		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
 		"####" "#" 0 A_Stop    
 		"####" "#" 0 A_Fall
 		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,32)
+	DisLoop:
 		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,32)
 		"####" "##" 2 A_FadeOut(0.03)
-		Goto Disintegrate+7
+		Loop
 	}
 }
 
@@ -3223,6 +3214,7 @@ Actor AEL4DCommonMale1
 	ActiveSound "L4D/Common/Male/Active"
 	Scale 0.4
 	+FLOORCLIP
+	+DONTCORPSE
 //Flesh
 	DamageFactor "Electric", 1.25
 	DamageFactor "AEPoison", 1.25
@@ -3238,15 +3230,6 @@ Actor AEL4DCommonMale1
 	Obituary "%o was overwhelmed by common infected."
 	States
 	{
-	Pain.Chaos:
-		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
-		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
-		Goto See
-	Pain.ChaosExpl1:
-		TNT1 A 0 A_ClearTarget
-		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
-		Goto Spawn
-	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
 	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
 	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
 	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
@@ -3257,13 +3240,8 @@ Actor AEL4DCommonMale1
 		Loop
 	See:
 		N041 BBCCDDEE 2 A_Chase
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDecide")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDecide")
 		Loop
-	DefileDecide:
-		TNT1 A 0 A_Jump(10,1)
-		Goto See
-		TNT1 A 0 A_Die
-		Wait
 	Melee:
 		N041 FG 4 A_FaceTarget
 		N041 H 4 A_CustomMeleeAttack(random(10,20),"quake4/Misc/MeleeHit","quake4/Misc/Swing","Normal",1)
@@ -3274,13 +3252,15 @@ Actor AEL4DCommonMale1
 		N041 A 8
 		Goto See
 	Death:
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDeath")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDeath")
 		N041 L 4 A_Fall
 		N041 MNOPQRST 4
+		"####" "#" 0 A_QueueCorpse
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
 		N041 U -1
 		Stop
 	XDeath:
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDeath")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDeath")
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 A 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
 		TNT1 AA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,1)
@@ -3321,6 +3301,7 @@ Actor AEL4DCommonMale2
 	ActiveSound "L4D/Common/Male/Active"
 	Scale 0.4
 	+FLOORCLIP
+	+DONTCORPSE
 //Flesh
 	DamageFactor "Electric", 1.25
 	DamageFactor "AEPoison", 1.25
@@ -3336,15 +3317,6 @@ Actor AEL4DCommonMale2
 	Obituary "%o was overwhelmed by common infected."
 	States
 	{
-	Pain.Chaos:
-		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
-		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
-		Goto See
-	Pain.ChaosExpl1:
-		TNT1 A 0 A_ClearTarget
-		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
-		Goto Spawn
-	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
 	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
 	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
 	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
@@ -3355,7 +3327,7 @@ Actor AEL4DCommonMale2
 		Loop
 	See:
 		N042 BBCCDDEE 2 A_Chase
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDecide")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDecide")
 		Loop
 	DefileDecide:
 		TNT1 A 0 A_Jump(10,1)
@@ -3372,9 +3344,11 @@ Actor AEL4DCommonMale2
 		N042 A 8
 		Goto See
 	Death:
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDeath")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDeath")
 		N042 L 4 A_Fall
 		N042 MNOPQ 4
+		"####" "#" 0 A_QueueCorpse
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
 		N042 R -1
 		Stop
 	DefileDeath:
@@ -3382,7 +3356,7 @@ Actor AEL4DCommonMale2
 		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
 		Goto XDeath+1
 	XDeath:
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDeath")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDeath")
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 A 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
 		TNT1 AA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,1)
@@ -3424,6 +3398,7 @@ Actor AEL4DCommonFemale1
 	ActiveSound "L4D/Common/Female/Active"
 	Scale 0.4
 	+FLOORCLIP
+	+DONTCORPSE
 //Flesh
 	DamageFactor "Electric", 1.25
 	DamageFactor "AEPoison", 1.25
@@ -3439,15 +3414,6 @@ Actor AEL4DCommonFemale1
 	Obituary "%o was overwhelmed by common infected."
 	States
 	{
-	Pain.Chaos:
-		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
-		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
-		Goto See
-	Pain.ChaosExpl1:
-		TNT1 A 0 A_ClearTarget
-		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
-		Goto Spawn
-	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
 	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
 	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
 	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
@@ -3458,7 +3424,7 @@ Actor AEL4DCommonFemale1
 		Loop
 	See:
 		N045 BBCCDDEE 2 A_Chase
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDecide")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDecide")
 		Loop
 	DefileDecide:
 		TNT1 A 0 A_Jump(10,1)
@@ -3475,9 +3441,11 @@ Actor AEL4DCommonFemale1
 		N045 A 8
 		Goto See
 	Death:
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDeath")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDeath")
 		N045 L 4 A_Fall
 		N045 MNOPQRSTU 4
+		"####" "#" 0 A_QueueCorpse
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
 		N045 V -1
 		Stop
 	DefileDeath:
@@ -3485,7 +3453,7 @@ Actor AEL4DCommonFemale1
 		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
 		Goto XDeath+1
 	XDeath:
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDeath")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDeath")
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 A 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
 		TNT1 AA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,1)
@@ -3521,6 +3489,7 @@ Actor AEL4DCommonFemale2
 	SeeSound "L4D/Common/Female/Sight"
 	ActiveSound "L4D/Common/Female/Active"
 	Scale 0.4
+	+DONTCORPSE
 //Flesh
 	DamageFactor "Electric", 1.25
 	DamageFactor "AEPoison", 1.25
@@ -3536,15 +3505,6 @@ Actor AEL4DCommonFemale2
 	Obituary "%o was overwhelmed by common infected."
 	States
 	{
-	Pain.Chaos:
-		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
-		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
-		Goto See
-	Pain.ChaosExpl1:
-		TNT1 A 0 A_ClearTarget
-		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
-		Goto Spawn
-	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
 	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
 	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
 	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
@@ -3555,7 +3515,7 @@ Actor AEL4DCommonFemale2
 		Loop
 	See:
 		N046 BBCCDDEE 2 A_Chase
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDecide")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDecide")
 		Loop
 	DefileDecide:
 		TNT1 A 0 A_Jump(10,1)
@@ -3572,13 +3532,15 @@ Actor AEL4DCommonFemale2
 		N046 A 8
 		Goto See
 	Death:
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDeath")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDeath")
 		N046 L 4 A_Fall
 		N046 MNOPQR 4
+		"####" "#" 0 A_QueueCorpse
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
 		N046 R -1
 		Stop
 	XDeath:
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDeath")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDeath")
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 A 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
 		TNT1 AA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,1)
@@ -3649,15 +3611,6 @@ Actor AEL4DSpitter		//revenant
 	HitObituary "%o was humiliated with a bitch slap from the Spitter."
 	States
 	{
-	Pain.Chaos:
-		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
-		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
-		Goto See
-	Pain.ChaosExpl1:
-		TNT1 A 0 A_ClearTarget
-		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
-		Goto Spawn
-	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
 	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
 	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
 	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
@@ -3674,7 +3627,7 @@ Actor AEL4DSpitter		//revenant
 		N044 F 3 A_Chase 	N044 F 2 A_Chase
 		N044 G 3 A_Chase 	N044 G 2 A_Chase
 		N044 H 3 A_Chase 	N044 H 2 A_Chase
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDecide")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDecide")
 		Loop
 	DefileDecide:
 		TNT1 A 0 A_Jump(10,1)
@@ -3696,7 +3649,7 @@ Actor AEL4DSpitter		//revenant
 		N044 A 8
 		Goto See
 	Death:
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDeath")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDeath")
 		N044 Q 3 A_Scream
 		N044 Q 3 A_Fall
 		N044 RSTUVW 3
@@ -3707,7 +3660,7 @@ Actor AEL4DSpitter		//revenant
 		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
 		Goto XDeath+1
 	XDeath:
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDeath")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDeath")
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 AA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
 		TNT1 AAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,1)
@@ -3759,6 +3712,7 @@ Actor AEL4DSmoker		//baron of hell
 	+BOSS
 	+BOSSDEATH
 	+DONTMORPH
+	+DONTCORPSE
 	DamageFactor "SpitterAcid", 0.1
 	DamageFactor "PoisonCloud", 0.0
 //Undead
@@ -3780,15 +3734,6 @@ Actor AEL4DSmoker		//baron of hell
 	HitObituary "%o should never have attempted to befriend a smoker."
 	States
 	{
-	Pain.Chaos:
-		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
-		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
-		Goto See
-	Pain.ChaosExpl1:
-		TNT1 A 0 A_ClearTarget
-		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
-		Goto Spawn
-	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
 	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
 	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
 	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
@@ -3802,7 +3747,7 @@ Actor AEL4DSmoker		//baron of hell
 		N043 C 3 A_Chase 	N043 C 2 A_Chase
 		N043 D 3 A_Chase 	N043 D 2 A_Chase
 		N043 E 3 A_Chase 	N043 E 2 A_Chase
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDecide")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDecide")
 		Loop
 	DefileDecide:
 		TNT1 A 0 A_Jump(8,1)
@@ -3840,38 +3785,39 @@ Actor AEL4DSmoker		//baron of hell
 		N043 A 8
 		Goto See
 	Death:
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDeath")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDeath")
 		TNT1 AA 0 A_CustomMissile("SmokerTrap",0,0,0)
 		N043 N 3 A_Scream
 		N043 O 3 A_Fall
 		N043 PQ 3
 		"####" "#" 0 A_QueueCorpse
-		N043 R -1 A_KillMaster
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
+		N043 R -1 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		Stop
 	DefileDeath:
 		TNT1 A 0 A_Die
 		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
 		Goto XDeath+1
 	XDeath:
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDeath")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDeath")
 		TNT1 AA 0 A_CustomMissile("SmokerTrap",0,0,0)
 		TNT1 A 0 A_Scream
 		TNT1 AA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
 		TNT1 AAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,1)
 		TNT1 A 0 A_SpawnItemEx("QuakeSmallGibDropper",0,0,random(20,40),0,0,0,0,1)
 		TNT1 A 1 A_Fall
-		TNT1 A 1 A_KillMaster
+		TNT1 A 1 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		Stop
 	Ice:
 		"####" "#" 5 A_GenericFreezeDeath
-		"####" "#" 0 A_KillMaster
+		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		"####" "#" 1 A_FreezeDeathChunks
 		Wait
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
 		"####" "#" 0 Thing_SetTranslation(0,50)
-		"####" "#" 0 A_KillMaster
+		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		"####" "#" 1 A_FadeOut(0.015)
 		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
 		"####" "#" 0 A_Stop    
@@ -3909,6 +3855,7 @@ Actor AEL4DBoomer		//fatso
 	MeleeRange 50
 	MaxTargetRange 1024
 	Scale 0.8
+	+FORCERADIUSDMG
 	+FLOORCLIP
 	+BOSS
 	+BOSSDEATH
@@ -3955,7 +3902,7 @@ Actor AEL4DBoomer		//fatso
 		N028 C 3 A_Chase 	N028 C 2 A_Chase
 		N028 D 3 A_Chase 	N028 D 2 A_Chase
 		N028 E 3 A_Chase 	N028 E 2 A_Chase
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDecide")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDecide")
 		Loop
 	DefileDecide:
 		TNT1 A 0 A_Jump(10,1)
@@ -3988,9 +3935,9 @@ Actor AEL4DBoomer		//fatso
 		N028 A 8
 		Goto See
 	Death:
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDeath")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDeath")
 		TNT1 A 0 A_Scream
-		TNT1 A 0 A_Explode(128,128)
+		TNT1 A 0 A_Explode(128,128,XF_NOTMISSILE,0,64)
 		TNT1 A 0 A_SetUserVar("user_angle",0)
 	Looper:
 		TNT1 A 0 A_JumpIf(user_angle>=360,"EndLoop")
@@ -4003,7 +3950,7 @@ Actor AEL4DBoomer		//fatso
 		TNT1 AAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,1)
 		TNT1 A 0 A_SpawnItemEx("QuakeSmallGibDropper",0,0,random(20,40),0,0,0,0,1)
 		TNT1 A 1 A_Fall
-		TNT1 A 1 A_KillMaster
+		TNT1 A 1 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		Stop
 	PukeFromExplo:
 		TNT1 A 0 A_GiveToTarget("PukeObscureVision",1)
@@ -4014,14 +3961,14 @@ Actor AEL4DBoomer		//fatso
 		Goto Death+1
 	Ice:
 		"####" "#" 5 A_GenericFreezeDeath
-		"####" "#" 0 A_KillMaster
+		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		"####" "#" 1 A_FreezeDeathChunks
 		Wait
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
 		"####" "#" 0 Thing_SetTranslation(0,50)
-		"####" "#" 0 A_KillMaster
+		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		"####" "#" 1 A_FadeOut(0.015)
 		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
 		"####" "#" 0 A_Stop    
@@ -4061,6 +4008,7 @@ Actor AEL4DJockey		//Hell knight
 	DeathSound "L4D/Jockey/Death"
 	ActiveSound "L4D/Jockey/Active"
 	Scale 0.5
+	+DONTCORPSE
 	+FLOORCLIP
 	DamageFactor "SpitterAcid", 0.1
 //Undead
@@ -4081,15 +4029,6 @@ Actor AEL4DJockey		//Hell knight
 	Obituary "A Jockey rode %o so hard, he was put away dead."
 	States
 	{
-	Pain.Chaos:
-		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
-		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
-		Goto See
-	Pain.ChaosExpl1:
-		TNT1 A 0 A_ClearTarget
-		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
-		Goto Spawn
-	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
 	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
 	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
 	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
@@ -4100,11 +4039,11 @@ Actor AEL4DJockey		//Hell knight
 		Loop
 	See:
 		N040 BBCCDDEE 2 A_Chase
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDecide")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDecide")
 		Loop
 	SeeNoMissile:
 		N040 BBCCDDEE 2 A_Chase("","")
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDecide")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDecide")
 		Goto See
 	DefileDecide:
 		TNT1 A 0 A_Jump(10,1)
@@ -4161,15 +4100,17 @@ Actor AEL4DJockey		//Hell knight
 		N040 A 8 A_Pain
 		Goto See
 	Death:
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDeath")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDeath")
 		N040 L 0 A_StopSound(6)
 		N040 L 0 A_Scream
 		N040 L 4 A_Fall
 		N040 MNOP 4
+		"####" "#" 0 A_QueueCorpse
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
 		N040 Q -1
 		Stop
 	XDeath:
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDeath")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDeath")
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 AA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
 		TNT1 AAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,1)
@@ -4220,6 +4161,7 @@ Actor AEL4DHunter		//archvile
 	Scale 0.35
 	MeleeRange 80
 	MaxTargetRange 512
+	+DONTCORPSE
 	+STEALTH
 	+FLOORCLIP
 	+BOSS
@@ -4244,15 +4186,6 @@ Actor AEL4DHunter		//archvile
 	Obituary "%o couldn't dodge out of the way of a Hunter."
 	States
 	{
-	Pain.Chaos:
-		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
-		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
-		Goto See
-	Pain.ChaosExpl1:
-		TNT1 A 0 A_ClearTarget
-		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
-		Goto Spawn
-	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
 	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
 	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
 	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
@@ -4306,6 +4239,8 @@ Actor AEL4DHunter		//archvile
 	Death:
 		N039 P 2 A_Fall
 		N039 QRSTUVWXY 2
+		"####" "#" 0 A_QueueCorpse
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
 		N039 Z -1
 		Stop
 	XDeath:
@@ -4376,15 +4311,6 @@ Actor AEL4DWitch		//archvile
 	Obituary "%o played with fire by startling a Witch."
 	States
 	{
-	Pain.Chaos:
-		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
-		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
-		Goto See
-	Pain.ChaosExpl1:
-		TNT1 A 0 A_ClearTarget
-		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
-		Goto Spawn
-	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
 	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
 	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
 	Pain.Defile:		TNT1 A 0 A_GiveInventory("DefileCheck",1)			Goto See 
@@ -4519,15 +4445,6 @@ Actor AEL4DCharger		//hell knight
 	HitObituary "%o should've realized the Charger's good arm is as strong as a Tank's."
 	States
 	{
-	Pain.Chaos:
-		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
-		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
-		Goto See
-	Pain.ChaosExpl1:
-		TNT1 A 0 A_ClearTarget
-		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
-		Goto Spawn
-	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
 	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
 	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
 	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
@@ -4537,12 +4454,12 @@ Actor AEL4DCharger		//hell knight
 		Loop
 	See:
 		N031 BCDE 4 A_Chase
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDecide")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDecide")
 		Loop
 	SeeNoMissile:
 		N031 BCDE 4 A_Chase("Melee","")
 		N031 BCDE 4 A_Chase("Melee","")
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDecide")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDecide")
 		Goto See
 	DefileDecide:
 		TNT1 A 0 A_Jump(10,1)
@@ -4604,7 +4521,7 @@ Actor AEL4DCharger		//hell knight
 	Death:
 		TNT1 A 0 A_RemoveChildren(1,RMVF_EVERYTHING)
 		TNT1 A 0 A_GiveInventory("IDied",1)
-		TNT1 A 0 A_JumpIfInventory("DefileCheck",1,"DefileDeath")
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDeath")
 		TNT1 A 0 A_Scream
 		TNT1 AAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
 		TNT1 AAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,1)
@@ -4705,6 +4622,7 @@ Actor AEL4DBill		//archvile
 	+FLOORCLIP
 	+BOSSDEATH
 	+BOSS
+	+DONTCORPSE
 	SeeSound "L4D/Bill/sight"
 	PainSound "L4D/Bill/pain"
 	DeathSound "L4D/Bill/death"
@@ -4725,15 +4643,6 @@ Actor AEL4DBill		//archvile
 	Obituary "%o fell to Bullet Time Bill."
 	States
 	{
-	Pain.Chaos:
-		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
-		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
-		Goto See
-	Pain.ChaosExpl1:
-		TNT1 A 0 A_ClearTarget
-		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
-		Goto Spawn
-	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
 	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
 	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
 	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
@@ -4805,6 +4714,8 @@ Actor AEL4DBill		//archvile
 		N054 F 3 A_Scream
 		N054 G 3 A_Fall
 		N054 HIJK 3
+		"####" "#" 0 A_QueueCorpse
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
 		N054 L -1
 		Stop
 	Death.UnholyDisint:
@@ -4816,9 +4727,10 @@ Actor AEL4DBill		//archvile
 		"####" "#" 0 A_Stop    
 		"####" "#" 0 A_Fall
 		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
+	DisLoop:
 		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
 		"####" "##" 2 A_FadeOut(0.03)
-		Goto Disintegrate+6
+		Loop
 	}
 	
 }
@@ -4832,7 +4744,7 @@ Actor AEL4DBill		//archvile
 Actor AEL4DLouis		//baron
 {
 	DropItem "AEoDScreamerItem" 24
-	DropItem "AEoDPKShotgunItem" 24
+	DropItem "AEoDPKShotgunItem" 48
 	DropItem "HealthBottle" 64
 	DropItem "HealthBottle" 64
 	DropItem "ShellBigAmmo" 128
@@ -4851,6 +4763,7 @@ Actor AEL4DLouis		//baron
 	Speed 16
 	Health 1000
 	Painchance 64
+	+DONTCORPSE
 	+FLOORCLIP
 	+BOSSDEATH
 	+BOSS
@@ -4874,15 +4787,6 @@ Actor AEL4DLouis		//baron
 	Obituary "%o tried to steal Louis' pills."
 	States
 	{
-	Pain.Chaos:
-		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
-		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
-		Goto See
-	Pain.ChaosExpl1:
-		TNT1 A 0 A_ClearTarget
-		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
-		Goto Spawn
-	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
 	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
 	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
 	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
@@ -4922,24 +4826,25 @@ Actor AEL4DLouis		//baron
 		N035 J 3 A_Fall
 		N035 JKLMO 3
 		"####" "#" 0 A_QueueCorpse
-		N035 P -1 A_KillMaster
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
+		N035 P -1 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		Stop
 	XDeath:
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 A 0 A_KillMaster
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		TNT1 A 1 A_Fall
 		Stop
 	Ice:
 		"####" "#" 5 A_GenericFreezeDeath
-		"####" "#" 0 A_KillMaster
+		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		"####" "#" 1 A_FreezeDeathChunks
 		Wait
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
 		"####" "#" 0 Thing_SetTranslation(0,50)
-		"####" "#" 0 A_KillMaster
+		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		"####" "#" 1 A_FadeOut(0.015)
 		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
 		"####" "#" 0 A_Stop    
@@ -5023,6 +4928,7 @@ Actor AEL4DFrancis		//archvile
 	Speed 16
 	Health 1000
 	Painchance 20
+	+DONTCORPSE
 	+FLOORCLIP
 	+BOSSDEATH
 	+BOSS
@@ -5046,15 +4952,6 @@ Actor AEL4DFrancis		//archvile
 	Obituary "%o insulted Francis' vest and paid the price."
 	States
 	{
-	Pain.Chaos:
-		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
-		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
-		Goto See
-	Pain.ChaosExpl1:
-		TNT1 A 0 A_ClearTarget
-		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
-		Goto Spawn
-	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
 	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
 	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
 	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
@@ -5106,6 +5003,8 @@ Actor AEL4DFrancis		//archvile
 		N032 H 3 A_Scream
 		N032 I 3 A_Fall
 		N032 JKLM 3
+		"####" "#" 0 A_QueueCorpse
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
 		N032 N -1
 		Stop
 	XDeath:
@@ -5152,6 +5051,7 @@ Actor AEL4DZoey		//baron
 	Speed 16
 	Health 1000
 	Painchance 20
+	+DONTCORPSE
 	+FLOORCLIP
 	+BOSSDEATH
 	+BOSS
@@ -5175,15 +5075,6 @@ Actor AEL4DZoey		//baron
 	Obituary "Zoey taught %o that even if she's small, she can still kick ass."
 	States
 	{
-	Pain.Chaos:
-		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
-		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
-		Goto See
-	Pain.ChaosExpl1:
-		TNT1 A 0 A_ClearTarget
-		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
-		Goto Spawn
-	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
 	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
 	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
 	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
@@ -5229,24 +5120,25 @@ Actor AEL4DZoey		//baron
 		N038 I 3 A_Fall
 		N038 JKLM 3
 		"####" "#" 0 A_QueueCorpse
-		N038 N -1 A_KillMaster
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
+		N038 N -1 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		Stop
 	XDeath:
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 A 0 A_KillMaster
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		TNT1 A 1 A_Fall
 		Stop
 	Ice:
 		"####" "#" 5 A_GenericFreezeDeath
-		"####" "#" 0 A_KillMaster
+		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		"####" "#" 1 A_FreezeDeathChunks
 		Wait
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
 		"####" "#" 0 Thing_SetTranslation(0,50)
-		"####" "#" 0 A_KillMaster
+		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		"####" "#" 1 A_FadeOut(0.015)
 		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
 		"####" "#" 0 A_Stop    
@@ -5282,6 +5174,7 @@ Actor AEL4DCoach		//archvile
 	Speed 16
 	Health 1000
 	Painchance 32
+	+DONTCORPSE
 	+FLOORCLIP
 	+BOSSDEATH
 	+BOSS
@@ -5305,15 +5198,6 @@ Actor AEL4DCoach		//archvile
 	Obituary "Coach thought %o had hamburgers on him."
 	States
 	{
-	Pain.Chaos:
-		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
-		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
-		Goto See
-	Pain.ChaosExpl1:
-		TNT1 A 0 A_ClearTarget
-		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
-		Goto Spawn
-	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
 	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
 	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
 	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
@@ -5368,6 +5252,8 @@ Actor AEL4DCoach		//archvile
 		N033 H 3 A_Scream
 		N033 I 3 A_Fall
 		N033 JKLMN 3
+		"####" "#" 0 A_QueueCorpse
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
 		N033 O -1
 		Stop
 	XDeath:
@@ -5414,6 +5300,7 @@ Actor AEL4DEllis 		//baron
 	Speed 16
 	Health 1000
 	Painchance 20
+	+DONTCORPSE
 	+FLOORCLIP
 	+BOSSDEATH
 	+BOSS
@@ -5437,15 +5324,6 @@ Actor AEL4DEllis 		//baron
 	Obituary "%o is now fully aware of Ellis' mechanical skills."
 	States
 	{
-	Pain.Chaos:
-		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
-		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
-		Goto See
-	Pain.ChaosExpl1:
-		TNT1 A 0 A_ClearTarget
-		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
-		Goto Spawn
-	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
 	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
 	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
 	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
@@ -5494,19 +5372,20 @@ Actor AEL4DEllis 		//baron
 		N036 I 3 A_Fall
 		N036 JKLMN 3
 		"####" "#" 0 A_QueueCorpse
-		N036 O -1 A_KillMaster
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
+		N036 O -1 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		Stop
 	XDeath:
 		N036 A 0 A_StopSound(5)
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 A 0 A_KillMaster
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		TNT1 A 1 A_Fall
 		Stop
 	Ice:
 		"####" "#" 5 A_StopSound(5)
 		"####" "#" 5 A_GenericFreezeDeath
-		"####" "#" 0 A_KillMaster
+		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		"####" "#" 1 A_FreezeDeathChunks
 		Wait
 	Death.UnholyDisint:
@@ -5514,7 +5393,7 @@ Actor AEL4DEllis 		//baron
 	Disintegrate:
 		"####" "#" 0 Thing_SetTranslation(0,50)
 		"####" "#" 0 A_StopSound(5)
-		"####" "#" 0 A_KillMaster
+		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		"####" "#" 1 A_FadeOut(0.015)
 		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
 		"####" "#" 0 A_Stop    
@@ -5630,6 +5509,7 @@ Actor AEL4DNick		//archvile
 	Speed 16
 	Painchance 20
 	Health 1000
+	+DONTCORPSE
 	+FLOORCLIP
 	+BOSSDEATH
 	+BOSS
@@ -5653,15 +5533,6 @@ Actor AEL4DNick		//archvile
 	Obituary "Nick knocked %o's teeth onto the floor."
 	States
 	{
-	Pain.Chaos:
-		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
-		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
-		Goto See
-	Pain.ChaosExpl1:
-		TNT1 A 0 A_ClearTarget
-		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
-		Goto Spawn
-	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
 	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
 	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
 	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
@@ -5709,6 +5580,8 @@ Actor AEL4DNick		//archvile
 		N034 H 3 A_Scream
 		N034 I 3 A_Fall
 		N034 JKLMN 3
+		"####" "#" 0 A_QueueCorpse
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
 		N034 O -1
 		Stop
 	XDeath:
@@ -5900,6 +5773,7 @@ Actor AEL4DRochelle		//baron
 	ActiveSound "L4D/Rochelle/idle"
 	Scale 0.34
 	MeleeRange 100
+	+DONTCORPSE
 	+FLOORCLIP
 	+BOSSDEATH
 	+BOSS
@@ -5918,15 +5792,6 @@ Actor AEL4DRochelle		//baron
 	Obituary "Rochelle got ugly with %o."
 	States
 	{
-	Pain.Chaos:
-		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
-		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
-		Goto See
-	Pain.ChaosExpl1:
-		TNT1 A 0 A_ClearTarget
-		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
-		Goto Spawn
-	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
 	Pain.Charm:			TNT1 A 0 A_ChangeFlag("FRIENDLY",1)				Goto See
 	Pain.Terror:		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)			Goto See
 	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)	Goto Pain
@@ -6010,24 +5875,25 @@ Actor AEL4DRochelle		//baron
 		N037 H 3 A_Fall
 		N037 IJK 3
 		"####" "#" 0 A_QueueCorpse
-		N037 L -1 A_KillMaster
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
+		N037 L -1 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		Stop
 	XDeath:
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 A 0 A_KillMaster
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		TNT1 A 1 A_Fall
 		Stop
 	Ice:
 		"####" "#" 5 A_GenericFreezeDeath
-		"####" "#" 0 A_KillMaster
+		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		"####" "#" 1 A_FreezeDeathChunks
 		Wait
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
 		"####" "#" 0 Thing_SetTranslation(0,50)
-		"####" "#" 0 A_KillMaster
+		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		"####" "#" 1 A_FadeOut(0.015)
 		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
 		"####" "#" 0 A_Stop    
