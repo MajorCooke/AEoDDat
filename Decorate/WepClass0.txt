@@ -4996,6 +4996,8 @@ Actor NovaLightningFinger
 		TNT1 A 0
 		TNT1 A 0 A_Explode(128,10,0)
 		TNT1 A 0 A_PlaySound("Thunderstorm/lightning")
+		TNT1 A 0 A_JumpIf(z >= ceilingz || z <= floorz,"Death")
+		TNT1 A 0 A_CheckSight("Death")
 	Velocity:
 		TNT1 A 0 //A_Explode(3,16,0)
 		TNT1 A 0 A_SetUserVar("user_count",0)
@@ -5004,14 +5006,16 @@ Actor NovaLightningFinger
 		TNT1 A 0 A_SetUserArray("user_vel",2,frandom(-3.0,3.0))
 	Warping:
 		TNT1 A 0 A_SpawnItemEx("NovaLightningFingerTrail",0,0,0,0,0,0,0,0,33)
-		TNT1 A 0 A_Jump(256,1,2)
+		TNT1 A 0 A_Jump(128,2)
 		TNT1 A 0 A_Warp(AAPTR_DEFAULT,user_vel[0],user_vel[1]*frandom(1.0,3.0),user_vel[2]*frandom(1.0,3.0),0,WARPF_STOP,1)
 		Goto Death
 		TNT1 A 0 A_Warp(AAPTR_DEFAULT,user_vel[0],user_vel[1]*frandom(1.0,3.0),user_vel[2]*frandom(1.0,3.0),0,0,"Warp2")
 		Goto Death
 	Warp2:
+		TNT1 A 0 A_JumpIf(z >= ceilingz || z <= floorz,"Death")
+		TNT1 A 0 A_CheckSight("Death")
 		TNT1 A 0 A_SetUserVar("user_failsafe",user_failsafe+1)
-		TNT1 A 0 A_JumpIf(user_failsafe>=3000,"Death")
+		TNT1 A 0 A_JumpIf(user_failsafe>=500,"Death")
 		TNT1 A 0 A_SetUserVar("user_count",user_count+1)
 		TNT1 A 0 A_JumpIf(user_count>=random(3,10),"Velocity")
 		Loop
@@ -11990,6 +11994,22 @@ Actor SoulReaperBladeConverter
 		"####" "#" 0 A_TakeInventory("SRBConverterOut",1000,0,AAPTR_TARGET)
 		"####" "#" 0 A_JumpIfInventory("InfiniteAmmo",1,"Inf",AAPTR_TARGET)
 		"####" "#" 0 A_JumpIfInventory("PowerEconomizer",1,"Inf",AAPTR_TARGET)
+		TNT1 A 0 A_JumpIf(CheckClass("PlayerPawn",AAPTR_DEFAULT,1),"ExplosionEffect")
+		"####" "#" 0 A_JumpIf(CheckClass("SpyCrab",AAPTR_TRACER,1) || 
+							CheckClass("HTC2BlackBear",AAPTR_TRACER,1) ||
+							CheckClass("BerthaBear",AAPTR_TRACER,1) ||
+							CheckClass("FBeggar",AAPTR_TRACER,1) ||
+							CheckClass("Bvictim",AAPTR_TRACER,1) ||
+							CheckClass("HLScientist",AAPTR_TRACER,1) ||
+							CheckClass("HL2Citizen",AAPTR_TRACER,1) ||
+							CheckClass("FPeasant",AAPTR_TRACER,1) ||
+							CheckClass("FBeggar",AAPTR_TRACER,1) ||
+							CheckClass("FRat",AAPTR_TRACER,1) ||
+							CheckClass("HLBabyHeadcrab",AAPTR_TRACER,1) ||
+							CheckClass("FMiniSpider1",AAPTR_TRACER,1) ||
+							CheckClass("FMiniSpider2",AAPTR_TRACER,1) ||
+							CheckClass("FMiniSpider3",AAPTR_TRACER,1) ||
+							CheckClass("LILCaleb",AAPTR_TRACER,1), "Destroy") 
 		Goto DGood
 	Inf:
 		"####" "#" 0 A_SetUserVar(user_inf,1)
@@ -12026,49 +12046,32 @@ Actor SoulReaperBladeConverter
 			"####" "#" 0 A_CheckFlag("ISMONSTER","CheckAEoD",AAPTR_TRACER)
 			Goto Destroy
 		CheckAEoD:
+			
 			"####" "#" 0 A_JumpIfInventory("AEoDToken",1,"CheckBlacklist",AAPTR_TRACER)
+			//If testing is required for specific monsters, comment this out.
 			Goto Destroy
 		CheckBlacklist:
 			"####" "#" 0 A_JumpIf(CheckClass("WeepingAngel",AAPTR_TRACER,1),"SpecialDestroy")
-			"####" "#" 0 A_JumpIf(CheckClass("SpyCrab",AAPTR_TRACER,1) || 
-							CheckClass("HTC2BlackBear",AAPTR_TRACER,1) ||
-							CheckClass("BerthaBear",AAPTR_TRACER,1) ||
-							CheckClass("FBeggar",AAPTR_TRACER,1) ||
-							CheckClass("Bvictim",AAPTR_TRACER,1) ||
-							CheckClass("HLScientist",AAPTR_TRACER,1) ||
-							CheckClass("HL2Citizen",AAPTR_TRACER,1) ||
-							CheckClass("FPeasant",AAPTR_TRACER,1) ||
-							CheckClass("FBeggar",AAPTR_TRACER,1) ||
-							CheckClass("FRat",AAPTR_TRACER,1) ||
-							CheckClass("HLBabyHeadcrab",AAPTR_TRACER,1) ||
-							CheckClass("FMiniSpider1",AAPTR_TRACER,1) ||
-							CheckClass("FMiniSpider2",AAPTR_TRACER,1) ||
-							CheckClass("FMiniSpider3",AAPTR_TRACER,1) ||
-							CheckClass("LILCaleb",AAPTR_TRACER,1), "Destroy") 
+			Goto Choose
 	Choose:
+		"####" "#" 0 A_CheckFlag("FRIENDLY","Restore",AAPTR_TRACER)
 		"####" "#" 0 A_Jump(64,"DemonMorph")
-		"####" "#" 0 A_Jump(128,"Convert")
+		"####" "#" 0 A_Jump(150,"Convert")
 		Goto Destroy
 		
-		Destroy:
-			"####" "#" 0 A_CheckFlag("FRIENDLY","Restore",AAPTR_TRACER)
-			"####" "#" 0 A_CheckFlag("VULNERABLE",1,AAPTR_TRACER)
-			Goto Destroy2
-			"####" "#" 0 A_GiveInventory("SRMonsterDestroyer",1,AAPTR_TRACER)//A_DamageTracer(100000,"Extreme",DMSS_FOILINVUL|DMSS_FOILBUDDHA)
-			Goto Explosion
-		Destroy2:
-			TNT1 A 0 A_CheckFlag("FRIENDLY","End")
-			TNT1 A 0 A_JumpIf(CheckClass("FDeathBringerThanatos",AAPTR_DEFAULT,0) ||
-								CheckClass("PlayerPawn",AAPTR_DEFAULT,1),"Death")
-			Goto Cont
 		SpecialDestroy:
 			TNT1 A 0 A_DropItem("DemonMorphPowerup",1,256)
-		Cont:
+			Goto Destroy
+		Destroy:
+			TNT1 A 0 A_JumpIf(CheckClass("FDeathBringerThanatos",AAPTR_DEFAULT,0),"DBTAttention")
 			TNT1 A 0 A_DamageTracer(100000,"Telefrag",DMSS_FOILBUDDHA|DMSS_FOILINVUL|DMSS_NOFACTOR)
+			Goto Explosion
+		DBTAttention: //Just to turn DBT's attention back to the player.
+			TNT1 A 0 A_DamageTracer(10,"NEIN")
 			Goto Explosion
 		//==========================================================================
 		Convert:
-			"####" "#" 0 A_CheckFlag("FRIENDLY",2,AAPTR_TRACER)
+			"####" "#" 0 A_CheckFlag("FRIENDLY","Restore",AAPTR_TRACER)
 			"####" "#" 0 A_JumpIf(	CheckClass("FDeathBringerThanatos",AAPTR_TRACER,1),"Restore")
 		Restore:
 			"####" "#" 0 A_SpawnItemEx("SRBMaxController",0,0,0,0,0,0,0,32|SXF_TRANSFERPOINTERS)
@@ -12083,17 +12086,20 @@ Actor SoulReaperBladeConverter
 	//==========================================================================
 	//399 green mana or less.
 	ConvertSmall:
+		"####" "#" 0 A_Jump(128,"DmgSmaller")
 		"####" "#" 0 A_RadiusGive("SoulReaperStrength",(128+user_strength),RGF_MONSTERS,user_strength)
 		"####" "#" 0 A_RadiusGive("SRBFriendlifier",(128+user_strength),RGF_MONSTERS,1)
-	
+		Goto Explosion
+	DmgSmaller:
+		"####" "#" 0 A_Explode(user_strength*random(4,8),128+user_strength,0,0,128+user_strength)
 	//And where it all winds up afterwards.
 	Explosion:
 		"####" "#" 0 A_Explode(0,128,0,0,128)
-	End:
 	ExplosionEffect:
+	End:
 	Death:
-		"####" "#" 0 A_TakeInventory("SRBConverterOut",1000,0,AAPTR_TARGET)
-		"####" "#" 1 A_SpawnItemEx("PBExplosionDebrisless",0,0,0,0,0,0,0,32|SXF_TRANSFERTRANSLATION)
+		"####" "#" 0 A_SpawnItemEx("PBExplosionDebrisless",0,0,0,0,0,0,0,32|SXF_TRANSFERTRANSLATION)
+		"####" "#" 1 A_TakeInventory("SRBConverterOut",1000,0,AAPTR_TARGET)
 		Stop
 	}
 }
@@ -12167,8 +12173,8 @@ Actor SRBController
 		Goto DamageEnd
 	// Death Inc has written an angry letter about letting in too many petlings and slaves.
 	// Also, it's unfair trying to convert the big boss when you dont have 400 mana. WORK FOR IT!
-		"####" "#" 0 A_JumpIfInventory("AEoDToken",1,1,AAPTR_TRACER)
-		Goto DamageEnd
+		//"####" "#" 0 A_JumpIfInventory("AEoDToken",1,1,AAPTR_TRACER)
+		//Goto DamageEnd
 		"####" "#" 0 A_JumpIf(	CheckClass("FDeathBringerThanatos",AAPTR_TRACER,1) ||
 								CheckClass("DBTVulnerableThing",AAPTR_TRACER,1) ||
 								CheckClass("DBTVulnerableDouble",AAPTR_TRACER,1) ||
@@ -12249,13 +12255,13 @@ Actor SRBMaxController
 							CheckClass("DBTVulnerableDouble",AAPTR_TRACER,1) ||
 							CheckClass("DBTVulnerableThingSteel",AAPTR_TRACER,1), "GetMasterToTracer")
 		"####" "#" 0 A_JumpIf(CheckClass("FDeathBringerThanatos",AAPTR_TRACER,0),"Looping")
-		"####" "#" 0 A_JumpIfInventory("AEoDToken",1,1,AAPTR_TRACER)
-		Goto DamageEnd
+		//"####" "#" 0 A_JumpIfInventory("AEoDToken",1,1,AAPTR_TRACER)
+		//Goto DamageEnd
 		TNT1 A 0 A_SetUserVar(user_hp,CallACS("SoulReaperHealthCheck",0,0,0)) //Get their spawn health.
 		TNT1 A 0 A_JumpIf(user_hp > 50000,"DamageEnd") //Not from our mod!
 	Looping:
 		TNT1 A 0 A_JumpIfHealthLower(1,"End",AAPTR_TRACER)
-		TNT1 A 17 A_GiveInventory("SRNoDamage",1,AAPTR_TRACER)
+		TNT1 A 350 A_GiveInventory("SRNoDamage",1,AAPTR_TRACER)
 		Loop
 	Restore:
 		TNT1 A 0 A_ResetHealth(AAPTR_TRACER)
@@ -12283,7 +12289,7 @@ Actor SRFriendly : CustomInventory
 	Pickup:
 		TNT1 A 0 A_JumpIf(CheckClass("FDeathBringerThanatos",AAPTR_DEFAULT,0),2)
 		TNT1 A 0 Thing_SetTranslation(0,109)
-		TNT1 A 0 A_KillMaster("Telefrag",KILS_FOILINVUL,None,"Spawner")
+		TNT1 A 0 A_KillMaster("Telefrag",KILS_FOILINVUL,None,"AEoDSpawner")
 		TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
 		TNT1 A 0 A_ChangeFlag("SOLID",0)
 		TNT1 A 0 A_ChangeFlag("NOTELESTOMP",1)
@@ -12323,7 +12329,7 @@ Actor SRNoDamage : CustomInventory
 		TNT1 A 0 A_ChangeFlag("THRUACTORS",1)
 		TNT1 A 0 A_ChangeFlag("CANTSEEK",1)
 		TNT1 A 0 A_SetHealth(666666)
-		TNT1 A 0 A_KillMaster("Telefrag",KILS_FOILINVUL,None,"Spawner")
+		TNT1 A 0 A_KillMaster("Telefrag",KILS_FOILINVUL,None,"AEoDSpawner")
 		TNT1 A 0 A_CheckFlag("FRIENDLY","End")
 		TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
 		TNT1 A 0 A_CopyFriendliness(AAPTR_PLAYER1)

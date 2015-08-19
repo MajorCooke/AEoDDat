@@ -10506,18 +10506,16 @@ actor PopcornBomb
 	PopcornHomer:
 		X140 A 0 A_SetUserVar("user_engaged",1)
 		X140 A 0 A_ChangeFlag("FLOATBOB",1)
-		X140 A 0 A_SetUserVar("user_explolimit",0)
-		X140 A 35 A_SetUserVar("user_popcount",0)
 	PopcornStaging:
 		X140 A 0 A_CustomMissile("PopcornTargeter",0,0,random(0,360),6,random(-90,90))
-		X140 A 0 A_Explode(2,128,0)
+		X140 A 0 A_Explode(2,128,0,0)
 		X140 A 0 A_SetUserVar("user_popcount",user_popcount+1)
 		X140 A 1 A_JumpIf(user_popcount>400,1)
 		Loop
 		X140 A 140 A_SetUserVar("user_popcount",0)
 	PopcornExplodeSet:
 		X140 AAAAAAAAAA 0 A_CustomMissile("PopcornNade",20,0,random(0,360),6,random(-35,85))
-		X140 A 0 A_Explode(50,256,0)
+		X140 A 0 A_Explode(50,256,0,0)
 		X140 A 0 A_SetUserVar("user_popcount",user_popcount+1)
 		X140 A 0 A_JumpIf(user_popcount>=10,1)
 		Loop
