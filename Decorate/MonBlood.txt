@@ -96,6 +96,7 @@ Actor FCultist 7180	// chaingun guy
 		E21D D 5 A_Fall
 		E21D E 5
 		E21D FG 5
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
 		E21D H -1 
 		Stop
 		Defilement:
@@ -734,6 +735,7 @@ Actor HellHound : FCerberus			// hell knight
 		E13D B 5 A_Scream
 		E13D C 5 A_Fall
 		E13D DEFGH 5
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
 		"####" "#" 0 A_QueueCorpse
 		E13D I -1 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")	
 		Stop
@@ -748,6 +750,7 @@ Actor HellHound : FCerberus			// hell knight
 		E13D B 5 A_Scream
 		E13D C 5 A_Fall
 		E13D DEFGH 5
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
 		E13D I -1 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")	
 		Stop
 	XDeathBlood:
@@ -874,6 +877,7 @@ Actor FFireDog 7184	// chaingunner
 		ZZZZ ZAAAAAAAAAAA 0 A_TossGib
 		E14X B 3 A_Fall
 		E14X CDE 4
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
 		E14X F -1
 	Raise:
 		E14D HGFEDCBA 5
@@ -1042,6 +1046,7 @@ Actor FFatZombie 7185	// revenant
 		TNT1 AAAA 0 A_TossGib
 		E15X CDEFGHIJK 5
 		"####" "#" 0 A_QueueCorpse
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
 		E15X L -1
 		Stop
 	XDeathBlood:
@@ -1209,6 +1214,7 @@ Actor FWingedDemon 7186		// cacodemon
 		E17F E 5 A_Fall
 		E17F F 5
 		E17F GHIJ 5
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
 		E17F K -1 A_SetFloorClip
 		Stop
 	Death.UnholyDisint:
@@ -1601,6 +1607,7 @@ Actor FRat 7189
 		E19D B 5 A_Scream
 		E19D C 5 A_Fall
 		E19D DE 5
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
 		E19D F -1
 		Stop
 	Death.UnholyDisint:
@@ -2074,6 +2081,7 @@ Actor FFishThing 7194	// demon
 		E24X B 5 A_Fall
 		TNT1 AAAAAAAA 0 A_TossGib
 		E24X CDE 5
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
 		E24X F -1
 		Stop
 	XDeathBlood:
@@ -2304,6 +2312,7 @@ Actor FWereWolf2 : FWereWolf	7196	//mancubus
 		E25D B 5 A_Scream
 	   	E25D C 5 A_Fall
 	   	E25D DE 5
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
 	   	E25D F -1 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 	   	Stop
 		Defilement:
@@ -4625,9 +4634,15 @@ Actor AxeZombieBuried : AxeZombie 7202
 }
 Actor AxeZombCorpseDummy
 {
+	Monster
+	Health 0
+	-COUNTKILL
+	-SOLID
 	+CORPSE
 	+THRUACTORS
 	-NOGRAVITY
+	-SHOOTABLE
+	+NONSHOOTABLE
 	Scale 0.51
 	States
 	{
