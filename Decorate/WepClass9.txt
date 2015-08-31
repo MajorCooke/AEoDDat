@@ -8206,382 +8206,382 @@ ACTOR AEoDDrakanItem : CustomInventory 6024
 
 ACTOR AEoDDrakan : Weapon // 6024
 { 
-+FLOORCLIP
-+CHEATNOTWEAPON
-+FLOATBOB
-+NOALERT
-Weapon.AmmoType1 "RedMana"
-Weapon.AmmoType2 "RedMana" 
-Weapon.AmmoGive 20
-Weapon.AmmoUse1 8
-Weapon.AmmoUse2 0
-Obituary "%o saw a pretty fire. That was a courtesy of %k."
-Inventory.PickupMessage "Picked up the Drakan Dragon Blade!"
-Inventory.PickupSound "pickuppiece"
-AttackSound "reilsss/weapons/katanahit"
-weapon.upsound "reilsss/weapons/knifeup"
-Tag "Drakan Blade"
-States
-{
-Spawn:
-	WFR1 A -1
-	Loop
-Select:
-	TNT1 A 0 //ACS_NamedExecute("s799",0,14,0,0)
-	FSD2 A 1 A_Raise
-	TNT1 AA 0 A_Raise
-	Loop
-Deselect:
-	TNT1 A 0 A_StopSound(6)
-	TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
-	FSD2 A 1 A_Lower
-	TNT1 AA 0 A_Lower
-	Goto Deselect+1
-Flash:
-	CRBW W 3 BRIGHT A_Light1
-	CRBW W 2 BRIGHT A_Light0
-	Stop 
+	+FLOORCLIP
+	+CHEATNOTWEAPON
+	+FLOATBOB
+	+NOALERT
+	Weapon.AmmoType1 "RedMana"
+	Weapon.AmmoType2 "RedMana" 
+	Weapon.AmmoGive 20
+	Weapon.AmmoUse1 8
+	Weapon.AmmoUse2 0
+	Obituary "%o saw a pretty fire. That was a courtesy of %k."
+	Inventory.PickupMessage "Picked up the Drakan Dragon Blade!"
+	Inventory.PickupSound "pickuppiece"
+	AttackSound "reilsss/weapons/katanahit"
+	weapon.upsound "reilsss/weapons/knifeup"
+	Tag "Drakan Blade"
+	States
+	{
+	Spawn:
+		WFR1 A -1
+		Loop
+	Select:
+		TNT1 A 0 //ACS_NamedExecute("s799",0,14,0,0)
+		FSD2 A 1 A_Raise
+		"----" AA 0 A_Raise
+		Loop
+	Deselect:
+		TNT1 A 0 A_StopSound(6)
+		//TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
+		FSD2 A 1 A_Lower
+		"----" AA 0 A_Lower
+		Goto Deselect+1
+	Flash:
+		CRBW W 3 BRIGHT A_Light1
+		CRBW W 2 BRIGHT A_Light0
+		Stop 
 
-//Melee
-Ready:
-	TNT1 A 0 A_StopSound(6)
-	TNT1 A 0 A_JumpIfInventory("DrakanModeChecker",1,"Ready2")
-	TNT1 A 0 A_PlaySound("reilsss/weapons/flameidle1", 6, 1.0, 1)
-	R037 ABC 6 Bright A_WeaponReady
-	Goto Ready+3
-Fire:
-	TNT1 A 0 A_JumpIfInventory("DrakanModeChecker",1,"Fire2")
-	R037 A 1 Bright Offset (5, 40)
-	R037 B 1 Bright Offset (5, 45)
-	R037 C 1 Bright Offset (5, 50)
-	R037 A 1 Bright Offset (5, 55)
-	R037 B 1 Bright Offset (5, 60)
-	goto Hold
-Hold:
-	TNT1 A 0 A_JumpIfInventory("DrakanModeChecker",1,"Hold2")
-	TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
-	R037 D 3 Bright Offset (5, 36)
-	R037 E 3 Bright Offset (5, 36)
-	R037 F 2 Bright Offset (5, 36)
-	TNT1 A 0 A_JumpIfCloser(150,"HoldClose")
-	TNT1 A 0 A_PlaySound("weapons/gvaporize", 8, 1.0, 0)
-	TNT1 A 0 A_Recoil(-1)
-	TNT1 A 0 A_Firecustommissile("CheapAlert2",0,0,0,0)
-	TNT1 A 0 Bright A_FireCustomMissile("DrakenFire2", -9, 0, 0, 8)
-	TNT1 A 0 Bright A_FireCustomMissile("DrakenFire2", -4, 0, 0, 6)
-	TNT1 A 0 Bright A_FireCustomMissile("DrakenFire2", 0, 1, 0, 4)
-	TNT1 A 0 Bright A_FireCustomMissile("DrakenFire2", 4, 0, 0, 2)
-	TNT1 A 0 Bright A_FireCustomMissile("DrakenFire2", 9, 0, 0, 0)
-	TNT1 A 0 A_SetBlend("Green",0.5,8)
-	R037 G 1 Bright Offset (5, 36) A_SetPitch(pitch+5)
-	R037 GHHII 1 Bright Offset (5, 36) A_SetPitch(pitch-1)
-	TNT1 A 6 Bright Offset (5, 150)
-	TNT1 A 4 A_ReFire
-	R037 B 1 Bright Offset (5, 60)
-	R037 C 1 Bright Offset (5, 55) 
-	R037 A 1 Bright Offset (5, 50)
-	R037 B 1 Bright Offset (5, 45)
-	R037 C 1 Bright Offset (5, 40)
-	goto Ready
-HoldClose:
-	//TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
-	//R037 D 3 Bright Offset (5, 36)
-	//R037 E 3 Bright Offset (5, 36)
-	//R037 F 2 Bright Offset (5, 36)
-	//TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordfire", 8, 1.0, 0)
-	TNT1 A 0 A_Recoil(-1)
-	TNT1 A 0 A_Firecustommissile("CheapAlert2",0,0,0,0)
-	TNT1 A 0 A_CustomPunch (random(500,1000),1,1,"DrakanPuff",150)
-	TNT1 A 0 A_GiveInventory("DrakanLeech", random(10,15))
-	R037 G 1 Bright Offset (5, 36) A_SetPitch(pitch+3)
-	R037 GGHHII 1 Bright Offset (5, 36) A_SetPitch(pitch-0.5)
-	TNT1 A 6 Bright Offset (5, 150)
-	TNT1 A 4 A_ReFire
-	R037 B 1 Bright Offset (5, 60) 
-	R037 C 1 Bright Offset (5, 55) 
-	R037 A 1 Bright Offset (5, 50)
-	R037 B 1 Bright Offset (5, 45)
-	R037 C 1 Bright Offset (5, 40)
-	goto Ready
-AltFire:
-	TNT1 A 0 A_JumpIfInventory("DrakanModeChecker",1,"AltFire2")
-	TNT1 A 0 A_GiveInventory("DrakanModeChecker",1)
-	TNT1 A 0 A_StopSound(6)
-	FSD2 A 4
-	R046 A 4 Bright A_PlaySound("reilsss/weapons/firehandaltfire", CHAN_WEAPON, 1.0, 0)
-	R046 BC 4 Bright
-	goto Ready
-//Ice / Ligthblue
-Ready2:
-	TNT1 A 0 A_StopSound(6)
-	TNT1 A 0 A_JumpIfInventory("DrakanModeChecker",2,"Ready3")
-	TNT1 A 0 A_PlaySound("reilsss/weapons/flameidle1", 6, 0.2, 1)
-	R046 ABC 6 Bright A_WeaponReady
-	Goto Ready2+3
-Fire2:
-	TNT1 A 0 A_JumpIfInventory("DrakanModeChecker",2,"Fire3")
-	R046 A 1 Bright Offset (5, 40)
-	R046 B 1 Bright Offset (5, 45)
-	R046 C 1 Bright Offset (5, 50)
-	R046 A 1 Bright Offset (5, 55)
-	R046 B 1 Bright Offset (5, 60)
-	goto Hold2
-Hold2:
-	TNT1 A 0 A_JumpIfInventory("DrakanModeChecker",2,"Hold3")
-	//TNT1 A 0 A_JumpIfCloser(150,"Hold2Close")
-	TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
-	R046 D 3 Bright Offset (5, 36)
-	R046 E 3 Bright Offset (5, 36)
-	R046 F 2 Bright Offset (5, 36)
-	TNT1 A 0 A_JumpIfCloser(150,"Hold2Close")
-	TNT1 A 0 A_PlaySound("weapons/gvaporize", 8, 1.0, 0)
-	TNT1 A 0 A_Recoil(1)
-	TNT1 A 0 A_Firecustommissile("CheapAlert2",0,0,0,0)
-	TNT1 A 0 Bright A_FireCustomMissile("DrakenFire3", -9, 0, 0, 8)
-	TNT1 A 0 Bright A_FireCustomMissile("DrakenFire3", -4, 0, 0, 6)
-	TNT1 A 0 Bright A_FireCustomMissile("DrakenFire3", 0, 1, 0, 4)
-	TNT1 A 0 Bright A_FireCustomMissile("DrakenFire3", 4, 0, 0, 2)
-	TNT1 A 0 Bright A_FireCustomMissile("DrakenFire3", 9, 0, 0, 0)
-	TNT1 A 0 A_SetBlend("Cyan1",0.5,8)
-	R046 G 1 Bright Offset (5, 36) A_SetPitch(pitch+3)
-	R046 GGHHII 1 Bright Offset (5, 36) A_SetPitch(pitch-0.5)
-	TNT1 A 6
-	TNT1 A 4 A_ReFire
-	R046 B 1 Bright Offset (5, 60)
-	R046 C 1 Bright Offset (5, 55) 
-	R046 A 1 Bright Offset (5, 50)
-	R046 B 1 Bright Offset (5, 45)
-	R046 C 1 Bright Offset (5, 40)
-	goto Ready
-Hold2Close:
-	//TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
-	//R046 D 3 Bright Offset (5, 36)
-	//R046 E 3 Bright Offset (5, 36)
-	//R046 F 2 Bright Offset (5, 36)
-	//TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordfire", 8, 1.0, 0)
-	TNT1 A 0 A_Recoil(-1)
-	TNT1 A 0 A_Firecustommissile("CheapAlert2",0,0,0,0)
-	TNT1 A 0 A_CustomPunch (random(500,1000),1,1,"DrakanPuffIce",150)
-	TNT1 A 0 A_GiveInventory("DrakanLeech", random(10,15))
-	R046 G 1 Bright Offset (5, 36) A_SetPitch(pitch+3)
-	R046 GGHHII 1 Bright Offset (5, 36) A_SetPitch(pitch-0.5)
-	TNT1 A 6
-	TNT1 A 4 A_ReFire
-	R046 B 1 Bright Offset (5, 60) 
-	R046 C 1 Bright Offset (5, 55) 
-	R046 A 1 Bright Offset (5, 50)
-	R046 B 1 Bright Offset (5, 45)
-	R046 C 1 Bright Offset (5, 40)
-	goto Ready
-AltFire2:
-	TNT1 A 0 A_JumpIfInventory("DrakanModeChecker",2,"AltFire3")
-	TNT1 A 0 A_GiveInventory("DrakanModeChecker",1)
-	TNT1 A 0 A_StopSound(6)
-	FSD2 A 4
-	R038 A 4 Bright A_PlaySound("reilsss/weapons/firehandaltfire", CHAN_WEAPON, 1.0, 0)
-	R038 BC 4 Bright
-	goto Ready
-//Wind / White
-Ready3:
-	TNT1 A 0 A_StopSound(6)
-	TNT1 A 0 A_JumpIfInventory("DrakanModeChecker",3,"Ready4")
-	TNT1 A 0 A_PlaySound("reilsss/weapons/flameidle1", 6, 0.2, 1)
-	R038 ABC 6 Bright A_WeaponReady
-	Goto Ready3+3
-Fire3:
-	TNT1 A 0 A_JumpIfInventory("DrakanModeChecker",3,"Fire4")
-	R038 A 1 Bright Offset (5, 40)
-	R038 B 1 Bright Offset (5, 45)
-	R038 C 1 Bright Offset (5, 50)
-	R038 A 1 Bright Offset (5, 55)
-	R038 B 1 Bright Offset (5, 60)
-	goto Hold3
-Hold3:
-	TNT1 A 0 A_JumpIfInventory("DrakanModeChecker",3,"Hold4")
-	TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
-	R038 D 3 Bright Offset (5, 36)
-	R038 E 3 Bright Offset (5, 36)
-	R038 F 2 Bright Offset (5, 36)
-	TNT1 A 0 A_JumpIfCloser(150,"Hold3Close")
-	TNT1 A 0 A_PlaySound("weapons/gvaporize", 8, 1.0, 0)
-	TNT1 A 0 A_Recoil(1)
-	TNT1 A 0 A_Firecustommissile("CheapAlert2",0,0,0,0)
-	TNT1 A 0 Bright A_FireCustomMissile("DrakenFire8", -9, 0, 0, 8)
-	TNT1 A 0 Bright A_FireCustomMissile("DrakenFire8", -4, 0, 0, 6)
-	TNT1 A 0 Bright A_FireCustomMissile("DrakenFire8", 0, 1, 0, 4)
-	TNT1 A 0 Bright A_FireCustomMissile("DrakenFire8", 4, 0, 0, 2)
-	TNT1 A 0 Bright A_FireCustomMissile("DrakenFire8", 9, 0, 0, 0)
-	TNT1 A 0 A_SetBlend("DarkViolet",0.5,8)
-	R038 G 1 Bright Offset (5, 36) A_SetPitch(pitch+3)
-	R038 GGHHII 1 Bright Offset (5, 36) A_SetPitch(pitch-0.5)
-	TNT1 A 6 Bright Offset (5, 150)
-	TNT1 A 4 A_ReFire
-	R038 B 1 Bright Offset (5, 60)
-	R038 C 1 Bright Offset (5, 55) 
-	R038 A 1 Bright Offset (5, 50)
-	R038 B 1 Bright Offset (5, 45)
-	R038 C 1 Bright Offset (5, 40)
-	goto Ready
-Hold3Close:
-	//TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
-	//R038 D 3 Bright Offset (5, 36)
-	//R038 E 3 Bright Offset (5, 36)
-	//R038 F 2 Bright Offset (5, 36)
-	//TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordfire", 8, 1.0, 0)
-	TNT1 A 0 A_Recoil(-1)
-	TNT1 A 0 A_Firecustommissile("CheapAlert2",0,0,0,0)
-	TNT1 A 0 A_CustomPunch (random(500,1000),1,1,"DrakanPuffMagic",150)
-	TNT1 A 0 A_GiveInventory("DrakanLeech", random(10,15))
-	R038 G 1 Bright Offset (5, 36) A_SetPitch(pitch+3)
-	R038 GGHHII 1 Bright Offset (5, 36) A_SetPitch(pitch-0.5)
-	TNT1 A 6 Bright Offset (5, 150)
-	TNT1 A 4 A_ReFire
-	R038 B 1 Bright Offset (5, 60) 
-	R038 C 1 Bright Offset (5, 55) 
-	R038 A 1 Bright Offset (5, 50)
-	R038 B 1 Bright Offset (5, 45)
-	R038 C 1 Bright Offset (5, 40)
-	goto Ready
-AltFire3:
-	TNT1 A 0 A_JumpIfInventory("DrakanModeChecker",3,"AltFire4")
-	TNT1 A 0 A_GiveInventory("DrakanModeChecker",1)
-	TNT1 A 0 A_StopSound(6)
-	FSD2 A 4
-	R040 A 4 Bright A_PlaySound("reilsss/weapons/firehandaltfire", CHAN_WEAPON, 1.0, 0)
-	R040 BC 4 Bright
-	goto Ready
-//Dragon / (Gold/Yellow)
-Ready4:
-	TNT1 A 0 A_StopSound(6)
-	TNT1 A 0 A_JumpIfInventory("DrakanModeChecker",4,"Ready5")
-	TNT1 A 0 A_PlaySound("reilsss/weapons/flameidle1", 6, 0.2, 1)
-	R040 ABC 6 Bright A_WeaponReady
-	Goto Ready4+3
-Fire4:
-	TNT1 A 0 A_JumpIfInventory("DrakanModeChecker",4,"Fire5")
-	R040 A 1 Bright Offset (5, 40)
-	R040 B 1 Bright Offset (5, 45)
-	R040 C 1 Bright Offset (5, 50)
-	R040 A 1 Bright Offset (5, 55)
-	R040 B 1 Bright Offset (5, 60)
-	goto Hold4
-Hold4:
-	TNT1 A 0 A_JumpIfInventory("DrakanModeChecker",4,"Hold5")
-	TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
-	R040 D 3 Bright Offset (5, 36)
-	R040 E 3 Bright Offset (5, 36)
-	R040 F 2 Bright Offset (5, 36)
-	TNT1 A 0 A_JumpIfInventory("RedMana",12,"Hold4Cont")     //if not enough to summon the dragon, will do melee
-	Goto "Hold4Close"
-Hold4Cont:
-	TNT1 A 0 A_PlaySound("weapons/gvaporize", 8, 0.2, 0)
-	TNT1 A 0 A_Recoil(1)
-	TNT1 AA 0 A_Firecustommissile("CheapAlert2",0,1,0,0)     //ammo waster
-	TNT1 A 0 Bright A_FireCustomMissile("DrakenFire9", 0, 1, 0, 4)
-	TNT1 A 0 A_SetBlend("Gold",0.5,8)
-	R040 G 1 Bright Offset (5, 36) A_SetPitch(pitch+3)
-	R040 GGHHII 1 Bright Offset (5, 36) A_SetPitch(pitch-0.5)
-	TNT1 A 6 Bright Offset (5, 150)
-	TNT1 A 4 A_ReFire
-	R040 B 1 Bright Offset (5, 60) 
-	R040 C 1 Bright Offset (5, 55)
-	R040 A 1 Bright Offset (5, 50)
-	R040 B 1 Bright Offset (5, 45)
-	R040 C 1 Bright Offset (5, 40)
-	goto Ready
-Hold4Close:
-	TNT1 A 0 A_Recoil(-1)
-	TNT1 A 0 A_Firecustommissile("CheapAlert2",0,0,0,0)
-	TNT1 A 0 A_CustomPunch(random(400,1000),1,1,"DrakanPuffFire",150)
-	TNT1 A 0 A_GiveInventory("DrakanLeech", random(10,15))
-	R040 G 1 Bright Offset (5, 36) A_SetPitch(pitch+3)
-	R040 GGHHII 1 Bright Offset (5, 36) A_SetPitch(pitch-0.5)
-	TNT1 A 6 Bright Offset (5, 150)
-	TNT1 A 4 A_ReFire
-	R040 B 1 Bright Offset (5, 60)
-	R040 C 1 Bright Offset (5, 55)
-	R040 A 1 Bright Offset (5, 50)
-	R040 B 1 Bright Offset (5, 45)
-	R040 C 1 Bright Offset (5, 40)
-	goto Ready
-AltFire4:
-	TNT1 A 0 A_JumpIfInventory("DrakanModeChecker",4,"AltFire5")
-	TNT1 A 0 A_GiveInventory("DrakanModeChecker",1)
-	TNT1 A 0 A_StopSound(6)
-	FSD2 A 4
-	R044 A 4 Bright A_PlaySound("reilsss/weapons/firehandaltfire", CHAN_WEAPON, 1.0, 0)
-	R044 BC 4 Bright
-	goto Ready
-//Black Vortex
-Ready5:
-	TNT1 A 0 A_StopSound(6)
-	//TNT1 A 0 A_JumpIfInventory("DrakanModeChecker",3,"Ready4")
-	TNT1 A 0 A_PlaySound("reilsss/weapons/flameidle1", 6, 0.2, 1)
-	R044 ABC 6 Bright A_WeaponReady
-	Goto Ready5+2
-Fire5:
-	//TNT1 A 0 A_JumpIfInventory("DrakanModeChecker",3,"Fire4")
-	R044 A 1 Bright Offset (5, 40)
-	R044 B 1 Bright Offset (5, 45)
-	R044 C 1 Bright Offset (5, 50)
-	R044 A 1 Bright Offset (5, 55)
-	R044 B 1 Bright Offset (5, 60)
-	goto Hold5
-Hold5:
-	//TNT1 A 0 A_JumpIfInventory("DrakanModeChecker",3,"Hold4")
-	//TNT1 A 0 A_JumpIfCloser(150,"Hold5Close")
-	TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
-	R044 D 3 Bright Offset (5, 36)
-	R044 E 3 Bright Offset (5, 36)
-	R044 F 2 Bright Offset (5, 36)
-	TNT1 A 0 A_JumpIfCloser(150,"Hold5Close")
-	TNT1 A 0 A_PlaySound("weapons/gvaporize", 8, 1.0, 0)
-	TNT1 A 0 A_Recoil(1)
-	TNT1 A 0 A_Firecustommissile("CheapAlert2",0,0,0,0)
-	TNT1 A 0 Bright A_FireCustomMissile("DrakKESSmall", -9, 0, 0, 8)
-	TNT1 A 0 Bright A_FireCustomMissile("DrakKESSmall", -4, 0, 0, 6)
-	TNT1 A 0 Bright A_FireCustomMissile("DrakKESSmall", 0, 1, 0, 4)
-	TNT1 A 0 Bright A_FireCustomMissile("DrakKESSmall", 4, 0, 0, 2)
-	TNT1 A 0 Bright A_FireCustomMissile("DrakKESSmall", 9, 0, 0, 0)
-	TNT1 A 0 A_SetBlend("Black",0.5,8)
-	R044 G 1 Bright Offset (5, 36) A_SetPitch(pitch+3)
-	R044 GGHHII 1 Bright Offset (5, 36) A_SetPitch(pitch-0.5)
-	TNT1 A 6 Bright Offset (5, 150)
-	TNT1 A 8 A_ReFire
-	R044 B 1 Bright Offset (5, 60) 
-	R044 C 1 Bright Offset (5, 55) 
-	R044 A 1 Bright Offset (5, 50)
-	R044 B 1 Bright Offset (5, 45)
-	R044 C 1 Bright Offset (5, 40)
-	goto Ready
-Hold5Close:
-	//TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
-	//R044 D 3 Bright Offset (5, 36)
-	//R044 E 3 Bright Offset (5, 36)
-	//R044 F 2 Bright Offset (5, 36)
-	//TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordfire", 8, 1.0, 0)
-	TNT1 A 0 A_Recoil(-1)
-	TNT1 A 0 A_Firecustommissile("CheapAlert2",0,0,0,0)
-	TNT1 A 0 A_CustomPunch(random(500,1000),1,1,"DrakanPuffVorpal",150)
-	TNT1 A 0 A_GiveInventory("DrakanLeech", random(10,15))
-	R044 G 1 Bright Offset (5, 36) A_SetPitch(pitch+3)
-	R044 GGHHII 1 Bright Offset (5, 36) A_SetPitch(pitch-0.5)
-	TNT1 A 6 Bright Offset (5, 150)
-	TNT1 A 4 A_ReFire
-	R044 B 1 Bright Offset (5, 60) 
-	R044 C 1 Bright Offset (5, 55) 
-	R044 A 1 Bright Offset (5, 50)
-	R044 B 1 Bright Offset (5, 45)
-	R044 C 1 Bright Offset (5, 40)
-	goto Ready
-AltFire5:
-	TNT1 A 0 A_TakeInventory("DrakanModeChecker",9999)
-	TNT1 A 0 A_StopSound(6)
-	FSD2 A 4
-	R037 A 4 Bright A_PlaySound("reilsss/weapons/firehandaltfire", CHAN_WEAPON, 1.0, 0)
-	R037 BC 4 Bright
-	goto Ready
-}
+	//Melee
+	Ready:
+		R037 A 0 A_StopSound(6)
+		"----" A 0 A_JumpIfInventory("DrakanModeChecker",1,"Ready2")
+		"----" A 0 A_PlaySound("reilsss/weapons/flameidle1", 6, 1.0, 1)
+		R037 ABC 6 Bright A_WeaponReady
+		Goto Ready+3
+	Fire:
+		"----" A 0 A_JumpIfInventory("DrakanModeChecker",1,"Fire2")
+		R037 A 1 Bright Offset (5, 40)
+		R037 B 1 Bright Offset (5, 45)
+		R037 C 1 Bright Offset (5, 50)
+		R037 A 1 Bright Offset (5, 55)
+		R037 B 1 Bright Offset (5, 60)
+		goto Hold
+	Hold:
+		"----" A 0 A_JumpIfInventory("DrakanModeChecker",1,"Hold2")
+		"----" A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
+		R037 D 3 Bright Offset (5, 36)
+		R037 E 3 Bright Offset (5, 36)
+		R037 F 2 Bright Offset (5, 36)
+		"----" A 0 A_JumpIfCloser(150,"HoldClose")
+		"----" A 0 A_PlaySound("weapons/gvaporize", 8, 1.0, 0)
+		"----" A 0 A_Recoil(-1)
+		"----" A 0 A_Firecustommissile("CheapAlert2",0,0,0,0)
+		"----" A 0 Bright A_FireCustomMissile("DrakenFire2", -9, 0, 0, 8)
+		"----" A 0 Bright A_FireCustomMissile("DrakenFire2", -4, 0, 0, 6)
+		"----" A 0 Bright A_FireCustomMissile("DrakenFire2", 0, 1, 0, 4)
+		"----" A 0 Bright A_FireCustomMissile("DrakenFire2", 4, 0, 0, 2)
+		"----" A 0 Bright A_FireCustomMissile("DrakenFire2", 9, 0, 0, 0)
+		"----" A 0 A_SetBlend("Green",0.5,8)
+		R037 G 1 Bright Offset (5, 36) A_SetPitch(pitch+5)
+		R037 GHHII 1 Bright Offset (5, 36) A_SetPitch(pitch-1)
+		TNT1 A 6 Bright Offset (5, 150)
+		TNT1 A 4 A_ReFire
+		R037 B 1 Bright Offset (5, 60)
+		R037 C 1 Bright Offset (5, 55) 
+		R037 A 1 Bright Offset (5, 50)
+		R037 B 1 Bright Offset (5, 45)
+		R037 C 1 Bright Offset (5, 40)
+		goto Ready
+	HoldClose:
+		//"----" A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
+		//R037 D 3 Bright Offset (5, 36)
+		//R037 E 3 Bright Offset (5, 36)
+		//R037 F 2 Bright Offset (5, 36)
+		//"----" A 0 A_PlaySound("reilsss/weapons/dragonswordfire", 8, 1.0, 0)
+		"----" A 0 A_Recoil(-1)
+		"----" A 0 A_Firecustommissile("CheapAlert2",0,0,0,0)
+		"----" A 0 A_CustomPunch (random(500,1000),1,1,"DrakanPuff",150)
+		"----" A 0 A_GiveInventory("DrakanLeech", random(10,15))
+		R037 G 1 Bright Offset (5, 36) A_SetPitch(pitch+3)
+		R037 GGHHII 1 Bright Offset (5, 36) A_SetPitch(pitch-0.5)
+		TNT1 A 6 Bright Offset (5, 150)
+		TNT1 A 4 A_ReFire
+		R037 B 1 Bright Offset (5, 60) 
+		R037 C 1 Bright Offset (5, 55) 
+		R037 A 1 Bright Offset (5, 50)
+		R037 B 1 Bright Offset (5, 45)
+		R037 C 1 Bright Offset (5, 40)
+		goto Ready
+	AltFire:
+		"----" A 0 A_JumpIfInventory("DrakanModeChecker",1,"AltFire2")
+		"----" A 0 A_GiveInventory("DrakanModeChecker",1)
+		"----" A 0 A_StopSound(6)
+		FSD2 A 4
+		R046 A 4 Bright A_PlaySound("reilsss/weapons/firehandaltfire", CHAN_WEAPON, 1.0, 0)
+		R046 BC 4 Bright
+		goto Ready
+	//Ice / Ligthblue
+	Ready2:
+		"----" A 0 A_StopSound(6)
+		"----" A 0 A_JumpIfInventory("DrakanModeChecker",2,"Ready3")
+		"----" A 0 A_PlaySound("reilsss/weapons/flameidle1", 6, 0.2, 1)
+		R046 ABC 6 Bright A_WeaponReady
+		Goto Ready2+3
+	Fire2:
+		"----" A 0 A_JumpIfInventory("DrakanModeChecker",2,"Fire3")
+		R046 A 1 Bright Offset (5, 40)
+		R046 B 1 Bright Offset (5, 45)
+		R046 C 1 Bright Offset (5, 50)
+		R046 A 1 Bright Offset (5, 55)
+		R046 B 1 Bright Offset (5, 60)
+		goto Hold2
+	Hold2:
+		"----" A 0 A_JumpIfInventory("DrakanModeChecker",2,"Hold3")
+		//TNT1 A 0 A_JumpIfCloser(150,"Hold2Close")
+		TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
+		R037 D 3 Bright Offset (5, 36)
+		R046 E 3 Bright Offset (5, 36)
+		R046 F 2 Bright Offset (5, 36)
+		"----" A 0 A_JumpIfCloser(150,"Hold2Close")
+		"----" A 0 A_PlaySound("weapons/gvaporize", 8, 1.0, 0)
+		"----" A 0 A_Recoil(1)
+		"----" A 0 A_Firecustommissile("CheapAlert2",0,0,0,0)
+		"----" A 0 Bright A_FireCustomMissile("DrakenFire3", -9, 0, 0, 8)
+		"----" A 0 Bright A_FireCustomMissile("DrakenFire3", -4, 0, 0, 6)
+		"----" A 0 Bright A_FireCustomMissile("DrakenFire3", 0, 1, 0, 4)
+		"----" A 0 Bright A_FireCustomMissile("DrakenFire3", 4, 0, 0, 2)
+		"----" A 0 Bright A_FireCustomMissile("DrakenFire3", 9, 0, 0, 0)
+		"----" A 0 A_SetBlend("Cyan1",0.5,8)
+		R046 G 1 Bright Offset (5, 36) A_SetPitch(pitch+3)
+		R046 GGHHII 1 Bright Offset (5, 36) A_SetPitch(pitch-0.5)
+		TNT1 A 6
+		TNT1 A 4 A_ReFire
+		R046 B 1 Bright Offset (5, 60)
+		R046 C 1 Bright Offset (5, 55) 
+		R046 A 1 Bright Offset (5, 50)
+		R046 B 1 Bright Offset (5, 45)
+		R046 C 1 Bright Offset (5, 40)
+		goto Ready
+	Hold2Close:
+		//TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
+		//R046 D 3 Bright Offset (5, 36)
+		//R046 E 3 Bright Offset (5, 36)
+		//R046 F 2 Bright Offset (5, 36)
+		//TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordfire", 8, 1.0, 0)
+		"----" A 0 A_Recoil(-1)
+		"----" A 0 A_Firecustommissile("CheapAlert2",0,0,0,0)
+		"----" A 0 A_CustomPunch (random(500,1000),1,1,"DrakanPuffIce",150)
+		"----" A 0 A_GiveInventory("DrakanLeech", random(10,15))
+		R046 G 1 Bright Offset (5, 36) A_SetPitch(pitch+3)
+		R046 GGHHII 1 Bright Offset (5, 36) A_SetPitch(pitch-0.5)
+		TNT1 A 6
+		TNT1 A 4 A_ReFire
+		R046 B 1 Bright Offset (5, 60) 
+		R046 C 1 Bright Offset (5, 55) 
+		R046 A 1 Bright Offset (5, 50)
+		R046 B 1 Bright Offset (5, 45)
+		R046 C 1 Bright Offset (5, 40)
+		goto Ready
+	AltFire2:
+		TNT1 A 0 A_JumpIfInventory("DrakanModeChecker",2,"AltFire3")
+		TNT1 A 0 A_GiveInventory("DrakanModeChecker",1)
+		TNT1 A 0 A_StopSound(6)
+		FSD2 A 4
+		R038 A 4 Bright A_PlaySound("reilsss/weapons/firehandaltfire", CHAN_WEAPON, 1.0, 0)
+		R038 BC 4 Bright
+		goto Ready
+	//Wind / White
+	Ready3:
+		"----" A 0 A_StopSound(6)
+		"----" A 0 A_JumpIfInventory("DrakanModeChecker",3,"Ready4")
+		"----" A 0 A_PlaySound("reilsss/weapons/flameidle1", 6, 0.2, 1)
+		R038 ABC 6 Bright A_WeaponReady
+		Goto Ready3+3
+	Fire3:
+		"----" A 0 A_JumpIfInventory("DrakanModeChecker",3,"Fire4")
+		R038 A 1 Bright Offset (5, 40)
+		R038 B 1 Bright Offset (5, 45)
+		R038 C 1 Bright Offset (5, 50)
+		R038 A 1 Bright Offset (5, 55)
+		R038 B 1 Bright Offset (5, 60)
+		goto Hold3
+	Hold3:
+		"----" A 0 A_JumpIfInventory("DrakanModeChecker",3,"Hold4")
+		"----" A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
+		R037 D 3 Bright Offset (5, 36)
+		R038 E 3 Bright Offset (5, 36)
+		R038 F 2 Bright Offset (5, 36)
+		"----" A 0 A_JumpIfCloser(150,"Hold3Close")
+		"----" A 0 A_PlaySound("weapons/gvaporize", 8, 1.0, 0)
+		"----" A 0 A_Recoil(1)
+		"----" A 0 A_Firecustommissile("CheapAlert2",0,0,0,0)
+		"----" A 0 Bright A_FireCustomMissile("DrakenFire8", -9, 0, 0, 8)
+		"----" A 0 Bright A_FireCustomMissile("DrakenFire8", -4, 0, 0, 6)
+		"----" A 0 Bright A_FireCustomMissile("DrakenFire8", 0, 1, 0, 4)
+		"----" A 0 Bright A_FireCustomMissile("DrakenFire8", 4, 0, 0, 2)
+		"----" A 0 Bright A_FireCustomMissile("DrakenFire8", 9, 0, 0, 0)
+		"----" A 0 A_SetBlend("DarkViolet",0.5,8)
+		R038 G 1 Bright Offset (5, 36) A_SetPitch(pitch+3)
+		R038 GGHHII 1 Bright Offset (5, 36) A_SetPitch(pitch-0.5)
+		"----" A 6 Bright Offset (5, 150)
+		"----" A 4 A_ReFire
+		R038 B 1 Bright Offset (5, 60)
+		R038 C 1 Bright Offset (5, 55) 
+		R038 A 1 Bright Offset (5, 50)
+		R038 B 1 Bright Offset (5, 45)
+		R038 C 1 Bright Offset (5, 40)
+		goto Ready
+	Hold3Close:
+		//TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
+		//R038 D 3 Bright Offset (5, 36)
+		//R038 E 3 Bright Offset (5, 36)
+		//R038 F 2 Bright Offset (5, 36)
+		//TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordfire", 8, 1.0, 0)
+		"----" A 0 A_Recoil(-1)
+		"----" A 0 A_Firecustommissile("CheapAlert2",0,0,0,0)
+		"----" A 0 A_CustomPunch (random(500,1000),1,1,"DrakanPuffMagic",150)
+		"----" A 0 A_GiveInventory("DrakanLeech", random(10,15))
+		R038 G 1 Bright Offset (5, 36) A_SetPitch(pitch+3)
+		R038 GGHHII 1 Bright Offset (5, 36) A_SetPitch(pitch-0.5)
+		"----" A 6 Bright Offset (5, 150)
+		"----" A 4 A_ReFire
+		R038 B 1 Bright Offset (5, 60) 
+		R038 C 1 Bright Offset (5, 55) 
+		R038 A 1 Bright Offset (5, 50)
+		R038 B 1 Bright Offset (5, 45)
+		R038 C 1 Bright Offset (5, 40)
+		goto Ready
+	AltFire3:
+		"----" A 0 A_JumpIfInventory("DrakanModeChecker",3,"AltFire4")
+		"----" A 0 A_GiveInventory("DrakanModeChecker",1)
+		"----" A 0 A_StopSound(6)
+		FSD2 A 4
+		R040 A 4 Bright A_PlaySound("reilsss/weapons/firehandaltfire", CHAN_WEAPON, 1.0, 0)
+		R040 BC 4 Bright
+		goto Ready
+	//Dragon / (Gold/Yellow)
+	Ready4:
+		"----" A 0 A_StopSound(6)
+		"----" A 0 A_JumpIfInventory("DrakanModeChecker",4,"Ready5")
+		"----" A 0 A_PlaySound("reilsss/weapons/flameidle1", 6, 0.2, 1)
+		R040 ABC 6 Bright A_WeaponReady
+		Goto Ready4+3
+	Fire4:
+		"----" A 0 A_JumpIfInventory("DrakanModeChecker",4,"Fire5")
+		R040 A 1 Bright Offset (5, 40)
+		R040 B 1 Bright Offset (5, 45)
+		R040 C 1 Bright Offset (5, 50)
+		R040 A 1 Bright Offset (5, 55)
+		R040 B 1 Bright Offset (5, 60)
+		goto Hold4
+	Hold4:
+		"----" A 0 A_JumpIfInventory("DrakanModeChecker",4,"Hold5")
+		"----" A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
+		R037 D 3 Bright Offset (5, 36)
+		R040 E 3 Bright Offset (5, 36)
+		R040 F 2 Bright Offset (5, 36)
+		"----" A 0 A_JumpIfInventory("RedMana",12,"Hold4Cont")     //if not enough to summon the dragon, will do melee
+		Goto "Hold4Close"
+	Hold4Cont:
+		"----" A 0 A_PlaySound("weapons/gvaporize", 8, 0.2, 0)
+		"----" A 0 A_Recoil(1)
+		"----" AA 0 A_Firecustommissile("CheapAlert2",0,1,0,0)     //ammo waster
+		"----" A 0 Bright A_FireCustomMissile("DrakenFire9", 0, 1, 0, 4)
+		"----" A 0 A_SetBlend("Gold",0.5,8)
+		R040 G 1 Bright Offset (5, 36) A_SetPitch(pitch+3)
+		R040 GGHHII 1 Bright Offset (5, 36) A_SetPitch(pitch-0.5)
+		TNT1 A 6 Bright Offset (5, 150)
+		TNT1 A 4 A_ReFire
+		R040 B 1 Bright Offset (5, 60) 
+		R040 C 1 Bright Offset (5, 55)
+		R040 A 1 Bright Offset (5, 50)
+		R040 B 1 Bright Offset (5, 45)
+		R040 C 1 Bright Offset (5, 40)
+		goto Ready
+	Hold4Close:
+		"----" A 0 A_Recoil(-1)
+		"----" A 0 A_Firecustommissile("CheapAlert2",0,0,0,0)
+		"----" A 0 A_CustomPunch(random(400,1000),1,1,"DrakanPuffFire",150)
+		"----" A 0 A_GiveInventory("DrakanLeech", random(10,15))
+		R040 G 1 Bright Offset (5, 36) A_SetPitch(pitch+3)
+		R040 GGHHII 1 Bright Offset (5, 36) A_SetPitch(pitch-0.5)
+		TNT1 A 6 Bright Offset (5, 150)
+		TNT1 A 4 A_ReFire
+		R040 B 1 Bright Offset (5, 60)
+		R040 C 1 Bright Offset (5, 55)
+		R040 A 1 Bright Offset (5, 50)
+		R040 B 1 Bright Offset (5, 45)
+		R040 C 1 Bright Offset (5, 40)
+		goto Ready
+	AltFire4:
+		"----" A 0 A_JumpIfInventory("DrakanModeChecker",4,"AltFire5")
+		"----" A 0 A_GiveInventory("DrakanModeChecker",1)
+		"----" A 0 A_StopSound(6)
+		FSD2 A 4
+		R044 A 4 Bright A_PlaySound("reilsss/weapons/firehandaltfire", CHAN_WEAPON, 1.0, 0)
+		R044 BC 4 Bright
+		goto Ready
+	//Black Vortex
+	Ready5:
+		"----" A 0 A_StopSound(6)
+		//"----" A 0 A_JumpIfInventory("DrakanModeChecker",3,"Ready4")
+		"----" A 0 A_PlaySound("reilsss/weapons/flameidle1", 6, 0.2, 1)
+		R044 ABC 6 Bright A_WeaponReady
+		Goto Ready5+2
+	Fire5:
+		//"----" A 0 A_JumpIfInventory("DrakanModeChecker",3,"Fire4")
+		R044 A 1 Bright Offset (5, 40)
+		R044 B 1 Bright Offset (5, 45)
+		R044 C 1 Bright Offset (5, 50)
+		R044 A 1 Bright Offset (5, 55)
+		R044 B 1 Bright Offset (5, 60)
+		goto Hold5
+	Hold5:
+		//"----" A 0 A_JumpIfInventory("DrakanModeChecker",3,"Hold4")
+		//"----" A 0 A_JumpIfCloser(150,"Hold5Close")
+		"----" A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
+		R037 D 3 Bright Offset (5, 36)
+		R044 E 3 Bright Offset (5, 36)
+		R044 F 2 Bright Offset (5, 36)
+		"----" A 0 A_JumpIfCloser(150,"Hold5Close")
+		"----" A 0 A_PlaySound("weapons/gvaporize", 8, 1.0, 0)
+		"----" A 0 A_Recoil(1)
+		"----" A 0 A_Firecustommissile("CheapAlert2",0,0,0,0)
+		"----" A 0 Bright A_FireCustomMissile("DrakKESSmall", -9, 0, 0, 8)
+		"----" A 0 Bright A_FireCustomMissile("DrakKESSmall", -4, 0, 0, 6)
+		"----" A 0 Bright A_FireCustomMissile("DrakKESSmall", 0, 1, 0, 4)
+		"----" A 0 Bright A_FireCustomMissile("DrakKESSmall", 4, 0, 0, 2)
+		"----" A 0 Bright A_FireCustomMissile("DrakKESSmall", 9, 0, 0, 0)
+		"----" A 0 A_SetBlend("Black",0.5,8)
+		R044 G 1 Bright Offset (5, 36) A_SetPitch(pitch+3)
+		R044 GGHHII 1 Bright Offset (5, 36) A_SetPitch(pitch-0.5)
+		TNT1 A 6 Bright Offset (5, 150)
+		TNT1 A 8 A_ReFire
+		R044 B 1 Bright Offset (5, 60) 
+		R044 C 1 Bright Offset (5, 55) 
+		R044 A 1 Bright Offset (5, 50)
+		R044 B 1 Bright Offset (5, 45)
+		R044 C 1 Bright Offset (5, 40)
+		goto Ready
+	Hold5Close:
+		//TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
+		//R044 D 3 Bright Offset (5, 36)
+		//R044 E 3 Bright Offset (5, 36)
+		//R044 F 2 Bright Offset (5, 36)
+		//TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordfire", 8, 1.0, 0)
+		"----" A 0 A_Recoil(-1)
+		"----" A 0 A_Firecustommissile("CheapAlert2",0,0,0,0)
+		"----" A 0 A_CustomPunch(random(500,1000),1,1,"DrakanPuffVorpal",150)
+		"----" A 0 A_GiveInventory("DrakanLeech", random(10,15))
+		R044 G 1 Bright Offset (5, 36) A_SetPitch(pitch+3)
+		R044 GGHHII 1 Bright Offset (5, 36) A_SetPitch(pitch-0.5)
+		TNT1 A 6 Bright Offset (5, 150)
+		TNT1 A 4 A_ReFire
+		R044 B 1 Bright Offset (5, 60) 
+		R044 C 1 Bright Offset (5, 55) 
+		R044 A 1 Bright Offset (5, 50)
+		R044 B 1 Bright Offset (5, 45)
+		R044 C 1 Bright Offset (5, 40)
+		goto Ready
+	AltFire5:
+		"----" A 0 A_TakeInventory("DrakanModeChecker",9999)
+		"----" A 0 A_StopSound(6)
+		FSD2 A 4
+		R037 A 4 Bright A_PlaySound("reilsss/weapons/firehandaltfire", CHAN_WEAPON, 1.0, 0)
+		R037 BC 4 Bright
+		goto Ready
+	}
 }
 
 ACTOR DrakanModeChecker : Inventory
