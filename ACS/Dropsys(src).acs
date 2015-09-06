@@ -432,6 +432,8 @@ Script "SelectAEoDWeapon" (int class)
 		slotmax = GetCvar("user_AEWeaps1");		break;
 	}*/
 	
+	
+	
 	if ((GetActorProperty(0,APROP_Dormant)) || (GetActorProperty(0,APROP_HEALTH) <= 0)
 		|| CheckInventory("cammin") > 0 || (GetWeapon() == "AEoDDemonMorphHand"))	Terminate;
 		
@@ -462,10 +464,14 @@ Script "SelectAEoDWeapon" (int class)
 	int temp = 0;
 	int count;
 	
-
+	//Assemble the names in that slot.
+	for (int t = 1; t <= slotmax; t++)
+	{
+		Weaps[curslot][t][4] = StrParam(s:"user_",s:Weaps[curslot][t][0]);
+	}
 	//Compare names and the cvars of the numbers of weapons.
 	
-	for (int t = 1; t <= slotmax; t++)
+	for (t = 1; t <= slotmax; t++)
 	{	
 		if (index > slotmax)
 		{
@@ -519,7 +525,8 @@ Script "SelectAEoDWeapon" (int class)
 		{	//We have the weapon.
 			if (SetWeapon(weapOrder[currentid]))
 			{ 	//Switch to it and shut this down.
-				for (t = slotmax; t > 0; t--)
+				Log(i:currentid, s:"\n");
+				for (t = slotmax; t >= 0; t--)
 				{
 					if (GetUserCvar(plrnum,Weaps[curslot][t][4]) == currentid)
 					{
@@ -553,4 +560,5 @@ Script "SelectAEoDWeapon" (int class)
 		timeloop++;
 		currentid++;
 	}
+	log(s:"Looks like something went over 3 loops.\n");
 }
