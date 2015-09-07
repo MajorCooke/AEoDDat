@@ -542,6 +542,8 @@ Actor RickCore
 	var int user_count;
 	var int user_move;
 	var int user_plr;
+	var int user_x;
+	var int user_y;
 	Monster
 	+FLOORCLIP
 	-COUNTKILL
@@ -554,21 +556,26 @@ Actor RickCore
 	+LOOKALLAROUND
 	-NODROPOFF
 	+DROPOFF
-	Mass 0x7FFFFFFF
+	+VULNERABLE
+	+BUDDHA
+	+ALWAYSTELEFRAG
+	+DONTCORPSE
+	DamageFactor "RickRoll", 0.0
+	PainChance "Normal", 0
+	PainChance "Telefrag", 256
 	Radius 32
 	Height 32
 	Scale 0.25
 	States
 	{
 	Spawn:
-		N009 A 0
-		TNT1 A 0 A_JumpIfInventory("CoreCheck3",1,"End",AAPTR_PLAYER1)
-		TNT1 A 0 A_GiveInventory("CoreCheck3",1,AAPTR_PLAYER1)
-		TNT1 A 0 A_GiveInventory("RickImmune",1)
+		N009 A 0 NoDelay A_SpawnItemEx("RickCoreSighter",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
+		N009 A 0 A_JumpIfInventory("CoreCheck3",1,"End",AAPTR_PLAYER1)
+		N009 A 0 A_GiveInventory("CoreCheck3",1,AAPTR_PLAYER1)
 	Idle:
 		N009 A 0 A_Gravity
 		N009 A 0 A_TakeInventory("RickCoreDirection",9999,0)
-	IdleCont:
+	/*IdleCont:
 		N009 A 0 A_JumpIf(user_plr==1,"Idle2")
 		N009 A 0 A_JumpIf(user_count>=1,2)
 		N009 A 0 A_Jump(20,"Speak")
@@ -577,7 +584,7 @@ Actor RickCore
 		Loop
 	Sight:
 		N009 A 0 A_SetUserVar("user_plr",1)
-		Goto Idle2
+		Goto Idle2*/
 	Idle2:
 		N009 A 0 A_JumpIf(user_count>=1,2)
 		N009 A 0 A_Jump(20,"Speak")
@@ -752,6 +759,40 @@ Actor RickCore
 	}
 }
 
+Actor RickCoreSighter
+{
+	+NOTONAUTOMAP
+	+NOINTERACTION
+	+LOOKALLAROUND
+	+NOTELEPORT
+	RenderStyle None
+	States
+	{
+	Spawn:
+		TNT1 A 5 A_Look
+		TNT1 A 0 A_Warp(AAPTR_MASTER,0,0,16,0,WARPF_NOCHECKPOSITION)
+		Loop
+	See:
+		TNT1 A 0 A_GiveInventory("RickCorePlayerFound",1,AAPTR_MASTER)
+		Stop
+	}
+}
+
+Actor RickCorePlayerFound : CustomInventory
+{
+	//var int user_plr;
+	//var int user_ggg2;
+	+ALWAYSPICKUP
+	//+AUTOACTIVATE
+	States
+	{
+	Pickup:
+		TNT1 A 0 A_SetUserVar(user_plr,1)
+		//TNT1 A 0 A_SetUserVar(user_ggg2,1)
+		Stop
+	}
+}
+
 Actor RickCoreDirection : Inventory
 {	Inventory.MaxAmount 1	}
 
@@ -793,13 +834,11 @@ Actor WHATTHEHELLISTHATCRAP
 Actor RickTrollD : CustomInventory
 {
 	+INVENTORY.ALWAYSPICKUP
-	+INVENTORY.AUTOACTIVATE
 	States
 	{
-	Use:
-		TNT1 A 0 A_JumpIfInventory("RickImmune",1,"Nope")
+	Pickup:
 		TNT1 A 0 A_CheckFlag("FRIENDLY","Nope")
-		TNT1 A 0 A_DamageSelf(20000,"None",DMSS_FOILINVUL)
+		TNT1 A 0 A_DamageSelf(20000,"RickRoll",DMSS_FOILINVUL)
 		Stop
 	Nope:
 		TNT1 A 0

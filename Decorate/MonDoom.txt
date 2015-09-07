@@ -371,6 +371,7 @@ Actor FImp : DoomImp 7004
 	DropItem "HealthHeart" 210
 	DropItem "PowerslaveSpawner" 128
 	DropItem "PowerupSpawner" 8
+	+DONTCORPSE
 	+FLOORCLIP
 	RipLevelMin 1
 	PainChance "Charm", 255
@@ -584,14 +585,16 @@ Actor FDemon : Demon 7005
 //===========================================================================
 //===========================================================================
 
-Actor FSpectre : Spectre 7006
+Actor FSpectre : Demon
 {
 	DropItem "Mana1Ammo"
 	DropItem "HealthHeart" 210
 	DropItem "PowerslaveSpawner" 70
 	DropItem "PowerupSpawner" 8
+	RenderStyle OptFuzzy
 	RipLevelMin 1
 	+FLOORCLIP
+	+DONTCORPSE
 //Ethereal
 	DamageFactor "Electric", 1.25
 	DamageFactor "AEPoison", 0.75
@@ -747,6 +750,7 @@ Actor FLostSoul : LostSoul 7008
 	PainChance "ChaosExpl1", 255
 	PainChance "ChaosExpl2", 255
 	RipLevelMin 1
+	+DONTCORPSE
 //Ethereal
 	DamageFactor "Electric", 1.25
 	DamageFactor "AEPoison", 0.75
@@ -1193,6 +1197,7 @@ Actor FPainElemental : PainElemental 7012
 	DropItem "PowerupSpawner" 8
 	RipLevelMin 1
 	+FLOORCLIP
+	+DONTCORPSE
 	PainChance "Charm", 192
 	PainChance "Terror", 192
 	PainChance "Drain", 128
@@ -2409,7 +2414,7 @@ Actor MSkeleton 7021	//zombieman
 		Goto See
 	Death:
 		"####" "#" 0 A_UnsetSolid
-		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"Defilement")
+		//TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"Defilement")
 		SKEL L 6
 		SKEL M 6 A_Scream
 		SKEL N 6
@@ -2811,6 +2816,7 @@ Actor FatUnseeing : FatMinion	7024	// hell knight
 	DropItem "PowerslaveSpawner" 28
 	DropItem "PowerupSpawner" 8
 	RipLevelMin 1
+	+DONTCORPSE
 	Scale 0.8
 	Health 400
 	+Stealth
