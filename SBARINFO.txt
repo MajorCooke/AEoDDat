@@ -26,6 +26,14 @@ statusbar Automap, forcescaled
 	InInventory HUDCabalToken	{ DrawString ReilsssSmallFont03, Red, "Cabal",	271, 69; }
 	InInventory HUDUACToken		{ DrawString ReilsssSmallFont03, Red, "U.A.C.",	271, 79; }
 	
+	//------------------
+	// FOR ALL AUTOMAPS
+	//------------------
+	
+	// Dark mana counter for the spells
+	DrawImage "IEDMA0", 310, 26;
+	DrawNumber 3, REILSSSFONT13, Orange, DarkMana, whennotzero, 310, 28, 0, Red, 5, Gold, 50;
+	
 	//------------------------------------------
 	// ARCANUM SIDHE, SIRENS, SJNUM - Ichor
 	//------------------------------------------
@@ -624,10 +632,6 @@ statusbar Automap, forcescaled
 	// AEOD 6 DEFAULT, whatever that means...
 	//------------------------------------------
 		
-		// Dark mana counter for the spells
-		DrawImage "IEDMA0", 310, 26;
-		DrawNumber 3, REILSSSFONT13, Orange, DarkMana, whennotzero, 310, 28, 0, Red, 5, Gold, 50;
-		
 		//Health
 		DrawImage "RHC1HEAL", 5, 172;
 		DrawNumber 3, REILSSSFONT25, DarkBrown, Health, 57, 174, 0, Red, 50, DarkGrey, 220;
@@ -752,10 +756,267 @@ statusbar Automap, forcescaled
 //===============================
 statusbar None, forcescaled
 {
-		// Dark mana counter for the spells
-		DrawImage "IEDMA0", 310, 26;
-		DrawNumber 3, REILSSSFONT13, Orange, DarkMana, whennotzero, 310, 28, 0, Red, 5, Gold, 50;
+	// Debugging class identifiers
+	InInventory HUDArcanumToken	{ DrawString ReilsssSmallFont03, Red, "Arcanum",271, 29; }
+	InInventory HUDCrawlToken	{ DrawString ReilsssSmallFont03, Red, "Crawl",	271, 39; }
+	InInventory HUDCultToken	{ DrawString ReilsssSmallFont03, Red, "Cult",	271, 49; }
+	InInventory HUDEDFToken		{ DrawString ReilsssSmallFont03, Red, "E.D.F.",	271, 59; }
+	InInventory HUDCabalToken	{ DrawString ReilsssSmallFont03, Red, "Cabal",	271, 69; }
+	InInventory HUDUACToken		{ DrawString ReilsssSmallFont03, Red, "U.A.C.",	271, 79; }
+	
+	//------------------
+	// FOR ALL MINIHUDS
+	//------------------
+	
+	// Dark mana counter for the spells
+	DrawImage "IEDMA0", 310, 26;
+	DrawNumber 3, REILSSSFONT13, Orange, DarkMana, whennotzero, 310, 28, 0, Red, 5, Gold, 50;
+	
+	//------------------------------------------
+	// ARCANUM SIDHE, SIRENS, SJNUM - Ichor
+	//------------------------------------------
+	InInventory HUDArcanumToken	
+	{ 
+		DrawString ReilsssSmallFont03, Red, "Arcanum",271, 29; 
 		
+		//Mugshot Pain effect
+		drawmugshot 5, 0, 0;
+		
+		//Health
+	    DrawImage "RHA1HEAL", 4, 166;
+		DrawImage "RHA1HICO", 30, 166;
+		DrawNumber 3, RAVENLARGE, Green, health, 22, 170, 0, Red, 49, LightBlue, 251;
+		
+		//Armor
+		DrawImage "RHA1ARMO", 4, 183;
+		DrawImage "RHA1AICO", 31, 183;
+		DrawNumber 3, RAVENLARGE, Green, armor, whennotzero, 22, 187, Red, 49, LightBlue, 251;
+		
+		//Ammo
+		UsesAmmo
+		{
+			DrawImage "RHA1AMM1", 293, 166;
+			DrawImage "RHA1BOXA", 276, 166;
+			DrawNumber 3, RAVENLARGE, untranslated, ammo1, 311, 170, Red, 24;
+			DrawImage ammoicon1, 278, 170;
+			
+			DrawImage "RHA1AMM2", 293, 183;
+			DrawImage "RHA1BOXA", 276, 183;
+			DrawNumber 3, RAVENLARGE, untranslated, ammo2, 311, 187, Red, 24;
+			DrawImage ammoicon2, 278, 187;
+		}
+		
+		//Keys
+    	DrawSwitchableImage BlueCard, "NULL", "RHA0BLUE", 4, 161;
+    	DrawSwitchableImage YellowCard, "NULL", "RHA0GOLD", 12, 161;
+    	DrawSwitchableImage RedCard, "NULL", "RHA0RED", 20, 161;
+    	DrawSwitchableImage BlueSkull, "NULL", "RHA0BLUE", 293, 161;
+    	DrawSwitchableImage YellowSkull, "NULL", "RHA0GOLD", 301, 161;
+    	DrawSwitchableImage RedSkull, "NULL", "RHA0RED", 309, 161;
+
+		//Portable Item
+    	DrawSelectedInventory alternateonempty, REILSSSFONT10, 46, 169, 64, 163, untranslated
+		{}
+	} ELSE {
+	
+	//------------------------------------------
+	// CRAWL PALANAX, REPTON, XEPTRON - Reilsss
+	//------------------------------------------
+	InInventory HUDCrawlToken	
+	{ 
+		DrawString ReilsssSmallFont03, Red, "Crawl",	271, 39; 
+		
+		//Mugshot Pain effect
+		DrawMugshot 5, 0, 0;
+		
+		//Health / Armor
+		DrawImage "RHR1HEAR", 0, 3;
+		DrawBar "RHR1HBON", "RHR1HBOF", Health, horizontal, 17, 4;
+		DrawNumber 3, REILSSSFONT13, Gold, Health, fillzeros, 72, 4, 0, Red, 50, LightBlue, 200;
+		DrawImage "RHR1HEIC", 5, 6;
+		DrawBar "RHR1ABON", "RHR1ABOF", Armor, horizontal, 27, 16;
+		DrawNumber 3, REILSSSFONT13, Gold, Armor, fillzeros, 82, 16, 0, Red, 50, Green, 100;
+		drawimage "RHR1ARIC", 16, 18;
+		
+		//Ammo
+		UsesAmmo
+		{
+			DrawImage "RHR1AMMO", 0, 3;
+			DrawBar "RHR1A1ON", "RHR1A1OF", Ammo1, horizontal, reverse, 259, 4;
+			DrawNumber 4, REILSSSFONT13, Orange, Ammo1, fillzeros, 255, 4, 0, Red, 25, Gold, 100;
+			DrawImage Ammoicon1, 306, 5;
+			DrawBar "RHR1A2ON", "RHR1A2OF", Ammo2, horizontal, reverse, 248, 16;
+			DrawNumber 4, REILSSSFONT13, Orange, Ammo2, fillzeros, 245, 16, 0, Red, 25, Gold, 100;
+			DrawImage Ammoicon2, 295, 17;
+		}
+		
+		//Inventory
+		DrawImage "RHR1IVEN", 1, 121;
+		DrawSelectedInventory artiflash, REILSSSFONT10, 18, 150, 22, 186, untranslated, 1; //10
+		
+		//Keys
+		DrawSwitchableImage BlueCard && BlueSkull, "NULL", "RHR0CBLU", "RHR0KBLU", "RHR0KBLU", 3, 138; // 35 140
+		DrawSwitchableImage YellowCard && YellowSkull, "NULL", "RHR0CGOL", "RHR0KGOL", "RHR0KGOL", 3, 153; // 20 140
+		DrawSwitchableImage RedCard && RedSkull, "NULL", "RHR0CRED", "RHR0KRED", "RHR0KRED", 3, 168; // 5 140
+	} ELSE {
+	
+	//------------------------------------------
+	// CULT ORDER, SPEAKER, SPECTOR - DBThanatos
+	//------------------------------------------
+	InInventory HUDCultToken	
+	{ 
+		DrawString ReilsssSmallFont03, Red, "Cult",	271, 49; 
+		
+		//Mugshot Pain effect
+		DrawMugshot 5, 0, 0;
+		
+		//Health Armor
+		DrawImage "RHT1HAIB", 0, 152;
+		DrawBar "RHT1HBON", "RHT1HBOF", Health, horizontal, 1, 153;
+		DrawNumber 3, AMMOFONT, Orange, Health, 14, 155, 0, Red, 50;
+		DrawBar "RHT1ABON", "RHT1AROF", Armor, vertical, 35, 164;
+		DrawNumber 3, AMMOFONT, Orange, Armor, 45, 193, 0, Red, 25;
+		
+		//Ammo
+		UsesAmmo
+		{
+			DrawImage "RHT1AMMO", 283, 175;
+			DrawNumber 3, REILSSSFONT32, Orange, Ammo1, 319, 190, Red, 15;
+			DrawImage ammoicon1, 285, 190;
+			DrawNumber 3, REILSSSFONT32, Orange, Ammo2, 319, 178, Red, 15;
+			DrawImage ammoicon2, 285, 178;
+		}
+		
+		//Portable Item
+		DrawSelectedInventory artiflash, REILSSSFONT18, 1, 164, 10, 184, untranslated, 1;
+		
+		//Keys
+		DrawSwitchableImage BlueCard && BlueSkull, "NULL", "RHT0BLUE", "RHT0BLUE", "RHT0BLUE", 22, 194; // 35 140
+		DrawSwitchableImage YellowCard && YellowSkull, "NULL", "RHT0GOLD", "RHT0GOLD", "RHT0GOLD", 12, 194; // 20 140
+		DrawSwitchableImage RedCard && RedSkull, "NULL", "RHT0RED", "RHT0RED", "RHT0RED", 1, 194; // 5 140
+	} ELSE {
+	
+	//------------------------------------------
+	// EDF HUNT, SCOUT, SOILDER - 3d Realms
+	//------------------------------------------
+	InInventory HUDEDFToken		
+	{ 
+		DrawString ReilsssSmallFont03, Red, "E.D.F.",	271, 59; 
+	
+		//Mugshot Pain effect
+		DrawMugshot 5, 0, 0;
+		
+		//White and Cyan
+		
+		
+		//Health Armor
+		DrawImage "RHE1HEAR", 3, 100;
+		DrawBar "RHE1HBON", "RHE1HBOF", Health, vertical, 13, 109, 0;
+		DrawNumber 3, SMALLFONT, White, Health, 44, 181, 0, Red, 50, Cyan, 200;
+		DrawBar "RHE1ABON", "RHE1ABOF", Armor, vertical, 3, 118, 0;
+		DrawNumber 3, SMALLFONT, White, Armor, 34, 190, 0, Orange, 25, Cyan, 200;
+		
+		//Ammo
+		UsesAmmo
+		{
+			DrawImage "RHE1AMMO", 300, 100;
+			DrawBar "RHE1AMON", "RHE1AMOF", Ammo1, vertical, 300, 109, 0;
+			DrawNumber 3, SMALLFONT, White, Ammo1, 297, 181, Red, 15, Cyan, 400;
+			DrawImage ammoicon1, 300, 102;
+			DrawBar "RHE1AMON", "RHE1AMOF", Ammo2, vertical, 310, 118, 0;
+			DrawNumber 3, SMALLFONT, White, Ammo2, 308, 190, Red, 15, Cyan, 400;
+			DrawImage ammoicon2, 309, 110;
+		}
+		
+		//Keys
+		DrawSwitchableImage BlueCard && BlueSkull, "nullimage", "RHE0BLUE", "RHE0BLUE", "RHE0BLUE", 23, 151;
+		DrawSwitchableImage YellowCard && YellowSkull, "nullimage", "RHE0GOLD", "RHE0GOLD", "RHE0GOLD", 23, 161;
+		DrawSwitchableImage RedCard && RedSkull, "nullimage", "RHE0RED", "RHE0RED", "RHE0RED", 23, 171;
+		
+		//Portable Item
+		DrawSelectedInventory artiflash, SMALLFONT, 145, 169, 164, 160, untranslated, 1;
+	} ELSE {
+	
+	//------------------------------------------
+	// THE CABAL, CHOSEN, CORRUPT - Bouncy
+	//------------------------------------------
+	InInventory HUDCabalToken	
+	{ 
+		DrawString ReilsssSmallFont03, Red, "Cabal",	271, 69; 
+		//Mugshot Pain effect
+		drawmugshot 5, 0, 0;
+		
+		//Health
+		DrawImage "RHC1HEAL", 5, 182;
+		DrawNumber 3, REILSSSFONT25, DarkBrown, Health, 57, 184, 0, Red, 50, DarkGrey, 220;
+		DrawBar "RHC1BAON", "RHC1BAOF", Health, horizontal, 64, 183;
+		
+		//Armor
+		DrawImage "RHC1ARMO", 73, 182;
+		DrawNumber 3, REILSSSFONT25, DarkBrown, Armor, 137, 184, 0, Red, 50, DarkGrey, 200;
+		DrawBar "RHC1BAON", "RHC1BAOF", Armor, horizontal, 143, 183;
+		
+		//Ammo
+		UsesAmmo
+		{
+			DrawImage "RHC1AMMO", 250, 182;
+			DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo1, 303, 185, 0, Red, 50, DarkGrey, 220;
+			DrawImage ammoicon1, 268, 188;
+			DrawImage "RHC1AMMO", 250, 167;
+			DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo2, 303, 170, 0, Red, 50, DarkGrey, 220;
+			DrawImage ammoicon2, 268, 173;
+		}
+		
+		//Inventory
+		DrawImage "RHC1INFL", 0, 0;
+		DrawImage "RHC1INFR", 27, 3;
+		DrawSelectedInventory artiflash, REILSSSFONT15, 5, 27, 22, 63, untranslated, 1;
+		
+		//Keys
+		drawswitchableimage BlueCard && BlueSkull, "nullimage", "RHC0BLUE", "RHC0BLUE", "RHC0BLUE", 18, 5;
+		drawswitchableimage YellowCard && YellowSkull, "nullimage", "RHC0GOLD", "RHC0GOLD", "RHC0GOLD", 18, 14; 
+		drawswitchableimage RedCard && RedSkull, "nullimage", "RHC0RED", "RHC0RED", "RHC0RED", 18, 71;
+	} ELSE {
+	
+	//------------------------------------------
+	// UAC BLACK OPS, COVERT OPS, SPEC OPS
+	//------------------------------------------
+	InInventory HUDUACToken		
+	{ 
+		DrawString ReilsssSmallFont03, Red, "U.A.C.",	271, 79; 
+		
+		//Mugshot Pain effect
+		DrawMugshot 5, 0, 0;
+		
+		//Health
+		DrawBar "RHU1HBON", "RHU1HBOF", Health, vertical, 128, 76;
+		DrawNumber 3, AMMOFONT, Green, Health, 15, 182, 0, Red, 50;
+		
+		//Armor
+		DrawBar "RHU1ABON", "RHU1ABOF", Armor, vertical, 171, 76;
+		DrawNumber 3, AMMOFONT, Green, Armor, 15, 192, 0, Red, 25;
+		
+		//Ammo
+		UsesAmmo
+		{
+			DrawNumber 3, AMMOFONT, Green, Ammo1, 305, 182, Red, 15;
+			DrawImage ammoicon1, 307, 180;
+			DrawNumber 3, AMMOFONT, Green, Ammo2, 305, 192, Red, 15;
+			DrawImage ammoicon2, 307, 190;
+		}
+		
+		//Keys
+		DrawSwitchableImage BlueCard && BlueSkull, "nullimage", "KEY0", "KEY0", "KEY0", 22, 2;
+		DrawSwitchableImage YellowCard && YellowSkull, "nullimage", "KEY1", "KEY1", "KEY1", 12, 2; 
+		DrawSwitchableImage RedCard && RedSkull, "nullimage", "KEY2", "KEY2", "KEY2", 1, 2;
+		
+		//Portable Item
+		DrawSelectedInventory artiflash, AMMOFONT, 286, 3, 286, 3, untranslated, 1;
+	} ELSE {
+	
+	//------------------------------------------
+	// AEOD 6 DEFAULT, or what is it...
+	//------------------------------------------
 		//Health
 		DrawImage "RHC1HEAL", 5, 182;
 		DrawNumber 3, REILSSSFONT25, DarkBrown, Health, 57, 184, 0, Red, 50, DarkGrey, 220;
@@ -873,6 +1134,7 @@ statusbar None, forcescaled
 		drawswitchableimage BlueCard && BlueSkull, "nullimage", "RHC0BLUE", "RHC0BLUE", "RHC0BLUE", 18, 5;
 		drawswitchableimage YellowCard && YellowSkull, "nullimage", "RHC0GOLD", "RHC0GOLD", "RHC0GOLD", 18, 14; 
 		drawswitchableimage RedCard && RedSkull, "nullimage", "RHC0RED", "RHC0RED", "RHC0RED", 18, 71;
+	}}}}}}
 }
 
 //===============================
