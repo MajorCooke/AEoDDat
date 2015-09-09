@@ -235,8 +235,23 @@ script "s848" Enter
 	TakeInventory("Portal2Token",100);
 	TakeInventory("ThunderRingCount",100);
 	Thing_ChangeTID(0,21000+PlayerNumber());		//this is used by the Joke mode weapon
-	fadeto(0,0,0,1.0,0);
-	fadeto (0, 0, 0, 0, 0.3);
+	FadeTo(0,0,0,1.0,0  );
+	FadeTo(0,0,0,0  ,0.3);
+	ACS_NamedExecute("AEEverytime", 0);
+}
+
+str huds[7] = { "Nothing",
+				"HUDArcanumToken",	"HUDCrawlToken",	"HUDCultToken",
+				"HUDEDFToken",		"HUDCabalToken",	"HUDUACToken"	};
+
+//	This script runs every tic on every player and can be used accordingly.
+script "AEEverytime" (void)
+{
+	int h = GetCVar("user_hud");
+	if(h) for(int i=1; i<=6; i++) TakeInventory(huds[i],1);	// take any previous
+	GiveInventory(huds[h],1); // give current
+	Delay (1);
+	ACS_NamedExecuteAlways("AEEverytime", 0);	// tail recursion
 }
 
 Script "AEFadeToBlack" (void)
