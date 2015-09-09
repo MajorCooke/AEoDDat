@@ -235,8 +235,29 @@ script "s848" Enter
 	TakeInventory("Portal2Token",100);
 	TakeInventory("ThunderRingCount",100);
 	Thing_ChangeTID(0,21000+PlayerNumber());		//this is used by the Joke mode weapon
-	fadeto(0,0,0,1.0,0);
-	fadeto (0, 0, 0, 0, 0.3);
+	FadeTo(0,0,0,1.0,0  );
+	FadeTo(0,0,0,0  ,0.3);
+}
+
+#define HUDS 6
+str hudnames[HUDS+1] = {"Nothing",	// Why the hell did I decide to index this array from 1? I must be fucking nuts.
+						"HUDArcanumToken",	"HUDCrawlToken",	"HUDCultToken",
+						"HUDEDFToken",		"HUDCabalToken",	"HUDUACToken"	};
+
+//	Toggle HUDs. Use 0 to switch forward, -1 to switch backward, 1 to HUDS to set
+script "AESetHud" (int x)
+{
+	if(CheckInventory(hudnames[x])) Terminate;	// Save unnecessary switching, props to Major Cooke
+	if(x < 1)					// If X corresponds to relative setting,
+		for(int i=1; i<=HUDS; i++)		// find which HUD is active now and 
+			if(CheckInventory(hudnames[i]))	// change X to absolute setting.
+				x = i + (2*x + 1);		// Step back or forward.
+	if(x < 1) 	x = HUDS;			// Cycle to max if negative,
+	if(x > HUDS)x = 1;				// cycle to min if overflow.
+	
+	// Set HUD according to absolute setting.
+	for(i=1; i<=HUDS; i++) TakeInventory(hudnames[i],1);	// Clear any previous.
+	GiveInventory(hudnames[x],1); // Give current.
 }
 
 Script "AEFadeToBlack" (void)
