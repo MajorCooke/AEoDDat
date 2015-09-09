@@ -247,6 +247,7 @@ str hudnames[HUDS+1] = {"Nothing",	// Why the hell did I decide to index this ar
 //	Toggle HUDs. Use 0 to switch forward, -1 to switch backward, 1 to HUDS to set
 script "AESetHud" (int x)
 {
+	if(CheckInventory(hudnames[x])) Terminate;	// Save unnecessary switching, props to Major Cooke
 	if(x < 1)					// If X corresponds to relative setting,
 		for(int i=1; i<=HUDS; i++)		// find which HUD is active now and 
 			if(CheckInventory(hudnames[i]))	// change X to absolute setting.
