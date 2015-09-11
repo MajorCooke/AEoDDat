@@ -1,0 +1,755 @@
+
+//===============================
+// Aeons of Death v6: Automap
+//===============================
+
+
+StatusBar Automap, ForceScaled
+{
+	// Debugging class identifiers
+	InInventory HUDArcanumToken	{ DrawString ReilsssSmallFont03, Red, "Arcanum",271, 29; }
+	InInventory HUDCrawlToken	{ DrawString ReilsssSmallFont03, Red, "Crawl",	271, 39; }
+	InInventory HUDCultToken	{ DrawString ReilsssSmallFont03, Red, "Cult",	271, 49; }
+	InInventory HUDEDFToken		{ DrawString ReilsssSmallFont03, Red, "E.D.F.",	271, 59; }
+	InInventory HUDCabalToken	{ DrawString ReilsssSmallFont03, Red, "Cabal",	271, 69; }
+	InInventory HUDUACToken		{ DrawString ReilsssSmallFont03, Red, "U.A.C.",	271, 79; }
+	
+	//------------------
+	// FOR ALL AUTOMAPS
+	//------------------
+	
+	// Dark mana counter for the spells
+	DrawImage "IEDMA0", 310, 26;
+	DrawNumber 3, REILSSSFONT13, Orange, DarkMana, whennotzero, 310, 28, 0, Red, 5, Gold, 50;
+	
+	
+	
+	//------------------------------------------
+	// ARCANUM SIDHE, SIRENS, SJNUM - Ichor
+	//------------------------------------------
+	InInventory HUDArcanumToken	
+	{ 
+		DrawString ReilsssSmallFont03, Orange, "Arcanum",	270, 28; 
+		
+		//Mugshot Pain effect
+		DrawMugshot 5, 0, 0;
+		
+		//Backgroundgraphic
+		DrawImage "RHA3AMAP", 0, 0;
+		DrawImage "RHA3BACK",0,141;
+		
+		//Health
+		DrawNumber 3, RAVENGREEN, untranslated, health, 84, 177, 0, Red, 49, LightBlue, 251;
+		
+		//Armor
+		DrawNumber 3, RAVENGREEN, untranslated, armor, whennotzero, 121, 177, 0, Red, 49, LightBlue, 251;
+		
+		//Ammo
+		DrawNumber 3, REILSSSFONT18, untranslated, ammo1, 221, 186, 0, Red, 24;
+		DrawImage ammoicon1, 211, 173;
+		DrawBar "RHA3A1ON", "RHA3A1OF", ammo1, vertical, 195, 171;
+		DrawNumber 3, REILSSSFONT18, untranslated, ammo2, 257, 186, 0, Red, 24;		
+		DrawImage ammoicon2, 247, 173;
+		DrawBar "RHA3A2ON", "RHA3A2OF", ammo2, vertical, 231, 171;
+		
+		//Keys		
+		DrawSwitchableImage BlueCard, "NULL", "RHA0BLUE", 126, 173;
+		DrawSwitchableImage YellowCard, "NULL", "RHA0GOLD", 126, 180;
+		DrawSwitchableImage RedCard, "NULL", "RHA0RED", 126, 187;
+		DrawSwitchableImage BlueSkull, "NULL", "RHA0BLUE", 183, 173;
+		DrawSwitchableImage YellowSkull, "NULL", "RHA0GOLD", 183, 180;
+		DrawSwitchableImage RedSkull, "NULL", "RHA0RED", 183, 187;
+		
+		//Portable Items
+		DrawSelectedInventory alternateonempty, REILSSSFONT15, 144, 166, 161, 160, untranslated, 0
+		{}
+		
+		//Map Infos TOP
+		DrawNumber 3, REILSSSFONT15, Grey, Secrets, 158, 15;
+		DrawNumber 3, REILSSSFONT15, Grey, TotalSecrets, 178, 15;
+		DrawNumber 3, REILSSSFONT15, Grey, Items, 158, 24;
+		DrawNumber 3, REILSSSFONT15, Grey, TotalItems, 178, 24;
+		DrawNumber 3, REILSSSFONT15, Grey, Kills, 158, 33;
+		DrawNumber 3, REILSSSFONT15, Grey, Monsters, 178, 33;
+	} ELSE {
+	
+	
+	
+	//------------------------------------------
+	// CRAWL PALANAX, REPTON, XEPTRON - Reilsss
+	//------------------------------------------
+	InInventory HUDCrawlToken	
+	{ 
+		DrawString ReilsssSmallFont03, Orange, "Crawl",	270, 38; 
+		//Mugshot Pain effect
+		DrawMugshot 5, 0, 0;
+		
+		// Backgrounds
+		DrawImage "RHR3AMAP", 0, 0;
+		
+		//Health & Armor
+		DrawImage "RHR2HEAR", 0, 0;
+		DrawImage "RHR1HEIC", 39, 10;
+		DrawNumber 3, REILSSSFONT31, Gold, health, fillzeros, 20, 7, 0, Red, 50, LightBlue, 200;
+		DrawBar "RHR2HBON", "RHR2HBOF", Health, Horizontal, 27, 5;
+		DrawImage "RHR1ARIC", 57, 11;
+		DrawNumber 3, REILSSSFONT31, Gold, armor, fillzeros, 94, 14, 0, Red, 50, Green, 100;
+		DrawBar "RHR2ABON", "RHR2ABOF", Armor, Horizontal, reverse, 21, 17;
+		
+		//Ammo
+		UsesAmmo
+		{
+			DrawImage "RHR2AMMO", 220, 0;
+			DrawImage Ammoicon1, 232, 1;
+			DrawNumber 4, REILSSSFONT31, Orange, ammo1, fillzeros, 246, 8, 0, Red, 25, Gold, 100;
+			DrawBar "RHR2A1ON", "RHR2A1OF", Ammo1, Horizontal, 250, 10;
+			DrawImage Ammoicon2, 304, 8;
+			DrawNumber 4, REILSSSFONT31, Orange, ammo2, fillzeros, 314, 15, 0, Red, 25, Gold, 100;
+			DrawBar "RHR2A2ON", "RHR2A2OF", Ammo2, Horizontal, reverse, 234, 16;
+		}
+		
+		//Inventory
+		DrawImage "RHR3INVB", 0, 85;
+		DrawBar "RH08BEA", "RH08BEB", Kills, Vertical, 4, 96;
+		DrawBar "RH08BFA", "RH08BFB", Items, Vertical, reverse, 8, 100;
+		DrawSelectedInventory artiflash, REILSSSFONT10, 12, 110, 22, 100, untranslated, 1;
+		DrawSwitchableImage weaponslot 1, "RF21NU1", "RF23NU1", 313, 186;
+		DrawSwitchableImage weaponslot 2, "RF21NU2", "RF23NU2", 313, 180;
+		DrawSwitchableImage weaponslot 3, "RF21NU3", "RF23NU3", 313, 174;
+		DrawSwitchableImage weaponslot 4, "RF21NU4", "RF23NU4", 313, 168;
+		DrawSwitchableImage weaponslot 5, "RF21NU5", "RF23NU5", 313, 162;
+		DrawSwitchableImage weaponslot 6, "RF21NU6", "RF23NU6", 313, 156;
+		DrawSwitchableImage weaponslot 7, "RF21NU7", "RF23NU7", 313, 150;
+		DrawSwitchableImage weaponslot 8, "RF21NU8", "RF23NU8", 313, 144;
+		DrawSwitchableImage weaponslot 9, "RF21NU9", "RF23NU9", 313, 138;
+		DrawSwitchableImage weaponslot 0, "RF21NU0", "RF23NU0", 313, 132;
+		DrawSwitchableImage YellowCard && YellowSkull, "RHR3KYOF", "RHR3KYOC", "RHR3KYOS", "RHR3KYOB", 287, 178;
+		DrawSwitchableImage RedCard && RedSkull, "RHR3KROF", "RHR3KROC", "RHR3KROS", "RHR3KROB", 294, 173;
+		DrawSwitchableImage weaponslot 0, "RHR3KGOF", "RHR3KGOB", 301, 178;
+		DrawSwitchableImage BlueCard && BlueSkull, "RHR3KBOF", "RHR3KBOC", "RHR3KBOS", "RHR3KBOB", 294, 182;
+		DrawString RHR3HUDMINIFONT, Gold, "K", 7, 169, 0;
+		DrawNumber 3, REILSSSFONT10, Gold, Kills, /**/ 16, 168, 0, Orange, 50, Yellow, 200;
+		DrawString RHR3HUDMINIFONT, Gold, "/", 20, 169, 0;
+		DrawNumber 3, REILSSSFONT10, Gold, Monsters, /**/ 29, 168, 0;
+		DrawString RHR3HUDMINIFONT, Gold, "I", 5, 179, 0;
+		DrawNumber 3, REILSSSFONT10, Gold, Items, /**/ 16, 178, 0, Orange, 25, Yellow, 100;
+		DrawString RHR3HUDMINIFONT, Gold, "/", 20, 179, 0;
+		DrawNumber 3, REILSSSFONT10, Gold, TotalItems, /**/ 29, 178, 0;
+		DrawString RHR3HUDMINIFONT, Gold, "S", 7, 189, 0;
+		DrawNumber 3, REILSSSFONT10, Gold, Secrets, /**/ 16, 188, 0, Orange, 3, Yellow, 10;
+		DrawString RHR3HUDMINIFONT, Gold, "/", 20, 189, 0;
+		DrawNumber 3, REILSSSFONT10, Gold, TotalSecrets, /**/ 29, 188, 0;
+		DrawBar "RHR3HBON", "RHR3HBOF", Health, Horizontal, reverse, 246, 176;
+		DrawNumber 4, REILSSSFONT10, Gold, health, 270, 174;
+		DrawNumber 3, REILSSSFONT10, Gold, ammo1, 282, 177;
+		DrawNumber 3, REILSSSFONT10, Gold, ammo2, 280, 185;
+		DrawBar "RHR3ABON", "RHR3ABOF", Armor, Horizontal, reverse, 275, 196;
+		DrawNumber 4, REILSSSFONT10, Gold, armor, 303, 194;
+		DrawSwitchableImage invulnerable, "RH08INB", "RH08INA", 248, 191; 
+		
+		//Ammo Types
+		// 9mm Clip
+		DrawImage "IE9MA0", 38, 176;
+		DrawNumber 3, REILSSSFONT13, Orange, AE9mmClip, fillzeros, 46, 170, 0, Red, 30, Gold, 300;
+		// Caliber 762 Bullets
+		DrawImage "IE37A0", 50, 176;
+		DrawNumber 3, REILSSSFONT13, Orange, Cal762Bullets, fillzeros, 58, 170, 0, Red, 10, Gold, 100;
+		// Shells
+		DrawImage "IESCA0", 62, 176;
+		DrawNumber 3, REILSSSFONT13, Orange, AEShell, fillzeros, 70, 170, 0, Red, 8, Gold, 75;
+		// 12mm Bullets
+		DrawImage "IEBCA0", 74, 176;
+		DrawNumber 3, REILSSSFONT13, Orange, AEClip, fillzeros, 82, 170, 0, Red, 30, Gold, 300;
+		// Nails
+		DrawImage "IENCA0", 86, 176;
+		DrawNumber 3, REILSSSFONT13, Orange, AENails, fillzeros, 94, 170, 0, Red, 3, Gold, 10;
+		// Grenades
+		DrawImage "IGRCA0", 98, 176;
+		DrawNumber 3, REILSSSFONT13, Orange, AEGrenade, fillzeros, 106, 170, 0, Red, 35, Gold, 350;
+		// Rockets
+		DrawImage "IERCA0", 110, 176;
+		DrawNumber 3, REILSSSFONT13, Orange, AERocket, fillzeros, 118, 170, 0, Red, 12, Gold, 100;
+		// Ice Crystals
+		DrawImage "IECYA0", 122, 176;
+		DrawNumber 3, REILSSSFONT13, Orange, Crystal, fillzeros, 130, 170, 0, Red, 3, Gold, 18;
+		// Napalm Gas
+		DrawImage "IEGCA0", 134, 176;
+		DrawNumber 3, REILSSSFONT13, Orange, AEGas, fillzeros, 142, 170, 0, Red, 10, Gold, 100;
+		// Energy Cells
+		DrawImage "IECCA0", 146, 176;
+		DrawNumber 3, REILSSSFONT13, Orange, AECell, fillzeros, 154, 170, 0, Red, 30, Gold, 300;
+		// Plasma Rod
+		DrawImage "IEPCA0", 158, 176;
+		DrawNumber 3, REILSSSFONT13, Orange, PlasmaRod, fillzeros, 166, 170, 0, Red, 5, Gold, 50;
+		// Mini Rockets
+		DrawImage "IMRCA0", 170, 176;
+		DrawNumber 3, REILSSSFONT13, Orange, MiniRockets, fillzeros, 178, 170, 0, Red, 5, Gold, 50;
+		// Heavy Rockets
+		DrawImage "IEHRA0", 182, 176;
+		DrawNumber 3, REILSSSFONT13, Orange, HeavyRockets, fillzeros, 190, 170, 0, Red, 5, Gold, 50;
+		// Blue Mana
+		DrawImage "IEBMA0", 194, 176;
+		DrawNumber 3, REILSSSFONT13, Orange, BlueMana, fillzeros, 202, 170, 0, Red, 5, Gold, 50;
+		// Green Mana
+		DrawImage "IEGMA0", 206, 176;
+		DrawNumber 3, REILSSSFONT13, Orange, GreenMana, fillzeros, 214, 170, 0, Red, 5, Gold, 50;
+		// Red Mana
+		DrawImage "IERMA0", 218, 176;
+		DrawNumber 3, REILSSSFONT13, Orange, RedMana, fillzeros, 226, 170, 0, Red, 5, Gold, 50;
+		// Dark Mana
+		DrawImage "IEDMA0", 230, 176;
+		DrawNumber 3, REILSSSFONT13, Orange, DarkMana, fillzeros, 238, 170, 0, Red, 5, Gold, 50;
+		
+		//Max Ammo Types
+		// 9mm Clip
+		DrawImage "IE9MA0", 38, 193;
+		DrawNumber 3, REILSSSFONT13, Gold, AmmoCapacity AE9mmClip, fillzeros, 46, 187, 0, Red, 50;
+		// Caliber 762 Bullets
+		DrawImage "IE37A0", 50, 193;
+		DrawNumber 3, REILSSSFONT13, Gold, AmmoCapacity Cal762Bullets, fillzeros, 58, 187, 0, Red, 25;
+		// Shells
+		DrawImage "IESCA0", 62, 193;
+		DrawNumber 3, REILSSSFONT13, Gold, AmmoCapacity AEShell, fillzeros, 70, 187, 0, Red, 25;
+		// 12mm Bullets
+		DrawImage "IEBCA0", 74, 193;
+		DrawNumber 3, REILSSSFONT13, Gold, AmmoCapacity AEClip, fillzeros, 82, 187, 0, Red, 50;
+		// Nails
+		DrawImage "IENCA0", 86, 193;
+		DrawNumber 3, REILSSSFONT13, Gold, AmmoCapacity AENails, fillzeros, 94, 187, 0, Red, 5;
+		// Grenades
+		DrawImage "IGRCA0", 98, 193;
+		DrawNumber 3, REILSSSFONT13, Gold, AmmoCapacity AEGrenade, fillzeros, 106, 187, 0, Red, 50;
+		// Rockets
+		DrawImage "IERCA0", 110, 193;
+		DrawNumber 3, REILSSSFONT13, Gold, AmmoCapacity AERocket, fillzeros, 118, 187, 0, Red, 25;
+		// Ice Crystals
+		DrawImage "IECYA0", 122, 193;
+		DrawNumber 3, REILSSSFONT13, Gold, AmmoCapacity Crystal, fillzeros, 130, 187, 0, Red, 5;
+		// Napalm Gas
+		DrawImage "IEGCA0", 134, 193;
+		DrawNumber 3, REILSSSFONT13, Gold, AmmoCapacity AEGas, fillzeros, 142, 187, 0, Red, 25;
+		// Energy Cells
+		DrawImage "IECCA0", 146, 193;
+		DrawNumber 3, REILSSSFONT13, Gold, AmmoCapacity AECell, fillzeros, 154, 187, 0, Red, 25;
+		// Plasma Rod
+		DrawImage "IEPCA0", 158, 193;
+		DrawNumber 3, REILSSSFONT13, Gold, AmmoCapacity PlasmaRod, fillzeros, 166, 187, 0, Red, 25;
+		// Mini Rockets
+		DrawImage "IMRCA0", 170, 193;
+		DrawNumber 3, REILSSSFONT13, Gold, AmmoCapacity MiniRockets, fillzeros, 178, 187, 0, Red, 25;
+		// Heavy Rockets
+		DrawImage "IEHRA0", 182, 193;
+		DrawNumber 3, REILSSSFONT13, Gold, AmmoCapacity HeavyRockets, fillzeros, 190, 187, 0, Red, 25;
+		// Blue Mana
+		DrawImage "IEBMA0", 194, 193;
+		DrawNumber 3, REILSSSFONT13, Gold, AmmoCapacity BlueMana, fillzeros, 202, 187, 0, Red, 25;
+		// Green Mana
+		DrawImage "IEGMA0", 206, 193;
+		DrawNumber 3, REILSSSFONT13, Gold, AmmoCapacity GreenMana, fillzeros, 214, 187, 0, Red, 25;
+		// Red Mana
+		DrawImage "IERMA0", 218, 193;
+		DrawNumber 3, REILSSSFONT13, Gold, AmmoCapacity RedMana, fillzeros, 226, 187, 0, Red, 25;
+		// Dark Mana
+		DrawImage "IEDMA0", 230, 193;
+		DrawNumber 3, REILSSSFONT13, Gold, AmmoCapacity DarkMana, fillzeros, 238, 187, 0, Red, 25;
+		
+		//Map Infos TOP
+		DrawNumber 3, REILSSSFONT10, Gold, Secrets, 134, 5;
+		DrawNumber 3, REILSSSFONT10, Gold, TotalSecrets, 132, 16;
+		DrawNumber 3, REILSSSFONT10, Gold, Kills, 154, 11;
+		DrawNumber 3, REILSSSFONT10, Gold, Monsters, 176, 11;
+		DrawNumber 3, REILSSSFONT10, Gold, Items, 195, 5;
+		DrawNumber 3, REILSSSFONT10, Gold, TotalItems, 195, 16;
+	} ELSE {
+	
+	
+	
+	//------------------------------------------
+	// CULT ORDER, SPEAKER, SPECTOR - DBThanatos
+	//------------------------------------------
+	InInventory HUDCultToken
+	{ 
+		DrawString ReilsssSmallFont03, Orange, "Cult",	270, 48; 
+		
+		//Mugshot Pain effect
+		DrawMugshot 5, 0, 0;
+		
+		//Background Image
+		DrawImage "RHT3AMAP", 0, 0;
+		
+		//Portable Item
+		DrawSelectedInventory artiflash, REILSSSFONT18, 145, 163, 173, 184, untranslated, 1;
+		
+		//Health
+		DrawNumber 3, REILSSSFONT16, Orange, health, 66, 175, 1, Red, 50, Yellow, 230;
+		
+		//Armor
+		DrawNumber 3, REILSSSFONT16, Orange, Armor, 279, 176, 1, Red, 25, Yellow, 200;
+		
+		//Ammo
+		DrawBar "RHT3A1ON", "RHT3A1OF", Ammo1, vertical, 94, 164, 1;
+		DrawImage ammoicon1, 80, 166;
+		DrawNumber 3, REILSSSFONT18, Orange, Ammo1, 91, 181, Red, 25;
+		DrawBar "RHT3A2ON", "RHT3A2OF", Ammo2, vertical, 102, 164, 1;
+		DrawImage ammoicon2, 113, 166;
+		DrawNumber 3, REILSSSFONT18, Orange, Ammo2, 122, 181, Red, 25;
+		
+		//Map Infos
+		DrawString ReilsssSmallFont01, Orange, "K", 200, 164, 0;
+		DrawNumber 4, REILSSSFONT18, Red, Kills, /**/ 222, 164;
+		DrawNumber 4, REILSSSFONT18, Orange, Monsters, /**/ 243, 164;
+		DrawString ReilsssSmallFont01, Orange, "I", 200, 171, 0;
+		DrawNumber 4, REILSSSFONT18, Red, Items, /**/ 222, 171;
+		DrawNumber 4, REILSSSFONT18, Orange, TotalItems, /**/ 243, 171;
+		DrawString ReilsssSmallFont01, Orange, "S", 200, 178, 0;
+		DrawNumber 4, REILSSSFONT18, Red, Secrets, /**/ 222, 178;
+		DrawNumber 4, REILSSSFONT18, Orange, TotalSecrets, /**/ 243, 178;
+		
+		//Weapon info
+		DrawSwitchableImage weaponslot 1, "RF21NU1", "RF18NU1", 194, 185;
+		DrawSwitchableImage weaponslot 2, "RF21NU2", "RF18NU2", 199, 185;
+		DrawSwitchableImage weaponslot 3, "RF21NU3", "RF18NU3", 204, 185;
+		DrawSwitchableImage weaponslot 4, "RF21NU4", "RF18NU4", 209, 185;
+		DrawSwitchableImage weaponslot 5, "RF21NU5", "RF18NU5", 214, 185;
+		DrawSwitchableImage weaponslot 6, "RF21NU6", "RF18NU6", 219, 185;
+		DrawSwitchableImage weaponslot 7, "RF21NU7", "RF18NU7", 224, 185;
+		DrawSwitchableImage weaponslot 8, "RF21NU8", "RF18NU8", 229, 185;
+		DrawSwitchableImage weaponslot 9, "RF21NU9", "RF18NU9", 234, 185;
+		DrawSwitchableImage weaponslot 0, "RF21NU0", "RF18NU0", 239, 185;
+		
+		//Live Gem
+		DrawGem translatable,  translatable, "RHT3CHAI", "RHT3CGEM", -23, 49, 15, 30, 193;
+		DrawImage "RHT3CELE", 0, 193;
+		DrawImage "RHT3CERI", 277, 193;
+		DrawShader 8, 10, horizontal, 43, 194;
+		DrawShader 8, 10, horizontal, reverse, 269, 194;
+		
+		//Keys
+		DrawSwitchableImage BlueCard, "nullimage", "RHT0BLUE", 131, 167;
+		DrawSwitchableImage YellowCard, "nullimage", "RHT0GOLD", 131, 175;
+		DrawSwitchableImage RedCard, "nullimage", "RHT0RED", 131, 184;
+		DrawSwitchableImage BlueSkull, "nullimage", "RHT0BLUE", 181, 165;
+		DrawSwitchableImage YellowSkull, "nullimage", "RHT0GOLD", 181, 174;
+		DrawSwitchableImage RedSkull, "nullimage", "RHT0RED", 181, 183;
+		
+		//Map Infos TOP
+		DrawNumber 3, REILSSSFONT15, Gold, Items, 160, 1;
+		DrawNumber 3, REILSSSFONT15, Gold, TotalItems, 179, 1;
+		DrawNumber 3, REILSSSFONT15, Gold, Kills, 160, 9;
+		DrawNumber 3, REILSSSFONT15, Gold, Monsters, 179, 9;
+		DrawNumber 3, REILSSSFONT15, Gold, Secrets, 160, 17;
+		DrawNumber 3, REILSSSFONT15, Gold, TotalSecrets, 179, 17;
+	} ELSE {
+	
+	
+	
+	//------------------------------------------
+	// EDF HUNT, SCOUT, SOILDER - 3d Realms
+	//------------------------------------------
+	InInventory HUDEDFToken		
+	{ 
+		DrawString ReilsssSmallFont03, Orange, "E.D.F.",	270, 58; 
+		
+		//Mugshot Pain effect
+		DrawMugshot 5, 0, 0;
+		
+		//background Grpahic
+		DrawImage "RHE3AMAP", 0, 0;
+		DrawImage "RHE3BACK", 0, 0;
+		
+		//Health
+		DrawImage "RHE3HEAL", 53, 162;
+		DrawNumber 3, SMALLFONT, White, Health, 83, 161, 0, Red, 50;
+		
+		//Armor
+		DrawImage "RHE3ARMO", 314, 162;
+		DrawNumber 3, SMALLFONT, White, Armor, 310, 161, 0, Red, 25;
+		
+		//Ammo Icon
+		DrawImage ammoicon1, 287, 176;
+		DrawNumber 3, SMALLFONT, White, Ammo1, 318, 176, Red, 15;
+		DrawImage ammoicon2, 287, 188;
+		DrawNumber 3, SMALLFONT, White, Ammo2, 318, 188, Red, 15;
+		
+		//Keys
+		DrawSwitchableImage BlueCard && BlueSkull, "nullimage", "RHE0BLUE", "RHE0BLUE", "RHE0BLUE", 265, 176;
+		DrawSwitchableImage YellowCard && YellowSkull, "nullimage", "RHE0GOLD", "RHE0GOLD", "RHE0GOLD", 265, 184;
+		DrawSwitchableImage RedCard && RedSkull, "nullimage", "RHE0RED", "RHE0RED", "RHE0RED", 265, 192;
+		
+		//Portable Item
+		DrawSelectedInventory artiflash, SMALLFONT, 3, 168, 35, 155, untranslated, 1;
+		
+		//Weapons Arms
+		DrawSwitchableImage weaponslot 1, "RF21NU1", "RF24NU1", 226, 183;
+		DrawSwitchableImage weaponslot 2, "RF21NU2", "RF24NU2", 232, 183;
+		DrawSwitchableImage weaponslot 3, "RF21NU3", "RF24NU3", 238, 183;
+		DrawSwitchableImage weaponslot 4, "RF21NU4", "RF24NU4", 244, 183;
+		DrawSwitchableImage weaponslot 5, "RF21NU5", "RF24NU5", 250, 183;
+		DrawSwitchableImage weaponslot 6, "RF21NU6", "RF24NU6", 226, 191;
+		DrawSwitchableImage weaponslot 7, "RF21NU7", "RF24NU7", 232, 191;
+		DrawSwitchableImage weaponslot 8, "RF21NU8", "RF24NU8", 238, 191;
+		DrawSwitchableImage weaponslot 9, "RF21NU9", "RF24NU9", 244, 191;
+		DrawSwitchableImage weaponslot 0, "RF21NU0", "RF24NU0", 250, 191;
+		
+		//Map Infos
+		DrawNumber 3, SMALLFONT, White, Secrets, 95, 171;
+		DrawNumber 3, SMALLFONT, White, TotalSecrets, 117, 171;
+		DrawNumber 3, SMALLFONT, White, Items, 157, 171;
+		DrawNumber 3, SMALLFONT, White, TotalItems, 185, 171;
+		DrawNumber 3, SMALLFONT, White, Kills, 222, 171;
+		DrawNumber 3, SMALLFONT, White, Monsters, 252, 171;
+		
+		//Ammo Types
+		// Napalm Gas
+		DrawImage "IEGCA0", 72, 191;
+		DrawNumber 3, SMALLFONT, Grey, AEGas, fillzeros, 72, 191, 0, Red, 5;
+		// 762 Rounds
+		DrawImage "IE37A0", 49, 183;
+		DrawNumber 3, SMALLFONT, Grey, Cal762Bullets, fillzeros, 80, 183, 0, Red, 5;
+		
+		// Bullets
+		DrawImage "IEBCA0", 107, 191;
+		DrawNumber 3, SMALLFONT, Grey, AEClip, fillzeros, 107, 191, 0, Red, 50;
+		// Shells
+		DrawImage "IESCA0", 84, 183;
+		DrawNumber 3, SMALLFONT, Grey, AEShell, fillzeros, 115, 183, 0, Red, 25;
+		
+		// Rockets
+		DrawImage "IERCA0", 142, 191;
+		DrawNumber 3, SMALLFONT, Grey, AERocket, fillzeros, 142, 191, 0, Red, 25;
+		// Cells
+		DrawImage "IECCA0", 119, 183;
+		DrawNumber 3, SMALLFONT, Grey, AECell, fillzeros, 150, 183, 0, Red, 50;
+		
+		// Plasma Rod
+		DrawImage "IEPCA0", 177, 191;
+		DrawNumber 3, SMALLFONT, Grey, PlasmaRod, fillzeros, 177, 191, 0, Red, 50;
+		// Minirockets
+		DrawImage "IMRCA0", 154, 183;
+		DrawNumber 3,SMALLFONT, Grey, MiniRockets, fillzeros, 185, 183, 0, Red, 25;
+		
+		// Grenade
+		DrawImage "IGRCA0", 212, 191;
+		DrawNumber 3, SMALLFONT, Grey, AEGrenade, fillzeros, 212, 191, 0, Red, 25;
+		// Nails
+		DrawImage "IENCA0", 189, 183;
+		DrawNumber 3, SMALLFONT, Grey, AENails, fillzeros, 220, 183, 0, Red, 5;
+		
+		//Map Infos TOP
+		DrawNumber 3, REILSSSFONT15, Grey, Secrets, 165, 4;
+		DrawNumber 3, REILSSSFONT15, Grey, TotalSecrets, 190, 4;
+		DrawNumber 3, REILSSSFONT15, Grey, Items, 165, 11;
+		DrawNumber 3, REILSSSFONT15, Grey, TotalItems, 190, 11;
+		DrawNumber 3, REILSSSFONT15, Grey, Kills, 165, 18;
+		DrawNumber 3, REILSSSFONT15, Grey, Monsters, 190, 18;
+	} ELSE {
+	
+	
+	
+	//------------------------------------------
+	// THE CABAL, CHOSEN, CORRUPT - Bouncy
+	//------------------------------------------
+	InInventory HUDCabalToken	
+	{ 
+		DrawString ReilsssSmallFont03, Orange, "Cabal",	270, 68; 
+		
+		//Mugshot Pain effect
+		DrawMugshot 5, 0, 0;
+		
+		//Background Grpahic
+		DrawImage "RHC3AMAP", 0, 0;
+		DrawImage "RHC3BACK", 0, 0;
+		
+		//Health Armor Numbers
+		DrawNumber 3, REILSSSFONT25, DarkBrown, Health, 107, 174, 0, Red, 50, Brown, 241;
+		DrawBar "RHC3HBON", "RHC3HBOF", Health, Horizontal, reverse, 44, 161;
+		DrawNumber 3, REILSSSFONT25, DarkBrown, Armor, 237, 174, 0, Red, 25, Brown, 200;
+		
+		//Ammo
+		DrawNumber 3, REILSSSFONT15, DarkBrown, Ammo1, 75, 182, Red, 15;
+		DrawImage ammoicon1, 46, 181;
+		DrawNumber 3, REILSSSFONT15, DarkBrown, Ammo2, 75, 172, Red, 15;
+		DrawImage ammoicon2, 46, 172;
+		
+		//Keys
+		DrawSwitchableImage BlueCard, "nullimage", "RHC0BLUE", 8, 190;
+		DrawSwitchableImage YellowCard, "nullimage", "RHC0GOLD", 18, 190;
+		DrawSwitchableImage RedCard, "nullimage", "RHC0RED", 28, 190;
+		DrawSwitchableImage RedSkull, "nullimage", "RHC0RED", 285, 190;
+		DrawSwitchableImage YellowSkull, "nullimage", "RHC0GOLD", 295, 190;
+		DrawSwitchableImage BlueSkull, "nullimage", "RHC0BLUE", 305, 190;
+		
+		//Portable Item
+		DrawSelectedInventory artiflash, REILSSSFONT15, 244, 166, 250, 162, untranslated, 1;
+		
+		//Ammo Types
+		// Bullets
+		DrawImage "IEBCA0", 124, 175;
+		DrawNumber 3, REILSSSFONT15, DarkBrown, AEClip, fillzeros, 145, 176, 0, Red, 50;
+		// Shells
+		DrawImage "IESCA0", 125, 183;
+		DrawNumber 3, REILSSSFONT15, DarkBrown, AEShell, fillzeros, 145, 183, 0, Red, 25;
+		// Nails
+		DrawImage "IENCA0", 124, 192;
+		DrawNumber 3, REILSSSFONT15, DarkBrown, AENails, fillzeros, 145, 191, 0, Red, 25;
+		// Grenades
+		DrawImage "IGRCA0", 146, 175;
+		DrawNumber 3, REILSSSFONT15, DarkBrown, AEGrenade, fillzeros, 168, 176, 0, Red, 50;
+		// Rockets
+		DrawImage "IERCA0", 146, 183;
+		DrawNumber 3, REILSSSFONT15, DarkBrown, AERocket, fillzeros, 168, 183, 0, Red, 50;
+		// Cristals
+		DrawImage "IECYA0", 146, 191;
+		DrawNumber 3, REILSSSFONT15, DarkBrown, Crystal, fillzeros, 168, 191, 0, Red, 25;
+		// Cells
+		DrawImage "IECCA0", 169, 175;
+		DrawNumber 3, REILSSSFONT15, DarkBrown, AECell, fillzeros, 191, 176, 0, Red, 25;
+		// Plasma
+		DrawImage "IEPCA0", 169, 183;
+		DrawNumber 3, REILSSSFONT15, DarkBrown, PlasmaRod, fillzeros, 191, 183, 0, Red, 5;
+		// Napalm Gas
+		DrawImage "IEGCA0", 170, 191;
+		DrawNumber 3, REILSSSFONT15, DarkBrown, AEGas, fillzeros, 191, 191, 0, Red, 5;
+		
+		//Map Infos TOP
+		DrawNumber 3, REILSSSFONT15, DarkBrown, Secrets, 158, 6;
+		DrawNumber 3, REILSSSFONT15, DarkBrown, TotalSecrets, 178, 6;
+		DrawNumber 3, REILSSSFONT15, DarkBrown, Items, 158, 13;
+		DrawNumber 3, REILSSSFONT15, DarkBrown, TotalItems, 178, 13;
+		DrawNumber 3, REILSSSFONT15, DarkBrown, Kills, 158, 20;
+		DrawNumber 3, REILSSSFONT15, DarkBrown, Monsters, 178, 20;
+	} ELSE {
+	
+	
+	
+	//------------------------------------------
+	// UAC BLACK OPS, COVERT OPS, SPEC OPS - id Software
+	//------------------------------------------
+	InInventory HUDUACToken		
+	{ 
+		DrawString ReilsssSmallFont03, Orange, "U.A.C.",	270, 78; 
+		
+		//Mugshot Pain effect
+		DrawMugshot 5, 0, 0;
+		
+		//Background Grpahic
+		DrawImage "RHU3AMAP", 0, 0;
+		
+		//Health
+		DrawImage "RHU3HEAL", 73, 185;
+		DrawNumber 3, REILSSSFONT04, Green, Armor, fillzeros, 53, 180, 0, Yellow, 50;
+		
+		//Armor
+		DrawImage "RHU3ARMO", 13, 182;
+		DrawNumber 3, REILSSSFONT04, Green, Health, fillzeros, 114, 182, 0, Yellow, 25;
+		
+		//Ammo
+		DrawNumber 3, REILSSSFONT04, Green, Ammo1, fillzeros, 286, 179, Yellow, 15;
+		DrawImage ammoicon1, 288, 178;
+		DrawNumber 3, REILSSSFONT04, Green, Ammo2, fillzeros, 315, 185, Yellow, 15;
+		DrawImage ammoicon2, 272, 189;
+		
+		//Keys
+		DrawSwitchableImage BlueCard && BlueSkull, "nullimage", "RHU0BLUE", "RHU0BLUE", "RHU0BLUE", 176, 175;
+		DrawSwitchableImage YellowCard && YellowSkull, "nullimage", "RHU0GOLD", "RHU0GOLD", "RHU0GOLD", 176, 182; 
+		DrawSwitchableImage RedCard && RedSkull, "nullimage", "RHU0RED", "RHU0RED", "RHU0RED", 176, 189;
+		
+		//Portable Item
+		DrawSelectedInventory artiflash, REILSSSFONT28, 145, 167, 145, 170, untranslated, 1;
+		
+		//Kill Item Secret Counters
+		DrawNumber 3, REILSSSFONT03, Green, Secrets, 225, 179;
+		DrawNumber 3, REILSSSFONT03, Green, Items, 225, 185;
+		DrawNumber 3, REILSSSFONT03, Green, Kills, 225, 191;
+		
+		DrawNumber 3, REILSSSFONT03, Green, TotalSecrets, 243, 179;
+		DrawNumber 3, REILSSSFONT03, Green, TotalItems, 243, 185;
+		DrawNumber 3, REILSSSFONT03, Green, Monsters, 243, 191;
+		
+		//Weapons Arms
+		DrawSwitchableImage weaponslot 1, "RF21NU1", "RF28NU1", 240, 163;
+		DrawSwitchableImage weaponslot 2, "RF21NU2", "RF28NU2", 248, 163;
+		DrawSwitchableImage weaponslot 3, "RF21NU3", "RF28NU3", 256, 163;
+		DrawSwitchableImage weaponslot 4, "RF21NU4", "RF28NU4", 264, 163;
+		DrawSwitchableImage weaponslot 5, "RF21NU5", "RF28NU5", 272, 163;
+		DrawSwitchableImage weaponslot 6, "RF21NU6", "RF28NU6", 280, 163;
+		DrawSwitchableImage weaponslot 7, "RF21NU7", "RF28NU7", 288, 163;
+		DrawSwitchableImage weaponslot 8, "RF21NU8", "RF28NU8", 296, 163;
+		DrawSwitchableImage weaponslot 9, "RF21NU9", "RF28NU9", 304, 163;
+		DrawSwitchableImage weaponslot 0, "RF21NU0", "RF28NU0", 312, 163;
+		
+		//Ammo Types
+		// Bullets
+		DrawImage "IEBCA0", 2, 147;
+		DrawNumber 3, REILSSSFONT03, Green, AEClip, fillzeros, 23, 148, 0, Yellow, 50;
+		// Shells
+		DrawImage "IESCA0", 2, 155;
+		DrawNumber 3, REILSSSFONT03, Green, AEShell, fillzeros, 23, 155, 0, Yellow, 25;
+		// Nails
+		DrawImage "IENCA0", 2, 163;
+		DrawNumber 3, REILSSSFONT03, Green, AENails, fillzeros, 23, 163, 0, Yellow, 25;
+		
+		// Grenades
+		DrawImage "IGRCA0", 25, 147;
+		DrawNumber 3, REILSSSFONT03, Green, AEGrenade, fillzeros, 46, 148, 0, Yellow, 50;
+		// Rockets
+		DrawImage "IERCA0", 25, 155;
+		DrawNumber 3, REILSSSFONT03, Green, AERocket, fillzeros, 46, 155, 0, Yellow, 50;
+		// MiniRockets
+		DrawImage "IMRCA0", 25, 163;
+		DrawNumber 3, REILSSSFONT03, Green, MiniRockets, fillzeros, 46, 163, 0, Yellow, 25;
+		
+		// Cells
+		DrawImage "IECCA0", 48, 147;
+		DrawNumber 3, REILSSSFONT03, Green, AECell, fillzeros, 69, 148, 0, Yellow, 25;
+		// Plasma Rod
+		DrawImage "IEPCA0", 48, 155;
+		DrawNumber 3, REILSSSFONT03, Green, PlasmaRod, fillzeros, 69, 155, 0, Yellow, 5;
+		// Napalm Gas
+		DrawImage "IEGCA0", 48, 163;
+		DrawNumber 3, REILSSSFONT03, Green, AEGas, fillzeros, 69, 163, 0, Yellow, 5;
+		
+		// Crystal
+		DrawImage "IECYA0", 71, 147;
+		DrawNumber 3, REILSSSFONT03, Green, Crystal, fillzeros, 92, 148, 0, Yellow, 25;
+		// Heavy Rockets
+		DrawImage "IEHRA0", 71, 155;
+		DrawNumber 3, REILSSSFONT03, Green, HeavyRockets, fillzeros, 92, 155, 0, Yellow, 25;
+		// Caliber 762 Bullets
+		DrawImage "IE37A0", 71, 163;
+		DrawNumber 3, REILSSSFONT03, Green, Cal762Bullets, fillzeros, 92, 163, 0, Yellow, 25;
+		
+		//Map Infos TOP
+		DrawNumber 3, REILSSSFONT28, DarkGreen, Secrets, 161, 8;
+		DrawNumber 3, REILSSSFONT28, DarkGreen, TotalSecrets, 184, 8;
+		DrawNumber 3, REILSSSFONT28, DarkGreen, Items, 161, 14;
+		DrawNumber 3, REILSSSFONT28, DarkGreen, TotalItems, 184, 14;
+		DrawNumber 3, REILSSSFONT28, DarkGreen, Kills, 161, 20;
+		DrawNumber 3, REILSSSFONT28, DarkGreen, Monsters, 184, 20;
+	} ELSE {
+	
+	
+	
+	//------------------------------------------
+	// AEOD 6 DEFAULT, whatever that means...
+	//------------------------------------------
+		
+		//Health
+		DrawImage "RHC1HEAL", 5, 172;
+		DrawNumber 3, REILSSSFONT25, DarkBrown, Health, 57, 174, 0, Red, 50, DarkGrey, 220;
+		DrawBar "RHC1BAON", "RHC1BAOF", Health, horizontal, 64, 173;
+		
+		//Armor
+		DrawImage "RHC1ARMO", 73, 172;
+		DrawNumber 3, REILSSSFONT25, DarkBrown, Armor, 137, 174, 0, Red, 50, DarkGrey, 200;
+		DrawBar "RHC1BAON", "RHC1BAOF", Armor, horizontal, 143, 173;
+		
+		//Ammo
+		UsesAmmo
+		{
+			DrawImage "RHC1AMMO", 250, 182;
+			WeaponAmmo AEClip
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo1, 303, 185, 0, Red, 40, DarkGrey, 220; }
+			WeaponAmmo AEShell
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo1, 303, 185, 0, Red, 20, DarkGrey, 220; }
+			WeaponAmmo AERocket
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo1, 303, 185, 0, Red, 15, DarkGrey, 220; }
+			WeaponAmmo AECell
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo1, 303, 185, 0, Red, 40, DarkGrey, 220; }
+			WeaponAmmo DarkMana
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo1, 303, 185, 0, Red, 10, DarkGrey, 220; }
+			WeaponAmmo BlueMana
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo1, 303, 185, 0, Red, 40, DarkGrey, 220; }
+			WeaponAmmo RedMana
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo1, 303, 185, 0, Red, 20, DarkGrey, 220; }
+			WeaponAmmo ASTF
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo1, 303, 185, 0, Red, 20, DarkGrey, 220; }
+			WeaponAmmo MiniRockets
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo1, 303, 185, 0, Red, 30, DarkGrey, 220; }
+			WeaponAmmo PlasmaRod
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo1, 303, 185, 0, Red, 40, DarkGrey, 220; }
+			WeaponAmmo AEGrenade
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo1, 303, 185, 0, Red, 15, DarkGrey, 220; }
+			WeaponAmmo AENails
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo1, 303, 185, 0, Red, 30, DarkGrey, 220; }
+			WeaponAmmo BunnyAmmo
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo1, 303, 185, 0, Red, 3, DarkGrey, 220; }
+			WeaponAmmo Mojo
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo1, 303, 185, 0, Red, 30, DarkGrey, 220; }
+			WeaponAmmo GreenMana
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo1, 303, 185, 0, Red, 30, DarkGrey, 220; }
+			WeaponAmmo BFGHolder
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo1, 303, 185, 0, Red, 10, DarkGrey, 220; }
+			WeaponAmmo Ubercharge
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo1, 303, 185, 0, Red, 20, DarkGrey, 220; }
+			WeaponAmmo Doom3ShotgunClip
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo1, 303, 185, 0, Red, 3, DarkGrey, 220; }
+			WeaponAmmo COPgunInClip
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo1, 303, 185, 0, Red, 3, DarkGrey, 220; }
+			WeaponAmmo RiotgunClip
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo1, 303, 185, 0, Red, 1, DarkGrey, 220; }
+			WeaponAmmo BoneDusterClip
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo1, 303, 185, 0, Red, 5, DarkGrey, 220; }
+			WeaponAmmo HLHornet
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo1, 303, 185, 0, Red, 3, DarkGrey, 220; }
+			DrawImage ammoicon1, 268, 188;
+			
+			DrawImage "RHC1AMMO", 250, 167;
+			WeaponAmmo AEClip
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo2, 303, 170, 0, Red, 40, DarkGrey, 220; }
+			WeaponAmmo AEShell
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo2, 303, 170, 0, Red, 20, DarkGrey, 220; }
+			WeaponAmmo AERocket
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo2, 303, 170, 0, Red, 15, DarkGrey, 220; }
+			WeaponAmmo AECell
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo2, 303, 170, 0, Red, 40, DarkGrey, 220; }
+			WeaponAmmo DarkMana
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo2, 303, 170, 0, Red, 10, DarkGrey, 220; }
+			WeaponAmmo BlueMana
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo2, 303, 170, 0, Red, 40, DarkGrey, 220; }
+			WeaponAmmo RedMana
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo2, 303, 170, 0, Red, 20, DarkGrey, 220; }
+			WeaponAmmo ASTF
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo2, 303, 170, 0, Red, 20, DarkGrey, 220; }
+			WeaponAmmo MiniRockets
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo2, 303, 170, 0, Red, 30, DarkGrey, 220; }
+			WeaponAmmo PlasmaRod
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo2, 303, 170, 0, Red, 40, DarkGrey, 220; }
+			WeaponAmmo AEGrenade
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo2, 303, 170, 0, Red, 15, DarkGrey, 220; }
+			WeaponAmmo AENails
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo2, 303, 170, 0, Red, 30, DarkGrey, 220; }
+			WeaponAmmo BunnyAmmo
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo2, 303, 170, 0, Red, 3, DarkGrey, 220; }
+			WeaponAmmo Mojo
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo2, 303, 170, 0, Red, 30, DarkGrey, 220; }
+			WeaponAmmo GreenMana
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo2, 303, 170, 0, Red, 30, DarkGrey, 220; }
+			WeaponAmmo BFGHolder
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo2, 303, 170, 0, Red, 10, DarkGrey, 220; }
+			WeaponAmmo Ubercharge
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo2, 303, 170, 0, Red, 20, DarkGrey, 220; }
+			WeaponAmmo Doom3ShotgunClip
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo2, 303, 170, 0, Red, 3, DarkGrey, 220; }
+			WeaponAmmo COPgunInClip
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo2, 303, 170, 0, Red, 3, DarkGrey, 220; }
+			WeaponAmmo RiotgunClip
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo2, 303, 170, 0, Red, 1, DarkGrey, 220; }
+			WeaponAmmo BoneDusterClip
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo2, 303, 170, 0, Red, 5, DarkGrey, 220; }	
+			WeaponAmmo HLHornet
+			{ DrawNumber 3, REILSSSFONT25, DarkBrown, Ammo2, 303, 170, 0, Red, 3, DarkGrey, 220; }
+			DrawImage ammoicon2, 268, 173;
+		}
+		
+		//Inventory
+		DrawImage "RHC1INFL", 0, 0;
+		DrawImage "RHC1INFR", 27, 3;
+		DrawSelectedInventory artiflash, REILSSSFONT15, 5, 27, 22, 63, untranslated, 1;
+		
+		//Keys
+		drawswitchableimage BlueCard && BlueSkull, "nullimage", "RHC0BLUE", "RHC0BLUE", "RHC0BLUE", 18, 5;
+		drawswitchableimage YellowCard && YellowSkull, "nullimage", "RHC0GOLD", "RHC0GOLD", "RHC0GOLD", 18, 14; 
+		drawswitchableimage RedCard && RedSkull, "nullimage", "RHC0RED", "RHC0RED", "RHC0RED", 18, 71;
+	}}}}}} // number of braces equals number of huds--easy to remember, easy to check
+}
