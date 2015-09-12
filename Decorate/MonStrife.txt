@@ -5,7 +5,7 @@
 //=======================================================
 //=======================================================
 
-Actor FArmoredGuy : ZombieMan 7415		//zombieman
+Actor FArmoredGuy : ZombieMan //7415		//zombieman
 {
 	DropItem "BulletAmmo"
 	DropItem "HealthHeart" 210
@@ -159,6 +159,7 @@ Actor ArmoredGuyShield
     health 9999999
     radius 23
     height 25
+	+NEVERTARGET
     +NOCLIP
     +SHOOTABLE
     +INVULNERABLE
@@ -178,7 +179,7 @@ Actor ArmoredGuyShield
 //=======================================================
 //=======================================================
 
-Actor FArmoredGuy2 : FArmoredGuy 7416		//shotguy
+Actor FArmoredGuy2 : FArmoredGuy //7416		//shotguy
 {
 	DropItem "ShellAmmo"
 	DropItem "HealthHeart" 210
@@ -230,7 +231,7 @@ Actor FArmoredGuy2 : FArmoredGuy 7416		//shotguy
 //=======================================================
 //=======================================================
 
-Actor FArmoredGuy3 : FArmoredGuy 7417		//Hellknight
+Actor FArmoredGuy3 : FArmoredGuy //7417		//Hellknight
 {
 	DropItem "AEoDSniperRailgunItem" 32
 	DropItem "ShellBigAmmo"
@@ -344,7 +345,7 @@ Actor FArmoredGuy3 : FArmoredGuy 7417		//Hellknight
 //=======================================================
 //=======================================================
 
-ACTOR FUziGuy 7418		//imp
+ACTOR FUziGuy //7418		//imp
 {
 	DropItem "BulletAmmo"
 	DropItem "HealthHeart" 210
@@ -470,7 +471,7 @@ ACTOR FUziGuy 7418		//imp
 //=======================================================
 //=======================================================
 
-ACTOR FUziGuy2 : FUziGuy 7419  	//revenant
+ACTOR FUziGuy2 : FUziGuy //7419  	//revenant
 {
 	DropItem "BulletBigAmmo"
 	DropItem "HealthHeart" 210
@@ -543,7 +544,7 @@ ACTOR UziGuyNail
 //=======================================================
 //=======================================================
 
-ACTOR FCommander 7420	// chaingun guy
+ACTOR FCommander //7420	// chaingun guy
 {
 	DropItem "BulletAmmo"
 	DropItem "ExploAmmo"
@@ -653,7 +654,7 @@ ACTOR FCommander 7420	// chaingun guy
 //========================================================
 //========================================================
 
-ACTOR Naberios 7421		//spider mast
+ACTOR Naberios //7421		//spider mast
 {
 	DropItem "RandomWeaponPower"
 	DropItem "MegaHeart" 210
@@ -674,7 +675,6 @@ ACTOR Naberios 7421		//spider mast
     +NOBLOOD
     +NORADIUSDMG
     +MISSILEMORE
-    +NOICEDEATH
     +FLOORCLIP
     +DONTMORPH
     +NOFEAR
@@ -765,16 +765,21 @@ ACTOR Naberios 7421		//spider mast
     Death.UnholyDisint:
     Death.PlasmaDisint:
     Disintegrate:
-	TNT1 A 0 Thing_SetTranslation(0,50)	
-	TNT1 a 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
-	MLDR H 1 A_FadeOut(0.015)
-	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-	TNT1 a 0 A_Stop	
-	TNT1 a 0 A_Fall
-	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowBig",0,0,45,0,0,0,0,32)
-	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksBig",0,0,45,0,0,0,0,32)
-	MLDR HH 2 A_FadeOut(0.03)
-	Goto Disintegrate+7
+		"----" A 0 Thing_SetTranslation(0,50)	
+		"----" a 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
+		MLDR H 1 A_FadeOut(0.015)
+		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+		TNT1 a 0 A_Stop	
+		TNT1 a 0 A_Fall
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowBig",0,0,45,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksBig",0,0,45,0,0,0,0,32)
+		MLDR HH 2 A_FadeOut(0.03)
+		Goto Disintegrate+7
+	Ice:
+		"----" A 5 A_GenericFreezeDeath
+		"----" A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
+		"----" A 1 A_FreezeDeathChunks
+		Wait
     }
 }
 
@@ -830,7 +835,7 @@ Death:
 //========================================================
 //========================================================
 
-ACTOR FGateRobot 7422		//baron of hell
+ACTOR FGateRobot //7422		//baron of hell
 {
 	DropItem "AEoDPMFLayerItem" 32
 	DropItem "CellAmmo"
@@ -947,10 +952,10 @@ ACTOR FGateRobot 7422		//baron of hell
 		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		Stop
     Ice:
-	MLDR H 5 A_GenericFreezeDeath
-	MLDR H 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
-	MLDR H 1 A_FreezeDeathChunks
-	Wait
+		MLDR H 5 A_GenericFreezeDeath
+		MLDR H 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
+		MLDR H 1 A_FreezeDeathChunks
+		Wait
     Death.UnholyDisint:
     Death.PlasmaDisint:
     Disintegrate:
@@ -1021,7 +1026,7 @@ ACTOR GateBotBolt2
 //===========================================================================
 //===========================================================================
 
-ACTOR FPriest 7423	// cacodemon
+ACTOR FPriest //7423	// cacodemon
 {
 	DropItem "HealthHeart" 210
 	DropItem "PowerslaveSpawner" 210
@@ -1176,7 +1181,7 @@ ACTOR PriestWeirdBall
 //===========================================================================
 //===========================================================================
 
-ACTOR Thoth 7425	// cyberdemon
+ACTOR Thoth //7425	// cyberdemon
 {
 	DropItem "MediumWeaponPower"
 	DropItem "MegaHeart" 210
@@ -1198,7 +1203,7 @@ ACTOR Thoth 7425	// cyberdemon
     +BOSS
     +NOGRAVITY
     +FLOAT
-    +NOICEDEATH
+    //+NOICEDEATH
     +DONTMORPH
     +NOFEAR
     SeeSound "DarkMage/Idle"
@@ -1224,120 +1229,120 @@ ACTOR Thoth 7425	// cyberdemon
 	DamageFactor "PlasmaDisint", 1.25
     States
     {
-        Pain.Drain:
-	TNT1 A 0
-	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
-	Goto See
+	Pain.Drain:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+		Goto See
     Spawn:
-	PRST AABBCCDD 5 A_Look
-	Loop
+		PRST AABBCCDD 5 A_Look
+		Loop
     See:
-	PRST AABBCCDD 5 A_FastChase
-	Loop
+		PRST AABBCCDD 5 A_FastChase
+		Loop
     Melee:
-	PRST A 0 A_PlaySound("DarkMage/Attack")
-	PRST E 7 BRIGHT A_FaceTarget
-	PRST F 2 Bright A_CustomMissile("PhoenixShot2",40,0,0)
-	PRST F 2 Bright A_CustomMissile("PhoenixShot2",40,0,0)
-	PRST F 2 Bright A_CustomMissile("PhoenixShot2",40,0,0)
-	PRST F 2 Bright A_CustomMissile("PhoenixShot2",40,0,0)
-	PRST F 2 Bright A_CustomMissile("PhoenixShot2",40,0,0)
-	PRST F 2 Bright A_CustomMissile("PhoenixShot2",40,0,0)
-	PRST F 2 Bright A_CustomMissile("PhoenixShot2",40,0,0)
-	Goto See
+		PRST A 0 A_PlaySound("DarkMage/Attack")
+		PRST E 7 BRIGHT A_FaceTarget
+		PRST F 2 Bright A_CustomMissile("PhoenixShot2",40,0,0)
+		PRST F 2 Bright A_CustomMissile("PhoenixShot2",40,0,0)
+		PRST F 2 Bright A_CustomMissile("PhoenixShot2",40,0,0)
+		PRST F 2 Bright A_CustomMissile("PhoenixShot2",40,0,0)
+		PRST F 2 Bright A_CustomMissile("PhoenixShot2",40,0,0)
+		PRST F 2 Bright A_CustomMissile("PhoenixShot2",40,0,0)
+		PRST F 2 Bright A_CustomMissile("PhoenixShot2",40,0,0)
+		Goto See
     Missile:
-	TNT1 A 0 A_Jump(255,"Miss1","Miss2","Miss3","Miss4","Miss5","Miss6","Miss7","Miss8")
+		TNT1 A 0 A_Jump(255,"Miss1","Miss2","Miss3","Miss4","Miss5","Miss6","Miss7","Miss8")
     Miss1:
-	PRST E 7 BRIGHT A_FaceTarget
-	PRST F 7 Bright A_CustomMissile("DComet",40,0,0)
-	PRST E 7 BRIGHT A_FaceTarget
-	PRST F 7 Bright A_CustomMissile("DComet",40,0,0)
-	PRST E 7 BRIGHT A_FaceTarget
-	PRST F 7 Bright A_CustomMissile("DComet",40,0,0)
-	PRST E 7 BRIGHT A_FaceTarget
-	PRST F 7 Bright A_CustomMissile("DComet",40,0,0)
-	Goto See
+		PRST E 7 BRIGHT A_FaceTarget
+		PRST F 7 Bright A_CustomMissile("DComet",40,0,0)
+		PRST E 7 BRIGHT A_FaceTarget
+		PRST F 7 Bright A_CustomMissile("DComet",40,0,0)
+		PRST E 7 BRIGHT A_FaceTarget
+		PRST F 7 Bright A_CustomMissile("DComet",40,0,0)
+		PRST E 7 BRIGHT A_FaceTarget
+		PRST F 7 Bright A_CustomMissile("DComet",40,0,0)
+		Goto See
     Miss2:
-	PRST A 0 A_PlaySound("DarkMage/Attack")
-	PRST E 7 BRIGHT A_FaceTarget
-	PRST FFFFFFFFF 2 Bright A_CustomMissile("CStaffMissile",40,0,0)
-	Goto See
+		PRST A 0 A_PlaySound("DarkMage/Attack")
+		PRST E 7 BRIGHT A_FaceTarget
+		PRST FFFFFFFFF 2 Bright A_CustomMissile("CStaffMissile",40,0,0)
+		Goto See
     Miss3:
-	PRST E 14 BRIGHT A_FaceTarget
-	PRST F 9 Bright A_CustomMissile("SwordFire",40,0,0)
-	PRST E 14 BRIGHT A_FaceTarget
-	PRST F 9 Bright A_CustomMissile("SwordFire",40,0,0)
-	PRST E 14 BRIGHT A_FaceTarget
-	PRST F 9 Bright A_CustomMissile("SwordFire",40,0,0)
-	Goto See
+		PRST E 14 BRIGHT A_FaceTarget
+		PRST F 9 Bright A_CustomMissile("SwordFire",40,0,0)
+		PRST E 14 BRIGHT A_FaceTarget
+		PRST F 9 Bright A_CustomMissile("SwordFire",40,0,0)
+		PRST E 14 BRIGHT A_FaceTarget
+		PRST F 9 Bright A_CustomMissile("SwordFire",40,0,0)
+		Goto See
     Miss4:
-	PRST E 7 BRIGHT A_FaceTarget
-	PRST F 7 Bright A_CustomMissile("PhoenixShot",40,0,0)
-	PRST E 7 BRIGHT A_FaceTarget
-	PRST F 7 Bright A_CustomMissile("PhoenixShot",40,0,0)
-	PRST E 7 BRIGHT A_FaceTarget
-	PRST F 7 Bright A_CustomMissile("PhoenixShot",40,0,0)
-	PRST E 7 BRIGHT A_FaceTarget
-	PRST F 7 Bright A_CustomMissile("PhoenixShot",40,0,0)
-	Goto See
+		PRST E 7 BRIGHT A_FaceTarget
+		PRST F 7 Bright A_CustomMissile("PhoenixShot",40,0,0)
+		PRST E 7 BRIGHT A_FaceTarget
+		PRST F 7 Bright A_CustomMissile("PhoenixShot",40,0,0)
+		PRST E 7 BRIGHT A_FaceTarget
+		PRST F 7 Bright A_CustomMissile("PhoenixShot",40,0,0)
+		PRST E 7 BRIGHT A_FaceTarget
+		PRST F 7 Bright A_CustomMissile("PhoenixShot",40,0,0)
+		Goto See
     Miss5:
-	PRST E 7 BRIGHT A_FaceTarget
-	PRST F 0 Bright A_CustomMissile("MageStaffFX2",40,0,15)
-	PRST F 0 Bright A_CustomMissile("MageStaffFX2",40,0,0)
-	PRST F 0 Bright A_CustomMissile("MageStaffFX2",40,0,-15)
-	PRST F 7 Bright
-	Goto See
+		PRST E 7 BRIGHT A_FaceTarget
+		PRST F 0 Bright A_CustomMissile("MageStaffFX2",40,0,15)
+		PRST F 0 Bright A_CustomMissile("MageStaffFX2",40,0,0)
+		PRST F 0 Bright A_CustomMissile("MageStaffFX2",40,0,-15)
+		PRST F 7 Bright
+		Goto See
     Miss6:
-	PRST E 17 BRIGHT A_FaceTarget
-	PRST F 17 Bright A_CustomMissile("HolyMissile",40,0,0)
-	PRST E 17 BRIGHT A_FaceTarget
-	PRST F 17 Bright A_CustomMissile("HolyMissile",40,0,0)
-	PRST E 17 BRIGHT A_FaceTarget
-	Goto See
+		PRST E 17 BRIGHT A_FaceTarget
+		PRST F 17 Bright A_CustomMissile("HolyMissile",40,0,0)
+		PRST E 17 BRIGHT A_FaceTarget
+		PRST F 17 Bright A_CustomMissile("HolyMissile",40,0,0)
+		PRST E 17 BRIGHT A_FaceTarget
+		Goto See
     Miss7:
-	PRST E 10 BRIGHT A_FaceTarget
-	PRST F 10 Bright A_CustomMissile("RavenStaffShot",40,0,0)
-	PRST E 10 BRIGHT A_FaceTarget
-	PRST F 10 Bright A_CustomMissile("RavenStaffShot",40,0,0)
-	PRST E 10 BRIGHT A_FaceTarget
-	Goto See
+		PRST E 10 BRIGHT A_FaceTarget
+		PRST F 10 Bright A_CustomMissile("RavenStaffShot",40,0,0)
+		PRST E 10 BRIGHT A_FaceTarget
+		PRST F 10 Bright A_CustomMissile("RavenStaffShot",40,0,0)
+		PRST E 10 BRIGHT A_FaceTarget
+		Goto See
     Miss8:
-	PRST E 0 Bright A_PlaySound("weapons/icewand/charge")
-	PRST EEEEEEE 4 Bright A_FaceTarget
-	PRST E 0 Bright A_FaceTarget
-	PRST E 0 Bright A_PlaySound("weapons/icewand/altfire")
-	PRST F 10 Bright A_CustomMissile("IceDragonHead",40,0,0)
-	PRST E 10 Bright A_FaceTarget
-	Goto See
+		PRST E 0 Bright A_PlaySound("weapons/icewand/charge")
+		PRST EEEEEEE 4 Bright A_FaceTarget
+		PRST E 0 Bright A_FaceTarget
+		PRST E 0 Bright A_PlaySound("weapons/icewand/altfire")
+		PRST F 10 Bright A_CustomMissile("IceDragonHead",40,0,0)
+		PRST E 10 Bright A_FaceTarget
+		Goto See
     Death:
 		"####" "#" 0 A_UnsetSolid
-	PDED A 6 A_Scream
-	PDED B 6 A_SetFloorClip
-	PDED C 6 A_NoBlocking
-		
-	PDED DEFGHI 6 
-	PDED I 350
-	PDED JKLMNO 5
-  	TNT1 AAAAAAAAAAAAA 0 A_TossGib
-	PDED P 5 A_SpawnItem("FAlien",30)
-	PDED QRS 5
-	"####" "#" 0 A_QueueCorpse
-	"####" "#" 0 A_ChangeFlag("CORPSE",1)
-	PDED T -1 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
-	Stop
-    Death.UnholyDisint:
-    Death.PlasmaDisint:
-    Disintegrate:
-	TNT1 A 0 Thing_SetTranslation(0,50)
-	TNT1 a 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
-	PRST A 1 A_FadeOut(0.015)
-	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-	TNT1 a 0 A_Stop	
-	TNT1 a 0 A_Fall
-	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
-	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
-	PRST AA 2 A_FadeOut(0.03)
-	Goto Disintegrate+7
+		PDED A 6 A_Scream
+		PDED B 6 A_SetFloorClip
+		PDED C 6 A_NoBlocking
+
+		PDED DEFGHI 6 
+		PDED I 350
+		PDED JKLMNO 5
+		TNT1 AAAAAAAAAAAAA 0 A_TossGib
+		PDED P 5 A_SpawnItem("FAlien",30)
+		PDED QRS 5
+		"####" "#" 0 A_QueueCorpse
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
+		PDED T -1 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
+		Stop
+	Death.UnholyDisint:
+	Death.PlasmaDisint:
+	Disintegrate:
+		TNT1 A 0 Thing_SetTranslation(0,50)
+		TNT1 a 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
+		PRST A 1 A_FadeOut(0.015)
+		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+		TNT1 a 0 A_Stop	
+		TNT1 a 0 A_Fall
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+		PRST AA 2 A_FadeOut(0.03)
+		Goto Disintegrate+7
     Ice:
 		"####" "#" 5 A_GenericFreezeDeath
 		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
@@ -1349,109 +1354,114 @@ ACTOR Thoth 7425	// cyberdemon
 //===========================================================================
 //===========================================================================
 
-ACTOR FSentinel : Sentinel 7426		// cacodemon
+ACTOR FSentinel : Sentinel //7426		// cacodemon
 {
 	DropItem "CellAmmo"
 	DropItem "PowerslaveSpawner" 64
 	DropItem "PowerupSpawner" 8
-    Health 300
-    PainChance 120
-    Height 50
-    Radius 24
-    +FLOORCLIP
-    +MISSILEMORE
-    +FLOATBOB
-    +NOICEDEATH
-    -LOOKALLAROUND
-    SeeSound "sentinel/sight"
-    DeathSound "sentinel/death"
-    PainChance "Charm", 255
-    PainChance "Terror", 255
-    PainChance "Defile", 255
-    PainChance "Drain", 128
-    PainChance "Chaos", 255
-    PainChance "ChaosExpl1", 255
-    PainChance "ChaosExpl2", 255
-//Mechanic
+	Health 300
+	PainChance 120
+	Height 50
+	Radius 24
+	+FLOORCLIP
+	+MISSILEMORE
+	+FLOATBOB
+	-LOOKALLAROUND
+	+DONTCORPSE
+	SeeSound "sentinel/sight"
+	DeathSound "sentinel/death"
+	PainChance "Charm", 255
+	PainChance "Terror", 255
+	PainChance "Defile", 255
+	PainChance "Drain", 128
+	PainChance "Chaos", 255
+	PainChance "ChaosExpl1", 255
+	PainChance "ChaosExpl2", 255
+	//Mechanic
 	DamageFactor "Fire", 1.25
 	DamageFactor "Ice", 0.75
 	DamageFactor "Electric", 1.5
 	DamageFactor "AEPoison", 0.5
 	DamageFactor "AEBullet", 0.75
 	DamageFactor "AEMagic", 0.75
- 	DamageFactor "Plasma", 1.25
- 	DamageFactor "PlasmaDisint", 1.25
-    States
-    {
-                Pain.Charm:
-	TNT1 A 0
-	TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
-	Goto See
-    Pain.Terror:
-	TNT1 A 0
-	TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
-	Goto See
-    Pain.Drain:
-	TNT1 A 0
-	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
-	Goto Pain
-    Pain.Defile:
-	TNT1 A 0
-	TNT1 A 0 A_GiveInventory("DefileCheck",1)
-	Goto See
+	DamageFactor "Plasma", 1.25
+	DamageFactor "PlasmaDisint", 1.25
+	States
+	{
+	Pain.Charm:
+		TNT1 A 0
+		TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
+		Goto See
+	Pain.Terror:
+		TNT1 A 0
+		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
+		Goto See
+	Pain.Drain:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+		Goto Pain
+	Pain.Defile:
+		TNT1 A 0
+		TNT1 A 0 A_GiveInventory("DefileCheck",1)
+		Goto See
 
-    Spawn:
-	SEWR A 10 A_Look
-	Loop
-    See:
-	SEWR A 0 A_PlaySoundEx("sentinel/fly","SoundSlot5",1,0)
-	SEWR A 0 A_SentinelBob
-	SEWR AAAA 3 A_Chase
-	Goto See
-    Missile:
-	SEWR B 0 A_FaceTarget
-	SEWR C 3 Bright A_CustomMissile("RedSentinelBall",18,0,random(2,-2))
-	SEWR C 1 Bright A_CPosReFire
-	Loop
-    Pain:
-	SEWR D 5 A_Pain
-	Goto See
-    Death:
+	Spawn:
+		SEWR A 10 A_Look
+		Loop
+	See:
+		SEWR A 0 A_PlaySoundEx("sentinel/fly","SoundSlot5",1,0)
+		SEWR A 0 A_SentinelBob
+		SEWR AAAA 3 A_Chase
+		Goto See
+	Missile:
+		SEWR B 0 A_FaceTarget
+		SEWR C 3 Bright A_CustomMissile("RedSentinelBall",18,0,random(2,-2))
+		SEWR C 1 Bright A_CPosReFire
+		Loop
+	Pain:
+		SEWR D 5 A_Pain
+		Goto See
+	Death:
 		"####" "#" 0 A_UnsetSolid
-	SEWR D 0 A_StopSoundEx("SoundSlot5")
-	SEWR D 0 A_ChangeFlag("FLOATBOB",0)
-	SEWR D 7 A_Fall
-	"####" "#" 0 A_ChangeFlag("CORPSE",1)
-	SEWR E 8 Bright A_TossGib
-	SEWR F 5 Bright A_Scream
-	TNT1 A 0 A_SpawnItemEx("MonExplosionMediumSimple",0,0,0,10,0,0,0,0,32)
-	SEWR GH 4 Bright A_TossGib
-	SEWR I 4
-	SEWR J -1
-	Stop
+		SEWR D 0 A_StopSoundEx("SoundSlot5")
+		SEWR D 0 A_ChangeFlag("FLOATBOB",0)
+		SEWR D 7 A_Fall
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
+		SEWR E 8 Bright A_TossGib
+		SEWR F 5 Bright A_Scream
+		TNT1 A 0 A_SpawnItemEx("MonExplosionMediumSimple",0,0,0,10,0,0,0,0,32)
+		SEWR GH 4 Bright A_TossGib
+		SEWR I 4
+		SEWR J -1
+		Stop
 	XDeath:
+		TNT1 A 0 A_UnsetSolid
 		TNT1 A 0 A_PlaySound("quake4/Misc/Explo")
 		TNT1 A 0 A_SpawnItemEx("MonExplosionMedium",0,0,20,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0)
 		TNT1 AAAAAAAAAAAA 0 A_SpawnItemEx("Junk",0,0,0,random(-7,7),random(-7,7),random(1,14),random(1,359),1)
 		TNT1 A 1 A_Fall
 		Stop
-    Death.UnholyDisint:
-    Death.PlasmaDisint:
-    Disintegrate:
-	TNT1 A 0 Thing_SetTranslation(0,50)	
-	SEWR D 1 A_FadeOut(0.015)
-	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-	TNT1 a 0 A_Stop	
-	TNT1 a 0 A_Fall
-	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
-	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
-	SEWR DD 2 A_FadeOut(0.03)
-	Goto Disintegrate+6
-    Raise:
-	SEWR IHGFED 4
-	Goto See
-    }
+	Death.UnholyDisint:
+	Death.PlasmaDisint:
+	Disintegrate:
+		TNT1 A 0 Thing_SetTranslation(0,50)	
+		SEWR D 1 A_FadeOut(0.015)
+		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+		TNT1 a 0 A_Stop	
+		TNT1 a 0 A_Fall
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+		SEWR DD 2 A_FadeOut(0.03)
+		Goto Disintegrate+6
+	Raise:
+		SEWR IHGFED 4
+		Goto See
+	Ice:
+		"----" A 5 A_GenericFreezeDeath
+		"----" A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
+		"----" A 1 A_FreezeDeathChunks
+		Wait
+	}
 }
 
 ACTOR RedSentinelBall : PlasmaBall
@@ -1477,7 +1487,7 @@ ACTOR RedSentinelBall : PlasmaBall
 //=====================================================================================
 //=====================================================================================
 
-ACTOR Seeker : FSentinel 7427		// pain elemental
+ACTOR Seeker : FSentinel //7427		// pain elemental
 {
 	DropItem "CellAmmo"
 	DropItem "PowerslaveSpawner" 64
@@ -1485,6 +1495,7 @@ ACTOR Seeker : FSentinel 7427		// pain elemental
     Speed 10
     Health 450
     Scale 1.1
+	+DONTCORPSE
     -LOOKALLAROUND
     Obituary "%o couldn't escape the seeker's plasma."
     Translation "80:111=176:191","5:8=188:191"
@@ -1505,23 +1516,23 @@ ACTOR Seeker : FSentinel 7427		// pain elemental
     States
     {
 	Pain.Charm:
-	TNT1 A 0
-	TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
-	Goto See
+		TNT1 A 0
+		TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
+		Goto See
     Pain.Terror:
-	TNT1 A 0
-	TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
-	Goto See
+		TNT1 A 0
+		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
+		Goto See
     Pain.Drain:
-	TNT1 A 0
-	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
-	Goto Pain
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+		Goto Pain
     Missile:
-	SEWR B 0 A_FaceTarget
-	SEWR B 0 Bright A_PlaySound("reilsss/weapons/plasmagunfire1")
-	SEWR C 3 Bright A_CustomMissile("BouncingPlasmaBallWeak",20,0,random(-4,4))
-	SEWR C 1 Bright A_CPosReFire
-	Loop
+		SEWR B 0 A_FaceTarget
+		SEWR B 0 Bright A_PlaySound("reilsss/weapons/plasmagunfire1")
+		SEWR C 3 Bright A_CustomMissile("BouncingPlasmaBallWeak",20,0,random(-4,4))
+		SEWR C 1 Bright A_CPosReFire
+		Loop
     }
 }
 
@@ -1533,7 +1544,7 @@ ACTOR Seeker : FSentinel 7427		// pain elemental
 //=====================================================================================
 //=====================================================================================
 
-ACTOR Probe : FSentinel 8411		// lost soul
+ACTOR Probe : FSentinel //8411		// lost soul
 {
 	DropItem "BulletAmmo"
 	DropItem "PowerslaveSpawner" 64
@@ -1544,6 +1555,7 @@ ACTOR Probe : FSentinel 8411		// lost soul
     Health 80
     Scale 0.55
     -LOOKALLAROUND
+	+DONTCORPSE
     Obituary "%o was probed."
     Translation "80:111=48:79","5:8=76:79"
     PainChance "Charm", 192
@@ -1563,40 +1575,46 @@ ACTOR Probe : FSentinel 8411		// lost soul
     States
     {
     See:
-	SEWR A 0 A_PlaySoundEx("sentinel/fly","SoundSlot5",1,0)
-	SEWR A 0 A_SentinelBob
-	SEWR AAAAAA 2 A_Chase
-	Goto See
+		SEWR A 0 A_PlaySoundEx("sentinel/fly","SoundSlot5",1,0)
+		SEWR A 0 A_SentinelBob
+		SEWR AAAAAA 2 A_Chase
+		Goto See
 	Pain.Charm:
-	TNT1 A 0
-	TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
-	Goto See
+		TNT1 A 0
+		TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
+		Goto See
     Pain.Terror:
-	TNT1 A 0
-	TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
-	Goto See
+		TNT1 A 0
+		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
+		Goto See
     Pain.Drain:
-	TNT1 A 0
-	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
-	Goto Pain
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+		Goto Pain
     Missile:
-	SEWR B 0 A_FaceTarget
-	SEWR B 0 Bright A_PlaySound("weapons/nailshot")
-	SEWR C 4 Bright A_CustomMissile("ProbeNail",12,0,random(-2,2))
-	SEWR C 1 Bright A_CPosReFire
-	Loop
+		SEWR B 0 A_FaceTarget
+		SEWR B 0 Bright A_PlaySound("weapons/nailshot")
+		SEWR C 4 Bright A_CustomMissile("ProbeNail",12,0,random(-2,2))
+		SEWR C 1 Bright A_CPosReFire
+		Loop
     Death.UnholyDisint:
     Death.PlasmaDisint:
     Disintegrate:
-	TNT1 A 0 Thing_SetTranslation(0,50)	
-	SEWR D 1 A_FadeOut(0.015)
-	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-	TNT1 a 0 A_Stop	
-	TNT1 a 0 A_Fall
-	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowSmallMedium",0,0,18,0,0,0,0,32)
-	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksSmallMedium",0,0,18,0,0,0,0,32)
-	SEWR DD 2 A_FadeOut(0.03)
-	Goto Disintegrate+6
+		TNT1 A 0 Thing_SetTranslation(0,50)	
+		SEWR D 1 A_FadeOut(0.015)
+		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+		TNT1 a 0 A_Stop	
+		TNT1 a 0 A_Fall
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowSmallMedium",0,0,18,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksSmallMedium",0,0,18,0,0,0,0,32)
+		SEWR DD 2 A_FadeOut(0.03)
+		Goto Disintegrate+6
+	
+	Ice:
+		"----" A 5 A_GenericFreezeDeath
+		"----" A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
+		"----" A 1 A_FreezeDeathChunks
+		Wait
     }
 }
 
@@ -1634,7 +1652,7 @@ ACTOR ProbeNail
 //=====================================================================================
 //=====================================================================================
 
-ACTOR FReaver : Reaver 7428		// shotgun guy
+ACTOR FReaver : Reaver //7428		// shotgun guy
 {
 	DropItem "BulletAmmo"
 	DropItem "PowerSlaveSpawnerShotgunner" 210
@@ -1648,7 +1666,8 @@ ACTOR FReaver : Reaver 7428		// shotgun guy
     ActiveSound "reaver/active"
     DeathSound "reaver/death"
     Scale 0.88
-    +NOICEDEATH
+	+DONTCORPSE
+    //+NOICEDEATH
     +FLOORCLIP
     -LOOKALLAROUND
     PainChance "Charm", 255
@@ -1670,94 +1689,90 @@ ACTOR FReaver : Reaver 7428		// shotgun guy
     States
     {
 	Pain.Charm:
-	TNT1 A 0
-	TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
-	Goto See
+		TNT1 A 0
+		TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
+		Goto See
     Pain.Terror:
-	TNT1 A 0
-	TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
-	Goto See
+		TNT1 A 0
+		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
+		Goto See
     Pain.Drain:
-	TNT1 A 0
-	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
-	Goto Pain
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+		Goto Pain
     Pain.Defile:
-	TNT1 A 0
-	TNT1 A 0 A_GiveInventory("DefileCheck",1)
-	Goto See
+		TNT1 A 0
+		TNT1 A 0 A_GiveInventory("DefileCheck",1)
+		Goto See
     Spawn:
-	ROB1 A 10 A_Look
-	Loop
+		ROB1 A 10 A_Look
+		Loop
     See:
-	ROB1 BBCCDDEE 3 A_Chase
-	Loop
+		ROB1 BBCCDDEE 3 A_Chase
+		Loop
     Melee:
-	ROB1 H 6 A_FaceTarget
-	ROB1 I 8 A_CustomMeleeAttack(4,"reaver/melee")
-	Goto See
+		ROB1 H 6 A_FaceTarget
+		ROB1 I 8 A_CustomMeleeAttack(4,"reaver/melee")
+		Goto See
     Missile:
-	ROB1 G 8 A_FaceTarget
-	ROB1 F 0 A_PlaySound("weapons/assaultgun")
-	ROB1 F 2 Bright A_CustomBulletAttack(2,2,1,1,"BulletDamagePuff")
-	ROB1 G 2 A_FaceTarget
-	ROB1 F 0 A_PlaySound("weapons/assaultgun")
-	ROB1 F 2 Bright A_CustomBulletAttack(2,2,1,1,"BulletDamagePuff")
-	ROB1 G 2 A_FaceTarget
-	ROB1 F 0 A_PlaySound("weapons/assaultgun")
-	ROB1 F 2 Bright A_CustomBulletAttack(2,2,1,1,"BulletDamagePuff")
-	ROB1 G 2 A_FaceTarget
-	ROB1 F 0 A_PlaySound("weapons/assaultgun")
-	ROB1 F 2 Bright A_CustomBulletAttack(2,2,1,1,"BulletDamagePuff")
-	ROB1 G 2 A_FaceTarget
-	Goto See
+		ROB1 G 8 A_FaceTarget
+		ROB1 F 0 A_PlaySound("weapons/assaultgun")
+		ROB1 F 2 Bright A_CustomBulletAttack(2,2,1,1,"BulletDamagePuff")
+		ROB1 G 2 A_FaceTarget
+		ROB1 F 0 A_PlaySound("weapons/assaultgun")
+		ROB1 F 2 Bright A_CustomBulletAttack(2,2,1,1,"BulletDamagePuff")
+		ROB1 G 2 A_FaceTarget
+		ROB1 F 0 A_PlaySound("weapons/assaultgun")
+		ROB1 F 2 Bright A_CustomBulletAttack(2,2,1,1,"BulletDamagePuff")
+		ROB1 G 2 A_FaceTarget
+		ROB1 F 0 A_PlaySound("weapons/assaultgun")
+		ROB1 F 2 Bright A_CustomBulletAttack(2,2,1,1,"BulletDamagePuff")
+		ROB1 G 2 A_FaceTarget
+		Goto See
     Pain:
-	ROB1 A 2
-	ROB1 A 2 A_Pain
-	Goto See
+		ROB1 A 2
+		ROB1 A 2 A_Pain
+		Goto See
     Death:
 		"####" "#" 0 A_UnsetSolid
-	ROB1 J 6
-	ROB1 K 6 A_Scream
-	ROB1 L 5
-	ROB1 M 5 A_NoBlocking
-	ROB1 N 5
-	TNT1 A 0 A_SpawnItemEx("MonExplosionMediumSimple",0,0,0,10,0,0,0,0,32)
-	ROB1 OP 5
-	ROB1 Q 6 A_Explode(32,32,1,1)
-	"####" "#" 0 A_ChangeFlag("CORPSE",1)
-	ROB1 R -1
-	Stop
-    XDeath:
-	ROB1 L 5 A_TossGib
-	ROB1 M 5 A_Scream
-	ROB1 N 5 A_TossGib
-	TNT1 A 0 A_SpawnItemEx("MonExplosionMediumSimple",0,0,0,10,0,0,0,0,32)
-	ROB1 O 5 A_NoBlocking
-	ROB1 P 5 A_TossGib
-	Goto Death+7
-	Death.Telefrag:
-	XDeath.Telefrag:
+		ROB1 J 6
+		ROB1 K 6 A_Scream
+		ROB1 L 5
+		ROB1 M 5 A_NoBlocking
+		ROB1 N 5
+		TNT1 A 0 A_SpawnItemEx("MonExplosionMediumSimple",0,0,0,10,0,0,0,0,32)
+		ROB1 OP 5
+		ROB1 Q 6 //A_Explode(32,32,1,1)
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
+		ROB1 R -1
+		Stop
+	XDeath:
+		TNT1 A 0 A_UnsetSolid
 		TNT1 A 0 A_PlaySound("quake4/Misc/Explo")
 		TNT1 A 0 A_SpawnItemEx("MonExplosionMedium",0,0,20,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0)
-		TNT1 AAAAAAAAAAAA 0 A_SpawnItemEx("Junk",0,0,0,random(-7,7),random(-7,7),random(1,14),random(1,359),1)
+		TNT1 AAAAAA 0 A_SpawnItemEx("Junk",0,0,0,random(-7,7),random(-7,7),random(1,14),random(1,359),1)
 		TNT1 A 1 A_Fall
 		Stop
     Death.UnholyDisint:
     Death.PlasmaDisint:
     Disintegrate:
-	TNT1 A 0 Thing_SetTranslation(0,50)	
-	ROB1 A 1 A_FadeOut(0.015)
-	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-	TNT1 a 0 A_Stop	
-	TNT1 a 0 A_Fall
-	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
-	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
-	ROB1 AA 2 A_FadeOut(0.03)
-	Goto Disintegrate+6
+		TNT1 A 0 Thing_SetTranslation(0,50)	
+		ROB1 A 1 A_FadeOut(0.015)
+		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+		TNT1 a 0 A_Stop	
+		TNT1 a 0 A_Fall
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+		ROB1 AA 2 A_FadeOut(0.03)
+		Goto Disintegrate+6
     Raise:
-	ROB1 QPONMLKJ 5
-	Goto See 
+		ROB1 QPONMLKJ 5
+		Goto See
+	Ice:
+		"----" A 5 A_GenericFreezeDeath
+		"----" A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
+		"----" A 1 A_FreezeDeathChunks
+		Wait
     }
 }
 
@@ -1768,7 +1783,7 @@ ACTOR FReaver : Reaver 7428		// shotgun guy
 //=====================================================================================
 //=====================================================================================
 
-ACTOR Assassin : FReaver 7429		// imp
+ACTOR Assassin : FReaver //7429		// imp
 {
 	DropItem "CellAmmo"
 	DropItem "PowerslaveSpawner" 64
@@ -1828,7 +1843,7 @@ ACTOR AssassinShot : MedicBlasterStrong
 //=====================================================================================
 //=====================================================================================
 
-ACTOR FTemplar 7430		// fatso
+ACTOR FTemplar //7430		// fatso
 {
 	DropItem "CellAmmo"
 	DropItem "HealthHeart" 210
@@ -1842,7 +1857,7 @@ ACTOR FTemplar 7430		// fatso
     Mass 500
     Monster	+DONTCORPSE		RipLevelMin 1
     +NOBLOOD
-    +NOICEDEATH
+    //+NOICEDEATH
     +FLOORCLIP
     MinMissileChance 200
     HitObituary "%o was clawed by a Templar."
@@ -1869,51 +1884,51 @@ ACTOR FTemplar 7430		// fatso
  	DamageFactor "PlasmaDisint", 1.25
     States
     {
-                Pain.Charm:
-	TNT1 A 0
-	TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
-	Goto See
+	Pain.Charm:
+		TNT1 A 0
+		TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
+		Goto See
     Pain.Terror:
-	TNT1 A 0
-	TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
-	Goto See
+		TNT1 A 0
+		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
+		Goto See
     Pain.Drain:
-	TNT1 A 0
-	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
-	Goto Pain
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+		Goto Pain
     Spawn:
-	TPLR AA 5 A_Look
-	Loop
+		TPLR AA 5 A_Look
+		Loop
     See:
-	TPLR AABBCCDD 3 A_Chase
-	Loop
+		TPLR AABBCCDD 3 A_Chase
+		Loop
     Melee:
-	TPLR E 8 A_FaceTarget
-	TPLR F 8 A_CustomMeleeAttack(random(30,60),"imp/melee")
-	Goto See
+		TPLR E 8 A_FaceTarget
+		TPLR F 8 A_CustomMeleeAttack(random(30,60),"imp/melee")
+		Goto See
     Missile:
-	TPLR G 8 Bright A_FaceTarget
-	TPLR G 0 Bright A_PlaySound("templar/shoot")
-	TPLR H 8 Bright A_CustomBulletAttack(8,8,random(5,10),5,"TemplarPuff")
-	Goto See
+		TPLR G 8 Bright A_FaceTarget
+		TPLR G 0 Bright A_PlaySound("templar/shoot")
+		TPLR H 8 Bright A_CustomBulletAttack(8,8,random(5,10),5,"TemplarPuff")
+		Goto See
     Pain:
-	TPLR A 2
-	TPLR A 2 A_Pain
-	Goto See
+		TPLR A 2
+		TPLR A 2 A_Pain
+		Goto See
     Death:
 		"####" "#" 0 A_UnsetSolid
-	TPLR I 4 A_TossGib
-	TPLR J 4 A_Scream
-	TPLR K 4 A_TossGib
-	TPLR L 4 A_NoBlocking
-	TNT1 a 0 A_spawnItemEx("MonExplosionMediumSimple",random(10,-10),random(10,-10),random(10,40),0,0,0,0,32)
-	TPLR MN 4
-	TNT1 a 0 A_spawnItemEx("MonExplosionMediumSimple",random(10,-10),random(10,-10),random(10,40),0,0,0,0,32)
-	TPLR O 4 A_TossGib
-	TPLR "PQRSTUVWXYZ[" 4
-	"####" "#" 0 A_ChangeFlag("CORPSE",1)
-	TPL2 A -1 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
-	Stop
+		TPLR I 4 A_TossGib
+		TPLR J 4 A_Scream
+		TPLR K 4 A_TossGib
+		TPLR L 4 A_NoBlocking
+		TNT1 a 0 A_spawnItemEx("MonExplosionMediumSimple",random(10,-10),random(10,-10),random(10,40),0,0,0,0,32)
+		TPLR MN 4
+		TNT1 a 0 A_spawnItemEx("MonExplosionMediumSimple",random(10,-10),random(10,-10),random(10,40),0,0,0,0,32)
+		TPLR O 4 A_TossGib
+		TPLR "PQRSTUVWXYZ[" 4
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
+		TPL2 A -1 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
+		Stop
 	XDeath:
 		TNT1 A 0 A_PlaySound("quake4/Misc/Explo")
 		TNT1 A 0 A_SpawnItemEx("MonExplosionMedium",0,0,20,0,0,0,0,32)
@@ -1923,22 +1938,27 @@ ACTOR FTemplar 7430		// fatso
 		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		Stop
     Raise:
-	TPL2 A 4
-	TPLR ZYXWVUTSRQPONMLKJI 4
-	Goto See
+		TPL2 A 4
+		TPLR ZYXWVUTSRQPONMLKJI 4
+		Goto See
     Death.UnholyDisint:
     Death.PlasmaDisint:
     Disintegrate:
-	TNT1 A 0 Thing_SetTranslation(0,50)	
-	TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
-	TPLR A 1 A_FadeOut(0.015)
-	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-	TNT1 a 0 A_Stop	
-	TNT1 a 0 A_Fall
-	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
-	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
-	TPLR AA 2 A_FadeOut(0.03)
-	Goto Disintegrate+7
+		TNT1 A 0 Thing_SetTranslation(0,50)	
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
+		TPLR A 1 A_FadeOut(0.015)
+		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+		TNT1 a 0 A_Stop	
+		TNT1 a 0 A_Fall
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+		TPLR AA 2 A_FadeOut(0.03)
+		Goto Disintegrate+7
+	Ice:
+		"----" A 5 A_GenericFreezeDeath
+		"----" A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
+		"----" A 1 A_FreezeDeathChunks
+		Wait
     }
 }
 
@@ -1949,7 +1969,7 @@ ACTOR FTemplar 7430		// fatso
 //=====================================================================================
 //=====================================================================================
 
-ACTOR Sentry : FTemplar 7431		// hell knight
+ACTOR Sentry : FTemplar //7431		// hell knight
 {
 	DropItem "CellAmmo"
 	DropItem "HealthHeart" 210
@@ -1962,6 +1982,7 @@ ACTOR Sentry : FTemplar 7431		// hell knight
     MinMissileChance 230
     +FLOORCLIP
     -LOOKALLAROUND
+	+DONTCORPSE
     HitObituary "%o was gouged by a sentry."
     Obituary "%o was discovered by a sentry."
     Translation "128:151=88:111","236:239=104:107","13:15=104:106","1:1=6:6",
@@ -1984,35 +2005,35 @@ ACTOR Sentry : FTemplar 7431		// hell knight
  	DamageFactor "PlasmaDisint", 1.25
     States
     {
-                Pain.Charm:
-	TNT1 A 0
-	TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
-	Goto See
+	Pain.Charm:
+		TNT1 A 0
+		TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
+		Goto See
     Pain.Terror:
-	TNT1 A 0
-	TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
-	Goto See
+		TNT1 A 0
+		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
+		Goto See
     Pain.Drain:
-	TNT1 A 0
-	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
-	Goto Pain
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+		Goto Pain
     Pain.Defile:
-	TNT1 A 0
-	TNT1 A 0 A_GiveInventory("DefileCheck",1)
-	Goto See
+		TNT1 A 0
+		TNT1 A 0 A_GiveInventory("DefileCheck",1)
+		Goto See
     Melee:
-	TPLR E 8 A_FaceTarget
-	TPLR F 8 A_CustomMeleeAttack(7,"imp/melee")
-	Goto See
+		TPLR E 8 A_FaceTarget
+		TPLR F 8 A_CustomMeleeAttack(7,"imp/melee")
+		Goto See
     Missile:
-	TPLR G 4 Bright A_FaceTarget
-	TPLR G 0 Bright A_PlaySound("templar/shoot")
-	TPLR H 8 Bright A_CustomMissile("SentryShot",32,0,random(-2,2))
-	TPLR G 3 Bright A_FaceTarget
-	TPLR H 8 Bright A_CustomMissile("SentryShot",32,0,random(-2,2))
-	TPLR G 3 Bright A_FaceTarget
-	TPLR H 8 Bright A_CustomMissile("SentryShot",32,0,random(-2,2))
-	Goto See
+		TPLR G 4 Bright A_FaceTarget
+		TPLR G 0 Bright A_PlaySound("templar/shoot")
+		TPLR H 8 Bright A_CustomMissile("SentryShot",32,0,random(-2,2))
+		TPLR G 3 Bright A_FaceTarget
+		TPLR H 8 Bright A_CustomMissile("SentryShot",32,0,random(-2,2))
+		TPLR G 3 Bright A_FaceTarget
+		TPLR H 8 Bright A_CustomMissile("SentryShot",32,0,random(-2,2))
+		Goto See
 	XDeath:
 		TNT1 A 0 A_PlaySound("quake4/Misc/Explo")
 		TNT1 A 0 A_SpawnItemEx("MonExplosionMedium",0,0,20,0,0,0,0,32)
@@ -2071,7 +2092,7 @@ ACTOR SentryShot
 //=====================================================================================
 //=====================================================================================
 
-ACTOR FCrusader : Crusader 7432		// arachnotron
+ACTOR FCrusader : Crusader //7432		// arachnotron
 {
 	DropItem "AEoDPlutoniumCannonItem" 16
 	DropItem "ExploAmmo"
@@ -2085,11 +2106,12 @@ ACTOR FCrusader : Crusader 7432		// arachnotron
     DeathSound "crusader/death"
     PainChance 40
     Health 550
-    +NOICEDEATH
+    //+NOICEDEATH
     +BOSS
     +BOSSDEATH
     +FLOORCLIP
     -LOOKALLAROUND
+	+DONTCORPSE
     PainChance "Charm", 192
     PainChance "Terror", 192
     PainChance "Drain", 96
@@ -2107,56 +2129,56 @@ ACTOR FCrusader : Crusader 7432		// arachnotron
  	DamageFactor "PlasmaDisint", 1.25
     States
     {
-                Pain.Charm:
-	TNT1 A 0
-	TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
-	Goto See
+	Pain.Charm:
+		TNT1 A 0
+		TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
+		Goto See
     Pain.Terror:
-	TNT1 A 0
-	TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
-	Goto See
+		TNT1 A 0
+		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
+		Goto See
     Pain.Drain:
-	TNT1 A 0
-	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
-	Goto Pain
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+		Goto Pain
     Spawn:
-	ROB2 G 10 A_Look
-	Loop
+		ROB2 G 10 A_Look
+		Loop
     See:
-	ROB2 AABB 3 A_Chase
-	ROB2 B 0 A_PlaySound("crusader/step")
-	ROB2 CCDD 3 A_Chase
-	ROB2 D 0 A_PlaySound("crusader/step")
-	Loop
+		ROB2 AABB 3 A_Chase
+		ROB2 B 0 A_PlaySound("crusader/step")
+		ROB2 CCDD 3 A_Chase
+		ROB2 D 0 A_PlaySound("crusader/step")
+		Loop
     Missile:
-	ROB2 E 10 A_FaceTarget
-	ROB2 F 2 Bright A_CustomMissile("CrusaderRocket",42,-36,0)
-	ROB2 E 10 Bright A_FaceTarget
-	ROB2 F 2 Bright A_CustomMissile("CrusaderRocket",42,-36,0)
-	ROB2 E 10 Bright A_FaceTarget
-	ROB2 F 2 Bright A_CustomMissile("CrusaderRocket",42,-36,0)
-	ROB2 E 6 Bright A_FaceTarget
-	Goto See
+		ROB2 E 10 A_FaceTarget
+		ROB2 F 2 Bright A_CustomMissile("CrusaderRocket",42,-36,0)
+		ROB2 E 10 Bright A_FaceTarget
+		ROB2 F 2 Bright A_CustomMissile("CrusaderRocket",42,-36,0)
+		ROB2 E 10 Bright A_FaceTarget
+		ROB2 F 2 Bright A_CustomMissile("CrusaderRocket",42,-36,0)
+		ROB2 E 6 Bright A_FaceTarget
+		Goto See
     Pain:
-	ROB2 D 1 A_Pain
-	Goto See
+		ROB2 D 1 A_Pain
+		Goto See
     Death:
-	ROB2 H 3 A_Scream
-	ROB2 I 5 A_TossGib
-	ROB2 J 4 Bright A_TossGib
-	TNT1 a 0 A_spawnItemEx("MonExplosionMediumSimple",random(10,-10),random(10,-10),random(10,40),0,0,0,0,32)
-	ROB2 K 4 Bright A_Explode(64,64,1,1)
-	ROB2 L 4 Bright A_Fall
-	
-	TNT1 a 0 A_spawnItemEx("MonExplosionMediumSimple",random(10,-10),random(10,-10),random(10,40),0,0,0,0,32)
-	ROB2 M 4 A_Explode(64,64,1,1)
-	ROB2 NO 4 A_TossGib
-	TNT1 a 0 A_spawnItemEx("MonExplosionMediumSimple",random(10,-10),random(10,-10),random(10,40),0,0,0,0,32)
-	ROB2 P 4 A_Explode(64,64,1,1)
-	TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
-	"####" "#" 0 A_ChangeFlag("CORPSE",1)
-	ROB2 Q -1 A_CrusaderDeath
-	Stop
+		ROB2 H 3 A_Scream
+		ROB2 I 5 A_TossGib
+		ROB2 J 4 Bright A_TossGib
+		TNT1 a 0 A_spawnItemEx("MonExplosionMediumSimple",random(10,-10),random(10,-10),random(10,40),0,0,0,0,32)
+		ROB2 K 4 Bright //A_Explode(64,64,1,1)
+		ROB2 L 4 Bright A_Fall
+		
+		TNT1 a 0 A_spawnItemEx("MonExplosionMediumSimple",random(10,-10),random(10,-10),random(10,40),0,0,0,0,32)
+		ROB2 M 4 //A_Explode(64,64,1,1)
+		ROB2 NO 4 A_TossGib
+		TNT1 a 0 A_spawnItemEx("MonExplosionMediumSimple",random(10,-10),random(10,-10),random(10,40),0,0,0,0,32)
+		ROB2 P 4 A_Explode(64,64,1,1)
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
+		ROB2 Q -1 A_CrusaderDeath
+		Stop
 	XDeath:
 		XTRA C 0 A_PlaySound("other/gibdeath")
 		TNT1 A 0 A_fall
@@ -2170,19 +2192,24 @@ ACTOR FCrusader : Crusader 7432		// arachnotron
     Death.UnholyDisint:
     Death.PlasmaDisint:
     Disintegrate:
-	TNT1 A 0 Thing_SetTranslation(0,50)	
-	TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
-	ROB2 D 1 A_FadeOut(0.015)
-	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-	TNT1 a 0 A_Stop	
-	TNT1 a 0 A_Fall
-	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,32)
-	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,32)
-	ROB2 DD 2 A_FadeOut(0.03)
-	Goto Disintegrate+7
+		TNT1 A 0 Thing_SetTranslation(0,50)	
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
+		ROB2 D 1 A_FadeOut(0.015)
+		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+		TNT1 a 0 A_Stop	
+		TNT1 a 0 A_Fall
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,32)
+		ROB2 DD 2 A_FadeOut(0.03)
+		Goto Disintegrate+7
     Raise:
-	ROB2 PONMLKJIH 4
-	Goto See
+		ROB2 PONMLKJIH 4
+		Goto See
+	Ice:
+		"----" A 5 A_GenericFreezeDeath
+		"----" A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
+		"----" A 1 A_FreezeDeathChunks
+		Wait
     }
 }
 
@@ -2194,7 +2221,7 @@ ACTOR FCrusader : Crusader 7432		// arachnotron
 //=====================================================================================
 //=====================================================================================
 
-ACTOR Drone : FCrusader 7433		// chaingun guy
+ACTOR Drone : FCrusader //7433		// chaingun guy
 {
 	DropItem "BulletAmmo"
 	DropItem "PowerSlaveSpawnerMonsterAmmo" 210
@@ -2203,6 +2230,7 @@ ACTOR Drone : FCrusader 7433		// chaingun guy
     Height 50
     Health 100
     Scale 0.7
+	+DONTCORPSE
     +FLOORCLIP
     -LOOKALLAROUND
     Obituary "%o was gunned down by a drone."
@@ -2226,28 +2254,28 @@ ACTOR Drone : FCrusader 7433		// chaingun guy
  	DamageFactor "PlasmaDisint", 1.25
     States
     {
-                Pain.Charm:
-	TNT1 A 0
-	TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
-	Goto See
+	Pain.Charm:
+		TNT1 A 0
+		TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
+		Goto See
     Pain.Terror:
-	TNT1 A 0
-	TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
-	Goto See
+		TNT1 A 0
+		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
+		Goto See
     Pain.Drain:
-	TNT1 A 0
-	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
-	Goto Pain
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+		Goto Pain
     Pain.Defile:
-	TNT1 A 0
-	TNT1 A 0 A_GiveInventory("DefileCheck",1)
-	Goto See
+		TNT1 A 0
+		TNT1 A 0 A_GiveInventory("DefileCheck",1)
+		Goto See
     Missile:
-	ROB2 E 8 A_FaceTarget
-	ROB2 E 2 A_FaceTarget	
-	ROB2 F 2 Bright A_CustomBulletAttack (22.5, 0, 1, 5, "BulletDamagePuff")
-	ROB2 E 0 A_CPosReFire
-	Goto Missile+1
+		ROB2 E 8 A_FaceTarget
+		ROB2 E 2 A_FaceTarget	
+		ROB2 F 2 Bright A_CustomBulletAttack (22.5, 0, 1, 5, "BulletDamagePuff")
+		ROB2 E 0 A_CPosReFire
+		Goto Missile+1
     }
 }
 
@@ -2287,7 +2315,7 @@ ACTOR CrusaderRocket
 //=====================================================================================
 //=====================================================================================
 
-ACTOR FInquisitor : Inquisitor 7413	// cyberdemon
+ACTOR FInquisitor : Inquisitor //7413	// cyberdemon
 {
 	var int user_d[2];
 	DropItem "AEoDCrawlerItem" 64
@@ -2310,6 +2338,7 @@ ACTOR FInquisitor : Inquisitor 7413	// cyberdemon
     +MISSILEMORE
     +NOFEAR
     -LOOKALLAROUND
+	+DONTCORPSE
     DamageFactor "Wormwood", 0.2
     PainChance "Drain", 40
     PainChance "Chaos", 255
@@ -2326,105 +2355,105 @@ ACTOR FInquisitor : Inquisitor 7413	// cyberdemon
  	DamageFactor "PlasmaDisint", 1.25
     States
     {
-        Pain.Drain:
-	TNT1 A 0
-	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
-	Goto See
+	Pain.Drain:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+		Goto See
     Spawn:
-	ROB4 A 10 A_Look
-	Loop
+		ROB4 A 10 A_Look
+		Loop
     See:
-	//ROB4 B 3 A_InquisitorWalk
-	ROB4 BB 3 A_Chase
-	ROB4 B 0 A_PlaySound("inquisitor/step")
-	ROB4 CCDD 4 A_Chase
-	ROB4 D 0 A_PlaySound("inquisitor/step")
-	ROB4 EE 3 A_Chase
-	Loop
+		//ROB4 B 3 A_InquisitorWalk
+		ROB4 BB 3 A_Chase
+		ROB4 B 0 A_PlaySound("inquisitor/step")
+		ROB4 CCDD 4 A_Chase
+		ROB4 D 0 A_PlaySound("inquisitor/step")
+		ROB4 EE 3 A_Chase
+		Loop
     Missile:
     Mauler:
-	ROB4 A 0 A_Jump(208,"Rocket","Jump")
-	ROB4 A 0 A_Jump(20,"QSG")
-	ROB4 A 0 A_JumpIfCloser(1800,5)
-	ROB4 A 6 A_FaceTarget
-	ROB4 F 0 Bright A_PlaySound("weapons/infinityfire",CHAN_AUTO,1.0,0)
-	ROB4 F 4 Bright A_CustomMissile("InquisitorMShot4",70,-32,0)
-	ROB4 G 6
-	Goto See
-	ROB4 A 0 A_JumpIfCloser(1200,5)
-	ROB4 A 6 A_FaceTarget
-	ROB4 F 0 Bright A_PlaySound("weapons/infinityfire",CHAN_AUTO,1.0,0)
-	ROB4 F 4 Bright A_CustomMissile("InquisitorMShot3",70,-32,0)
-	ROB4 G 6
-	Goto See
-	ROB4 A 0 A_JumpIfCloser(600,5)
-	ROB4 A 6 A_FaceTarget
-	ROB4 F 0 Bright A_PlaySound("weapons/infinityfire",CHAN_AUTO,1.0,0)
-	ROB4 F 4 Bright A_CustomMissile("InquisitorMShot2",70,-32,0)
-	ROB4 G 6
-	Goto See
-	ROB4 A 6 A_FaceTarget
-	ROB4 F 0 Bright A_PlaySound("weapons/infinityfire",CHAN_AUTO,1.0,0)
-	ROB4 F 4 Bright A_CustomMissile("InquisitorMShot1",70,-32,0)
-	ROB4 G 6
-	Goto See
-    Rocket:
-	ROB4 A 0 A_JumpIfCloser(2500,6)
-	ROB4 A 6 A_FaceTarget
-	ROB4 J 0 Bright A_PlaySound("q2weapon/grenadelaunfire",CHAN_AUTO,1.0,0)
-	ROB4 J 0 Bright A_CustomMissile("GrenadeL4",100,24,0,1)
-	ROB4 J 3 Bright A_CustomMissile("GrenadeL4",100,-24,0,1)
-	ROB4 G 6
-	Goto See
-	ROB4 A 0 A_JumpIfCloser(1600,6)
-	ROB4 A 6 A_FaceTarget
-	ROB4 J 0 Bright A_PlaySound("q2weapon/grenadelaunfire",CHAN_AUTO,1.0,0)
-	ROB4 J 0 Bright A_CustomMissile("GrenadeL3",100,24,0,1)
-	ROB4 J 3 Bright A_CustomMissile("GrenadeL3",100,-24,0,1)
-	ROB4 G 6
-	Goto See
-	ROB4 A 0 A_JumpIfCloser(400,6)
-	ROB4 A 6 A_FaceTarget
-	ROB4 J 0 Bright A_PlaySound("q2weapon/grenadelaunfire",CHAN_AUTO,1.0,0)
-	ROB4 J 0 Bright A_CustomMissile("GrenadeL",100,24,0,1)
-	ROB4 J 3 Bright A_CustomMissile("GrenadeL",100,-24,0,1)
-	ROB4 G 6
-	Goto See
-	ROB4 A 6 A_FaceTarget
-	ROB4 J 0 Bright A_PlaySound("q2weapon/grenadelaunfire",CHAN_AUTO,1.0,0)
-	ROB4 J 0 Bright A_CustomMissile("GrenadeL2",100,24,0,1)
-	ROB4 J 3 Bright A_CustomMissile("GrenadeL2",100,-24,0,1)
-	ROB4 G 6
-	Goto See
+		ROB4 A 0 A_Jump(208,"Rocket","Jump")
+		ROB4 A 0 A_Jump(20,"QSG")
+		ROB4 A 0 A_JumpIfCloser(1800,5)
+		ROB4 A 6 A_FaceTarget
+		ROB4 F 0 Bright A_PlaySound("weapons/infinityfire",CHAN_AUTO,1.0,0)
+		ROB4 F 4 Bright A_CustomMissile("InquisitorMShot4",70,-32,0)
+		ROB4 G 6
+		Goto See
+		ROB4 A 0 A_JumpIfCloser(1200,5)
+		ROB4 A 6 A_FaceTarget
+		ROB4 F 0 Bright A_PlaySound("weapons/infinityfire",CHAN_AUTO,1.0,0)
+		ROB4 F 4 Bright A_CustomMissile("InquisitorMShot3",70,-32,0)
+		ROB4 G 6
+		Goto See
+		ROB4 A 0 A_JumpIfCloser(600,5)
+		ROB4 A 6 A_FaceTarget
+		ROB4 F 0 Bright A_PlaySound("weapons/infinityfire",CHAN_AUTO,1.0,0)
+		ROB4 F 4 Bright A_CustomMissile("InquisitorMShot2",70,-32,0)
+		ROB4 G 6
+		Goto See
+		ROB4 A 6 A_FaceTarget
+		ROB4 F 0 Bright A_PlaySound("weapons/infinityfire",CHAN_AUTO,1.0,0)
+		ROB4 F 4 Bright A_CustomMissile("InquisitorMShot1",70,-32,0)
+		ROB4 G 6
+		Goto See
+		Rocket:
+		ROB4 A 0 A_JumpIfCloser(2500,6)
+		ROB4 A 6 A_FaceTarget
+		ROB4 J 0 Bright A_PlaySound("q2weapon/grenadelaunfire",CHAN_AUTO,1.0,0)
+		ROB4 J 0 Bright A_CustomMissile("GrenadeL4",100,24,0,1)
+		ROB4 J 3 Bright A_CustomMissile("GrenadeL4",100,-24,0,1)
+		ROB4 G 6
+		Goto See
+		ROB4 A 0 A_JumpIfCloser(1600,6)
+		ROB4 A 6 A_FaceTarget
+		ROB4 J 0 Bright A_PlaySound("q2weapon/grenadelaunfire",CHAN_AUTO,1.0,0)
+		ROB4 J 0 Bright A_CustomMissile("GrenadeL3",100,24,0,1)
+		ROB4 J 3 Bright A_CustomMissile("GrenadeL3",100,-24,0,1)
+		ROB4 G 6
+		Goto See
+		ROB4 A 0 A_JumpIfCloser(400,6)
+		ROB4 A 6 A_FaceTarget
+		ROB4 J 0 Bright A_PlaySound("q2weapon/grenadelaunfire",CHAN_AUTO,1.0,0)
+		ROB4 J 0 Bright A_CustomMissile("GrenadeL",100,24,0,1)
+		ROB4 J 3 Bright A_CustomMissile("GrenadeL",100,-24,0,1)
+		ROB4 G 6
+		Goto See
+		ROB4 A 6 A_FaceTarget
+		ROB4 J 0 Bright A_PlaySound("q2weapon/grenadelaunfire",CHAN_AUTO,1.0,0)
+		ROB4 J 0 Bright A_CustomMissile("GrenadeL2",100,24,0,1)
+		ROB4 J 3 Bright A_CustomMissile("GrenadeL2",100,-24,0,1)
+		ROB4 G 6
+		Goto See
     QSG:
-	ROB4 A 0 A_PlaySound("reilsss/weapons/qsgloadandfire",CHAN_AUTO,1.0,0,ATTN_NONE)
-	ROB4 AAAAAAAAAA 3 A_FaceTarget
-	ROB4 A 0 A_JumpIfCloser(2500,6)
-	ROB4 AA 3 A_FaceTarget
-	ROB4 F 6 Bright A_CustomMissile("InquisitorIShot4",76,-32,0)
-	ROB4 G 6
-	Goto See
-	ROB4 A 0 A_JumpIfCloser(1600,6)
-	ROB4 AA 3 A_FaceTarget
-	ROB4 F 6 Bright A_CustomMissile("InquisitorIShot3",76,-32,0)
-	ROB4 G 6
-	Goto See
-	ROB4 A 0 A_JumpIfCloser(400,6)
-	ROB4 AA 3 A_FaceTarget
-	ROB4 F 6 Bright A_CustomMissile("InquisitorIShot2",76,-32,0)
-	ROB4 G 6
-	Goto See
-	ROB4 AA 3 A_FaceTarget
-	ROB4 F 6 Bright A_CustomMissile("InquisitorIShot1",76,-32,0)
-	ROB4 G 6
-	Goto See
-    Jump:
-	ROB4 H 0 A_Jump(50,1)
-	Goto Missile
-	ROB4 H 8 Bright A_InquisitorJump
-	ROB4 I 4 Bright A_InquisitorCheckLand
-	ROB4 H 4 Bright A_InquisitorCheckLand
-	Goto Jump+2
+		ROB4 A 0 A_PlaySound("reilsss/weapons/qsgloadandfire",CHAN_AUTO,1.0,0,ATTN_NONE)
+		ROB4 AAAAAAAAAA 3 A_FaceTarget
+		ROB4 A 0 A_JumpIfCloser(2500,6)
+		ROB4 AA 3 A_FaceTarget
+		ROB4 F 6 Bright A_CustomMissile("InquisitorIShot4",76,-32,0)
+		ROB4 G 6
+		Goto See
+		ROB4 A 0 A_JumpIfCloser(1600,6)
+		ROB4 AA 3 A_FaceTarget
+		ROB4 F 6 Bright A_CustomMissile("InquisitorIShot3",76,-32,0)
+		ROB4 G 6
+		Goto See
+		ROB4 A 0 A_JumpIfCloser(400,6)
+		ROB4 AA 3 A_FaceTarget
+		ROB4 F 6 Bright A_CustomMissile("InquisitorIShot2",76,-32,0)
+		ROB4 G 6
+		Goto See
+		ROB4 AA 3 A_FaceTarget
+		ROB4 F 6 Bright A_CustomMissile("InquisitorIShot1",76,-32,0)
+		ROB4 G 6
+		Goto See
+		Jump:
+		ROB4 H 0 A_Jump(50,1)
+		Goto Missile
+		ROB4 H 8 Bright A_InquisitorJump
+		ROB4 I 4 Bright A_InquisitorCheckLand
+		ROB4 H 4 Bright A_InquisitorCheckLand
+		Goto Jump+2
     Death:
 		"####" "#" 0 A_UnsetSolid
 		ROB4 L 0 A_SetUserArray(user_d,0,84)
@@ -2443,20 +2472,20 @@ ACTOR FInquisitor : Inquisitor 7413	// cyberdemon
 		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 Bright A_TossGib
 		TNT1 a 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		TNT1 A 50 A_QuakeEx(5,5,0, 40,0,2560,"", QF_SCALEDOWN)
-    Stop
+		Stop
     Death.UnholyDisint:
     Death.PlasmaDisint:
     Disintegrate:
-	TNT1 A 0 Thing_SetTranslation(0,50)	
-	TNT1 a 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
-	ROB4 L 1 A_FadeOut(0.015)
-	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-	TNT1 a 0 A_Stop	
-	TNT1 a 0 A_Fall
-	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowBig",0,0,45,0,0,0,0,32)
-	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksBig",0,0,45,0,0,0,0,32)
-	ROB4 LL 2 A_FadeOut(0.03)
-	Goto Disintegrate+7
+		TNT1 A 0 Thing_SetTranslation(0,50)	
+		TNT1 a 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
+		ROB4 L 1 A_FadeOut(0.015)
+		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+		TNT1 a 0 A_Stop	
+		TNT1 a 0 A_Fall
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowBig",0,0,45,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksBig",0,0,45,0,0,0,0,32)
+		ROB4 LL 2 A_FadeOut(0.03)
+		Goto Disintegrate+7
     Ice:
 		"####" "#" 5 A_GenericFreezeDeath
 		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
@@ -2471,7 +2500,7 @@ ACTOR FInquisitor : Inquisitor 7413	// cyberdemon
 
 //=====================================================================================
 //=====================================================================================
-ACTOR Interrogator : Inquisitor 7414	// archvile
+ACTOR Interrogator : Inquisitor //7414	// archvile
 {
 	DropItem "AEoDDeathRayItem" 32
 	DropItem "ExploBigAmmo"
@@ -2490,7 +2519,7 @@ ACTOR Interrogator : Inquisitor 7414	// archvile
     +FLOORCLIP
     +NORADIUSDMG
     +DONTMORPH
-    +NOICEDEATH
+    //+NOICEDEATH
     -LOOKALLAROUND
     Obituary "%o was liquidated by an interrogator."
     DamageFactor "Interrogator", 0
@@ -2512,41 +2541,41 @@ ACTOR Interrogator : Inquisitor 7414	// archvile
  	DamageFactor "PlasmaDisint", 1.25
     States
     {
-                Pain.Charm:
-	TNT1 A 0
-	TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
-	Goto See
+	Pain.Charm:
+		TNT1 A 0
+		TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
+		Goto See
     Pain.Terror:
-	TNT1 A 0
-	TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
-	Goto See
+		TNT1 A 0
+		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
+		Goto See
     Pain.Drain:
-	TNT1 A 0
-	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
-	Goto See
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+		Goto See
     Spawn:
-	ROB3 A 10 A_Look
-	Loop
+		ROB3 A 10 A_Look
+		Loop
     See:
-	ROB3 BB 3 A_Chase
-	ROB3 B 0 A_PlaySound("crusader/step")
-	ROB3 CCDD 4 A_Chase
-	ROB3 D 0 A_PlaySound("crusader/step")
-	ROB3 EE 3 A_Chase
-	Loop
+		ROB3 BB 3 A_Chase
+		ROB3 B 0 A_PlaySound("crusader/step")
+		ROB3 CCDD 4 A_Chase
+		ROB3 D 0 A_PlaySound("crusader/step")
+		ROB3 EE 3 A_Chase
+		Loop
     Missile:
-	ROB3 A 0 A_Jump(180,5)
-	ROB3 A 6 A_FaceTarget
-	ROB3 F 0 Bright A_PlaySound("weapons/deathray/fire")
-	ROB3 F 3 Bright A_CustomMissile("IntDeathRay",46,random(-22,-24),random(2,-2))
-	ROB3 G 6
-	Goto See
+		ROB3 A 0 A_Jump(180,5)
+		ROB3 A 6 A_FaceTarget
+		ROB3 F 0 Bright A_PlaySound("weapons/deathray/fire")
+		ROB3 F 3 Bright A_CustomMissile("IntDeathRay",46,random(-22,-24),random(2,-2))
+		ROB3 G 6
+		Goto See
     Rocket:
-	ROB3 A 6 A_FaceTarget
-	ROB3 J 0 Bright A_CustomMissile("BitchRocket",58,16,0,1)
-	ROB3 J 3 Bright A_CustomMissile("BitchRocket",58,-16,0,1)
-	ROB3 G 6
-	Goto See
+		ROB3 A 6 A_FaceTarget
+		ROB3 J 0 Bright A_CustomMissile("BitchRocket",58,16,0,1)
+		ROB3 J 3 Bright A_CustomMissile("BitchRocket",58,-16,0,1)
+		ROB3 G 6
+		Goto See
 /*    Jump:
 	ROB3 H 0 A_Jump(100,1)
 	Goto Missile
@@ -2556,41 +2585,53 @@ ACTOR Interrogator : Inquisitor 7414	// archvile
 	Goto Jump+2*/
     Death:
 		"####" "#" 0 A_UnsetSolid
-	RB3D A 0 A_StopSoundEx("Item")
-	RB3D B 4 A_TossGib
-	RB3D C 4 A_Scream
-	RB3D D 4 A_TossGib
-	TNT1 a 0 A_SpawnItemEx("MonExplosionMedium",random(10,-10),random(10,-10),random(10,80),0,0,0,0,32)
-	RB3D E 4 Bright A_Explode(128,128,1,1)
-	RB3D F 4 Bright A_TossGib
-	RB3D G 4 Bright A_NoBlocking
-	RB3D HIJKL 4 A_TossGib
-	TNT1 a 0 A_SpawnItemEx("MonExplosionMedium",random(10,-10),random(10,-10),random(10,80),0,0,0,0,32)
-	RB3D M 4 Bright A_Explode(128,128,1,1)
-	RB3D NO 4 Bright A_TossGib
-	RB3D P 4 A_TossArm
-	RB3D Q 4 A_TossGib
-	RB3D R 3 A_TossGib
-	TNT1 a 0 A_SpawnItemEx("MonExplosionMedium",random(10,-10),random(10,-10),random(10,80),0,0,0,0,32)
-	RB3D S 3 Bright A_Explode(128,128,1,1)
-	RB3D T 3 Bright 
-	RB3D U -1 A_ChangeFlag("CORPSE",1)
-	Stop
+		RB3D A 0 A_StopSoundEx("Item")
+		RB3D B 4 A_TossGib
+		RB3D C 4 A_Scream
+		RB3D D 4 A_TossGib
+		TNT1 a 0 A_SpawnItemEx("MonExplosionMedium",random(10,-10),random(10,-10),random(10,80),0,0,0,0,32)
+		RB3D E 4 Bright //A_Explode(128,128,1,1)
+		RB3D F 4 Bright A_TossGib
+		RB3D G 4 Bright A_NoBlocking
+		RB3D HIJKL 4 A_TossGib
+		TNT1 a 0 A_SpawnItemEx("MonExplosionMedium",random(10,-10),random(10,-10),random(10,80),0,0,0,0,32)
+		RB3D M 4 Bright //A_Explode(128,128,1,1)
+		RB3D NO 4 Bright A_TossGib
+		RB3D P 4 A_TossArm
+		RB3D Q 4 A_TossGib
+		RB3D R 3 A_TossGib
+		TNT1 a 0 A_SpawnItemEx("MonExplosionMedium",random(10,-10),random(10,-10),random(10,80),0,0,0,0,32)
+		RB3D S 3 Bright //A_Explode(128,128,1,1)
+		RB3D T 3 Bright 
+		RB3D U -1 A_ChangeFlag("CORPSE",1)
+		Stop
+	XDeath:
+		TNT1 A 0 A_UnsetSolid
+		TNT1 A 0 A_PlaySound("quake4/Misc/Explo")
+		TNT1 A 0 A_SpawnItemEx("MonExplosionMedium",0,0,20,0,0,0,0,32)
+		TNT1 AAAAAAAAAAAA 0 A_SpawnItemEx("Junk",0,0,0,random(-7,7),random(-7,7),random(1,14),random(1,359),1)
+		TNT1 A 1 A_Fall
+		Stop
     Raise:
-	RB3D TSRQPONMLKJIHGFEDCBA 4
-	Goto See
+		RB3D TSRQPONMLKJIHGFEDCBA 4
+		Goto See
     Death.UnholyDisint:
     Death.PlasmaDisint:
     Disintegrate:
-	TNT1 A 0 Thing_SetTranslation(0,50)	
-	ROB3 A 1 A_FadeOut(0.015)
-	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-	TNT1 a 0 A_Stop	
-	TNT1 a 0 A_Fall
-	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,32)
-	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,32)
-	ROB3 AA 2 A_FadeOut(0.03)
-	Goto Disintegrate+6
+		TNT1 A 0 Thing_SetTranslation(0,50)	
+		ROB3 A 1 A_FadeOut(0.015)
+		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+		TNT1 a 0 A_Stop	
+		TNT1 a 0 A_Fall
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,32)
+		ROB3 AA 2 A_FadeOut(0.03)
+		Goto Disintegrate+6
+	Ice:
+		"----" A 5 A_GenericFreezeDeath
+		"----" A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
+		"----" A 1 A_FreezeDeathChunks
+		Wait
     }
 }
 
@@ -2848,7 +2889,7 @@ ACTOR InquisitorIVortex : PlasmaBall
     {
     Spawn:
 	TNT1 A 0 BRIGHT 
-	VOIP A 1 BRIGHT Thing_ChangeTID(0,879)
+	VOIP A 1 BRIGHT //Thing_ChangeTID(0,879)
 	VOIP A 1 BRIGHT A_PlaySound("reilsss/weapons/qsgblackhole", 8, 1.0, 0) //could be made so it plays on the whole map on full volume?
 	TNT1 A 0 A_CustomMissile("InfinityWaveVoip",9,0,0,0)
 	VOIP AABBCC 1 BRIGHT A_Explode(16,344,1) //Reilsss note: I increase the radius from 192 to 512
@@ -3016,11 +3057,11 @@ ACTOR Zealot		// demon
     Mass 500
     Monster	+DONTCORPSE		RipLevelMin 1
     +NOBLOOD
-    +NOICEDEATH
+    //+NOICEDEATH
     +FLOORCLIP
     Scale 0.65
     MinMissileChance 200
-    HitObituary "%o was clawed by a Templar."
+    HitObituary "%o was clawed by a Zealot."
     Obituary "%o was vaporized by a Templar."
     SeeSound "templar/active"
     ActiveSound "templar/active"
@@ -3045,27 +3086,27 @@ ACTOR Zealot		// demon
  	DamageFactor "PlasmaDisint", 1.25
     States
     {
-                Pain.Charm:
-	TNT1 A 0
-	TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
-	Goto See
+	Pain.Charm:
+		TNT1 A 0
+		TNT1 A 0 A_ChangeFlag("FRIENDLY",1)
+		Goto See
     Pain.Terror:
-	TNT1 A 0
-	TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
-	Goto See
+		TNT1 A 0
+		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
+		Goto See
     Pain.Drain:
-	TNT1 A 0
-	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
-	Goto Pain
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+		Goto Pain
     Pain.Defile:
-	TNT1 A 0
-	TNT1 A 0 A_GiveInventory("DefileCheck",1)
-	Goto See
+		TNT1 A 0
+		TNT1 A 0 A_GiveInventory("DefileCheck",1)
+		Goto See
 	
 	
     Spawn:
-	TPLR AA 5 A_Look
-	Loop
+		TPLR AA 5 A_Look
+		Loop
     See:
 		TPLR AABBCCDD 3 A_Chase
 		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDecide")
@@ -3076,46 +3117,58 @@ ACTOR Zealot		// demon
 		TNT1 A 0 A_Die
 		Wait
     Melee:
-	TPLR E 8 A_FaceTarget
-	TPLR F 8 A_CustomMeleeAttack(random(10,30),"imp/melee")
-	Goto See
+		TPLR E 8 A_FaceTarget
+		TPLR F 8 A_CustomMeleeAttack(random(10,30),"imp/melee")
+		Goto See
     Pain:
-	TPLR A 2
-	TPLR A 2 A_Pain
-	Goto See
+		TPLR A 2
+		TPLR A 2 A_Pain
+		Goto See
     Death:
 		"####" "#" 0 A_UnsetSolid
-	TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDeath")
-	TPLR I 4 A_TossGib
-	TPLR J 4 A_Scream
-	TPLR K 4 A_TossGib
-	TNT1 a 0 A_spawnItemEx("MonExplosionMediumSimple",random(10,-10),random(10,-10),random(10,40),0,0,0,0,32)
-	TPLR L 4 A_NoBlocking
+		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDeath")
+		TPLR I 4 A_TossGib
+		TPLR J 4 A_Scream
+		TPLR K 4 A_TossGib
+		TNT1 a 0 A_spawnItemEx("MonExplosionMediumSimple",random(10,-10),random(10,-10),random(10,40),0,0,0,0,32)
+		TPLR L 4 A_NoBlocking
 		"####" "#" 0 A_ChangeFlag("CORPSE",1)
-	TPLR MN 4
-	TPLR O 4 A_TossGib
-	TPLR "PQRSTUVWXYZ[" 4
-	TPL2 A -1
-	Stop
+		TPLR MN 4
+		TPLR O 4 A_TossGib
+		TPLR "PQRSTUVWXYZ[" 4
+		TPL2 A -1
+		Stop
+	XDeath:
+		TNT1 A 0 A_UnsetSolid
+		TNT1 A 0 A_PlaySound("quake4/Misc/Explo")
+		TNT1 A 0 A_SpawnItemEx("MonExplosionMedium",0,0,20,0,0,0,0,32)
+		TNT1 AAAAAAAAAAAA 0 A_SpawnItemEx("Junk",0,0,0,random(-7,7),random(-7,7),random(1,14),random(1,359),1)
+		TNT1 A 1 A_Fall
+		Stop
 	DefileDeath:
 		TNT1 A 0 A_Die
 		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
 		Goto Death+4
     Raise:
-	TPL2 A 4
-	TPLR ZYXWVUTSRQPONMLKJI 4
-	Goto See
+		TPL2 A 4
+		TPLR ZYXWVUTSRQPONMLKJI 4
+		Goto See
     Death.UnholyDisint:
     Death.PlasmaDisint:
     Disintegrate:
-	TNT1 A 0 Thing_SetTranslation(0,50)	
-	TPLR A 1 A_FadeOut(0.015)
-	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-	TNT1 a 0 A_Stop	
-	TNT1 a 0 A_Fall
-	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
-	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
-	TPLR AA 2 A_FadeOut(0.03)
-	Goto Disintegrate+6
+		TNT1 A 0 Thing_SetTranslation(0,50)	
+		TPLR A 1 A_FadeOut(0.015)
+		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+		TNT1 a 0 A_Stop	
+		TNT1 a 0 A_Fall
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+		TPLR AA 2 A_FadeOut(0.03)
+		Goto Disintegrate+6
+	Ice:
+		"----" A 5 A_GenericFreezeDeath
+		"----" A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
+		"----" A 1 A_FreezeDeathChunks
+		Wait
     }
 }
