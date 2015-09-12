@@ -10,395 +10,397 @@
 
 //--------------------------------------------------------------------
 
-ACTOR AEoDChainsawItem : CustomInventory 6065
+Actor AEoDChainsawItem : CustomInventory 6065
 {
-    +FLOORCLIP
-    +INVENTORY.IGNORESKILL
-    Scale 0.25
-    Inventory.Amount 1
-    Inventory.PickupMessage "You got the Chainsaw!"
-    Inventory.PickupSound "reilsss/weappickup/chainsaw"
-    States
-    {
-    Spawn:
-        CSAW A -1
-        Loop
-    Pickup:
-	TNT1 A 0 A_JumpIfInventory("AEoDChainsaw",1,"Ammo")
-	TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",2) <= 0,"Nothing")
-	TNT1 A 0 A_GiveInventory("Weapon2Count",1)
-	TNT1 A 0 A_GiveInventory("ChainsawDrop",1)
-	TNT1 A 0 A_GiveInventory("AEoDChainsaw",1)
-	TNT1 A 0 //ACS_NamedExecute("s799",0,1,0,0)
-	Stop
-    Nothing:
-	TNT1 A 0 A_JumpIfInventory("AEoDChainsaw",1,"Ammo")
-	TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
-	Goto Pickup+2
-	TNT1 A 0 ACS_NamedExecute("s798",0,2,0,0)
-	Fail
-    Ammo:
-	TNT1 A 0 A_SpawnItemEx("Nothing",0,0,0,0,0,0,0,32)
-	Stop
-    }
+	+FLOORCLIP
+	+INVENTORY.IGNORESKILL
+	Scale 0.25
+	Inventory.Amount 1
+	Inventory.PickupMessage "You got the Chainsaw!"
+	Inventory.PickupSound "reilsss/weappickup/chainsaw"
+	States
+	{
+	Spawn:
+		CSAW A -1
+		Loop
+	Pickup:
+		TNT1 A 0 A_JumpIfInventory("AEoDChainsaw",1,"Ammo")
+		TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",2) <= 0,"Nothing")
+		TNT1 A 0 A_GiveInventory("Weapon2Count",1)
+		TNT1 A 0 A_GiveInventory("ChainsawDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDChainsaw",1)
+		TNT1 A 0 //ACS_NamedExecute("s799",0,1,0,0)
+		Stop
+	Nothing:
+		TNT1 A 0 A_JumpIfInventory("AEoDChainsaw",1,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
+		Goto Pickup+2
+		TNT1 A 0 ACS_NamedExecute("s798",0,2,0,0)
+		Fail
+	Ammo:
+		TNT1 A 0 A_SpawnItemEx("Nothing",0,0,0,0,0,0,0,32)
+		Stop
+	}
 } 
 
-ACTOR AEoDChainsaw : Weapon // 6065
+Actor AEoDChainsaw : Weapon // 6065
 {
-    +FLOORCLIP
-    +CHEATNOTWEAPON
-    +MELEEWEAPON
-    +EXTREMEDEATH
-    Weapon.Kickback 1
-    Obituary "%o was cut into pieces by %k's Chainsaw" 
-    Inventory.PickupMessage "You got the Chainsaw!"
-    Inventory.PickupSound "reilsss/weappickup/chainsaw"
-    weapon.upsound "weapons/chainsaw/draw"
-    Scale 0.25
-    Tag "Chainsaw"
-    States
-    {
-    Spawn:
-	CSAW A -1
-	Loop
-    Ready:
-	SAWX K 1 A_PlayWeaponSound("weapons/sawpull")
-	SAWX K 0 //ACS_NamedExecute("s799",0,1,0,0)
-	SAWX IG 1
-	SAWP A 0 A_PlaySound("weapons/sawzip")
-	SAWP ABCDEF 1
-	SAWP G 1 A_PlayWeaponSound("weapons/sawidl2") 
-	SAWP LR 1 
-	SAWX FEDCBA 1
-    ReadyWaiting:
-	SAWI A 0 A_PlaySound("weapons/sawidl2", 6, 1.0, 1)
-	SAWI ABCDEFABCDEFABCDEFABCDEFABCDEFABCDEF 1 A_WeaponReady
-	Goto "ReadyWaiting"
-    RemoveTokenAttack:
-	SAWD D 1 A_TakeInventory("SawAttack", 99)
-	SAWD CBA 1
-	Goto "ReadyWaiting"
-    Deselect:
-	TNT1 A 0 A_StopSound(6)
-	SAWI A 0 A_TakeInventory("SawAttack", 99)
-	SAWI A 0 A_PlayWeaponSound("weapons/sawdown")
-	TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
-	SAWI A 1 A_Lower
-	TNT1 AA 0 A_Lower
-	Goto Deselect+3
-    Select:
-	TNT1 A 0 //ACS_NamedExecute("s799",0,1,0,0)
-	SAWI A 0 A_Raise
-	TNT1 AA 0 A_Raise
-	Loop
-    Fire:
-	SAWD Z 1 A_StopSound(6)
-	TNT1 A 0 A_Jump(255,"Attack1","Attack2","Attack3")
-	SAWD ABCDZZZ 1
-    Attack1: //Right-side Swipe
-	SAW1 A 1 A_PlaySound("weapons/sawrevup")
-	SAW1 BCD 1
-	SAW1 EFG 1 A_CustomPunch(20, 0, 0, "SawPuff", 80)
-	SAW1 HI 1
-	SAW1 J 1 A_PlaySound("weapons/sawrevdown")
-	TNT1 A 0 A_TakeInventory("SawAttack", 99)
-	TNT1 A 0 A_GiveInventory("SawAttack", 2) //Attack 2
-	TNT1 AAAAAAAAAA 2 A_WeaponReady
-	TNT1 A 0 A_TakeInventory("SawAttack", 99)
-	Goto "RemoveTokenAttack"
-    Attack2: //Short Left Swipe
-	TNT1 A 4
-	SAW2 A 1 A_PlaySound("weapons/sawrevup")
-	SAW2 B 1
-	SAW2 CD 1
-	SAW2 EFG 1 A_CustomPunch(19, 0, 0, "SawPuff", 80)
-	SAW2 H 1 A_PlaySound("weapons/sawrevdown")
-	TNT1 A 0 A_TakeInventory("SawAttack", 99)
-	TNT1 A 0 A_GiveInventory("SawAttack", 4) //Attack 4
-	TNT1 AAAAAAAAA 1 A_WeaponReady
-	TNT1 A 0 A_TakeInventory("SawAttack", 99)
-	TNT1 A 0 A_GiveInventory("SawAttack", 3) //Attack 3
-	TNT1 AAAAAAAA 2 A_WeaponReady
-	TNT1 A 0 A_TakeInventory("SawAttack", 99)
-	Goto "RemoveTokenAttack"
-    Attack3: //Short Right Swing (Combo II)
-	SAW3 A 1 A_PlaySound("weapons/sawrevup")
-	SAW3 B 1
-	SAW3 C 1
-	SAW3 DE 1 A_CustomPunch(21, 0, 0, "SawPuff", 80)
-	SAW3 F 1
-	SAW3 G 1 A_PlaySound("weapons/sawrevdown")
-	SAW3 H 1 A_TakeInventory("SawAttack", 99)
-	TNT1 A 0 A_GiveInventory("SawAttack", 4) //Attack 4
-	TNT1 AAAAAAAAAA 2 A_WeaponReady
-	TNT1 A 0 A_TakeInventory("SawAttack", 99)
-	Goto "RemoveTokenAttack"
-    Attack4: //Stabbing Thrust (Finisher)
-	TNT1 A 5
-	TNT1 A 3 A_PlaySound("weapons/sawrevup")
-	SAWF A 1
-	SAWF B 1
-	SAWF C 1
-	SAWF DE 1 A_CustomPunch(25, 0, 0, "SawPuff", 80)
-	SAWG DEFGFE 1 A_CustomPunch(3, 0, 0, "SawPuff", 100)
-	SAWG D 1 A_PlaySound("weapons/sawrevdown") 
-	SAWG CB 1 
-	SAWG A 1 A_TakeInventory("SawAttack", 99)
-	SAWG AA /*AAAAAAAA*/ 2
-	Goto "ReadyWaiting"
-    AltFire:
-	TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,"AltFireQuick")
-	TNT1 A 0 A_JumpIfInventory("SawAttack", 1, 14)
-	SAWG A 1 A_PlaySound("weapons/sawrevup") 
-	SAWG BC 1 
-	SAWG D 1 A_GiveInventory("SawAlt",14) 
-	SAWG E 1 A_CustomPunch(12, 0, 0, "SilentPuff", 80)
-	SAWG F 1
-	SAWG G 1 A_CustomPunch(10, 0, 0, "SawPuff", 80)
-	SAWG F 1 A_StopSoundEx("Weapon")
-	SAWG E 1 A_CustomPunch(8, 0, 0, "SilentPuff", 80)
-	SAWG D 1 A_ReFire
-	SAWG C 1 A_PlaySound("weapons/sawrevdown")  
-	SAWG B 1 A_TakeInventory("SawAlt",99)
-	SAWG A 1 
-	Goto "ReadyWaiting"
-	TNT1 A 0 
-	Goto "RemoveTokenAttack"
-    AltHold: //84 tics
-	TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,"AltHoldQuick")
-	TNT1 A 0 A_JumpIfInventory("SawAlt", 14, 1)
-	Goto AltHold+3
-	TNT1 A 0 A_TakeInventory("SawAlt",99)
-	TNT1 A 0 A_PlaySound("weapons/sawful2")
-	SAWG D 1 A_GiveInventory("SawAlt",1)
-	SAWG E 1 A_CustomPunch(12, 0, 0, "SilentPuff", 80)
-	SAWG F 1
-	SAWG G 1 A_CustomPunch(10, 0, 0, "SawPuff", 80)
-	SAWG F 1
-	SAWG E 1 A_CustomPunch(12, 0, 0, "SilentPuff", 80)
-	SAWG D 1 A_ReFire
-	SAWG C 1 A_PlaySound("weapons/sawrevdown")  
-	SAWG B 1 A_TakeInventory("SawAlt",99)
-	SAWG A 1 
-	Goto "ReadyWaiting"
-    AltFireQuick:
-	TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,1)
-	Goto AltFire
-	TNT1 A 0 A_JumpIfInventory("SawAttack", 1, 14)
-	SAWG A 1 A_PlaySound("weapons/sawrevup") 
-	SAWG BC 1 
-	SAWG D 1 A_GiveInventory("SawAlt",14) 
-	SAWG E 0 A_CustomPunch(12, 0, 0, "SilentPuff", 80)
-	SAWG F 1
-	SAWG G 0 A_CustomPunch(10, 0, 0, "SawPuff", 80)
-	SAWG F 1 A_StopSoundEx("Weapon")
-	SAWG E 0 A_CustomPunch(8, 0, 0, "SilentPuff", 80)
-	SAWG D 1 A_ReFire
-	SAWG C 1 A_PlaySound("weapons/sawrevdown")  
-	SAWG B 1 A_TakeInventory("SawAlt",99)
-	SAWG A 1 
-	Goto "ReadyWaiting"
-	TNT1 A 0 
-	Goto "RemoveTokenAttack"
-    AltHoldQuick:
-	TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,1)
-	Goto AltFire
-	TNT1 A 0 A_JumpIfInventory("SawAlt", 14, 1)
-	Goto AltHoldQuick+4
-	TNT1 A 0 A_TakeInventory("SawAlt",99)
-	TNT1 A 0 A_PlaySound("weapons/sawful2")
-	SAWG D 1 A_GiveInventory("SawAlt",1)
-	SAWG E 0 A_CustomPunch(12, 0, 0, "SilentPuff", 80)
-	SAWG F 1
-	SAWG G 0 A_CustomPunch(10, 0, 0, "SawPuff", 80)
-	SAWG F 1
-	SAWG E 0 A_CustomPunch(12, 0, 0, "SilentPuff", 80)
-	SAWG D 1 A_ReFire("AltHoldQuick")
-	SAWG C 1 A_PlaySound("weapons/sawrevdown")  
-	SAWG B 1 A_TakeInventory("SawAlt",99)
-	SAWG A 1 
-	Goto "ReadyWaiting"
-    }
+	+FLOORCLIP
+	+CHEATNOTWEAPON
+	+MELEEWEAPON
+	+EXTREMEDEATH
+	Weapon.Kickback 1
+	Obituary "%o was cut into pieces by %k's Chainsaw" 
+	Inventory.PickupMessage "You got the Chainsaw!"
+	Inventory.PickupSound "reilsss/weappickup/chainsaw"
+	Weapon.UpSound "weapons/chainsaw/draw"
+	Scale 0.25
+	Tag "Chainsaw"
+	Weapon.SelectionOrder 4900
+	States
+	{
+	Spawn:
+		CSAW A -1
+		Loop
+	Ready:
+		SAWX K 1 A_PlayWeaponSound("weapons/sawpull")
+		SAWX K 0 //ACS_NamedExecute("s799",0,1,0,0)
+		SAWX IG 1
+		SAWP A 0 A_PlaySound("weapons/sawzip")
+		SAWP ABCDEF 1
+		SAWP G 1 A_PlayWeaponSound("weapons/sawidl2") 
+		SAWP LR 1 
+		SAWX FEDCBA 1
+	ReadyWaiting:
+		SAWI A 0 A_PlaySound("weapons/sawidl2", 6, 1.0, 1)
+		SAWI ABCDEFABCDEFABCDEFABCDEFABCDEFABCDEF 1 A_WeaponReady
+		Goto "ReadyWaiting"
+	RemoveTokenAttack:
+		SAWD D 1 A_TakeInventory("SawAttack", 99)
+		SAWD CBA 1
+		Goto "ReadyWaiting"
+	Deselect:
+		TNT1 A 0 A_StopSound(6)
+		SAWI A 0 A_TakeInventory("SawAttack", 99)
+		SAWI A 0 A_PlayWeaponSound("weapons/sawdown")
+		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
+		SAWI A 1 A_Lower
+		TNT1 AA 0 A_Lower
+		Goto Deselect+3
+	Select:
+		TNT1 A 0 //ACS_NamedExecute("s799",0,1,0,0)
+		SAWI A 0 A_Raise
+		TNT1 AA 0 A_Raise
+		Loop
+	Fire:
+		SAWD Z 1 A_StopSound(6)
+		TNT1 A 0 A_Jump(255,"Attack1","Attack2","Attack3")
+		SAWD ABCDZZZ 1
+	Attack1: //Right-side Swipe
+		SAW1 A 1 A_PlaySound("weapons/sawrevup")
+		SAW1 BCD 1
+		SAW1 EFG 1 A_CustomPunch(20, 0, 0, "SawPuff", 80)
+		SAW1 HI 1
+		SAW1 J 1 A_PlaySound("weapons/sawrevdown")
+		TNT1 A 0 A_TakeInventory("SawAttack", 99)
+		TNT1 A 0 A_GiveInventory("SawAttack", 2) //Attack 2
+		TNT1 AAAAAAAAAA 2 A_WeaponReady
+		TNT1 A 0 A_TakeInventory("SawAttack", 99)
+		Goto "RemoveTokenAttack"
+	Attack2: //Short Left Swipe
+		TNT1 A 4
+		SAW2 A 1 A_PlaySound("weapons/sawrevup")
+		SAW2 B 1
+		SAW2 CD 1
+		SAW2 EFG 1 A_CustomPunch(19, 0, 0, "SawPuff", 80)
+		SAW2 H 1 A_PlaySound("weapons/sawrevdown")
+		TNT1 A 0 A_TakeInventory("SawAttack", 99)
+		TNT1 A 0 A_GiveInventory("SawAttack", 4) //Attack 4
+		TNT1 AAAAAAAAA 1 A_WeaponReady
+		TNT1 A 0 A_TakeInventory("SawAttack", 99)
+		TNT1 A 0 A_GiveInventory("SawAttack", 3) //Attack 3
+		TNT1 AAAAAAAA 2 A_WeaponReady
+		TNT1 A 0 A_TakeInventory("SawAttack", 99)
+		Goto "RemoveTokenAttack"
+	Attack3: //Short Right Swing (Combo II)
+		SAW3 A 1 A_PlaySound("weapons/sawrevup")
+		SAW3 B 1
+		SAW3 C 1
+		SAW3 DE 1 A_CustomPunch(21, 0, 0, "SawPuff", 80)
+		SAW3 F 1
+		SAW3 G 1 A_PlaySound("weapons/sawrevdown")
+		SAW3 H 1 A_TakeInventory("SawAttack", 99)
+		TNT1 A 0 A_GiveInventory("SawAttack", 4) //Attack 4
+		TNT1 AAAAAAAAAA 2 A_WeaponReady
+		TNT1 A 0 A_TakeInventory("SawAttack", 99)
+		Goto "RemoveTokenAttack"
+	Attack4: //Stabbing Thrust (Finisher)
+		TNT1 A 5
+		TNT1 A 3 A_PlaySound("weapons/sawrevup")
+		SAWF A 1
+		SAWF B 1
+		SAWF C 1
+		SAWF DE 1 A_CustomPunch(25, 0, 0, "SawPuff", 80)
+		SAWG DEFGFE 1 A_CustomPunch(3, 0, 0, "SawPuff", 100)
+		SAWG D 1 A_PlaySound("weapons/sawrevdown") 
+		SAWG CB 1 
+		SAWG A 1 A_TakeInventory("SawAttack", 99)
+		SAWG AA /*AAAAAAAA*/ 2
+		Goto "ReadyWaiting"
+	AltFire:
+		TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,"AltFireQuick")
+		TNT1 A 0 A_JumpIfInventory("SawAttack", 1, 14)
+		SAWG A 1 A_PlaySound("weapons/sawrevup") 
+		SAWG BC 1 
+		SAWG D 1 A_GiveInventory("SawAlt",14) 
+		SAWG E 1 A_CustomPunch(12, 0, 0, "SilentPuff", 80)
+		SAWG F 1
+		SAWG G 1 A_CustomPunch(10, 0, 0, "SawPuff", 80)
+		SAWG F 1 A_StopSoundEx("Weapon")
+		SAWG E 1 A_CustomPunch(8, 0, 0, "SilentPuff", 80)
+		SAWG D 1 A_ReFire
+		SAWG C 1 A_PlaySound("weapons/sawrevdown")  
+		SAWG B 1 A_TakeInventory("SawAlt",99)
+		SAWG A 1 
+		Goto "ReadyWaiting"
+		TNT1 A 0 
+		Goto "RemoveTokenAttack"
+	AltHold: //84 tics
+		TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,"AltHoldQuick")
+		TNT1 A 0 A_JumpIfInventory("SawAlt", 14, 1)
+		Goto AltHold+3
+		TNT1 A 0 A_TakeInventory("SawAlt",99)
+		TNT1 A 0 A_PlaySound("weapons/sawful2")
+		SAWG D 1 A_GiveInventory("SawAlt",1)
+		SAWG E 1 A_CustomPunch(12, 0, 0, "SilentPuff", 80)
+		SAWG F 1
+		SAWG G 1 A_CustomPunch(10, 0, 0, "SawPuff", 80)
+		SAWG F 1
+		SAWG E 1 A_CustomPunch(12, 0, 0, "SilentPuff", 80)
+		SAWG D 1 A_ReFire
+		SAWG C 1 A_PlaySound("weapons/sawrevdown")  
+		SAWG B 1 A_TakeInventory("SawAlt",99)
+		SAWG A 1 
+		Goto "ReadyWaiting"
+	AltFireQuick:
+		TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,1)
+		Goto AltFire
+		TNT1 A 0 A_JumpIfInventory("SawAttack", 1, 14)
+		SAWG A 1 A_PlaySound("weapons/sawrevup") 
+		SAWG BC 1 
+		SAWG D 1 A_GiveInventory("SawAlt",14) 
+		SAWG E 0 A_CustomPunch(12, 0, 0, "SilentPuff", 80)
+		SAWG F 1
+		SAWG G 0 A_CustomPunch(10, 0, 0, "SawPuff", 80)
+		SAWG F 1 A_StopSoundEx("Weapon")
+		SAWG E 0 A_CustomPunch(8, 0, 0, "SilentPuff", 80)
+		SAWG D 1 A_ReFire
+		SAWG C 1 A_PlaySound("weapons/sawrevdown")  
+		SAWG B 1 A_TakeInventory("SawAlt",99)
+		SAWG A 1 
+		Goto "ReadyWaiting"
+		TNT1 A 0 
+		Goto "RemoveTokenAttack"
+	AltHoldQuick:
+		TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,1)
+		Goto AltFire
+		TNT1 A 0 A_JumpIfInventory("SawAlt", 14, 1)
+		Goto AltHoldQuick+4
+		TNT1 A 0 A_TakeInventory("SawAlt",99)
+		TNT1 A 0 A_PlaySound("weapons/sawful2")
+		SAWG D 1 A_GiveInventory("SawAlt",1)
+		SAWG E 0 A_CustomPunch(12, 0, 0, "SilentPuff", 80)
+		SAWG F 1
+		SAWG G 0 A_CustomPunch(10, 0, 0, "SawPuff", 80)
+		SAWG F 1
+		SAWG E 0 A_CustomPunch(12, 0, 0, "SilentPuff", 80)
+		SAWG D 1 A_ReFire("AltHoldQuick")
+		SAWG C 1 A_PlaySound("weapons/sawrevdown")  
+		SAWG B 1 A_TakeInventory("SawAlt",99)
+		SAWG A 1 
+		Goto "ReadyWaiting"
+	}
 }
 
-ACTOR SawPuff
+Actor SawPuff
 {	
-    +NOGRAVITY
-    +NOBLOCKMAP
-    +FLOORCLIP
-    +FORCEXYBILLBOARD
-    +NOGRAVITY
-    +EXTREMEDEATH
-    Mass 1
-    Radius 1
-    Height 1
-    RENDERSTYLE TRANSLUCENT
-    ALPHA 0.6
-//    Scale .08
-    States
-    {
-    Spawn:
-	TNT1 A 0
-	CLAW S 1 A_PlaySound("weapons/sawwall")
-	CLAW T 1 Bright
-	CLAW U 1 Bright A_SetTranslucent(.75,1)
-	CLAW V 1 Bright A_SetTranslucent(.5,1)
-	CLAW W 1 Bright A_SetTranslucent(.25,1)
-	Stop
-    }
+	+NOGRAVITY
+	+NOBLOCKMAP
+	+FLOORCLIP
+	+FORCEXYBILLBOARD
+	+NOGRAVITY
+	+EXTREMEDEATH
+	Mass 1
+	Radius 1
+	Height 1
+	RenderStyle TRANSLUCENT
+	Alpha 0.6
+//	Scale .08
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		CLAW S 1 A_PlaySound("weapons/sawwall")
+		CLAW T 1 Bright
+		CLAW U 1 Bright A_SetTranslucent(.75,1)
+		CLAW V 1 Bright A_SetTranslucent(.5,1)
+		CLAW W 1 Bright A_SetTranslucent(.25,1)
+		Stop
+	}
 }
 
-ACTOR SilentPuff
+Actor SilentPuff
 {	
-    +NOGRAVITY
-    +NOBLOCKMAP
-    +FLOORCLIP
-    +FORCEXYBILLBOARD
-    +NOGRAVITY
-    +EXTREMEDEATH
-    Radius 1
-    Height 1
-    RENDERSTYLE TRANSLUCENT
-    ALPHA 0.6
-//    Scale 0.08
-    States
-    {
-    Spawn:
-	TNT1 A 0
-	CLAW S 1
-	CLAW T 1 Bright
-	CLAW U 1 Bright A_SetTranslucent(.75,1)
-	CLAW V 1 Bright A_SetTranslucent(.5,1)
-	CLAW W 1 Bright A_SetTranslucent(.25,1)
-	Stop
-    }
+	+NOGRAVITY
+	+NOBLOCKMAP
+	+FLOORCLIP
+	+FORCEXYBILLBOARD
+	+NOGRAVITY
+	+EXTREMEDEATH
+	Radius 1
+	Height 1
+	RenderStyle TRANSLUCENT
+	Alpha 0.6
+//	Scale 0.08
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		CLAW S 1
+		CLAW T 1 Bright
+		CLAW U 1 Bright A_SetTranslucent(.75,1)
+		CLAW V 1 Bright A_SetTranslucent(.5,1)
+		CLAW W 1 Bright A_SetTranslucent(.25,1)
+		Stop
+	}
 }
 
-ACTOR SawAttack : PuzzleItem
+Actor SawAttack : PuzzleItem
 {
-    -INVBAR
-    Inventory.MaxAmount 99
-    Inventory.Icon TNT1A0
-    States
-    {
-    Spawn:
-	TNT1 A 4
-	loop
-    }
+	-INVBAR
+	Inventory.MaxAmount 99
+	Inventory.Icon TNT1A0
+	States
+	{
+	Spawn:
+		TNT1 A 4
+		Loop
+	}
 }
 
-ACTOR SawAlt : PuzzleItem
+Actor SawAlt : PuzzleItem
 {
-    -INVBAR
-    Inventory.MaxAmount 99
-    Inventory.Icon TNT1A0
-    States
-    {
-    Spawn:
-	TNT1 A 4
-	loop
-    }
+	-INVBAR
+	Inventory.MaxAmount 99
+	Inventory.Icon TNT1A0
+	States
+	{
+	Spawn:
+		TNT1 A 4
+		Loop
+	}
 }
 
 // do any weapon use this beside the DBT Chainsaw?
-actor extremepuff : NewPuff1 
+Actor extremepuff : NewPuff1 
 {
-    +EXTREMEDEATH
+	+EXTREMEDEATH
 }
 
 Actor ChainsawDrop : CustomInventory
 {
-    Inventory.MaxAmount 1
-    States
-    {
-    Use:
-	TNT1 A 0
-	TNT1 A 0 A_StopSound(6)
-	TNT1 A 0 A_TakeInventory("SawAttack", 99)
-	TNT1 A 0 A_PlayWeaponSound("weapons/sawdown")
-	TNT1 A 0 A_SpawnItemEx("DroppedChainsaw",0,0,32,8,0,0,0,32,0)
-	Stop
-    }
+	Inventory.MaxAmount 1
+	States
+	{
+	Use:
+		TNT1 A 0
+		TNT1 A 0 A_StopSound(6)
+		TNT1 A 0 A_TakeInventory("SawAttack", 99)
+		TNT1 A 0 A_PlayWeaponSound("weapons/sawdown")
+		TNT1 A 0 A_SpawnItemEx("DroppedChainsaw",0,0,32,8,0,0,0,32,0)
+		Stop
+	}
 }
 
-ACTOR DroppedChainsaw
+Actor DroppedChainsaw
 {
-    Radius 16
-    Height 20
-    Scale 0.25
-    States
-    {
-    Spawn:
-	CSAW A 15
-    Death:
-	TNT1 A 0 A_SpawnItemEx("AEoDChainsawItem",0,0,0,0,0,0,0,48,0)
-	Stop
-    }
+	Radius 16
+	Height 20
+	Scale 0.25
+	States
+	{
+	Spawn:
+		CSAW A 15
+	Death:
+		TNT1 A 0 A_SpawnItemEx("AEoDChainsawItem",0,0,0,0,0,0,0,48,0)
+		Stop
+	}
 }
 
 //--------------------------------------------------------------------
 
 
-ACTOR AEoDKnifeItem : CustomInventory 6012
+Actor AEoDKnifeItem : CustomInventory 6012
 {
-    +FLOORCLIP
-    +INVENTORY.IGNORESKILL
-    Scale 0.5
-    Inventory.Amount 1
-    Inventory.PickupMessage "You found a combat knife"
-    Inventory.PickupSound "reilsss/weapons/knifeblock"
-    States
-    {
-    Spawn:
-        GRON A -1
-        Loop
-    Pickup:
-	TNT1 A 0 A_JumpIfInventory("AEoDKnife",1,"Ammo")
-	TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",2) <= 0,"Nothing")
-	TNT1 A 0 A_GiveInventory("Weapon2Count",1)
-	TNT1 A 0 A_GiveInventory("KnifeDrop",1)
-	TNT1 A 0 A_GiveInventory("AEoDKnife",1)
-	TNT1 A 0 //ACS_NamedExecute("s799",0,2,0,0)
-	Stop
-    Nothing:
-	TNT1 A 0 A_JumpIfInventory("AEoDKnife",1,"Ammo")
-	TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
-	Goto Pickup+2
-	TNT1 A 0 ACS_NamedExecute("s798",0,2,0,0)
-	Fail
-    Ammo:
-	TNT1 A 0 A_SpawnItemEx("Nothing",0,0,0,0,0,0,0,32)
-	Stop
-    }
+	+FLOORCLIP
+	+INVENTORY.IGNORESKILL
+	Scale 0.5
+	Inventory.Amount 1
+	Inventory.PickupMessage "You found a combat knife"
+	Inventory.PickupSound "reilsss/weapons/knifeblock"
+	States
+	{
+	Spawn:
+		GRON A -1
+		Loop
+	Pickup:
+		TNT1 A 0 A_JumpIfInventory("AEoDKnife",1,"Ammo")
+		TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",2) <= 0,"Nothing")
+		TNT1 A 0 A_GiveInventory("Weapon2Count",1)
+		TNT1 A 0 A_GiveInventory("KnifeDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDKnife",1)
+		TNT1 A 0 //ACS_NamedExecute("s799",0,2,0,0)
+		Stop
+	Nothing:
+		TNT1 A 0 A_JumpIfInventory("AEoDKnife",1,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
+		Goto Pickup+2
+		TNT1 A 0 ACS_NamedExecute("s798",0,2,0,0)
+		Fail
+	Ammo:
+		TNT1 A 0 A_SpawnItemEx("Nothing",0,0,0,0,0,0,0,32)
+		Stop
+	}
 }
 
-ACTOR AEoDKnife : Weapon // 6012
+Actor AEoDKnife : Weapon // 6012
 { 
-    +FLOORCLIP
-    +NOALERT
-    +MELEEWEAPON
-    +WEAPON.NOALERT
-    +BLOODSPLATTER
-    +EXTREMEDEATH
-    Obituary "%o was sliced by %k."
-    Inventory.PickupMessage "You found a combat knife"
-    Inventory.PickupSound "reilsss/weapons/knifeblock" 
-    //AttackSound "reilsss/weapons/knifehit"
-    AttackSound "postal2/weapons/machetelimbhit"
-    //weapon.upsound "reilsss/weapons/knifeblock"
-    Weapon.upsound "postal2/weapons/machetebrandish2"
-    Scale 0.5
-    Tag "Knife"
-    States
-    {
-    Spawn:
-	GRON A -1
-	Loop
-    Ready:
+	+FLOORCLIP
+	+NOALERT
+	+MELEEWEAPON
+	+WEAPON.NOALERT
+	+BLOODSPLATTER
+	+EXTREMEDEATH
+	Obituary "%o was sliced by %k."
+	Inventory.PickupMessage "You found a combat knife"
+	Inventory.PickupSound "reilsss/weapons/knifeblock" 
+	//AttackSound "reilsss/weapons/knifehit"
+	AttackSound "postal2/weapons/machetelimbhit"
+	//Weapon.UpSound "reilsss/weapons/knifeblock"
+	Weapon.UpSound "postal2/weapons/machetebrandish2"
+	Scale 0.5
+	Tag "Knife"
+	Weapon.SelectionOrder 32000
+	States
+	{
+	Spawn:
+		GRON A -1
+		Loop
+	Ready:
 		KNFG A 0 A_TakeInventory("MacheteAttack",99)
 		KNFG A 1 A_WeaponReady
 		Loop
-    Deselect:
+	Deselect:
 		TNT1 A 0 A_TakeInventory("MacheteAttack", 99)
 		//KNFX ABCDZZZZ 1 
 		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
@@ -406,7 +408,7 @@ ACTOR AEoDKnife : Weapon // 6012
 		KNFX Z 1 A_Lower
 		KNFX ZZ 0 A_Lower
 		Loop
-    Select:
+	Select:
 		//KNFX Z 1
 		//KNFX ZZZZDCBA 1 
 		//KNFX A 1 A_Lower
@@ -414,305 +416,305 @@ ACTOR AEoDKnife : Weapon // 6012
 	SelLoop:
 		KNFX D 1 A_Raise
 		KNFX DD 0 A_Raise
-	Loop
-    Fire:
-	TNT1 A 0 A_JumpIfInventory("MacheteAttack", 9, "Attack9")
-	TNT1 A 0 A_JumpIfInventory("MacheteAttack", 8, "Attack8")
-	TNT1 A 0 A_JumpIfInventory("MacheteAttack", 7, "Attack7")
-	TNT1 A 0 A_JumpIfInventory("MacheteAttack", 6, "Attack6")
-	TNT1 A 0 A_JumpIfInventory("MacheteAttack", 5, "Attack5")
-	TNT1 A 0 A_JumpIfInventory("MacheteAttack", 4, "Attack4")
-	TNT1 A 0 A_JumpIfInventory("MacheteAttack", 3, "Attack3")
-	TNT1 A 0 A_JumpIfInventory("MacheteAttack", 2, "Attack2")
-	TNT1 A 0 A_JumpIfInventory("MacheteAttack", 1, "Attack1")
+		Loop
+	Fire:
+		TNT1 A 0 A_JumpIfInventory("MacheteAttack", 9, "Attack9")
+		TNT1 A 0 A_JumpIfInventory("MacheteAttack", 8, "Attack8")
+		TNT1 A 0 A_JumpIfInventory("MacheteAttack", 7, "Attack7")
+		TNT1 A 0 A_JumpIfInventory("MacheteAttack", 6, "Attack6")
+		TNT1 A 0 A_JumpIfInventory("MacheteAttack", 5, "Attack5")
+		TNT1 A 0 A_JumpIfInventory("MacheteAttack", 4, "Attack4")
+		TNT1 A 0 A_JumpIfInventory("MacheteAttack", 3, "Attack3")
+		TNT1 A 0 A_JumpIfInventory("MacheteAttack", 2, "Attack2")
+		TNT1 A 0 A_JumpIfInventory("MacheteAttack", 1, "Attack1")
 
-    Attack1:
- 	KNFX A 1
-	KNFX B 1
-	KNFX C 1
-	KNFX D 1
-	KNFX Z 1 
- 	//Attack1: Right-angled Swipe
- 	KNFG B 1
-	//KNFG C 1 A_PlaySound("reilsss/weapons/knifeswing", CHAN_WEAPON, 1.0, 0)
-	KNFG C 1 A_PlaySound("postal2/weapons/macheteswingmiss", CHAN_WEAPON, 1.0, 0)
-	KNFG D 1
-	KNFG EFG 1 A_CustomPunch(2, 0, 0, "KnifePuff", 65)
-	KNFG HI 1
-	TNT1 A 0 A_TakeInventory("MacheteAttack", 99)
-	TNT1 A 0 A_GiveInventory("MacheteAttack", 2) //Attack 2
-	TNT1 A 1 A_WeaponReady
- 	Goto Ready
-    Attack2:
- 	//Attack2: Left-angled Swipe
-	KNF2 A 1
-	KNF2 B 1 
-	KNFG C 1 A_PlaySound("postal2/weapons/macheteswingmiss", CHAN_WEAPON, 1.0, 0)
-	KNF2 D 1
-	KNF2 EFG 1 A_CustomPunch(2, 0, 0, "KnifePuff", 65)
-	KNF2 H 1
-	TNT1 A 0 A_TakeInventory("MacheteAttack", 99)
-	TNT1 A 0 A_GiveInventory("MacheteAttack", 3) //Attack 3
-	TNT1 A 1 A_WeaponReady
- 	Goto Ready
-    Attack3:
- 	//Attack3: Overhand Chop (Finisher)
-	KNF7 A 1 A_Recoil(-1)
-	KNF7 B 1
-	KNF7 C 1 A_PlaySound("postal2/weapons/macheteswingmiss", CHAN_WEAPON, 1.0, 0)
-	KNF7 DE 1 A_CustomPunch(3, 0, 0, "KnifePuff", 96)
-	KNF7 F 1
-	KNF7 G 1
-	KNF4 A 1 A_Recoil(-1)
-	TNT1 A 0 A_TakeInventory("MacheteAttack", 99)
-	TNT1 A 0 A_GiveInventory("MacheteAttack", 4) //Attack 4
-	TNT1 A 3 A_WeaponReady
-	Goto Ready
-    Attack4:
- 	KNFX A 1
-	KNFX B 1
-	KNFX C 1
-	KNFX D 1
-	KNFX Z 1 
-	//Attack4: Diagonal Swing - Right
-	KNF4 B 1
-	KNF4 C 1 A_PlaySound("postal2/weapons/macheteswingmiss", CHAN_WEAPON, 1.0, 0)
-	KNF4 DE 1 A_CustomPunch(2, 0, 0, "KnifePuff", 65)
-	KNF4 F 1
-	KNF4 G 1
-	TNT1 A 0 A_TakeInventory("MacheteAttack", 99)
-	TNT1 A 0 A_GiveInventory("MacheteAttack", 5) //Attack 5
-	TNT1 A 1 A_WeaponReady
- 	Goto Ready
-    Attack5:
- 	//Attack5: Right-angled Swipe
- 	KNFG B 1
-	KNFG C 1 A_PlaySound("postal2/weapons/macheteswingmiss", CHAN_WEAPON, 1.0, 0)
-	KNFG D 1
-	KNFG EFG 1 A_CustomPunch(2, 0, 0, "KnifePuff", 65)
-	KNFG HI 1
-	TNT1 A 0 A_TakeInventory("MacheteAttack", 99)
-	TNT1 A 0 A_GiveInventory("MacheteAttack", 6) //Attack 6
-	TNT1 A 1 A_WeaponReady
- 	Goto Ready
-    Attack6:
- 	//Attack6: Diagonal Swing - Left
- 	KNF3 A 1
-	KNF3 B 1
-	KNF3 C 1 A_PlaySound("postal2/weapons/macheteswingmiss", CHAN_WEAPON, 1.0, 0)
-	KNF3 DE 1 A_CustomPunch(2, 0, 0, "KnifePuff", 65)
-	KNF3 F 1
-	KNF3 G 1
-	TNT1 A 0 A_TakeInventory("MacheteAttack", 99)
-	TNT1 A 0 A_GiveInventory("MacheteAttack", 7) //Attack 7
-	TNT1 A 1 A_WeaponReady
- 	Goto Ready
-    Attack7:
- 	//Attack7: Overhand Chop 2 (Finisher)
-	KNF7 A 1 A_Recoil(-1)
-	KNF7 B 1
-	KNF7 C 1 A_PlaySound("postal2/weapons/macheteswingmiss", CHAN_WEAPON, 1.0, 0)
-	KNF7 DE 1 A_CustomPunch(2, 0, 0, "KnifePuff", 96)
-	KNF7 F 1
-	KNF7 G 1
-	KNF4 A 1 A_Recoil(-1)
-	TNT1 A 0 A_TakeInventory("MacheteAttack", 99)
-	TNT1 A 0 A_GiveInventory("MacheteAttack", 8) //Attack 8
-	TNT1 A 3 A_WeaponReady
- 	Goto Ready
-    Attack8:
-	//Attack8: Slice N' Dice
- 	TNT1 A 0 A_Recoil(-1)
-	TNT1 A 0 A_JumpIfInventory("MacheteSkewerStage", 3, 23)
-	TNT1 A 0 A_JumpIfInventory("MacheteSkewerStage", 2, 13)
-	TNT1 A 0 A_JumpIfInventory("MacheteSkewerStage", 1, 6)
-	KNF6 E 1 A_PlaySound("postal2/weapons/macheteswingmiss", CHAN_WEAPON, 1.0, 0)
-	KNF6 C 1
-	TNT1 A 0 A_CustomPunch(1, 0, 0, "KnifePuff", 65)
-	KNF6 B 1
-	KNF6 C 1
-	KNF6 E 1
-	KNF6 E 1 A_PlaySound("postal2/weapons/macheteswingmiss", CHAN_WEAPON, 1.0, 0)
-	KNF6 G 1
-	TNT1 A 0 A_CustomPunch(2, 0, 0, "KnifePuff", 65)
-	KNF6 F 1
-	KNF6 G 1
-	KNF6 E 1
-	KNF6 E 1 A_PlaySound("postal2/weapons/macheteswingmiss", CHAN_WEAPON, 1.0, 0)
-	KNF6 I 1
-	TNT1 A 0 A_CustomPunch(1, 0, 0, "KnifePuff", 65)
-	KNF6 H 1
-	KNF6 I 1
-	KNF6 E 1
-	TNT1 A 0 A_GiveInventory("MacheteSkewerStage", 1)
-	TNT1 A 1 A_WeaponReady
-	Goto Ready
-	TNT1 A 0
-	TNT1 A 0 A_TakeInventory("MacheteSkewerStage", 99)
-	TNT1 A 0 A_GiveInventory("MacheteAttack", 9)
-	TNT1 A 1 A_WeaponReady
-	Goto Ready
-    Attack9:
- 	//Attack9: Slice N' Dice (Finisher)
-	KNF6 E 1 A_Recoil(-2)
-	KNF6 D 1 A_PlaySound("postal2/weapons/macheteswingmiss", CHAN_WEAPON, 1.0, 0)
-	KNF6 C 1
-	KNF6 BA 1 A_CustomPunch(3, 0, 0, "KnifePuff", 96)
-	KNF6 A 10
-	KNF6 BCDE 1
-	TNT1 A 3 A_TakeInventory("MacheteAttack", 99)
-	TNT1 A 0 A_TakeInventory("MacheteSkewerStage", 99)
-	TNT1 A 0 A_GiveInventory("MacheteAttack", 1)
-	TNT1 A 1 A_WeaponReady
- 	Goto Ready
-    AttackB:
-	//AttackB: Block Finisher
-	KNF6 A 1 A_Recoil(-1)
-	KNF6 A 1 A_PlaySound("postal2/weapons/macheteswingmiss", CHAN_WEAPON, 1.0, 0)
-	KNF6 B 1 A_CustomPunch(4, 0, 0, "KnifePuff", 96)
-	KNF6 C 1 A_CustomPunch(4, 0, 0, "KnifePuff", 96)
-	KNF6 DE 1
-	TNT1 A 3 A_WeaponReady
- 	Goto Ready
-    AltFire:
-	KNF5 A 1 A_JumpIfInventory("KnifeBlockSeq",1,29)
-	KNF5 B 1 A_GiveInventory("KnifeBlockSeq",1)
-	KNF5 C 1 A_PlaySound("reilsss/weapons/knifeblock", CHAN_WEAPON, 1.0, 0)
-	KNF5 DEFGGGGG 1 A_SpawnItem("KnifeBlock",32)
-	KNF5 G 0 A_SpawnItem("KnifeBlock",32)
-	KNF5 G 1 A_WeaponReady
-	KNF5 G 0 A_SpawnItem("KnifeBlock",32)
-	KNF5 G 1 A_WeaponReady
-	KNF5 G 0 A_SpawnItem("KnifeBlock",32)
-	KNF5 G 1 A_WeaponReady
-	KNF5 G 0 A_SpawnItem("KnifeBlock",32)
-	KNF5 G 1 A_WeaponReady
-	KNF5 G 0 A_SpawnItem("KnifeBlock",32)
-	KNF5 G 1 A_WeaponReady
-	KNF5 G 0 A_SpawnItem("KnifeBlock",32)
-	KNF5 G 1 A_WeaponReady
-	KNF5 G 0 A_SpawnItem("KnifeBlock",32)
-	KNF5 G 1 A_WeaponReady
-	KNF5 G 0 A_SpawnItem("KnifeBlock",32)
-	KNF5 G 1 A_WeaponReady
-	KNF5 G 0 A_SpawnItem("KnifeBlock",32)
-	KNF5 G 1 A_WeaponReady
-	KNF5 G 0 A_SpawnItem("KnifeBlock",32)
-	KNF5 G 1 A_WeaponReady
-	KNF5 G 0 A_ReFire
-	KNF5 G 0 A_TakeInventory("KnifeBlockSeq",1)
-	KNF5 FEDCB 1
-	Goto AttackB
-    }
+	Attack1:
+		KNFX A 1
+		KNFX B 1
+		KNFX C 1
+		KNFX D 1
+		KNFX Z 1 
+		//Attack1: Right-angled Swipe
+		KNFG B 1
+		//KNFG C 1 A_PlaySound("reilsss/weapons/knifeswing", CHAN_WEAPON, 1.0, 0)
+		KNFG C 1 A_PlaySound("postal2/weapons/macheteswingmiss", CHAN_WEAPON, 1.0, 0)
+		KNFG D 1
+		KNFG EFG 1 A_CustomPunch(2, 0, 0, "KnifePuff", 65)
+		KNFG HI 1
+		TNT1 A 0 A_TakeInventory("MacheteAttack", 99)
+		TNT1 A 0 A_GiveInventory("MacheteAttack", 2) //Attack 2
+		TNT1 A 1 A_WeaponReady
+		Goto Ready
+	Attack2:
+		//Attack2: Left-angled Swipe
+		KNF2 A 1
+		KNF2 B 1 
+		KNFG C 1 A_PlaySound("postal2/weapons/macheteswingmiss", CHAN_WEAPON, 1.0, 0)
+		KNF2 D 1
+		KNF2 EFG 1 A_CustomPunch(2, 0, 0, "KnifePuff", 65)
+		KNF2 H 1
+		TNT1 A 0 A_TakeInventory("MacheteAttack", 99)
+		TNT1 A 0 A_GiveInventory("MacheteAttack", 3) //Attack 3
+		TNT1 A 1 A_WeaponReady
+		Goto Ready
+	Attack3:
+		//Attack3: Overhand Chop (Finisher)
+		KNF7 A 1 A_Recoil(-1)
+		KNF7 B 1
+		KNF7 C 1 A_PlaySound("postal2/weapons/macheteswingmiss", CHAN_WEAPON, 1.0, 0)
+		KNF7 DE 1 A_CustomPunch(3, 0, 0, "KnifePuff", 96)
+		KNF7 F 1
+		KNF7 G 1
+		KNF4 A 1 A_Recoil(-1)
+		TNT1 A 0 A_TakeInventory("MacheteAttack", 99)
+		TNT1 A 0 A_GiveInventory("MacheteAttack", 4) //Attack 4
+		TNT1 A 3 A_WeaponReady
+		Goto Ready
+	Attack4:
+		KNFX A 1
+		KNFX B 1
+		KNFX C 1
+		KNFX D 1
+		KNFX Z 1 
+		//Attack4: Diagonal Swing - Right
+		KNF4 B 1
+		KNF4 C 1 A_PlaySound("postal2/weapons/macheteswingmiss", CHAN_WEAPON, 1.0, 0)
+		KNF4 DE 1 A_CustomPunch(2, 0, 0, "KnifePuff", 65)
+		KNF4 F 1
+		KNF4 G 1
+		TNT1 A 0 A_TakeInventory("MacheteAttack", 99)
+		TNT1 A 0 A_GiveInventory("MacheteAttack", 5) //Attack 5
+		TNT1 A 1 A_WeaponReady
+		Goto Ready
+	Attack5:
+		//Attack5: Right-angled Swipe
+		KNFG B 1
+		KNFG C 1 A_PlaySound("postal2/weapons/macheteswingmiss", CHAN_WEAPON, 1.0, 0)
+		KNFG D 1
+		KNFG EFG 1 A_CustomPunch(2, 0, 0, "KnifePuff", 65)
+		KNFG HI 1
+		TNT1 A 0 A_TakeInventory("MacheteAttack", 99)
+		TNT1 A 0 A_GiveInventory("MacheteAttack", 6) //Attack 6
+		TNT1 A 1 A_WeaponReady
+		Goto Ready
+	Attack6:
+		//Attack6: Diagonal Swing - Left
+		KNF3 A 1
+		KNF3 B 1
+		KNF3 C 1 A_PlaySound("postal2/weapons/macheteswingmiss", CHAN_WEAPON, 1.0, 0)
+		KNF3 DE 1 A_CustomPunch(2, 0, 0, "KnifePuff", 65)
+		KNF3 F 1
+		KNF3 G 1
+		TNT1 A 0 A_TakeInventory("MacheteAttack", 99)
+		TNT1 A 0 A_GiveInventory("MacheteAttack", 7) //Attack 7
+		TNT1 A 1 A_WeaponReady
+		Goto Ready
+	Attack7:
+		//Attack7: Overhand Chop 2 (Finisher)
+		KNF7 A 1 A_Recoil(-1)
+		KNF7 B 1
+		KNF7 C 1 A_PlaySound("postal2/weapons/macheteswingmiss", CHAN_WEAPON, 1.0, 0)
+		KNF7 DE 1 A_CustomPunch(2, 0, 0, "KnifePuff", 96)
+		KNF7 F 1
+		KNF7 G 1
+		KNF4 A 1 A_Recoil(-1)
+		TNT1 A 0 A_TakeInventory("MacheteAttack", 99)
+		TNT1 A 0 A_GiveInventory("MacheteAttack", 8) //Attack 8
+		TNT1 A 3 A_WeaponReady
+		Goto Ready
+	Attack8:
+		//Attack8: Slice N' Dice
+		TNT1 A 0 A_Recoil(-1)
+		TNT1 A 0 A_JumpIfInventory("MacheteSkewerStage", 3, 23)
+		TNT1 A 0 A_JumpIfInventory("MacheteSkewerStage", 2, 13)
+		TNT1 A 0 A_JumpIfInventory("MacheteSkewerStage", 1, 6)
+		KNF6 E 1 A_PlaySound("postal2/weapons/macheteswingmiss", CHAN_WEAPON, 1.0, 0)
+		KNF6 C 1
+		TNT1 A 0 A_CustomPunch(1, 0, 0, "KnifePuff", 65)
+		KNF6 B 1
+		KNF6 C 1
+		KNF6 E 1
+		KNF6 E 1 A_PlaySound("postal2/weapons/macheteswingmiss", CHAN_WEAPON, 1.0, 0)
+		KNF6 G 1
+		TNT1 A 0 A_CustomPunch(2, 0, 0, "KnifePuff", 65)
+		KNF6 F 1
+		KNF6 G 1
+		KNF6 E 1
+		KNF6 E 1 A_PlaySound("postal2/weapons/macheteswingmiss", CHAN_WEAPON, 1.0, 0)
+		KNF6 I 1
+		TNT1 A 0 A_CustomPunch(1, 0, 0, "KnifePuff", 65)
+		KNF6 H 1
+		KNF6 I 1
+		KNF6 E 1
+		TNT1 A 0 A_GiveInventory("MacheteSkewerStage", 1)
+		TNT1 A 1 A_WeaponReady
+		Goto Ready
+		TNT1 A 0
+		TNT1 A 0 A_TakeInventory("MacheteSkewerStage", 99)
+		TNT1 A 0 A_GiveInventory("MacheteAttack", 9)
+		TNT1 A 1 A_WeaponReady
+		Goto Ready
+	Attack9:
+		//Attack9: Slice N' Dice (Finisher)
+		KNF6 E 1 A_Recoil(-2)
+		KNF6 D 1 A_PlaySound("postal2/weapons/macheteswingmiss", CHAN_WEAPON, 1.0, 0)
+		KNF6 C 1
+		KNF6 BA 1 A_CustomPunch(3, 0, 0, "KnifePuff", 96)
+		KNF6 A 10
+		KNF6 BCDE 1
+		TNT1 A 3 A_TakeInventory("MacheteAttack", 99)
+		TNT1 A 0 A_TakeInventory("MacheteSkewerStage", 99)
+		TNT1 A 0 A_GiveInventory("MacheteAttack", 1)
+		TNT1 A 1 A_WeaponReady
+		Goto Ready
+	AttackB:
+		//AttackB: Block Finisher
+		KNF6 A 1 A_Recoil(-1)
+		KNF6 A 1 A_PlaySound("postal2/weapons/macheteswingmiss", CHAN_WEAPON, 1.0, 0)
+		KNF6 B 1 A_CustomPunch(4, 0, 0, "KnifePuff", 96)
+		KNF6 C 1 A_CustomPunch(4, 0, 0, "KnifePuff", 96)
+		KNF6 DE 1
+		TNT1 A 3 A_WeaponReady
+		Goto Ready
+	AltFire:
+		KNF5 A 1 A_JumpIfInventory("KnifeBlockSeq",1,29)
+		KNF5 B 1 A_GiveInventory("KnifeBlockSeq",1)
+		KNF5 C 1 A_PlaySound("reilsss/weapons/knifeblock", CHAN_WEAPON, 1.0, 0)
+		KNF5 DEFGGGGG 1 A_SpawnItem("KnifeBlock",32)
+		KNF5 G 0 A_SpawnItem("KnifeBlock",32)
+		KNF5 G 1 A_WeaponReady
+		KNF5 G 0 A_SpawnItem("KnifeBlock",32)
+		KNF5 G 1 A_WeaponReady
+		KNF5 G 0 A_SpawnItem("KnifeBlock",32)
+		KNF5 G 1 A_WeaponReady
+		KNF5 G 0 A_SpawnItem("KnifeBlock",32)
+		KNF5 G 1 A_WeaponReady
+		KNF5 G 0 A_SpawnItem("KnifeBlock",32)
+		KNF5 G 1 A_WeaponReady
+		KNF5 G 0 A_SpawnItem("KnifeBlock",32)
+		KNF5 G 1 A_WeaponReady
+		KNF5 G 0 A_SpawnItem("KnifeBlock",32)
+		KNF5 G 1 A_WeaponReady
+		KNF5 G 0 A_SpawnItem("KnifeBlock",32)
+		KNF5 G 1 A_WeaponReady
+		KNF5 G 0 A_SpawnItem("KnifeBlock",32)
+		KNF5 G 1 A_WeaponReady
+		KNF5 G 0 A_SpawnItem("KnifeBlock",32)
+		KNF5 G 1 A_WeaponReady
+		KNF5 G 0 A_ReFire
+		KNF5 G 0 A_TakeInventory("KnifeBlockSeq",1)
+		KNF5 FEDCB 1
+		Goto AttackB
+	}
 } 
 
-ACTOR KnifeBlock
+Actor KnifeBlock
 {
-    +NOBLOOD
-    +SHOOTABLE
-    +NOGRAVITY
-    Health 5
-    height 35
-    radius 12
-    Speed 8
-    RENDERSTYLE NONE
-    States
-    {
-    Spawn: 
-	TNT1 A 1 
-	Stop
-    Death: 
-	TNT1 A 0
-	Stop
-    }
+	+NOBLOOD
+	+SHOOTABLE
+	+NOGRAVITY
+	Health 5
+	Height 35
+	Radius 12
+	Speed 8
+	RenderStyle NONE
+	States
+	{
+	Spawn: 
+		TNT1 A 1 
+		Stop
+	Death: 
+		TNT1 A 0
+		Stop
+	}
 }
 
-ACTOR KnifePuff
+Actor KnifePuff
 {	
-    +NOGRAVITY
-    +NOBLOCKMAP
-    +FLOORCLIP
-	+EXTREMEDEATH
-    Radius 1
-    Height 1
-    RenderStyle ADD
-    Alpha 1
-    Scale .08
-    States
-    {
-    Spawn:
-	CLWP A 1 BRIGHT
-	CLWP A 1 BRIGHT A_PlaySound("reilsss/weapons/knifehitwall", CHAN_AUTO, 1.0, 0)
-	CLWP B 1 A_AlertMonsters
-	CLWP C 1 Bright A_SetTranslucent(.75,1)
-	CLWp D 1 Bright A_SetTranslucent(.5,1)
-	CLWP E 1 Bright A_SetTranslucent(.25,1)
-	Stop
-    }
+	+NOGRAVITY
+	+NOBLOCKMAP
+	+FLOORCLIP
+	Radius 1
+	Height 1
+	RenderStyle Add
+	Alpha 1
+	Scale .08
+	DamageType "ZombieGibber"
+	States
+	{
+	Spawn:
+		CLWP A 1 BRIGHT
+		CLWP A 1 Bright A_PlaySound("reilsss/weapons/knifehitwall", CHAN_AUTO, 1.0, 0)
+		CLWP B 1 A_AlertMonsters
+		CLWP C 1 Bright A_SetTranslucent(.75,1)
+		CLWp D 1 Bright A_SetTranslucent(.5,1)
+		CLWP E 1 Bright A_SetTranslucent(.25,1)
+		Stop
+	}
 }
 
-ACTOR MacheteAttack : PuzzleItem
+Actor MacheteAttack : PuzzleItem
 {
-    -INVBAR
-    Inventory.MaxAmount 99
-    Inventory.Icon TNT1A0
-    States
-    {
-    Spawn:
-	TNT1 A 4
-	loop
-    }
+	-INVBAR
+	Inventory.MaxAmount 99
+	Inventory.Icon TNT1A0
+	States
+	{
+	Spawn:
+		TNT1 A 4
+		Loop
+	}
 }
 
-ACTOR MacheteSkewerStage : PuzzleItem
+Actor MacheteSkewerStage : PuzzleItem
 {
-    -INVBAR
-    Inventory.MaxAmount 99
-    Inventory.Icon TNT1A0
-    States
-    {
-    Spawn:
-	TNT1 A 4
-	loop
-    }
+	-INVBAR
+	Inventory.MaxAmount 99
+	Inventory.Icon TNT1A0
+	States
+	{
+	Spawn:
+		TNT1 A 4
+		Loop
+	}
 }
 
-ACTOR KnifeblockSeq : CustomInventory
+Actor KnifeblockSeq : CustomInventory
 {
-    Inventory.Amount 1
-    Inventory.MaxAmount 1
-    States
-    {
-    Use:
-	TNT1 A 0
-	Stop
-    }
+	Inventory.Amount 1
+	Inventory.MaxAmount 1
+	States
+	{
+	Use:
+		TNT1 A 0
+		Stop
+	}
 }
 
 Actor KnifeDrop : CustomInventory
 {
-    Inventory.MaxAmount 1
-    States
-    {
-    Use:
-	TNT1 A 0
-	TNT1 A 0 A_SpawnItemEx("DroppedKnife",0,0,32,8,0,0,0,32,0)
-	Stop
-    }
+	Inventory.MaxAmount 1
+	States
+	{
+	Use:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("DroppedKnife",0,0,32,8,0,0,0,32,0)
+		Stop
+	}
 }
 
-ACTOR DroppedKnife
+Actor DroppedKnife
 {
-    Radius 16
-    Height 20
-    Scale 0.5
-    States
-    {
-    Spawn:
-	GRON A 15
-	TNT1 A 0 A_SpawnItemEx("AEoDKnifeItem",0,0,0,0,0,0,0,48,0)
-	Stop
-    }
+	Radius 16
+	Height 20
+	Scale 0.5
+	States
+	{
+	Spawn:
+		GRON A 15
+		TNT1 A 0 A_SpawnItemEx("AEoDKnifeItem",0,0,0,0,0,0,0,48,0)
+		Stop
+	}
 }
 
 //=================================================================================
@@ -721,284 +723,285 @@ ACTOR DroppedKnife
 
 //=================================================================================
 //=================================================================================
-ACTOR AEoDMedievalAxeItem : CustomInventory 6010
+Actor AEoDMedievalAxeItem : CustomInventory 6010
 {
-    +FLOORCLIP
-    +INVENTORY.IGNORESKILL
-    Inventory.Amount 1
-    Inventory.PickupMessage "You found a medieval Axe!"
-    Inventory.PickupSound "weaponbuild"
-    States
-    {
-    Spawn:
-        WFAX A -1
-        Loop
-    Pickup:
-	TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
-	Goto Pickup+2
-	TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",2) <= 0,"Nothing")
-	TNT1 A 0 A_JumpIfInventory("AEoDAxeCount",2,"Ammo")
-	TNT1 A 0 A_JumpIfInventory("AEoDAxeCount",1,"Pickup2")
-	TNT1 A 0 A_GiveInventory("Weapon2Count",1)
-	TNT1 A 0 A_GiveInventory("MedievalAxeDrop",1)
-	TNT1 A 0 A_GiveInventory("AEoDMedievalAxe",1)
-	TNT1 A 0 A_GiveInventory("AEoDAxeCount",1)
-	TNT1 A 0 //ACS_NamedExecute("s799",0,3,0,0)
-	TNT1 A 0 A_JumpIfInventory("NoWeaponSwitch",1,2)
-	TNT1 A 0 A_SelectWeapon("AEoDMedievalAxe")
-	TNT1 A 0
-	Stop
-    Pickup2:
-	TNT1 A 0 A_GiveInventory("MedievalAxeDrop",1)
-	TNT1 A 0 A_GiveInventory("AEoDMedievalAxe",1)
-	TNT1 A 0 A_GiveInventory("AEoDAxeCount",1)
-	TNT1 A 0 //ACS_NamedExecute("s799",0,3,0,0)
-	TNT1 A 0 A_JumpIfInventory("NoWeaponSwitch",1,2)
-	TNT1 A 0 A_SelectWeapon("AEoDMedievalAxe")
-	TNT1 A 0
-	Stop
-    Nothing:
-	TNT1 A 0 A_JumpIfInventory("AEoDAxeCount",2,"Ammo")
-	TNT1 A 0 A_JumpIfInventory("AEoDAxeCount",1,"Pickup2")
-	TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
-	Goto Pickup+2
-	TNT1 A 0 ACS_NamedExecute("s798",0,2,0,0)
-	Fail
-    Ammo:
-	TNT1 A 0 A_GiveInventory("AEoDMedievalAxe",1)
-	Stop
-    }
+	+FLOORCLIP
+	+INVENTORY.IGNORESKILL
+	Inventory.Amount 1
+	Inventory.PickupMessage "You found a medieval Axe!"
+	Inventory.PickupSound "weaponbuild"
+	States
+	{
+	Spawn:
+		WFAX A -1
+		Loop
+	Pickup:
+		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
+		Goto Pickup+2
+		TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",2) <= 0,"Nothing")
+		TNT1 A 0 A_JumpIfInventory("AEoDAxeCount",2,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("AEoDAxeCount",1,"Pickup2")
+		TNT1 A 0 A_GiveInventory("Weapon2Count",1)
+		TNT1 A 0 A_GiveInventory("MedievalAxeDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDMedievalAxe",1)
+		TNT1 A 0 A_GiveInventory("AEoDAxeCount",1)
+		TNT1 A 0 //ACS_NamedExecute("s799",0,3,0,0)
+		TNT1 A 0 A_JumpIfInventory("NoWeaponSwitch",1,2)
+		TNT1 A 0 A_SelectWeapon("AEoDMedievalAxe")
+		TNT1 A 0
+		Stop
+	Pickup2:
+		TNT1 A 0 A_GiveInventory("MedievalAxeDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDMedievalAxe",1)
+		TNT1 A 0 A_GiveInventory("AEoDAxeCount",1)
+		TNT1 A 0 //ACS_NamedExecute("s799",0,3,0,0)
+		TNT1 A 0 A_JumpIfInventory("NoWeaponSwitch",1,2)
+		TNT1 A 0 A_SelectWeapon("AEoDMedievalAxe")
+		TNT1 A 0
+		Stop
+	Nothing:
+		TNT1 A 0 A_JumpIfInventory("AEoDAxeCount",2,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("AEoDAxeCount",1,"Pickup2")
+		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
+		Goto Pickup+2
+		TNT1 A 0 ACS_NamedExecute("s798",0,2,0,0)
+		Fail
+	Ammo:
+		TNT1 A 0 A_GiveInventory("AEoDMedievalAxe",1)
+		Stop
+	}
 }
-ACTOR AEoDMedievalAxe : Weapon // : FWeapAxe // 6010
+Actor AEoDMedievalAxe : Weapon // : FWeapAxe // 6010
 { 
-    +FLOORCLIP
-    +MELEEWEAPON
-    +AMMO_OPTIONAL
-    +CHEATNOTWEAPON
-    +INVENTORY.IGNORESKILL
-    Weapon.AmmoType1 "BlueMana"
-    Weapon.AmmoType2 "BlueMana"
-    Weapon.AmmoGive1 20
-    Weapon.AmmoGive2 6
-    Weapon.AmmoUse1 2
-    Weapon.AmmoUse2 5
-    Weapon.YAdjust -12
-    Weapon.KickBack 50
-    Obituary "%o was axed by %k."
-    Inventory.PickupMessage "You found a medieval Axe!"
-    Inventory.PickupSound "weaponbuild"
-    weapon.upsound "weapons/draw"
-    Tag "Magic axe"
-    States
-    {
-    Spawn:
-	TNT1 A 0
-	TNT1 A 0 A_SpawnItemEx("AEoDAxePickup",0,0,0,0,0,0,0,32,0)
-        Stop
-    Deselect: 
-	TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
-	TNT1 A 0 A_JumpIfInventory("AEoDAxeCount",2,"Deselect2")
-	FAXE A 1 A_Lower
-	TNT1 AA 0 A_Lower 
-	Loop
-    Deselect2: 
-	TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
-	FAX2 A 1 A_Lower
-	TNT1 AA 0 A_Lower 
-	Loop
-    Select:
-	TNT1 A 0 //ACS_NamedExecute("s799",0,3,0,0)
-	TNT1 A 0 A_JumpIfInventory("AEoDAxeCount",2,"Select2")
-	FAXE A 1 A_Raise
-	TNT1 AA 0 A_Raise
-	Loop
-    Select2: 
-	TNT1 A 0 //ACS_NamedExecute("s799",0,3,0,0)
-	FAX2 A 1 A_Raise
-	TNT1 AA 0 A_Raise
-	Loop
-    Ready:
-	TNT1 A 0 A_TakeInventory("AxeDropCheck",1)
-	TNT1 A 0 A_JumpIfInventory("AEoDAxeCount",2,"Ready2")
-	FAXE A 0 A_JumpIfInventory("BlueMana",2,2)
-	FAXE A 1 A_WeaponReady
-	Loop
-	FAXE LLL 1 A_WeaponReady
-	FAXE MMM 1 A_WeaponReady
-	Loop
-    Ready2:
-	TNT1 A 0 A_JumpIfInventory("AxeDropCheck",1,"Ready")
-	FAX2 A 0 A_JumpIfInventory("BlueMana",2,2)
-	FAX2 A 1 A_WeaponReady
-	Loop
-	FAX2 JJJ 1 A_WeaponReady
-	FAX2 KKK 1 A_WeaponReady
-	Loop
-    Fire:
-	TNT1 A 0 A_JumpIfInventory("AEoDAxeCount",2,"Fire2")
-	FAXE B 0 Offset (15, 32) A_JumpIfInventory("BlueMana",2,"FireGlow")
-	FAXE B 4 Offset (15, 32)
-	FAXE C 3 Offset (15, 32)
-	FAXE D 2 Offset (15, 32)
-	FAXE D 1 OffSet (-5, 70) A_CustomPunch(random(50,75),1,0,"AxePuff",144)
-	FAXE D 2 Offset (-25, 90)
-	FAXE E 1 Offset (15, 32)
-	FAXE E 2 Offset (10, 54)
-	FAXE E 7 Offset (10, 150)
-	FAXE A 1 Offset (0, 60) A_ReFire
-	FAXE A 1 Offset (0, 52)
-	FAXE A 1 Offset (0, 44)
-	FAXE A 1 Offset (0, 36)
-	FAXE A 1
-	Goto Ready
-    Fire2:
-	FAX2 B 0 Offset (15, 32) A_JumpIfInventory("BlueMana",2,"FireGlow2")
-	FAX2 B 2 Offset (15, 32)
-	FAX2 C 1 Offset (15, 32)
-	FAX2 D 1 Offset (15, 32)
-	FAX2 D 1 OffSet (-5, 70) A_CustomPunch(random(50,75),1,0,"AxePuff",144)
-	FAX2 D 1 Offset (-25, 90)
-	FAX2 E 1 Offset (15, 32)
-	FAX2 E 1 Offset (10, 54)
-	FAX2 E 2 Offset (10, 150)
-	FAX2 F 2 Offset (-15, 32)
-	FAX2 G 2 Offset (-15, 32)
-	FAX2 H 1 Offset (-15, 32)
-	FAX2 H 1 Offset (5, 70) A_CustomPunch(random(50,75),1,0,"AxePuff",144)
-	FAX2 H 1 Offset (25, 90)
-	FAX2 I 1 Offset (-15, 32)
-	FAX2 I 2 Offset (-10, 54)
-	FAX2 I 8 Offset (-10, 150)
-	FAX2 A 1 Offset (1, 60) A_ReFire
-	FAX2 A 1 Offset (1, 52)
-	FAX2 A 1 Offset (1, 44)
-	FAX2 A 1 Offset (1, 36)
-	FAX2 A 1
-	Goto Ready
-    FireGlow:
-	FAXE N 4 Offset (15, 32)
-	FAXE O 3 Offset (15, 32)
-	FAXE P 2 Offset (15, 32)
-	FAXE P 1 Offset (-5, 70) A_CustomPunch(random(110,140),1,1,"AxePuffGlowDMG",144)
-	FAXE P 2 Offset (-25, 90)
-	FAXE Q 1 Offset (15, 32)
-	FAXE Q 2 Offset (10, 54)
-	FAXE Q 7 Offset (10, 150)
-	FAXE A 1 Offset (0, 60) A_ReFire
-	FAXE A 1 Offset (0, 52)
-	FAXE A 1 Offset (0, 44)
-	FAXE A 1 Offset (0, 36)
-	FAXE A 1
-	Goto Ready
-    FireGlow2:
-	FAX2 L 2 Offset (15, 32)
-	FAX2 M 1 Offset (15, 32)
-	FAX2 N 1 Offset (15, 32)
-	FAX2 N 1 Offset (-5, 70) A_CustomPunch(random(110,140),1,1,"AxePuffGlowDMG",144)
-	FAX2 N 1 Offset (-25, 90)
-	FAX2 O 1 Offset (15, 32)
-	FAX2 O 1 Offset (10, 54)
-	FAX2 O 2 Offset (10, 150)
-	FAX2 P 2 Offset (-15, 32)
-	FAX2 Q 2 Offset (-15, 32)
-	FAX2 R 1 Offset (-15, 32)
-	FAX2 R 1 Offset (5, 70) A_CustomPunch(random(110,140),1,1,"AxePuffGlowDMG",144)
-	FAX2 R 1 Offset (25, 90)
-	FAX2 S 1 Offset (-15, 32)
-	FAX2 S 2 Offset (-10, 54)
-	FAX2 S 8 Offset (-10, 150)
-	FAX2 A 1 Offset (1, 60) A_ReFire
-	FAX2 A 1 Offset (1, 52)
-	FAX2 A 1 Offset (1, 44)
-	FAX2 A 1 Offset (1, 36)
-	FAX2 A 1
-	Goto Ready
-    AltFire:
-	TNT1 A 0 A_JumpIfInventory("AEoDAxeCount",2,"AltFire2")
-	FAXE B 0 Offset (15, 32) A_JumpIfInventory("BlueMana",2,"AltFireGlow")
-	FAXE B 4 Offset (15, 32)
-	FAXE C 3 Offset (15, 32)
-	FAXE D 2 Offset (15, 32)
-	FAXE D 0 Offset (15, 32) A_PlaySound("FighterHammerMiss", CHAN_WEAPON, 1.0, 0)
-	FAXE D 1 Offset (-5, 70) A_FireCustomMissile("ThrownAxe",0,1,0,0,0)
-	FAXE D 2 Offset (-25, 90)
-	FAXE E 1 Offset (15, 32)
-	FAXE E 2 Offset (10, 54)
-	FAXE E 7 Offset (10, 150)
-	FAXE A 1 Offset (0, 60) A_ReFire
-	FAXE A 1 Offset (0, 52)
-	FAXE A 1 Offset (0, 44)
-	FAXE A 1 Offset (0, 36)
-	FAXE A 1
-	Goto Ready
-    AltFire2:
-	FAXE B 0 Offset (15, 32) A_JumpIfInventory("BlueMana",2,"AltFireGlow2")
-	FAX2 B 2 Offset (15, 32)
-	FAX2 C 1 Offset (15, 32)
-	FAX2 D 1 Offset (15, 32)
-	FAXE D 0 Offset (15, 32) A_PlaySound("FighterHammerMiss", CHAN_WEAPON, 1.0, 0)
-	FAXE D 1 Offset (-5, 70) A_FireCustomMissile("ThrownAxe",0,1,0,0,0)
-	FAX2 D 1 Offset (-25, 90)
-	FAX2 E 1 Offset (15, 32)
-	FAX2 E 1 Offset (10, 54)
-	FAX2 E 2 Offset (10, 150)
-	FAX2 F 2 Offset (-15, 32)
-	FAX2 G 2 Offset (-15, 32)
-	FAX2 H 1 Offset (-15, 32)
-	FAXE D 0 Offset (-15, 32) A_PlaySound("FighterHammerMiss", CHAN_WEAPON, 1.0, 0)
-	FAXE D 1 Offset (5, 70) A_FireCustomMissile("ThrownAxe",0,1,0,0,0)
-	FAX2 H 1 Offset (25, 90)
-	FAX2 I 1 Offset (-15, 32)
-	FAX2 I 2 Offset (-10, 54)
-	FAX2 I 8 Offset (-10, 150)
-	FAX2 A 1 Offset (1, 60) A_ReFire
-	FAX2 A 1 Offset (1, 52)
-	FAX2 A 1 Offset (1, 44)
-	FAX2 A 1 Offset (1, 36)
-	FAX2 A 1
-	Goto Ready
-    AltFireGlow:
-	FAXE N 4 Offset (15, 32)
-	FAXE O 3 Offset (15, 32)
-	FAXE P 2 Offset (15, 32)
-	FAXE P 0 Offset (15, 32) A_PlaySound("FighterHammerMiss", CHAN_WEAPON, 1.0, 0)
-	FAXE P 1 Offset (-5, 70) A_FireCustomMissile("ThrownAxe",0,1,0,0,0)
-	FAXE P 2 Offset (-25, 90)
-	FAXE Q 1 Offset (15, 32)
-	FAXE Q 2 Offset (10, 54)
-	FAXE Q 7 Offset (10, 150)
-	FAXE A 1 Offset (0, 60) A_Refire
-	FAXE A 1 Offset (0, 52)
-	FAXE A 1 Offset (0, 44)
-	FAXE A 1 Offset (0, 36)
-	FAXE A 1
-	Goto Ready
-    AltFireGlow2:
-	FAX2 L 2 Offset (15, 32)
-	FAX2 M 1 Offset (15, 32)
-	FAX2 N 1 Offset (15, 32)
-	FAXE P 0 Offset (15, 32) A_PlaySound("FighterHammerMiss", CHAN_WEAPON, 1.0, 0)
-	FAXE P 1 Offset (-5, 70) A_FireCustomMissile("ThrownAxe",0,1,0,0,0)
-	FAX2 N 1 Offset (-25, 90)
-	FAX2 O 1 Offset (15, 32)
-	FAX2 O 1 Offset (10, 54)
-	FAX2 O 2 Offset (10, 150)
-	FAX2 P 2 Offset (-15, 32)
-	FAX2 Q 2 Offset (-15, 32)
-	FAX2 R 1 Offset (-15, 32)
-	FAXE P 0 Offset (-15, 32) A_PlaySound("FighterHammerMiss", CHAN_WEAPON, 1.0, 0)
-	FAXE P 1 Offset (5, 70) A_FireCustomMissile("ThrownAxe",0,1,0,0,0)
-	FAX2 R 1 Offset (25, 90)
-	FAX2 S 1 Offset (-15, 32)
-	FAX2 S 2 Offset (-10, 54)
-	FAX2 S 8 Offset (-10, 150)
-	FAX2 A 1 Offset (1, 60) A_ReFire
-	FAX2 A 1 Offset (1, 52)
-	FAX2 A 1 Offset (1, 44)
-	FAX2 A 1 Offset (1, 36)
-	FAX2 A 1
-	Goto Ready
-    }
+	+FLOORCLIP
+	+MELEEWEAPON
+	+AMMO_OPTIONAL
+	+CHEATNOTWEAPON
+	+INVENTORY.IGNORESKILL
+	Weapon.AmmoType1 "BlueMana"
+	Weapon.AmmoType2 "BlueMana"
+	Weapon.AmmoGive1 20
+	Weapon.AmmoGive2 6
+	Weapon.AmmoUse1 2
+	Weapon.AmmoUse2 5
+	Weapon.YAdjust -12
+	Weapon.KickBack 50
+	Obituary "%o was axed by %k."
+	Inventory.PickupMessage "You found a medieval Axe!"
+	Inventory.PickupSound "weaponbuild"
+	Weapon.UpSound "weapons/draw"
+	Tag "Magic axe"
+	Weapon.SelectionOrder 25000
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("AEoDAxePickup",0,0,0,0,0,0,0,32,0)
+		Stop
+	Deselect: 
+		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
+		TNT1 A 0 A_JumpIfInventory("AEoDAxeCount",2,"Deselect2")
+		FAXE A 1 A_Lower
+		TNT1 AA 0 A_Lower 
+		Loop
+	Deselect2: 
+		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
+		FAX2 A 1 A_Lower
+		TNT1 AA 0 A_Lower 
+		Loop
+	Select:
+		TNT1 A 0 //ACS_NamedExecute("s799",0,3,0,0)
+		TNT1 A 0 A_JumpIfInventory("AEoDAxeCount",2,"Select2")
+		FAXE A 1 A_Raise
+		TNT1 AA 0 A_Raise
+		Loop
+	Select2: 
+		TNT1 A 0 //ACS_NamedExecute("s799",0,3,0,0)
+		FAX2 A 1 A_Raise
+		TNT1 AA 0 A_Raise
+		Loop
+	Ready:
+		TNT1 A 0 A_TakeInventory("AxeDropCheck",1)
+		TNT1 A 0 A_JumpIfInventory("AEoDAxeCount",2,"Ready2")
+		FAXE A 0 A_JumpIfInventory("BlueMana",2,2)
+		FAXE A 1 A_WeaponReady
+		Loop
+		FAXE LLL 1 A_WeaponReady
+		FAXE MMM 1 A_WeaponReady
+		Loop
+	Ready2:
+		TNT1 A 0 A_JumpIfInventory("AxeDropCheck",1,"Ready")
+		FAX2 A 0 A_JumpIfInventory("BlueMana",2,2)
+		FAX2 A 1 A_WeaponReady
+		Loop
+		FAX2 JJJ 1 A_WeaponReady
+		FAX2 KKK 1 A_WeaponReady
+		Loop
+	Fire:
+		TNT1 A 0 A_JumpIfInventory("AEoDAxeCount",2,"Fire2")
+		FAXE B 0 Offset (15, 32) A_JumpIfInventory("BlueMana",2,"FireGlow")
+		FAXE B 4 Offset (15, 32)
+		FAXE C 3 Offset (15, 32)
+		FAXE D 2 Offset (15, 32)
+		FAXE D 1 OffSet (-5, 70) A_CustomPunch(random(50,75),1,0,"AxePuff",144)
+		FAXE D 2 Offset (-25, 90)
+		FAXE E 1 Offset (15, 32)
+		FAXE E 2 Offset (10, 54)
+		FAXE E 7 Offset (10, 150)
+		FAXE A 1 Offset (0, 60) A_ReFire
+		FAXE A 1 Offset (0, 52)
+		FAXE A 1 Offset (0, 44)
+		FAXE A 1 Offset (0, 36)
+		FAXE A 1
+		Goto Ready
+	Fire2:
+		FAX2 B 0 Offset (15, 32) A_JumpIfInventory("BlueMana",2,"FireGlow2")
+		FAX2 B 2 Offset (15, 32)
+		FAX2 C 1 Offset (15, 32)
+		FAX2 D 1 Offset (15, 32)
+		FAX2 D 1 OffSet (-5, 70) A_CustomPunch(random(50,75),1,0,"AxePuff",144)
+		FAX2 D 1 Offset (-25, 90)
+		FAX2 E 1 Offset (15, 32)
+		FAX2 E 1 Offset (10, 54)
+		FAX2 E 2 Offset (10, 150)
+		FAX2 F 2 Offset (-15, 32)
+		FAX2 G 2 Offset (-15, 32)
+		FAX2 H 1 Offset (-15, 32)
+		FAX2 H 1 Offset (5, 70) A_CustomPunch(random(50,75),1,0,"AxePuff",144)
+		FAX2 H 1 Offset (25, 90)
+		FAX2 I 1 Offset (-15, 32)
+		FAX2 I 2 Offset (-10, 54)
+		FAX2 I 8 Offset (-10, 150)
+		FAX2 A 1 Offset (1, 60) A_ReFire
+		FAX2 A 1 Offset (1, 52)
+		FAX2 A 1 Offset (1, 44)
+		FAX2 A 1 Offset (1, 36)
+		FAX2 A 1
+		Goto Ready
+	FireGlow:
+		FAXE N 4 Offset (15, 32)
+		FAXE O 3 Offset (15, 32)
+		FAXE P 2 Offset (15, 32)
+		FAXE P 1 Offset (-5, 70) A_CustomPunch(random(110,140),1,1,"AxePuffGlowDMG",144)
+		FAXE P 2 Offset (-25, 90)
+		FAXE Q 1 Offset (15, 32)
+		FAXE Q 2 Offset (10, 54)
+		FAXE Q 7 Offset (10, 150)
+		FAXE A 1 Offset (0, 60) A_ReFire
+		FAXE A 1 Offset (0, 52)
+		FAXE A 1 Offset (0, 44)
+		FAXE A 1 Offset (0, 36)
+		FAXE A 1
+		Goto Ready
+	FireGlow2:
+		FAX2 L 2 Offset (15, 32)
+		FAX2 M 1 Offset (15, 32)
+		FAX2 N 1 Offset (15, 32)
+		FAX2 N 1 Offset (-5, 70) A_CustomPunch(random(110,140),1,1,"AxePuffGlowDMG",144)
+		FAX2 N 1 Offset (-25, 90)
+		FAX2 O 1 Offset (15, 32)
+		FAX2 O 1 Offset (10, 54)
+		FAX2 O 2 Offset (10, 150)
+		FAX2 P 2 Offset (-15, 32)
+		FAX2 Q 2 Offset (-15, 32)
+		FAX2 R 1 Offset (-15, 32)
+		FAX2 R 1 Offset (5, 70) A_CustomPunch(random(110,140),1,1,"AxePuffGlowDMG",144)
+		FAX2 R 1 Offset (25, 90)
+		FAX2 S 1 Offset (-15, 32)
+		FAX2 S 2 Offset (-10, 54)
+		FAX2 S 8 Offset (-10, 150)
+		FAX2 A 1 Offset (1, 60) A_ReFire
+		FAX2 A 1 Offset (1, 52)
+		FAX2 A 1 Offset (1, 44)
+		FAX2 A 1 Offset (1, 36)
+		FAX2 A 1
+		Goto Ready
+	AltFire:
+		TNT1 A 0 A_JumpIfInventory("AEoDAxeCount",2,"AltFire2")
+		FAXE B 0 Offset (15, 32) A_JumpIfInventory("BlueMana",2,"AltFireGlow")
+		FAXE B 4 Offset (15, 32)
+		FAXE C 3 Offset (15, 32)
+		FAXE D 2 Offset (15, 32)
+		FAXE D 0 Offset (15, 32) A_PlaySound("FighterHammerMiss", CHAN_WEAPON, 1.0, 0)
+		FAXE D 1 Offset (-5, 70) A_FireCustomMissile("ThrownAxe",0,1,0,0,0)
+		FAXE D 2 Offset (-25, 90)
+		FAXE E 1 Offset (15, 32)
+		FAXE E 2 Offset (10, 54)
+		FAXE E 7 Offset (10, 150)
+		FAXE A 1 Offset (0, 60) A_ReFire
+		FAXE A 1 Offset (0, 52)
+		FAXE A 1 Offset (0, 44)
+		FAXE A 1 Offset (0, 36)
+		FAXE A 1
+		Goto Ready
+	AltFire2:
+		FAXE B 0 Offset (15, 32) A_JumpIfInventory("BlueMana",2,"AltFireGlow2")
+		FAX2 B 2 Offset (15, 32)
+		FAX2 C 1 Offset (15, 32)
+		FAX2 D 1 Offset (15, 32)
+		FAXE D 0 Offset (15, 32) A_PlaySound("FighterHammerMiss", CHAN_WEAPON, 1.0, 0)
+		FAXE D 1 Offset (-5, 70) A_FireCustomMissile("ThrownAxe",0,1,0,0,0)
+		FAX2 D 1 Offset (-25, 90)
+		FAX2 E 1 Offset (15, 32)
+		FAX2 E 1 Offset (10, 54)
+		FAX2 E 2 Offset (10, 150)
+		FAX2 F 2 Offset (-15, 32)
+		FAX2 G 2 Offset (-15, 32)
+		FAX2 H 1 Offset (-15, 32)
+		FAXE D 0 Offset (-15, 32) A_PlaySound("FighterHammerMiss", CHAN_WEAPON, 1.0, 0)
+		FAXE D 1 Offset (5, 70) A_FireCustomMissile("ThrownAxe",0,1,0,0,0)
+		FAX2 H 1 Offset (25, 90)
+		FAX2 I 1 Offset (-15, 32)
+		FAX2 I 2 Offset (-10, 54)
+		FAX2 I 8 Offset (-10, 150)
+		FAX2 A 1 Offset (1, 60) A_ReFire
+		FAX2 A 1 Offset (1, 52)
+		FAX2 A 1 Offset (1, 44)
+		FAX2 A 1 Offset (1, 36)
+		FAX2 A 1
+		Goto Ready
+	AltFireGlow:
+		FAXE N 4 Offset (15, 32)
+		FAXE O 3 Offset (15, 32)
+		FAXE P 2 Offset (15, 32)
+		FAXE P 0 Offset (15, 32) A_PlaySound("FighterHammerMiss", CHAN_WEAPON, 1.0, 0)
+		FAXE P 1 Offset (-5, 70) A_FireCustomMissile("ThrownAxe",0,1,0,0,0)
+		FAXE P 2 Offset (-25, 90)
+		FAXE Q 1 Offset (15, 32)
+		FAXE Q 2 Offset (10, 54)
+		FAXE Q 7 Offset (10, 150)
+		FAXE A 1 Offset (0, 60) A_Refire
+		FAXE A 1 Offset (0, 52)
+		FAXE A 1 Offset (0, 44)
+		FAXE A 1 Offset (0, 36)
+		FAXE A 1
+		Goto Ready
+	AltFireGlow2:
+		FAX2 L 2 Offset (15, 32)
+		FAX2 M 1 Offset (15, 32)
+		FAX2 N 1 Offset (15, 32)
+		FAXE P 0 Offset (15, 32) A_PlaySound("FighterHammerMiss", CHAN_WEAPON, 1.0, 0)
+		FAXE P 1 Offset (-5, 70) A_FireCustomMissile("ThrownAxe",0,1,0,0,0)
+		FAX2 N 1 Offset (-25, 90)
+		FAX2 O 1 Offset (15, 32)
+		FAX2 O 1 Offset (10, 54)
+		FAX2 O 2 Offset (10, 150)
+		FAX2 P 2 Offset (-15, 32)
+		FAX2 Q 2 Offset (-15, 32)
+		FAX2 R 1 Offset (-15, 32)
+		FAXE P 0 Offset (-15, 32) A_PlaySound("FighterHammerMiss", CHAN_WEAPON, 1.0, 0)
+		FAXE P 1 Offset (5, 70) A_FireCustomMissile("ThrownAxe",0,1,0,0,0)
+		FAX2 R 1 Offset (25, 90)
+		FAX2 S 1 Offset (-15, 32)
+		FAX2 S 2 Offset (-10, 54)
+		FAX2 S 8 Offset (-10, 150)
+		FAX2 A 1 Offset (1, 60) A_ReFire
+		FAX2 A 1 Offset (1, 52)
+		FAX2 A 1 Offset (1, 44)
+		FAX2 A 1 Offset (1, 36)
+		FAX2 A 1
+		Goto Ready
+	}
 }
 
 
@@ -1032,813 +1035,712 @@ Actor AxePuffGlowSpark
 		TNT1 A 0 A_Jump(256,"Jump1A","Jump1B","Jump1C")
 	Jump1A:
 		TNT1 A 0 A_FadeOut(0.08)
-		FAXE R 2 bright A_ScaleVelocity(0.8)
+		FAXE R 2 Bright A_ScaleVelocity(0.8)
 		Goto Spawn+1
 	Jump1B:
 		TNT1 A 0 A_FadeOut(0.08)
-		FAXE S 2 bright A_ScaleVelocity(0.8)
+		FAXE S 2 Bright A_ScaleVelocity(0.8)
 		Goto Spawn+1
 	Jump1C:
 		TNT1 A 0 A_FadeOut(0.08)
-		FAXE T 2 bright A_ScaleVelocity(0.8)
+		FAXE T 2 Bright A_ScaleVelocity(0.8)
 		Goto Spawn+1
 	}
 }
-/*
-Actor AxePuffGlowSpark
+
+Actor ThrownAxe
 {
-	Translation "0:255=%[0,0,0]:[0.75,0.75,2.0]"
-	+NOINTERACTION
-	Scale 0.12
-	RenderStyle Add
-	Alpha 1.0
+	PROJECTILE
+	+FORCERADIUSDMG
+	Radius 10
+	Height 10
+	Speed 25
+	Damage 11 //was 7
+	DamageType "Electric"
+	DeathSound "weapons/bowhit"
 	States
 	{
 	Spawn:
-		TNT1 A 0
-		TNT1 A 0 A_Jump(256,"S1","S2","S3","S4","S5","S6","S7","S8")
-	S1:	X079 A 0	
-	Goto Perform
-	S2:	X079 B 0	
-	Goto Perform
-	S3:	X079 C 0	
-	Goto Perform
-	S4:	X079 D 0	
-	Goto Perform
-	S5:	X079 E 0	
-	Goto Perform
-	S6:	X079 F 0	
-	Goto Perform
-	S7:	X079 G 0	
-	Goto Perform
-	S8: X079 H 0	
-	Goto Perform
-	Perform:
-		"####" "#" 1 Bright A_SetScale(ScaleX+0.005)
-		"####" "#" 0 A_FadeOut(0.03)
+		THAX ABC 2 Bright
+		THAX D 2 Bright A_PlaySound("FighterHammerContinuous")
+		THAX EFG 2 Bright
+		THAX H 2 Bright A_PlaySound("FighterHammerContinuous")
 		Loop
+	Death:
+		TNT1 A 0 A_SpawnItemEx("AxePuffGlowDMG",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_Scream
+		TNT1 A 0 A_Explode(64,96,0)
+		Stop
 	}
-}*/
-
-ACTOR ThrownAxe
-{
-    PROJECTILE
-    +FORCERADIUSDMG
-    Radius 10
-    Height 10
-    Speed 25
-    Damage 11 //was 7
-    DamageType "Electric"
-    DeathSound "weapons/bowhit"
-    States
-    {
-    Spawn:
-	THAX ABC 2 Bright
-	THAX D 2 Bright A_PlaySound("FighterHammerContinuous")
-	THAX EFG 2 Bright
-	THAX H 2 Bright A_PlaySound("FighterHammerContinuous")
-	Loop
-    Death:
-	TNT1 A 0 A_SpawnItemEx("AxePuffGlowDMG",0,0,0,0,0,0,0,32,0)
-	TNT1 A 0 A_Scream
-	TNT1 A 0 A_Explode(64,96,0)
-	Stop
-    }
 }
 
-ACTOR AEoDAxePickup : CustomInventory
+Actor AEoDAxePickup : CustomInventory
 {
-Inventory.PickupMessage "You found a medieval Axe!"
-Inventory.PickupSound "weaponbuild"
-States
-{
-Spawn:
-	WFAX A -1
-	Loop
-Pickup:
-	TNT1 A 0 A_JumpIfInventory("AEoDAxeCount",2,4)
-	TNT1 A 0 A_GiveInventory("AEoDAxeCount",1)
-	TNT1 A 0 A_JumpIfInventory("NoWeaponSwitch",1,2)
-	TNT1 A 0 A_SelectWeapon("AEoDMedievalAxe")
-	TNT1 A 0 A_GiveInventory("AEoDMedievalAxe",1)
-	TNT1 A 0
-	Stop
-}
-}
-
-ACTOR AEoDAxeCount : Inventory
-{
-    Inventory.MaxAmount 2
-    Inventory.Amount 1
+	Inventory.PickupMessage "You found a medieval Axe!"
+	Inventory.PickupSound "weaponbuild"
+	States
+	{
+	Spawn:
+		WFAX A -1
+		Loop
+	Pickup:
+		TNT1 A 0 A_JumpIfInventory("AEoDAxeCount",2,4)
+		TNT1 A 0 A_GiveInventory("AEoDAxeCount",1)
+		TNT1 A 0 A_JumpIfInventory("NoWeaponSwitch",1,2)
+		TNT1 A 0 A_SelectWeapon("AEoDMedievalAxe")
+		TNT1 A 0 A_GiveInventory("AEoDMedievalAxe",1)
+		TNT1 A 0
+		Stop
+	}
 }
 
-ACTOR AxeDropCheck : Inventory
-{
-    Inventory.Amount 1
-    Inventory.MaxAmount 1
-}
-
+Actor AEoDAxeCount : Inventory { Inventory.MaxAmount 2 }
+Actor AxeDropCheck : Inventory {}
 
 Actor MedievalAxeDrop : CustomInventory
 {
-    Inventory.Amount 1
-    Inventory.MaxAmount 2
-    States
-    {
-    Use:
-	TNT1 A 0
-	TNT1 A 0 A_SpawnItemEx("DroppedMedievalAxe",0,0,32,8,0,0,0,32,0)
-	TNT1 A 0 A_TakeInventory("AEoDAxeCount",1)
-	Stop
-    }
+	Inventory.MaxAmount 2
+	States
+	{
+	Use:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("DroppedMedievalAxe",0,0,32,8,0,0,0,32,0)
+		TNT1 A 0 A_TakeInventory("AEoDAxeCount",1)
+		Stop
+	}
 }
 
-ACTOR DroppedMedievalAxe
+Actor DroppedMedievalAxe
 {
-    Radius 16
-    Height 20
-    States
-    {
-    Spawn:
-	WFAX A 15
-	TNT1 A 0 A_SpawnItemEx("AEoDMedievalAxeNoAmmo",0,0,0,0,0,0,0,48,0)
-	Stop
-    }
+	Radius 16
+	Height 20
+	States
+	{
+	Spawn:
+		WFAX A 15
+		TNT1 A 0 A_SpawnItemEx("AEoDMedievalAxeNoAmmo",0,0,0,0,0,0,0,48,0)
+		Stop
+	}
 }
 
-ACTOR AEoDMedievalAxeNoAmmo : AEoDMedievalAxeItem
+Actor AEoDMedievalAxeNoAmmo : AEoDMedievalAxeItem
 {
-    +FLOORCLIP
-    +INVENTORY.IGNORESKILL
-    Inventory.Amount 1
-    Inventory.PickupMessage "You found a medieval Axe!"
-    Inventory.PickupSound "weaponbuild"
-    States
-    {
-    Spawn:
-        WFAX A -1
-        Loop
-    Pickup:
-	TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
-	Goto Pickup+2
-	TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",2) <= 0,"Nothing")
-	TNT1 A 0 A_JumpIfInventory("BlueMana",20,"Ammo")
-	TNT1 A 0 A_JumpIfInventory("BlueMana",6,"Ammo3")
-	TNT1 A 0 A_JumpIfInventory("AEoDAxeCount",2,"Ammo")
-	TNT1 A 0 A_JumpIfInventory("AEoDAxeCount",1,"Pickup2")
-	TNT1 A 0 A_GiveInventory("Weapon2Count",1)
-	TNT1 A 0 A_GiveInventory("MedievalAxeDrop",1)
-	TNT1 A 0 A_GiveInventory("AEoDMedievalAxe",1)
-	TNT1 A 0 A_GiveInventory("AEoDAxeCount",1)
-	TNT1 A 0 A_TakeInventory("BlueMana",20)
-	TNT1 A 0 A_TakeInventory("BlueMana",6)
-	TNT1 A 0 //ACS_NamedExecute("s799",0,3,0,0)
-	TNT1 A 0 A_JumpIfInventory("NoWeaponSwitch",1,2)
-	TNT1 A 0 A_SelectWeapon("AEoDMedievalAxe")
-	TNT1 A 0
-	Stop
-    Pickup2:
-	TNT1 A 0 A_JumpIfInventory("BlueMana",20,"Ammo")
-	TNT1 A 0 A_JumpIfInventory("BlueMana",6,"Ammo")
-	TNT1 A 0 A_GiveInventory("MedievalAxeDrop",1)
-	TNT1 A 0 A_GiveInventory("AEoDMedievalAxe",1)
-	TNT1 A 0 A_GiveInventory("AEoDAxeCount",1)
-	TNT1 A 0 A_TakeInventory("BlueMana",20)
-	TNT1 A 0 A_TakeInventory("BlueMana",6)
-	TNT1 A 0 //ACS_NamedExecute("s799",0,3,0,0)
-	TNT1 A 0 A_JumpIfInventory("NoWeaponSwitch",1,2)
-	TNT1 A 0 A_SelectWeapon("AEoDMedievalAxe")
-	TNT1 A 0
-	Stop
-    Nothing:
-	TNT1 A 0 A_JumpIfInventory("AEoDAxeCount",2,"Ammo")
-	TNT1 A 0 A_JumpIfInventory("AEoDAxeCount",1,"Pickup2")
-	TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
-	Goto Pickup+2
-	TNT1 A 0 ACS_NamedExecute("s798",0,2,0,0)
-	Fail
-    Ammo:
-	TNT1 A 0 A_JumpIfInventory("BlueMana",6,1)
-	Goto Ammo2
-	TNT1 A 0 A_TakeInventory("BlueMana",20)
-	TNT1 A 0 A_TakeInventory("BlueMana",6)
-	TNT1 A 0 A_JumpIfInventory("AEoDAxeCount",1,2)
-	TNT1 A 0 A_GiveInventory("Weapon2Count",1)
-	TNT1 A 0 A_GiveInventory("AEoDAxeCount",1)
-	TNT1 A 0 A_GiveInventory("MedievalAxeDrop",1)
-	TNT1 A 0 A_GiveInventory("AEoDMedievalAxe",1)
-	Stop
-    Ammo2:
-	TNT1 A 0 A_TakeInventory("BlueMana",20)
-	TNT1 A 0 A_JumpIfInventory("AEoDAxeCount",1,2)
-	TNT1 A 0 A_GiveInventory("Weapon2Count",1)
-	TNT1 A 0 A_GiveInventory("AEoDAxeCount",1)
-	TNT1 A 0 A_GiveInventory("MedievalAxeDrop",1)
-	TNT1 A 0 A_GiveInventory("AEoDMedievalAxe",1)
-	TNT1 A 0 A_TakeInventory("BlueMana",6)
-	Stop
-    Ammo3:
-	TNT1 A 0 A_TakeInventory("BlueMana",6)
-	TNT1 A 0 A_JumpIfInventory("AEoDAxeCount",1,2)
-	TNT1 A 0 A_GiveInventory("Weapon2Count",1)
-	TNT1 A 0 A_GiveInventory("AEoDAxeCount",1)
-	TNT1 A 0 A_GiveInventory("MedievalAxeDrop",1)
-	TNT1 A 0 A_GiveInventory("AEoDMedievalAxe",1)
-	TNT1 A 0 A_TakeInventory("BlueMana",20)
-	Stop
-    }
+	+FLOORCLIP
+	+INVENTORY.IGNORESKILL
+	Inventory.PickupMessage "You found a medieval Axe!"
+	Inventory.PickupSound "weaponbuild"
+	States
+	{
+	Spawn:
+		WFAX A -1
+		Loop
+	Pickup:
+		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
+		Goto Pickup+2
+		TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",2) <= 0,"Nothing")
+		TNT1 A 0 A_JumpIfInventory("BlueMana",20,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("BlueMana",6,"Ammo3")
+		TNT1 A 0 A_JumpIfInventory("AEoDAxeCount",2,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("AEoDAxeCount",1,"Pickup2")
+		TNT1 A 0 A_GiveInventory("Weapon2Count",1)
+		TNT1 A 0 A_GiveInventory("MedievalAxeDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDMedievalAxe",1)
+		TNT1 A 0 A_GiveInventory("AEoDAxeCount",1)
+		TNT1 A 0 A_TakeInventory("BlueMana",20)
+		TNT1 A 0 A_TakeInventory("BlueMana",6)
+		TNT1 A 0 //ACS_NamedExecute("s799",0,3,0,0)
+		TNT1 A 0 A_JumpIfInventory("NoWeaponSwitch",1,2)
+		TNT1 A 0 A_SelectWeapon("AEoDMedievalAxe")
+		TNT1 A 0
+		Stop
+	Pickup2:
+		TNT1 A 0 A_JumpIfInventory("BlueMana",20,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("BlueMana",6,"Ammo")
+		TNT1 A 0 A_GiveInventory("MedievalAxeDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDMedievalAxe",1)
+		TNT1 A 0 A_GiveInventory("AEoDAxeCount",1)
+		TNT1 A 0 A_TakeInventory("BlueMana",20)
+		TNT1 A 0 A_TakeInventory("BlueMana",6)
+		TNT1 A 0 //ACS_NamedExecute("s799",0,3,0,0)
+		TNT1 A 0 A_JumpIfInventory("NoWeaponSwitch",1,2)
+		TNT1 A 0 A_SelectWeapon("AEoDMedievalAxe")
+		TNT1 A 0
+		Stop
+	Nothing:
+		TNT1 A 0 A_JumpIfInventory("AEoDAxeCount",2,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("AEoDAxeCount",1,"Pickup2")
+		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
+		Goto Pickup+2
+		TNT1 A 0 ACS_NamedExecute("s798",0,2,0,0)
+		Fail
+	Ammo:
+		TNT1 A 0 A_JumpIfInventory("BlueMana",6,1)
+		Goto Ammo2
+		TNT1 A 0 A_TakeInventory("BlueMana",20)
+		TNT1 A 0 A_TakeInventory("BlueMana",6)
+		TNT1 A 0 A_JumpIfInventory("AEoDAxeCount",1,2)
+		TNT1 A 0 A_GiveInventory("Weapon2Count",1)
+		TNT1 A 0 A_GiveInventory("AEoDAxeCount",1)
+		TNT1 A 0 A_GiveInventory("MedievalAxeDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDMedievalAxe",1)
+		Stop
+	Ammo2:
+		TNT1 A 0 A_TakeInventory("BlueMana",20)
+		TNT1 A 0 A_JumpIfInventory("AEoDAxeCount",1,2)
+		TNT1 A 0 A_GiveInventory("Weapon2Count",1)
+		TNT1 A 0 A_GiveInventory("AEoDAxeCount",1)
+		TNT1 A 0 A_GiveInventory("MedievalAxeDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDMedievalAxe",1)
+		TNT1 A 0 A_TakeInventory("BlueMana",6)
+		Stop
+	Ammo3:
+		TNT1 A 0 A_TakeInventory("BlueMana",6)
+		TNT1 A 0 A_JumpIfInventory("AEoDAxeCount",1,2)
+		TNT1 A 0 A_GiveInventory("Weapon2Count",1)
+		TNT1 A 0 A_GiveInventory("AEoDAxeCount",1)
+		TNT1 A 0 A_GiveInventory("MedievalAxeDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDMedievalAxe",1)
+		TNT1 A 0 A_TakeInventory("BlueMana",20)
+		Stop
+	}
 }
 
 //--------------------------------------------------------------------
 
-ACTOR AEoDGauntletsItem : CustomInventory 6029
+Actor AEoDGauntletsItem : CustomInventory 6029
 {
-    +FLOORCLIP
-    +FLOATBOB
-    +INVENTORY.IGNORESKILL
-    Scale 0.7
-    Inventory.Amount 1
-    Inventory.PickupMessage "You found the gauntlets"
-    Inventory.PickupSound "reilsss/weapons/gaulentpickup" 
-    States
-    {
-    Spawn:
-        CLAW R -1
-        Loop
-    Pickup:
-	TNT1 A 0 A_JumpIfInventory("AEoDGauntlets",1,"Ammo")
-	TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",2) <= 0,"Nothing")
-	TNT1 A 0 A_GiveInventory("Weapon2Count",1)
-	TNT1 A 0 A_GiveInventory("GauntletsDrop",1)
-	TNT1 A 0 A_GiveInventory("AEoDGauntlets",1)
-	TNT1 A 0 //ACS_NamedExecute("s799",0,4,0,0)
-	Stop
-    Nothing:
-	TNT1 A 0 A_JumpIfInventory("AEoDGauntlets",1,"Ammo")
-	TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
-	Goto Pickup+2
-	TNT1 A 0 ACS_NamedExecute("s798",0,2,0,0)
-	Fail
-    Ammo:
-	TNT1 A 0 A_GiveInventory("AEoDGauntlets",1)
-	Stop
-    }
+	+FLOORCLIP
+	+FLOATBOB
+	+INVENTORY.IGNORESKILL
+	Scale 0.7
+	Inventory.Amount 1
+	Inventory.PickupMessage "You found the gauntlets"
+	Inventory.PickupSound "reilsss/weapons/gaulentpickup" 
+	States
+	{
+	Spawn:
+		CLAW R -1
+		Loop
+	Pickup:
+		TNT1 A 0 A_JumpIfInventory("AEoDGauntlets",1,"Ammo")
+		TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",2) <= 0,"Nothing")
+		TNT1 A 0 A_GiveInventory("Weapon2Count",1)
+		TNT1 A 0 A_GiveInventory("GauntletsDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDGauntlets",1)
+		TNT1 A 0 //ACS_NamedExecute("s799",0,4,0,0)
+		Stop
+	Nothing:
+		TNT1 A 0 A_JumpIfInventory("AEoDGauntlets",1,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
+		Goto Pickup+2
+		TNT1 A 0 ACS_NamedExecute("s798",0,2,0,0)
+		Fail
+	Ammo:
+		TNT1 A 0 A_GiveInventory("AEoDGauntlets",1)
+		Stop
+	}
 }
 
-ACTOR AEoDGauntlets : Gauntlets // 6029
+Actor AEoDGauntlets : Gauntlets // 6029
 {
-    +FLOORCLIP
-    +NOALERT
-    +WEAPON.WIMPY_WEAPON
-    +WEAPON.MELEEWEAPON
-    +WEAPON.NOALERT
-    +CHEATNOTWEAPON
-    +INVENTORY.IGNORESKILL
-    +FLOATBOB
-    Scale 0.7
-    +Ammo_Optional
-    +Alt_Ammo_Optional
-    Weapon.Kickback 0
-    Weapon.AmmoType2 "BlueMana"
-    Weapon.AmmoGive2 20
-    Weapon.AmmoUse2 0
-    Obituary "%o had %p bell rung by %k."
-    Inventory.PickupMessage "You found the gaunlets"
-    Inventory.PickupSound "reilsss/weapons/gaulentpickup" 
-    AttackSound "reilsss/weapons/gaulentpunchhit"
-    weapon.upsound "reilsss/weapons/gaulentpickup"
-    Tag "Gauntlets"
-    States
-    {
-    Spawn:
-	CLAW R -1
-	Loop
-    Ready: 
-	CLAW A 1 A_WeaponReady
-	Loop
-    Deselect:
-	TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
-	CLAW A 1 A_Lower
-	TNT1 AA 0 A_Lower 
-	Loop 
-    Select: 
-	TNT1 A 0 //ACS_NamedExecute("s799",0,4,0,0)
-	CLAW A 1 A_Raise
-	TNT1 AA 0 A_Raise 
-	Loop
-    Fire:
-	CLAW A 0 A_Jump (128, 6)
-	CLAW B 2 A_PlaySound("reilsss/weapons/gaulentpunch", CHAN_WEAPON, 1.0, 0)
-	CLAW C 1 A_Recoil(-0.3)
-	CLAW D 1 ACS_NamedExecute("s851",0,random(-4,4),random(-18,18),0)
-	CLAW E 2 A_CustomPunch(20,0,0,"ChopPuff",50)
-	CLAW D 2 
-	Goto Ready
-	CLAW F 2 A_PlaySound("reilsss/weapons/gaulentpunch", CHAN_WEAPON, 1.0, 0)
-	CLAW G 1 A_Recoil(-0.3)
-	CLAW H 1 ACS_NamedExecute("s851",0,random(-4,4),random(-4,4),0)
-	CLAW I 2 A_CustomPunch(20,0,0,"ChopPuff",50)
-	CLAW H 1
-	CLAW G 1
-	Goto Ready  
-    AltFire:
-	CLAW K 0 A_JumpIfInventory("BlueMana",1,2)
-	CLAW K 0 A_ClearReFire
-	Goto Ready
-	CLAW J 0 A_AlertMonsters
-	CLAW J 2 A_PlaySound("reilsss/weapons/gaulentpickup", 6, 1.0, 0)
-	TNT1 A 0 A_ReFire
-	Goto Ready
-    AltHold:
-	CLAW K 0 A_JumpIfInventory("BlueMana",1,2)
-	CLAW K 0 A_ClearReFire
-	Goto Ready
-	CLAW K 0 A_PlaySound("reilsss/weapons/gaulentfire", CHAN_WEAPON, 1.0, 0)
-	CLAW K 2 Bright A_GauntletAttack(1)
-	TNT1 A 0 Bright ACS_NamedExecute("s851",0,random(-18,18),random(-18,18),0)
-	CLAW L 2 Bright A_GauntletAttack(1)
-	TNT1 A 0 Bright ACS_NamedExecute("s851",0,random(-18,18),random(-18,18),0)
-	CLAW M 2 Bright A_GauntletAttack(1)
-	TNT1 A 0 Bright ACS_NamedExecute("s851",0,random(-18,18),random(-18,18),0)
-	CLAW M 0 A_JumpIfInventory("PGauntletsCheck",1,3)
-	CLAW M 0 A_GiveInventory("PGauntletsCheck",1)
-	CLAW M 0 A_Jump(256,5)
-	CLAW M 0 A_JumpIfInventory("PowerEconomizer",1,3)
-	CLAW M 0 A_JumpIfInventory("InfiniteAmmo",1,2)
-	CLAW M 0 A_TakeInventory("BlueMana",1)
-	CLAW M 0 A_TakeInventory("PGauntletsCheck",1)
-	CLAW M 0 Bright A_ReFire
-	Goto Ready
-    }
+	+FLOORCLIP
+	+NOALERT
+	+WEAPON.WIMPY_WEAPON
+	+WEAPON.MELEEWEAPON
+	+WEAPON.NOALERT
+	+CHEATNOTWEAPON
+	+INVENTORY.IGNORESKILL
+	+FLOATBOB
+	Scale 0.7
+	+Ammo_Optional
+	+Alt_Ammo_Optional
+	Weapon.Kickback 0
+	Weapon.AmmoType2 "BlueMana"
+	Weapon.AmmoGive2 20
+	Weapon.AmmoUse2 0
+	Weapon.SelectionOrder 24000
+	Obituary "%o had %p bell rung by %k."
+	Inventory.PickupMessage "You found the gaunlets"
+	Inventory.PickupSound "reilsss/weapons/gaulentpickup" 
+	AttackSound "reilsss/weapons/gaulentpunchhit"
+	Weapon.UpSound "reilsss/weapons/gaulentpickup"
+	Tag "Gauntlets"
+	States
+	{
+	Spawn:
+		CLAW R -1
+		Loop
+	Ready: 
+		CLAW A 1 A_WeaponReady
+		Loop
+	Deselect:
+		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
+		CLAW A 1 A_Lower
+		TNT1 AA 0 A_Lower 
+		Loop 
+	Select: 
+		TNT1 A 0 //ACS_NamedExecute("s799",0,4,0,0)
+		CLAW A 1 A_Raise
+		TNT1 AA 0 A_Raise 
+		Loop
+	Fire:
+		CLAW A 0 A_Jump (128, 6)
+		CLAW B 2 A_PlaySound("reilsss/weapons/gaulentpunch", CHAN_WEAPON, 1.0, 0)
+		CLAW C 1 A_Recoil(-0.3)
+		CLAW D 1 ACS_NamedExecute("s851",0,random(-4,4),random(-18,18),0)
+		CLAW E 2 A_CustomPunch(20,0,0,"ChopPuff",50)
+		CLAW D 2 
+		Goto Ready
+		CLAW F 2 A_PlaySound("reilsss/weapons/gaulentpunch", CHAN_WEAPON, 1.0, 0)
+		CLAW G 1 A_Recoil(-0.3)
+		CLAW H 1 ACS_NamedExecute("s851",0,random(-4,4),random(-4,4),0)
+		CLAW I 2 A_CustomPunch(20,0,0,"ChopPuff",50)
+		CLAW H 1
+		CLAW G 1
+		Goto Ready  
+	AltFire:
+		CLAW K 0 A_JumpIfInventory("BlueMana",1,2)
+		CLAW K 0 A_ClearReFire
+		Goto Ready
+		CLAW J 0 A_AlertMonsters
+		CLAW J 2 A_PlaySound("reilsss/weapons/gaulentpickup", 6, 1.0, 0)
+		TNT1 A 0 A_ReFire
+		Goto Ready
+	AltHold:
+		CLAW K 0 A_JumpIfInventory("BlueMana",1,2)
+		CLAW K 0 A_ClearReFire
+		Goto Ready
+		CLAW K 0 A_PlaySound("reilsss/weapons/gaulentfire", CHAN_WEAPON, 1.0, 0)
+		CLAW K 2 Bright A_GauntletAttack(1)
+		TNT1 A 0 Bright ACS_NamedExecute("s851",0,random(-18,18),random(-18,18),0)
+		CLAW L 2 Bright A_GauntletAttack(1)
+		TNT1 A 0 Bright ACS_NamedExecute("s851",0,random(-18,18),random(-18,18),0)
+		CLAW M 2 Bright A_GauntletAttack(1)
+		TNT1 A 0 Bright ACS_NamedExecute("s851",0,random(-18,18),random(-18,18),0)
+		CLAW M 0 A_JumpIfInventory("PGauntletsCheck",1,3)
+		CLAW M 0 A_GiveInventory("PGauntletsCheck",1)
+		CLAW M 0 A_Jump(256,5)
+		CLAW M 0 A_JumpIfInventory("PowerEconomizer",1,3)
+		CLAW M 0 A_JumpIfInventory("InfiniteAmmo",1,2)
+		CLAW M 0 A_TakeInventory("BlueMana",1)
+		CLAW M 0 A_TakeInventory("PGauntletsCheck",1)
+		CLAW M 0 Bright A_ReFire
+		Goto Ready
+	}
 }
 
-ACTOR GauntletPuff2DMG : GauntletPuff2 replaces GauntletPuff2
+Actor GauntletPuff2DMG : GauntletPuff2 replaces GauntletPuff2 { DamageType "AEMagic" }
+
+Actor ChopPuff
 {
- DamageType "AEMagic"
+	+NOGRAVITY
+	SeeSound "reilsss/weapons/gaulenthitwall"
+	PainSound "reilsss/weapons/gaulenthitwall"
+	DeathSound "reilsss/weapons/gaulenthitwall"
+	RenderStyle TRANSLUCENT
+	Alpha 0.6
+	States
+	{
+	Spawn:
+		CLWP A 1 BRIGHT
+		TNT1 A 0 Bright A_PlaySound("reilsss/weapons/gaulenthitwall2", 8, 0.5, 0)
+		CLWP A 1 Bright A_PlaySound("reilsss/weapons/gaulenthitwall1", 7, 1.0, 0)
+		CLWP B 1 A_AlertMonsters
+		CLWP C 1 Bright A_SetTranslucent(.75,1)
+		CLWp D 1 Bright A_SetTranslucent(.5,1)
+		CLWP E 1 Bright A_SetTranslucent(.25,1)
+		Stop
+	}
 }
 
-ACTOR ChopPuff
-{
-    +NOGRAVITY
-    SeeSound "reilsss/weapons/gaulenthitwall"
-    PainSound "reilsss/weapons/gaulenthitwall"
-    DeathSound "reilsss/weapons/gaulenthitwall"
-    RENDERSTYLE TRANSLUCENT
-    ALPHA 0.6
-    States
-    {
-    Spawn:
-	CLWP A 1 BRIGHT
-	TNT1 A 0 BRIGHT A_PlaySound("reilsss/weapons/gaulenthitwall2", 8, 0.5, 0)
-	CLWP A 1 BRIGHT A_PlaySound("reilsss/weapons/gaulenthitwall1", 7, 1.0, 0)
-	CLWP B 1 A_AlertMonsters
-	CLWP C 1 Bright A_SetTranslucent(.75,1)
-	CLWp D 1 Bright A_SetTranslucent(.5,1)
-	CLWP E 1 Bright A_SetTranslucent(.25,1)
-	Stop
-    }
-}
-
-Actor PGauntletsCheck : Inventory
-{
-    Inventory.Amount 1
-    Inventory.MaxAmount 1
-}
+Actor PGauntletsCheck : Inventory {}
 
 Actor GauntletsDrop : CustomInventory
 {
-    Inventory.MaxAmount 1
-    States
-    {
-    Use:
-	TNT1 A 0
-	TNT1 A 0 A_SpawnItemEx("DroppedGauntlets",0,0,32,8,0,0,0,32,0)
-	Stop
-    }
+	States
+	{
+	Use:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("DroppedGauntlets",0,0,32,8,0,0,0,32,0)
+		Stop
+	}
 }
 
-ACTOR DroppedGauntlets
+Actor DroppedGauntlets
 {
-    Radius 16
-    Height 20
-    Scale 0.7
-    States
-    {
-    Spawn:
-	CLAW R 15
-	TNT1 A 0 A_SpawnItemEx("AEoDGauntletsNoAmmo",0,0,0,0,0,0,0,48,0)
-	Stop
-    }
+	Radius 16
+	Height 20
+	Scale 0.7
+	States
+	{
+	Spawn:
+		CLAW R 15
+		TNT1 A 0 A_SpawnItemEx("AEoDGauntletsNoAmmo",0,0,0,0,0,0,0,48,0)
+		Stop
+	}
 }
 
-ACTOR AEoDGauntletsNoAmmo : AEoDGauntletsItem
+Actor AEoDGauntletsNoAmmo : AEoDGauntletsItem
 {
-    +FLOORCLIP
-    +FLOATBOB
-    +INVENTORY.IGNORESKILL
-    Scale 0.7
-    Inventory.Amount 1
-    Inventory.PickupMessage "You found the gaulents"
-    Inventory.PickupSound "reilsss/weapons/gaulentpickup" 
-    States
-    {
-    Spawn:
-        CLAW R -1
-        Loop
-    Pickup:
-	TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",2) <= 0,"Nothing")
-	TNT1 A 0 A_JumpIfInventory("BlueMana",20,"Ammo")
-	TNT1 A 0 A_GiveInventory("Weapon2Count",1)
-	TNT1 A 0 A_GiveInventory("GauntletsDrop",1)
-	TNT1 A 0 A_GiveInventory("AEoDGauntlets",1)
-	TNT1 A 0 A_TakeInventory("BlueMana",20)
-	TNT1 A 0 //ACS_NamedExecute("s799",0,4,0,0)
-	Stop
-    Nothing:
-	TNT1 A 0 A_JumpIfInventory("AEoDGauntlets",1,"Ammo")
-	TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
-	Goto Pickup+2
-	TNT1 A 0 ACS_NamedExecute("s798",0,2,0,0)
-	Fail
-    Ammo:
-	TNT1 A 0 A_TakeInventory("BlueMana",20)
-	TNT1 A 0 A_JumpIfInventory("AEoDGauntlets",1,2)
-	TNT1 A 0 A_GiveInventory("Weapon2Count",1)
-	TNT1 A 0 A_GiveInventory("GauntletsDrop",1)
-	TNT1 A 0 A_GiveInventory("AEoDGauntlets",1)
-	Stop
-    }
+	+FLOORCLIP
+	+FLOATBOB
+	+INVENTORY.IGNORESKILL
+	Scale 0.7
+	Inventory.Amount 1
+	Inventory.PickupMessage "You found the gaulents"
+	Inventory.PickupSound "reilsss/weapons/gaulentpickup" 
+	States
+	{
+	Spawn:
+		CLAW R -1
+		Loop
+	Pickup:
+		TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",2) <= 0,"Nothing")
+		TNT1 A 0 A_JumpIfInventory("BlueMana",20,"Ammo")
+		TNT1 A 0 A_GiveInventory("Weapon2Count",1)
+		TNT1 A 0 A_GiveInventory("GauntletsDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDGauntlets",1)
+		TNT1 A 0 A_TakeInventory("BlueMana",20)
+		TNT1 A 0 //ACS_NamedExecute("s799",0,4,0,0)
+		Stop
+	Nothing:
+		TNT1 A 0 A_JumpIfInventory("AEoDGauntlets",1,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
+		Goto Pickup+2
+		TNT1 A 0 ACS_NamedExecute("s798",0,2,0,0)
+		Fail
+	Ammo:
+		TNT1 A 0 A_TakeInventory("BlueMana",20)
+		TNT1 A 0 A_JumpIfInventory("AEoDGauntlets",1,2)
+		TNT1 A 0 A_GiveInventory("Weapon2Count",1)
+		TNT1 A 0 A_GiveInventory("GauntletsDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDGauntlets",1)
+		Stop
+	}
 }
 
 //--------------------------------------------------------------------
 
-ACTOR AEoDKatanaItem : CustomInventory 6047
+Actor AEoDKatanaItem : CustomInventory 6047
 {
-    +INVENTORY.IGNORESKILL
-    Scale 0.14
-    Inventory.Amount 1
-    Inventory.PickupMessage "You found the Katana!"
-    Inventory.PickupSound "reilsss/weappickup/katana"
-    States
-    {
-    Spawn:
-        R002 T -1
-        Loop
-    Pickup:
-	TNT1 A 0 A_JumpIfInventory("AEoDKatana",1,"Ammo")
-	TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",2) <= 0,"Nothing")
-	TNT1 A 0 A_GiveInventory("Weapon2Count",1)
-	TNT1 A 0 A_GiveInventory("KatanaDrop",1)
-	TNT1 A 0 A_GiveInventory("AEoDKatana",1)
-	TNT1 A 0 //ACS_NamedExecute("s799",0,5,0,0)
-	Stop
-    Nothing:
-	TNT1 A 0 A_JumpIfInventory("AEoDKatana",1,"Ammo")
-	TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
-	Goto Pickup+2
-	TNT1 A 0 ACS_NamedExecute("s798",0,2,0,0)
-	Fail
-    Ammo:
-	TNT1 A 0 A_SpawnItemEx("Nothing",0,0,0,0,0,0,0,32)
-	Stop
-    }
+	+INVENTORY.IGNORESKILL
+	Scale 0.14
+	Inventory.Amount 1
+	Inventory.PickupMessage "You found the Katana!"
+	Inventory.PickupSound "reilsss/weappickup/katana"
+	States
+	{
+	Spawn:
+		R002 T -1
+		Loop
+	Pickup:
+		TNT1 A 0 A_JumpIfInventory("AEoDKatana",1,"Ammo")
+		TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",2) <= 0,"Nothing")
+		TNT1 A 0 A_GiveInventory("Weapon2Count",1)
+		TNT1 A 0 A_GiveInventory("KatanaDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDKatana",1)
+		TNT1 A 0 //ACS_NamedExecute("s799",0,5,0,0)
+		Stop
+	Nothing:
+		TNT1 A 0 A_JumpIfInventory("AEoDKatana",1,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
+		Goto Pickup+2
+		TNT1 A 0 ACS_NamedExecute("s798",0,2,0,0)
+		Fail
+	Ammo:
+		TNT1 A 0 A_SpawnItemEx("Nothing",0,0,0,0,0,0,0,32)
+		Stop
+	}
 }
 
-ACTOR AEoDKatana : Weapon // 6047
+Actor AEoDKatana : Weapon // 6047
 {
-    +NOAUTOFIRE
-    +NOALERT
-    +NOEXTREMEDEATH
-    +MELEEWEAPON
-    +CHEATNOTWEAPON
-    Inventory.PickupMessage "You found the Katana!"
-    Inventory.PickupSound "reilsss/weappickup/katana"
-    AttackSound "reilsss/weapons/katanahit"
-    weapon.upsound "reilsss/weapons/knifeup"
-    Scale 0.14
-    Tag "Katana"
-    States
-    {
-    Spawn:
-	R002 T -1
-	LOOP
-    Ready:
-	TNT1 A 0 A_TakeInventory("KatanaSeq",1)
-	R002 A 1 A_WeaponReady
-	Goto Ready+1
-    Deselect:
-	TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
-	R002 A 1 A_Lower
-	TNT1 AA 0 A_Lower
-	Loop
-    Select:
-	TNT1 A 0 //ACS_NamedExecute("s799",0,5,0,0)
-	R002 A 1 A_Raise
-	TNT1 AA 0 A_Raise
-	Loop
-    Fire:
-	TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,"FireQuick")
-	TNT1 A 0 A_JumpIfInventory("KatanaSeq",1,10)
-	R002 B 1
-	R002 C 1 A_PlaySound("reilsss/weapons/katanaswing", CHAN_WEAPON, 1.0, 0)
-	R002 D 1
-	R002 E 1 A_CustomPunch(8,0,0,"KatanaPuff")
-	R002 F 1 A_Recoil(-0.3)
-	R002 G 1
-	TNT1 A 0 A_GiveInventory("KatanaSeq",1)
-	TNT1 A 0 A_Refire
-	TNT1 A 0 A_TakeInventory("KatanaSeq",1)
-	Goto Ready
-	R002 HI 1
-	R002 J 1 A_PlaySound("reilsss/weapons/katanaswing", CHAN_WEAPON, 1.0, 0)
-	R002 K 1
-	R002 L 1 A_CustomPunch(8,0,0,"KatanaPuff")
-	R002 M 1 A_Recoil(-0.3)
-	R002 NOP 1
-	TNT1 A 0 A_TakeInventory("KatanaSeq",1)
-	TNT1 A 0 A_Refire
-	Goto Ready
-    FireQuick:
-	TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,1)
-	Goto Fire
-	TNT1 A 0 A_JumpIfInventory("KatanaSeq",1,10)
-	R002 B 0
-	R002 C 1 A_PlaySound("reilsss/weapons/katanaswing", CHAN_WEAPON, 1.0, 0)
-	R002 D 0
-	R002 E 1 A_CustomPunch(8,0,0,"KatanaPuff")
-	R002 F 0 A_Recoil(-0.3)
-	R002 G 1
-	TNT1 A 0 A_GiveInventory("KatanaSeq",1)
-	TNT1 A 0 A_Refire
-	TNT1 A 0 A_TakeInventory("KatanaSeq",1)
-	Goto Ready
-	R002 H 1
-	R002 J 1 A_PlaySound("reilsss/weapons/katanaswing", CHAN_WEAPON, 1.0, 0)
-	R002 K 0
-	R002 L 1 A_CustomPunch(8,0,0,"KatanaPuff")
-	R002 M 0 A_Recoil(-0.3)
-	R002 NP 1
-	TNT1 A 0 A_TakeInventory("KatanaSeq",1)
-	TNT1 A 0 A_Refire
-	Goto Ready
-/*    AltFire:
-	TNT1 A 0 A_JumpIfInventory("KatanaSeq",1,2)
-	TNT1 A 0 A_PlaySound("reilsss/weapons/knifeup", CHAN_WEAPON, 1.0, 0)
-	TNT1 A 0 A_GiveInventory("KatanaSeq",1)
-	R002 S 1 A_FireCustomMissile("FakedeflectK", 0, 0, 0, 0)
-	R002 S 1 A_FireCustomMissile("FakedeflectK", 0, 0, 0, 0)
-	R002 S 1 A_FireCustomMissile("FakedeflectK", 0, 0, 0, 0)
-	R002 S 0 A_ReFire
-	TNT1 A 0 A_TakeInventory("KatanaSeq",1)
-	Goto Ready*/
-    } 
+	+NOAUTOFIRE
+	+NOALERT
+	+NOEXTREMEDEATH
+	+MELEEWEAPON
+	+CHEATNOTWEAPON
+	Inventory.PickupMessage "You found the Katana!"
+	Inventory.PickupSound "reilsss/weappickup/katana"
+	AttackSound "reilsss/weapons/katanahit"
+	Weapon.UpSound "reilsss/weapons/knifeup"
+	Weapon.SelectionOrder 31000
+	Scale 0.14
+	Tag "Katana"
+	
+	States
+	{
+	Spawn:
+		R002 T -1
+		Loop
+	Ready:
+		TNT1 A 0 A_TakeInventory("KatanaSeq",1)
+		R002 A 1 A_WeaponReady
+		Goto Ready+1
+	Deselect:
+		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
+		R002 A 1 A_Lower
+		TNT1 AA 0 A_Lower
+		Loop
+	Select:
+		TNT1 A 0 //ACS_NamedExecute("s799",0,5,0,0)
+		R002 A 1 A_Raise
+		TNT1 AA 0 A_Raise
+		Loop
+	Fire:
+		TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,"FireQuick")
+		TNT1 A 0 A_JumpIfInventory("KatanaSeq",1,10)
+		R002 B 1
+		R002 C 1 A_PlaySound("reilsss/weapons/katanaswing", CHAN_WEAPON, 1.0, 0)
+		R002 D 1
+		R002 E 1 A_CustomPunch(8,0,0,"KatanaPuff")
+		R002 F 1 A_Recoil(-0.3)
+		R002 G 1
+		TNT1 A 0 A_GiveInventory("KatanaSeq",1)
+		TNT1 A 0 A_Refire
+		TNT1 A 0 A_TakeInventory("KatanaSeq",1)
+		Goto Ready
+		R002 HI 1
+		R002 J 1 A_PlaySound("reilsss/weapons/katanaswing", CHAN_WEAPON, 1.0, 0)
+		R002 K 1
+		R002 L 1 A_CustomPunch(8,0,0,"KatanaPuff")
+		R002 M 1 A_Recoil(-0.3)
+		R002 NOP 1
+		TNT1 A 0 A_TakeInventory("KatanaSeq",1)
+		TNT1 A 0 A_Refire
+		Goto Ready
+	FireQuick:
+		TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,1)
+		Goto Fire
+		TNT1 A 0 A_JumpIfInventory("KatanaSeq",1,10)
+		R002 B 0
+		R002 C 1 A_PlaySound("reilsss/weapons/katanaswing", CHAN_WEAPON, 1.0, 0)
+		R002 D 0
+		R002 E 1 A_CustomPunch(8,0,0,"KatanaPuff")
+		R002 F 0 A_Recoil(-0.3)
+		R002 G 1
+		TNT1 A 0 A_GiveInventory("KatanaSeq",1)
+		TNT1 A 0 A_Refire
+		TNT1 A 0 A_TakeInventory("KatanaSeq",1)
+		Goto Ready
+		R002 H 1
+		R002 J 1 A_PlaySound("reilsss/weapons/katanaswing", CHAN_WEAPON, 1.0, 0)
+		R002 K 0
+		R002 L 1 A_CustomPunch(8,0,0,"KatanaPuff")
+		R002 M 0 A_Recoil(-0.3)
+		R002 NP 1
+		TNT1 A 0 A_TakeInventory("KatanaSeq",1)
+		TNT1 A 0 A_Refire
+		Goto Ready
+	} 
 }
 
-ACTOR KatanaSeq : Inventory
-{
-    Inventory.Amount 1
-    Inventory.MaxAmount 1
-}
+Actor KatanaSeq : Inventory {}
 
-ACTOR FakedeflectK
-{
-    +NOBLOOD
-    +SHOOTABLE
-    +NOGRAVITY
-    +REFLECTIVE
-    +DONTSPLASH
-    +NOCLIP
-    Health 5
-    Height 35
-    Radius 12
-    Speed  18
-    RENDERSTYLE NONE
-    States
-    {
-    Spawn: 
-	TNT1 AA 2 
-	Stop
-    Death: 
-	TNT1 A 0
-	Stop
-    }
-}
-
-ACTOR KatanaPuff : KnifePuff
+Actor KatanaPuff : KnifePuff
 { 
-    +NOEXTREMEDEATH
-    +NOGRAVITY
-    +NOBLOCKMAP
-    +FLOORCLIP
-    Radius 1
-    Height 1
-    SeeSound "reilsss/weapons/katanametal"
-    PainSound "reilsss/weapons/katanametal"
-    DeathSound "reilsss/weapons/katanametal"
-    RenderStyle ADD
-    Alpha 1
-    Scale .08
-    States
-    {
-    Spawn:
-	CLWP A 1 BRIGHT
-	CLWP A 1 BRIGHT A_PlaySound("reilsss/weapons/katanametal", CHAN_AUTO, 1.0, 0)
-	CLWP B 1 A_AlertMonsters
-	CLWP C 1 Bright A_SetTranslucent(.75,1)
-	CLWp D 1 Bright A_SetTranslucent(.5,1)
-	CLWP E 1 Bright A_SetTranslucent(.25,1)
-	Stop
-    }
+	+NOEXTREMEDEATH
+	+NOGRAVITY
+	+NOBLOCKMAP
+	+FLOORCLIP
+	Radius 1
+	Height 1
+	SeeSound "reilsss/weapons/katanametal"
+	PainSound "reilsss/weapons/katanametal"
+	DeathSound "reilsss/weapons/katanametal"
+	RenderStyle Add
+	Alpha 1
+	Scale .08
+	States
+	{
+	Spawn:
+		CLWP A 1 BRIGHT
+		CLWP A 1 Bright A_PlaySound("reilsss/weapons/katanametal", CHAN_AUTO, 1.0, 0)
+		CLWP B 1 A_AlertMonsters
+		CLWP C 1 Bright A_SetTranslucent(.75,1)
+		CLWp D 1 Bright A_SetTranslucent(.5,1)
+		CLWP E 1 Bright A_SetTranslucent(.25,1)
+		Stop
+	}
 }
 
 Actor KatanaDrop : CustomInventory
 {
-    Inventory.MaxAmount 1
-    States
-    {
-    Use:
-	TNT1 A 0
-	TNT1 A 0 A_SpawnItemEx("DroppedKatana",0,0,32,8,0,0,0,32,0)
-	Stop
-    }
+	States
+	{
+	Use:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("DroppedKatana",0,0,32,8,0,0,0,32,0)
+		Stop
+	}
 }
 
-ACTOR DroppedKatana
+Actor DroppedKatana
 {
-    Radius 16
-    Height 20
-    Scale 0.14
-    States
-    {
-    Spawn:
-	R002 T 15
-	TNT1 A 0 A_SpawnItemEx("AEoDKatanaItem",0,0,0,0,0,0,0,48,0)
-	Stop
-    }
+	Radius 16
+	Height 20
+	Scale 0.14
+	States
+	{
+	Spawn:
+		R002 T 15
+		TNT1 A 0 A_SpawnItemEx("AEoDKatanaItem",0,0,0,0,0,0,0,48,0)
+		Stop
+	}
 }
 
 //--------------------------------------------------------------------
 
-ACTOR AEoDPainkillerItem : CustomInventory 6028
+Actor AEoDPainkillerItem : CustomInventory 6028
 {
-    +INVENTORY.IGNORESKILL
-    Scale 0.5
-    Inventory.Amount 1
-    Inventory.PickupMessage "You found the painkiller! What the hell is that thing?"
-    Inventory.PickupSound "PainKiller/PickupNew"
-    States
-    {
-    Spawn:
-        R001 J -1
-        Loop
-    Pickup:
-	TNT1 A 0 A_JumpIfInventory("AEoDPainkiller",1,"Ammo")
-	TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",2) <= 0,"Nothing")
-	TNT1 A 0 A_GiveInventory("Weapon2Count",1)
-	TNT1 A 0 A_GiveInventory("PainkillerDrop",1)
-	TNT1 A 0 A_GiveInventory("AEoDPainkiller",1)
-	TNT1 A 0 //ACS_NamedExecute("s799",0,6,0,0)
-	Stop
-    Nothing:
-	TNT1 A 0 A_JumpIfInventory("AEoDPainkiller",1,"Ammo")
-	TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
-	Goto Pickup+2
-	TNT1 A 0 ACS_NamedExecute("s798",0,2,0,0)
-	Fail
-    Ammo:
-	TNT1 A 0 A_GiveInventory("AEoDPainKiller",1)
-	Stop
-    }
+	+INVENTORY.IGNORESKILL
+	Scale 0.5
+	Inventory.Amount 1
+	Inventory.PickupMessage "You found the painkiller! What the hell is that thing?"
+	Inventory.PickupSound "PainKiller/PickupNew"
+	States
+	{
+	Spawn:
+		R001 J -1
+		Loop
+	Pickup:
+		TNT1 A 0 A_JumpIfInventory("AEoDPainkiller",1,"Ammo")
+		TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",2) <= 0,"Nothing")
+		TNT1 A 0 A_GiveInventory("Weapon2Count",1)
+		TNT1 A 0 A_GiveInventory("PainkillerDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDPainkiller",1)
+		TNT1 A 0 //ACS_NamedExecute("s799",0,6,0,0)
+		Stop
+	Nothing:
+		TNT1 A 0 A_JumpIfInventory("AEoDPainkiller",1,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
+		Goto Pickup+2
+		TNT1 A 0 ACS_NamedExecute("s798",0,2,0,0)
+		Fail
+	Ammo:
+		TNT1 A 0 A_GiveInventory("AEoDPainKiller",1)
+		Stop
+	}
 }
 
 
-ACTOR AEoDPainkiller : weapon // 6028
+Actor AEoDPainkiller : weapon // 6028
 {
-    +AMMO_OPTIONAL
-    +ALT_AMMO_OPTIONAL
-    +MELEEWEAPON
-    +AXEBLOOD
-    +CHEATNOTWEAPON
-    +INVENTORY.IGNORESKILL
-    Weapon.AmmoType2 "BlueMana"
-    Weapon.AmmoGive2 20
-    Weapon.AmmoUse2 1
-    obituary "%o was sliced into pieces by %k."
-    Inventory.PickupMessage "You found the painkiller! What the hell is that thing?"
-    Inventory.PickupSound "PainKiller/PickupNew"
-    weapon.upsound "weapons/draw"
-    Tag "Painkiller"
-    Scale 0.5
-    states
-    {
-    Spawn:
-	R001 J 4
-	loop
-    Select:
-	TNT1 A 0 //ACS_NamedExecute("s799",0,6,0,0)
-	R001 A 1 A_Raise
-	TNT1 AAA 0 A_Raise
-	Loop
-    Deselect:
-	TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
-	R001 A 1 A_Lower
-	R001 AAA 0 A_Lower
-	Loop
-    Ready:
-	R001 A 1 A_weaponready
-	TNT1 A 0 A_JumpIfInventory("BladerFired",1,"ready1")
-	loop
+	+AMMO_OPTIONAL
+	+ALT_AMMO_OPTIONAL
+	+MELEEWEAPON
+	+AXEBLOOD
+	+CHEATNOTWEAPON
+	+INVENTORY.IGNORESKILL
+	Weapon.AmmoType2 "BlueMana"
+	Weapon.AmmoGive2 20
+	Weapon.AmmoUse2 1
+	Weapon.SelectionOrder 9850
+	Obituary "%o was sliced into pieces by %k."
+	Inventory.PickupMessage "You found the painkiller! What the hell is that thing?"
+	Inventory.PickupSound "PainKiller/PickupNew"
+	Weapon.UpSound "weapons/draw"
+	Tag "Painkiller"
+	Scale 0.5
+	States
+	{
+	Spawn:
+		R001 J 4
+		Loop
+	Select:
+		TNT1 A 0 //ACS_NamedExecute("s799",0,6,0,0)
+		R001 A 1 A_Raise
+		TNT1 AAA 0 A_Raise
+		Loop
+	Deselect:
+		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
+		R001 A 1 A_Lower
+		R001 AAA 0 A_Lower
+		Loop
+	Ready:
+		R001 A 1 A_weaponready
+		TNT1 A 0 A_JumpIfInventory("BladerFired",1,"ready1")
+		Loop
 	Ready12:
 		R001 B 0 A_TakeInventory("BladesNotBack",10000,0)
 		R001 B 0 A_GiveInventory("BladesNotBack",120)
 		R001 B 0 A_GiveInventory("Killers",1)
 		R001 C 2 A_Takeinventory("BladerFired",10000)
 		Goto R2
-    Ready1:
+	Ready1:
 		R001 B 1 A_weaponready
 		TNT1 A 0 A_Giveinventory("BladesNotBack",1)
 		TNT1 A 0 A_JumpIfInventory("BladesNotBack",120,2)
 		TNT1 A 0 A_JumpIfInventory("Killers",1,2)
-		loop
+		Loop
 	R2:
 		TNT1 A 0 ACS_NamedExecuteAlways("s910",0,0,0,0)
 		TNT1 A 0 A_Takeinventory("BladesNotBack",10000)
 		R001 B 2 A_PlaySound("reilsss/weapons/painkillerback", 7, 1.0, 0)
 		R001 C 2 A_Takeinventory("BladerFired",10000)
 		R001 D 2 A_TakeInventory("Killers",10000,0)
-		goto Ready
-    Fire:
-	TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,"FireQuick")
-	TNT1 A 0 A_JumpIfInventory("BladerFired",1,"ready1")
-	TNT1 A 0 A_PlaySound("reilsss/weapons/painkillerspinstart", CHAN_WEAPON, 1.0, 0)
-	R001 E 2
-	TNT1 A 0 A_PlaySound("reilsss/weapons/painkillerspin", 6, 1.0, 1)
-	TNT1 A 0 A_Refire
-	TNT1 A 0 A_StopSound(6)
-	goto Ready
-    Hold:
-	R001 F 1 A_FireCustomMissile("PKMeleeRadius",0,0)
-	R001 F 0 A_Custompunch(10,1,1,"PKpuff")
-	R001 G 1 A_FireCustomMissile("PKMeleeRadius",0,0)
-	R001 G 0 A_Custompunch(10,1,1,"PKpuff")
-	R001 H 1 A_FireCustomMissile("PKMeleeRadius",0,0)
-	R001 H 0 A_Custompunch(10,1,1,"PKpuff")
-	R001 I 1 A_FireCustomMissile("PKMeleeRadius",0,0)
-	R001 I 0 A_Custompunch(10,1,1,"PKpuff")
-	TNT1 A 0 A_Refire
-	TNT1 A 0 A_StopSound(6)
-	R001 E 2 A_PlaySound("reilsss/weapons/painkillerspinstop", CHAN_WEAPON, 1.0, 0)
-	goto Ready
-    FireQuick:
-	TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,1)
-	Goto Fire
-	TNT1 A 0 A_JumpIfInventory("BladerFired",1,"ready1")
-	TNT1 A 0 A_PlaySound("reilsss/weapons/painkillerspinstart", CHAN_WEAPON, 1.0, 0)
-	R001 E 1
-	TNT1 A 0 A_PlaySound("reilsss/weapons/painkillerspin", 6, 1.0, 1)
-	TNT1 A 0 A_Refire("HoldQuick")
-	TNT1 A 0 A_StopSound(6)
-	goto Ready
-    HoldQuick:
-	TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,1)
-	Goto Hold
-	R001 F 1 A_Custompunch(10,0,1,"PKpuff")
-	R001 G 0 A_Custompunch(10,0,1,"PKpuff")
-	R001 G 0 A_FireCustomMissile("PKMeleeRadius",0,0)
-	R001 H 1 A_Custompunch(10,0,1,"PKpuff")
-	R001 I 0 A_Custompunch(10,0,1,"PKpuff")
-	R001 I 0 A_FireCustomMissile("PKMeleeRadius",0,0)
-	TNT1 A 0 A_Refire("HoldQuick")
-	TNT1 A 0 A_StopSound(6)
-	R001 E 1 A_PlaySound("reilsss/weapons/painkillerspinstop", CHAN_WEAPON, 1.0, 0)
-	goto Ready
-    Altfire:
-	TNT1 A 0 A_JumpIfInventory("BlueMana",2,1)
-	Goto Ready
-	TNT1 A 0 A_JumpIfInventory("BladerFired",1,"Ready12")
-	TNT1 A 0 A_PlaySound("reilsss/weapons/painkillershot", CHAN_WEAPON, 1.0, 0)
-	TNT1 A 0 A_Giveinventory("BladerFired")
-	TNT1 A 0 A_Takeinventory("Killers")
-	R001 B 3 A_FireCustomMissile("Blader",0,1,6)
-	R001 CD 3
-	goto Ready1
-    }
+		Goto Ready
+	Fire:
+		TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,"FireQuick")
+		TNT1 A 0 A_JumpIfInventory("BladerFired",1,"ready1")
+		TNT1 A 0 A_PlaySound("reilsss/weapons/painkillerspinstart", CHAN_WEAPON, 1.0, 0)
+		R001 E 2
+		TNT1 A 0 A_PlaySound("reilsss/weapons/painkillerspin", 6, 1.0, 1)
+		TNT1 A 0 A_Refire
+		TNT1 A 0 A_StopSound(6)
+		Goto Ready
+	Hold:
+		R001 F 1 A_FireCustomMissile("PKMeleeRadius",0,0)
+		R001 F 0 A_Custompunch(10,1,1,"PKpuff")
+		R001 G 1 A_FireCustomMissile("PKMeleeRadius",0,0)
+		R001 G 0 A_Custompunch(10,1,1,"PKpuff")
+		R001 H 1 A_FireCustomMissile("PKMeleeRadius",0,0)
+		R001 H 0 A_Custompunch(10,1,1,"PKpuff")
+		R001 I 1 A_FireCustomMissile("PKMeleeRadius",0,0)
+		R001 I 0 A_Custompunch(10,1,1,"PKpuff")
+		TNT1 A 0 A_Refire
+		TNT1 A 0 A_StopSound(6)
+		R001 E 2 A_PlaySound("reilsss/weapons/painkillerspinstop", CHAN_WEAPON, 1.0, 0)
+		Goto Ready
+	FireQuick:
+		TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,1)
+		Goto Fire
+		TNT1 A 0 A_JumpIfInventory("BladerFired",1,"ready1")
+		TNT1 A 0 A_PlaySound("reilsss/weapons/painkillerspinstart", CHAN_WEAPON, 1.0, 0)
+		R001 E 1
+		TNT1 A 0 A_PlaySound("reilsss/weapons/painkillerspin", 6, 1.0, 1)
+		TNT1 A 0 A_Refire("HoldQuick")
+		TNT1 A 0 A_StopSound(6)
+		Goto Ready
+	HoldQuick:
+		TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,1)
+		Goto Hold
+		R001 F 1 A_Custompunch(10,0,1,"PKpuff")
+		R001 G 0 A_Custompunch(10,0,1,"PKpuff")
+		R001 G 0 A_FireCustomMissile("PKMeleeRadius",0,0)
+		R001 H 1 A_Custompunch(10,0,1,"PKpuff")
+		R001 I 0 A_Custompunch(10,0,1,"PKpuff")
+		R001 I 0 A_FireCustomMissile("PKMeleeRadius",0,0)
+		TNT1 A 0 A_Refire("HoldQuick")
+		TNT1 A 0 A_StopSound(6)
+		R001 E 1 A_PlaySound("reilsss/weapons/painkillerspinstop", CHAN_WEAPON, 1.0, 0)
+		Goto Ready
+	Altfire:
+		TNT1 A 0 A_JumpIfInventory("BlueMana",2,1)
+		Goto Ready
+		TNT1 A 0 A_JumpIfInventory("BladerFired",1,"Ready12")
+		TNT1 A 0 A_PlaySound("reilsss/weapons/painkillershot", CHAN_WEAPON, 1.0, 0)
+		TNT1 A 0 A_Giveinventory("BladerFired")
+		TNT1 A 0 A_Takeinventory("Killers")
+		R001 B 3 A_FireCustomMissile("Blader",0,1,6)
+		R001 CD 3
+		Goto Ready1
+	}
 }
 
-Actor BladerFired : Inventory
-{
-    Inventory.maxamount 1
-}
-
-Actor Killers : Inventory
-{
-    Inventory.maxamount 1
-}
-
-Actor BladesNotBack : Inventory
-{
-    Inventory.maxamount 120
-}
+Actor BladerFired : Inventory {}
+Actor Killers : Inventory {}
+Actor BladesNotBack : Inventory { Inventory.MaxAmount 120 }
 
 Actor PKMeleeRadius
 {
@@ -1851,8 +1753,6 @@ Actor PKMeleeRadius
 	Radius 1
 	Height 1
 	RenderStyle None
-	//Attacksound "reilsss/weapons/painkillerhitwall"
-    //Seesound "reilsss/weapons/painkillerhit"
 	States
 	{
 	Spawn:
@@ -1891,46 +1791,46 @@ Actor PKMeleeBleeder
 
 Actor Blader
 {
-    +EXTREMEDEATH
+	+EXTREMEDEATH
 	+RIPPER
 	RipperLevel 2
 	+DONTREFLECT
 	+SKYEXPLODE
 	+EXPLODEONWATER
-    Projectile
-    Damage 25
-    Speed 20
-    Radius 10
-    Height 10
-    Scale 0.4
-    DamageType "AEMagic"
-    States
-    {
-    Spawn:
-	TNT1 A 0
-	R001 K 0 A_PlaySound("reilsss/weapons/painkillerspin", 6, 1.0, 1)
+	Projectile
+	Damage 25
+	Speed 20
+	Radius 10
+	Height 10
+	Scale 0.4
+	DamageType "AEMagic"
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		R001 K 0 A_PlaySound("reilsss/weapons/painkillerspin", 6, 1.0, 1)
 	Looping:
 		R001 K 1 A_JumpIfInventory("Killers",1,"Death",AAPTR_TARGET)
 		R001 L 1 A_JumpIfInventory("Killers",1,"Death",AAPTR_TARGET)
 		R001 M 1 A_JumpIfInventory("Killers",1,"Death",AAPTR_TARGET)
 		R001 N 1 A_JumpIfInventory("Killers",1,"Death",AAPTR_TARGET)
 		Loop
-    Death:
-    Crash:
-	TNT1 A 0 A_GiveToTarget("Killers",1)
-	TNT1 A 0 A_PlaySound ("reilsss/weapons/katanametal")
-	TNT1 A 0 A_CustomRailGun(0,0,black,none,3,1,3,"PKBloodlesspuff")
-	TNT1 A 0 ACS_NamedExecuteAlways("s910",0,0,0,0)
-	TNT1 A 2
-	Stop
-    XDeath:
-	TNT1 A 0 A_GiveToTarget("Killers",1)
-	TNT1 A 0 A_PlaySound("reilsss/weapons/katanahit")
-	TNT1 A 0 A_CustomRailGun(0,0,black,none,3,1,3,"PKBloodlesspuff")
-	TNT1 A 0 ACS_NamedExecuteAlways("s910",0,0,0,0)
-	TNT1 A 2
-	Stop
-    }
+	Death:
+	Crash:
+		TNT1 A 0 A_GiveToTarget("Killers",1)
+		TNT1 A 0 A_PlaySound ("reilsss/weapons/katanametal")
+		TNT1 A 0 A_CustomRailGun(0,0,black,none,3,1,3,"PKBloodlesspuff")
+		TNT1 A 0 ACS_NamedExecuteAlways("s910",0,0,0,0)
+		TNT1 A 2
+		Stop
+	XDeath:
+		TNT1 A 0 A_GiveToTarget("Killers",1)
+		TNT1 A 0 A_PlaySound("reilsss/weapons/katanahit")
+		TNT1 A 0 A_CustomRailGun(0,0,black,none,3,1,3,"PKBloodlesspuff")
+		TNT1 A 0 ACS_NamedExecuteAlways("s910",0,0,0,0)
+		TNT1 A 2
+		Stop
+	}
 }
 
 Actor PKBloodlesspuff
@@ -1949,14 +1849,14 @@ Actor PKBloodlesspuff
 	}
 }
 
-actor PKPuff
+Actor PKPuff
 {
-    +NOBLOCKMAP
-    +NOGRAVITY
-    +PUFFONACTORS
+	+NOBLOCKMAP
+	+NOGRAVITY
+	+PUFFONACTORS
 	+EXTREMEDEATH
-    Attacksound "reilsss/weapons/painkillerhitwall"
-    Seesound "reilsss/weapons/painkillerhit"
+	Attacksound "reilsss/weapons/painkillerhitwall"
+	Seesound "reilsss/weapons/painkillerhit"
 	States
 	{
 	See:
@@ -1967,1017 +1867,942 @@ actor PKPuff
 
 Actor PainkillerDrop : CustomInventory
 {
-    Inventory.MaxAmount 1
-    States
-    {
-    Use:
-	TNT1 A 0
-	TNT1 A 0 A_StopSound(6)
-	TNT1 A 0 A_SpawnItemEx("DroppedPainkiller",0,0,32,8,0,0,0,32,0)
-	Stop
-    }
+	States
+	{
+	Use:
+		TNT1 A 0
+		TNT1 A 0 A_StopSound(6)
+		TNT1 A 0 A_SpawnItemEx("DroppedPainkiller",0,0,32,8,0,0,0,32,0)
+		Stop
+	}
 }
 
-ACTOR DroppedPainkiller
+Actor DroppedPainkiller
 {
-    Radius 16
-    Height 20
-    Scale 0.5
-    States
-    {
-    Spawn:
-	R001 J 15
-	TNT1 A 0 A_SpawnItemEx("AEoDPainkillerNoAmmo",0,0,0,0,0,0,0,48,0)
-	Stop
-    }
+	Radius 16
+	Height 20
+	Scale 0.5
+	States
+	{
+	Spawn:
+		R001 J 15
+		TNT1 A 0 A_SpawnItemEx("AEoDPainkillerNoAmmo",0,0,0,0,0,0,0,48,0)
+		Stop
+	}
 }
 
-ACTOR AEoDPainkillerNoAmmo : AEoDPainkillerItem
+Actor AEoDPainkillerNoAmmo : AEoDPainkillerItem
 {
-    +FLOORCLIP
-    +INVENTORY.IGNORESKILL
-    Scale 0.5
-    Inventory.Amount 1
-    Inventory.PickupMessage "You found the painkiller! What the hell is that thing?"
-    Inventory.PickupSound "PainKiller/PickupNew"
-    States
-    {
-    Spawn:
-        R001 J -1
-        Loop
-    Pickup:
-	TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",2) <= 0,"Nothing")
-	TNT1 A 0 A_JumpIfInventory("BlueMana",20,"Ammo")
-	TNT1 A 0 A_GiveInventory("Weapon2Count",1)
-	TNT1 A 0 A_GiveInventory("PainkillerDrop",1)
-	TNT1 A 0 A_GiveInventory("AEoDPainkiller",1)
-	TNT1 A 0 A_TakeInventory("BlueMana",20)
-	TNT1 A 0 //ACS_NamedExecute("s799",0,6,0,0)
-	Stop
-    Nothing:
-	TNT1 A 0 A_JumpIfInventory("AEoDPainkiller",1,"Ammo")
-	TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
-	Goto Pickup+2
-	TNT1 A 0 ACS_NamedExecute("s798",0,2,0,0)
-	Fail
-    Ammo:
-	TNT1 A 0 A_TakeInventory("BlueMana",20)
-	TNT1 A 0 A_JumpIfInventory("AEoDPainKiller",1,2)
-	TNT1 A 0 A_GiveInventory("Weapon2Count",1)
-	TNT1 A 0 A_GiveInventory("PainkillerDrop",1)
-	TNT1 A 0 A_GiveInventory("AEoDPainkiller",1)
-	Stop
-    }
+	+FLOORCLIP
+	+INVENTORY.IGNORESKILL
+	Scale 0.5
+	Inventory.PickupMessage "You found the painkiller! What the hell is that thing?"
+	Inventory.PickupSound "PainKiller/PickupNew"
+	States
+	{
+	Spawn:
+		R001 J -1
+		Loop
+	Pickup:
+		TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",2) <= 0,"Nothing")
+		TNT1 A 0 A_JumpIfInventory("BlueMana",20,"Ammo")
+		TNT1 A 0 A_GiveInventory("Weapon2Count",1)
+		TNT1 A 0 A_GiveInventory("PainkillerDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDPainkiller",1)
+		TNT1 A 0 A_TakeInventory("BlueMana",20)
+		TNT1 A 0 //ACS_NamedExecute("s799",0,6,0,0)
+		Stop
+	Nothing:
+		TNT1 A 0 A_JumpIfInventory("AEoDPainkiller",1,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
+		Goto Pickup+2
+		TNT1 A 0 ACS_NamedExecute("s798",0,2,0,0)
+		Fail
+	Ammo:
+		TNT1 A 0 A_TakeInventory("BlueMana",20)
+		TNT1 A 0 A_JumpIfInventory("AEoDPainKiller",1,2)
+		TNT1 A 0 A_GiveInventory("Weapon2Count",1)
+		TNT1 A 0 A_GiveInventory("PainkillerDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDPainkiller",1)
+		Stop
+	}
 }
 
 //--------------------------------------------------------------------
 
-ACTOR AEoDStroggArmSawItem : CustomInventory 6031
+Actor AEoDStroggArmSawItem : CustomInventory 6031
 {
-    +INVENTORY.IGNORESKILL
-    Scale 0.09
-    Inventory.Amount 1
-    Inventory.PickupMessage "You grabbed a Strogg arm saw!"
-    Inventory.PickupSound "weapons/stroggarmsaw/pickup"
-    States
-    {
-    Spawn:
-        SASW A -1
-        Loop
-    Pickup:
-	TNT1 A 0 A_JumpIfInventory("AEoDStroggArmSaw",1,"Ammo")
-	TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",2) <= 0,"Nothing")
-	TNT1 A 0 A_GiveInventory("Weapon2Count",1)
-	TNT1 A 0 A_GiveInventory("StroggArmSawDrop",1)
-	TNT1 A 0 A_GiveInventory("AEoDStroggArmSaw",1)
-	TNT1 A 0 //ACS_NamedExecute("s799",0,7,0,0)
-	Stop
-    Nothing:
-	TNT1 A 0 A_JumpIfInventory("AEoDStroggArmSaw",1,"Ammo")
-	TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
-	Goto Pickup+2
-	TNT1 A 0 ACS_NamedExecute("s798",0,2,0,0)
-	Fail
-    Ammo:
-	TNT1 A 0 A_GiveInventory("AEoDStroggArmSaw",1)
-	Stop
-    }
+	+INVENTORY.IGNORESKILL
+	Scale 0.09
+	Inventory.PickupMessage "You grabbed a Strogg arm saw!"
+	Inventory.PickupSound "weapons/stroggarmsaw/pickup"
+	States
+	{
+	Spawn:
+		SASW A -1
+		Loop
+	Pickup:
+		TNT1 A 0 A_JumpIfInventory("AEoDStroggArmSaw",1,"Ammo")
+		TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",2) <= 0,"Nothing")
+		TNT1 A 0 A_GiveInventory("Weapon2Count",1)
+		TNT1 A 0 A_GiveInventory("StroggArmSawDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDStroggArmSaw",1)
+		TNT1 A 0 //ACS_NamedExecute("s799",0,7,0,0)
+		Stop
+	Nothing:
+		TNT1 A 0 A_JumpIfInventory("AEoDStroggArmSaw",1,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
+		Goto Pickup+2
+		TNT1 A 0 ACS_NamedExecute("s798",0,2,0,0)
+		Fail
+	Ammo:
+		TNT1 A 0 A_GiveInventory("AEoDStroggArmSaw",1)
+		Stop
+	}
 }
 
-ACTOR AEoDStroggArmSaw : Weapon // 6031
+Actor AEoDStroggArmSaw : Weapon // 6031
 {
-    +AMMO_OPTIONAL
-    +ALT_AMMO_OPTIONAL
-    +INVENTORY.IGNORESKILL
-    +FLOORCLIP
-    +CHEATNOTWEAPON
-    +MELEEWEAPON
-    +EXTREMEDEATH
-    Weapon.AmmoType2 "PlasmaRod"
-    Weapon.AmmoGive2 40
-    Weapon.AmmoUse2 0
-    Weapon.Kickback 1
-    Obituary "%o was mutilated by %k's Strogg arm saw" 
-    Inventory.PickupMessage "You grabbed a Strogg arm saw!"
-    Inventory.PickupSound "weapons/stroggarmsaw/pickup"
-    weapon.upsound "weapons/draw"
-    Scale 0.09
-    Tag "Strogg ArmSaw"
-    States
-    {
-    Spawn:
-	SASW A -1
-	Loop
-    Ready:
-	SASW B 1 A_WeaponReady
-	Loop
-    Select:
-	TNT1 A 0 //ACS_NamedExecute("s799",0,7,0,0)
-	SASW B 1 A_Raise
-	TNT1 AA 0 A_Raise
-	Loop
-    Deselect:
-	TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
-	SASW A 0 A_StopSound(6)
-	SASW B 1 A_Lower
-	TNT1 AA 0 A_Lower
-	Loop
-    Fire:
-	SASW C 0 A_PlayWeaponSound("weapons/stroggarmsaw/up")
-	SASW CDEFG 2
-	SASW H 0 A_ReFire
-	SASW H 0 A_StopSound(6)
-	SASW H 0 A_PlayWeaponSound("weapons/stroggarmsaw/down")
-	SASW GFEDC 2
-	Goto Ready
-    Hold:
-	TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,"HoldQuick")
-	SASW H 0 A_PlaySound("weapons/stroggarmsaw/running",6,0.8,1)
-	SASW H 1 A_Saw("None","weapons/stroggarmsaw/hit",5,"SilentStroggPuff")
-	SASW I 1
-	SASW J 1 A_Saw("None","weapons/stroggarmsaw/hit",4,"StroggSawPuff")
-	SASW K 1
-	SASW H 1 A_Saw("None","weapons/stroggarmsaw/hit",5,"SilentStroggPuff")
-	SASW I 1
-	SASW J 1 A_Saw("None","weapons/stroggarmsaw/hit",4,"StroggSawPuff")
-	SASW K 1
-	SASW H 0 A_ReFire
-	SASW H 0 A_StopSound(6)
-	SASW H 0 A_PlayWeaponSound("weapons/stroggarmsaw/down")
-	SASW GFEDC 2
-	Goto Ready
-    HoldQuick:
-	TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,1)
-	Goto Hold
-	SASW H 0 A_PlaySound("weapons/stroggarmsaw/running",6,0.8,1)
-	SASW H 1 A_Saw("None","weapons/stroggarmsaw/hit",5,"SilentStroggPuff")
-	SASW I 0
-	SASW J 1 A_Saw("None","weapons/stroggarmsaw/hit",4,"StroggSawPuff")
-	SASW K 0
-	SASW H 1 A_Saw("None","weapons/stroggarmsaw/hit",5,"SilentStroggPuff")
-	SASW I 0
-	SASW J 1 A_Saw("None","weapons/stroggarmsaw/hit",4,"StroggSawPuff")
-	SASW K 0
-	SASW H 0 A_ReFire("HoldQuick")
-	SASW H 0 A_StopSound(6)
-	SASW H 0 A_PlayWeaponSound("weapons/stroggarmsaw/down")
-	SASW GFEDC 2
-	Goto Ready
-    AltFire:
-	SASW C 0 A_JumpIfInventory("PlasmaRod",1,1)
-	Goto Ready
-	SASW C 0 A_PlayWeaponSound("weapons/stroggarmsaw/up")
-	SASW CDEFG 2
-	SASW H 0 A_ReFire
-	SASW H 0 A_StopSound(6)
-	SASW H 0 A_PlayWeaponSound("weapons/stroggarmsaw/down")
-	SASW GFEDC 2
-	Goto Ready
-    AltHold:
-	TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,"AltHoldQuick")
-	SASW H 0 A_PlaySound("weapons/stroggarmsaw/running",6,0.8,1)
-	SASW H 1 A_Saw("None","weapons/stroggarmsaw/hit",7,"SilentStroggPuffAlt")
-	SASW J 0 A_FireCustomMissile("IceWandSmokeSpawner",0,0,random(8,10),8)
-	SASW J 1 A_Saw("None","weapons/stroggarmsaw/hit",6,"StroggSawPuffAlt")
-	SASW H 1 A_Saw("None","weapons/stroggarmsaw/hit",7,"SilentStroggPuffAlt")
-	SASW J 0 A_FireCustomMissile("IceWandSmokeSpawner",0,0,random(8,10),8)
-	SASW J 1 A_Saw("None","weapons/stroggarmsaw/hit",6,"StroggSawPuffAlt")
-	TNT1 A 0 A_JumpIfInventory("PowerEconomizer",1,3)
-	TNT1 A 0 A_JumpIfInventory("InfiniteAmmo",1,2)
-	SASW J 0 A_TakeInventory("PlasmaRod",1)
+	+AMMO_OPTIONAL
+	+ALT_AMMO_OPTIONAL
+	+INVENTORY.IGNORESKILL
+	+FLOORCLIP
+	+CHEATNOTWEAPON
+	+MELEEWEAPON
+	+EXTREMEDEATH
+	Weapon.AmmoType2 "PlasmaRod"
+	Weapon.AmmoGive2 40
+	Weapon.AmmoUse2 0
+	Weapon.Kickback 1
+	Weapon.SelectionOrder 9810
+	Obituary "%o was mutilated by %k's Strogg arm saw" 
+	Inventory.PickupMessage "You grabbed a Strogg arm saw!"
+	Inventory.PickupSound "weapons/stroggarmsaw/pickup"
+	Weapon.UpSound "weapons/draw"
+	Scale 0.09
+	Tag "Strogg ArmSaw"
+	States
+	{
+	Spawn:
+		SASW A -1
+		Loop
+	Ready:
+		SASW B 1 A_WeaponReady
+		Loop
+	Select:
+		TNT1 A 0 //ACS_NamedExecute("s799",0,7,0,0)
+		SASW B 1 A_Raise
+		TNT1 AA 0 A_Raise
+		Loop
+	Deselect:
+		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
+		SASW A 0 A_StopSound(6)
+		SASW B 1 A_Lower
+		TNT1 AA 0 A_Lower
+		Loop
+	Fire:
+		SASW C 0 A_PlayWeaponSound("weapons/stroggarmsaw/up")
+		SASW CDEFG 2
+		SASW H 0 A_ReFire
+		SASW H 0 A_StopSound(6)
+		SASW H 0 A_PlayWeaponSound("weapons/stroggarmsaw/down")
+		SASW GFEDC 2
+		Goto Ready
+	Hold:
+		TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,"HoldQuick")
+		SASW H 0 A_PlaySound("weapons/stroggarmsaw/running",6,0.8,1)
+		SASW H 1 A_Saw("None","weapons/stroggarmsaw/hit",5,"SilentStroggPuff")
+		SASW I 1
+		SASW J 1 A_Saw("None","weapons/stroggarmsaw/hit",4,"StroggSawPuff")
+		SASW K 1
+		SASW H 1 A_Saw("None","weapons/stroggarmsaw/hit",5,"SilentStroggPuff")
+		SASW I 1
+		SASW J 1 A_Saw("None","weapons/stroggarmsaw/hit",4,"StroggSawPuff")
+		SASW K 1
+		SASW H 0 A_ReFire
+		SASW H 0 A_StopSound(6)
+		SASW H 0 A_PlayWeaponSound("weapons/stroggarmsaw/down")
+		SASW GFEDC 2
+		Goto Ready
+	HoldQuick:
+		TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,1)
+		Goto Hold
+		SASW H 0 A_PlaySound("weapons/stroggarmsaw/running",6,0.8,1)
+		SASW H 1 A_Saw("None","weapons/stroggarmsaw/hit",5,"SilentStroggPuff")
+		SASW I 0
+		SASW J 1 A_Saw("None","weapons/stroggarmsaw/hit",4,"StroggSawPuff")
+		SASW K 0
+		SASW H 1 A_Saw("None","weapons/stroggarmsaw/hit",5,"SilentStroggPuff")
+		SASW I 0
+		SASW J 1 A_Saw("None","weapons/stroggarmsaw/hit",4,"StroggSawPuff")
+		SASW K 0
+		SASW H 0 A_ReFire("HoldQuick")
+		SASW H 0 A_StopSound(6)
+		SASW H 0 A_PlayWeaponSound("weapons/stroggarmsaw/down")
+		SASW GFEDC 2
+		Goto Ready
+	AltFire:
+		SASW C 0 A_JumpIfInventory("PlasmaRod",1,1)
+		Goto Ready
+		SASW C 0 A_PlayWeaponSound("weapons/stroggarmsaw/up")
+		SASW CDEFG 2
+		SASW H 0 A_ReFire
+		SASW H 0 A_StopSound(6)
+		SASW H 0 A_PlayWeaponSound("weapons/stroggarmsaw/down")
+		SASW GFEDC 2
+		Goto Ready
+	AltHold:
+		TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,"AltHoldQuick")
+		SASW H 0 A_PlaySound("weapons/stroggarmsaw/running",6,0.8,1)
+		SASW H 1 A_Saw("None","weapons/stroggarmsaw/hit",7,"SilentStroggPuffAlt")
+		SASW J 0 A_FireCustomMissile("IceWandSmokeSpawner",0,0,random(8,10),8)
+		SASW J 1 A_Saw("None","weapons/stroggarmsaw/hit",6,"StroggSawPuffAlt")
+		SASW H 1 A_Saw("None","weapons/stroggarmsaw/hit",7,"SilentStroggPuffAlt")
+		SASW J 0 A_FireCustomMissile("IceWandSmokeSpawner",0,0,random(8,10),8)
+		SASW J 1 A_Saw("None","weapons/stroggarmsaw/hit",6,"StroggSawPuffAlt")
+		TNT1 A 0 A_JumpIfInventory("PowerEconomizer",1,3)
+		TNT1 A 0 A_JumpIfInventory("InfiniteAmmo",1,2)
+		SASW J 0 A_TakeInventory("PlasmaRod",1)
 	SASW K 0 A_JumpIfInventory("PlasmaRod",1,2)	
-	SASW K 0 A_Jump(256,2)
-	SASW H 0 A_ReFire
-	SASW H 0 A_ClearReFire
-	SASW H 0 A_StopSound(6)
-	SASW H 0 A_PlayWeaponSound("weapons/stroggarmsaw/down")
-	SASW GFEDC 2
-	Goto Ready
-    AltHoldQuick:
-	TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,1)
-	Goto AltHold
-	SASW H 0 A_PlaySound("weapons/stroggarmsaw/running",6,0.8,1)
-	SASW H 1 A_Saw("None","weapons/stroggarmsaw/hit",11,"SilentStroggPuffAlt")
-	SASW J 0 A_FireCustomMissile("IceWandSmokeSpawner",0,0,random(8,10),8)
-	SASW J 1 A_Saw("None","weapons/stroggarmsaw/hit",10,"StroggSawPuffAlt")
-	TNT1 A 0 A_JumpIfInventory("PowerEconomizer",1,3)
-	TNT1 A 0 A_JumpIfInventory("InfiniteAmmo",1,2)
-	SASW J 0 A_TakeInventory("PlasmaRod",1)
-	SASW K 0 A_JumpIfInventory("PlasmaRod",1,2)
-	SASW K 0 A_Jump(256,6)
-	SASW H 1 A_Saw("None","weapons/stroggarmsaw/hit",11,"SilentStroggPuffAlt")
-	SASW J 0 A_FireCustomMissile("IceWandSmokeSpawner",0,0,random(8,10),8)
-	SASW J 1 A_Saw("None","weapons/stroggarmsaw/hit",10,"StroggSawPuffAlt")
-	TNT1 A 0 A_JumpIfInventory("PowerEconomizer",1,3)
-	TNT1 A 0 A_JumpIfInventory("InfiniteAmmo",1,2)
-	SASW J 0 A_TakeInventory("PlasmaRod",1)
+		SASW K 0 A_Jump(256,2)
+		SASW H 0 A_ReFire
+		SASW H 0 A_ClearReFire
+		SASW H 0 A_StopSound(6)
+		SASW H 0 A_PlayWeaponSound("weapons/stroggarmsaw/down")
+		SASW GFEDC 2
+		Goto Ready
+	AltHoldQuick:
+		TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,1)
+		Goto AltHold
+		SASW H 0 A_PlaySound("weapons/stroggarmsaw/running",6,0.8,1)
+		SASW H 1 A_Saw("None","weapons/stroggarmsaw/hit",11,"SilentStroggPuffAlt")
+		SASW J 0 A_FireCustomMissile("IceWandSmokeSpawner",0,0,random(8,10),8)
+		SASW J 1 A_Saw("None","weapons/stroggarmsaw/hit",10,"StroggSawPuffAlt")
+		TNT1 A 0 A_JumpIfInventory("PowerEconomizer",1,3)
+		TNT1 A 0 A_JumpIfInventory("InfiniteAmmo",1,2)
+		SASW J 0 A_TakeInventory("PlasmaRod",1)
+		SASW K 0 A_JumpIfInventory("PlasmaRod",1,2)
+		SASW K 0 A_Jump(256,6)
+		SASW H 1 A_Saw("None","weapons/stroggarmsaw/hit",11,"SilentStroggPuffAlt")
+		SASW J 0 A_FireCustomMissile("IceWandSmokeSpawner",0,0,random(8,10),8)
+		SASW J 1 A_Saw("None","weapons/stroggarmsaw/hit",10,"StroggSawPuffAlt")
+		TNT1 A 0 A_JumpIfInventory("PowerEconomizer",1,3)
+		TNT1 A 0 A_JumpIfInventory("InfiniteAmmo",1,2)
+		SASW J 0 A_TakeInventory("PlasmaRod",1)
 	SASW K 0 A_JumpIfInventory("PlasmaRod",1,2)	
-	SASW K 0 A_Jump(256,2)
-	SASW H 0 A_ReFire("AltHoldQuick")
-	SASW H 0 A_ClearReFire
-	SASW H 0 A_StopSound(6)
-	SASW H 0 A_PlayWeaponSound("weapons/stroggarmsaw/down")
-	SASW GFEDC 1
-	Goto Ready
-    }
+		SASW K 0 A_Jump(256,2)
+		SASW H 0 A_ReFire("AltHoldQuick")
+		SASW H 0 A_ClearReFire
+		SASW H 0 A_StopSound(6)
+		SASW H 0 A_PlayWeaponSound("weapons/stroggarmsaw/down")
+		SASW GFEDC 1
+		Goto Ready
+	}
 }
 
-ACTOR StroggSawPuff
+Actor StroggSawPuff
 {	
-    +NOGRAVITY
-    +NOBLOCKMAP
-    +FLOORCLIP
-    +FORCEXYBILLBOARD
-    +NOGRAVITY
-    +NOEXTREMEDEATH
-    Mass 1
-    Radius 1
-    Height 1
-    RENDERSTYLE TRANSLUCENT
-    ALPHA 0.6
-    Scale .08
-    States
-    {
-    Spawn:
-	TNT1 A 0
-	CLAW S 1 A_PlaySound("weapons/sawwall")
-	CLAW T 1 Bright
-	CLAW U 1 Bright A_SetTranslucent(.75,1)
-	CLAW V 1 Bright A_SetTranslucent(.5,1)
-	CLAW W 1 Bright A_SetTranslucent(.25,1)
-	Stop
-    }
+	+NOGRAVITY
+	+NOBLOCKMAP
+	+FLOORCLIP
+	+FORCEXYBILLBOARD
+	+NOGRAVITY
+	+NOEXTREMEDEATH
+	Mass 1
+	Radius 1
+	Height 1
+	RenderStyle TRANSLUCENT
+	Alpha 0.6
+	Scale .08
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		CLAW S 1 A_PlaySound("weapons/sawwall")
+		CLAW T 1 Bright
+		CLAW U 1 Bright A_SetTranslucent(.75,1)
+		CLAW V 1 Bright A_SetTranslucent(.5,1)
+		CLAW W 1 Bright A_SetTranslucent(.25,1)
+		Stop
+	}
 }
 
-ACTOR StroggSawPuffAlt : StroggSawPuff
+Actor StroggSawPuffAlt : StroggSawPuff
 {
-    -NOEXTREMEDEATH
-    +EXTREMEDEATH
+	-NOEXTREMEDEATH
+	+EXTREMEDEATH
 }
 
-ACTOR SilentStroggPuff : SilentPuff
+Actor SilentStroggPuff : SilentPuff
 {
-    +NOEXTREMEDEATH
-    -EXTREMEDEATH
+	+NOEXTREMEDEATH
+	-EXTREMEDEATH
 }
 
-ACTOR SilentStroggPuffAlt : SilentStroggPuff
+Actor SilentStroggPuffAlt : SilentStroggPuff
 {
-    -NOEXTREMEDEATH
-    +EXTREMEDEATH
+	-NOEXTREMEDEATH
+	+EXTREMEDEATH
 }
 
 Actor StroggArmSawDrop : CustomInventory
 {
-    Inventory.MaxAmount 1
-    States
-    {
-    Use:
-	TNT1 A 0
-	TNT1 A 0 A_StopSound(6)
-	TNT1 A 0 A_SpawnItemEx("DroppedStroggArmSaw",0,0,32,8,0,0,0,32,0)
-	Stop
-    }
+	Inventory.MaxAmount 1
+	States
+	{
+	Use:
+		TNT1 A 0
+		TNT1 A 0 A_StopSound(6)
+		TNT1 A 0 A_SpawnItemEx("DroppedStroggArmSaw",0,0,32,8,0,0,0,32,0)
+		Stop
+	}
 }
 
-ACTOR DroppedStroggArmSaw
+Actor DroppedStroggArmSaw
 {
-    Radius 16
-    Height 20
-    Scale 0.09
-    States
-    {
-    Spawn:
-	SASW A 15
-	TNT1 A 0 A_SpawnItemEx("AEoDStroggArmSawNoAmmo",0,0,0,0,0,0,0,48,0)
-	Stop
-    }
+	Radius 16
+	Height 20
+	Scale 0.09
+	States
+	{
+	Spawn:
+		SASW A 15
+		TNT1 A 0 A_SpawnItemEx("AEoDStroggArmSawNoAmmo",0,0,0,0,0,0,0,48,0)
+		Stop
+	}
 }
 
-ACTOR AEoDStroggArmSawNoAmmo : AEoDStroggArmSawItem
+Actor AEoDStroggArmSawNoAmmo : AEoDStroggArmSawItem
 {
-    +FLOORCLIP
-    +INVENTORY.IGNORESKILL
-    Scale 0.09
-    Inventory.Amount 1
-    Inventory.PickupMessage "You grabbed a Strogg arm saw!"
-    Inventory.PickupSound "weapons/stroggarmsaw/pickup"
-    States
-    {
-    Spawn:
-        SASW A -1
-        Loop
-    Pickup:
-	TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",2) <= 0,"Nothing")
-	TNT1 A 0 A_JumpIfInventory("PlasmaRod",40,"Ammo")
-	TNT1 A 0 A_GiveInventory("Weapon2Count",1)
-	TNT1 A 0 A_GiveInventory("StroggArmSawDrop",1)
-	TNT1 A 0 A_GiveInventory("AEoDStroggArmSaw",1)
-	TNT1 A 0 A_TakeInventory("PlasmaRod",40)
-	TNT1 A 0 //ACS_NamedExecute("s799",0,7,0,0)
-	Stop
-    Nothing:
-	TNT1 A 0 A_JumpIfInventory("AEoDStroggArmSaw",1,"Ammo")
-	TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
-	Goto Pickup+2
-	TNT1 A 0 ACS_NamedExecute("s798",0,2,0,0)
-	Fail
-    Ammo:
-	TNT1 A 0 A_TakeInventory("PlasmaRod",40)
-	TNT1 A 0 A_JumpIfInventory("AEoDStroggArmSaw",1,2)
-	TNT1 A 0 A_GiveInventory("Weapon2Count",1)
-	TNT1 A 0 A_GiveInventory("StroggArmSawDrop",1)
-	TNT1 A 0 A_GiveInventory("AEoDStroggArmSaw",1)
-	Stop
-    }
+	+FLOORCLIP
+	+INVENTORY.IGNORESKILL
+	Scale 0.09
+	Inventory.Amount 1
+	Inventory.PickupMessage "You grabbed a Strogg arm saw!"
+	Inventory.PickupSound "weapons/stroggarmsaw/pickup"
+	States
+	{
+	Spawn:
+		SASW A -1
+		Loop
+	Pickup:
+		TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",2) <= 0,"Nothing")
+		TNT1 A 0 A_JumpIfInventory("PlasmaRod",40,"Ammo")
+		TNT1 A 0 A_GiveInventory("Weapon2Count",1)
+		TNT1 A 0 A_GiveInventory("StroggArmSawDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDStroggArmSaw",1)
+		TNT1 A 0 A_TakeInventory("PlasmaRod",40)
+		TNT1 A 0 //ACS_NamedExecute("s799",0,7,0,0)
+		Stop
+	Nothing:
+		TNT1 A 0 A_JumpIfInventory("AEoDStroggArmSaw",1,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
+		Goto Pickup+2
+		TNT1 A 0 ACS_NamedExecute("s798",0,2,0,0)
+		Fail
+	Ammo:
+		TNT1 A 0 A_TakeInventory("PlasmaRod",40)
+		TNT1 A 0 A_JumpIfInventory("AEoDStroggArmSaw",1,2)
+		TNT1 A 0 A_GiveInventory("Weapon2Count",1)
+		TNT1 A 0 A_GiveInventory("StroggArmSawDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDStroggArmSaw",1)
+		Stop
+	}
 }
 
 //--------------------------------------------------------------------
 
-ACTOR AEoDVorpalBladeItem : CustomInventory 6152
+Actor AEoDVorpalBladeItem : CustomInventory 6152
 {
-    +FLOORCLIP
-    +INVENTORY.IGNORESKILL
-    Scale 0.7
-    Inventory.Amount 1
-    Inventory.PickupMessage "You stumbled upon a Vorpal Blade. Curiouser and curiouser..."
-    Inventory.PickupSound "weapons/icewand/pickup"
-    States
-    {
-    Spawn:
-        WVPL A -1
-        Loop
-    Pickup:
-	TNT1 A 0 A_JumpIfInventory("AEoDVorpalBlade",1,"Ammo")
-	TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",2) <= 0,"Nothing")
-	TNT1 A 0 A_GiveInventory("Weapon2Count",1)
-	TNT1 A 0 A_GiveInventory("VorpalBladeDrop",1)
-	TNT1 A 0 A_GiveInventory("AEoDVorpalBlade",1)
-	TNT1 A 0 //ACS_NamedExecute("s799",0,8,0,0)
-	Stop
-    Nothing:
-	TNT1 A 0 A_JumpIfInventory("AEoDVorpalBlade",1,"Ammo")
-	TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
-	Goto Pickup+2
-	TNT1 A 0 ACS_NamedExecute("s798",0,2,0,0)
-	Fail
-    Ammo:
-	TNT1 A 0 A_SpawnItemEx("Nothing",0,0,0,0,0,0,0,32)
-	Stop
-    }
+	+FLOORCLIP
+	+INVENTORY.IGNORESKILL
+	Scale 0.7
+	Inventory.Amount 1
+	Inventory.PickupMessage "You stumbled upon a Vorpal Blade. Curiouser and curiouser..."
+	Inventory.PickupSound "weapons/icewand/pickup"
+	States
+	{
+	Spawn:
+		WVPL A -1
+		Loop
+	Pickup:
+		TNT1 A 0 A_JumpIfInventory("AEoDVorpalBlade",1,"Ammo")
+		TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",2) <= 0,"Nothing")
+		TNT1 A 0 A_GiveInventory("Weapon2Count",1)
+		TNT1 A 0 A_GiveInventory("VorpalBladeDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDVorpalBlade",1)
+		TNT1 A 0 //ACS_NamedExecute("s799",0,8,0,0)
+		Stop
+	Nothing:
+		TNT1 A 0 A_JumpIfInventory("AEoDVorpalBlade",1,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
+		Goto Pickup+2
+		TNT1 A 0 ACS_NamedExecute("s798",0,2,0,0)
+		Fail
+	Ammo:
+		TNT1 A 0 A_SpawnItemEx("Nothing",0,0,0,0,0,0,0,32)
+		Stop
+	}
 } 
 
-ACTOR AEoDVorpalBlade : Weapon // 6152
+Actor AEoDVorpalBlade : Weapon // 6152
 {
-    +FLOORCLIP
-    +AXEBLOOD
-    +MELEEWEAPON
-    +CHEATNOTWEAPON
-    +WEAPON.NOALERT
-    Scale 0.7
-    Weapon.AmmoType1 "Ubercharge"
-    Obituary "%o was beheaded by %k's vorpal blade."
-    Inventory.PickupMessage "You stumbled upon a Vorpal Blade. Curiouser and curiouser..."
-    Inventory.PickupSound "weapons/icewand/pickup"
-    weapon.upsound "weapons/draw"
-    Tag "Vorpal Blade"
-    States
-    {
-    Spawn:
-	WVPL A -1
-	Loop
-    Ready:
-	VRPL A 0 A_JumpIfInventory("UberchargeActive",1,10)
-	VRPL A 0 A_JumpIfInventory("Ubercharge",100,3)
-	VRPL A 0 A_StopSound(6)
-	VRPL A 1 A_WeaponReady
-	Goto Ready+3
-	VRPL QQQRRR 1 A_WeaponReady
-	Loop
-	VRPL A 0 A_PlaySound("reilsss/weapons/flameidle1",6,1.0,1)
-	VRPL A 0 A_JumpIfInventory("UberchargeActive",1,2)
-	VRPL A 0 A_StopSound(6)
-	Goto Ready+3
-	VRPL H 1 A_WeaponReady
-	VRPL A 0 A_JumpIfInventory("UberchargeActive",1,2)
-	VRPL A 0 A_StopSound(6)
-	Goto Ready+3
-	VRPL H 1 A_WeaponReady
-	VRPL A 0 A_JumpIfInventory("UberchargeActive",1,2)
-	VRPL A 0 A_StopSound(6)
-	Goto Ready+3
-	VRPL H 1 A_WeaponReady
-	VRPL A 0 A_JumpIfInventory("UberchargeActive",1,2)
-	VRPL A 0 A_StopSound(6)
-	Goto Ready+3
-	VRPL I 1 A_WeaponReady
-	VRPL A 0 A_JumpIfInventory("UberchargeActive",1,2)
-	VRPL A 0 A_StopSound(6)
-	Goto Ready+3
-	VRPL I 1 A_WeaponReady
-	VRPL A 0 A_JumpIfInventory("UberchargeActive",1,2)
-	VRPL A 0 A_StopSound(6)
-	Goto Ready+3
-	VRPL I 1 A_WeaponReady
-	VRPL A 0 A_JumpIfInventory("UberchargeActive",1,2)
-	VRPL A 0 A_StopSound(6)
-	Goto Ready+3
-	VRPL J 1 A_WeaponReady
-	VRPL A 0 A_JumpIfInventory("UberchargeActive",1,2)
-	VRPL A 0 A_StopSound(6)
-	Goto Ready+3
-	VRPL J 1 A_WeaponReady
-	VRPL A 0 A_JumpIfInventory("UberchargeActive",1,2)
-	VRPL A 0 A_StopSound(6)
-	Goto Ready+3
-	VRPL J 1 A_WeaponReady
-	Loop
-    Select:
-	TNT1 A 0 //ACS_NamedExecute("s799",0,8,0,0)
-	TNT1 A 0 A_GiveInventory("AxeBloodCheck",1)
-	VRPL A 1 A_Raise
-	TNT1 AA 0 A_Raise
-	Loop
-    Deselect:
-	TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
-	TNT1 A 0 A_TakeInventory("AxeBloodCheck",1)
-	VRPL A 0 A_StopSound(6)
-	VRPL A 1 A_Lower
-	TNT1 AA 0 A_Lower
-	Loop
-    Fire:
-	VRPL A 0 A_JumpIfInventory("UberchargeActive",1,"UberchargeInUse")
-	VRPL A 0 A_JumpIfInventory("Ubercharge",100,"UberchargeFull")
-	TNT1 A 4
-	TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
-	VRPL BCD 2
-	VRPL E 2 A_CustomPunch(random(18,24),0,0,"VorpalPuff",136)
-	VRPL FG 2
-	TNT1 A 3
-	Goto Ready
-    UberchargeFull:
-	TNT1 A 4
-	TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
-	VRPL BST 2
-	VRPL U 2 A_CustomPunch(random(18,24),0,0,"VorpalPuff",136)
-	VRPL VG 2
-	TNT1 A 3
-	Goto Ready
-    UberchargeInUse:
-	VRPL A 0 A_JumpIfInventory("FullCharge",1,"FireFull")
-	VRPL A 0 A_JumpIfInventory("90PercentCharge",1,"Fire90")
-	VRPL A 0 A_JumpIfInventory("80PercentCharge",1,"Fire80")
-	VRPL A 0 A_JumpIfInventory("70PercentCharge",1,"Fire70")
-	VRPL A 0 A_JumpIfInventory("60PercentCharge",1,"Fire60")
-	VRPL A 0 A_JumpIfInventory("50PercentCharge",1,"Fire50")
-	VRPL A 0 A_JumpIfInventory("40PercentCharge",1,"Fire40")
-	VRPL A 0 A_JumpIfInventory("30PercentCharge",1,"Fire30")
-	VRPL A 0 A_JumpIfInventory("20PercentCharge",1,"Fire20")
-	VRPL A 0 A_JumpIfInventory("10PercentCharge",1,"Fire10")
-	VRPL A 0 A_StopSound(6)
-	Goto Fire
-    FireFull:
-	TNT1 A 2
-	TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
-	VRPL KLM 2
-	VRPL N 0 A_FireCustomMissile("VorpalSlash",0,0,0)
-	VRPL N 2 A_CustomPunch(random(80,120),0,0,"UberchargePuffFull",150)
-	VRPL OP 2
-	TNT1 A 2
-	Goto Ready
-    Fire90:
-	TNT1 A 2
-	TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
-	VRPL KLM 2
-	VRPL N 2 A_CustomPunch(random(56,77),0,0,"UberchargePuff",150)
-	VRPL OP 2
-	TNT1 A 2
-	Goto Ready
-    Fire80:
-	TNT1 A 2
-	TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
-	VRPL KLM 2
-	VRPL N 2 A_CustomPunch(random(53,74),0,0,"UberchargePuff",150)
-	VRPL OP 2
-	TNT1 A 3
-	Goto Ready
-    Fire70:
-	TNT1 A 2
-	TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
-	VRPL KLM 2
-	VRPL N 2 A_CustomPunch(random(50,70),0,0,"UberchargePuff",150)
-	VRPL OP 2
-	TNT1 A 2
-	Goto Ready
-    Fire60:
-	TNT1 A 2
-	TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
-	VRPL KLM 2
-	VRPL N 2 A_CustomPunch(random(46,67),0,0,"UberchargePuff",150)
-	VRPL OP 2
-	TNT1 A 2
-	Goto Ready
-    Fire50:
-	TNT1 A 2
-	TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
-	VRPL KLM 2
-	VRPL N 2 A_CustomPunch(random(43,64),0,0,"UberchargePuff",150)
-	VRPL OP 2
-	TNT1 A 2
-	Goto Ready
-    Fire40:
-	TNT1 A 2
-	TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
-	VRPL KLM 2
-	VRPL N 2 A_CustomPunch(random(40,60),0,0,"UberchargePuff",150)
-	VRPL OP 2
-	TNT1 A 2
-	Goto Ready
-    Fire30:
-	TNT1 A 2
-	TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
-	VRPL KLM 2
-	VRPL N 2 A_CustomPunch(random(36,57),0,0,"UberchargePuff",150)
-	VRPL OP 2
-	TNT1 A 2
-	Goto Ready
-    Fire20:
-	TNT1 A 2
-	TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
-	VRPL KLM 2
-	VRPL N 2 A_CustomPunch(random(33,54),0,0,"UberchargePuff",150)
-	VRPL OP 2
-	TNT1 A 2
-	Goto Ready
-    Fire10:
-	TNT1 A 2
-	TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
-	VRPL KLM 2
-	VRPL N 2 A_CustomPunch(random(30,50),0,0,"UberchargePuff",150)
-	VRPL OP 2
-	TNT1 A 2
-	Goto Ready
-    AltFire:
-	VRPL A 0 A_JumpIfInventory("UberchargeActive",1,"UberchargeInUse")
-	VRPL A 0 A_JumpIfInventory("Ubercharge",10,1)
-	Goto Ready
-	VRPL A 0 A_PlayWeaponSound("weapons/pdbshot")
-	VRPL IJ 3
-	VRPL A 0 A_GiveInventory("UberchargeActive",1)
-	VRPL A 0 A_SpawnItemEx("UberchargeSpawner",0,0,0,0,0,0,0,32,0)
-	VRPL A 0 A_JumpIfInventory("Ubercharge",100,"FullActivated")
-	VRPL A 0 A_JumpIfInventory("Ubercharge",90,"90PercentActivated")
-	VRPL A 0 A_JumpIfInventory("Ubercharge",80,"80PercentActivated")
-	VRPL A 0 A_JumpIfInventory("Ubercharge",70,"70PercentActivated")
-	VRPL A 0 A_JumpIfInventory("Ubercharge",60,"60PercentActivated")
-	VRPL A 0 A_JumpIfInventory("Ubercharge",50,"50PercentActivated")
-	VRPL A 0 A_JumpIfInventory("Ubercharge",40,"40PercentActivated")
-	VRPL A 0 A_JumpIfInventory("Ubercharge",30,"30PercentActivated")
-	VRPL A 0 A_JumpIfInventory("Ubercharge",20,"20PercentActivated")
-	VRPL A 0 A_JumpIfInventory("Ubercharge",10,"10PercentActivated")
-	Goto Ready
-    FullActivated:
-	VRPL A 0 A_GiveInventory("FullCharge",1)
-	VRPL A 0 A_GiveInventory("FullChargeResistance",1)
-	VRPL A 0 A_GiveInventory("FullChargeSpeed",1)
-	Goto Ready
-    90PercentActivated:
-	VRPL A 0 A_GiveInventory("90PercentCharge",1)
-	Goto Ready
-    80PercentActivated:
-	VRPL A 0 A_GiveInventory("80PercentCharge",1)
-	Goto Ready
-    70PercentActivated:
-	VRPL A 0 A_GiveInventory("70PercentCharge",1)
-	Goto Ready
-    60PercentActivated:
-	VRPL A 0 A_GiveInventory("60PercentCharge",1)
-	Goto Ready
-    50PercentActivated:
-	VRPL A 0 A_GiveInventory("50PercentCharge",1)
-	Goto Ready
-    40PercentActivated:
-	VRPL A 0 A_GiveInventory("40PercentCharge",1)
-	Goto Ready
-    30PercentActivated:
-	VRPL A 0 A_GiveInventory("30PercentCharge",1)
-	Goto Ready
-    20PercentActivated:
-	VRPL A 0 A_GiveInventory("20PercentCharge",1)
-	Goto Ready
-    10PercentActivated:
-	VRPL A 0 A_GiveInventory("10PercentCharge",1)
-	Goto Ready
-    }
+	+FLOORCLIP
+	+AXEBLOOD
+	+MELEEWEAPON
+	+CHEATNOTWEAPON
+	+WEAPON.NOALERT
+	Scale 0.7
+	Weapon.AmmoType1 "Ubercharge"
+	Weapon.SelectionOrder 23000
+	Obituary "%o was beheaded by %k's vorpal blade."
+	Inventory.PickupMessage "You stumbled upon a Vorpal Blade. Curiouser and curiouser..."
+	Inventory.PickupSound "weapons/icewand/pickup"
+	Weapon.UpSound "weapons/draw"
+	Tag "Vorpal Blade"
+	States
+	{
+	Spawn:
+		WVPL A -1
+		Loop
+	Ready:
+		VRPL A 0 A_JumpIfInventory("UberchargeActive",1,10)
+		VRPL A 0 A_JumpIfInventory("Ubercharge",100,3)
+		VRPL A 0 A_StopSound(6)
+		VRPL A 1 A_WeaponReady
+		Goto Ready+3
+		VRPL QQQRRR 1 A_WeaponReady
+		Loop
+		VRPL A 0 A_PlaySound("reilsss/weapons/flameidle1",6,1.0,1)
+		VRPL A 0 A_JumpIfInventory("UberchargeActive",1,2)
+		VRPL A 0 A_StopSound(6)
+		Goto Ready+3
+		VRPL H 1 A_WeaponReady
+		VRPL A 0 A_JumpIfInventory("UberchargeActive",1,2)
+		VRPL A 0 A_StopSound(6)
+		Goto Ready+3
+		VRPL H 1 A_WeaponReady
+		VRPL A 0 A_JumpIfInventory("UberchargeActive",1,2)
+		VRPL A 0 A_StopSound(6)
+		Goto Ready+3
+		VRPL H 1 A_WeaponReady
+		VRPL A 0 A_JumpIfInventory("UberchargeActive",1,2)
+		VRPL A 0 A_StopSound(6)
+		Goto Ready+3
+		VRPL I 1 A_WeaponReady
+		VRPL A 0 A_JumpIfInventory("UberchargeActive",1,2)
+		VRPL A 0 A_StopSound(6)
+		Goto Ready+3
+		VRPL I 1 A_WeaponReady
+		VRPL A 0 A_JumpIfInventory("UberchargeActive",1,2)
+		VRPL A 0 A_StopSound(6)
+		Goto Ready+3
+		VRPL I 1 A_WeaponReady
+		VRPL A 0 A_JumpIfInventory("UberchargeActive",1,2)
+		VRPL A 0 A_StopSound(6)
+		Goto Ready+3
+		VRPL J 1 A_WeaponReady
+		VRPL A 0 A_JumpIfInventory("UberchargeActive",1,2)
+		VRPL A 0 A_StopSound(6)
+		Goto Ready+3
+		VRPL J 1 A_WeaponReady
+		VRPL A 0 A_JumpIfInventory("UberchargeActive",1,2)
+		VRPL A 0 A_StopSound(6)
+		Goto Ready+3
+		VRPL J 1 A_WeaponReady
+		Loop
+	Select:
+		TNT1 A 0 //ACS_NamedExecute("s799",0,8,0,0)
+		TNT1 A 0 A_GiveInventory("AxeBloodCheck",1)
+		VRPL A 1 A_Raise
+		TNT1 AA 0 A_Raise
+		Loop
+	Deselect:
+		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
+		TNT1 A 0 A_TakeInventory("AxeBloodCheck",1)
+		VRPL A 0 A_StopSound(6)
+		VRPL A 1 A_Lower
+		TNT1 AA 0 A_Lower
+		Loop
+	Fire:
+		VRPL A 0 A_JumpIfInventory("UberchargeActive",1,"UberchargeInUse")
+		VRPL A 0 A_JumpIfInventory("Ubercharge",100,"UberchargeFull")
+		TNT1 A 4
+		TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
+		VRPL BCD 2
+		VRPL E 2 A_CustomPunch(random(18,24),0,0,"VorpalPuff",136)
+		VRPL FG 2
+		TNT1 A 3
+		Goto Ready
+	UberchargeFull:
+		TNT1 A 4
+		TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
+		VRPL BST 2
+		VRPL U 2 A_CustomPunch(random(18,24),0,0,"VorpalPuff",136)
+		VRPL VG 2
+		TNT1 A 3
+		Goto Ready
+	UberchargeInUse:
+		VRPL A 0 A_JumpIfInventory("FullCharge",1,"FireFull")
+		VRPL A 0 A_JumpIfInventory("90PercentCharge",1,"Fire90")
+		VRPL A 0 A_JumpIfInventory("80PercentCharge",1,"Fire80")
+		VRPL A 0 A_JumpIfInventory("70PercentCharge",1,"Fire70")
+		VRPL A 0 A_JumpIfInventory("60PercentCharge",1,"Fire60")
+		VRPL A 0 A_JumpIfInventory("50PercentCharge",1,"Fire50")
+		VRPL A 0 A_JumpIfInventory("40PercentCharge",1,"Fire40")
+		VRPL A 0 A_JumpIfInventory("30PercentCharge",1,"Fire30")
+		VRPL A 0 A_JumpIfInventory("20PercentCharge",1,"Fire20")
+		VRPL A 0 A_JumpIfInventory("10PercentCharge",1,"Fire10")
+		VRPL A 0 A_StopSound(6)
+		Goto Fire
+	FireFull:
+		TNT1 A 2
+		TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
+		VRPL KLM 2
+		VRPL N 0 A_FireCustomMissile("VorpalSlash",0,0,0)
+		VRPL N 2 A_CustomPunch(random(80,120),0,0,"UberchargePuffFull",150)
+		VRPL OP 2
+		TNT1 A 2
+		Goto Ready
+	Fire90:
+		TNT1 A 2
+		TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
+		VRPL KLM 2
+		VRPL N 2 A_CustomPunch(random(56,77),0,0,"UberchargePuff",150)
+		VRPL OP 2
+		TNT1 A 2
+		Goto Ready
+	Fire80:
+		TNT1 A 2
+		TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
+		VRPL KLM 2
+		VRPL N 2 A_CustomPunch(random(53,74),0,0,"UberchargePuff",150)
+		VRPL OP 2
+		TNT1 A 3
+		Goto Ready
+	Fire70:
+		TNT1 A 2
+		TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
+		VRPL KLM 2
+		VRPL N 2 A_CustomPunch(random(50,70),0,0,"UberchargePuff",150)
+		VRPL OP 2
+		TNT1 A 2
+		Goto Ready
+	Fire60:
+		TNT1 A 2
+		TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
+		VRPL KLM 2
+		VRPL N 2 A_CustomPunch(random(46,67),0,0,"UberchargePuff",150)
+		VRPL OP 2
+		TNT1 A 2
+		Goto Ready
+	Fire50:
+		TNT1 A 2
+		TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
+		VRPL KLM 2
+		VRPL N 2 A_CustomPunch(random(43,64),0,0,"UberchargePuff",150)
+		VRPL OP 2
+		TNT1 A 2
+		Goto Ready
+	Fire40:
+		TNT1 A 2
+		TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
+		VRPL KLM 2
+		VRPL N 2 A_CustomPunch(random(40,60),0,0,"UberchargePuff",150)
+		VRPL OP 2
+		TNT1 A 2
+		Goto Ready
+	Fire30:
+		TNT1 A 2
+		TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
+		VRPL KLM 2
+		VRPL N 2 A_CustomPunch(random(36,57),0,0,"UberchargePuff",150)
+		VRPL OP 2
+		TNT1 A 2
+		Goto Ready
+	Fire20:
+		TNT1 A 2
+		TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
+		VRPL KLM 2
+		VRPL N 2 A_CustomPunch(random(33,54),0,0,"UberchargePuff",150)
+		VRPL OP 2
+		TNT1 A 2
+		Goto Ready
+	Fire10:
+		TNT1 A 2
+		TNT1 A 0 A_PlaySound("reilsss/weapons/dragonswordswing", 8, 1.0, 0)
+		VRPL KLM 2
+		VRPL N 2 A_CustomPunch(random(30,50),0,0,"UberchargePuff",150)
+		VRPL OP 2
+		TNT1 A 2
+		Goto Ready
+	AltFire:
+		VRPL A 0 A_JumpIfInventory("UberchargeActive",1,"UberchargeInUse")
+		VRPL A 0 A_JumpIfInventory("Ubercharge",10,1)
+		Goto Ready
+		VRPL A 0 A_PlayWeaponSound("weapons/pdbshot")
+		VRPL IJ 3
+		VRPL A 0 A_GiveInventory("UberchargeActive",1)
+		VRPL A 0 A_SpawnItemEx("UberchargeSpawner",0,0,0,0,0,0,0,32,0)
+		VRPL A 0 A_JumpIfInventory("Ubercharge",100,"FullActivated")
+		VRPL A 0 A_JumpIfInventory("Ubercharge",90,"90PercentActivated")
+		VRPL A 0 A_JumpIfInventory("Ubercharge",80,"80PercentActivated")
+		VRPL A 0 A_JumpIfInventory("Ubercharge",70,"70PercentActivated")
+		VRPL A 0 A_JumpIfInventory("Ubercharge",60,"60PercentActivated")
+		VRPL A 0 A_JumpIfInventory("Ubercharge",50,"50PercentActivated")
+		VRPL A 0 A_JumpIfInventory("Ubercharge",40,"40PercentActivated")
+		VRPL A 0 A_JumpIfInventory("Ubercharge",30,"30PercentActivated")
+		VRPL A 0 A_JumpIfInventory("Ubercharge",20,"20PercentActivated")
+		VRPL A 0 A_JumpIfInventory("Ubercharge",10,"10PercentActivated")
+		Goto Ready
+	FullActivated:
+		VRPL A 0 A_GiveInventory("FullCharge",1)
+		VRPL A 0 A_GiveInventory("FullChargeResistance",1)
+		VRPL A 0 A_GiveInventory("FullChargeSpeed",1)
+		Goto Ready
+	90PercentActivated:
+		VRPL A 0 A_GiveInventory("90PercentCharge",1)
+		Goto Ready
+	80PercentActivated:
+		VRPL A 0 A_GiveInventory("80PercentCharge",1)
+		Goto Ready
+	70PercentActivated:
+		VRPL A 0 A_GiveInventory("70PercentCharge",1)
+		Goto Ready
+	60PercentActivated:
+		VRPL A 0 A_GiveInventory("60PercentCharge",1)
+		Goto Ready
+	50PercentActivated:
+		VRPL A 0 A_GiveInventory("50PercentCharge",1)
+		Goto Ready
+	40PercentActivated:
+		VRPL A 0 A_GiveInventory("40PercentCharge",1)
+		Goto Ready
+	30PercentActivated:
+		VRPL A 0 A_GiveInventory("30PercentCharge",1)
+		Goto Ready
+	20PercentActivated:
+		VRPL A 0 A_GiveInventory("20PercentCharge",1)
+		Goto Ready
+	10PercentActivated:
+		VRPL A 0 A_GiveInventory("10PercentCharge",1)
+		Goto Ready
+	}
 }
 
-ACTOR AxeBloodCheck : Inventory
+Actor AxeBloodCheck : Inventory {}
+Actor AxeBlood2Check : AxeBloodCheck {}
+
+Actor Ubercharge : Ammo
 {
-    Inventory.Amount 1
-    Inventory.MaxAmount 1
+	+IgnoreSkill
+	Inventory.MaxAmount 100
+	Inventory.PickupMessage "Not supposed to be picked up."
+	Inventory.Icon GNTPRCNT
+	States
+	{
+	Spawn:
+		TNT1 A -1
+		Stop
+	}
 }
 
-ACTOR AxeBlood2Check : AxeBloodCheck
-{}
-
-ACTOR Ubercharge : Ammo
+Actor VorpalBlood : AxeBlood replaces AxeBlood
 {
-    +IgnoreSkill
-    Inventory.MaxAmount 100
-    Inventory.PickupMessage "Not supposed to be picked up."
-    Inventory.Icon GNTPRCNT
-    States
-    {
-    Spawn:
-	TNT1 A -1
-	Stop
-    }
+	Radius 2
+	Height 4
+	+NOBLOCKMAP
+	+NOGRAVITY
+	+DROPOFF
+	+NOTELEPORT
+	+CANNOTPUSH
+	-ALLOWPARTICLES	//not sure if "axeblood" actually has it, but just in case
+	Mass 5
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("UberchargeGiver",0,0,0,0,0,0,0,32,0)
+		Stop
+	}
 }
 
-ACTOR VorpalBlood : AxeBlood replaces AxeBlood
+Actor VorpalPuff
 {
-    Radius 2
-    Height 4
-    +NOBLOCKMAP
-    +NOGRAVITY
-    +DROPOFF
-    +NOTELEPORT
-    +CANNOTPUSH
-    -ALLOWPARTICLES	//not sure if "axeblood" actually has it, but just in case
-    Mass 5
-    States
-    {
-    Spawn:
-	TNT1 A 0
-	TNT1 A 0 A_SpawnItemEx("UberchargeGiver",0,0,0,0,0,0,0,32,0)
-	Stop
-    }
+	+NOEXTREMEDEATH
+	+NOBLOCKMAP
+	+NOGRAVITY
+	+PUFFONACTORS
+	+NOTIMEFREEZE
+	RenderStyle Translucent
+	Alpha 0.4
+	SeeSound "reilsss/weapons/katanahit"
+	PainSound "reilsss/weapons/katanametal"
+	DeathSound "FighterHammerMiss"
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		Stop
+	Crash:
+		TNT1 A 0 A_PlaySound("reilsss/weapons/katanametal", CHAN_AUTO, 1.0, 0)
+		Stop
+	}
 }
 
-ACTOR VorpalPuff
+Actor UberchargePuff
 {
-    +NOEXTREMEDEATH
-    +NOBLOCKMAP
-    +NOGRAVITY
-    +PUFFONACTORS
-    +NOTIMEFREEZE
-    RenderStyle Translucent
-    Alpha 0.4
-    SeeSound "reilsss/weapons/katanahit"
-    PainSound "reilsss/weapons/katanametal"
-    DeathSound "FighterHammerMiss"
-    States
-    {
-    Spawn:
-	TNT1 A 0
-//	FHFX STUVW 4
-	Stop
-    Crash:
-	TNT1 A 0 A_PlaySound("reilsss/weapons/katanametal", CHAN_AUTO, 1.0, 0)
-//	FHFX STUVW 4
-	Stop
-    }
+	+NOBLOCKMAP
+	+PUFFONACTORS
+	+NOGRAVITY
+	RenderStyle Add
+	Translation "192:207=177:191","80:111=176:191"
+	SeeSound "FighterAxeHitThing"
+	AttackSound "FighterHammerHitWall"
+	ActiveSound "FighterHammerMiss"
+	DamageType "Unholy"
+	Alpha 1
+	States
+	{
+	Spawn:
+		FAXE RSTUVWX 4 Bright
+		Stop
+	}
 }
 
-ACTOR UberchargePuff
+Actor UberchargePuffFull : UberchargePuff
 {
-    +NOBLOCKMAP
-    +PUFFONACTORS
-    +NOGRAVITY
-    RenderStyle Add
-    Translation "192:207=177:191","80:111=176:191"
-    SeeSound "FighterAxeHitThing"
-    AttackSound "FighterHammerHitWall"
-    ActiveSound "FighterHammerMiss"
-    DamageType "Unholy"
-    Alpha 1
-    States
-    {
-    Spawn:
-	FAXE RSTUVWX 4 Bright
-	Stop
-    }
+	+EXTREMEDEATH
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("VorpalHealthGiver",0,0,0,0,0,0,0,32,0)
+		FAXE RSTUVWX 4 Bright
+		Stop
+	}
 }
 
-ACTOR UberchargePuffFull : UberchargePuff
+Actor VorpalSlash
 {
-    +EXTREMEDEATH
-    States
-    {
-    Spawn:
-	TNT1 A 0
-	TNT1 A 0 A_SpawnItemEx("VorpalHealthGiver",0,0,0,0,0,0,0,32,0)
-	FAXE RSTUVWX 4 Bright
-	Stop
-    }
+	Radius 10
+	Height 12
+	Speed 24
+	Damage 12
+	PROJECTILE
+	RENDERSTYLE ADD
+	ALPHA 0.75
+	DamageType "Unholy"
+	+RIPPER	RipperLevel 1
+	+NOBOSSRIP
+	+NODAMAGETHRUST
+	+EXTREMEDEATH
+	States
+	{
+	Spawn:
+		VPFX A 0
+		VPFX A 0 A_AlertMonsters
+		VPFX AAAAAAAAAAAAAAA 1 Bright A_SpawnItem("SlashTrail",0,0)
+		Stop
+	} 
 }
 
-ACTOR VorpalSlash
+Actor SlashTrail
 {
-   Radius 10
-   Height 12
-   Speed 24
-   Damage 12
-   PROJECTILE
-   RENDERSTYLE ADD
-   ALPHA 0.75
-   DamageType "Unholy"
-   +RIPPER	RipperLevel 1
-   +NOBOSSRIP
-   +NODAMAGETHRUST
-   +EXTREMEDEATH
-   States
-   {
-   Spawn:
-	VPFX A 0
-	VPFX A 0 A_AlertMonsters
-      VPFX AAAAAAAAAAAAAAA 1 Bright A_SpawnItem("SlashTrail",0,0)
-      Stop
-   } 
+	Radius 3
+	Height 3
+	PROJECTILE
+	RENDERSTYLE ADD
+	ALPHA 0.80
+	States
+	{
+	Spawn:
+		TNT1 A 1
+		VPFX A 2 Bright A_FadeOut
+		Goto Spawn+1
+	}
 }
 
-ACTOR SlashTrail
+Actor UberchargeGiver
 {
-   Radius 3
-   Height 3
-   PROJECTILE
-   RENDERSTYLE ADD
-   ALPHA 0.80
-   States
-   {
-   Spawn:
-      TNT1 A 1
-      VPFX A 2 Bright A_FadeOut
-      Goto Spawn+1
-   }
+	Radius 0
+	Height 1
+	Speed 0
+	PROJECTILE
+	RenderStyle NONE
+	+LOOKALLAROUND
+	+MISSILEMORE
+	+MISSILEEVENMORE
+	+NOTIMEFREEZE
+	+NOFEAR
+	MinMissileChance 0
+	States
+	{
+	Spawn:
+		TNT1 A 0 
+		TNT1 A 1 A_Look
+	See:
+		TNT1 A 1 A_Chase
+	Missile:
+		TNT1 A 0 A_FaceTarget
+		TNT1 A 0 A_JumpIfInTargetInventory("AxeBloodCheck",1,1)
+		Stop
+		TNT1 A 0 A_JumpIfInTargetInventory("UberchargeActive",1,2)
+		TNT1 A 1 A_GiveToTarget("Ubercharge",4)
+		TNT1 A 0
+		Stop
+	}
 }
 
-ACTOR UberchargeGiver
+Actor UberchargeSpawner
 {
-    Radius 0
-    Height 1
-    Speed 0
-    PROJECTILE
-    RENDERSTYLE NONE
-    +LOOKALLAROUND
-    +MISSILEMORE
-    +MISSILEEVENMORE
-    +NOTIMEFREEZE
-    +NOFEAR
-    MinMissileChance 0
-    States
-    {
-    Spawn:
-	TNT1 A 0 
-	TNT1 A 1 A_Look
-    See:
-	TNT1 A 1 A_Chase
-    Missile:
-	TNT1 A 0 A_FaceTarget
-	TNT1 A 0 A_JumpIfInTargetInventory("AxeBloodCheck",1,1)
-	Stop
-	TNT1 A 0 A_JumpIfInTargetInventory("UberchargeActive",1,2)
-	TNT1 A 1 A_GiveToTarget("Ubercharge",4)
-	TNT1 A 0
-	Stop
-    }
+	Radius 0
+	Height 0
+	+NOTIMEFREEZE
+	+NOFEAR
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("UberchargeDrainer",0,0,0,0,0,0,0,32,0)
+		Stop 
+	}
 }
 
-ACTOR UberchargeSpawner
+Actor UberchargeDrainer
 {
-    Radius 0
-    Height 0
-    +NOTIMEFREEZE
-    +NOFEAR
-    States
-    {
-    Spawn:
-        TNT1 A 0
-        TNT1 A 0 A_SpawnItemEx("UberchargeDrainer",0,0,0,0,0,0,0,32,0)
-        Stop 
-    }
+	Radius 0
+	Height 1
+	Speed 0
+	PROJECTILE
+	RenderStyle NONE
+	+LOOKALLAROUND
+	+MISSILEMORE
+	+MISSILEEVENMORE
+	+NOTIMEFREEZE
+	+NOFEAR
+	MinMissileChance 0
+	States
+	{
+	Spawn:
+		TNT1 A 0 
+		TNT1 A 1 A_Look
+	See:
+		TNT1 A 1 A_Chase
+	Missile:
+		TNT1 A 0 A_JumpIfInTargetInventory("Ubercharge",1,1)
+		Goto Death
+		TNT1 A 0 A_FaceTarget
+		TNT1 A 6 A_TakeFromTarget("Ubercharge",1)
+		TNT1 A 0 
+		Loop
+	Death:
+		TNT1 A 0 A_TakeFromTarget("UberchargeActive",1)
+		TNT1 A 0 A_TakeFromTarget("FullCharge",1)
+		TNT1 A 0 A_TakeFromTarget("90PercentCharge",1)
+		TNT1 A 0 A_TakeFromTarget("80PercentCharge",1)
+		TNT1 A 0 A_TakeFromTarget("70PercentCharge",1)
+		TNT1 A 0 A_TakeFromTarget("60PercentCharge",1)
+		TNT1 A 0 A_TakeFromTarget("50PercentCharge",1)
+		TNT1 A 0 A_TakeFromTarget("40PercentCharge",1)
+		TNT1 A 0 A_TakeFromTarget("30PercentCharge",1)
+		TNT1 A 0 A_TakeFromTarget("20PercentCharge",1)
+		TNT1 A 0 A_TakeFromTarget("10PercentCharge",1)
+		Stop
+	}
 }
 
-ACTOR UberchargeDrainer
+Actor VorpalHealthGiver
 {
-    Radius 0
-    Height 1
-    Speed 0
-    PROJECTILE
-    RENDERSTYLE NONE
-    +LOOKALLAROUND
-    +MISSILEMORE
-    +MISSILEEVENMORE
-    +NOTIMEFREEZE
-    +NOFEAR
-    MinMissileChance 0
-    States
-    {
-    Spawn:
-	TNT1 A 0 
-	TNT1 A 1 A_Look
-    See:
-	TNT1 A 1 A_Chase
-    Missile:
-	TNT1 A 0 A_JumpIfInTargetInventory("Ubercharge",1,1)
-	Goto Death
-	TNT1 A 0 A_FaceTarget
-	TNT1 A 6 A_TakeFromTarget("Ubercharge",1)
-	TNT1 A 0 
-	Loop
-    Death:
-	TNT1 A 0 A_TakeFromTarget("UberchargeActive",1)
-	TNT1 A 0 A_TakeFromTarget("FullCharge",1)
-	TNT1 A 0 A_TakeFromTarget("90PercentCharge",1)
-	TNT1 A 0 A_TakeFromTarget("80PercentCharge",1)
-	TNT1 A 0 A_TakeFromTarget("70PercentCharge",1)
-	TNT1 A 0 A_TakeFromTarget("60PercentCharge",1)
-	TNT1 A 0 A_TakeFromTarget("50PercentCharge",1)
-	TNT1 A 0 A_TakeFromTarget("40PercentCharge",1)
-	TNT1 A 0 A_TakeFromTarget("30PercentCharge",1)
-	TNT1 A 0 A_TakeFromTarget("20PercentCharge",1)
-	TNT1 A 0 A_TakeFromTarget("10PercentCharge",1)
-	Stop
-    }
+	Radius 0
+	Height 1
+	Speed 0
+	PROJECTILE
+	RenderStyle NONE
+	+LOOKALLAROUND
+	+MISSILEMORE
+	+MISSILEEVENMORE
+	+NOTIMEFREEZE
+	+NOFEAR
+	MinMissileChance 0
+	States
+	{
+	Spawn:
+		TNT1 A 0 
+		TNT1 A 1 A_Look
+	See:
+		TNT1 A 1 A_Chase
+	Missile:
+		TNT1 A 0 A_FaceTarget
+		TNT1 A 1 A_GiveToTarget("HealthPotion",random(10,20))
+		TNT1 A 0
+		Stop
+	}
 }
 
-ACTOR VorpalHealthGiver
+Actor PowerFullChargeResistance : PowerProtection
 {
-    Radius 0
-    Height 1
-    Speed 0
-    PROJECTILE
-    RENDERSTYLE NONE
-    +LOOKALLAROUND
-    +MISSILEMORE
-    +MISSILEEVENMORE
-    +NOTIMEFREEZE
-    +NOFEAR
-    MinMissileChance 0
-    States
-    {
-    Spawn:
-	TNT1 A 0 
-	TNT1 A 1 A_Look
-    See:
-	TNT1 A 1 A_Chase
-    Missile:
-	TNT1 A 0 A_FaceTarget
-	TNT1 A 1 A_GiveToTarget("HealthPotion",random(10,20))
-	TNT1 A 0
-	Stop
-    }
+	DamageFactor "Normal", 0.8
 }
 
-ACTOR PowerFullChargeResistance : PowerProtection
+Actor FullChargeResistance : PowerupGiver
 {
-    DamageFactor "Normal", 0.8
+	+INVENTORY.AUTOACTIVATE
+	Inventory.MaxAmount 1
+	Powerup.Type "FullChargeResistance"	
+	Powerup.Duration 600
+	Powerup.Color "FF 00 40", 0.3
 }
 
-ACTOR FullChargeResistance : PowerupGiver
+Actor PowerFullChargeSpeed : PowerSpeed
 {
-    +INVENTORY.AUTOACTIVATE
-    Inventory.Maxamount 1
-    Powerup.Type "FullChargeResistance"	
-    Powerup.Duration 600
-    Powerup.Color "FF 00 40", 0.3
+	Speed 1.1
 }
 
-ACTOR PowerFullChargeSpeed : PowerSpeed
+Actor FullChargeSpeed : PowerupGiver
 {
-    Speed 1.1
+	+INVENTORY.AUTOACTIVATE
+	Inventory.MaxAmount 1
+	Powerup.Type "FullChargeSpeed"
+	Powerup.Duration 600
 }
 
-ACTOR FullChargeSpeed : PowerupGiver
-{
-    +INVENTORY.AUTOACTIVATE
-    Inventory.Maxamount 1
-    Powerup.Type "FullChargeSpeed"
-    Powerup.Duration 600
-}
-
-ACTOR UberchargeActive : Inventory
-{
-    Inventory.InterHubAmount 0
-    Inventory.Amount 1
-    Inventory.MaxAmount 1
-}
-
-ACTOR FullCharge : Inventory
-{
-    Inventory.InterHubAmount 0
-    Inventory.Amount 1
-    Inventory.MaxAmount 1
-}
-
-ACTOR 90PercentCharge : Inventory
-{
-    Inventory.InterHubAmount 0
-    Inventory.Amount 1
-    Inventory.MaxAmount 1
-}
-
-ACTOR 80PercentCharge : Inventory
-{
-    Inventory.InterHubAmount 0
-    Inventory.Amount 1
-    Inventory.MaxAmount 1
-}
-
-ACTOR 70PercentCharge : Inventory
-{
-    Inventory.InterHubAmount 0
-    Inventory.Amount 1
-    Inventory.MaxAmount 1
-}
-
-ACTOR 60PercentCharge : Inventory
-{
-    Inventory.InterHubAmount 0
-    Inventory.Amount 1
-    Inventory.MaxAmount 1
-}
-
-ACTOR 50PercentCharge : Inventory
-{
-    Inventory.InterHubAmount 0
-    Inventory.Amount 1
-    Inventory.MaxAmount 1
-}
-
-ACTOR 40PercentCharge : Inventory
-{
-    Inventory.InterHubAmount 0
-    Inventory.Amount 1
-    Inventory.MaxAmount 1
-}
-
-ACTOR 30PercentCharge : Inventory
-{
-    Inventory.InterHubAmount 0
-    Inventory.Amount 1
-    Inventory.MaxAmount 1
-}
-
-ACTOR 20PercentCharge : Inventory
-{
-    Inventory.InterHubAmount 0
-    Inventory.Amount 1
-    Inventory.MaxAmount 1
-}
-
-ACTOR 10PercentCharge : Inventory
-{
-    Inventory.InterHubAmount 0
-    Inventory.Amount 1
-    Inventory.MaxAmount 1
-}
+Actor UberchargeActive 	: Inventory {	Inventory.InterHubAmount 0 }
+Actor FullCharge 		: Inventory {	Inventory.InterHubAmount 0 }
+Actor 90PercentCharge 	: Inventory {	Inventory.InterHubAmount 0 }
+Actor 80PercentCharge 	: Inventory {	Inventory.InterHubAmount 0 }
+Actor 70PercentCharge 	: Inventory {	Inventory.InterHubAmount 0 }
+Actor 60PercentCharge 	: Inventory {	Inventory.InterHubAmount 0 }
+Actor 50PercentCharge 	: Inventory {	Inventory.InterHubAmount 0 }
+Actor 40PercentCharge 	: Inventory {	Inventory.InterHubAmount 0 }
+Actor 30PercentCharge 	: Inventory {	Inventory.InterHubAmount 0 }
+Actor 20PercentCharge 	: Inventory {	Inventory.InterHubAmount 0 }
+Actor 10PercentCharge 	: Inventory {	Inventory.InterHubAmount 0 }
 
 Actor VorpalBladeDrop : CustomInventory
 {
-    Inventory.MaxAmount 1
-    States
-    {
-    Use:
-	TNT1 A 0
-	TNT1 A 0 A_StopSound(6)
-	TNT1 A 0 A_SpawnItemEx("DroppedVorpalBlade",0,0,32,8,0,0,0,32,0)
-	Stop
-    }
+	States
+	{
+	Use:
+		TNT1 A 0
+		TNT1 A 0 A_StopSound(6)
+		TNT1 A 0 A_SpawnItemEx("DroppedVorpalBlade",0,0,32,8,0,0,0,32,0)
+		Stop
+	}
 }
 
-ACTOR DroppedVorpalBlade
+Actor DroppedVorpalBlade
 {
-    Radius 16
-    Height 20
-    Scale 0.7
-    States
-    {
-    Spawn:
-	WVPL A 15
-	TNT1 A 0 A_SpawnItemEx("AEoDVorpalBladeItem",0,0,0,0,0,0,0,48,0)
-	Stop
-    }
+	Radius 16
+	Height 20
+	Scale 0.7
+	States
+	{
+	Spawn:
+		WVPL A 15
+		TNT1 A 0 A_SpawnItemEx("AEoDVorpalBladeItem",0,0,0,0,0,0,0,48,0)
+		Stop
+	}
 }
 
 //================================================================
@@ -2988,295 +2813,149 @@ ACTOR DroppedVorpalBlade
 
 //Arcanum Sidhe (Ichor)
 //-------------
-ACTOR AEoDSickle : weapon 6096
+Actor AEoDSickle : weapon 6096
 {
-+MELEEWEAPON
-+CHEATNOTWEAPON
-+FLOATBOB
-+NOALERT
-+NOEXTREMEDEATH
-+INVENTORY.UNDROPPABLE
-obituary "%o was sliced into pieces by %k."
-Inventory.PickupMessage "You found a Arcanum Sickel"
-Attacksound "reilsss/weapons/macehitflesh"
-Inventory.PickupSound "reilsss/weappickup/armblade"
-weapon.upsound "weapons/draw"
-Scale 1.0
-Tag "Unused"
-states
+	+MELEEWEAPON
+	+CHEATNOTWEAPON
+	+FLOATBOB
+	+NOALERT
+	+NOEXTREMEDEATH
+	+INVENTORY.UNDROPPABLE
+	Obituary "%o was sliced into pieces by %k."
+	Inventory.PickupMessage "You found a Arcanum Sickle"
+	Attacksound "reilsss/weapons/macehitflesh"
+	Inventory.PickupSound "reilsss/weappickup/armblade"
+	Weapon.UpSound "weapons/draw"
+	Weapon.SelectionOrder 22000
+	Scale 1.0
+	Tag "Unused"
+	States
+	{
+	Spawn:
+		R062 O 4
+		Loop
+	Select:
+		TNT1 A 1
+		DERP A 1 A_Raise
+		TNT1 AA 0 A_Raise
+		Goto Select+1
+	Deselect:
+		R062 A 1 A_lower
+		TNT1 AA 0 A_lower
+		Loop
+	Ready:
+		DERP A 1 A_weaponready
+		Loop
+	Fire:
+		R062 N 2
+		TNT1 A 2
+	Hold:
+		TNT1 A 0 A_PlaySound("reilsss/weapons/macealtswing", CHAN_WEAPON, 1.0, 0)
+		R062 A 1 offset(32,32)
+		R062 A 1 offset(28,32)
+		R062 A 1 offset(24,32)
+
+		R062 B 1 offset(22,32)
+		R062 B 1 offset(15,32)
+		R062 B 1 offset(10,32)
+
+		R062 C 1 offset(20,33) A_Custompunch(10,0,0,"SicklePuff",85)
+		R062 C 1 offset(12,34)
+		R062 C 1 offset(0,36)
+		R062 C 1 offset(-10,36)
+
+		R062 D 1 offset(40,36)
+		R062 D 1 offset(36,39)
+		R062 D 1 offset(32,42)
+		TNT1 A 4
+		TNT1 A 0 A_Refire
+		TNT1 A 2
+		R062 N 2
+		Goto Ready
+	Altfire:
+		R062 N 2
+		TNT1 A 2
+	AltHold:
+		TNT1 A 0 A_Jump(255,"Altfire1","Altfire2")
+	Altfire1:
+		TNT1 A 0 A_PlaySound("reilsss/weapons/macealtswing", CHAN_WEAPON, 1.0, 0)
+		R062 A 3
+		R062 E 3
+		R062 F 3
+		R062 G 1 offset(30,33)
+		R062 G 1 offset(28,35)
+		R062 G 1 offset(26,37)
+		R062 H 0 offset(39,32) A_Custompunch(0,0,0,"SicklePuff2",115)
+		R062 H 0 offset(39,32) A_Custompunch(0,0,0,"SicklePuff3",115)
+		R062 H 1 offset(39,32) A_Custompunch(15,0,0,"SicklePuff3",115)
+		R062 H 1 offset(36,40)
+		R062 H 1 offset(33,48)
+		TNT1 A 3
+		TNT1 A 0 A_Refire
+		TNT1 A 2
+		R062 N 2
+		Goto Ready
+	Altfire2:
+		TNT1 A 0 A_PlaySound("reilsss/weapons/macealtswing", CHAN_WEAPON, 1.0, 0)
+		R062 I 1 offset(36,38)
+		R062 I 2 offset(32,32)
+		R062 J 3
+		R062 K 3
+		R062 L 2 offset(38,28)
+		R062 L 2 offset(32,32)
+		R062 L 2 offset(28,38)
+		R062 M 0 offset(39,32) A_Custompunch(0,0,0,"SicklePuff2",115)
+		R062 M 0 offset(39,32) A_Custompunch(0,0,0,"SicklePuff3",115)
+		R062 H 1 offset(39,32) A_Custompunch(19,0,0,"SicklePuff3",115)
+		TNT1 A 3
+		TNT1 A 0 A_Refire
+		TNT1 A 2
+		R062 N 2
+		Goto Ready
+	}
+}
+
+Actor SicklePuff
 {
-Spawn:
-	R062 O 4
-	loop
-Select:
-	TNT1 A 1
-	DERP A 1 A_raise
-	TNT1 AA 0 A_raise
-	Goto Select+1
-Deselect:
-	R062 A 1 A_lower
-	TNT1 AA 0 A_lower
-	loop
-Ready:
-	DERP A 1 A_weaponready
-	loop
-Fire:
-	R062 N 2
-	TNT1 A 2
-Hold:
-	TNT1 A 0 A_PlaySound("reilsss/weapons/macealtswing", CHAN_WEAPON, 1.0, 0)
-	R062 A 1 offset(32,32)
-	R062 A 1 offset(28,32)
-	R062 A 1 offset(24,32)
-
-	R062 B 1 offset(22,32)
-	R062 B 1 offset(15,32)
-	R062 B 1 offset(10,32)
-
-	R062 C 1 offset(20,33) A_Custompunch(10,0,0,"SicklePuff",85)
-	R062 C 1 offset(12,34)
-	R062 C 1 offset(0,36)
-	R062 C 1 offset(-10,36)
-
-	R062 D 1 offset(40,36)
-	R062 D 1 offset(36,39)
-	R062 D 1 offset(32,42)
-	TNT1 A 4
-	TNT1 A 0 A_Refire
-	TNT1 A 2
-	R062 N 2
-	goto Ready
-Altfire:
-	R062 N 2
-	TNT1 A 2
-AltHold:
-	TNT1 A 0 A_Jump(255,"Altfire1","Altfire2")
-Altfire1:
-	TNT1 A 0 A_PlaySound("reilsss/weapons/macealtswing", CHAN_WEAPON, 1.0, 0)
-	R062 A 3
-	R062 E 3
-	R062 F 3
-	R062 G 1 offset(30,33)
-	R062 G 1 offset(28,35)
-	R062 G 1 offset(26,37)
-	R062 H 0 offset(39,32) A_Custompunch(0,0,0,"SicklePuff2",115)
-	R062 H 0 offset(39,32) A_Custompunch(0,0,0,"SicklePuff3",115)
-	R062 H 1 offset(39,32) A_Custompunch(15,0,0,"SicklePuff3",115)
-	R062 H 1 offset(36,40)
-	R062 H 1 offset(33,48)
-	TNT1 A 3
-	TNT1 A 0 A_Refire
-	TNT1 A 2
-	R062 N 2
-	goto Ready
-Altfire2:
-	TNT1 A 0 A_PlaySound("reilsss/weapons/macealtswing", CHAN_WEAPON, 1.0, 0)
-	R062 I 1 offset(36,38)
-	R062 I 2 offset(32,32)
-	R062 J 3
-	R062 K 3
-	R062 L 2 offset(38,28)
-	R062 L 2 offset(32,32)
-	R062 L 2 offset(28,38)
-	R062 M 0 offset(39,32) A_Custompunch(0,0,0,"SicklePuff2",115)
-	R062 M 0 offset(39,32) A_Custompunch(0,0,0,"SicklePuff3",115)
-	R062 H 1 offset(39,32) A_Custompunch(19,0,0,"SicklePuff3",115)
-	TNT1 A 3
-	TNT1 A 0 A_Refire
-	TNT1 A 2
-	R062 N 2
-	goto Ready
-}
+	+NOGRAVITY
+	+NOBLOCKMAP
+	+FLOORCLIP
+	Radius 1
+	Height 1
+	SeeSound "reilsss/weapons/knifehitwall"
+	PainSound "reilsss/weapons/knifehitwall"
+	DeathSound "reilsss/weapons/knifehitwall"
+	RenderStyle ADD
+	Alpha	1
+	Scale	.08
+	States
+	{
+	Spawn:
+		CLWP A 1 Bright
+		CLWP A 1 Bright A_PlaySound("reilsss/weapons/knifehitwall", CHAN_AUTO, 1.0, 0)
+		CLWP B 1 A_AlertMonsters
+		CLWP C 1 Bright A_SetTranslucent(.75,1)
+		CLWP D 1 Bright A_SetTranslucent(.5,1)
+		CLWP E 1 Bright A_SetTranslucent(.25,1)
+		Stop
+	}
 }
 
-ACTOR SicklePuff
-{	
-+NOGRAVITY
-+NOBLOCKMAP
-+FLOORCLIP
-Radius 1
-Height 1
-SeeSound "reilsss/weapons/knifehitwall"
-PainSound "reilsss/weapons/knifehitwall"
-DeathSound "reilsss/weapons/knifehitwall"
-RenderStyle ADD
-Alpha	1
-Scale	.08
-States
+Actor SicklePuff2 : SicklePuff
 {
-Spawn:
-	CLWP A 1 Bright
-	CLWP A 1 Bright A_PlaySound("reilsss/weapons/knifehitwall", CHAN_AUTO, 1.0, 0)
-	CLWP B 1 A_AlertMonsters
-	CLWP C 1 Bright A_SetTranslucent(.75,1)
-	CLWP D 1 Bright A_SetTranslucent(.5,1)
-	CLWP E 1 Bright A_SetTranslucent(.25,1)
-	Stop
-}
+	+FORCEPAIN
+	DamageType "Drain"
 }
 
-ACTOR SicklePuff2 : SicklePuff
+Actor SicklePuff3 : SicklePuff2
 {
-    +FORCEPAIN
-    DamageType "Drain"
-}
-
-ACTOR SicklePuff3 : SicklePuff2
-{
-    -FORCEPAIN
-    States
-    {
-	TNT1 A 0
-	Stop
-    }
-}
-
-//--------------------------------------------------------------------
-
-//Crawl Palanax (Reilsss)
-//-------------
-ACTOR AEoDFist : Weapon 6095
-{
-+MELEEWEAPON
-+CHEATNOTWEAPON
-+NOALERT
-+NOEXTREMEDEATH
-+INVENTORY.UNDROPPABLE
-obituary "%o was sliced into pieces by %k."
-Inventory.PickupMessage "You found a Crawl Wristblade"
-Attacksound "reilsss/weapons/punchhit"
-Inventory.PickupSound "misc/w_pkup"
-weapon.upsound "weapons/draw"
-Scale 0.5
-Tag "Unused"
-states
-{
-Spawn:
-	MDKT A 4
-	loop
-Select:
-	TNT1 A 1
-	DERP A 1 A_raise
-	TNT1 AA 0 A_raise
-	Goto Select+1
-Deselect:
-	R064 A 1 A_lower
-	TNT1 AA 0 A_lower
-	loop
-Ready:
-	DERP A 1 A_weaponready
-	loop
-Fire:
-	R064 BC 2
-	TNT1 A 3
-Hold:
-	TNT1 A 0 A_Jump(255,"Fire1","Fire2","Fire1","Fire2")
-Fire1:
-	TNT1 A 0 A_PlaySound("reilsss/weapons/gaulentpunch", CHAN_WEAPON, 1.0, 0)
-	R064 D 1
-	R064 E 1
-	R064 F 1
-	R064 G 1
-	R064 H 1
-	R064 I 1 A_Custompunch(9,0,0,"FistPuff",75)
-	TNT1 A 0 A_Recoil(-1)
-	R064 J 1
-	R064 K 1
-	R064 L 1
-	TNT1 A 0 A_Refire
-	TNT1 A 3
-	R064 CB 2
-	goto Ready
-Fire2:
-	TNT1 A 0 A_PlaySound("reilsss/weapons/gaulentpunch", CHAN_WEAPON, 1.0, 0)
-	R064 M 1
-	R064 N 1
-	R064 O 1
-	R064 P 1
-	R064 Q 1
-	R064 R 1 A_Custompunch(9,0,0,"FistPuff",75)
-	TNT1 A 0 A_Recoil(-1)
-	R064 S 1
-	R064 T 1
-	R064 U 1
-	TNT1 A 0 A_Refire
-	TNT1 A 3
-	R064 CB 2
-	goto Ready
-Altfire:
-	R064 Z 3
-	TNT1 A 0 A_Jump(255,"Altfire1","Altfire2")
-Altfire1:
-	TNT1 A 0 A_PlaySound("reilsss/weapons/macealtswing", CHAN_WEAPON, 1.0, 0)
-	R064 V 4
-	R064 W 4 A_Custompunch(12,0,0,"FootKickPuff",107)
-	TNT1 A 0 A_Recoil(-2)
-	R064 V 4
-	R064 Z 4
-	TNT1 A 0 A_Refire
-	goto Ready
-Altfire2:
-	TNT1 A 0 A_PlaySound("reilsss/weapons/macealtswing", CHAN_WEAPON, 1.0, 0)
-	R064 X 4
-	R064 Y 4 A_Custompunch(12,0,0,"FootKickPuff",105)
-	TNT1 A 0 A_Recoil(-2)
-	R064 X 4
-	R064 Z 4
-	TNT1 A 0 A_Refire
-	goto Ready
-}
-}
-
-ACTOR FistPuff
-{	
-+NOGRAVITY
-+NOBLOCKMAP
-+FLOORCLIP
-Radius 1
-Height 1
-SeeSound "reilsss/weapons/gaulenthitwall2"
-PainSound "reilsss/weapons/gaulenthitwall2"
-DeathSound "reilsss/weapons/gaulenthitwall2"
-RenderStyle ADD
-Alpha	1
-Scale	.08
-States
-{
-Spawn:
-	CLWP A 1 BRIGHT
-	CLWP A 1 BRIGHT A_PlaySound("reilsss/weapons/gaulenthitwall2", CHAN_AUTO, 1.0, 0)
-	CLWP B 1 A_AlertMonsters
-	CLWP C 1 Bright A_SetTranslucent(.75,1)
-	CLWp D 1 Bright A_SetTranslucent(.5,1)
-	CLWP E 1 Bright A_SetTranslucent(.25,1)
-	Stop
-}
-}
-
-ACTOR FootKickPuff
-{	
-+NOGRAVITY
-+NOBLOCKMAP
-+FLOORCLIP
-Radius 1
-Height 1
-SeeSound "reilsss/weapons/macehitflesh"
-PainSound "reilsss/weapons/macehitflesh"
-DeathSound "reilsss/weapons/macehitflesh"
-RenderStyle ADD
-Alpha	1
-Scale	.08
-States
-{
-Spawn:
-	CLWP A 1 BRIGHT
-	CLWP A 1 BRIGHT A_PlaySound("reilsss/weapons/macehitflesh", CHAN_AUTO, 1.0, 0)
-	CLWP B 1 A_AlertMonsters
-	CLWP C 1 Bright A_SetTranslucent(.75,1)
-	CLWp D 1 Bright A_SetTranslucent(.5,1)
-	CLWP E 1 Bright A_SetTranslucent(.25,1)
-	Stop
-}
+	-FORCEPAIN
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		Stop
+	}
 }
 
 //--------------------------------------------------------------------
@@ -3291,7 +2970,7 @@ Spawn:
 
 //EDF Hunt (3d Realms)
 //--------
-ACTOR AEoDDagger : Weapon 6094
+Actor AEoDDagger : Weapon 6094
 {
 +MELEEWEAPON
 +CHEATNOTWEAPON
@@ -3301,7 +2980,7 @@ ACTOR AEoDDagger : Weapon 6094
 obituary "%o was sliced into pieces by %k."
 Inventory.PickupMessage "You found a EDF Dagger"
 Inventory.PickupSound "reilsss/weappickup/katana"
-weapon.upsound "weapons/draw"
+Weapon.UpSound "weapons/draw"
 Scale 1.0
 Tag "Unused"
 States
@@ -3329,7 +3008,7 @@ Fire:
 	R063 E 2 A_CustomPunch(4,0,1,"KnifePuff",65)
 	R063 FG 2 A_CustomPunch(2,0,1,"KnifePuff",65)
 	TNT1 A 2
-	goto Ready 
+	Goto Ready 
 AltFire: 
 	TNT1 A 0 A_Jump(80,"AltFire2")
 	R063 B 3  
@@ -3337,14 +3016,14 @@ AltFire:
 	R063 HIJ 3 A_CustomPunch(4,0,1,"KnifePuff",65)
 	R063 K 3 A_CustomPunch(5,0,1,"KnifePuff",65)
 	TNT1 A 4 A_CustomPunch(5,0,1,"KnifePuff",65)
-	goto Ready 
+	Goto Ready 
 AltFire2: 
 	TNT1 A 3  
 	TNT1 A 0 A_PlaySound("deathknight/swing2", CHAN_WEAPON, 1.0, 0)
 	R063 KJI 3 A_CustomPunch(4,0,1,"KnifePuff",65)
 	R063 H 3 A_CustomPunch(5,0,1,"KnifePuff",65)
 	TNT1 A 4 A_CustomPunch(5,0,1,"KnifePuff",65)
-	goto Ready 
+	Goto Ready 
 } 
 } 
 
@@ -3352,7 +3031,7 @@ AltFire2:
 
 //The Cabal (Bouncy (exmember)
 //---------
-ACTOR AEoDFlail : weapon 6093
+Actor AEoDFlail : weapon 6093
 {
 +MELEEWEAPON
 +CHEATNOTWEAPON
@@ -3364,14 +3043,14 @@ obituary "%o was sliced into pieces by %k."
 Inventory.PickupMessage "You found a Cabal Flail"
 Attacksound "reilsss/weapons/macehitflesh"
 Inventory.PickupSound "weaponbuild"
-weapon.upsound "weapons/draw"
+Weapon.UpSound "weapons/draw"
 Scale 1.0
 Tag "Unused"
 states
 {
 Spawn:
 	R060 M 4
-	loop
+	Loop
 Select:
 	TNT1 A 1
 	R060 A 1 A_raise
@@ -3380,10 +3059,10 @@ Select:
 Deselect:
 	R060 A 1 A_lower
 	TNT1 AA 0 A_lower
-	loop
+	Loop
 Ready:
 	DERP A 1 A_weaponready
-	loop
+	Loop
 Fire:
 	R060 B 3
 	TNT1 A 0 A_PlaySound("reilsss/weapons/macealtswing", CHAN_WEAPON, 1.0, 0)
@@ -3401,7 +3080,7 @@ Fire:
 	R060 G 3
 	TNT1 A 3
 	TNT1 A 0 A_Refire
-	goto Ready
+	Goto Ready
 Altfire:
 	TNT1 A 3
 	TNT1 A 0 A_PlaySound("reilsss/weapons/macealtswing", CHAN_WEAPON, 1.0, 0)
@@ -3415,11 +3094,11 @@ Altfire:
 	R060 L 4 offset(32,32)
 	TNT1 A 12
 	TNT1 A 0 A_Refire
-	goto Ready
+	Goto Ready
 }
 }
 
-ACTOR FlailPuff
+Actor FlailPuff
 {	
 +NOGRAVITY
 +NOBLOCKMAP
@@ -3436,7 +3115,7 @@ States
 {
 Spawn:
 	CLWP A 1 BRIGHT
-	CLWP A 1 BRIGHT A_PlaySound("reilsss/weapons/macehitground", CHAN_AUTO, 1.0, 0)
+	CLWP A 1 Bright A_PlaySound("reilsss/weapons/macehitground", CHAN_AUTO, 1.0, 0)
 	CLWP B 1 A_AlertMonsters
 	CLWP C 1 Bright A_SetTranslucent(.75,1)
 	CLWp D 1 Bright A_SetTranslucent(.5,1)
@@ -3449,7 +3128,7 @@ Spawn:
 
 //UAC Black Ops (id software)
 //-------------
-ACTOR AEoDWristblade : Weapon 6092
+Actor AEoDWristblade : Weapon 6092
 {
 +MELEEWEAPON
 +CHEATNOTWEAPON
@@ -3460,14 +3139,14 @@ obituary "%o was smashed down by %k."
 Inventory.PickupMessage "You found a UAC Figthskill"
 Attacksound "reilsss/weapons/macehitflesh"
 Inventory.PickupSound "reilsss/weappickup/armblade"
-weapon.upsound "weapons/draw"
+Weapon.UpSound "weapons/draw"
 Scale 0.5
 Tag "Unused"
 states
 {
 Spawn:
 	R061 T 4
-	loop
+	Loop
 Select:
 	TNT1 A 1
 	R061 B 1 A_raise
@@ -3476,10 +3155,10 @@ Select:
 Deselect:
 	R061 B 1 A_lower
 	TNT1 AA 0 A_lower
-	loop
+	Loop
 Ready:
 	DERP B 1 A_weaponready
-	loop
+	Loop
 Fire:
 	R061 CD 2
 	TNT1 A 3
@@ -3498,7 +3177,7 @@ Fire1:
 	TNT1 A 0 A_Refire
 	TNT1 A 3
 	R061 DC 2
-	goto Ready
+	Goto Ready
 Fire2:
 	TNT1 A 0 A_PlaySound("reilsss/weapons/maceswing", CHAN_WEAPON, 1.0, 0)
 	R061 L 1
@@ -3512,7 +3191,7 @@ Fire2:
 	TNT1 A 0 A_Refire
 	TNT1 A 3
 	R061 DC 2
-	goto Ready
+	Goto Ready
 Altfire:
 	R061 CD 2
 	TNT1 A 3
@@ -3526,11 +3205,11 @@ AltHold:
 	TNT1 A 0 A_Refire
 	TNT1 A 3
 	R061 DC 2
-	goto Ready
+	Goto Ready
 }
 }
 
-ACTOR WristbladePuff
+Actor WristbladePuff
 {	
 +NOGRAVITY
 +NOBLOCKMAP
@@ -3547,7 +3226,7 @@ States
 {
 Spawn:
 	CLWP A 1 BRIGHT
-	CLWP A 1 BRIGHT A_PlaySound("reilsss/weapons/knifehitwall", CHAN_AUTO, 1.0, 0)
+	CLWP A 1 Bright A_PlaySound("reilsss/weapons/knifehitwall", CHAN_AUTO, 1.0, 0)
 	CLWP B 1 A_AlertMonsters
 	CLWP C 1 Bright A_SetTranslucent(.75,1)
 	CLWp D 1 Bright A_SetTranslucent(.5,1)
@@ -3562,7 +3241,7 @@ Spawn:
 
 //=================================================================================
 //=================================================================================
-ACTOR AEoDScytheItem : CustomInventory 
+Actor AEoDScytheItem : CustomInventory 
 {
 	+FLOORCLIP
 	+INVENTORY.IGNORESKILL
@@ -3606,7 +3285,7 @@ Actor ScytheDrop : CustomInventory
 	}
 }
 
-ACTOR DroppedScythe
+Actor DroppedScythe
 {
 	Radius 16
 	Height 20
@@ -3620,7 +3299,7 @@ ACTOR DroppedScythe
 	}
 }
 
-ACTOR AEoDScythe : Weapon 
+Actor AEoDScythe : Weapon 
 { 
 	+FLOORCLIP
 	+CHEATNOTWEAPON
@@ -3675,7 +3354,7 @@ ACTOR AEoDScythe : Weapon
 		W66W A 1 offset(-65,80)
 		W66W A 1 offset(-35,65)
 		W66W A 1 offset(-10,50)
-		goto Ready 
+		Goto Ready 
 	AltFire: 
 		W66W A 1 offset(30,32)
 		W66W A 1 offset(45,32)
@@ -3709,7 +3388,7 @@ ACTOR AEoDScythe : Weapon
 		W66W A 1 offset(-65,80)
 		W66W A 1 offset(-35,65)
 		W66W A 1 offset(-10,50)
-		goto Ready 
+		Goto Ready 
 	AltFire2:
 		W66W B 1 offset(60,32)
 		W66W B 1 offset(30,32) A_CustomPunch(5, 0, 1,"KnifePuff",120)
@@ -3729,7 +3408,7 @@ ACTOR AEoDScythe : Weapon
 		W66W A 1 offset(-65,80)
 		W66W A 1 offset(-35,65)
 		W66W A 1 offset(-10,50)
-		goto Ready 
+		Goto Ready 
 	AltFire3:
 		W66W B 1 offset(60,32)
 		W66W B 1 offset(30,32) A_CustomPunch(6, 0, 1,"KnifePuff",120)
@@ -3750,7 +3429,7 @@ ACTOR AEoDScythe : Weapon
 		W66W A 1 offset(-65,80)
 		W66W A 1 offset(-35,65)
 		W66W A 1 offset(-10,50)
-		goto Ready 
+		Goto Ready 
 	AltFire4:
 		W66W B 1 offset(60,32)
 		W66W B 1 offset(30,32) A_CustomPunch(8, 0, 1,"KnifePuff",120)
@@ -3771,7 +3450,7 @@ ACTOR AEoDScythe : Weapon
 		W66W A 1 offset(-65,80)
 		W66W A 1 offset(-35,65)
 		W66W A 1 offset(-10,50)
-		goto Ready 
+		Goto Ready 
 	AltFire5:
 		W66W B 1 offset(60,32)
 		W66W B 1 offset(30,32) A_CustomPunch(20, 0, 1,"KnifePuff",120)
@@ -3792,7 +3471,7 @@ ACTOR AEoDScythe : Weapon
 		W66W A 1 offset(-65,80)
 		W66W A 1 offset(-35,65)
 		W66W A 1 offset(-10,50)
-		goto Ready 
+		Goto Ready 
 	} 
 } 
 
@@ -3802,7 +3481,7 @@ Actor StrenghtCount : Inventory
 	Inventory.Amount 1
 }
 // This is a dummy version just to prevent certain decorate errors
-ACTOR AEoDCultScythe : Weapon 
+Actor AEoDCultScythe : Weapon 
 { 
 	States 
 	{ 
@@ -3860,7 +3539,7 @@ Order your spy knife today!
 
 //===============================================================================*/
 //=================================================================================
-ACTOR AEoDSpyKnifeItem : CustomInventory
+Actor AEoDSpyKnifeItem : CustomInventory
 {
 	+FLOORCLIP
 	+INVENTORY.IGNORESKILL
@@ -3905,7 +3584,7 @@ Actor SpyKnifeDrop : CustomInventory
 	}
 }
 
-ACTOR DroppedSpyKnife
+Actor DroppedSpyKnife
 {
 	Radius 16
 	Height 20
@@ -3930,7 +3609,7 @@ Actor AEoDSpyKnife : Weapon
 	Obituary "%o should never have trusted %k when he's holding a butterfly knife."
 	Inventory.PickupMessage "You found the butterfly knife! Gut them like Cornish game hens!"
 	Inventory.PickupSound "reilsss/weapons/knifeblock" 
-	Weapon.upsound "postal2/weapons/machetebrandish2"
+	Weapon.UpSound "postal2/weapons/machetebrandish2"
 	Scale 0.25
 	Tag "Butterfly knife"
 	States
