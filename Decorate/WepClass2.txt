@@ -2805,127 +2805,6 @@ Actor DroppedVorpalBlade
 	}
 }
 
-//================================================================
-//================================================================
-// Start Melee Weapons follows below
-//================================================================
-//================================================================
-
-
-//--------------------------------------------------------------------
-
-//UAC Black Ops (id software)
-//-------------
-Actor AEoDWristblade : Weapon 6092
-{
-+MELEEWEAPON
-+CHEATNOTWEAPON
-+NOALERT
-+NOEXTREMEDEATH
-+INVENTORY.UNDROPPABLE
-obituary "%o was smashed down by %k."
-Inventory.PickupMessage "You found a UAC Figthskill"
-Attacksound "reilsss/weapons/macehitflesh"
-Inventory.PickupSound "reilsss/weappickup/armblade"
-Weapon.UpSound "weapons/draw"
-Scale 0.5
-Tag "Unused"
-states
-{
-Spawn:
-	R061 T 4
-	Loop
-Select:
-	TNT1 A 1
-	R061 B 1 A_raise
-	TNT1 AA 0 A_raise
-	Goto Select+1
-Deselect:
-	R061 B 1 A_lower
-	TNT1 AA 0 A_lower
-	Loop
-Ready:
-	DERP B 1 A_weaponready
-	Loop
-Fire:
-	R061 CD 2
-	TNT1 A 3
-Hold:
-	TNT1 A 0 A_Jump(255,"Fire1","Fire2","Fire1","Fire2")
-Fire1:
-	TNT1 A 0 A_PlaySound("reilsss/weapons/maceswing", CHAN_WEAPON, 1.0, 0)
-	R061 E 1
-	R061 F 1
-	R061 G 1 A_Custompunch(9,0,0,"WristbladePuff",75)
-	TNT1 A 0 A_Recoil(-1)
-	R061 H 2
-	R061 I 2
-	R061 J 2
-	R061 K 2
-	TNT1 A 0 A_Refire
-	TNT1 A 3
-	R061 DC 2
-	Goto Ready
-Fire2:
-	TNT1 A 0 A_PlaySound("reilsss/weapons/maceswing", CHAN_WEAPON, 1.0, 0)
-	R061 L 1
-	R061 M 1
-	R061 N 1
-	R061 O 1 A_Custompunch(9,0,0,"WristbladePuff",75)
-	TNT1 A 0 A_Recoil(-1)
-	R061 Q 2
-	R061 R 2
-	R061 S 2
-	TNT1 A 0 A_Refire
-	TNT1 A 3
-	R061 DC 2
-	Goto Ready
-Altfire:
-	R061 CD 2
-	TNT1 A 3
-AltHold:
-	TNT1 A 0 A_PlaySound("reilsss/weapons/macealtswing", CHAN_WEAPON, 1.0, 0)
-	R061 UVWX 2
-	R061 Y 3 A_Custompunch(13,0,0,"FootKickPuff",107)
-	TNT1 A 0 A_Recoil(-2)
-	R061 XWVU 2
-	TNT1 A 2
-	TNT1 A 0 A_Refire
-	TNT1 A 3
-	R061 DC 2
-	Goto Ready
-}
-}
-
-Actor WristbladePuff
-{	
-+NOGRAVITY
-+NOBLOCKMAP
-+FLOORCLIP
-Radius 1
-Height 1
-SeeSound "reilsss/weapons/knifehitwall"
-PainSound "reilsss/weapons/knifehitwall"
-DeathSound "reilsss/weapons/knifehitwall"
-RenderStyle ADD
-Alpha	1
-Scale	.08
-States
-{
-Spawn:
-	CLWP A 1 BRIGHT
-	CLWP A 1 Bright A_PlaySound("reilsss/weapons/knifehitwall", CHAN_AUTO, 1.0, 0)
-	CLWP B 1 A_AlertMonsters
-	CLWP C 1 Bright A_SetTranslucent(.75,1)
-	CLWp D 1 Bright A_SetTranslucent(.5,1)
-	CLWP E 1 Bright A_SetTranslucent(.25,1)
-	Stop
-}
-}
-
-//=================================================================================
-//=================================================================================
-
 
 //=================================================================================
 //=================================================================================
@@ -2995,6 +2874,7 @@ Actor AEoDScythe : Weapon
 	Inventory.PickupSound "misc/w_pkup" 
 	Inventory.PickupMessage "You found an unholy scythe!"
 	Weapon.UpSound "weapons/draw"
+	Weapon.SelectionOrder 22000
 	Obituary "%o was sliced by %k."
 	MeleeSound "guadana1"
 	+MELEEWEAPON
@@ -3049,14 +2929,14 @@ Actor AEoDScythe : Weapon
 		W66W A 1 offset(70,32)
 		TNT1 A 12 A_ReFire
 	AltHold:
-		TNT1 A 8 A_GiveInventory("StrenghtCount",1)
+		TNT1 A 8 A_GiveInventory("StrengthCount",1)
 		TNT1 A 0 A_Refire
 		Goto "AltHoldEnd"
 	AltHoldEnd:
-		TNT1 A 0 A_JumpIfInventory("StrenghtCount",15,"AltFire5")
-		TNT1 A 0 A_JumpIfInventory("StrenghtCount",9,"AltFire4")
-		TNT1 A 0 A_JumpIfInventory("StrenghtCount",6,"AltFire3")
-		TNT1 A 0 A_JumpIfInventory("StrenghtCount",3,"AltFire2")
+		TNT1 A 0 A_JumpIfInventory("StrengthCount",15,"AltFire5")
+		TNT1 A 0 A_JumpIfInventory("StrengthCount",9,"AltFire4")
+		TNT1 A 0 A_JumpIfInventory("StrengthCount",6,"AltFire3")
+		TNT1 A 0 A_JumpIfInventory("StrengthCount",3,"AltFire2")
 	AltFire1:
 		W66W B 1 offset(60,32)
 		W66W B 1 offset(30,32) A_CustomPunch(4, 0, 1,"KnifePuff",120)
@@ -3071,7 +2951,7 @@ Actor AEoDScythe : Weapon
 		W66W D 1 offset(-60,45) A_CustomPunch(5, 0, 1,"KnifePuff",120)
 		W66W D 1 offset(-70,51)
 		W66W D 1 offset(-90,57)
-		TNT1 A 5 A_TakeInventory("StrenghtCount",15)
+		TNT1 A 5 A_TakeInventory("StrengthCount",15)
 		W66W A 1 offset(-90,110)
 		W66W A 1 offset(-65,80)
 		W66W A 1 offset(-35,65)
@@ -3091,7 +2971,7 @@ Actor AEoDScythe : Weapon
 		W66W D 1 offset(-60,45) A_CustomPunch(6, 0, 1,"KnifePuff",120)
 		W66W D 1 offset(-70,51)
 		W66W D 1 offset(-90,57)
-		TNT1 A 10 A_TakeInventory("StrenghtCount",15)
+		TNT1 A 10 A_TakeInventory("StrengthCount",15)
 		W66W A 1 offset(-90,110)
 		W66W A 1 offset(-65,80)
 		W66W A 1 offset(-35,65)
@@ -3112,7 +2992,7 @@ Actor AEoDScythe : Weapon
 		TNT1 A 0 ACS_NamedExecute("s851",0,-8,random(-3,-9),0)
 		W66W D 1 offset(-70,51)
 		W66W D 1 offset(-90,57)
-		TNT1 A 15 A_TakeInventory("StrenghtCount",15)
+		TNT1 A 15 A_TakeInventory("StrengthCount",15)
 		W66W A 1 offset(-90,110)
 		W66W A 1 offset(-65,80)
 		W66W A 1 offset(-35,65)
@@ -3133,7 +3013,7 @@ Actor AEoDScythe : Weapon
 		TNT1 A 0 ACS_NamedExecute("s851",0,-10,random(-5,-12),0)
 		W66W D 1 offset(-70,51)
 		W66W D 1 offset(-90,57)
-		TNT1 A 25 A_TakeInventory("StrenghtCount",15)
+		TNT1 A 25 A_TakeInventory("StrengthCount",15)
 		W66W A 1 offset(-90,110)
 		W66W A 1 offset(-65,80)
 		W66W A 1 offset(-35,65)
@@ -3154,7 +3034,7 @@ Actor AEoDScythe : Weapon
 		W66W D 1 offset(-60,45) A_CustomPunch(31, 0, 1,"KnifePuff",120)
 		W66W D 1 offset(-70,51)
 		W66W D 1 offset(-90,57)
-		TNT1 A 50 A_TakeInventory("StrenghtCount",15)
+		TNT1 A 50 A_TakeInventory("StrengthCount",15)
 		W66W A 1 offset(-90,110)
 		W66W A 1 offset(-65,80)
 		W66W A 1 offset(-35,65)
@@ -3163,7 +3043,7 @@ Actor AEoDScythe : Weapon
 	} 
 } 
 
-Actor StrenghtCount : Inventory
+Actor StrengthCount : Inventory
 {
 	Inventory.MaxAmount 15
 	Inventory.Amount 1
@@ -3298,6 +3178,7 @@ Actor AEoDSpyKnife : Weapon
 	Inventory.PickupMessage "You found the butterfly knife! Gut them like Cornish game hens!"
 	Inventory.PickupSound "reilsss/weapons/knifeblock" 
 	Weapon.UpSound "postal2/weapons/machetebrandish2"
+	Weapon.SelectionOrder 21000
 	Scale 0.25
 	Tag "Butterfly knife"
 	States
@@ -3392,11 +3273,8 @@ Actor AEoDSpyKnife : Weapon
 	}
 }
 
-Actor OpenAnimation : Inventory
-{ Inventory.MaxAmount 1 }
-
-Actor BackstabChecker : Inventory
-{ Inventory.MaxAmount 1 }
+Actor OpenAnimation 	: Inventory {}
+Actor BackstabChecker 	: Inventory {}
 
 Actor BackstabAccumulator : Inventory
 { Inventory.MaxAmount 4 }
