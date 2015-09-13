@@ -2218,48 +2218,6 @@ Actor SniperRifleCasing // Bullet that drops out weapon after firing
 	}
 }
 
-Actor FlaregunFire //Example
-{
-	-SOLID
-	PROJECTILE
-	+SEEKERMISSILE
-	+ROCKETTRAIL	
-	+DONTSPLASH
-	-EXTREMEDEATH
-	DONTHURTSHOOTER
-	Radius 3
-	Height 4
-	Speed 145 //45
-	Scale 0.5
-	Damage 20
-	explosionRadius 32
-	explosiondamage 45
-	activesound "dsFLRAIR"
-	DeathSound "DSRXPLOD"
-	States
-	{
-	Spawn:
-		TNT1 A 0 Bright A_LoopActiveSound
-		R016 PQR 1 Bright A_SeekerMissile(80,20)
-		TNT1 AAA 0 A_CustomMissile("Flaretrail",0,0,random(0,360),2,random(-90,90))
-		Loop
-	Death:
-		TNT1 A 0 A_Explode
-		R016 A 1 Bright
-		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("Flaretrail",0,0,10,random(-4,4),random(-4,4),random(-4,4),random(1,360))
-		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("Flaretrail",0,0,10,random(-4,4),random(-4,4),random(-4,4),random(1,360))
-		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("Flaretrail",0,0,10,random(-4,4),random(-4,4),random(-4,4),random(1,360))
-		Stop
-	XDeath:
-		TNT1 A 0 A_Explode
-		R016 A 1 Bright
-		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("Flaretrail",0,0,10,random(-4,4),random(-4,4),random(-4,4),random(1,360))
-		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("Flaretrail",0,0,10,random(-4,4),random(-4,4),random(-4,4),random(1,360))
-		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("Flaretrail",0,0,10,random(-4,4),random(-4,4),random(-4,4),random(1,360))
-		Stop
-	}
-}
-
 Actor SniperTrail
 {
 	PROJECTILE
