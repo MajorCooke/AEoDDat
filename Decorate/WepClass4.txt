@@ -35,7 +35,7 @@ Actor AEoDAWPItem : CustomInventory 6126
 		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
 		TNT1 A 0 A_GiveInventory("AWPDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDAWP",1)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,1,0,0)
+		TNT1 A 0 	
 		Stop
 	Nothing:
 		TNT1 A 0 A_JumpIfInventory("AEoDAWP",1,"Ammo")
@@ -49,7 +49,7 @@ Actor AEoDAWPItem : CustomInventory 6126
 	}
 }
 
-Actor AEoDAWP : Weapon // 6126
+Actor AEoDAWP: Weapon // 6126
 {
 	Obituary "%o was shredded unto thine void by %k's AWP"
 	Inventory.PickupMessage "You got the AWP!"
@@ -63,6 +63,7 @@ Actor AEoDAWP : Weapon // 6126
 	Weapon.AmmoGive1 30
 	Weapon.AmmoType "AENails"
 	Weapon.AmmoType2 "AENails"
+	Weapon.SelectionOrder 16000
 	Weapon.upsound "Weapon/SniperCharge"
 	Scale 0.24
 	Tag "AWP rifle"
@@ -77,12 +78,12 @@ Actor AEoDAWP : Weapon // 6126
 	Deselect:
 		TNT1 A 0 A_TakeInventory("ZoomToken",3)
 		TNT1 A 0 A_ZoomFactor(1.0,1)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
+		TNT1 A 0 	
 		AWP1 A 1 A_Lower
 		TNT1 AA 0 A_Lower
 		Goto Deselect+2
 	Select:
-		TNT1 A 0 //ACS_NamedExecute("s799",0,1,0,0)
+		TNT1 A 0 	
 		AWP1 A 1 A_Raise
 		TNT1 AA 0 A_Raise
 		Loop
@@ -161,8 +162,7 @@ Actor AEoDAWP : Weapon // 6126
 	}
 }
 
-Actor ZoomToken : Inventory
-{	Inventory.MaxAmount 1	}
+Actor ZoomToken : Inventory {}
 
 Actor AWPFlasher
 {
@@ -312,7 +312,7 @@ Actor AEoDAWPNoAmmo : AEoDAWPItem
 		TNT1 A 0 A_GiveInventory("AWPDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDAWP",1)
 		TNT1 A 0 A_TakeInventory("AENails",30)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,1,0,0)
+		TNT1 A 0 	
 		Stop
 	Nothing:
 		TNT1 A 0 A_JumpIfInventory("AEoDAWP",1,"Ammo")
@@ -356,7 +356,7 @@ Actor AEoDCMRifleItem : CustomInventory 6034
 		TNT1 A 0 A_GiveInventory("COPgunInClip",12)
 		TNT1 A 0 A_GiveInventory("CMRifleDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDCMRifle",1)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,2,0,0)
+		TNT1 A 0 	
 		Stop
 	Nothing:
 		TNT1 A 0 A_JumpIfInventory("AEoDCMRifle",1,"Ammo")
@@ -383,6 +383,7 @@ Actor AEoDCMRifle : Weapon // 6034
 	Weapon.AmmoGive1 0
 	Weapon.AmmoGive2 16
 	Weapon.AmmoUse1 0
+	Weapon.SelectionOrder 22222
 	Inventory.PickupMessage "You got the Combat Manual Rifle!"
 	Inventory.PickupSound "reilsss/weappickup/copgun"
 	AttackSound "reilsss/weapons/copgunfire"
@@ -398,12 +399,10 @@ Actor AEoDCMRifle : Weapon // 6034
 		COPG A 1 A_WeaponReady(WRF_ALLOWRELOAD)
 		Loop
 	Deselect:
-		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
 		COPG A 1 A_Lower
 		TNT1 AA 0 A_Lower
 		Loop
 	Select:
-		TNT1 A 0 //ACS_NamedExecute("s799",0,2,0,0)
 		COPG A 1 A_Raise
 		TNT1 AA 0 A_Raise
 		Loop
@@ -426,54 +425,27 @@ Actor AEoDCMRifle : Weapon // 6034
 		Goto Ready
 	AltFire:
 	Reload:
-		D3SG A 0 A_JumpIfInventory("COPgunInClip", 12, "Ready") //Line 1
-		D3SG A 0 A_JumpIfInventory("AEShell", 1, 1) //Line 2
+		D3SG A 0 A_JumpIfInventory("COPgunInClip", 12, "Ready")
+		D3SG A 0 A_JumpIfInventory("AEShell", 1, 1)
 		Goto Ready
 	Reload1:
 		COPR AAABBBCC 1 A_WeaponReady(WRF_NOFIRE)
-		//COPR A 3 //Line 3
-		//COPR B 3 //Line 4
-		//COPR C 2 //Line 5
-		COPR D 0 A_PlaySound("reilsss/weapons/copgunreload1", 6, 1.0, 0) //Line 6
+		COPR D 0 A_PlaySound("reilsss/weapons/copgunreload1", 6, 1.0, 0)
 		COPR DDEEFFFGGGHHHIII 1 A_WeaponReady(WRF_NOFIRE)
-		//COPR E 2 //Line 7
-		//COPR F 3 //Line 8
-		//COPR G 3 //Line 9
-		//COPR H 3 //Line 10
-		//COPR I 3 //Line 11
-		COPR J 0 A_PlaySound("reilsss/weapons/copgunreload2", 7, 1.0, 0) //Line 12
+		COPR J 0 A_PlaySound("reilsss/weapons/copgunreload2", 7, 1.0, 0)
 		COPR JJKKLLMM 1 A_WeaponReady(WRF_NOFIRE)
-		//COPR K 3 //Line 13
-		//COPR L 3 //Line 14
-		//COPR M 3 //Line 15
-		
 	Reload2:
 		COPR NOPQRST 1 A_WeaponReady(WRF_NOFIRE)
-		//COPR N 3 //Line 24
-		//COPR O 3 //Line 25
-		//COPR P 3 //Line 26
-		//COPR Q 3 //Line 27
-		//COPR R 3 //Line 28
-		//COPR S 3 //Line 29
-		//COPR T 3 //Line 30
-		COPR U 0 A_PlaySound("reilsss/weapons/copgunreload3", 6, 1.0, 0) //Line 31
+		COPR U 0 A_PlaySound("reilsss/weapons/copgunreload3", 6, 1.0, 0)
 		COPR UVWXYZ 1 A_WeaponReady(WRF_NOFIRE)
-		//COPR V 3 //Line 32
-		//COPR W 3 //Line 33
-		//COPR X 3 //Line 34
-		//COPR Y 3 //Line 35
-		//COPR Z 3 //Line 36
-		//COPG A 2 //Line 37
-		//Goto Ready
-		//Reload
 	Reload2Check:
-		TNT1 A 0 //Line 16
-		TNT1 A 0 A_JumpIfInventory("InfiniteAmmo",1,2) // Line 17
-		TNT1 A 0 A_TakeInventory("AEShell",1) //Line 18
-		TNT1 A 0 A_GiveInventory("COPgunInClip",1) //Line 19
-		TNT1 A 0 A_JumpIfInventory("COPgunInClip",12,"Ready") //Line 20
-		TNT1 A 0 A_JumpIfInventory("AEShell",1,"Reload2Check") //Line 21
-		TNT1 A 0  //Line 22
+		TNT1 A 0
+		TNT1 A 0 A_JumpIfInventory("InfiniteAmmo",1,2) 
+		TNT1 A 0 A_TakeInventory("AEShell",1) 
+		TNT1 A 0 A_GiveInventory("COPgunInClip",1)
+		TNT1 A 0 A_JumpIfInventory("COPgunInClip",12,"Ready") 
+		TNT1 A 0 A_JumpIfInventory("AEShell",1,"Reload2Check")
+		TNT1 A 0
 		Goto Ready
 	Flash:
 		TNT1 A 1 Bright A_Light2
@@ -520,7 +492,6 @@ Actor CheapAlert
 
 Actor CMRifleDrop : CustomInventory
 {
-	Inventory.MaxAmount 1
 	States
 	{
 	Use:
@@ -564,7 +535,7 @@ Actor AEoDCMRifleNoAmmo : AEoDCMRifleItem
 		TNT1 A 0 A_GiveInventory("CMRifleDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDCMRifle",1)
 		TNT1 A 0 A_TakeInventory("AEShell",16)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,2,0,0)
+		TNT1 A 0 	
 		Stop
 	Nothing:
 		TNT1 A 0 A_JumpIfInventory("AEoDCMRifle",1,"Ammo")
@@ -607,7 +578,7 @@ Actor AEoDCombatShotgunItem : CustomInventory 6060
 		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
 		TNT1 A 0 A_GiveInventory("CombatShotgunDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDCombatShotgun",1)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,3,0,0)
+		TNT1 A 0 	
 		Stop
 	Nothing:
 		TNT1 A 0 A_JumpIfInventory("AEoDCombatShotgun",1,"Ammo")
@@ -630,6 +601,7 @@ Actor AEoDCombatShotgun : Weapon // 6060
 	Weapon.AmmoGive1 8
 	Weapon.AmmoUse1 2
 	Weapon.AmmoUse2 4
+	Weapon.SelectionOrder 7500
 	+CHEATNOTWEAPON
 	Obituary "%o felt the %k's combat shotgun."
 	Inventory.PickupMessage "You found the Combat Shotgun."
@@ -647,12 +619,10 @@ Actor AEoDCombatShotgun : Weapon // 6060
 		Q2SS A 1 A_WeaponReady 
 		Loop 
 	Deselect: 
-		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
 		Q2SS A 1 A_Lower
 		TNT1 AA 0 A_Lower 
 		Loop 
 	Select: 
-		TNT1 A 0 //ACS_NamedExecute("s799",0,3,0,0)
 		Q2SS A 1 A_Raise
 		TNT1 AA 0 A_Raise 
 		Loop
@@ -826,7 +796,7 @@ Actor AEoDCombatShotgunNoAmmo : AEoDCombatShotgunItem
 		TNT1 A 0 A_GiveInventory("CombatShotgunDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDCombatShotgun",1)
 		TNT1 A 0 A_TakeInventory("AEShell",8)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,3,0,0)
+		TNT1 A 0 	
 		Stop
 	Nothing:
 		TNT1 A 0 A_JumpIfInventory("AEoDCombatShotgun",1,"Ammo")
@@ -868,7 +838,7 @@ Actor AEoDCrystalGunItem : CustomInventory 6039
 		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
 		TNT1 A 0 A_GiveInventory("CrystalGunDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDCrystalGun",1)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,4,0,0)
+		TNT1 A 0 	
 		Stop
 	Nothing:
 		TNT1 A 0 A_JumpIfInventory("AEoDCrystalGun",1,"Ammo")
@@ -892,6 +862,7 @@ Actor AEoDCrystalGun : Weapon // 6039
 	Weapon.AmmoGive1 45
 	Weapon.AmmoUse1 5
 	Weapon.AmmoUse2 15
+	Weapon.SelectionOrder 9777
 	Inventory.PickupMessage "You got the Crystal Gun!"
 	Inventory.PickupSound "reilsss/weappickup/crystalgun"
 	weapon.upsound "weapons/draw"
@@ -905,12 +876,12 @@ Actor AEoDCrystalGun : Weapon // 6039
 		CRYG A 1 A_WeaponReady
 		Loop
 	Deselect:
-		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
+		TNT1 A 0 	
 		CRYG A 1 A_Lower
 		TNT1 AA 0 A_Lower
 		Loop
 	Select:
-		TNT1 A 0 //ACS_NamedExecute("s799",0,4,0,0)
+		TNT1 A 0 	
 		CRYG A 1 A_Raise
 		TNT1 AA 0 A_Raise
 		Loop
@@ -1061,246 +1032,7 @@ Actor CrytalShotExtra
 	}
 }
 
-Actor FMaelStromBall
-{
-	PROJECTILE
-	+LOWGRAVITY
-	+DONTSPLASH
-	Radius 5
-	Height 8
-	Speed 25
-	Damage 50
-	DamageType "Ice"
-	SeeSound "mageshardsfire"
-	DeathSound "mageshardsexplode"
-	Scale 1.5
-	States
-	{
-	Spawn:
-		SHRD A 0 A_LowGravity
-		SHRD A 1 Bright A_CustomMissile("FMaelstromTrail",0,0,0)
-		Loop
-	Death:
-		PLSE A 0 Bright A_CustomMissile("FMaelStromBolt", 0, 0, 0)
-		PLSE A 0 Bright A_CustomMissile("FMaelStromBolt4Spawner", 0, 0, -180)
-		PLSE A 0 Bright A_CustomMissile("FMaelStromBolt4Spawner", 0, 0, -157)
-		PLSE A 0 Bright A_CustomMissile("FMaelStromBolt4Spawner", 0, 0, -135)
-		PLSE A 0 Bright A_CustomMissile("FMaelStromBolt4Spawner", 0, 0, -112)
-		PLSE A 0 Bright A_CustomMissile("FMaelStromBolt4Spawner", 0, 0, -90)
-		PLSE A 0 Bright A_CustomMissile("FMaelStromBolt4Spawner", 0, 0, -66)
-		PLSE A 0 Bright A_CustomMissile("FMaelStromBolt4Spawner", 0, 0, -45)
-		PLSE A 0 Bright A_CustomMissile("FMaelStromBolt4Spawner", 0, 0, -25)
-		PLSE A 0 Bright A_CustomMissile("FMaelStromBolt4Spawner", 0, 0, 25)
-		PLSE A 0 Bright A_CustomMissile("FMaelStromBolt4Spawner", 0, 0, 45)
-		PLSE A 0 Bright A_CustomMissile("FMaelStromBolt4Spawner", 0, 0, 66)
-		PLSE A 0 Bright A_CustomMissile("FMaelStromBolt4Spawner", 0, 0, 90)
-		PLSE A 0 Bright A_CustomMissile("FMaelStromBolt4Spawner", 0, 0, 112)
-		PLSE A 0 Bright A_CustomMissile("FMaelStromBolt4Spawner", 0, 0, 135)
-		PLSE A 0 Bright A_CustomMissile("FMaelStromBolt4Spawner", 0, 0, 157)
-		SHEX ABCDE 4 BRIGHT
-		Stop
-	}
-}	
-
-Actor FMaelstromTrail
-{
-	+NOGRAVITY
-	+DONTSPLASH
-	Radius 1
-	Height 1
-	Speed 0
-	Damage 0
-	RenderStyle Add
-	Alpha 0.5
-	States
-	{
-	Spawn:
-		SHEX ABCDE 3 BRIGHT
-		Stop
-	}
-}
-	  
-	Actor FMaelStromBolt
-	{
-	+NOGRAVITY
-	+NOCLIP
-	+DONTSPLASH
-	DamageType "Ice"
-	Radius 13
-	Height 8
-	Speed 1
-	Mass 5000
-	Scale 0.75
-	States
-	{
-	Spawn:
-		TNT1 A 1
-		TNT1 A 0 Bright A_CustomMissile("FMaelStromBolt2", 0, 0, -180)
-		TNT1 A 0 Bright A_CustomMissile("FMaelStromBolt2", 0, 16, -175)
-		TNT1 A 0 Bright A_CustomMissile("FMaelStromBolt2", 0, 32, -170)
-		TNT1 A 0 Bright A_CustomMissile("FMaelStromBolt2", 0, -16, -185)
-		TNT1 A 0 Bright A_CustomMissile("FMaelStromBolt2", 0, -32, -190)
-		Stop
-	}
-}	
-
-Actor FMaelStromBolt2
-{
-	DamageType "Ice"
-	+NOGRAVITY
-	+NOCLIP
-	+DONTSPLASH
-	Radius 13
-	Height 8
-	Speed 2
-	Mass 5000
-	Scale 0.75
-	States
-	{
-	Spawn:
-		TNT1 A 1 BRIGHT
-		TNT1 A 0 Bright A_CustomMissile("FMaelStromBolt3", 0, 0, 0)
-		TNT1 A 0 Bright A_CustomMissile("FMaelStromBolt3", 0, 16, 0)
-		TNT1 A 0 Bright A_CustomMissile("FMaelStromBolt3", 0, -16, 0)
-		Stop
-	}
-}	
-
-Actor FMaelStromBolt3
-{
-	+DONTSPLASH
-	DamageType "Ice"
-	+NOGRAVITY
-	+FLOORHUGGER
-	Radius 13
-	Height 8
-	Speed 0
-	Mass 5000
-	Obituary "%o fell in the Korax's rage."
-	RenderStyle Add
-	Alpha 0.5
-	Scale 0.75
-	States
-	{
-	Spawn:
-		FIR2 A 2 Bright A_PlaySound("mealstrom/boltcrackle")
-		FIR2 B 2 Bright 
-		FIR2 C 2 Bright A_PlaySound("mealstrom/boltcrackle")
-		FIR2 D 2 Bright A_Explode(12,64,1)
-		FIR2 E 2 Bright A_PlaySound("mealstrom/boltcrackle")
-		FIR2 F 2 Bright 
-		FIR2 G 2 Bright A_PlaySound("mealstrom/boltcrackle")
-		FIR2 H 2 Bright A_Explode(12,64,1)
-		FIR2 I 2 Bright A_PlaySound("mealstrom/boltcrackle")
-		FIR2 J 2 Bright 
-		FIR2 K 2 Bright A_PlaySound("mealstrom/boltcrackle")
-		FIR2 L 2 Bright A_Explode(12,64,1)
-		FIR2 M 2 Bright A_PlaySound("mealstrom/boltcrackle")
-		FIR2 N 2 Bright 
-		FIR2 O 2 Bright A_PlaySound("mealstrom/boltcrackle")
-		FIR2 P 2 Bright A_Explode(12,64,1)
-		FIR2 A 2 Bright A_PlaySound("mealstrom/boltcrackle")
-		FIR2 B 2 Bright 
-		FIR2 C 2 Bright A_PlaySound("mealstrom/boltcrackle")
-		FIR2 D 2 Bright A_Explode(12,64,1)
-		FIR2 E 2 Bright A_PlaySound("mealstrom/boltcrackle")
-		FIR2 F 2 Bright 
-		FIR2 G 2 Bright A_PlaySound("mealstrom/boltcrackle")
-		FIR2 H 2 Bright 
-		FIR2 I 2 Bright A_PlaySound("mealstrom/boltcrackle")
-		FIR2 J 2 Bright 
-		FIR2 K 2 Bright A_PlaySound("mealstrom/boltcrackle")
-		FIR2 L 2 Bright A_Explode(12,64,1)
-		FIR2 M 2 Bright A_PlaySound("mealstrom/boltcrackle")
-		FIR2 N 2 Bright 
-		FIR2 O 2 Bright A_PlaySound("mealstrom/boltcrackle")
-		FIR2 P 2 Bright 
-		FIR2 O 2 Bright A_PlaySound("mealstrom/boltcrackle")
-		FIR2 N 2 Bright 
-		FIR2 M 2 Bright A_PlaySound("mealstrom/boltcrackle")
-		FIR2 N 2 Bright A_Explode(12,64,1)
-		FIR2 O 2 Bright A_PlaySound("mealstrom/boltcrackle")
-		FIR2 P 2 Bright 
-		FIR2 O 2 Bright A_PlaySound("mealstrom/boltcrackle")
-		FIR2 N 2 Bright 
-		FIR2 M 2 Bright A_PlaySound("mealstrom/boltcrackle")
-		FIR2 N 2 Bright 
-		FIR2 QR 6 BRIGHT
-		Stop
-	}
-}	
-
-ACTOR	FMaelStromBolt4Spawner
-{
-	PROJECTILE
-	DamageType "Ice"
-	+RIPPER	RipperLevel 1
-	+FLOORHUGGER
-	+SEEKERMISSILE
-	+DONTSPLASH
-	Radius 13
-	Height 8
-	Speed 22
-	Damage 5
-	Mass 5000
-	reactiontime 50
-	States
-	{
-	Spawn:
-		TNT1 A 1 A_CustomMissile("FMaelStromBolt4", 0, 0, 0)
-		TNT1 A 0 A_SeekerMissile(5,15)
-		TNT1 A 0 A_CountDown
-		Loop
-	Death: 
-		TNT1 A 0
-		Stop
-	}
-}	
-
-ACTOR	FMaelStromBolt4
-{
-	+NOGRAVITY
-	+FLOORCLIP
-	+STRIFEDAMAGE
-	DamageType "Ice"
-	+RIPPER	RipperLevel 1
-	+FLOORHUGGER
-	+DONTSPLASH
-	Radius 13
-	Height 8
-	Speed 0
-	Mass 5000
-	Damage 2
-	RenderStyle Add
-	Alpha 0.5
-	Scale 0.75
-	States
-	{
-	Spawn:
-		FIR2 A 2 Bright A_PlaySound("mealstrom/boltcrackle")
-		FIR2 B 2 Bright A_Explode(16,64,1)
-		FIR2 C 2 Bright A_PlaySound("mealstrom/boltcrackle")
-		FIR2 D 2 Bright 
-		FIR2 E 2 Bright A_PlaySound("mealstrom/boltcrackle")
-		FIR2 F 2 Bright A_Explode(16,64,1)
-		FIR2 G 2 Bright A_PlaySound("mealstrom/boltcrackle")
-		FIR2 H 2 Bright 
-		FIR2 I 2 Bright A_PlaySound("mealstrom/boltcrackle")
-		FIR2 J 2 Bright A_Explode(16,64,1)
-		FIR2 K 2 Bright A_PlaySound("mealstrom/boltcrackle")
-		FIR2 L 2 Bright 
-		FIR2 M 2 Bright A_PlaySound("mealstrom/boltcrackle")
-		FIR2 N 2 Bright A_Explode(16,64,1)
-		FIR2 O 2 Bright A_PlaySound("mealstrom/boltcrackle")
-		FIR2 P 2 Bright 
-		FIR2 QR 6 BRIGHT
-		Stop
-	}
-}
-
-
-
-ACTOR	IceStaffShot2
+Actor IceStaffShot2
 {
 	PROJECTILE
 	Radius 5
@@ -1472,7 +1204,7 @@ Actor AEoDCrystalGunNoAmmo : AEoDCrystalGunItem
 		TNT1 A 0 A_GiveInventory("CrystalGunDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDCrystalGun",1)
 		TNT1 A 0 A_TakeInventory("AECell",45)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,4,0,0)
+		TNT1 A 0 	
 		Stop
 	Nothing:
 		TNT1 A 0 A_JumpIfInventory("AEoDCrystalGun",1,"Ammo")
@@ -1515,7 +1247,7 @@ Actor AEoDDemonOrbItem : CustomInventory 6044
 		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
 		TNT1 A 0 A_GiveInventory("DemonOrbDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDDemonOrb",1)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,5,0,0)
+		TNT1 A 0 	
 		Stop
 	Nothing:
 		TNT1 A 0 A_JumpIfInventory("AEoDDemonOrb",1,"Ammo")
@@ -1543,10 +1275,10 @@ Actor AEoDDemonOrb : Weapon // 6044
 	Weapon.AmmoGive1 25
 	Weapon.AmmoUse1 5
 	Weapon.AmmoUse2 10
+	Weapon.SelectionOrder 19000
 	Weapon.UpSound "weapons/draw"
 	Inventory.PickupMessage "You found the DemonOrb!"
 	Inventory.PickupSound "reilsss/weapons/demoncalleridlebio"
-	//weapon.upsound "reilsss/weapons/demoncalleridlebio"
 	Tag "Demon Orb"
 	States
 	{
@@ -1567,12 +1299,10 @@ Actor AEoDDemonOrb : Weapon // 6044
 		Goto Ready
 	Deselect:
 		UNHG A 0 A_Light0
-		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
 		UNHG A 1 A_Lower
 		TNT1 AA 0 A_Lower
 		Goto Deselect+1
 	Select:
-		TNT1 A 0 //ACS_NamedExecute("s799",0,5,0,0)
 		UNHG A 1 A_Raise
 		TNT1 AA 0 A_Raise
 		Loop
@@ -1582,7 +1312,6 @@ Actor AEoDDemonOrb : Weapon // 6044
 		UNHG GH 3
 		UNHG I 4 A_Light1
 		UNHG J 0 A_Light2
-		//UNHG J 0 A_Recoil(1.5)
 		UNHG J 0 A_SetBlend("red",0.2,15)
 		UNHG J 8 A_FireCustomMissile("MonsterDropper",0,1,0,1)
 		UNHG I 4 A_Light1
@@ -1596,7 +1325,6 @@ Actor AEoDDemonOrb : Weapon // 6044
 		UNHG GH 3
 		UNHG I 4 A_Light1
 		UNHG J 0 A_Light2
-		//UNHG J 0 A_Recoil(3.2)
 		UNHG J 0 A_SetBlend("red",0.2,30)
 		UNHG J 10 A_FireCustomMissile("MonsterDropper2",0,1,0,1)
 		UNHG I 6 A_Light1
@@ -1831,7 +1559,6 @@ Actor AEoDDemonOrbNoAmmo : AEoDDemonOrbItem
 		TNT1 A 0 A_GiveInventory("DemonOrbDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDDemonOrb",1)
 		TNT1 A 0 A_TakeInventory("RedMana",25)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,5,0,0)
 		Stop
 	Nothing:
 		TNT1 A 0 A_JumpIfInventory("AEoDDemonOrb",1,"Ammo")
@@ -1852,7 +1579,6 @@ Actor AEoDDemonOrbNoAmmo : AEoDDemonOrbItem
 Actor SpentShell : PuzzleItem
 {
 	-INVBAR
-	Inventory.MaxAmount 1
 	Inventory.Icon TNT1A0
 	States
 	{
@@ -1887,7 +1613,7 @@ Actor AEoDSerpentStaffItem : CustomInventory 6016
 		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
 		TNT1 A 0 A_GiveInventory("SerpentStaffDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDSerpentStaff",1)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,6,0,0)
+		TNT1 A 0 	
 		Stop
 	Nothing:
 		TNT1 A 0 A_JumpIfInventory("AEoDSerpentStaff",1,"Ammo")
@@ -1912,6 +1638,7 @@ Actor AEoDSerpentStaff : CWeapStaff // 6016
 	Weapon.AmmoGive1 40
 	Weapon.AmmoUse1 2
 	Weapon.AmmoUse2 1
+	Weapon.SelectionOrder 11000
 	Obituary "%o saw the %k's serpent eye."
 	Inventory.PickupMessage "You found the Serpent Staff!"
 	Inventory.PickupSound "weaponbuild" 
@@ -1932,13 +1659,10 @@ Actor AEoDSerpentStaff : CWeapStaff // 6016
 		CSSF A 0 A_WeaponReady
 		Loop
 	Deselect: 
-		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
 		CSSF A 1 A_Lower 
 		TNT1 AA 0 A_Lower
 		Loop 
 	Select: 
-
-		TNT1 A 0 //ACS_NamedExecute("s799",0,6,0,0)
 		CSSF A 1 A_Raise
 		TNT1 AA 0 A_Raise 
 		Loop
@@ -1986,9 +1710,7 @@ Actor AEoDSerpentStaff : CWeapStaff // 6016
 		CSSF M 1 Bright A_FireCustomMissile("GreenGas", 0, 1, 0, 0) 
 		TNT1 AAA 0 Bright A_FireCustomMissile("GreenGasFake", random(15,-15), 0, 0, 0) 
 		CSSF M 1 Bright A_FireCustomMissile("GreenGas", 0, 0, 0, 0) 
-		CSSF N 2 Bright
-		CSSF K 2 Bright
-		CSSF J 2 Bright
+		CSSF NKJ 2 Bright
 		CSSF A 0 A_ReFire
 		Goto Ready
 	} 
@@ -2227,7 +1949,7 @@ Actor AEoDSerpentStaffNoAmmo : AEoDSerpentStaffItem
 		TNT1 A 0 A_GiveInventory("SerpentStaffDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDSerpentStaff",1)
 		TNT1 A 0 A_TakeInventory("BlueMana",40)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,6,0,0)
+		TNT1 A 0 	
 		Stop
 	Nothing:
 		TNT1 A 0 A_JumpIfInventory("AEoDSerpentStaff",1,"Ammo")
@@ -2251,7 +1973,7 @@ Actor AEoDSerpentStaffNoAmmo : AEoDSerpentStaffItem
 //==================================================================================
 //==================================================================================
 
-Actor AEoDBioRifleItem : CustomInventory 6040
+Actor AEoDBiorifleItem : CustomInventory 6040
 {
 	+FLOORCLIP
 	+INVENTORY.IGNORESKILL
@@ -2268,40 +1990,40 @@ Actor AEoDBioRifleItem : CustomInventory 6040
 		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
 		Goto Pickup+2
 		TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",4) <= 0,"Nothing")
-		TNT1 A 0 A_JumpIfInventory("AEoDBioRifleCount",2,"Ammo")
-		TNT1 A 0 A_JumpIfInventory("AEoDBioRifleCount",1,"Pickup2")
+		TNT1 A 0 A_JumpIfInventory("AEoDBiorifleCount",2,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("AEoDBiorifleCount",1,"Pickup2")
 		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
 		TNT1 A 0 A_GiveInventory("BiorifleDrop",1)
-		TNT1 A 0 A_GiveInventory("AEoDBioRifle",1)
-		TNT1 A 0 A_GiveInventory("AEoDBioRifleCount",1)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,7,0,0)
+		TNT1 A 0 A_GiveInventory("AEoDBiorifle",1)
+		TNT1 A 0 A_GiveInventory("AEoDBiorifleCount",1)
+		TNT1 A 0 	
 		TNT1 A 0 A_JumpIfInventory("NoWeaponSwitch",1,2)
-		TNT1 A 0 A_SelectWeapon("AEoDBioRifle")
+		TNT1 A 0 A_SelectWeapon("AEoDBiorifle")
 		TNT1 A 0
 		Stop
 	Pickup2:
 		TNT1 A 0 A_GiveInventory("BiorifleDrop",1)
-		TNT1 A 0 A_GiveInventory("AEoDBioRifle",1)
-		TNT1 A 0 A_GiveInventory("AEoDBioRifleCount",1)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,7,0,0)
+		TNT1 A 0 A_GiveInventory("AEoDBiorifle",1)
+		TNT1 A 0 A_GiveInventory("AEoDBiorifleCount",1)
+		TNT1 A 0 	
 		TNT1 A 0 A_JumpIfInventory("NoWeaponSwitch",1,2)
-		TNT1 A 0 A_SelectWeapon("AEoDBioRifle")
+		TNT1 A 0 A_SelectWeapon("AEoDBiorifle")
 		TNT1 A 0
 		Stop
 	Nothing:
-		TNT1 A 0 A_JumpIfInventory("AEoDBioRifleCount",2,"Ammo")
-		TNT1 A 0 A_JumpIfInventory("AEoDBioRifleCount",1,"Pickup2")
+		TNT1 A 0 A_JumpIfInventory("AEoDBiorifleCount",2,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("AEoDBiorifleCount",1,"Pickup2")
 		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
 		Goto Pickup+2
 		TNT1 A 0 ACS_NamedExecute("s798",0,4,0,0)
 		Fail
 	Ammo:
-		TNT1 A 0 A_GiveInventory("AEoDBioRifle",1)
+		TNT1 A 0 A_GiveInventory("AEoDBiorifle",1)
 		Stop
 	}
 }
 
-Actor AEoDBioRifle : Weapon // 6040
+Actor AEoDBiorifle : Weapon // 6040
 {
 	+FLOORCLIP
 	+INVENTORY.IGNORESKILL
@@ -2313,6 +2035,7 @@ Actor AEoDBioRifle : Weapon // 6040
 	Weapon.AmmoGive1 30
 	Weapon.AmmoUse1 1
 	Weapon.AmmoUse2 2
+	Weapon.SelectionOrder 10500
 	Obituary "%o drank a glass of %k's dripping green load."
 	Inventory.PickupMessage "You got the GES Biorifle!"
 	Inventory.PickupSound "reilsss/weappickup/biorifle"
@@ -2323,11 +2046,11 @@ Actor AEoDBioRifle : Weapon // 6040
 	{
 	Spawn:
 		R010 J 0
-		TNT1 A 0 A_SpawnItemEx("AEoDBioRiflePickup",0,0,0,0,0,0,0,0)
+		TNT1 A 0 A_SpawnItemEx("AEoDBioriflePickup",0,0,0,0,0,0,0,0)
 		Stop
 	Ready:
 		TNT1 A 0 A_TakeInventory("BiorifleDropCheck",1)
-		TNT1 A 0 A_JumpIfInventory("AEoDBioRifleCount",2,"Ready2")
+		TNT1 A 0 A_JumpIfInventory("AEoDBiorifleCount",2,"Ready2")
 		TNT1 A 0 A_PlaySound("reilsss/weapons/magicidle2", 6, 0.8, 1)
 		R010 AAAA 1 A_WeaponReady
 		Loop
@@ -2338,29 +2061,29 @@ Actor AEoDBioRifle : Weapon // 6040
 		Loop
 	Deselect:
 		TNT1 A 0 A_StopSound(6)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
-		TNT1 A 0 A_JumpIfInventory("AEoDBioRifleCount",2,"Deselect2")
+		TNT1 A 0 	
+		TNT1 A 0 A_JumpIfInventory("AEoDBiorifleCount",2,"Deselect2")
 		R010 A 1 A_Lower
 		TNT1 AA 0 A_Lower
 		Goto Deselect+1
 	Deselect2:
-		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
+		TNT1 A 0 	
 		R102 A 1 A_Lower
 		TNT1 AA 0 A_Lower
 		Loop
 	Select:
-		TNT1 A 0 //ACS_NamedExecute("s799",0,7,0,0)
-		TNT1 A 0 A_JumpIfInventory("AEoDBioRifleCount",2,"Select2")
+		TNT1 A 0 	
+		TNT1 A 0 A_JumpIfInventory("AEoDBiorifleCount",2,"Select2")
 		R010 A 1 A_Raise
 		TNT1 AA 0 A_Raise
 		Loop
 	Select2:
-		TNT1 A 0 //ACS_NamedExecute("s799",0,7,0,0)
+		TNT1 A 0 	
 		R102 A 1 A_Raise
 		TNT1 AA 0 A_Raise
 		Loop
 	Fire:
-		TNT1 A 0 A_JumpIfInventory("AEoDBioRifleCount",2,"Fire2")
+		TNT1 A 0 A_JumpIfInventory("AEoDBiorifleCount",2,"Fire2")
 		R010 C 3
 		TNT1 A 0 A_GunFlash
 		TNT1 A 0 A_PlaySound("reilsss/weapons/bioriflefire", CHAN_WEAPON, 1.0, 0)
@@ -2381,7 +2104,7 @@ Actor AEoDBioRifle : Weapon // 6040
 		R102 G 2
 		Goto Ready
 	Altfire:
-		TNT1 A 0 A_JumpIfInventory("AEoDBioRifleCount",2,"2AltFire")
+		TNT1 A 0 A_JumpIfInventory("AEoDBiorifleCount",2,"2AltFire")
 		TNT1 A 0 A_JumpIfInventory("BioRifleCounter",6,16)
 		TNT1 A 0 A_JumpIfInventory("BioRifleCounter",5,12)
 		TNT1 A 0 A_JumpIfInventory("BioRifleCounter",4,11)
@@ -2409,12 +2132,10 @@ Actor AEoDBioRifle : Weapon // 6040
 		TNT1 A 0 A_GunFlash
 		TNT1 A 0 A_PlaySound("reilsss/weapons/bioriflefire", CHAN_WEAPON, 1.0, 0)
 		TNT1 A 0 A_TakeInventory("BioRifleCounter",6)
-	//	TNT1 A 0 A_TakeInventory("PlasmaRod",2)
 		TNT1 A 0 //Move up
 		TNT1 A 0
 		R010 F 4 A_FireCustomMissile("BioSlug", 0, 1, 7, 3) //tiny
-		R010 C 4
-		R010 B 4
+		R010 CB 4
 		R010 B 2
 		Goto Ready
 	Altfire2:
@@ -2422,48 +2143,36 @@ Actor AEoDBioRifle : Weapon // 6040
 		TNT1 A 0 A_GunFlash
 		TNT1 A 0 A_PlaySound("reilsss/weapons/bioriflefire", CHAN_WEAPON, 1.0, 0)
 		TNT1 A 0 A_TakeInventory("BioRifleCounter",6)
-	//	TNT1 A 0 A_TakeInventory("PlasmaRod",4)
 		TNT1 A 0 //Move up
 		TNT1 A 0
 		R010 F 0 A_FireCustomMissile("AmmoUser", 0, 1, 0, 0)
 		R010 F 4 A_FireCustomMissile("BioSlug2", 0, 1, 7, 3) //small
-		R010 I 4
-		R010 C 4
-		R010 B 4
+		R010 ICB 4
 		Goto Ready
 	Altfire3:
 		TNT1 A 0 A_StopSound(7)
 		TNT1 A 0 A_GunFlash
 		TNT1 A 0 A_PlaySound("reilsss/weapons/bioriflefire", CHAN_WEAPON, 1.0, 0)
 		TNT1 A 0 A_TakeInventory("BioRifleCounter",6)
-	//	TNT1 A 0 A_TakeInventory("PlasmaRod",6)
 		TNT1 A 0 //Move up
 		TNT1 A 0
 		R010 F 0 A_FireCustomMissile("AmmoUser", 0, 1, 0, 0)
 		R010 F 0 A_FireCustomMissile("AmmoUser", 0, 1, 0, 0)
 		R010 F 4 A_FireCustomMissile("BioSlug3", 0, 1, 7, 3) //medium
-		R010 H 4
-		R010 I 4
-		R010 C 4
-		R010 B 4
+		R010 HICB 4
 		Goto Ready
 	Altfire4:
 		TNT1 A 0 A_StopSound(7)
 		TNT1 A 0 A_GunFlash
 		TNT1 A 0 A_PlaySound("reilsss/weapons/bioriflefire", CHAN_WEAPON, 1.0, 0)
 		TNT1 A 0 A_TakeInventory("BioRifleCounter",6)
-	//	TNT1 A 0 A_TakeInventory("PlasmaRod",8)
 		TNT1 A 0 //Move up
 		TNT1 A 0
 		R010 F 0 A_FireCustomMissile("AmmoUser", 0, 1, 0, 0)
 		R010 F 0 A_FireCustomMissile("AmmoUser", 0, 1, 0, 0)
 		R010 F 0 A_FireCustomMissile("AmmoUser", 0, 1, 0, 0)
 		R010 F 0 A_FireCustomMissile("BioSlug4", 0, 1, 7, 3) //large
-		R010 G 4
-		R010 H 4
-		R010 I 4
-		R010 C 4
-		R010 B 4
+		R010 GHICB 4
 		Goto Ready
 	2AltFire:
 		TNT1 A 0 A_JumpIfInventory("BioRifleCounter",6,16)
@@ -2493,13 +2202,11 @@ Actor AEoDBioRifle : Weapon // 6040
 		TNT1 A 0 A_GunFlash
 		TNT1 A 0 A_PlaySound("reilsss/weapons/bioriflefire", CHAN_WEAPON, 1.0, 0)
 		TNT1 A 0 A_TakeInventory("BioRifleCounter",6)
-	//	TNT1 A 0 A_TakeInventory("PlasmaRod",4)
 		TNT1 A 0 //Move up
 		TNT1 A 0
 		R102 L 0 A_FireCustomMissile("BioSlug", 0, 1, 7, 3) //tiny
 		R102 L 4 A_FireCustomMissile("BioSlug", 0, 1, -7, 3) //tiny
-		R102 O 4
-		R102 H 4
+		R102 OH 4
 		R102 H 2
 		Goto Ready
 	2Altfire2:
@@ -2507,57 +2214,36 @@ Actor AEoDBioRifle : Weapon // 6040
 		TNT1 A 0 A_GunFlash
 		TNT1 A 0 A_PlaySound("reilsss/weapons/bioriflefire", CHAN_WEAPON, 1.0, 0)
 		TNT1 A 0 A_TakeInventory("BioRifleCounter",6)
-	//	TNT1 A 0 A_TakeInventory("PlasmaRod",8)
 		TNT1 A 0 //Move up
 		TNT1 A 0
-		R102 L 0 A_FireCustomMissile("AmmoUser", 0, 1, 0, 0)
-		R102 L 0 A_FireCustomMissile("AmmoUser", 0, 1, 0, 0)
+		R102 LL 0 A_FireCustomMissile("AmmoUser", 0, 1, 0, 0)
 		R102 L 0 A_FireCustomMissile("BioSlug2", 0, 1, 7, 3) //small
 		R102 L 4 A_FireCustomMissile("BioSlug2", 0, 1, -7, 3) //small
-		R102 O 4
-		R102 I 4
-		R102 H 4
+		R102 OIH 4
 		Goto Ready
 	2Altfire3:
 		TNT1 A 0 A_StopSound(7)
 		TNT1 A 0 A_GunFlash
 		TNT1 A 0 A_PlaySound("reilsss/weapons/bioriflefire", CHAN_WEAPON, 1.0, 0)
 		TNT1 A 0 A_TakeInventory("BioRifleCounter",6)
-	//	TNT1 A 0 A_TakeInventory("PlasmaRod",12)
 		TNT1 A 0 //Move up
 		TNT1 A 0
-		R102 L 0 A_FireCustomMissile("AmmoUser", 0, 1, 0, 0)
-		R102 L 0 A_FireCustomMissile("AmmoUser", 0, 1, 0, 0)
-		R102 L 0 A_FireCustomMissile("AmmoUser", 0, 1, 0, 0)
-		R102 L 0 A_FireCustomMissile("AmmoUser", 0, 1, 0, 0)
+		R102 LLLL 0 A_FireCustomMissile("AmmoUser", 0, 1, 0, 0)
 		R102 L 0 A_FireCustomMissile("BioSlug3", 0, 1, 7, 3) //medium
 		R102 L 4 A_FireCustomMissile("BioSlug3", 0, 1, -7, 3) //medium
-		R102 N 4
-		R102 O 4
-		R102 I 4
-		R102 H 4
+		R102 NOIH 4
 		Goto Ready
 	2Altfire4:
 		TNT1 A 0 A_StopSound(7)
 		TNT1 A 0 A_GunFlash
 		TNT1 A 0 A_PlaySound("reilsss/weapons/bioriflefire", CHAN_WEAPON, 1.0, 0)
 		TNT1 A 0 A_TakeInventory("BioRifleCounter",6)
-	//	TNT1 A 0 A_TakeInventory("PlasmaRod",16)
 		TNT1 A 0 //Move up
 		TNT1 A 0
-		R102 L 0 A_FireCustomMissile("AmmoUser", 0, 1, 0, 0)
-		R102 L 0 A_FireCustomMissile("AmmoUser", 0, 1, 0, 0)
-		R102 L 0 A_FireCustomMissile("AmmoUser", 0, 1, 0, 0)
-		R102 L 0 A_FireCustomMissile("AmmoUser", 0, 1, 0, 0)
-		R102 L 0 A_FireCustomMissile("AmmoUser", 0, 1, 0, 0)
-		R102 L 0 A_FireCustomMissile("AmmoUser", 0, 1, 0, 0)
+		R102 LLLLLL 0 A_FireCustomMissile("AmmoUser", 0, 1, 0, 0)
 		R102 L 0 A_FireCustomMissile("BioSlug4", 0, 1, 7, 3) //large
 		R102 L 0 A_FireCustomMissile("BioSlug4", 0, 1, -7, 3) //large
-		R102 M 4
-		R102 N 4
-		R102 O 4
-		R102 I 4
-		R102 H 4
+		R102 MNOIH 4
 		Goto Ready
 	Flash:
 		TNT1 A 1 Bright A_Light1
@@ -2639,15 +2325,12 @@ Actor BioSlug
 		Goto Spawn+3
 	BioSlugOnEnemy:
 		TNT1 A 0 A_PlaySound("reilsss/weapons/biorifleexplosion")
-		//TNT1 A 0 A_Explode(100,192)
 		TNT1 A 0 A_Explode(50,100,1)
-	//	R010 MN 6 Bright
 		TNT1 A 1 A_SpawnItemEx("BioSlugBoom",0,0,0,0,0,0,0,128)
 		TNT1 A 0 A_SpawnDebris("LittleBioSlug")
 		TNT1 A 0 A_SpawnDebris("LittleBioSlug")
 		TNT1 A 0 A_SpawnDebris("LittleBioSlug")
 		TNT1 A 0 A_SpawnDebris("LittleBioSlug")
-	//	R010 OPQ 6 Bright
 		Stop
 	}
 }
@@ -2780,14 +2463,12 @@ Actor BioSlug2
 	BioSlugOnEnemy:
 		TNT1 A 0 A_PlaySound("reilsss/weapons/biorifleexplosion")
 		TNT1 A 0 A_Explode(55,192,1)
-	//	R010 MN 6 Bright
 		TNT1 A 1 A_SpawnItemEx("BioSlugBoom2",0,0,0,0,0,0,0,128)
 		TNT1 A 0 A_SpawnDebris("LittleBioSlug")
 		TNT1 A 0 A_SpawnDebris("LittleBioSlug")
 		TNT1 A 0 A_SpawnDebris("LittleBioSlug")
 		TNT1 A 0 A_SpawnDebris("BioSlugExplode3")
 		TNT1 A 0 A_SpawnItemEx("BioSlug",0,0,0,random(-6,6),0,random(3,6),random(0,359),32)
-	//	R010 OPQ 6 Bright
 		Stop
 	}
 }
@@ -2894,14 +2575,12 @@ Actor BioSlug3
 	BioSlugOnEnemy:
 		TNT1 A 0 A_PlaySound("reilsss/weapons/biorifleexplosion")
 		TNT1 A 0 A_Explode(75,192,1)
-	//	R010 MN 6 Bright
 		TNT1 A 1 A_SpawnItemEx("BioSlugBoom3",0,0,0,0,0,0,0,128)
 		TNT1 A 0 A_SpawnDebris("LittleBioSlug")
 		TNT1 A 0 A_SpawnDebris("LittleBioSlug")
 		TNT1 A 0 A_SpawnDebris("LittleBioSlug")
 		TNT1 A 0 A_SpawnDebris("BioSlugExplode2")
 		TNT1 AAA 0 A_SpawnItemEx("BioSlug",0,0,0,random(-6,6),0,random(3,6),random(0,359),32)
-	//	R010 OPQ 6 Bright
 		Stop
 	}
 }
@@ -3008,14 +2687,12 @@ Actor BioSlug4
 	BioSlugOnEnemy:
 		TNT1 A 0 A_PlaySound("reilsss/weapons/biorifleexplosion")
 		TNT1 A 0 A_Explode(100,192,1)
-	//	R010 MN 6 Bright
 		TNT1 A 1 A_SpawnItemEx("BioSlugBoom4",0,0,0,0,0,0,0,128)
 		TNT1 A 0 A_SpawnDebris("LittleBioSlug")
 		TNT1 A 0 A_SpawnDebris("LittleBioSlug")
 		TNT1 A 0 A_SpawnDebris("BioSlugExplode")
 		TNT1 A 0 A_SpawnDebris("BioSlugExplode")
 		TNT1 AAAAAA 0 A_SpawnItemEx("BioSlug",0,0,0,random(-6,6),0,random(3,6),random(0,359),32)
-	//	R010 OPQ 6 Bright
 		Stop
 	}
 }
@@ -3044,14 +2721,12 @@ Actor BioSlugOnWall4
 		R010 KKKKKKKKKKKKKKKLLLLLLLLLLLLLLL 1 Bright A_Explode(1,16)
 		TNT1 A 0 A_PlaySound("reilsss/weapons/biorifleexplosion")
 		TNT1 A 0 A_Explode(100,192,1)
-	//	R010 MN 6 Bright
 		TNT1 A 1 A_SpawnItemEx("BioSlugBoom4",0,0,0,0,0,0,0,128)
 		TNT1 A 0 A_SpawnDebris("LittleBioSlug")
 		TNT1 A 0 A_SpawnDebris("LittleBioSlug")
 		TNT1 A 0 A_SpawnDebris("BioSlugExplode")
 		TNT1 A 0 A_SpawnDebris("BioSlugExplode")
 		TNT1 AAAAAAA 0 A_SpawnItemEx("BioSlug",0,0,0,random(-6,6),0,random(3,6),random(0,359),32)
-	//	R010 OPQ 6 Bright
 		Stop
 	}
 }
@@ -3074,7 +2749,6 @@ Actor BioSlugExplode : PlasmaBall
 		D3BF B 1 BRIGHT
 		D3BF C 1 BRIGHT
 		D3BF DE 1 BRIGHT
-	//	TNT1 A 0 A_SpawnItemEx("BioSlugExplode2",0,0,0,random(5,-5),random(5,-5),random(3,20),random(0,359),0)
 		D3BF F 1 Bright A_SpawnDebris("BioSlugExplode2")
 		D3BF GHIJKLMNOPQRSTU 1 BRIGHT
 		Stop
@@ -3133,7 +2807,7 @@ Actor BioSlugBoom2 : BioSlugBoom	{ Scale 0.4 }
 Actor BioSlugBoom3 : BioSlugBoom	{ Scale 0.6 }
 Actor BioSlugBoom4 : BioSlugBoom	{ Scale 0.8 }
 
-Actor AEoDBioRiflePickup : CustomInventory //6042
+Actor AEoDBioriflePickup : CustomInventory //6042
 {
 	Inventory.PickupMessage "You got the GES Biorifle!"
 	Inventory.PickupSound "reilsss/weappickup/biorifle"
@@ -3144,31 +2818,22 @@ Actor AEoDBioRiflePickup : CustomInventory //6042
 		R010 J -1
 		Loop
 	Pickup:
-		TNT1 A 0 A_JumpIfInventory("AEoDBioRifleCount",2,4)
-		TNT1 A 0 A_GiveInventory("AEoDBioRifleCount",1)
+		TNT1 A 0 A_JumpIfInventory("AEoDBiorifleCount",2,4)
+		TNT1 A 0 A_GiveInventory("AEoDBiorifleCount",1)
 		TNT1 A 0 A_JumpIfInventory("NoWeaponSwitch",1,2)
-		TNT1 A 0 A_SelectWeapon("AEoDBioRifle")
-		TNT1 A 0 A_GiveInventory("AEoDBioRifle",1)
+		TNT1 A 0 A_SelectWeapon("AEoDBiorifle")
+		TNT1 A 0 A_GiveInventory("AEoDBiorifle",1)
 		TNT1 A 0
 		Stop
 	}
 }
 
-Actor AEoDBioRifleCount : Inventory
-{
-	Inventory.MaxAmount 2
-	Inventory.Amount 1
-}
+Actor AEoDBiorifleCount : Inventory { Inventory.MaxAmount 2 }
 
-Actor BiorifleDropCheck : Inventory
-{
-	Inventory.Amount 1
-	Inventory.MaxAmount 1
-}
+Actor BiorifleDropCheck : Inventory {}
 
 Actor BioRifleDrop : CustomInventory
 {
-	Inventory.Amount 1
 	Inventory.MaxAmount 2
 	States
 	{
@@ -3176,7 +2841,7 @@ Actor BioRifleDrop : CustomInventory
 		TNT1 A 0
 		TNT1 A 0 A_StopSound(6)
 		TNT1 A 0 A_SpawnItemEx("DroppedBioRifle",0,0,32,8,0,0,0,32,0)
-		TNT1 A 0 A_TakeInventory("AEoDBioRifleCount",1)
+		TNT1 A 0 A_TakeInventory("AEoDBiorifleCount",1)
 		Stop
 	}
 }
@@ -3220,7 +2885,7 @@ Actor AEoDBioRifleNoAmmo : AEoDBioRifleItem
 		TNT1 A 0 A_GiveInventory("AEoDBioRifle",1)
 		TNT1 A 0 A_GiveInventory("AEoDBioRifleCount",1)
 		TNT1 A 0 A_TakeInventory("PlasmaRod",30)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,7,0,0)
+		TNT1 A 0 	
 		TNT1 A 0 A_JumpIfInventory("NoWeaponSwitch",1,2)
 		TNT1 A 0 A_SelectWeapon("AEoDBioRifle")
 		TNT1 A 0
@@ -3231,7 +2896,7 @@ Actor AEoDBioRifleNoAmmo : AEoDBioRifleItem
 		TNT1 A 0 A_GiveInventory("AEoDBioRifle",1)
 		TNT1 A 0 A_GiveInventory("AEoDBioRifleCount",1)
 		TNT1 A 0 A_TakeInventory("PlasmaRod",30)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,7,0,0)
+		TNT1 A 0 	
 		TNT1 A 0 A_JumpIfInventory("NoWeaponSwitch",1,2)
 		TNT1 A 0 A_SelectWeapon("AEoDBioRifle")
 		TNT1 A 0
@@ -3279,7 +2944,7 @@ Actor AEoDDisruptorItem : CustomInventory 6202
 		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
 		TNT1 A 0 A_GiveInventory("DisruptorDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDDisruptor",1)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,8,0,0)
+		TNT1 A 0 	
 		Stop
 	Nothing:
 		TNT1 A 0 A_JumpIfInventory("AEoDDisruptor",1,"Ammo")
@@ -3303,6 +2968,7 @@ Actor AEoDDisruptor : Weapon // new dispersion gun
 	Weapon.AmmoGive1 30
 	Weapon.AmmoUse1 2
 	Weapon.AmmoUse2 15
+	Weapon.SelectionOrder 5500
 	Inventory.PickupMessage "You got the Disruptor!"
 	Inventory.PickupSound "weapons/stroggarmsaw/pickup"
 	Weapon.upsound "disruptor/select"
@@ -3319,12 +2985,12 @@ Actor AEoDDisruptor : Weapon // new dispersion gun
 		Goto Ready+1
 	Deselect:
 		TNT1 A 0 A_StopSound(6)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
+		TNT1 A 0 	
 		R086 A 1 A_Lower
 		TNT1 AA 0 A_Lower
 		Goto Deselect+1
 	Select:
-		TNT1 A 0 //ACS_NamedExecute("s799",0,8,0,0)
+		TNT1 A 0 	
 		R086 A 1 A_Raise
 		TNT1 AA 0 A_Raise
 		Loop
@@ -3333,7 +2999,7 @@ Actor AEoDDisruptor : Weapon // new dispersion gun
 	Hold:
 		TNT1 A 0 A_GunFlash
 		TNT1 A 0 A_PlaySound("halflife/weapons/combriflefire", CHAN_WEAPON, 1.0, 0)
-	 Goto "PhaseCheck"
+		Goto "PhaseCheck"
 	ResumeAttack:
 		R086 B 2 Bright A_FireCustomMissile("DisruptorShotNew", frandom(1.5,-1.5), 1, 8, 2,0,frandom(2.0,-2.0))
 		R086 C 1
@@ -3462,7 +3128,7 @@ Actor DisruptorShotNew : DisruptorShot //replaces DisruptorShot
 		TNT1 A 0 A_SpawnItemEx("DisruptorShotPuff",0,0,0,0,0,0,0,32)
 		TNT1 A 3
 		Stop
-   }
+	}
 }
  
 Actor DisruptorShotTrail
@@ -3556,6 +3222,7 @@ Actor DisruptorEnergyPellet
 		Stop
 	}
 } 
+
 Actor DEPFX
 {
 	Radius 1
@@ -3600,13 +3267,6 @@ Actor DEPLightGlow
 }
 
 
-
-
-
-
-
-
-
 Actor IonBullet1
 {
 	PROJECTILE
@@ -3628,7 +3288,7 @@ Actor IonBullet1
 	Speed 30
 	Damage 2
 	Scale 0.10
-	Obituary "%o was ripped apart by a Ion shot."
+	Obituary "%o was ripped apart by an Ion shot."
 	SeeSound "DSEMPTY"
 	DeathSound "HYPBL0"
 	RenderStyle Add
@@ -3866,7 +3526,7 @@ Actor AEoDDisruptorNoAmmo : AEoDDisruptorItem
 		TNT1 A 0 A_GiveInventory("DisruptorDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDDisruptor",1)
 		TNT1 A 0 A_TakeInventory("AECell",30)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,8,0,0)
+		TNT1 A 0 	
 		Stop
 	Nothing:
 		TNT1 A 0 A_JumpIfInventory("AEoDDisruptor",1,"Ammo")
@@ -3909,7 +3569,7 @@ Actor AEoDRiotgunItem : CustomInventory 6004
 		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
 		TNT1 A 0 A_GiveInventory("RiotgunDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDRiotgun",1)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,9,0,0)
+		TNT1 A 0 	
 		Stop
 	Nothing:
 		TNT1 A 0 A_JumpIfInventory("AEoDRiotgun",1,"Ammo")
@@ -3936,6 +3596,7 @@ Actor AEoDRiotgun : Weapon // 6004
 	Weapon.AmmoUse1 0
 	Weapon.AmmoUse2 0
 	Weapon.KickBack 35
+	Weapon.SelectionOrder 8250
 	Obituary "%o understand why %k likes that Riotgun."
 	Inventory.PickupMessage "You found a Riotgun."
 	Inventory.PickupSound "weapons/rifleup" 
@@ -3955,12 +3616,12 @@ Actor AEoDRiotgun : Weapon // 6004
 		REMG A 0 A_JumpIfInventory("RiotgunClip",1,"Ready")
 		Loop
 	Deselect:
-		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
+		TNT1 A 0 	
 		REMG A 1 A_Lower
 		TNT1 AA 0 A_Lower
 		Loop
 	Select:
-		TNT1 A 0 //ACS_NamedExecute("s799",0,9,0,0)
+		TNT1 A 0 	
 		REMG A 1 A_Raise
 		TNT1 AA 0 A_Raise
 		Loop
@@ -3980,8 +3641,7 @@ Actor AEoDRiotgun : Weapon // 6004
 		REMG FFF 1 Bright A_SetPitch(pitch+0.5)
 		REMG G 0 A_FireCustomMissile("ShotgunCasingSpawner",-50,0, 0,0)
 		REMG G 3 A_SetPitch(pitch+0.5)
-		REMG H 3 
-		REMG I 3
+		REMG HI 3
 		REMG A 2 
 		REMG A 0 A_JumpIfInventory("RiotgunClip",1,"Ready")
 	Reload:
@@ -4003,7 +3663,7 @@ Actor AEoDRiotgun : Weapon // 6004
 	AltFire:
 		TNT1 A 0 A_JumpIfInventory("RiotgunClip", 1, "AltFireSuccess")
 		Goto Reload
-		TNT1 A 0 A_JumpIfInventory("AEShell", 1, "AltReload")
+		TNT1 A 0 A_JumpIfInventory("AEShell", 1, "Reload")
 		Goto ReadyNoAmmo
 	AltFireSuccess:
 		TNT1 A 0
@@ -4021,18 +3681,7 @@ Actor AEoDRiotgun : Weapon // 6004
 		REMG DHI 1 A_SetPitch(pitch+0.5)
 		REMG A 0 A_ReFire
 		REMG A 0 A_JumpIfInventory("RiotgunClip",1,"Ready")
-		//Goto Ready
-	AltReload:
-		TNT1 A 0 A_Jump(256,"Reload")
-		/*TNT1 A 0 A_GiveInventory("RiotgunClip",4)
-		TNT1 A 0 A_JumpIfInventory("InfiniteAmmo",1,2)
-		TNT1 A 0 A_TakeInventory("AEShell",4,1)
-		REMG JK 2 
-		TNT1 A 0 A_PlaySound("reilsss/weapons/doublebarreledreload1", 6, 1.0, 0)
-		REMG LMNML 2
-		TNT1 A 0 A_PlaySound("reilsss/weapons/doublebarreledreload2", 7, 1.0, 0)
-		REMG KJ 2
-		Goto Ready*/
+		Goto Reload
 	Flash:
 		TNT1 A 1 Bright A_Light2
 		TNT1 A 1 Bright A_Light1
@@ -4111,7 +3760,7 @@ Actor DroppedRiotGun
 	}
 }
 
-Actor AEoDRiotgunNoAmmo : AEoDRiotgunItem
+Actor AEoDRiotGunNoAmmo : AEoDRiotGunItem
 {
 	+FLOORCLIP
 	+INVENTORY.IGNORESKILL
@@ -4128,22 +3777,22 @@ Actor AEoDRiotgunNoAmmo : AEoDRiotgunItem
 		TNT1 A 0 A_JumpIfInventory("AEShell",12,"Ammo")
 		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
 		TNT1 A 0 A_GiveInventory("RiotGunDrop",1)
-		TNT1 A 0 A_GiveInventory("AEoDRiotgun",1)
+		TNT1 A 0 A_GiveInventory("AEoDRiotGun",1)
 		TNT1 A 0 A_TakeInventory("AEShell",12)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,9,0,0)
+		TNT1 A 0 	
 		Stop
 	Nothing:
-		TNT1 A 0 A_JumpIfInventory("AEoDRiotgun",1,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("AEoDRiotGun",1,"Ammo")
 		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
 		Goto Pickup+2
 		TNT1 A 0 ACS_NamedExecute("s798",0,4,0,0)
 		Fail
 	Ammo:
 		TNT1 A 0 A_TakeInventory("AEShell",12)
-		TNT1 A 0 A_JumpIfInventory("AEoDRiotgun",1,2)
+		TNT1 A 0 A_JumpIfInventory("AEoDRiotGun",1,2)
 		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
 		TNT1 A 0 A_GiveInventory("RiotGunDrop",1)
-		TNT1 A 0 A_GiveInventory("AEoDRiotgun",1)
+		TNT1 A 0 A_GiveInventory("AEoDRiotGun",1)
 		Stop
 	}
 }
@@ -4177,7 +3826,7 @@ Actor AEoDShockRifleItem : CustomInventory 6102
 		TNT1 A 0 A_GiveInventory("ShockRifleDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDShockRifle",1)
 		TNT1 A 0 A_GiveInventory("AEoDShockRifleCount",1)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,10,0,0)
+		TNT1 A 0 	
 		TNT1 A 0 A_JumpIfInventory("NoWeaponSwitch",1,2)
 		TNT1 A 0 A_SelectWeapon("AEoDShockRifle")
 		TNT1 A 0
@@ -4186,7 +3835,7 @@ Actor AEoDShockRifleItem : CustomInventory 6102
 		TNT1 A 0 A_GiveInventory("ShockRifleDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDShockRifle",1)
 		TNT1 A 0 A_GiveInventory("AEoDShockRifleCount",1)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,10,0,0)
+		TNT1 A 0 	
 		TNT1 A 0 A_JumpIfInventory("NoWeaponSwitch",1,2)
 		TNT1 A 0 A_SelectWeapon("AEoDShockRifle")
 		TNT1 A 0
@@ -4214,6 +3863,7 @@ Actor AEoDShockRifle : Weapon // 6102
 	Weapon.AmmoGive1 20
 	Weapon.AmmoUse1 3
 	Weapon.AmmoUse2 6
+	Weapon.SelectionOrder 20500
 	Obituary "%k inflicted mortal damage upon %o with the shock rifle."
 	Inventory.PickupMessage "You got the ASMD shock rifle!"
 	Inventory.PickupSound "reilsss/weappickup/blasterrifle"
@@ -4239,25 +3889,25 @@ Actor AEoDShockRifle : Weapon // 6102
 		Loop
 	Deselect:
 		TNT1 A 0 A_StopSound(6)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
+		TNT1 A 0 	
 		TNT1 A 0 A_JumpIfInventory("AEoDShockRifleCount",2,"Deselect2")
 		R018 A 1 A_Lower
 		TNT1 AA 0 A_Lower
 		Loop
 	Deselect2:
 		TNT1 A 0 A_StopSound(6)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
+		TNT1 A 0 	
 		R018 Q 1 A_Lower
 		TNT1 AA 0 A_Lower
 		Loop
 	Select:
-		TNT1 A 0 //ACS_NamedExecute("s799",0,10,0,0)
+		TNT1 A 0 	
 		TNT1 A 0 A_JumpIfInventory("AEoDShockRifleCount",2,"Select2")
 		R018 A 1 A_Raise
 		TNT1 AA 0 A_Raise
 		Loop
 	Select2:
-		TNT1 A 0 //ACS_NamedExecute("s799",0,10,0,0)
+		TNT1 A 0 	
 		R018 Q 1 A_Raise
 		TNT1 AA 0 A_Raise
 		Loop
@@ -4404,16 +4054,7 @@ Actor ShockBeamTrail
 	States
 	{
 	Spawn:
-		R018 H 2 Bright A_FadeOut(0.1)
-		R018 H 2 Bright A_FadeOut(0.1)
-		R018 H 2 Bright A_FadeOut(0.1)
-		R018 H 2 Bright A_FadeOut(0.1)
-		R018 H 2 Bright A_FadeOut(0.1)
-		R018 I 2 Bright A_FadeOut(0.1)
-		R018 I 2 Bright A_FadeOut(0.1)
-		R018 I 2 Bright A_FadeOut(0.1)
-		R018 I 2 Bright A_FadeOut(0.1)
-		R018 I 2 Bright A_FadeOut(0.1)
+		R018 HHHHHIIIII 2 Bright A_FadeOut(0.1)
 		Stop
 	}
 }
@@ -4426,7 +4067,6 @@ Actor ShockBolt
 	+DONTRIP
 	+DONTREFLECT
 	Mass 0x7FFFFFFF
-	//+INVULNERABLE
 	DamageFactor "Normal" , 0.0
 	DamageFactor "ShkRflDmg", 1.1
 	-NOBLOCKMAP
@@ -4499,8 +4139,8 @@ Actor ShockBoltExplodeNew
 	{
 	Spawn:
 		TNT1 A 0
-		Q27A IJ 1 Bright Light("ShockBoltShadowExplo1") A_FadeIn(0.2)		TNT1 A 0 A_SetScale(1.3)
-		Q27A KL 1 Bright Light("ShockBoltShadowExplo1") A_FadeIn(0.2)		TNT1 A 0 A_SetScale(1.24)
+		Q27A IJ 1 Bright Light("ShockBoltShadowExplo1") A_FadeIn(0.2)	TNT1 A 0 A_SetScale(1.3)
+		Q27A KL 1 Bright Light("ShockBoltShadowExplo1") A_FadeIn(0.2)	TNT1 A 0 A_SetScale(1.24)
 		Q27B MN 1 Bright Light("ShockBoltShadowExplo1") A_GetHurt		TNT1 A 0 A_SetScale(1.20)
 		Q27B OP 1 Bright Light("ShockBoltShadowExplo1") A_GetHurt		TNT1 A 0 A_SetScale(1.16)
 		Q27B QR 1 Bright Light("ShockBoltShadowExplo1") A_GetHurt		TNT1 A 0 A_SetScale(1.12)
@@ -4531,7 +4171,7 @@ Actor ShockBoltExplodeNew
 		Q27B QR 1 Bright Light("ShockBoltShadowExplo7") A_GetHurt		TNT1 A 0 A_SetScale(0.12)
 		Q27B ST 1 Bright Light("ShockBoltShadowExplo8") A_GetHurt		TNT1 A 0 A_SetScale(0.08)
 		Q27B UV 1 Bright Light("ShockBoltShadowExplo9") A_GetHurt		TNT1 A 0 A_SetScale(0.04)
-		Q27B WX 1 Bright Light("ShockBoltShadowExplo10") A_GetHurt			
+		Q27B WX 1 Bright Light("ShockBoltShadowExplo10") A_GetHurt
 		Stop
 	}
 }
@@ -4555,7 +4195,6 @@ Actor ShockBeamDie
 	+NOGRAVITY
 	RenderStyle translucent
 	Alpha 0.55
-	//Scale 1
 	DamageType "Disintegrate"
 	States
 	{
@@ -4621,7 +4260,6 @@ Actor ShockBoltExplode3
 	+NOINTERACTION
 	RenderStyle Translucent
 	Alpha 0.6
-//	Scale 1
 	States
 	{
 	Spawn:
@@ -4651,21 +4289,11 @@ Actor AEoDShockRiflePickup : CustomInventory //6042
 	}
 }
 
-Actor AEoDShockRifleCount : Inventory
-{
-	Inventory.MaxAmount 2
-	Inventory.Amount 1
-}
-
-Actor ShockRifleDropCheck : Inventory
-{
-	Inventory.Amount 1
-	Inventory.MaxAmount 1
-}
+Actor AEoDShockRifleCount : Inventory { Inventory.MaxAmount 2 }
+Actor ShockRifleDropCheck : Inventory {}
 
 Actor ShockRifleDrop : CustomInventory
 {
-	Inventory.Amount 1
 	Inventory.MaxAmount 2
 	States
 	{
@@ -4717,7 +4345,7 @@ Actor AEoDShockRifleNoAmmo : AEoDShockRifleItem
 		TNT1 A 0 A_GiveInventory("AEoDShockRifle",1)
 		TNT1 A 0 A_GiveInventory("AEoDShockRifleCount",1)
 		TNT1 A 0 A_TakeInventory("AECell",20)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,10,0,0)
+		TNT1 A 0 	
 		TNT1 A 0 A_JumpIfInventory("NoWeaponSwitch",1,2)
 		TNT1 A 0 A_SelectWeapon("AEoDShockRifle")
 		TNT1 A 0
@@ -4728,7 +4356,7 @@ Actor AEoDShockRifleNoAmmo : AEoDShockRifleItem
 		TNT1 A 0 A_GiveInventory("AEoDShockRifle",1)
 		TNT1 A 0 A_GiveInventory("AEoDShockRifleCount",1)
 		TNT1 A 0 A_TakeInventory("AECell",20)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,10,0,0)
+		TNT1 A 0 	
 		TNT1 A 0 A_JumpIfInventory("NoWeaponSwitch",1,2)
 		TNT1 A 0 A_SelectWeapon("AEoDShockRifle")
 		TNT1 A 0
@@ -4780,7 +4408,7 @@ Actor AEoDDragonClawItem : CustomInventory 6008
 		TNT1 A 0 A_GiveInventory("DragonClawDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDDragonClaw",1)
 		TNT1 A 0 A_GiveInventory("AEoDDragonClawCount",1)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,11,0,0)
+		TNT1 A 0 	
 		TNT1 A 0 A_JumpIfInventory("NoWeaponSwitch",1,2)
 		TNT1 A 0 A_SelectWeapon("AEoDDragonClaw")
 		TNT1 A 0
@@ -4789,7 +4417,7 @@ Actor AEoDDragonClawItem : CustomInventory 6008
 		TNT1 A 0 A_GiveInventory("DragonClawDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDDragonClaw",1)
 		TNT1 A 0 A_GiveInventory("AEoDDragonClawCount",1)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,11,0,0)
+		TNT1 A 0 	
 		TNT1 A 0 A_JumpIfInventory("NoWeaponSwitch",1,2)
 		TNT1 A 0 A_SelectWeapon("AEoDDragonClaw")
 		TNT1 A 0
@@ -4819,6 +4447,7 @@ Actor AEoDDragonClaw : Weapon // Blaster 6008
 	Weapon.AmmoUse1 1
 	Weapon.AmmoUse2 4
 	Weapon.YAdjust 10
+	Weapon.SelectionOrder 7250
 	Inventory.PickupMessage "You got the Dragon Claw!"
 	Inventory.PickupSound "weaponbuild"
 	weapon.upsound "weapons/draw"
@@ -4839,24 +4468,24 @@ Actor AEoDDragonClaw : Weapon // Blaster 6008
 		R015 K 1 A_WeaponReady
 		Loop
 	Deselect:
-		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
+		TNT1 A 0 	
 		TNT1 A 0 A_JumpIfInventory("AEoDDragonClawCount",2,"Deselect2")
 		R015 A 1 A_Lower
 		TNT1 AA 0 A_Lower
 		Loop
 	Deselect2:
-		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
+		TNT1 A 0 	
 		R015 K 1 A_Lower
 		TNT1 AA 0 A_Lower
 		Loop
 	Select:
-		TNT1 A 0 //ACS_NamedExecute("s799",0,11,0,0)
+		TNT1 A 0 	
 		TNT1 A 0 A_JumpIfInventory("AEoDDragonClawCount",2,"Select2")
 		R015 A 1 A_Raise
 		TNT1 AA 0 A_Raise
 		Loop
 	Select2:
-		TNT1 A 0 //ACS_NamedExecute("s799",0,11,0,0)
+		TNT1 A 0 	
 		R015 K 1 A_Raise
 		TNT1 AA 0 A_Raise
 		Loop
@@ -5094,21 +4723,11 @@ Actor AEoDDragonClawPickup : CustomInventory //6042
 	}
 }
 
-Actor AEoDDragonClawCount : Inventory
-{
-	Inventory.MaxAmount 2
-	Inventory.Amount 1
-}
-
-Actor DragonClawDropCheck : Inventory
-{
-	Inventory.Amount 1
-	Inventory.MaxAmount 1
-}
+Actor AEoDDragonClawCount : Inventory { Inventory.MaxAmount 2 }
+Actor DragonClawDropCheck : Inventory {}
 
 Actor DragonClawDrop : CustomInventory
 {
-	Inventory.Amount 1
 	Inventory.MaxAmount 2
 	States
 	{
@@ -5138,7 +4757,6 @@ Actor AEoDDragonClawNoAmmo : AEoDDragonClawItem
 	+FLOATBOB
 	+FLOORCLIP
 	+INVENTORY.IGNORESKILL
-	Inventory.Amount 1
 	Inventory.PickupMessage "You got the Dragon Claw!"
 	Inventory.PickupSound "weaponbuild"
 	States
@@ -5158,7 +4776,7 @@ Actor AEoDDragonClawNoAmmo : AEoDDragonClawItem
 		TNT1 A 0 A_GiveInventory("AEoDDragonClaw",1)
 		TNT1 A 0 A_GiveInventory("AEoDDragonClawCount",1)
 		TNT1 A 0 A_TakeInventory("BlueMana",25)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,11,0,0)
+		TNT1 A 0 	
 		TNT1 A 0 A_JumpIfInventory("NoWeaponSwitch",1,2)
 		TNT1 A 0 A_SelectWeapon("AEoDDragonClaw")
 		TNT1 A 0
@@ -5169,7 +4787,7 @@ Actor AEoDDragonClawNoAmmo : AEoDDragonClawItem
 		TNT1 A 0 A_GiveInventory("AEoDDragonClaw",1)
 		TNT1 A 0 A_GiveInventory("AEoDDragonClawCount",1)
 		TNT1 A 0 A_TakeInventory("BlueMana",25)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,11,0,0)
+		TNT1 A 0 	
 		TNT1 A 0 A_JumpIfInventory("NoWeaponSwitch",1,2)
 		TNT1 A 0 A_SelectWeapon("AEoDDragonClaw")
 		TNT1 A 0
@@ -5218,7 +4836,7 @@ Actor AEoDVoodooDollItem : CustomInventory 6091
 		TNT1 A 0 A_GiveInventory("VoodooDollDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDVoodooDoll",1)
 		TNT1 A 0 A_GiveInventory("Mojo",200)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,12,0,0)
+		TNT1 A 0 	
 		Stop
 	Nothing:
 		TNT1 A 0 A_JumpIfInventory("AEoDVoodooDoll",1,"Ammo")
@@ -5235,12 +4853,13 @@ Actor AEoDVoodooDollItem : CustomInventory 6091
 Actor AEoDVoodooDoll : Weapon // 6091
 { 
 	+CHEATNOTWEAPON
-	Weapon.AmmoType1 "Mojo"
-	Weapon.AmmoType2 "Mojo"
 	+INVENTORY.IGNORESKILL
+	Weapon.AmmoType1 "Mojo"
 	Weapon.AmmoGive1 80
 	Weapon.AmmoUse1 1
+	Weapon.AmmoType2 "Mojo"
 	Weapon.AmmoUse2 20
+	Weapon.SelectionOrder 10250
 	Scale 0.8
 	Inventory.PickupMessage "Picked up a Voodoo Doll"
 	Inventory.PickupSound "BloodShotgun/Pickup"
@@ -5256,12 +4875,12 @@ Actor AEoDVoodooDoll : Weapon // 6091
 		VOOD A 1 A_WeaponReady
 		Loop 
 	Deselect:
-		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
+		TNT1 A 0 	
 		VOOD A 1 A_Lower
 		TNT1 AA 0 A_Lower
 		Loop 
 	Select:
-		TNT1 A 0 //ACS_NamedExecute("s799",0,12,0,0)
+		TNT1 A 0 	
 		VOOD A 1 A_Raise
 		TNT1 AA 0 A_Raise 
 		Loop 
@@ -5444,7 +5063,7 @@ Actor AEoDVoodooDollNoAmmo : AEoDVoodooDollItem
 		TNT1 A 0 A_GiveInventory("VoodooDollDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDVoodooDoll",1)
 		TNT1 A 0 A_TakeInventory("Mojo",80)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,12,0,0)
+		TNT1 A 0 	
 		Stop
 	Nothing:
 		TNT1 A 0 A_JumpIfInventory("AEoDVoodooDoll",1,"Ammo")
@@ -5491,7 +5110,7 @@ Actor AEoDBloodShotgunItem : CustomInventory 6186
 		TNT1 A 0 A_GiveInventory("BloodShotgunDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDBloodShotgun",1)
 		TNT1 A 0 A_GiveInventory("AEoDBloodShotgunCount",1)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,7,0,0)
+		TNT1 A 0 	
 		TNT1 A 0 A_JumpIfInventory("NoWeaponSwitch",1,2)
 		TNT1 A 0 A_SelectWeapon("AEoDBloodShotgun")
 		TNT1 A 0
@@ -5500,7 +5119,7 @@ Actor AEoDBloodShotgunItem : CustomInventory 6186
 		TNT1 A 0 A_GiveInventory("BloodShotgunDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDBloodShotgun",1)
 		TNT1 A 0 A_GiveInventory("AEoDBloodShotgunCount",1)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,7,0,0)
+		TNT1 A 0 	
 		TNT1 A 0 A_JumpIfInventory("NoWeaponSwitch",1,2)
 		TNT1 A 0 A_SelectWeapon("AEoDBloodShotgun")
 		TNT1 A 0
@@ -5518,21 +5137,11 @@ Actor AEoDBloodShotgunItem : CustomInventory 6186
 	}
 }
 
-Actor AEoDBloodShotgunCount : Inventory
-{
-	Inventory.MaxAmount 2
-	Inventory.Amount 1
-}
-
-Actor BloodShotgunDropCheck : Inventory
-{
-	Inventory.Amount 1
-	Inventory.MaxAmount 1
-}
+Actor AEoDBloodShotgunCount : Inventory { Inventory.MaxAmount 2 }
+Actor BloodShotgunDropCheck : Inventory {}
 
 Actor BloodShotgunDrop : CustomInventory
 {
-	Inventory.Amount 1
 	Inventory.MaxAmount 2
 	States
 	{
@@ -5575,7 +5184,7 @@ Actor AEoDBloodShotgunNoAmmo : AEoDBloodShotgunItem
 		TNT1 A 0 A_GiveInventory("AEoDBloodShotgun",1)
 		TNT1 A 0 A_GiveInventory("AEoDBloodShotgunCount",1)
 		TNT1 A 0 A_TakeInventory("AEShell",8)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,7,0,0)
+		TNT1 A 0 	
 		TNT1 A 0 A_JumpIfInventory("NoWeaponSwitch",1,2)
 		TNT1 A 0 A_SelectWeapon("AEoDBloodShotgun")
 		TNT1 A 0
@@ -5586,7 +5195,7 @@ Actor AEoDBloodShotgunNoAmmo : AEoDBloodShotgunItem
 		TNT1 A 0 A_GiveInventory("AEoDBloodShotgun",1)
 		TNT1 A 0 A_GiveInventory("AEoDBloodShotgunCount",1)
 		TNT1 A 0 A_TakeInventory("AEShell",8)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,7,0,0)
+		TNT1 A 0 	
 		TNT1 A 0 A_JumpIfInventory("NoWeaponSwitch",1,2)
 		TNT1 A 0 A_SelectWeapon("AEoDBloodShotgun")
 		TNT1 A 0
@@ -5621,6 +5230,7 @@ Actor AEoDBloodShotgun : Weapon
 	Weapon.AmmoUse 1
 	Weapon.AmmoUse2 1
 	Weapon.KickBack 50
+	Weapon.SelectionOrder 10750
 	Scale 0.195
 	Inventory.PickupSound "BloodShotgun/Pickup"
 	Inventory.PickupMessage "Picked up a sawed-off"
@@ -5643,13 +5253,13 @@ Actor AEoDBloodShotgun : Weapon
 		Loop
 	ReadyNoAmmo:
 	Deselect:
-		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
+		TNT1 A 0 	
 		TNT1 A 0 A_JumpIfInventory("AEoDBloodShotgunCount",2,"Deselect2")
 		BSG1 A 1 A_Lower
 		TNT1 AA 0 A_Lower
 		Loop
 	Select:
-		TNT1 A 0 //ACS_NamedExecute("s799",0,13,0,0)
+		TNT1 A 0 	
 		TNT1 A 0 A_JumpIfInventory("AEoDBloodShotgunCount",2,"Select2")
 		BSG1 A 1 A_Raise
 		TNT1 AA 0 A_Raise
@@ -5657,39 +5267,39 @@ Actor AEoDBloodShotgun : Weapon
 	Deselect2:
 		TNT1 A 0 A_TakeInventory("BloodShotgunToken",2)
 	DesLoop2:
-		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
+		TNT1 A 0 	
 		B2SG A 1 A_Lower
 		TNT1 A 0 A_Lower
 		Loop
 	Select2:
 		TNT1 A 0 A_GiveInventory("BloodShotgunToken",2)
 	SelLoop2:
-		TNT1 A 0 //ACS_NamedExecute("s799",0,14,0,0)
+		TNT1 A 0 	
 		B2SG A 1 A_Raise
 		TNT1 A 0 A_Raise
 		Loop
 	Fire:
 		TNT1 A 0 A_JumpIfInventory("AEoDBloodShotgunCount",2,"Fire2")
-		BSG1 A 0 //A_JumpIfNoAmmo(1)
+		BSG1 A 0 
 		BSG1 A 0 A_JumpIfInventory("SpentShellI", 1, 13)
 		BSG1 A 0 A_GiveInventory("SpentShellI", 1)
 		BSG1 A 1 A_GunFlash
-		TNT1 A 0 //ACS_NamedExecute("s851",0,50,random(-8,8),0)
+		TNT1 A 0 
 		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,8,6)
 		BSG1 B 0 A_PlayWeaponSound("Blood2Shotgun/Fire1")
 		BSG1 B 2 Bright A_FireBullets(5, 5, 10, 4, "BulletDamagePuff", 1)
-		BSG1 CD 2 //ACS_NamedExecute("s851",0,-25,0,0)			//<-
+		BSG1 CD 2
 		BSG1 HI 2
 		BSG1 I 0 A_ReFire
 		Goto Ready
-		BSG1 A 0 //A_JumpIfNoAmmo(1)
+		BSG1 A 0 
 		BSG1 A 0 A_TakeInventory("SpentShellI", 1)
 		BSG1 A 1 A_GunFlash
 		BSG1 E 0 A_PlayWeaponSound("Blood2Shotgun/Fire1")
-		TNT1 A 0 //ACS_NamedExecute("s851",0,50,random(-8,8),0)
+		TNT1 A 0 
 		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,10,6)
 		BSG1 E 2 Bright A_FireBullets(5, 5, 10, 4, "BulletDamagePuff", 1)
-		BSG1 FG 2 //ACS_NamedExecute("s851",0,-25,0,0)			//<-
+		BSG1 FG 2
 		BSG1 HI 2
 		BSG1 O 0 A_JumpIfNoAmmo("Ready")
 		BSG1 OP 2
@@ -5702,22 +5312,22 @@ Actor AEoDBloodShotgun : Weapon
 		BSG1 VWX 2
 		BSG1 X 0 A_ReFire
 		Goto Ready
-		BSG1 A 0 //A_SelectWeapon("AEoDCultScythe")
+		BSG1 A 0 A_SelectWeapon("AEoDCultScythe")
 		Goto Deselect
 	AltFire:
 		TNT1 A 0 A_JumpIfInventory("AEoDBloodShotgunCount",2,"AltFire2")
-		//BSG1 A 0 A_JumpIfNoAmmo(1)
+		BSG1 A 0 A_JumpIfNoAmmo(1)
 		BSG1 A 0 A_JumpIfInventory("AEShell", 2, 1)
 		Goto Fire
 		BSG1 A 0 A_JumpIfInventory("SpentShellI", 1, 28)
 		BSG1 A 1 A_GunFlash
 		BSG1 J 0 A_PlayWeaponSound("Blood2Shotgun/Fire2")
-		TNT1 A 0 //ACS_NamedExecute("s851",0,66,random(-8,8),0)
+		TNT1 A 0
 		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,8,6)
 		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,10,6)
 		BSG1 J 0 Bright A_FireBullets(12, 12, 15, 4, "BulletDamagePuff", 1)
 		BSG1 J 2 Bright A_FireBullets(12, 12, 15, 4, "BulletDamagePuff", 1)
-		BSG1 KLM 2 //ACS_NamedExecute("s851",0,-22,0,0)			//<-
+		BSG1 KLM 2
 		BSG1 N 3
 		BSG1 HI 2
 		BSG1 O 0 A_JumpIfNoAmmo(15)
@@ -5733,7 +5343,7 @@ Actor AEoDBloodShotgun : Weapon
 		Goto Ready
 		BSG1 A 0
 		Goto Fire+14
-		BSG1 A 0 //A_SelectWeapon("AEoDCultScythe")
+		BSG1 A 0 A_SelectWeapon("AEoDCultScythe")
 		Goto Deselect
 	Flash:
 		TNT1 A 2 A_Light2
@@ -5754,11 +5364,10 @@ Actor AEoDBloodShotgun : Weapon
 		B2SG A 0 A_JumpIfInventory("FirstRound",1,20)		 // Determines what barrels will fire
 		B2SG A 0 A_JumpIfInventory("OneShellInRightGun",1,68)
 		B2SG A 0 A_GunFlash				  // Fire left gun left barrel
-		//TNT1 A 0 ACS_NamedExecute("s851",0,50,random(-8,8),0)
 		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,-10,6)
 		B2SG K 0 A_PlayWeaponSound("Blood2Shotgun/Fire1")
 		B2SG K 3 Bright A_FireBullets(5,5,10,4,"BulletDamagePuff",1)
-		B2SG LM 2			 //<-
+		B2SG LM 2	
 		B2SG A 0 A_JumpIfInventory("OneShellLeft",1,52)
 		B2SG A 0 A_GunFlash				  // Fire right gun left barrel
 		TNT1 A 0
@@ -5766,7 +5375,7 @@ Actor AEoDBloodShotgun : Weapon
 		B2SG Q 0 A_PlayWeaponSound("Blood2Shotgun/Fire1")
 		B2SG Q 3 Bright A_FireBullets(5,5,10,4,"BulletDamagePuff",1)
 		B2SG Q 0 A_GiveInventory("FirstRound",1)
-		B2SG RS 2 //ACS_NamedExecute("s851",0,-25,0,0)			//<-
+		B2SG RS 2 
 		B2SG Y 2
 		B2SG Z 2 A_JumpIfNoAmmo(42)
 		B2SG Z 0 A_ReFire
@@ -5777,15 +5386,15 @@ Actor AEoDBloodShotgun : Weapon
 		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,-8,6)
 		B2SG N 0 A_PlayWeaponSound("Blood2Shotgun/Fire1")
 		B2SG N 3 Bright A_FireBullets(5,5,10,4,"BulletDamagePuff",1)
-		B2SG OP 2 //ACS_NamedExecute("s851",0,-25,0,0)			//<-
+		B2SG OP 2 
 		B2SG A 0 A_JumpIfInventory("TwoShellsLeft",1,23)
 		B2SG A 0 A_JumpIfInventory("OneShellLeft",1,32)
 		B2SG A 0 A_GunFlash				  // Fire right gun right barrel, prepares to reload
-		TNT1 A 0 //ACS_NamedExecute("s851",0,50,random(-8,8),0)
+		TNT1 A 0 
 		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,10,6)
 		B2SR A 0 A_PlayWeaponSound("Blood2Shotgun/Fire1")
 		B2SR A 3 Bright A_FireBullets(5,5,10,4,"BulletDamagePuff",1)
-		B2SR BC 2 //ACS_NamedExecute("s851",0,-25,0,0)			//<-
+		B2SR BC 2 
 		B2SR D 2 A_TakeInventory("FirstRound",1)
 		TNT1 AA 0 A_FireCustomMissile("ShotgunCasing",-45+random(-4,4),0,0,0)
 		TNT1 AA 0 A_FireCustomMissile("ShotgunCasing",45+random(-4,4),0,0,0)
@@ -5797,29 +5406,29 @@ Actor AEoDBloodShotgun : Weapon
 		B2SG A 3 A_ReFire
 		Goto Ready2
 		B2SG A 0 A_GunFlash				  // Fire right gun right barrel, no reload
-		TNT1 A 0 //ACS_NamedExecute("s851",0,50,random(-8,8),0)
+		TNT1 A 0 
 		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,10,6)
 		B2SR A 0 A_PlayWeaponSound("Blood2Shotgun/Fire1")
 		B2SR A 3 Bright A_FireBullets(5,5,10,4,"BulletDamagePuff",1)
-		B2SG TU 2 //ACS_NamedExecute("s851",0,-25,0,0)			//<-
+		B2SG TU 2 
 		B2SG V 2 A_TakeInventory("FirstRound",1)
 		B2SG Y 2
 		B2SG Z 2 A_JumpIfNoAmmo(1)
 		B2SG Z 0 A_ReFire
 		Goto Ready2
 		B2SG WX 2
-		B2SG A 0 //A_SelectWeapon("AEoDCultScythe")
+		B2SG A 0 A_SelectWeapon("AEoDCultScythe")
 		Goto Deselect2
 		B2SG A 0 A_GunFlash				  // One shell remaining in right gun
-		TNT1 A 0 //ACS_NamedExecute("s851",0,50,random(-8,8),0)
+		TNT1 A 0 
 		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,8,6)
 		B2SG A 0 A_PlayWeaponSound("Blood2Shotgun/Fire1")
 		B2SG "[" 3 Bright A_FireBullets(5,5,10,4,"BulletDamagePuff",1)
 		B2SG "\" 2 
-		B2SG "]" 2			 //<-
+		B2SG "]" 2	
 		B2SG Y 2 A_TakeInventory("OneShellInRightGun",1)
 		B2SG Z 2 A_JumpIfNoAmmo(1)
-		B2SG A 0 //A_SelectWeapon("AEoDCultScythe")
+		B2SG A 0 A_SelectWeapon("AEoDCultScythe")
 		Goto Deselect2
 	AltFire2:
 		B2SG A 0 A_JumpIfNoAmmo(1)
@@ -5842,12 +5451,12 @@ Actor AEoDBloodShotgun : Weapon
 		B2SG A 0 A_JumpIfInventory("OneShellLeft",1,58)
 		B2SG A 0 A_GunFlash				  // Fire left gun both barrels
 		B2SG B 0 A_PlayWeaponSound("Blood2Shotgun/Fire2")
-		TNT1 A 0 //ACS_NamedExecute("s851",0,66,random(-8,8),0)
+		TNT1 A 0 
 		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,-10,6)
 		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,-8,6)
 		B2SG B 0 Bright A_FireBullets(12,12,15,4,"BulletDamagePuff",1)
 		B2SG B 3 Bright A_FireBullets(12,12,15,4,"BulletDamagePuff",1)
-		B2SG CDH 2 //ACS_NamedExecute("s851",0,-22,0,0)			//<-
+		B2SG CDH 2 
 		B2SG H 1
 		B2SG A 0 A_JumpIfInventory("ThreeShellsLeft",1,36)
 		B2SG A 0 A_JumpIfNoAmmo(1)
@@ -5855,13 +5464,13 @@ Actor AEoDBloodShotgun : Weapon
 		B2SG A 0 A_JumpIfInventory("TwoShellsLeft",1,24)
 		B2SG A 0 A_GunFlash				  // Fire right gun both barrels
 		B2SG E 0 A_PlayWeaponSound("Blood2Shotgun/Fire2")
-		TNT1 A 0 //ACS_NamedExecute("s851",0,66,random(-8,8),0)
+		TNT1 A 0 
 		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,8,6)
 		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,10,6)
 		B2SG E 0 Bright A_FireBullets(12,12,15,4,"BulletDamagePuff",1)
 		B2SG E 3 Bright A_FireBullets(12,12,15,4,"BulletDamagePuff",1)
-		B2SG FG 2 //ACS_NamedExecute("s851",0,-22,0,0)			//<-
-		TNT1 A 2 //ACS_NamedExecute("s851",0,-22,0,0)			//<-
+		B2SG FG 2 
+		TNT1 A 2 
 		TNT1 AA 0 A_FireCustomMissile("ShotgunCasing",-45+random(-4,4),0,0,0)
 		TNT1 AA 0 A_FireCustomMissile("ShotgunCasing",45+random(-4,4),0,0,0)
 		TNT1 A 6 A_JumpIfNoAmmo(29)
@@ -5872,7 +5481,7 @@ Actor AEoDBloodShotgun : Weapon
 		B2SG A 3 A_ReFire
 		Goto Ready2
 		B2SG WX 2					 // Two shells left
-		B2SG AAAAAA 0 //A_SelectWeapon("AEoDCultScythe")
+		B2SG AAAAAA 0 A_SelectWeapon("AEoDCultScythe")
 		Goto Deselect2
 		B2SG A 0					 // Used alt-fire after using primary fire once
 		Goto Fire2+30
@@ -5881,12 +5490,12 @@ Actor AEoDBloodShotgun : Weapon
 		Goto Ready2
 		B2SG A 0					 // One shell remaining in right gun
 		Goto Fire2+79
-		B2SG AAAAAA 0 //A_SelectWeapon("AEoDCultScythe")
+		B2SG AAAAAA 0 A_SelectWeapon("AEoDCultScythe")
 		Goto Deselect2
 		TNT1 A 0					 // One shell left
 		Goto Fire2+12
-		B2SG A 0 //A_SelectWeapon("AEoDFlail")			// Empty
-		B2SG AAAAAAA 0 //A_SelectWeapon("AEoDCultScythe")
+		B2SG A 0 A_SelectWeapon("AEoDFlail")			// Empty
+		B2SG AAAAAAA 0 A_SelectWeapon("AEoDCultScythe")
 		Goto Deselect2+3
 
 	}
@@ -5908,41 +5517,14 @@ Actor SpentShellI : PuzzleItem
 
 //--------------------------------------------------------------------
 
-
-
-Actor FirstRound : Inventory
-{
-	Inventory.Amount 1
-	Inventory.MaxAmount 1
-}
-
-Actor ThreeShellsLeft : Inventory
-{
-	Inventory.Amount 1
-	Inventory.MaxAmount 1
-}
-
-Actor TwoShellsLeft : Inventory
-{
-	Inventory.Amount 1
-	Inventory.MaxAmount 1
-}
-
-Actor OneShellLeft : Inventory
-{
-	Inventory.Amount 1
-	Inventory.MaxAmount 1
-}
-
-Actor OneShellInRightGun : Inventory
-{
-	Inventory.Amount 1
-	Inventory.MaxAmount 1
-}
+Actor FirstRound 		: Inventory {}
+Actor ThreeShellsLeft 	: Inventory {}
+Actor TwoShellsLeft 	: Inventory {}
+Actor OneShellLeft 		: Inventory {}
+Actor OneShellInRightGun: Inventory {}
 
 Actor BloodShotgunToken : Inventory
 {
-	Inventory.Amount 1
 	Inventory.MaxAmount 2
 	Inventory.InterHubAmount 2
 }
@@ -5973,7 +5555,7 @@ Actor AEoDCarbineItem : CustomInventory 6160
 		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
 		TNT1 A 0 A_GiveInventory("CarbineDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDCarbine",1)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,17,0,0)
+		TNT1 A 0 	
 		Stop
 	Nothing:
 		TNT1 A 0 A_JumpIfInventory("AEoDCarbine",1,"Ammo")
@@ -5997,6 +5579,7 @@ Actor AEoDCarbine : Weapon
 	Weapon.AmmoGive1 20
 	Weapon.AmmoUse1 1
 	Weapon.AmmoUse2 1
+	Weapon.SelectionOrder 10375
 	Obituary "%o thought %g was safe from %k."
 	Inventory.PickupMessage "You found a 9A-91 Carbine Rifle!"
 	Inventory.PickupSound "weapons/stroggarmsaw/pickup"
@@ -6009,20 +5592,20 @@ Actor AEoDCarbine : Weapon
 		Q4MG F -1
 		Loop
 	Select:
-		TNT1 A 0 //ACS_NamedExecute("s799",0,17,0,0)
+		TNT1 A 0 	
 		Q4MG A 1 A_Raise
 		TNT1 AA 0 A_Raise
 		Loop
 	Deselect:
 		TNT1 A 0 A_JumpIfInventory("MachinegunAutomatic", 1, "ZoomDeselect")
 		TNT1 A 0 A_TakeInventory("MachinegunAutomatic",1)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
+		TNT1 A 0 	
 		TNT1 A 0 A_StopSound(6)
 		Q4MG A 1 A_Lower
 		TNT1 AA 0 A_Lower
 		Goto Deselect+3
 	ZoomDeselect:
-		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
+		TNT1 A 0 	
 		TNT1 A 0 A_TakeInventory("MachinegunAutomatic",1)
 		//Zoom Out
 		TNT1 A 0 A_ZoomFactor(1.0)
@@ -6036,12 +5619,10 @@ Actor AEoDCarbine : Weapon
 		Goto Ready+2
 	ZoomReady:
 		TNT1 A 0 A_JumpIfTargetInLOS("ZoomReadyLockedOn")
-		//TNT1 A 0 A_FireCustomMissile("LaserSightSpawner", 0, 0, 0, 4)
 		TNT1 A 0 A_FireBullets(0,0,1,0,"LaserSight",0)
 		R016 N 1 A_WeaponReady
 		Goto Ready
 	ZoomReadyLockedOn:
-		//TNT1 A 0 A_FireCustomMissile("LaserSightSpawner", 0, 0, 0, 4)
 		TNT1 A 0 A_FireBullets(0,0,1,0,"LaserSight",0)
 		R016 O 1 A_WeaponReady
 		Goto Ready
@@ -6092,7 +5673,6 @@ Actor AEoDCarbine : Weapon
 		TNT1 A 0 A_GiveInventory("MachinegunAutomatic",1)
 		TNT1 A 0 A_GiveInventory("Aiming",1)
 		R016 N 9
-		//TNT1 A 0 A_PlaySound("reilsss/weapons/sniperzoomidle", 6, 0.6, 1)	
 		Goto Ready
 	ZoomOut:
 		//Zoom Out
@@ -6106,20 +5686,14 @@ Actor AEoDCarbine : Weapon
 	}
 }
 
-Actor MachinegunAutomatic : Inventory
-{
-	Inventory.Amount 0
-	Inventory.MaxAmount 1
-}
+Actor MachinegunAutomatic : Inventory { Inventory.Amount 0 }
 
 Actor CarbineDrop : CustomInventory
 {
-	Inventory.MaxAmount 1
 	States
 	{
 	Use:
-		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DroppedCarbine",0,0,32,8,0,0,0,32,0)
+		TNT1 AA 0 A_SpawnItemEx("DroppedCarbine",0,0,32,8,0,0,0,32,0)
 		Stop
 	}
 }
@@ -6158,7 +5732,7 @@ Actor AEoDCarbineNoAmmo : AEoDCarbineItem
 		TNT1 A 0 A_GiveInventory("CarbineDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDCarbine",1)
 		TNT1 A 0 A_TakeInventory("AEClip",20)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,17,0,0)
+		TNT1 A 0 	
 		Stop
 	Nothing:
 		TNT1 A 0 A_JumpIfInventory("AEoDCarbine",1,"Ammo")
@@ -6204,7 +5778,7 @@ Actor AEoDBoltGunItem : CustomInventory
 		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
 		TNT1 A 0 A_GiveInventory("BoltGunDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDBoltGun",1)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,18,0,0)
+		TNT1 A 0 	
 		Stop
 	Nothing:
 		TNT1 A 0 A_JumpIfInventory("AEoDBoltGun",1,"Ammo")
@@ -6220,12 +5794,10 @@ Actor AEoDBoltGunItem : CustomInventory
 
 Actor BoltGunDrop : CustomInventory
 {
-	Inventory.MaxAmount 1
 	States
 	{
 	Use:
-		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DroppedBoltGun",0,0,32,8,0,0,0,32,0)
+		TNT1 AA 0 A_SpawnItemEx("DroppedBoltGun",0,0,32,8,0,0,0,32,0)
 		Stop
 	}
 }
@@ -6262,7 +5834,7 @@ Actor AEoDBoltGunNoAmmo : AEoDBoltGunItem
 		TNT1 A 0 A_GiveInventory("AEoDBoltGun",1)
 		TNT1 A 0 A_TakeInventory("AENails",30)
 		TNT1 A 0 A_TakeInventory("AEGrenade",5)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,18,0,0)
+		TNT1 A 0 	
 		Stop
 	Nothing:
 		TNT1 A 0 A_JumpIfInventory("AEoDBoltGun",1,"Ammo")
@@ -6314,6 +5886,7 @@ Actor AEoDBoltGun : Weapon
 	Weapon.AmmoType2 "AEGrenade"
 	Weapon.AmmoUse2 1
 	Weapon.AmmoGive2 5
+	Weapon.SelectionOrder 11750
 	Inventory.PickupSound "painkiller/weapon/boltgun/PickWeapon"
 	weapon.upsound "weapons/draw"
 	Inventory.PickupMessage "You bagged the Bolt Gun! Show'em how it's done!"
@@ -6327,12 +5900,12 @@ Actor AEoDBoltGun : Weapon
 		D004 N 1 A_WeaponReady
 		Loop
 	Deselect:
-		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
+		TNT1 A 0 	
 		D004 N 1 A_Lower
 		TNT1 AA 0 A_Lower
 		Loop
 	Select:
-		TNT1 A 0 //ACS_NamedExecute("s799",0,18,0,0)
+		TNT1 A 0 	
 		D004 N 1 A_Raise
 		TNT1 AA 0 A_Raise
 		Loop
@@ -6471,7 +6044,7 @@ Actor AEoDPKShotgunItem : CustomInventory
 		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
 		TNT1 A 0 A_GiveInventory("PKShotgunDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDPKShotgun",1)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,19,0,0)	//weapon identifier #19 in ACS array for slot 4
+		TNT1 A 0 
 		Stop
 	Nothing:
 		TNT1 A 0 A_JumpIfInventory("AEoDPKShotgun",1,"Ammo")
@@ -6487,12 +6060,10 @@ Actor AEoDPKShotgunItem : CustomInventory
 
 Actor PKShotgunDrop : CustomInventory
 {
-	Inventory.MaxAmount 1
 	States
 	{
 	Use:
-		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DroppedPKShotgun",0,0,32,8,0,0,0,32,0)
+		TNT1 AA 0 A_SpawnItemEx("DroppedPKShotgun",0,0,32,8,0,0,0,32,0)
 		Stop
 	}
 }
@@ -6529,7 +6100,7 @@ Actor AEoDPKShotgunNoAmmo : AEoDPKShotgunItem
 		TNT1 A 0 A_GiveInventory("AEoDPKShotgun",1)
 		TNT1 A 0 A_TakeInventory("AEShell",20)
 		TNT1 A 0 A_TakeInventory("PlasmaRod",40)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,19,0,0)
+		TNT1 A 0 	
 		Stop
 	Nothing:
 		TNT1 A 0 A_JumpIfInventory("AEoDPKShotgun",1,"Ammo")
@@ -6575,6 +6146,7 @@ Actor AEoDPKShotgun : Weapon
 	Weapon.AmmoUse2 5
 	Weapon.AmmoGive2 40
 	Weapon.KickBack 20
+	Weapon.SelectionOrder 7750
 	Scale 0.2
 	Inventory.PickupSound "weapons/stroggarmsaw/pickup"
 	weapon.upsound "weapons/draw"
@@ -6589,12 +6161,12 @@ Actor AEoDPKShotgun : Weapon
 		D009 F 1 A_WeaponReady
 		Loop
 	Deselect:
-		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
+		TNT1 A 0 	
 		D009 F 1 A_Lower
 		TNT1 AA 0 A_Lower
 		Loop
 	Select:
-		TNT1 A 0 //ACS_NamedExecute("s799",0,19,0,0)
+		TNT1 A 0 	
 		D009 F 1 A_Raise
 		TNT1 AA 0 A_Raise
 		Loop
@@ -6607,7 +6179,7 @@ Actor AEoDPKShotgun : Weapon
 		D009 B 1 A_SetPitch(pitch+0.5)
 		TNT1 A 0 A_FireCustomMissile("ShotgunCasingSpawner",-55,0, 0,0)
 		TNT1 A 0 A_FireCustomMissile("ShotgunCasingSpawner",-55,0, 4,0)
-		D009 CDDE 2 //A_SetPitch(pitch+0.5)
+		D009 CDDE 2 
 		D009 E 3
 		D009 F 4
 		Goto Ready
@@ -6724,10 +6296,7 @@ Actor MiniShardTrail
 	}
 }
 
-Actor SSGFreezerShard2 : SSGFreezerShard1
-{
-	DamageType "Ice"
-}
+Actor SSGFreezerShard2 : SSGFreezerShard1 { DamageType "Ice" }
 
 
 
@@ -6756,7 +6325,7 @@ Actor AEoDGasLauncherItem : CustomInventory
 		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
 		TNT1 A 0 A_GiveInventory("GasLauncherDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDGasLauncher",1)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,20,0,0)
+		TNT1 A 0 	
 		Stop
 	Nothing:
 		TNT1 A 0 A_JumpIfInventory("AEoDGasLauncher",1,"Ammo")
@@ -6773,7 +6342,6 @@ Actor AEoDGasLauncherItem : CustomInventory
 
 Actor GasLauncherDrop : CustomInventory
 {
-	Inventory.MaxAmount 1
 	States
 	{
 	Use:
@@ -6802,7 +6370,6 @@ Actor AEoDGasLauncherNoAmmo : AEoDGasLauncherItem
 {
 	+FLOORCLIP
 	+INVENTORY.IGNORESKILL
-	Inventory.Amount 1
 	Scale 0.75
 	Inventory.PickupMessage "You grabbed the Gas Rocket Launcher! Laugh until you drop!" 
 	Inventory.PickupSound "reilsss/weappickup/SniperRifle"
@@ -6818,7 +6385,7 @@ Actor AEoDGasLauncherNoAmmo : AEoDGasLauncherItem
 		TNT1 A 0 A_GiveInventory("GasLauncherDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDGasLauncher",1)
 		TNT1 A 0 A_TakeInventory("ASTF",20)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,20,0,0)
+		TNT1 A 0 	
 		Stop
 	Nothing:
 		TNT1 A 0 A_JumpIfInventory("AEoDGasLauncher",1,"Ammo")
@@ -6850,6 +6417,7 @@ Actor AEoDGasLauncher : Weapon
 	Weapon.AmmoGive 20 
 	Weapon.AmmoUse 5
 	Weapon.AmmoUse2 1
+	Weapon.SelectionOrder 10450
 	Inventory.PickupMessage "You grabbed the Gas Rocket Launcher! Laugh until you drop!" 
 	Obituary "%o choked on %k's gas."
 	Weapon.UpSound "weapons/draw"
@@ -6865,12 +6433,12 @@ Actor AEoDGasLauncher : Weapon
 		M010 G 1 A_WeaponReady 
 		Loop 
 	Deselect: 
-		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
+		TNT1 A 0 	
 		M010 G 1 A_Lower 
 		M010 GG 0 A_Lower
 		Loop 
 	 Select: 
-		TNT1 A 0 //ACS_NamedExecute("s799",0,20,0,0)
+		TNT1 A 0 	
 		M010 D 1 A_Raise
 		M010 DD 0 A_Raise
 		Loop 
@@ -6963,7 +6531,6 @@ Actor RevRocket2 : RevRocket
 	Damage 20
 	+NODAMAGETHRUST
 	+FORCERADIUSDMG
-	//+EXTREMEDEATH
 	+DONTREFLECT
 	DamageType "AEPoison"
 	States
@@ -7152,7 +6719,7 @@ Actor AEoDHeadHunterItem : CustomInventory
 		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
 		TNT1 A 0 A_GiveInventory("HeadHunterDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDHeadHunter",1)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,21,0,0)
+		TNT1 A 0 	
 		Stop
 	Nothing:
 		TNT1 A 0 A_JumpIfInventory("AEoDHeadHunter",1,"Ammo")
@@ -7168,7 +6735,6 @@ Actor AEoDHeadHunterItem : CustomInventory
 
 Actor HeadHunterDrop : CustomInventory
 {
-	Inventory.MaxAmount 1
 	States
 	{
 	Use:
@@ -7212,7 +6778,7 @@ Actor AEoDHeadHunterNoAmmo : AEoDHeadHunterItem
 		TNT1 A 0 A_GiveInventory("HeadHunterDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDHeadHunter",1)
 		TNT1 A 0 A_TakeInventory("AENails",40)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,21,0,0)
+		TNT1 A 0 	
 		Stop
 	Nothing:
 		TNT1 A 0 A_JumpIfInventory("AEoDHeadHunter",1,"Ammo")
@@ -7243,6 +6809,7 @@ Actor AEoDHeadHunter : weapon
 	Weapon.AmmoType1 "AENails"
 	Weapon.AmmoUse1 20
 	Weapon.AmmoGive1 40
+	Weapon.SelectionOrder 15950
 	Tag "Head Hunter"
 	+WEAPON.AMMO_OPTIONAL
 	+WEAPON.NOALERT
@@ -7257,12 +6824,12 @@ Actor AEoDHeadHunter : weapon
 		D016 A 4 A_WeaponReady
 		Loop
 	Select:
-		D016 A 0 //ACS_NamedExecute("s799",0,21,0,0)
+		D016 A 0 	
 		D016 A 1 A_Raise
 		D016 AA 0 A_Raise
 		Loop
 	Deselect:
-		D016 A 0 //ACS_NamedExecute("s799",0,0,0,0)
+		D016 A 0 	
 		D016 A 1 A_Lower
 		D016 AA 0 A_Lower
 		Loop
@@ -7323,8 +6890,6 @@ Actor AEoDHeadHunter : weapon
 		Goto Waiting+1
 		
 	DetonateBullet:
-		//TNT1 A 0 A_PrintBold("DetonateBullet")
-		//TNT1 A 0 A_TakeInventory("cammin",1)
 		D016 A 70 ACS_NamedExecute("s963",0,0,0,0)
 		Goto Waiting+2
 		
@@ -7347,12 +6912,9 @@ Actor AEoDHeadHunter : weapon
 	}
 }
 
-Actor HHZoomToken : Inventory
-{	Inventory.MaxAmount 1	}
-Actor DieToken : Inventory
-{	Inventory.MaxAmount 1	}
-Actor cammin : Inventory
-{	Inventory.MaxAmount 1	}
+Actor HHZoomToken 	: Inventory {}
+Actor DieToken 		: Inventory {}
+Actor cammin 		: Inventory {}
 
 
 Actor HHBulletPrimary : FastProjectile
@@ -7483,7 +7045,7 @@ Actor AEoDBisonItem : CustomInventory
 		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
 		TNT1 A 0 A_GiveInventory("BisonDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDBison",1)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,22,0,0)
+		TNT1 A 0 	
 		Stop
 	Nothing:
 		TNT1 A 0 A_JumpIfInventory("AEoDBison",1,"Ammo")
@@ -7543,7 +7105,7 @@ Actor AEoDBisonNoAmmo : AEoDBisonItem
 		TNT1 A 0 A_GiveInventory("BisonDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDBison",1)
 		TNT1 A 0 A_TakeInventory("AECell",25)
-		TNT1 A 0 //ACS_NamedExecute("s799",0,22,0,0)
+		TNT1 A 0 	
 		Stop
 	Nothing:
 		TNT1 A 0 A_JumpIfInventory("AEoDBison",1,"Ammo")
@@ -7567,6 +7129,7 @@ Actor AEoDBison : Weapon
 	Weapon.AmmoType1 "AECell"
 	Weapon.AmmoUse1 15
 	Weapon.AmmoGive1 25
+	Weapon.SelectionOrder 8375
 	Scale 0.25
 	Inventory.PickupMessage "You bagged the Righteous Bison! Make them jealous!"
 	Tag "Righteous Bison"
@@ -7578,12 +7141,12 @@ Actor AEoDBison : Weapon
 		M007 Z -1
 		Stop
 	Select:	
-		TNT1 A 0 //ACS_NamedExecute("s799",0,22,0,0)
+		TNT1 A 0 	
 		M007 A 1 A_Raise
 		M007 AA 0 A_Raise
 		Loop
 	Deselect:
-		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
+		TNT1 A 0 	
 		M007 A 1 A_Lower
 		M007 AA 0 A_Lower
 		Loop
@@ -7830,5 +7393,4 @@ Actor BisonRipperEffect2 : BisonRipperEffect
 	}
 }
 
-Actor BisonRegenToken : Inventory
-{	Inventory.MaxAmount 1	}
+Actor BisonRegenToken : Inventory {}
