@@ -3737,7 +3737,7 @@ Actor PlayCaveIsPissed
 
 Actor DummyMonster
 {
-	+NOTARGET
+	+NEVERTARGET
 	MONSTER
 	//-ISMONSTER
 	-COUNTKILL
@@ -3746,6 +3746,8 @@ Actor DummyMonster
 	+NONSHOOTABLE
 	+THRUACTORS
 	+NODAMAGE
+	+DONTCORPSE
+	+FRIGHTENED
 	//+LOOKALLAROUND
 	Radius 12
 	Height 56
@@ -3782,6 +3784,7 @@ Actor DummyMonsterBoss : DummyMonster
 	Death:
 		TNT1 A 0 A_SpawnItemEx("L4DSmallMobRunner",0,0,0,0,0,0,random(0,359),32,190)
 		TNT1 A 0 A_SpawnItemEx("L4DMediumMobRunner",0,0,0,0,0,0,random(0,359),32,230)
+		TNT1 A 0 A_SpawnItemEx("L4DLargeMobRunner",0,0,0,0,0,0,0,random(0,359),32,250)
 		TNT1 A 1 A_Fall
 		TNT1 A 10 A_KillMaster
 		Stop
@@ -3977,14 +3980,6 @@ Actor FancyPlasmaBallEffect
 //to kill off all versions.
 
 Actor Telefragged : Inventory
-{
-	Inventory.MaxAmount 1
-}
-
-//Made to allow monster bodies to be swallowed up by absorption. We want to 
-//ensure that monsters have FALLEN first and dropped their items.
-
-Actor Corpsed : Inventory
 {
 	Inventory.MaxAmount 1
 }
