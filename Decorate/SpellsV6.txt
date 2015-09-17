@@ -44,9 +44,6 @@ Actor ChaosSpellPick : CustomInventory
 Actor ChaosPresent : Inventory
 {Inventory.MaxAmount 1}
 
-
-
-
 Actor CharmSpellPick : ChaosSpellPick
 {
 	Inventory.PickupMessage "You got the charm spell"
@@ -419,3 +416,479 @@ Actor DrainParticle
 		Wait
 	}
 }
+
+Actor DefileSpell
+{
+    Height 5
+    Radius 5
+    Speed 23
+    Damage 1
+    PROJECTILE
+    +STRIFEDAMAGE
+    +DONTREFLECT
+    Scale 0.6
+    DamageType Defile
+    DeathSound "whiteballsdeth"
+    Translation "42:47=125:127","162:167=120:124","160:161=156:157","225:227=153:155","4:4=152:152"
+    States
+    {
+    Spawn:
+	BAL8 AAABBBCCCDDDEEEFFFGGGHHH 1 Bright A_SpawnItem("DefileSpellTrail",1)
+	Loop
+    Death:
+    	TNT1 A 0 A_Scream
+	TNT1 A 0 A_SpawnItemEx("DefileSpellExplode",0,0,0,0,0,0,0,32,0)
+	Stop
+    }
+}
+
+ACTOR DefileSpellExplode
+{
+    Height 5
+    Radius 5
+    Speed 0
+    PROJECTILE
+    Translation "231:231=4:4","248:248=112:112","215:217=113:115","175:191=116:127","44:47=124:127"
+    Scale 0.7
+    States
+    {
+    Spawn:
+	HELX ABCDEFGHIJ 3 Bright A_FadeOut
+	Wait
+    }
+}
+
+Actor DefileSpellTrail
+{
+    Projectile
+    Speed 0
+    Damage 0
+    +NOCLIP
+    Scale 0.75
+    RenderStyle Add
+    Alpha 0.67
+    Translation "42:47=125:127","162:167=120:124","160:161=156:157","225:227=153:155","4:4=152:152"
+    States
+    {
+    Spawn:
+	BAL8 ABCDEFGH 3 Bright A_FadeOut
+	Wait
+    }
+}
+
+ACTOR TerrorSpell
+{
+    Height 5
+    Radius 5
+    Speed 20
+    Damage 1
+    RenderStyle Add
+    Alpha 0.6
+    Scale 0.6
+    PROJECTILE
+    +STRIFEDAMAGE
+    +DONTREFLECT
+    DeathSound "greatwraith/death"
+    DamageType Terror
+    States
+    {
+    Spawn:
+	TSFX A 1 A_CustomMissile("TerrorSpellTrail",0+random(10,-10),0+random(10,-10),random(15,-15),0)
+	TSFX A 0 A_CustomMissile("TerrorSpellTrail",0+random(10,-10),0+random(10,-10),random(15,-15),0)
+	Loop
+    Death:
+    	SRBA E 0 A_Scream
+	SRBA EFGHIJ 2 Bright A_FadeOut
+	Wait
+    }
+}
+
+ACTOR TerrorSkull
+{
+    Height 5
+    Radius 5
+    Speed 20
+    Damage 1
+    PROJECTILE
+    +STRIFEDAMAGE
+    +DONTREFLECT
+    Scale 0.20
+    RenderStyle Add
+    DamageType Terror
+    States
+    {
+    Spawn:
+	TSSH ABCDE 3 Bright
+	Loop
+    Death:
+	TNT1 A 0
+	Stop
+    }
+}
+
+
+ACTOR TerrorSpellTrail
+{
+    Mass 1
+    Radius 8
+    Height 6
+    Speed 3
+    Scale 0.6
+    Damage 0
+    RenderStyle Add
+    Alpha 0.25
+    Translation "112:127=80:111", "224:231=80:82", "208:215=80:82", "160:166=80:84"
+    PROJECTILE
+    States
+    {
+    Spawn:
+        CFIR ABCDEFGHIJKLMOP 2 Bright 
+        Stop
+    }
+}
+
+Actor MorphSpell : EggFx
+{
+        +DONTREFLECT
+	Radius 8
+	Height 12
+	Scale 0.75
+	RenderStyle Add
+	MorphProjectile.Duration 700
+	MorphProjectile.PlayerClass "AEoDChickenPlayer"
+	Translation "192:207=80:111"
+	SeeSound "diablo2/amazoncast/fistofares"
+	DeathSound "weapons/phoenixhit"
+	States
+	{
+	Spawn:
+		ANFB ABC 3 Bright A_SpawnItem("MorphSpellTrail",1)
+		Loop
+	Death:
+		ANFB DEF 4 Bright
+		ANFB G 1 A_FadeOut
+		Wait
+	}
+}
+
+Actor MorphSpellTrail
+{
+	PROJECTILE
+	Speed 0
+	Damage 0
+	+NOCLIP
+	Scale 0.75
+	RenderStyle Add
+	Alpha 0.67
+	Translation "112:127=16:47"
+	States
+	{
+	Spawn:
+		ACID BCDE 3
+		ACID F 1 A_FadeOut
+		Wait
+	}
+}
+
+DamageType MadChaos
+{
+	Factor 0
+}
+
+ACTOR ChaosSpell
+{
+    Height 5
+    Radius 5
+    Speed 22
+    Damage 0
+    Scale 0.4
+    RenderStyle Add
+    PROJECTILE
+    +STRIFEDAMAGE
+    +DONTREFLECT
+	+HITTARGET //<--Monster will be responsible for causing infighting. THEY are responsible for the damage.
+	+FORCERADIUSDMG
+	+FOILINVUL
+	+OLDRADIUSDMG
+	+CAUSEPAIN //Works even with 0 damage!
+	+PAINLESS
+    //DamageType Chaos
+	DamageType "MadChaos"
+    DeathSound "weapons/sigilhit"
+    Translation "83:88=192:197","112:127=198:207"
+    States
+    {
+    Spawn:
+	CBTS A 2 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,2.5,0,0,32,0)
+	CBTS A 0 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,-2.5,0,0,32,0)
+	CBTS A 2 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,2.375,0.775,0,32,0)
+	CBTS A 0 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,-2.375,-0.775,0,32,0)
+	CBTS B 2 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,2.025,1.47,0,32,0)
+	CBTS B 0 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,-2.025,-1.47,0,32,0)
+	CBTS B 2 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,1.47,2.025,0,32,0)
+	CBTS B 0 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,-1.47,-2.025,0,32,0)
+	CBTS C 2 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,0.775,2.375,0,32,0)
+	CBTS C 0 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,-0.775,-2.375,0,32,0)
+	CBTS C 2 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,0,2.5,0,32,0)
+	CBTS C 0 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,0,-2.5,0,32,0)
+	CBTS D 2 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,-0.775,2.375,0,32,0)
+	CBTS D 0 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,0.775,-2.375,0,32,0)
+	CBTS D 2 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,-1.47,2.025,0,32,0)
+	CBTS D 0 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,1.47,-2.025,0,32,0)
+	CBTS E 2 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,-2.025,1.47,0,32,0)
+	CBTS E 0 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,2.025,-1.47,0,32,0)
+	CBTS E 2 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,-2.375,0.775,0,32,0)
+	CBTS E 0 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,2.375,-0.775,0,32,0)
+	CBTS F 2 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,-2.5,0,0,32,0)
+	CBTS F 0 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,2.5,0,0,32,0)
+	CBTS F 2 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,-2.375,-0.775,0,32,0)
+	CBTS F 0 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,2.375,0.775,0,32,0)
+	CBTS G 2 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,-2.025,-1.47,0,32,0)
+	CBTS G 0 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,2.025,1.47,0,32,0)
+	CBTS G 2 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,-1.47,-2.025,0,32,0)
+	CBTS G 0 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,1.47,2.025,0,32,0)
+	CBTS H 2 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,-0.775,-2.375,0,32,0)
+	CBTS H 0 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,0.775,2.375,0,32,0)
+	CBTS H 2 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,0,-2.5,0,32,0)
+	CBTS H 0 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,0,2.5,0,32,0)
+	CBTS I 2 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,0.775,-2.375,0,32,0)
+	CBTS I 0 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,-.775,2.375,0,32,0)
+	CBTS I 2 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,1.47,-2.025,0,32,0)
+	CBTS I 0 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,-1.47,2.025,0,32,0)
+	CBTS J 2 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,2.025,-1.47,0,32,0)
+	CBTS J 0 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,-2.025,1.47,0,32,0)
+	CBTS J 2 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,2.375,-0.775,0,32,0)
+	CBTS J 0 Bright A_SpawnItemEx("ChaosSpellTrail",0,0,0,0,-2.375,0.775,0,32,0)
+	Loop
+    Crash:
+	XDeath:
+		TNT1 A 0 A_Warp(AAPTR_TARGET,0,0,32,0,WARPF_NOCHECKPOSITION)
+		TNT1 A 0 A_Explode(1,10280,0,1,10280)
+		//TNT1 A 0 A_GiveInventory("ChaosBlastCauser",1,AAPTR_TRACER)
+	Death:
+		TNT1 A 0 A_Scream
+		TNT1 A 1 A_SpawnItemEx("ChaosSpellExplosion",0,0,0,0,0,0,0,32)
+		Stop
+    }
+}
+
+ACTOR ChaosSpellTrail
+{
+    Speed 2
+    Damage 0
+    Height 6
+    Radius 5
+    PROJECTILE
+    RenderStyle Add
+    Alpha 0.5
+    Scale 0.7
+    States
+    {
+    Spawn:
+	FX04 BCDEF 6
+	Stop
+    }  
+}
+
+ACTOR ChaosSpellExplosion
+{
+    +NOGRAVITY
+    RenderStyle Add
+    States
+    {
+    Spawn:
+	ANFB DEF 4 Bright
+	ANFB G 1 A_FadeOut
+	Wait
+    }
+}
+
+ACTOR ChaosExpl1
+{
+    +STRIFEDAMAGE
+    +FORCERADIUSDMG
+    +DONTSPLASH
+    PROJECTILE
+    DamageType ChaosExpl1
+    States
+    {
+    Spawn:
+	TNT1 A 0
+	TNT1 A 0 A_Explode(1,600,0,0,1)
+	Stop
+    }
+}
+
+ACTOR ChaosExpl2
+{
+    +STRIFEDAMAGE
+    +FORCERADIUSDMG
+    +DONTSPLASH
+    PROJECTILE
+    DamageType ChaosExpl2
+    States
+    {
+    Spawn:
+	TNT1 A 0
+	TNT1 A 0 A_Explode(1,600,0,0,1)
+	Stop
+    }
+}
+
+ACTOR CharmSpell
+{
+    Height 5
+    Radius 5
+    Speed 18
+    Damage 1
+    PROJECTILE
+    +STRIFEDAMAGE
+    +DONTREFLECT
+    Scale 0.75
+    RenderStyle Add
+    Alpha 0.67
+    Translation "176:188=252:254","171:175=192:198"
+    DamageType Charm
+    States
+    {
+    Spawn:
+	TRNG DDD 1 Bright A_SpawnItem("CharmSpellTrailD")
+	TRNG CCC 1 Bright A_SpawnItem("CharmSpellTrailC")
+	TRNG BBB 1 Bright A_SpawnItem("CharmSpellTrailB")
+	TRNG AAA 1 Bright A_SpawnItem("CharmSpellTrailA")
+	TRNG BBB 1 Bright A_SpawnItem("CharmSpellTrailB")
+	TRNG CCC 1 Bright A_SpawnItem("CharmSpellTrailC")
+	Loop
+    Death:
+	TRNG A 2 Bright A_FadeOut
+	Wait
+    }
+}
+
+ACTOR CharmSpellTrailA
+{
+    Projectile
+    Speed 0
+    Damage 0
+    +NOCLIP
+    Scale 0.75
+    RenderStyle Add
+    Alpha 0.8
+    Translation "176:188=252:254","171:175=192:198"
+    States
+    {
+    Spawn:
+	TRNG AAA 3 Bright A_FadeOut(0.08)
+	Wait
+    }
+}
+
+ACTOR CharmSpellTrailB : CharmSpellTrailA
+{
+    States
+    {
+    Spawn:
+	TRNG BBB 3 Bright A_FadeOut
+	Wait
+    }
+}
+
+ACTOR CharmSpellTrailC : CharmSpellTrailA
+{
+    States
+    {
+    Spawn:
+	TRNG CCC 3 Bright A_FadeOut
+	Wait
+    }
+}
+
+ACTOR CharmSpellTrailD : CharmSpellTrailA
+{
+    States
+    {
+    Spawn:
+	TRNG DDD 3 Bright A_FadeOut
+	Wait
+    }
+}
+
+ACTOR RedMiteSpawner
+{
+    Radius 1
+    Height 1
+    MONSTER
+    +FRIENDLY
+    -COUNTKILL
+    -SOLID
+    States
+    {
+    Spawn:
+	TNT1 A 0
+	TNT1 A 0 A_Jump(128,2)
+	TNT1 A 0 A_SpawnItemEx("RedMiteF",0,0,0,0,0,0,0,32,0)
+	TNT1 A 0 A_Jump(128,2)
+	TNT1 A 0 A_SpawnItemEx("RedMiteF",0,0,0,0,0,0,0,32,0)
+	TNT1 A 0 A_SpawnItemEx("RedMiteF",0,0,0,0,0,0,0,32,0)
+	TNT1 A 0 A_SpawnItemEx("RedMiteF",0,0,0,0,0,0,0,32,0)
+	TNT1 A 0 A_Jump(128,2)
+	TNT1 A 0 A_SpawnItemEx("OmenWaspF2",0,0,0,0,0,0,0,32,0)
+	TNT1 A 0 A_Jump(128,2)
+	TNT1 A 0 A_SpawnItemEx("OmenWaspF2",0,0,0,0,0,0,0,32,0)
+	TNT1 A 0 A_SpawnItemEx("OmenWaspF2",0,0,0,0,0,0,0,32,0)
+	TNT1 A 0 A_SpawnItemEx("OmenWaspF2",0,0,0,0,0,0,0,32,0)
+	Stop
+    }
+}
+
+ACTOR DrainPuff
+{
+    +PUFFONACTORS
+    +NOGRAVITY
+    DamageType Drain
+    States
+    {
+    Spawn:
+	TNT1 A 0
+	Stop
+    }
+}
+
+ACTOR DrainGiver
+{
+    Health 10000
+    Radius 10
+    Height 56
+    Speed 0
+    +NONSHOOTABLE
+    +MISSILEMORE
+    +MISSILEEVENMORE
+    +NOTIMEFREEZE
+    +LOOKALLAROUND
+    MinMissileChance 0
+    States
+    {
+    Spawn:
+        TNT1 AA 1 A_Look
+        Loop
+    See:
+//        TNT1 A 1 A_Chase
+//        Loop
+    Missile:
+	TNT1 A 0
+        TNT1 A 0 A_GiveToTarget("DrainHealth",random(8,16))
+        Stop
+    }
+}
+
+ACTOR DrainHealth : HealthBonus
+{
+    Inventory.Amount 1
+    Inventory.MaxAmount 250
+}
+
+//==============================================================================
+// Misc.
+
+ACTOR SlowCheck : Inventory {}
+ACTOR DefileCheck : Inventory {}

@@ -398,31 +398,23 @@ terminate;
 //============================================================================================================
 script "s952" enter
 {
+	//Check for infinite ammo.
 	if((GetCVar("sv_infiniteammo") > 0) && (CheckInventory("InfiniteAmmo") < 1))
-	{
 		GiveInventory("InfiniteAmmo",1);
-	}
 	else if (GetCVar("sv_infiniteammo") == 0)
-	{
 		TakeInventory("InfiniteAmmo",1);
-	}
-	delay(35);
-	restart;
-}
-
-//global bool 18: wepsw;
-
-script "s953" enter
-{
-	if((GetCVar("neverswitchonpickup") > 0) && (CheckInventory("NoWeaponSwitch") < 1))
-	{
+	
+	//Check for tracer option.
+	if ((GetCvar("user_TracerFX") > 0) && (CheckInventory("TracerFXToken") < 1))
+		GiveInventory("TracerFXToken",1);
+	else if (GetCvar("user_TracerFX") == 0)
+		TakeInventory("TracerFXToken",1);
+		
+	if ((GetCvar("NeverSwitchOnPickup") > 0) && (CheckInventory("NoWeaponSwitch") < 1))
 		GiveInventory("NoWeaponSwitch",1);
-	}
-	else if (GetCVar("neverswitchonpickup") == 0) 
-	{
-
+	else if (GetCvar("user_TracerFX") == 0)
 		TakeInventory("NoWeaponSwitch",1);
-	}
+		
 	delay(35);
 	restart;
 }

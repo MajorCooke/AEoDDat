@@ -30,7 +30,7 @@ Actor AEoDToken 		: Inventory	{}
 Actor NotATrueMapToken	: Inventory	{}
 Actor PFirstTimeToken	: Inventory	{}
 Actor PFirstTimeToken2	: Inventory	{}
-
+Actor NoWeaponSwitch	: Inventory {}
 Actor JokeToken 		: Inventory	{}
 Actor L4DDirToken 		: Inventory	{}
 Actor L4DModeToken 		: Inventory	{}
@@ -45,7 +45,7 @@ Actor HUDEDFToken		: Inventory	{}
 Actor HUDCabalToken		: Inventory	{}
 Actor HUDUACToken		: Inventory	{}
 
-Actor Counter : inventory		//general purpose couter
+Actor Counter : inventory		//general purpose counter
 {	Inventory.MaxAmount 255 }
 
 //***************************************************************
@@ -3022,35 +3022,11 @@ Actor DRSpycrab
 	}
 }
 
-Actor DeadRinger : Inventory
-{
-	Inventory.Amount 1
-	Inventory.MaxAmount 1
-}
-
-Actor NoDeadRinger : Inventory
-{
-	Inventory.Amount 1
-	Inventory.MaxAmount 1
-}
-
-Actor SpycrabCloakCheck : Inventory
-{
-	Inventory.Amount 1
-	Inventory.MaxAmount 1
-}
-
-Actor SpycrabCloakActive : Inventory
-{
-	Inventory.Amount 1
-	Inventory.MaxAmount 100
-}
-
-Actor DRSpycrabCheck : Inventory
-{
-	Inventory.Amount 1
-	Inventory.MaxAmount 1
-}
+Actor DeadRinger : Inventory {}
+Actor NoDeadRinger : Inventory {}
+Actor SpycrabCloakCheck : Inventory {}
+Actor SpycrabCloakActive : Inventory {}
+Actor DRSpycrabCheck : Inventory {}
 
 //==========================================================
 //==========================================================
@@ -3123,90 +3099,13 @@ Actor BVictim
 
 //************************************
 
-Actor AmmoUser
-{
-	PROJECTILE
-	Radius 0
-	Height 0
-	Speed 0
-	RenderStyle None
-	States
-	{
-	Spawn:
-		TNT1 A 0
-		Stop
-	}
-}
+Actor LimitScriptActive : Inventory {}
 
-Actor LimitScriptActive : CustomInventory
-{
-	-INVENTORY.INVBAR
-	Inventory.InterHubAmount 1
-	Inventory.Amount 1
-	Inventory.MaxAmount 1
-	States
-	{
-	Use:
-		TNT1 A 0
-		Stop
-	}
-}
+Actor LimitScriptCheck : Inventory {}
 
-Actor LimitScriptCheck : CustomInventory
-{
-	-INVENTORY.INVBAR
-	Inventory.InterHubAmount 1
-	Inventory.Amount 1
-	Inventory.MaxAmount 1
-	States
-	{
-	Use:
-		TNT1 A 0
-		Stop
-	}
-}
+Actor TorchEffects : Inventory {}
 
-Actor TorchEffects : CustomInventory
-{
-	-INVENTORY.INVBAR
-	Inventory.InterHubAmount 1
-	Inventory.Amount 1
-	Inventory.MaxAmount 1
-	States
-	{
-	Use:
-		TNT1 A 0
-		Stop
-	}
-}
-
-Actor InfiniteAmmo : CustomInventory
-{
-	-INVENTORY.INVBAR
-	Inventory.InterHubAmount 1
-	Inventory.Amount 1
-	Inventory.MaxAmount 1
-	States
-	{
-	Use:
-		TNT1 A 0
-		Stop
-	}
-}
-
-Actor NoWeaponSwitch : CustomInventory
-{
-	-INVENTORY.INVBAR
-	Inventory.InterHubAmount 1
-	Inventory.Amount 1
-	Inventory.MaxAmount 2
-	States
-	{
-	Use:
-		TNT1 A 0
-		Stop
-	}
-}
+Actor InfiniteAmmo : Inventory {}
 
 Actor PowerMakeVisible : PowerInvisibility
 {}
@@ -3998,6 +3897,8 @@ Actor Nothing
 	}
 }
 
+Actor AmmoUser : Nothing {}
+
 ////////////////////
 // SPECIAL ACTORS //
 ////////////////////
@@ -4013,4 +3914,42 @@ actor ClientSpawner 19191
     TNT1 A 1
     Loop
    }
+}
+
+Actor TracerFXToken : Inventory {}
+
+Actor BulletTracerFX
+{
+	const int SpawnSpeed = 300;
+	+NOINTERACTION
+	RenderStyle None
+	Speed 1
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_CheckSight("End")
+		TNT1 A 0 A_JumpIfInventory("TracerFXToken",1,1,AAPTR_PLAYER1)
+		Stop
+		TNT1 A 0 A_SpawnItemEx("BulletTracerEffect",0,0,0,velx*SpawnSpeed,vely*SpawnSpeed,velz*SpawnSpeed,0,SXF_NOCHECKPOSITION|SXF_ABSOLUTEVELOCITY)
+		Stop
+	End:
+		TNT1 A 0
+		Stop
+	}
+}
+Actor BulletTracerEffect
+{
+	Projectile
+	+NOINTERACTION
+	+BRIGHT
+	Translation "0:255=%[0,0,0]:[2,2,1]"
+	Speed 300
+	Radius 1
+	Height 2
+	States
+	{
+	Spawn:
+		BAL1 A 12
+		Stop
+	}
 }
