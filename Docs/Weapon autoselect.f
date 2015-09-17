@@ -22,9 +22,11 @@
  9810	Strogg ArmSaw
  9840	Peace maker carbine
  9850	Painkiller
+ 9900	Tempest staff
  9970	Hyperblaster
 10000	Minigun
 10250	Voodoo doll
+10333	Gluon gun
 10375	Carbine
 10450	Gas Rocket Launcher
 10500	Bio rifle
@@ -56,8 +58,10 @@
 14500	Wyvern heart
 14900	Chicken launcher
 14970	Grenade launcher
+
 15950	Head Hunter
 16000	AWP rifle
+18800	Soul reaver
 19000	Demon Orb
 
 20500	Shock Rifle
