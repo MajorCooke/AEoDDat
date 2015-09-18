@@ -442,11 +442,12 @@ ACTOR OscuroPlayer
 		OFLY A 0 A_ClearTarget
         Goto ResetAndChase
     Melee:
-		TNT1 A 0 A_JumpIfHealthLower(1,"Chasing",AAPTR_TARGET)
-        TNT1 A 0 A_Jump(128,"GoldFaceAttack")
-		TNT1 A 0 A_ChangeFlag("NOPAIN",1)
-        TNT1 A 0 A_SetInvulnerable
-        TNT1 A 0 A_ChangeFlag("SOLID",1)
+		OSEE A 1
+		OSEE A 0 A_JumpIfHealthLower(1,"Chasing",AAPTR_TARGET)
+        OSEE A 0 A_Jump(128,"GoldFaceAttack")
+		OSEE A 0 A_ChangeFlag("NOPAIN",1)
+        OSEE A 0 A_SetInvulnerable
+        OSEE A 0 A_ChangeFlag("SOLID",1)
         OSEE A 0 A_SetUserVar("user_chasecount",0)
         OSEE DCBABCD 2 A_FaceTarget
     HurtingChaseLooper:
@@ -539,7 +540,7 @@ ACTOR OscuroPlayer
 		OATS A 0 A_ChangeFlag("NOPAIN",1)
 		OATS A 0 A_FadeIn(1,FTF_CLAMP)
 		OATS A 0 A_Jump(30,"MeteorFire")
-		TNT1 A 0 A_SetInvulnerable
+		OATS A 0 A_SetInvulnerable
 		OATS A 0 A_SetUserVar("user_life",user_life+35)
 		OATI AAAAAAAA 4 bright A_FaceTarget
 		OATI BCDE 2 bright
@@ -633,7 +634,7 @@ ACTOR OscuroPlayer
 		OATS E 0 A_PlaySound("oscuro/specialfire")
 		OATS E 2 bright A_CustomMissile("KES",48,0,0)
 		OATS FGHI 2
-		TNT1 A 0 A_ChangeFlag("NOPAIN",0)
+		OATS A 0 A_ChangeFlag("NOPAIN",0)
 		Goto Chasing
 		TNT1 A 0 A_ChangeFlag("NOPAIN",1)
 		OAT1 ABCDEF 2 bright A_FaceTarget
