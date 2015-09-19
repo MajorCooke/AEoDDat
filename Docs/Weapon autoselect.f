@@ -7,6 +7,7 @@
  7000	Golden Colts
  7250	Dragon Claw
  7375	War axe
+ 7400	Crawler
  7500	Combat Shotgun
  7750	PK shotgun
  8000	Magic Crossbow
@@ -23,6 +24,7 @@
  9840	Peace maker carbine
  9850	Painkiller
  9900	Tempest staff
+ 9933	Soul leech
  9970	Hyperblaster
 10000	Minigun
 10250	Voodoo doll
@@ -37,17 +39,26 @@
 11000	Serpent staff
 11100	Laser gun
 11200	Plasma rifle
+11400	Hand Cannon
 11500	Gauss gun
 11600	Skullrod
+11650	Necrossbow
 11700	Nailgun MK2
 11750	Boltgun
+11800	Hellroot
 11850	Demonstaff
 11900	Razor
+11960	Wraithverge
 11970	Lightning rod
+11975	Bloodscourge
+11978	Hellcore
 11980	Scarab staff
+11985	Railgun prototype
 11990	Enlightenment Staff
+11995	Photon cannon
 
 12121	Screamer revolver
+12321	Drakan blade
 12345	Firestorm spell
 12500	Flamethrower
 12521	Missile launcher
@@ -58,7 +69,10 @@
 14500	Wyvern heart
 14900	Chicken launcher
 14970	Grenade launcher
+14987	Proteus Dynamo
+14990	Heavy rocket launcher
 
+15551	Prototype gun
 15950	Head Hunter
 16000	AWP rifle
 18800	Soul reaver
