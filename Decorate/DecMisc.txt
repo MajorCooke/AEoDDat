@@ -258,6 +258,7 @@ Actor NewPuff1 : BulletPuff
 	Projectile
 	+NOINTERACTION
 	+PUFFONACTORS
+	+HITTRACER
 	VSpeed 0
 	Speed 0
 	Scale 0.2
@@ -268,8 +269,7 @@ Actor NewPuff1 : BulletPuff
 	States
 	{
 	Spawn:
-		TNT1 A 0
-		TNT1 A 0 A_CheckSight("Simple")
+		TNT1 A 0 NoDelay A_CheckSight("Simple")
 	Crash:
 	Death:	//structure
 		TNT1 A 0 A_CheckFloor("SpawnFloorSmoke")
@@ -288,6 +288,9 @@ Actor NewPuff1 : BulletPuff
 		TNT1 A 0 A_SpawnItemEx("PuffFloorSmoke",0,0,0,0,0,0,0,32)
 		Goto Death+2
 	XDeath:
+		TNT1 A 0 A_CheckFlag("INVULNERABLE","Death",AAPTR_TRACER)
+		TNT1 A 0 A_CheckFlag("NOBLOOD","Death",AAPTR_TRACER)
+		TNT1 A 0 A_CheckFlag("DORMANT","Death",AAPTR_TRACER)
 		TNT1 A 0 A_PlaySound("postal2/weapons/bullet_hitflesh",5,0.5)
 		Stop
 	Simple:
