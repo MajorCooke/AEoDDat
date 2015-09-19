@@ -44,6 +44,8 @@
 11850	Demonstaff
 11900	Razor
 11970	Lightning rod
+11975	Bloodscourge
+11978	Hellcore
 11980	Scarab staff
 11990	Enlightenment Staff
 
@@ -58,6 +60,7 @@
 14500	Wyvern heart
 14900	Chicken launcher
 14970	Grenade launcher
+14990	Heavy rocket launcher
 
 15950	Head Hunter
 16000	AWP rifle

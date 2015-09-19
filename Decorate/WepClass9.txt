@@ -2028,7 +2028,7 @@ Actor SparkUp
 	Scale .15
 	Projectile
 	+NOINTERACTION
-	Renderstyle Add
+	RenderStyle Add
 	Alpha .65
 	States
 	{
@@ -2327,101 +2327,102 @@ Actor TempestLightning
 	States
 	{
 	Spawn:
-	HSPL A 0
-	HSPL A 0 A_Jump(64,"WithLight")
-	Goto NoLight
+		HSPL A 0
+		HSPL A 0 A_Jump(64,"WithLight")
+		Goto NoLight
 	WithLight:
-	HSPL ABCDEFGHIJABCDEFGHIJ 3 Light("TempestLightningFlicker") Bright
-	HSPL ABCDEFGHIJ 3 Light("TempestLightningFlicker") Bright A_FadeOut
-	Stop
+		HSPL ABCDEFGHIJABCDEFGHIJ 3 Light("TempestLightningFlicker") Bright
+		HSPL ABCDEFGHIJ 3 Light("TempestLightningFlicker") Bright A_FadeOut
+		Stop
 	NoLight:
-	HSPL ABCDEFGHIJABCDEFGHIJ 3 Bright
-	HSPL ABCDEFGHIJ 3 Bright A_FadeOut
-	Stop	
+		HSPL ABCDEFGHIJABCDEFGHIJ 3 Bright
+		HSPL ABCDEFGHIJ 3 Bright A_FadeOut
+		Stop	
 	Death:
-	TNT1 A 0
-	Stop
+		TNT1 A 0
+		Stop
 	Crash:
 	XDeath:
-	TNT1 A 20 A_Scream
-	Stop
+		TNT1 A 20 A_Scream
+		Stop
 	}
 }
 
-Actor TempestFireWind //: MageStaffFX2
+Actor TempestFireWind
 {
-Projectile
-Speed 12
-Damage (random(3,10)) //3
-Radius 16
-Height 12
-DamageType "Fire"
-+CANBOUNCEWATER
-+RIPPER	RipperLevel 1
-+BLOODLESSIMPACT
-+SEEKERMISSILE
--EXTREMEDEATH
--FOILINVUL
-Scale 0.6
-ReactionTime 40
-BounceType "Doom"
-BounceFactor 0.05
-RenderStyle Add
-Translation "96:101=160:165","102:111=70:79","5:5=1:1"
-Alpha 0.67
-States
-{
-Spawn:
-	FX07 D 1 Bright
-	FX07 DDD 0 A_CustomMissile("GunSmokeSpawner",random(20,40),random(12,-12),random(0,360),2,random(-5,5))
-	FX07 D 1 Bright
-	FX07 DDD 0 A_CustomMissile("GunSmokeSpawner",random(20,40),random(12,-12),random(0,360),2,random(-5,5))
-	FX07 D 1 Bright
-	FX07 DDD 0 A_CustomMissile("GunSmokeSpawner",random(20,40),random(12,-12),random(0,360),2,random(-5,5))
-	FX07 E 1 Bright
-	FX07 EEE 0 A_CustomMissile("GunSmokeSpawner",random(20,40),random(12,-12),random(0,360),2,random(-5,5))
-	FX07 E 1 Bright
-	FX07 EEE 0 A_CustomMissile("GunSmokeSpawner",random(20,40),random(12,-12),random(0,360),2,random(-5,5))
-	FX07 E 1 Bright
-	FX07 EEE 0 A_CustomMissile("GunSmokeSpawner",random(20,40),random(12,-12),random(0,360),2,random(-5,5))
-	FX07 F 1 Bright
-	FX07 FFF 0 A_CustomMissile("GunSmokeSpawner",random(20,40),random(12,-12),random(0,360),2,random(-5,5))
-	FX07 F 1 Bright
-	FX07 FFF 0 A_CustomMissile("GunSmokeSpawner",random(20,40),random(12,-12),random(0,360),2,random(-5,5))
-	FX07 F 1 Bright
-	FX07 FFF 0 A_CustomMissile("GunSmokeSpawner",random(20,40),random(12,-12),random(0,360),2,random(-5,5))
-	FX07 G 1 Bright
-	FX07 GGG 0 A_CustomMissile("GunSmokeSpawner",random(20,40),random(12,-12),random(0,360),2,random(-5,5))
-	FX07 G 1 Bright
-	FX07 GGG 0 A_CustomMissile("GunSmokeSpawner",random(20,40),random(12,-12),random(0,360),2,random(-5,5))
-	FX07 G 1 Bright
-	FX07 GGG 0 A_CustomMissile("GunSmokeSpawner",random(20,40),random(12,-12),random(0,360),2,random(-5,5))
-	TNT1 A 0 Bright A_CountDown
-	FX07 A 1 Bright A_SeekerMissile(10,10,SMF_LOOK,256)
-	FX07 AAA 0 Bright A_CustomMissile("GunSmokeSpawner",random(20,40),random(12,-12),random(0,360),2,random(-5,5))
-	FX07 A 1 Bright A_SeekerMissile(10,10,SMF_LOOK,256)
-	TNT1 AAA 0 Bright A_SpawnItemEx("FireWindExp",0,0,random(10,40),random(-5,5),random(-5,5),random(-5,5),random(1,360))
-	FX07 B 1 Bright A_SeekerMissile(10,10,SMF_LOOK,256)
-	FX07 BBB 0 Bright A_CustomMissile("GunSmokeSpawner",random(20,40),random(12,-12),random(0,360),2,random(-5,5))
-	FX07 B 1 Bright A_SeekerMissile(10,10,SMF_LOOK,256)
-	TNT1 AAA 0 Bright A_SpawnItemEx("FireWindExp",0,0,random(10,40),random(-5,5),random(-5,5),random(-5,5),random(1,360))
-	FX07 C 1 Bright A_SeekerMissile(10,10,SMF_LOOK,256)
-	FX07 CCC 0 Bright A_CustomMissile("GunSmokeSpawner",random(20,40),random(12,-12),random(0,360),2,random(-5,5))
-	FX07 C 1 Bright A_SeekerMissile(10,10,SMF_LOOK,256)
-	TNT1 AAA 0 Bright A_SpawnItemEx("FireWindExp",0,0,random(10,40),random(-5,5),random(-5,5),random(-5,5),random(1,360))
-	FX07 B 1 Bright A_SeekerMissile(10,10,SMF_LOOK,256)
-	FX07 BBB 0 Bright A_CustomMissile("GunSmokeSpawner",random(20,40),random(12,-12),random(0,360),2,random(-5,5))
-	FX07 B 1 Bright A_SeekerMissile(10,10,SMF_LOOK,256)
-	TNT1 AAA 0 Bright A_SpawnItemEx("FireWindExp",0,0,random(10,40),random(-5,5),random(-5,5),random(-5,5),random(1,360))
-	TNT1 A 0 A_Jump(40,1)
-	Goto Spawn+48
-	TNT1 A 0 A_PlaySound("ironlich/attack3")
-	Goto Spawn+48
-Death:
-	FX07 GFED 3 Bright
-	FX07 D 1 Bright A_FadeOut
-	Wait
-}
+	Projectile
+	Speed 12
+	Damage (random(3,10)) //3
+	Radius 16
+	Height 12
+	DamageType "Fire"
+	+CANBOUNCEWATER
+	+RIPPER	RipperLevel 1
+	+BLOODLESSIMPACT
+	+SEEKERMISSILE
+	-EXTREMEDEATH
+	-FOILINVUL
+	Scale 0.6
+	ReactionTime 40
+	BounceType "Doom"
+	BounceFactor 0.05
+	RenderStyle Add
+	Translation "96:101=160:165","102:111=70:79","5:5=1:1"
+	Alpha 0.67
+	States
+	{
+	Spawn:
+		FX07 D 1 Bright
+		FX07 DDD 0 A_CustomMissile("GunSmokeSpawner",random(20,40),random(12,-12),random(0,360),2,random(-5,5))
+		FX07 D 1 Bright
+		FX07 DDD 0 A_CustomMissile("GunSmokeSpawner",random(20,40),random(12,-12),random(0,360),2,random(-5,5))
+		FX07 D 1 Bright
+		FX07 DDD 0 A_CustomMissile("GunSmokeSpawner",random(20,40),random(12,-12),random(0,360),2,random(-5,5))
+		FX07 E 1 Bright
+		FX07 EEE 0 A_CustomMissile("GunSmokeSpawner",random(20,40),random(12,-12),random(0,360),2,random(-5,5))
+		FX07 E 1 Bright
+		FX07 EEE 0 A_CustomMissile("GunSmokeSpawner",random(20,40),random(12,-12),random(0,360),2,random(-5,5))
+		FX07 E 1 Bright
+		FX07 EEE 0 A_CustomMissile("GunSmokeSpawner",random(20,40),random(12,-12),random(0,360),2,random(-5,5))
+		FX07 F 1 Bright
+		FX07 FFF 0 A_CustomMissile("GunSmokeSpawner",random(20,40),random(12,-12),random(0,360),2,random(-5,5))
+		FX07 F 1 Bright
+		FX07 FFF 0 A_CustomMissile("GunSmokeSpawner",random(20,40),random(12,-12),random(0,360),2,random(-5,5))
+		FX07 F 1 Bright
+		FX07 FFF 0 A_CustomMissile("GunSmokeSpawner",random(20,40),random(12,-12),random(0,360),2,random(-5,5))
+		FX07 G 1 Bright
+		FX07 GGG 0 A_CustomMissile("GunSmokeSpawner",random(20,40),random(12,-12),random(0,360),2,random(-5,5))
+		FX07 G 1 Bright
+		FX07 GGG 0 A_CustomMissile("GunSmokeSpawner",random(20,40),random(12,-12),random(0,360),2,random(-5,5))
+		FX07 G 1 Bright
+		FX07 GGG 0 A_CustomMissile("GunSmokeSpawner",random(20,40),random(12,-12),random(0,360),2,random(-5,5))
+		TNT1 A 0 Bright A_CountDown
+		FX07 A 1 Bright A_SeekerMissile(10,10,SMF_LOOK,256)
+		FX07 AAA 0 Bright A_CustomMissile("GunSmokeSpawner",random(20,40),random(12,-12),random(0,360),2,random(-5,5))
+		FX07 A 1 Bright A_SeekerMissile(10,10,SMF_LOOK,256)
+		TNT1 AAA 0 Bright A_SpawnItemEx("FireWindExp",0,0,random(10,40),random(-5,5),random(-5,5),random(-5,5),random(1,360))
+		FX07 B 1 Bright A_SeekerMissile(10,10,SMF_LOOK,256)
+		FX07 BBB 0 Bright A_CustomMissile("GunSmokeSpawner",random(20,40),random(12,-12),random(0,360),2,random(-5,5))
+		FX07 B 1 Bright A_SeekerMissile(10,10,SMF_LOOK,256)
+		TNT1 AAA 0 Bright A_SpawnItemEx("FireWindExp",0,0,random(10,40),random(-5,5),random(-5,5),random(-5,5),random(1,360))
+		FX07 C 1 Bright A_SeekerMissile(10,10,SMF_LOOK,256)
+		FX07 CCC 0 Bright A_CustomMissile("GunSmokeSpawner",random(20,40),random(12,-12),random(0,360),2,random(-5,5))
+		FX07 C 1 Bright A_SeekerMissile(10,10,SMF_LOOK,256)
+		TNT1 AAA 0 Bright A_SpawnItemEx("FireWindExp",0,0,random(10,40),random(-5,5),random(-5,5),random(-5,5),random(1,360))
+		FX07 B 1 Bright A_SeekerMissile(10,10,SMF_LOOK,256)
+		FX07 BBB 0 Bright A_CustomMissile("GunSmokeSpawner",random(20,40),random(12,-12),random(0,360),2,random(-5,5))
+		FX07 B 1 Bright A_SeekerMissile(10,10,SMF_LOOK,256)
+		TNT1 AAA 0 Bright A_SpawnItemEx("FireWindExp",0,0,random(10,40),random(-5,5),random(-5,5),random(-5,5),random(1,360))
+		TNT1 A 0 A_Jump(40,1)
+		Goto Spawn+48
+		
+		TNT1 A 0 A_PlaySound("ironlich/attack3")
+		Goto Spawn+48
+	Death:
+		FX07 GFED 3 Bright
+		FX07 D 1 Bright A_FadeOut
+		Wait
+	}
 }
 
 Actor FireWindExp
@@ -2440,15 +2441,16 @@ Actor FireWindExp
 	States
 	{
 	Spawn:
-	PUF2 AAA 1
-	TNT1 A 0 A_Jump(160,1)
-	Loop
-	PUF2 AAA 1
-	PUF2 A 1 A_FadeOut
-	Wait
+		PUF2 AAA 1
+		TNT1 A 0 A_Jump(160,1)
+		Loop
+		
+		PUF2 AAA 1
+		PUF2 A 1 A_FadeOut
+		Wait
 	Death:
-	TNT1 A 1
-	Stop
+		TNT1 A 1
+		Stop
 	}
 }
 
@@ -2458,11 +2460,11 @@ Actor TempestStaffDrop : CustomInventory
 	States
 	{
 	Use:
-	TNT1 A 0
-	TNT1 I 0 A_StopSound(6)
-	TNT1 I 0 A_StopSound(CHAN_WEAPON)
-	TNT1 A 0 A_SpawnItemEx("DroppedTempestStaff",0,0,32,8,0,0,0,32,0)
-	Stop
+		TNT1 A 0
+		TNT1 I 0 A_StopSound(6)
+		TNT1 I 0 A_StopSound(CHAN_WEAPON)
+		TNT1 A 0 A_SpawnItemEx("DroppedTempestStaff",0,0,32,8,0,0,0,32,0)
+		Stop
 	}
 }
 
@@ -2474,9 +2476,9 @@ Actor DroppedTempestStaff
 	States
 	{
 	Spawn:
-	WTMP A 15
-	TNT1 A 0 A_SpawnItemEx("AEoDTempestStaffNoAmmo",0,0,0,0,0,0,0,48,0)
-	Stop
+		WTMP A 15
+		TNT1 A 0 A_SpawnItemEx("AEoDTempestStaffNoAmmo",0,0,0,0,0,0,0,48,0)
+		Stop
 	}
 }
 
@@ -2492,49 +2494,50 @@ Actor AEoDTempestStaffNoAmmo : AEoDTempestStaffItem
 	States
 	{
 	Spawn:
-	WTMP ABCDEFGHIJKL 3
+		WTMP ABCDEFGHIJKL 3
 		Loop
 	Pickup:
-	TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",9) <= 0,"Nothing")
-	TNT1 A 0 A_JumpIfInventory("BlueMana",50,"Ammo")
-	TNT1 A 0 A_JumpIfInventory("RedMana",40,"Ammo3")
-	TNT1 A 0 A_GiveInventory("Weapon9Count",1)
-	TNT1 A 0 A_GiveInventory("TempestStaffDrop",1)
-	TNT1 A 0 A_GiveInventory("AEoDTempestStaff",1)
-	TNT1 A 0 A_TakeInventory("BlueMana",50)
-	TNT1 A 0 A_TakeInventory("RedMana",40)
-	TNT1 A 0 	
-	Stop
+		TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",9) <= 0,"Nothing")
+		TNT1 A 0 A_JumpIfInventory("BlueMana",50,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("RedMana",40,"Ammo3")
+		TNT1 A 0 A_GiveInventory("Weapon9Count",1)
+		TNT1 A 0 A_GiveInventory("TempestStaffDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDTempestStaff",1)
+		TNT1 A 0 A_TakeInventory("BlueMana",50)
+		TNT1 A 0 A_TakeInventory("RedMana",40)
+		TNT1 A 0 	
+		Stop
 	Nothing:
-	TNT1 A 0 A_JumpIfInventory("AEoDTempestStaff",1,"Ammo")
-	TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
-	Goto Pickup+2
-	TNT1 A 0 ACS_NamedExecute("s798",0,9,0,0)
-	Fail
+		TNT1 A 0 A_JumpIfInventory("AEoDTempestStaff",1,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
+		Goto Pickup+2
+		
+		TNT1 A 0 ACS_NamedExecute("s798",0,9,0,0)
+		Fail
 	Ammo:
-	TNT1 A 0 A_JumpIfInventory("RedMana",40,1)
-	Goto Ammo2
-	TNT1 A 0 A_TakeInventory("BlueMana",50)
-	TNT1 A 0 A_TakeInventory("RedMana",40)
-	TNT1 A 0 A_JumpIfInventory("AEoDTempestStaff",1,2)
-	TNT1 A 0 A_GiveInventory("Weapon9Count",1)
-	TNT1 A 0 A_GiveInventory("TempestStaffDrop",1)
-	TNT1 A 0 A_GiveInventory("AEoDTempestStaff",1)
-	Stop
+		TNT1 A 0 A_JumpIfInventory("RedMana",40,1)
+		Goto Ammo2
+		TNT1 A 0 A_TakeInventory("BlueMana",50)
+		TNT1 A 0 A_TakeInventory("RedMana",40)
+		TNT1 A 0 A_JumpIfInventory("AEoDTempestStaff",1,2)
+		TNT1 A 0 A_GiveInventory("Weapon9Count",1)
+		TNT1 A 0 A_GiveInventory("TempestStaffDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDTempestStaff",1)
+		Stop
 	Ammo2:
-	TNT1 A 0 A_TakeInventory("BlueMana",50)
-	TNT1 A 0 A_GiveInventory("Weapon9Count",1)
-	TNT1 A 0 A_GiveInventory("TempestStaffDrop",1)
-	TNT1 A 0 A_GiveInventory("AEoDTempestStaff",1)
-	TNT1 A 0 A_TakeInventory("RedMana",40)
-	Stop
+		TNT1 A 0 A_TakeInventory("BlueMana",50)
+		TNT1 A 0 A_GiveInventory("Weapon9Count",1)
+		TNT1 A 0 A_GiveInventory("TempestStaffDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDTempestStaff",1)
+		TNT1 A 0 A_TakeInventory("RedMana",40)
+		Stop
 	Ammo3:
-	TNT1 A 0 A_TakeInventory("RedMana",40)
-	TNT1 A 0 A_GiveInventory("Weapon9Count",1)
-	TNT1 A 0 A_GiveInventory("TempestStaffDrop",1)
-	TNT1 A 0 A_GiveInventory("AEoDTempestStaff",1)
-	TNT1 A 0 A_TakeInventory("BlueMana",50)
-	Stop
+		TNT1 A 0 A_TakeInventory("RedMana",40)
+		TNT1 A 0 A_GiveInventory("Weapon9Count",1)
+		TNT1 A 0 A_GiveInventory("TempestStaffDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDTempestStaff",1)
+		TNT1 A 0 A_TakeInventory("BlueMana",50)
+		Stop
 	}
 }
 
@@ -2559,97 +2562,99 @@ Actor AEoDBloodScourgeItem : CustomInventory 6025
 		WMS1 A -1
 		Loop
 	Pickup:
-	TNT1 A 0 A_JumpIfInventory("AEoDBloodScourge",1,"Ammo")
-	TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",9) <= 0,"Nothing")
-	TNT1 A 0 A_GiveInventory("Weapon9Count",1)
-	TNT1 A 0 A_GiveInventory("BloodScourgeDrop2",1)
-	TNT1 A 0 A_GiveInventory("AEoDBloodScourge",1)
-	TNT1 A 0 	
-	Stop
+		TNT1 A 0 A_JumpIfInventory("AEoDBloodScourge",1,"Ammo")
+		TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",9) <= 0,"Nothing")
+		TNT1 A 0 A_GiveInventory("Weapon9Count",1)
+		TNT1 A 0 A_GiveInventory("BloodScourgeDrop2",1)
+		TNT1 A 0 A_GiveInventory("AEoDBloodScourge",1)
+		TNT1 A 0 	
+		Stop
 	Nothing:
-	TNT1 A 0 A_JumpIfInventory("AEoDBloodScourge",1,"Ammo")
-	TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
-	Goto Pickup+2
-	TNT1 A 0 ACS_NamedExecute("s798",0,9,0,0)
-	Fail
+		TNT1 A 0 A_JumpIfInventory("AEoDBloodScourge",1,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
+		Goto Pickup+2
+		
+		TNT1 A 0 ACS_NamedExecute("s798",0,9,0,0)
+		Fail
 	Ammo:
-	TNT1 A 0 A_GiveInventory("AEoDBloodScourge",1)
-	Stop
+		TNT1 A 0 A_GiveInventory("AEoDBloodScourge",1)
+		Stop
 	}
 }
 
 Actor AEoDBloodScourge : MWeapBloodScourge // 6025
 { 
-+FLOORCLIP
-+INVENTORY.IGNORESKILL
-+CHEATNOTWEAPON 
--PRIMARY_USES_BOTH
-+FLOATBOB
-Weapon.AmmoType1 "RedMana" 
-Weapon.AmmoType2 "RedMana" 
-Weapon.AmmoGive1 0
-Weapon.AmmoUse1 14
-Weapon.AmmoUse2 20
-Obituary "%o was incinerated by %k's BloodScourge Staff."
-Inventory.PickupMessage "Picked up the BloodScourge Staff!!"
-Inventory.PickupSound "pickuppiece" 
-Weapon.upsound "weapons/draw"
-Scale 0.7
-Tag "Bloodscourge staff"
-States 
-{ 
-Spawn: 
-	WMS1 A -1 
-	Loop 
-Ready:
-	MSTF ABCDEF 5 A_WeaponReady
-	Goto Ready+1
-Deselect: 
-	TNT1 A 0 A_StopSound(6)
-	TNT1 A 0 	
-	MSTF A 1 A_Lower
-	TNT1 AA 0 A_Lower 
-	Goto Deselect+1
-Select: 
-	TNT1 A 0 	
-	MSTF A 1 A_Raise
-	TNT1 AA 0 A_Raise 
-	Loop 
-Fire: 
-	MSTF G 5 Bright 
-	MSTF G 0 Bright A_Light2
-	MSTF A 0 A_Recoil(2)
-	TNT1 A 0 A_PlaySound("reilsss/weapons/bloodsourgefire", CHAN_WEAPON, 1.0, 0)
-	TNT1 A 0 A_SetBlend("Orange",0.5,5)
-	MSTF F 0 Bright A_FireCustomMissile("MageStaffFXPlayer", 0, 1, 0, 0)
-	MSTF F 0 Bright A_FireCustomMissile("MageStaffFXPlayer", 6, 0, 0, 0)
-	MSTF F 0 Bright A_FireCustomMissile("MageStaffFXPlayer", -6, 0, 0, 0)
-	MSTF H 1 Bright A_SetPitch(pitch-4)
-	MSTF HHHH 1 Bright A_SetPitch(pitch+0.5)
-	MSTF G 0 Bright A_Light0
-	MSTF IIII 1 Bright A_SetPitch(pitch+0.5)
-	MSTF J 5 Bright 
-	Goto Ready 
-AltFire: 
-	MSTF G 7 Bright 
-	MSTF G 0 Bright A_Light2
-	MSTF A 0 A_Recoil(4)
-	TNT1 A 0 A_SetBlend("Orange",0.5,8)
-	MSTF F 0 Bright A_FireCustomMissile("StaffFire2", 0, 1, 0, 0)
-	MSTF HH 1 Bright A_SetPitch(pitch-3)
-	MSTF HHHHHI 1 Bright A_SetPitch(pitch+1)
-	MSTF I 6 Bright A_Light0
-	MSTF J 7 Bright 
-	MSTF ABCDEF 6 Bright
-	Goto Ready 
-}
+	+FLOORCLIP
+	+INVENTORY.IGNORESKILL
+	+CHEATNOTWEAPON 
+	-PRIMARY_USES_BOTH
+	+FLOATBOB
+	Weapon.AmmoType1 "RedMana" 
+	Weapon.AmmoType2 "RedMana" 
+	Weapon.AmmoGive1 0
+	Weapon.AmmoUse1 14
+	Weapon.AmmoUse2 20
+	Weapon.SelectionOrder 11975
+	Obituary "%o was incinerated by %k's BloodScourge Staff."
+	Inventory.PickupMessage "Picked up the BloodScourge Staff!!"
+	Inventory.PickupSound "pickuppiece" 
+	Weapon.upsound "weapons/draw"
+	Scale 0.7
+	Tag "Bloodscourge staff"
+	States 
+	{ 
+	Spawn: 
+		WMS1 A -1 
+		Loop 
+	Ready:
+		MSTF ABCDEF 5 A_WeaponReady
+		Goto Ready+1
+	Deselect: 
+		TNT1 A 0 A_StopSound(6)
+		TNT1 A 0 	
+		MSTF A 1 A_Lower
+		TNT1 AA 0 A_Lower 
+		Goto Deselect+1
+	Select: 
+		TNT1 A 0 	
+		MSTF A 1 A_Raise
+		TNT1 AA 0 A_Raise 
+		Loop 
+	Fire: 
+		MSTF G 5 Bright 
+		MSTF G 0 Bright A_Light2
+		MSTF A 0 A_Recoil(2)
+		TNT1 A 0 A_PlaySound("reilsss/weapons/bloodsourgefire", CHAN_WEAPON, 1.0, 0)
+		TNT1 A 0 A_SetBlend("Orange",0.5,5)
+		MSTF F 0 Bright A_FireCustomMissile("MageStaffFXPlayer", 0, 1, 0, 0)
+		MSTF F 0 Bright A_FireCustomMissile("MageStaffFXPlayer", 6, 0, 0, 0)
+		MSTF F 0 Bright A_FireCustomMissile("MageStaffFXPlayer", -6, 0, 0, 0)
+		MSTF H 1 Bright A_SetPitch(pitch-4)
+		MSTF HHHH 1 Bright A_SetPitch(pitch+0.5)
+		MSTF G 0 Bright A_Light0
+		MSTF IIII 1 Bright A_SetPitch(pitch+0.5)
+		MSTF J 5 Bright 
+		Goto Ready 
+	AltFire: 
+		MSTF G 7 Bright 
+		MSTF G 0 Bright A_Light2
+		MSTF A 0 A_Recoil(4)
+		TNT1 A 0 A_SetBlend("Orange",0.5,8)
+		MSTF F 0 Bright A_FireCustomMissile("StaffFire2", 0, 1, 0, 0)
+		MSTF HH 1 Bright A_SetPitch(pitch-3)
+		MSTF HHHHHI 1 Bright A_SetPitch(pitch+1)
+		MSTF I 6 Bright A_Light0
+		MSTF J 7 Bright 
+		MSTF ABCDEF 6 Bright
+		Goto Ready 
+	}
 } 
 
 Actor MageStaffFXNew : MageStaffFX2 replaces MageStaffFX2
 {
-Damage 20
-States
-{
+	Damage 20
+	States
+	{
 	Death:
 		TNT1 A 0 A_SpawnItemEx("MageStaffFXExtraLight",0,0,0,0,0,0,0,32)
 		TNT1 AAAAAAAAAAAAAAA 0 A_SpawnItemEx("MageStaffFXExtra",0,0,6,random(4,-4)/(2*1.5),random(4,-4)/(2*1.5),random(4,-4)/(2*1.5),random(1,359),32)
@@ -2657,41 +2662,9 @@ States
 		MSP1 G 2 Bright A_Explode(80,192,0)
 		MSP1 HIJKLMOP 2 Bright A_FadeOut(0.08)
 		Stop
-}
-}
-/*
-Actor MageStaffFXPlayer
-{
-	Speed 17
-	Height 8
-	Radius 8
-	Damage 20
-	DamageType "Unholy"
-	Projectile
-	+RIPPER
-	+NOBOSSRIP
-	+SEEKERMISSILE
-	+SCREENSEEKER
-		+EXTREMEDEATH
-	+FORCERADIUSDMG
-	+NODAMAGETHRUST
-	DeathSound "MageStaffExplode"
-	States
-	{
-	Spawn:
-	MSP2 ABCD 2 Bright A_SeekerMissile(2,10,1)
-	Loop
-	Crash:
-	Death:
-	TNT1 A 0 A_SpawnItemEx("MageStaffFXExtraLight",0,0,0,0,0,0,0,32)
-	TNT1 AAAAAAAAAAAAAAA 0 A_SpawnItemEx("MageStaffFXExtra",0,0,6,random(4,-4)/(2*1.5),random(4,-4)/(2*1.5),random(4,-4)/(2*1.5),random(1,359),32)
-	TNT1 A 0 A_SetTranslucent(1,1)
-	MSP1 G 2 Bright A_Explode(160,192,0)
-	MSP1 HIJKLMOP 2 Bright A_FadeOut(0.08)
-	Stop
 	}
 }
-*/
+
 Actor MageStaffFXPlayer
 {
 	Speed 17
@@ -2711,7 +2684,6 @@ Actor MageStaffFXPlayer
 	States
 	{
 	Spawn:
-		//MSP2 ABCD 2 Bright A_SeekerMissile(2,10,1)
 		MSP2 AAAA 0 A_SpawnItemEx("BloodScourgeTrail",0,0,0,0,0,0,0,32,128)
 		MSP2 A 2 Bright A_SeekerMissile(2,10,1)
 		MSP2 AAAA 0 A_SpawnItemEx("BloodScourgeTrail",0,0,0,0,0,0,0,32,128)
@@ -2735,6 +2707,7 @@ Actor MageStaffFXPlayer
 		Stop
 	}
 }
+
 Actor BloodScourgeTrail
 {
 	+NOINTERACTION
@@ -2778,7 +2751,6 @@ Actor MageStaffFXExtra
 	+NOINTERACTION
 	Scale 0.9
 	RenderStyle Add
-//	Alpha 0.7
 	States
 	{
 	Spawn:
@@ -2789,134 +2761,130 @@ Actor MageStaffFXExtra
 	}
 }
 
-Actor MageStaffFXExtraLight : MageStaffFXExtra
-{ }
+Actor MageStaffFXExtraLight : MageStaffFXExtra { }
 
 Actor StaffFire2
 {
-Projectile
-+EXTREMEDEATH
-Radius 8
-Height 8
-Speed 20
-Damage 100
-SeeSound "reilsss/weapons/bloodsourgefire"
-DeathSound "reilsss/weapons/bloodsourgeexplosion"
-Scale 1.5
-DamageType "Unholy"
-States
-{
-Spawn:
-	MSP1 CDEF 2 Bright
-	MSP1 A 0 Bright A_CustomMissile("StaffFireSS",0,0,45,6)
-	MSP1 A 2 Bright A_CustomMissile("StaffFireSS",0,0,-45,6)
-	MSP1 B 0 Bright A_CustomMissile("StaffFireSS",0,0,90,6)
-	MSP1 B 2 Bright A_CustomMissile("StaffFireSS",0,0,-90,6)
-	MSP1 C 0 Bright A_CustomMissile("StaffFireSS",0,0,135,6)
-	MSP1 C 2 Bright A_CustomMissile("StaffFireSS",0,0,-135,6)
-	MSP1 D 0 Bright A_CustomMissile("StaffFireSS",0,0,180,6)
-	MSP1 D 2 Bright A_CustomMissile("StaffFireSS",0,0,-180,6)
-	MSP1 E 0 Bright A_CustomMissile("StaffFireSS",0,0,225,6)
-	MSP1 E 2 Bright A_CustomMissile("StaffFireSS",0,0,-225,6)
-	MSP1 F 0 Bright A_CustomMissile("StaffFireSS",0,0,270,6)
-	MSP1 F 2 Bright A_CustomMissile("StaffFireSS",0,0,-270,6)
-	MSP1 A 0 Bright A_CustomMissile("StaffFireSS",0,0,315,6)
-	MSP1 A 2 Bright A_CustomMissile("StaffFireSS",0,0,-315,6)
-	Goto Spawn+2
-Death:
-	TNT1 A 0 A_SpawnItemEx("MageStaffFXExtraLight",0,0,0,0,0,0,0,32)
-	TNT1 AAAAAAAAAAAAAAA 0 A_SpawnItemEx("MageStaffFXExtra",0,0,6,random(4,-4)/(2*1.5),random(4,-4)/(2*1.5),random(4,-4)/(2*1.5),random(1,359),32)
-	MSP1 G 2 Bright A_Explode(512,192,0)
-	MSP1 HIJKLMOP 2 Bright 
-	Stop
-}
+	Projectile
+	+EXTREMEDEATH
+	Radius 8
+	Height 8
+	Speed 20
+	Damage 100
+	SeeSound "reilsss/weapons/bloodsourgefire"
+	DeathSound "reilsss/weapons/bloodsourgeexplosion"
+	Scale 1.5
+	DamageType "Unholy"
+	States
+	{
+	Spawn:
+		MSP1 CDEF 2 Bright
+		MSP1 A 0 Bright A_CustomMissile("StaffFireSS",0,0,45,6)
+		MSP1 A 2 Bright A_CustomMissile("StaffFireSS",0,0,-45,6)
+		MSP1 B 0 Bright A_CustomMissile("StaffFireSS",0,0,90,6)
+		MSP1 B 2 Bright A_CustomMissile("StaffFireSS",0,0,-90,6)
+		MSP1 C 0 Bright A_CustomMissile("StaffFireSS",0,0,135,6)
+		MSP1 C 2 Bright A_CustomMissile("StaffFireSS",0,0,-135,6)
+		MSP1 D 0 Bright A_CustomMissile("StaffFireSS",0,0,180,6)
+		MSP1 D 2 Bright A_CustomMissile("StaffFireSS",0,0,-180,6)
+		MSP1 E 0 Bright A_CustomMissile("StaffFireSS",0,0,225,6)
+		MSP1 E 2 Bright A_CustomMissile("StaffFireSS",0,0,-225,6)
+		MSP1 F 0 Bright A_CustomMissile("StaffFireSS",0,0,270,6)
+		MSP1 F 2 Bright A_CustomMissile("StaffFireSS",0,0,-270,6)
+		MSP1 A 0 Bright A_CustomMissile("StaffFireSS",0,0,315,6)
+		MSP1 A 2 Bright A_CustomMissile("StaffFireSS",0,0,-315,6)
+		Goto Spawn+2
+	Death:
+		TNT1 A 0 A_SpawnItemEx("MageStaffFXExtraLight",0,0,0,0,0,0,0,32)
+		TNT1 AAAAAAAAAAAAAAA 0 A_SpawnItemEx("MageStaffFXExtra",0,0,6,random(4,-4)/(2*1.5),random(4,-4)/(2*1.5),random(4,-4)/(2*1.5),random(1,359),32)
+		MSP1 G 2 Bright A_Explode(512,192,0)
+		MSP1 HIJKLMOP 2 Bright 
+		Stop
+	}
 }
 
 Actor StaffFireSS
 {
-Projectile
-+EXPLODEONWATER
-+EXTREMEDEATH
-+DONTSPLASH
-+FORCERADIUSDMG
-+DONTREFLECT
-Radius 12
-Height 8
-Speed 10
-Damage 15
-SeeSound "vile/firecrkl"
-DeathSound "reilsss/weapons/bloodsourgeexplosion"
-DamageType "Unholy"
-States
-{
-Spawn:
-	MSP2 A 0 A_JumpIf(waterlevel == 3,"Death")
-	MSP2 A 0 A_LowGravity
-	MSP2 A 3 Bright A_SpawnItemEx("ExtensionBall",0,0,0,0,0,1,0,32|SXF_TRANSFERPOINTERS)
-	MSP2 A 0 A_JumpIf(waterlevel == 3,"Death")
-	MSP2 A 0 A_LowGravity
-	MSP2 B 3 Bright A_SpawnItemEx("ExtensionBall",0,0,0,0,0,1,0,32|SXF_TRANSFERPOINTERS)//A_CustomMissile("ExtensionBall",0,0,20)
-	MSP2 A 0 A_JumpIf(waterlevel == 3,"Death")
-	MSP2 A 0 A_LowGravity
-	MSP2 C 3 Bright A_SpawnItemEx("ExtensionBall",0,0,0,0,0,1,0,32|SXF_TRANSFERPOINTERS)
-	MSP2 A 0 A_JumpIf(waterlevel == 3,"Death")
-	MSP2 A 0 A_LowGravity
-	MSP2 D 3 Bright A_SpawnItemEx("ExtensionBall",0,0,0,0,0,1,0,32|SXF_TRANSFERPOINTERS)
-	Loop
-Death:
-	TNT1 A 0 A_SetTranslucent(1,1)
-	TNT1 A 0 A_SpawnItemEx("MageStaffFXExtraLight",0,0,0,0,0,0,0,32)
-	TNT1 AAAAAAAAAAAAAA 0 A_SpawnItemEx("MageStaffFXExtra",0,0,6,random(4,-4)/(2*1.5),random(4,-4)/(2*1.5),random(6,1)/(2*1.5),random(1,359),32)
-	MSP1 G 2 Bright A_Explode(96,96,0)
-	MSP1 HIJKLMOP 2 Bright A_FadeOut
-	Stop
-}
+	Projectile
+	+EXPLODEONWATER
+	+EXTREMEDEATH
+	+DONTSPLASH
+	+FORCERADIUSDMG
+	+DONTREFLECT
+	Radius 12
+	Height 8
+	Speed 10
+	Damage 15
+	SeeSound "vile/firecrkl"
+	DeathSound "reilsss/weapons/bloodsourgeexplosion"
+	DamageType "Unholy"
+	States
+	{
+	Spawn:
+		MSP2 A 0 A_JumpIf(waterlevel == 3,"Death")
+		MSP2 A 0 A_LowGravity
+		MSP2 A 3 Bright A_SpawnItemEx("ExtensionBall",0,0,0,0,0,1,0,32|SXF_TRANSFERPOINTERS)
+		MSP2 A 0 A_JumpIf(waterlevel == 3,"Death")
+		MSP2 A 0 A_LowGravity
+		MSP2 B 3 Bright A_SpawnItemEx("ExtensionBall",0,0,0,0,0,1,0,32|SXF_TRANSFERPOINTERS)//A_CustomMissile("ExtensionBall",0,0,20)
+		MSP2 A 0 A_JumpIf(waterlevel == 3,"Death")
+		MSP2 A 0 A_LowGravity
+		MSP2 C 3 Bright A_SpawnItemEx("ExtensionBall",0,0,0,0,0,1,0,32|SXF_TRANSFERPOINTERS)
+		MSP2 A 0 A_JumpIf(waterlevel == 3,"Death")
+		MSP2 A 0 A_LowGravity
+		MSP2 D 3 Bright A_SpawnItemEx("ExtensionBall",0,0,0,0,0,1,0,32|SXF_TRANSFERPOINTERS)
+		Loop
+	Death:
+		TNT1 A 0 A_SetTranslucent(1,1)
+		TNT1 A 0 A_SpawnItemEx("MageStaffFXExtraLight",0,0,0,0,0,0,0,32)
+		TNT1 AAAAAAAAAAAAAA 0 A_SpawnItemEx("MageStaffFXExtra",0,0,6,random(4,-4)/(2*1.5),random(4,-4)/(2*1.5),random(6,1)/(2*1.5),random(1,359),32)
+		MSP1 G 2 Bright A_Explode(96,96,0)
+		MSP1 HIJKLMOP 2 Bright A_FadeOut
+		Stop
+	}
 }
 
 Actor ExtensionBall
 {
-PROJECTILE
-//+RIPPER
-+DONTSPLASH
-+BLOODLESSIMPACT
-+EXPLODEONWATER
-+FORCERADIUSDMG
-+EXTREMEDEATH
-+DONTREFLECT
-Radius 8
-Height 6
-Speed 0
-Damage 10
-//MISSILEHeight 0
-//MissileType RBT1
--NOGRAVITY
-Gravity 0.5
-DeathSound "reilsss/weapons/bloodsourgeexplosion"
-DamageType "Unholy"
-RENDERSTYLE ADD
-States
-{
-Spawn:
-	WRBL A 0
-	WRBL A 0 A_JumpIf(waterlevel == 1, "Death")
-	WRBL A 0 A_JumpIf(waterlevel == 2, "Death")
-	WRBL A 0 A_JumpIf(waterlevel == 3, "Death")
-	WRBL A 4 Bright
-	WRBL B 0 A_JumpIf(waterlevel == 1, "Death")
-	WRBL B 0 A_JumpIf(waterlevel == 2, "Death")
-	WRBL B 0 A_JumpIf(waterlevel == 3, "Death")
-	WRBL B 4 Bright
-	WRBL C 0 A_JumpIf(waterlevel == 1, "Death")
-	WRBL C 0 A_JumpIf(waterlevel == 2, "Death")
-	WRBL C 0 A_JumpIf(waterlevel == 3, "Death")
-	WRBL C 4 Bright
-	Loop
-Death:
-	TNT1 A 0 A_Explode(32,32,0)
-	TNT1 A 0 A_SpawnItemEx("MageStaffFXExtra",random(4,-4),random(4,-4),random(0,4),0,0,random(10,1)/(8*1.05),0,32)
-	DKB2 DDEEFFGGHHII 2 Bright A_FadeOut(0.08)
-	Stop
-}
+	PROJECTILE
+	+DONTSPLASH
+	+BLOODLESSIMPACT
+	+EXPLODEONWATER
+	+FORCERADIUSDMG
+	+EXTREMEDEATH
+	+DONTREFLECT
+	Radius 8
+	Height 6
+	Speed 0
+	Damage 10
+	-NOGRAVITY
+	Gravity 0.5
+	DeathSound "reilsss/weapons/bloodsourgeexplosion"
+	DamageType "Unholy"
+	RenderStyle Add
+	States
+	{
+	Spawn:
+		WRBL A 0
+		WRBL A 0 A_JumpIf(waterlevel == 1, "Death")
+		WRBL A 0 A_JumpIf(waterlevel == 2, "Death")
+		WRBL A 0 A_JumpIf(waterlevel == 3, "Death")
+		WRBL A 4 Bright
+		WRBL B 0 A_JumpIf(waterlevel == 1, "Death")
+		WRBL B 0 A_JumpIf(waterlevel == 2, "Death")
+		WRBL B 0 A_JumpIf(waterlevel == 3, "Death")
+		WRBL B 4 Bright
+		WRBL C 0 A_JumpIf(waterlevel == 1, "Death")
+		WRBL C 0 A_JumpIf(waterlevel == 2, "Death")
+		WRBL C 0 A_JumpIf(waterlevel == 3, "Death")
+		WRBL C 4 Bright
+		Loop
+	Death:
+		TNT1 A 0 A_Explode(32,32,0)
+		TNT1 A 0 A_SpawnItemEx("MageStaffFXExtra",random(4,-4),random(4,-4),random(0,4),0,0,random(10,1)/(8*1.05),0,32)
+		DKB2 DDEEFFGGHHII 2 Bright A_FadeOut(0.08)
+		Stop
+	}
 }
 
 
@@ -2926,10 +2894,10 @@ Actor BloodScourgeDrop2 : CustomInventory
 	States
 	{
 	Use:
-	TNT1 A 0
-	TNT1 A 0 A_StopSound(6)
-	TNT1 A 0 A_SpawnItemEx("DroppedBloodScourge",0,0,32,8,0,0,0,32,0)
-	Stop
+		TNT1 A 0
+		TNT1 A 0 A_StopSound(6)
+		TNT1 A 0 A_SpawnItemEx("DroppedBloodScourge",0,0,32,8,0,0,0,32,0)
+		Stop
 	}
 }
 
@@ -2941,9 +2909,9 @@ Actor DroppedBloodScourge
 	States
 	{
 	Spawn:
-	WMS1 A 15
-	TNT1 A 0 A_SpawnItemEx("AEoDBloodScourgeNoAmmo",0,0,0,0,0,0,0,48,0)
-	Stop
+		WMS1 A 15
+		TNT1 A 0 A_SpawnItemEx("AEoDBloodScourgeNoAmmo",0,0,0,0,0,0,0,48,0)
+		Stop
 	}
 }
 
@@ -2962,27 +2930,27 @@ Actor AEoDBloodScourgeNoAmmo : AEoDBloodScourgeItem
 		WMS1 A -1
 		Loop
 	Pickup:
-	TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",9) <= 0,"Nothing")
-	TNT1 A 0 A_JumpIfInventory("RedMana",20,"Ammo")
-	TNT1 A 0 A_GiveInventory("Weapon9Count",1)
-	TNT1 A 0 A_GiveInventory("BloodScourgeDrop2",1)
-	TNT1 A 0 A_GiveInventory("AEoDBloodScourge",1)
-	TNT1 A 0 A_TakeInventory("RedMana",20)
-	TNT1 A 0 	
-	Stop
+		TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",9) <= 0,"Nothing")
+		TNT1 A 0 A_JumpIfInventory("RedMana",20,"Ammo")
+		TNT1 A 0 A_GiveInventory("Weapon9Count",1)
+		TNT1 A 0 A_GiveInventory("BloodScourgeDrop2",1)
+		TNT1 A 0 A_GiveInventory("AEoDBloodScourge",1)
+		TNT1 A 0 A_TakeInventory("RedMana",20)
+		TNT1 A 0 	
+		Stop
 	Nothing:
-	TNT1 A 0 A_JumpIfInventory("AEoDBloodScourge",1,"Ammo")
-	TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
-	Goto Pickup+2
-	TNT1 A 0 ACS_NamedExecute("s798",0,9,0,0)
-	Fail
+		TNT1 A 0 A_JumpIfInventory("AEoDBloodScourge",1,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
+		Goto Pickup+2
+		TNT1 A 0 ACS_NamedExecute("s798",0,9,0,0)
+		Fail
 	Ammo:
-	TNT1 A 0 A_TakeInventory("RedMana",20)
-	TNT1 A 0 A_JumpIfInventory("AEoDBloodScourge",1,2)
-	TNT1 A 0 A_GiveInventory("Weapon9Count",1)
-	TNT1 A 0 A_GiveInventory("BloodScourgeDrop2",1)
-	TNT1 A 0 A_GiveInventory("AEoDBloodScourge",1)
-	Stop
+		TNT1 A 0 A_TakeInventory("RedMana",20)
+		TNT1 A 0 A_JumpIfInventory("AEoDBloodScourge",1,2)
+		TNT1 A 0 A_GiveInventory("Weapon9Count",1)
+		TNT1 A 0 A_GiveInventory("BloodScourgeDrop2",1)
+		TNT1 A 0 A_GiveInventory("AEoDBloodScourge",1)
+		Stop
 	}
 }
 
@@ -3002,123 +2970,122 @@ Actor AEoDHellCoreItem : CustomInventory 6015
 	States
 	{
 	Spawn:
-	FHMR H -1
+		FHMR H -1
 		Loop
 	Pickup:
-	TNT1 A 0 A_JumpIfInventory("AEoDHellCore",1,"Ammo")
-	TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",9) <= 0,"Nothing")
-	TNT1 A 0 A_GiveInventory("Weapon9Count",1)
-	TNT1 A 0 A_GiveInventory("HellCoreDrop",1)
-	TNT1 A 0 A_GiveInventory("AEoDHellCore",1)
-	TNT1 A 0 	
-	Stop
+		TNT1 A 0 A_JumpIfInventory("AEoDHellCore",1,"Ammo")
+		TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",9) <= 0,"Nothing")
+		TNT1 A 0 A_GiveInventory("Weapon9Count",1)
+		TNT1 A 0 A_GiveInventory("HellCoreDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDHellCore",1)
+		TNT1 A 0 	
+		Stop
 	Nothing:
-	TNT1 A 0 A_JumpIfInventory("AEoDHellCore",1,"Ammo")
-	TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
-	Goto Pickup+2
-	TNT1 A 0 ACS_NamedExecute("s798",0,9,0,0)
-	Fail
+		TNT1 A 0 A_JumpIfInventory("AEoDHellCore",1,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
+		Goto Pickup+2
+		
+		TNT1 A 0 ACS_NamedExecute("s798",0,9,0,0)
+		Fail
 	Ammo:
-	TNT1 A 0 A_GiveInventory("AEoDHellCore",1)
-	Stop
+		TNT1 A 0 A_GiveInventory("AEoDHellCore",1)
+		Stop
 	}
 }
 
 Actor AEoDHellCore : Weapon//FWeapHammer //What is this I don't even... // 6015
 { 
-+FLOORCLIP
-+INVENTORY.IGNORESKILL
-+CHEATNOTWEAPON
-+FLOATBOB
-Weapon.AmmoType1 "RedMana"
-Weapon.AmmoType2 "RedMana"
-Weapon.AmmoGive1 20
-Weapon.AmmoUse1 8
-Weapon.AmmoUse2 20
-Weapon.KickBack 25
-Obituary "%o felt %k's Hellcore." 
-Inventory.PickupMessage "You found the Hellcore!"
-Inventory.PickupSound "weaponbuild"
-Weapon.upsound "weapons/draw"
-Tag "HellCore"
-States 
-{  
-Spawn: 
-	FHMR H 1
-	Loop
-Deselect: 
-	TNT1 A 0 	
-	FHMR A 1 A_Lower 
-	TNT1 AA 0 A_Lower
-	Loop 
-Select: 
-	TNT1 A 0 	
-	FHMR A 1 A_Raise
-	TNT1 AA 0 A_Raise 
-	Loop 
-Ready:
-	FHMR A 1 A_WeaponReady
-	Goto Ready
-Fire:
-	FHMR D 0 A_JumpIfInventory("RedMana",4,1)
-	Goto Ready
-	FHMR D 3
-	FHMR E 3 A_PlaySound("reilsss/weapons/hellcorefire", CHAN_WEAPON, 1.0, 0)
-	FHMR F 3 A_FireCustomMissile("HellcoreShot",0,1)
-	FHMR G 3
-	FHMR C 5
-	FHMR B 5
-	FHMR A 5
-	//FHMR A 35
-	Goto Ready
-AltFire:
-	FHMR D 5
-	FHMR E 5 A_PlaySound("reilsss/weapons/hellcorefire", CHAN_WEAPON, 1.0, 0)
-	FHMR F 5 A_FireCustomMissile("HellcoreShot2",0,1)
-	FHMR G 5
-	FHMR C 10
-	FHMR B 15
-	FHMR A 20
-	Goto Ready
-}
+	+FLOORCLIP
+	+INVENTORY.IGNORESKILL
+	+CHEATNOTWEAPON
+	+FLOATBOB
+	Weapon.AmmoType1 "RedMana"
+	Weapon.AmmoType2 "RedMana"
+	Weapon.AmmoGive1 20
+	Weapon.AmmoUse1 8
+	Weapon.AmmoUse2 20
+	Weapon.KickBack 25
+	Weapon.SelectionOrder 11978
+	Obituary "%o felt %k's Hellcore." 
+	Inventory.PickupMessage "You found the Hellcore!"
+	Inventory.PickupSound "weaponbuild"
+	Weapon.upsound "weapons/draw"
+	Tag "HellCore"
+	States 
+	{  
+	Spawn: 
+		FHMR H 1
+		Loop
+	Deselect: 
+		TNT1 A 0 	
+		FHMR A 1 A_Lower 
+		TNT1 AA 0 A_Lower
+		Loop 
+	Select: 
+		TNT1 A 0 	
+		FHMR A 1 A_Raise
+		TNT1 AA 0 A_Raise 
+		Loop 
+	Ready:
+		FHMR A 1 A_WeaponReady
+		Goto Ready
+	Fire:
+		FHMR D 0 A_JumpIfInventory("RedMana",4,1)
+		Goto Ready
+		FHMR D 3
+		FHMR E 3 A_PlaySound("reilsss/weapons/hellcorefire", CHAN_WEAPON, 1.0, 0)
+		FHMR F 3 A_FireCustomMissile("HellcoreShot",0,1)
+		FHMR G 3
+		FHMR CBA 5
+		Goto Ready
+	AltFire:
+		FHMR D 5
+		FHMR E 5 A_PlaySound("reilsss/weapons/hellcorefire", CHAN_WEAPON, 1.0, 0)
+		FHMR F 5 A_FireCustomMissile("HellcoreShot2",0,1)
+		FHMR G 5
+		FHMR C 10
+		FHMR B 15
+		FHMR A 20
+		Goto Ready
+	}
 }
 
 //----------------------------------------------------------
-Actor HellcoreShot //: HammerMissile
+Actor HellcoreShot 
 {
-PROJECTILE
-+FORCERADIUSDMG
-+EXTREMEDEATH
-Radius 8
-Height 12
-Speed 25
-Damage 20
-DamageType Fire
-DeathSound "reilsss/weapons/hellcoreexplosion"
-Obituary "%o felt %k's Hellcore."
-RENDERSTYLE ADD
-ALPHA 0.95
-Scale 0.5
-States
-{
-Spawn: 
-	OKFX AAABBBCCC 1 Bright A_SpawnItemEx("HellcoreTrail1",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
-	Loop
-Death:
-	TNT1 A 0 A_Explode(200,128,0)
-	TNT1 A 0 A_SpawnItemEx("NewExplosionMedium",0,0,0,0,0,0,0,32)
-	TNT1 A 0 A_CustomMissile("HellCoreInfernotShooter",0,0,0+random(-10,10),1)
-	TNT1 A 0 A_CustomMissile("HellCoreInfernotShooter",0,0,45+random(-10,10),1)
-	TNT1 A 0 A_CustomMissile("HellCoreInfernotShooter",0,0,90+random(-10,10),1)
-	TNT1 A 0 A_CustomMissile("HellCoreInfernotShooter",0,0,135+random(-10,10),1)
-	TNT1 A 0 A_CustomMissile("HellCoreInfernotShooter",0,0,180+random(-10,10),1)
-	TNT1 A 0 A_CustomMissile("HellCoreInfernotShooter",0,0,225+random(-10,10),1)
-	TNT1 A 0 A_CustomMissile("HellCoreInfernotShooter",0,0,270+random(-10,10),1)
-	TNT1 A 0 A_CustomMissile("HellCoreInfernotShooter",0,0,315+random(-10,10),1)
-	OKFX DEFGHI 3 Bright A_FadeOut(0.03)
-	OKFX I 1 Bright A_FadeOut(0.3)
-	Wait
-}
+	PROJECTILE
+	+FORCERADIUSDMG
+	+EXTREMEDEATH
+	Radius 8
+	Height 12
+	Speed 25
+	Damage 20
+	DamageType Fire
+	DeathSound "reilsss/weapons/hellcoreexplosion"
+	Obituary "%o felt %k's Hellcore."
+	RenderStyle Add
+	Alpha 0.95
+	Scale 0.5
+	States
+	{
+	Spawn: 
+		OKFX AAABBBCCC 1 Bright A_SpawnItemEx("HellcoreTrail1",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
+		Loop
+	Death:
+		TNT1 A 0 A_Explode(200,128,0)
+		TNT1 A 0 A_SpawnItemEx("NewExplosionMedium",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_CustomMissile("HellCoreInfernotShooter",0,0,0+random(-10,10),1)
+		TNT1 A 0 A_CustomMissile("HellCoreInfernotShooter",0,0,45+random(-10,10),1)
+		TNT1 A 0 A_CustomMissile("HellCoreInfernotShooter",0,0,90+random(-10,10),1)
+		TNT1 A 0 A_CustomMissile("HellCoreInfernotShooter",0,0,135+random(-10,10),1)
+		TNT1 A 0 A_CustomMissile("HellCoreInfernotShooter",0,0,180+random(-10,10),1)
+		TNT1 A 0 A_CustomMissile("HellCoreInfernotShooter",0,0,225+random(-10,10),1)
+		TNT1 A 0 A_CustomMissile("HellCoreInfernotShooter",0,0,270+random(-10,10),1)
+		TNT1 A 0 A_CustomMissile("HellCoreInfernotShooter",0,0,315+random(-10,10),1)
+		OKFX DEFGHI 3 Bright A_FadeOut(0.03)
+		OKFX I 1 Bright A_FadeOut(0.3)
+		Wait
+	}
 }
 
 Actor HellCoreInfernotShooter
@@ -3197,59 +3164,59 @@ Actor HellcoreSubtrail1
 
 
 //----------------------------------------------------------
-Actor HellcoreShot2 //: HammerMissile
+Actor HellcoreShot2
 {
-PROJECTILE
-+FORCERADIUSDMG
-+EXTREMEDEATH
-Radius 8
-Height 12
-Speed 25
-Damage 20
-DamageType Fire
-DeathSound "reilsss/weapons/hellcoreexplosion"
-RENDERSTYLE ADD
-ALPHA 0.95
-Scale 0.8
-States
-{
-Spawn: 
-	TNT1 A 0
-	OKFX AA 0 Bright A_SpawnItemEx("HellcoreTrail2b",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
-	OKFX A 1 Bright A_SpawnItemEx("HellcoreTrail2",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
-	OKFX AA 0 Bright A_SpawnItemEx("HellcoreTrail2b",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
-	OKFX A 1 Bright A_SpawnItemEx("HellcoreTrail2",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
-	OKFX AA 0 Bright A_SpawnItemEx("HellcoreTrail2b",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
-	OKFX A 1 Bright A_SpawnItemEx("HellcoreTrail2",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
-	OKFX AA 0 Bright A_SpawnItemEx("HellcoreTrail2b",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
-	OKFX B 1 Bright A_SpawnItemEx("HellcoreTrail2",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
-	OKFX AA 0 Bright A_SpawnItemEx("HellcoreTrail2b",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
-	OKFX B 1 Bright A_SpawnItemEx("HellcoreTrail2",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
-	OKFX AA 0 Bright A_SpawnItemEx("HellcoreTrail2b",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
-	OKFX B 1 Bright A_SpawnItemEx("HellcoreTrail2",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
-	OKFX AA 0 Bright A_SpawnItemEx("HellcoreTrail2b",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
-	OKFX C 1 Bright A_SpawnItemEx("HellcoreTrail2",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
-	OKFX AA 0 Bright A_SpawnItemEx("HellcoreTrail2b",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
-	OKFX C 1 Bright A_SpawnItemEx("HellcoreTrail2",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
-	OKFX AA 0 Bright A_SpawnItemEx("HellcoreTrail2b",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
-	OKFX C 1 Bright A_SpawnItemEx("HellcoreTrail2",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
-	Loop
-Death:
-	TNT1 A 0 A_Explode(128,128,0)
-	TNT1 A 0 A_SpawnItemEx("HellShotExplosionSet",0,0,0,0,0,0,0,32)
-	TNT1 A 0 A_SpawnItemEx("NewExplosionMedium",0,0,0,0,0,0,0,32)
-	TNT1 A 0 A_CustomMissile("HellShotW",0,0,0+random(-10,10),6)
-	TNT1 A 0 A_CustomMissile("HellShotW",0,0,45+random(-10,10),6)
-	TNT1 A 0 A_CustomMissile("HellShotW",0,0,90+random(-10,10),6)
-	TNT1 A 0 A_CustomMissile("HellShotW",0,0,135+random(-10,10),6)
-	TNT1 A 0 A_CustomMissile("HellShotW",0,0,180+random(-10,10),6)
-	TNT1 A 0 A_CustomMissile("HellShotW",0,0,225+random(-10,10),6)
-	TNT1 A 0 A_CustomMissile("HellShotW",0,0,270+random(-10,10),6)
-	TNT1 A 0 A_CustomMissile("HellShotW",0,0,315+random(-10,10),6)
-	OKFX DEFGHI 3 Bright A_FadeOut(0.03)
-	OKFX I 1 Bright A_FadeOut(0.3)
-	Wait
-}
+	PROJECTILE
+	+FORCERADIUSDMG
+	+EXTREMEDEATH
+	Radius 8
+	Height 12
+	Speed 25
+	Damage 20
+	DamageType Fire
+	DeathSound "reilsss/weapons/hellcoreexplosion"
+	RenderStyle Add
+	Alpha 0.95
+	Scale 0.8
+	States
+	{
+	Spawn: 
+		TNT1 A 0
+		OKFX AA 0 Bright A_SpawnItemEx("HellcoreTrail2b",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
+		OKFX A 1 Bright A_SpawnItemEx("HellcoreTrail2",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
+		OKFX AA 0 Bright A_SpawnItemEx("HellcoreTrail2b",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
+		OKFX A 1 Bright A_SpawnItemEx("HellcoreTrail2",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
+		OKFX AA 0 Bright A_SpawnItemEx("HellcoreTrail2b",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
+		OKFX A 1 Bright A_SpawnItemEx("HellcoreTrail2",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
+		OKFX AA 0 Bright A_SpawnItemEx("HellcoreTrail2b",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
+		OKFX B 1 Bright A_SpawnItemEx("HellcoreTrail2",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
+		OKFX AA 0 Bright A_SpawnItemEx("HellcoreTrail2b",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
+		OKFX B 1 Bright A_SpawnItemEx("HellcoreTrail2",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
+		OKFX AA 0 Bright A_SpawnItemEx("HellcoreTrail2b",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
+		OKFX B 1 Bright A_SpawnItemEx("HellcoreTrail2",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
+		OKFX AA 0 Bright A_SpawnItemEx("HellcoreTrail2b",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
+		OKFX C 1 Bright A_SpawnItemEx("HellcoreTrail2",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
+		OKFX AA 0 Bright A_SpawnItemEx("HellcoreTrail2b",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
+		OKFX C 1 Bright A_SpawnItemEx("HellcoreTrail2",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
+		OKFX AA 0 Bright A_SpawnItemEx("HellcoreTrail2b",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
+		OKFX C 1 Bright A_SpawnItemEx("HellcoreTrail2",0,random(4,-4),random(4,-4),0,0,random(10,-10)/(5*1.7),0,32)
+		Loop
+	Death:
+		TNT1 A 0 A_Explode(128,128,0)
+		TNT1 A 0 A_SpawnItemEx("HellShotExplosionSet",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("NewExplosionMedium",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_CustomMissile("HellShotW",0,0,0+random(-10,10),6)
+		TNT1 A 0 A_CustomMissile("HellShotW",0,0,45+random(-10,10),6)
+		TNT1 A 0 A_CustomMissile("HellShotW",0,0,90+random(-10,10),6)
+		TNT1 A 0 A_CustomMissile("HellShotW",0,0,135+random(-10,10),6)
+		TNT1 A 0 A_CustomMissile("HellShotW",0,0,180+random(-10,10),6)
+		TNT1 A 0 A_CustomMissile("HellShotW",0,0,225+random(-10,10),6)
+		TNT1 A 0 A_CustomMissile("HellShotW",0,0,270+random(-10,10),6)
+		TNT1 A 0 A_CustomMissile("HellShotW",0,0,315+random(-10,10),6)
+		OKFX DEFGHI 3 Bright A_FadeOut(0.03)
+		OKFX I 1 Bright A_FadeOut(0.3)
+		Wait
+	}
 }
 
 
@@ -3285,32 +3252,31 @@ Actor HellcoreTrail2b
 
 Actor HellShotW
 {
-PROJECTILE
-+FORCERADIUSDMG
-+NODAMAGETHRUST
-+EXTREMEDEATH
-Radius 8
-Height 12
-Speed 18
-Damage 3
-DamageType Fire
-DeathSound "reilsss/weapons/hellcoreexplosion"
-RENDERSTYLE Translucent
-ALPHA 0.95
-ReactionTime 6
-States
-{
-Spawn: 
-	TNT1 A 0 A_CountDown
-	//HEPA ABC 2 Bright A_SpawnItem("RedPuffW",0,0)
-	HEPA ABC 2 Bright A_SpawnItem("HellShotWTrail",0,0)	//
-	TNT1 A 0 A_CountDown
-	HEPA DEF 2 Bright A_SpawnItem("HellShotWTrail",0,0)
-	Loop
-Death:
-	TNT1 A 0 A_SpawnItemEx("HellShotExplosionSet",0,0,0,0,0,0,0,32)
-	Stop
-}
+	PROJECTILE
+	+FORCERADIUSDMG
+	+NODAMAGETHRUST
+	+EXTREMEDEATH
+	Radius 8
+	Height 12
+	Speed 18
+	Damage 3
+	DamageType Fire
+	DeathSound "reilsss/weapons/hellcoreexplosion"
+	RenderStyle Translucent
+	Alpha 0.95
+	ReactionTime 6
+	States
+	{
+	Spawn: 
+		TNT1 A 0 A_CountDown
+		HEPA ABC 2 Bright A_SpawnItem("HellShotWTrail",0,0)	//
+		TNT1 A 0 A_CountDown
+		HEPA DEF 2 Bright A_SpawnItem("HellShotWTrail",0,0)
+		Loop
+	Death:
+		TNT1 A 0 A_SpawnItemEx("HellShotExplosionSet",0,0,0,0,0,0,0,32)
+		Stop
+	}
 }
 
 Actor HellShotWTrail
@@ -3325,7 +3291,6 @@ Actor HellShotWTrail
 	{
 	Spawn:
 		TNT1 A 0
-		//X126 A 0 A_SetUserVar("user_scaleup",(0.75))
 	Perform:
 		X126 A 0 A_SetScale(ScaleX+(0.02))
 		X126 A 1 A_FadeOut(0.04)
@@ -3355,28 +3320,28 @@ Actor HellShotExplosionSet
 		TNT1 A 0 A_Explode(128,128,0)
 		TNT1 AAAAAAAA 0 A_SpawnItemEx("MageStaffFXExtra",0,0,6,random(4,-4)/(2*1.5),random(4,-4)/(2*1.5),random(4,-4)/(2*1.5),random(1,359),32)
 		TNT1 AAAAAAAA 0 A_SpawnItemEx("WarAxeRedExploSprite",0,0,0,frandom(-5,5),0,frandom(-5,5),random(0,359),32,128)	//see WepClass6.AED
-		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,random(4,-4)/(4*2.0),0,random(4,-4)/(4*2.0),0,32)
-		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,random(4,-4)/(4*2.0),0,random(4,-4)/(4*2.0),20,32)
-		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,random(4,-4)/(4*2.0),0,random(4,-4)/(4*2.0),40,32)
-		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,random(4,-4)/(4*2.0),0,random(4,-4)/(4*2.0),60,32)
-		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,random(4,-4)/(4*2.0),0,random(4,-4)/(4*2.0),80,32)
-		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,random(4,-4)/(4*2.0),0,random(4,-4)/(4*2.0),100,32)
-		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,random(4,-4)/(4*2.0),0,random(4,-4)/(4*2.0),120,32)
-		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,random(4,-4)/(4*2.0),0,random(4,-4)/(4*2.0),140,32)
-		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,random(4,-4)/(4*2.0),0,random(4,-4)/(4*2.0),160,32)
-		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,random(4,-4)/(4*2.0),0,random(4,-4)/(4*2.0),180,32)
-		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,random(4,-4)/(4*2.0),0,random(4,-4)/(4*2.0),-20,32)
-		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,random(4,-4)/(4*2.0),0,random(4,-4)/(4*2.0),-40,32)
-		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,random(4,-4)/(4*2.0),0,random(4,-4)/(4*2.0),-60,32)
-		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,random(4,-4)/(4*2.0),0,random(4,-4)/(4*2.0),-80,32)
-		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,random(4,-4)/(4*2.0),0,random(4,-4)/(4*2.0),-100,32)
-		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,random(4,-4)/(4*2.0),0,random(4,-4)/(4*2.0),-120,32)
-		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,random(4,-4)/(4*2.0),0,random(4,-4)/(4*2.0),-140,32)
-		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,random(4,-4)/(4*2.0),0,random(4,-4)/(4*2.0),-160,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,frandom(-.5,.5),0,frandom(-.5,.5),   0,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,frandom(-.5,.5),0,frandom(-.5,.5),  20,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,frandom(-.5,.5),0,frandom(-.5,.5),  40,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,frandom(-.5,.5),0,frandom(-.5,.5),  60,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,frandom(-.5,.5),0,frandom(-.5,.5),  80,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,frandom(-.5,.5),0,frandom(-.5,.5), 100,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,frandom(-.5,.5),0,frandom(-.5,.5), 120,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,frandom(-.5,.5),0,frandom(-.5,.5), 140,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,frandom(-.5,.5),0,frandom(-.5,.5), 160,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,frandom(-.5,.5),0,frandom(-.5,.5), 180,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,frandom(-.5,.5),0,frandom(-.5,.5), -20,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,frandom(-.5,.5),0,frandom(-.5,.5), -40,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,frandom(-.5,.5),0,frandom(-.5,.5), -60,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,frandom(-.5,.5),0,frandom(-.5,.5), -80,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,frandom(-.5,.5),0,frandom(-.5,.5),-100,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,frandom(-.5,.5),0,frandom(-.5,.5),-120,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,frandom(-.5,.5),0,frandom(-.5,.5),-140,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,frandom(-.5,.5),0,frandom(-.5,.5),-160,32)
 		HELX A 3 Bright
-		TNT1 A 0 Bright A_CustomMissile("HellBoomW",0,0,0,2)
-		TNT1 A 0 Bright A_CustomMissile("HellBoomW",0,0,45,2)
-		TNT1 A 0 Bright A_CustomMissile("HellBoomW",0,0,90,2)
+		TNT1 A 0 Bright A_CustomMissile("HellBoomW",0,0,  0,2)
+		TNT1 A 0 Bright A_CustomMissile("HellBoomW",0,0, 45,2)
+		TNT1 A 0 Bright A_CustomMissile("HellBoomW",0,0, 90,2)
 		TNT1 A 0 Bright A_CustomMissile("HellBoomW",0,0,135,2)
 		TNT1 A 0 Bright A_CustomMissile("HellBoomW",0,0,180,2)
 		TNT1 A 0 Bright A_CustomMissile("HellBoomW",0,0,225,2)
@@ -3394,59 +3359,57 @@ Actor HellShotExplosionSet
 	
 Actor HellBoomW
 {
-PROJECTILE
-//DONTHURTSHOOTER	//Deprecated. Instead, use A_Explode(damage,radius,0) because the 0 means hurtshooter = false.
-+THRUACTORS
-+EXTREMEDEATH
-Radius 1
-Height 1
-Speed 6
-Damage 0
-SeeSound "reilsss/weapons/hellcoreexplosion"
-RENDERSTYLE ADD
-ALPHA 0.80
-States
-{
-Spawn:
-	TNT1 AAAAA 6 A_SpawnItemEx("HellFXW",0,0,0,0,0,0,0,32)
-	Stop
-}
+	PROJECTILE
+	+THRUACTORS
+	+EXTREMEDEATH
+	Radius 1
+	Height 1
+	Speed 6
+	Damage 0
+	SeeSound "reilsss/weapons/hellcoreexplosion"
+	RenderStyle Add
+	Alpha 0.80
+	States
+	{
+	Spawn:
+		TNT1 AAAAA 6 A_SpawnItemEx("HellFXW",0,0,0,0,0,0,0,32)
+		Stop
+	}
 }
 
 Actor HellFXW
 {   
-+NOINTERACTION
-SeeSound "reilsss/weapons/hellcoreexplosion"
-RENDERSTYLE ADD
-//ALPHA 0.80
-States
-{
-Spawn:
-	TNT1 A 0 
-	TNT1 AA 0 A_SpawnItemEx("WarAxeRedExploSprite",0,0,0,frandom(-4,4),0,frandom(-4,4),random(0,359),32,128)	//see WepClass6.AED
-	TNT1 AAA 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,6,random(10,-10)/(10*1.95),random(10,-10)/(10*1.95),random(10,-10)/(10*1.95),0,32)
-	HELX A 3 Bright
-	HELX B 3 Bright
-	HELX CDEFGHIJ 3 Bright
-	Stop
-}
+	+NOINTERACTION
+	SeeSound "reilsss/weapons/hellcoreexplosion"
+	RenderStyle Add
+	States
+	{
+	Spawn:
+		TNT1 A 0 
+		TNT1 AA 0 A_SpawnItemEx("WarAxeRedExploSprite",0,0,0,frandom(-4,4),0,frandom(-4,4),random(0,359),32,128)	//see WepClass6.AED
+		TNT1 AAA 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,6,random(10,-10)/(10*1.95),random(10,-10)/(10*1.95),random(10,-10)/(10*1.95),0,32)
+		HELX A 3 Bright
+		HELX B 3 Bright
+		HELX CDEFGHIJ 3 Bright
+		Stop
+	}
 }
 
 Actor RedPuffW
 {   
-PROJECTILE
-Radius 0
-Height 1
-Speed 0
-RENDERSTYLE ADD
-ALPHA 0.85
-States
-{
-Spawn:
-	TNT1 A 3 Bright
-	RPUF ABCDE 3 Bright
-	Stop 
-}
+	PROJECTILE
+	Radius 0
+	Height 1
+	Speed 0
+	RenderStyle Add
+	Alpha 0.85
+	States
+	{
+	Spawn:
+		TNT1 A 3 Bright
+		RPUF ABCDE 3 Bright
+		Stop 
+	}
 }
 
 Actor HellCoreDrop : CustomInventory
@@ -3455,9 +3418,9 @@ Actor HellCoreDrop : CustomInventory
 	States
 	{
 	Use:
-	TNT1 A 0
-	TNT1 A 0 A_SpawnItemEx("DroppedHellCore",0,0,32,8,0,0,0,32,0)
-	Stop
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("DroppedHellCore",0,0,32,8,0,0,0,32,0)
+		Stop
 	}
 }
 
@@ -3468,9 +3431,9 @@ Actor DroppedHellCore
 	States
 	{
 	Spawn:
-	FHMR H 15
-	TNT1 A 0 A_SpawnItemEx("AEoDHellCoreNoAmmo",0,0,0,0,0,0,0,48,0)
-	Stop
+		FHMR H 15
+		TNT1 A 0 A_SpawnItemEx("AEoDHellCoreNoAmmo",0,0,0,0,0,0,0,48,0)
+		Stop
 	}
 }
 
@@ -3484,30 +3447,30 @@ Actor AEoDHellCoreNoAmmo : AEoDHellCoreItem
 	States
 	{
 	Spawn:
-	FHMR H -1
+		FHMR H -1
 		Loop
 	Pickup:
-	TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",9) <= 0,"Nothing")
-	TNT1 A 0 A_JumpIfInventory("RedMana",20,"Ammo")
-	TNT1 A 0 A_GiveInventory("Weapon9Count",1)
-	TNT1 A 0 A_GiveInventory("HellCoreDrop",1)
-	TNT1 A 0 A_GiveInventory("AEoDHellCore",1)
-	TNT1 A 0 A_TakeInventory("RedMana",20)
-	TNT1 A 0 	
-	Stop
+		TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",9) <= 0,"Nothing")
+		TNT1 A 0 A_JumpIfInventory("RedMana",20,"Ammo")
+		TNT1 A 0 A_GiveInventory("Weapon9Count",1)
+		TNT1 A 0 A_GiveInventory("HellCoreDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDHellCore",1)
+		TNT1 A 0 A_TakeInventory("RedMana",20)
+		TNT1 A 0 	
+		Stop
 	Nothing:
-	TNT1 A 0 A_JumpIfInventory("AEoDHellCore",1,"Ammo")
-	TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
-	Goto Pickup+2
-	TNT1 A 0 ACS_NamedExecute("s798",0,9,0,0)
-	Fail
+		TNT1 A 0 A_JumpIfInventory("AEoDHellCore",1,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
+		Goto Pickup+2
+		TNT1 A 0 ACS_NamedExecute("s798",0,9,0,0)
+		Fail
 	Ammo:
-	TNT1 A 0 A_TakeInventory("RedMana",20)
-	TNT1 A 0 A_JumpIfInventory("AEoDHellCore",1,2)
-	TNT1 A 0 A_GiveInventory("Weapon9Count",1)
-	TNT1 A 0 A_GiveInventory("HellCoreDrop",1)
-	TNT1 A 0 A_GiveInventory("AEoDHellCore",1)
-	Stop
+		TNT1 A 0 A_TakeInventory("RedMana",20)
+		TNT1 A 0 A_JumpIfInventory("AEoDHellCore",1,2)
+		TNT1 A 0 A_GiveInventory("Weapon9Count",1)
+		TNT1 A 0 A_GiveInventory("HellCoreDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDHellCore",1)
+		Stop
 	}
 }
 
@@ -3531,88 +3494,88 @@ Actor AEoDHERocketLauncherItem : CustomInventory 6048
 		W006 J -1
 		Loop
 	Pickup:
-	TNT1 A 0 A_JumpIfInventory("AEoDHERocketLauncher",1,"Ammo")
-	TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",9) <= 0,"Nothing")
-	TNT1 A 0 A_GiveInventory("Weapon9Count",1)
-	TNT1 A 0 A_GiveInventory("HERocketLauncherDrop",1)
-	TNT1 A 0 A_GiveInventory("AEoDHERocketLauncher",1)
-	TNT1 A 0 	
-	Stop
+		TNT1 A 0 A_JumpIfInventory("AEoDHERocketLauncher",1,"Ammo")
+		TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",9) <= 0,"Nothing")
+		TNT1 A 0 A_GiveInventory("Weapon9Count",1)
+		TNT1 A 0 A_GiveInventory("HERocketLauncherDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDHERocketLauncher",1)
+		TNT1 A 0 	
+		Stop
 	Nothing:
-	TNT1 A 0 A_JumpIfInventory("AEoDHERocketLauncher",1,"Ammo")
-	TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
-	Goto Pickup+2
-	TNT1 A 0 ACS_NamedExecute("s798",0,9,0,0)
-	Fail
+		TNT1 A 0 A_JumpIfInventory("AEoDHERocketLauncher",1,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
+		Goto Pickup+2
+		TNT1 A 0 ACS_NamedExecute("s798",0,9,0,0)
+		Fail
 	Ammo:
-	TNT1 A 0 A_GiveInventory("AEoDHERocketLauncher",1)
-	Stop
+		TNT1 A 0 A_GiveInventory("AEoDHERocketLauncher",1)
+		Stop
 	}
 }
 
 Actor AEoDHERocketLauncher : Weapon // 6048
 {
-+FLOORCLIP
-+INVENTORY.IGNORESKILL
-+CHEATNOTWEAPON
-Weapon.AmmoType1 "AERocket"
-Weapon.AmmoType2 "AERocket"
-Weapon.AmmoGive1 10
-Weapon.AmmoUse1 5
-Weapon.AmmoUse2 8
-Weapon.SelectionOrder 6057
-Scale 1.2
-Inventory.PickupMessage "You found a heavy rocket launcher. Be careful with this thing."
-Inventory.PickupSound "reilsss/weappickup/heavyrocketlauncher"
-Weapon.upsound "weapons/rlan/draw"
-Tag "Heavy Rocket launcher"
-States
-{
-Spawn:
-	W006 J -1
-	Loop
-Ready:
-	W006 A 1 A_WeaponReady
-	Loop
-Deselect:
-	TNT1 A 0 	
-	W006 A 1 A_Lower
-	TNT1 AA 0 A_Lower
-	Loop
-Select:
-	TNT1 A 0 	
-	W006 A 1 A_Raise
-	TNT1 AA 0 A_Raise
-	Loop
-Fire:
-	W006 B 0 A_PlaySound("reilsss/weapons/herocketlauncherfire", CHAN_WEAPON, 1.0, 0)
-	W006 A 0 A_Light2
-	TNT1 A 0 A_Recoil(7)
-	W006 B 0 A_FireCustomMissile("SuperRocket",0,1,5,5)
-	W006 BB 1 Bright A_SetPitch(pitch-5)
-	W006 B 0 A_SetPitch(pitch-0.5)
-	W006 A 0 A_Light0
-	W006 A 0 A_CheckReload
-	W006 CCD 1 A_SetPitch(pitch+1)
-	W006 AAAAA 1 A_SetPitch(pitch+0.8)
-	W006 AAAAAAA 1 A_SetPitch(pitch+0.5)
-	W006 A 20
-	Goto Ready
-AltFire:
-	W006 B 0 A_PlaySound("reilsss/weapons/herocketlauncherfire", CHAN_WEAPON, 1.0, 0)
-	W006 A 0 A_Light2
-	TNT1 A 0 A_Recoil(10)
-	W006 B 0 Bright A_FireCustomMissile("FirebombRocket",0,1,5,5)
-	W006 BB 1 Bright A_SetPitch(pitch-5)
-	W006 B 0 A_SetPitch(pitch-0.5)
-	W006 A 0 A_Light0
-	W006 A 0 A_CheckReload
-	W006 CCD 1 A_SetPitch(pitch+1)
-	W006 AAAAA 1 A_SetPitch(pitch+0.8)
-	W006 AAAAAAA 1 A_SetPitch(pitch+0.5)
-	W006 A 20
-	Goto Ready
-}
+	+FLOORCLIP
+	+INVENTORY.IGNORESKILL
+	+CHEATNOTWEAPON
+	Weapon.AmmoType1 "AERocket"
+	Weapon.AmmoType2 "AERocket"
+	Weapon.AmmoGive1 10
+	Weapon.AmmoUse1 5
+	Weapon.AmmoUse2 8
+	Weapon.SelectionOrder 14990
+	Scale 1.2
+	Inventory.PickupMessage "You found a heavy rocket launcher. Be careful with this thing."
+	Inventory.PickupSound "reilsss/weappickup/heavyrocketlauncher"
+	Weapon.upsound "weapons/rlan/draw"
+	Tag "Heavy Rocket launcher"
+	States
+	{
+	Spawn:
+		W006 J -1
+		Loop
+	Ready:
+		W006 A 1 A_WeaponReady
+		Loop
+	Deselect:
+		TNT1 A 0 	
+		W006 A 1 A_Lower
+		TNT1 AA 0 A_Lower
+		Loop
+	Select:
+		TNT1 A 0 	
+		W006 A 1 A_Raise
+		TNT1 AA 0 A_Raise
+		Loop
+	Fire:
+		W006 B 0 A_PlaySound("reilsss/weapons/herocketlauncherfire", CHAN_WEAPON, 1.0, 0)
+		W006 A 0 A_Light2
+		TNT1 A 0 A_Recoil(7)
+		W006 B 0 A_FireCustomMissile("SuperRocket",0,1,5,5)
+		W006 BB 1 Bright A_SetPitch(pitch-5)
+		W006 B 0 A_SetPitch(pitch-0.5)
+		W006 A 0 A_Light0
+		W006 A 0 A_CheckReload
+		W006 CCD 1 A_SetPitch(pitch+1)
+		W006 AAAAA 1 A_SetPitch(pitch+0.8)
+		W006 AAAAAAA 1 A_SetPitch(pitch+0.5)
+		W006 A 20
+		Goto Ready
+	AltFire:
+		W006 B 0 A_PlaySound("reilsss/weapons/herocketlauncherfire", CHAN_WEAPON, 1.0, 0)
+		W006 A 0 A_Light2
+		TNT1 A 0 A_Recoil(10)
+		W006 B 0 Bright A_FireCustomMissile("FirebombRocket",0,1,5,5)
+		W006 BB 1 Bright A_SetPitch(pitch-5)
+		W006 B 0 A_SetPitch(pitch-0.5)
+		W006 A 0 A_Light0
+		W006 A 0 A_CheckReload
+		W006 CCD 1 A_SetPitch(pitch+1)
+		W006 AAAAA 1 A_SetPitch(pitch+0.8)
+		W006 AAAAAAA 1 A_SetPitch(pitch+0.5)
+		W006 A 20
+		Goto Ready
+	}
 }
 
 Actor SuperRocket
