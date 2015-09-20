@@ -66,7 +66,7 @@
 11955	Guardian head
 11960	Wraithverge
 11970	Lightning rod
-11975	Bloodscoursge
+11975	Bloodscourge
 11978	Hellcore
 11980	Scarab staff
 11985	Railgun prototype
