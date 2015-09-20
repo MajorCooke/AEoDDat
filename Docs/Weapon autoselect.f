@@ -3,6 +3,7 @@
  3400	Desert Eagle
  4900	Chainsaw
  
+ 5250	Plutonium Cannon
  5500	Disruptor
  7000	Golden Colts
  7250	Dragon Claw
@@ -10,12 +11,14 @@
  7400	Crawler
  7500	Combat Shotgun
  7750	PK shotgun
+ 7777	Pulse gun
  8000	Magic Crossbow
  8250	Riotgun
  8375	Righteous Bison
  8500	Assault shotgun
  8750	Nailgun
  9000	Mac 10 SMG
+ 9250	Popcorn Gun
  9500	Tekbow
  9750	Flare gun
  9777	Crystal Gun
@@ -27,30 +30,43 @@
  9933	Soul leech
  9970	Hyperblaster
 10000	Minigun
+10050	Ice wand
 10250	Voodoo doll
 10333	Gluon gun
 10375	Carbine
+10400	Tesla cannon
 10450	Gas Rocket Launcher
 10500	Bio rifle
+10650	Prisma cannon
 10750	Blood shotgun
 10833	Icestorm rod
+10850	Thunderbolt
 10877	Cow Mangler
 10900	Freezethrower
 11000	Serpent staff
+11050	Eidechsenesser
 11100	Laser gun
+11150	Life leech
 11200	Plasma rifle
+11250	Hailstorm
+11300	Raptor
 11400	Hand Cannon
 11500	Gauss gun
 11600	Skullrod
 11650	Necrossbow
 11700	Nailgun MK2
 11750	Boltgun
+11770	Electrodriver
+11790	Vulcan cannon
 11800	Hellroot
 11850	Demonstaff
+11860	Ripper gun
 11900	Razor
+11930	Wormwood arbalest
+11955	Guardian head
 11960	Wraithverge
 11970	Lightning rod
-11975	Bloodscourge
+11975	Bloodscoursge
 11978	Hellcore
 11980	Scarab staff
 11985	Railgun prototype
@@ -62,16 +78,22 @@
 12345	Firestorm spell
 12500	Flamethrower
 12521	Missile launcher
+12525	Devastator
+12530	Concussion rocket launcher
 12550	Howitzer
 13300	Rocket launcher
 13400	PMF mine layer
 13500	Meteorite rod
 14500	Wyvern heart
 14900	Chicken launcher
+14960	Bouncer
 14970	Grenade launcher
+14980	Frag grenade launcher
 14987	Proteus Dynamo
 14990	Heavy rocket launcher
+14995	Incinerator
 
+15243	Perforator
 15551	Prototype gun
 15950	Head Hunter
 16000	AWP rifle
