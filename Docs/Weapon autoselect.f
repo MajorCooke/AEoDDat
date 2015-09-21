@@ -18,15 +18,19 @@
  8500	Assault shotgun
  8750	Nailgun
  9000	Mac 10 SMG
+ 9191	Nova
  9250	Popcorn Gun
+ 9300	Dark Matter gun
  9500	Tekbow
  9750	Flare gun
  9777	Crystal Gun
  9805	HornetGun
  9810	Strogg ArmSaw
+ 9830	Soul Reaper
  9840	Peace maker carbine
  9850	Painkiller
  9900	Tempest staff
+ 9950	Apocalypse
  9933	Soul leech
  9970	Hyperblaster
 10000	Minigun
@@ -50,6 +54,7 @@
 11200	Plasma rifle
 11250	Hailstorm
 11300	Raptor
+11350	Quantum singularity generator
 11400	Hand Cannon
 11500	Gauss gun
 11600	Skullrod
@@ -59,6 +64,7 @@
 11770	Electrodriver
 11790	Vulcan cannon
 11800	Hellroot
+11840	Inferno syphon
 11850	Demonstaff
 11860	Ripper gun
 11900	Razor
@@ -94,12 +100,22 @@
 14995	Incinerator
 
 15243	Perforator
+15500	Volcano Cannon
 15551	Prototype gun
 15950	Head Hunter
 16000	AWP rifle
 18800	Soul reaver
+18900	Bio Force Gun
 19000	Demon Orb
+19500	Fusion cannon
+19550	Redeemer
+19700	Dark flame staff
+19800	Hand of God
+19900	Death's Hand
+19999	Hell and Heaven Hand
 
+20100	Penetrator
+20202	BFG9000
 20500	Shock Rifle
 21000	Butterfly knife
 22000	Unholy Scythe

@@ -5,7 +5,7 @@
 == One-property actors into one-liners ==
 
 # Find:
-Actor ([a-zA-Z0-9_]+)[ \t]*:[ \t]*([a-zA-Z0-9_]+)[ \t]*\r\n[ \t]*\{[ \t]*\r\n[ \t]*([\t a-Z0-9\.\(\)\[\]\/\\'"\+\-]+)\r\n[ \t]*\}[ \t]*
+Actor ([a-zA-Z0-9_]+)[ \t]*:[ \t]*([a-zA-Z0-9_]+)[ \t]*\r\n[ \t]*\{[ \t]*\r\n[ \t]*([\t a-Z0-9\=\:\,\%\.\(\)\[\]\/\\'"\+\-]+)\r\n[ \t]*\}[ \t]*
 
 # Replace:
 Actor $1 : $2 { $3 }
@@ -19,3 +19,13 @@ Actor $1 : $2 { $3 }
 
 # Replace:
 \t
+
+
+
+== Add a line after each GOTO not followed by a state label ==
+
+# Find:
+\r\n([\t]+)Goto ([a-zA-Z0-9\+"]+)\r\n([\t]+)([a-zA-Z0-9]{4} )
+
+# Replace ():
+\r\n$1Goto $2\r\n$3\r\n$3$4
