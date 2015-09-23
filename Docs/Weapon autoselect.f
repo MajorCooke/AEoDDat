@@ -91,6 +91,7 @@
 13300	Rocket launcher
 13400	PMF mine layer
 13500	Meteorite rod
+13600	D'Sparil staff
 14500	Wyvern heart
 14900	Chicken launcher
 14960	Bouncer

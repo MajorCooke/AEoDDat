@@ -602,140 +602,141 @@ Actor AEoDDSparilStaffItem : CustomInventory 6081
 		DTSP A -1
 		Loop
 	Pickup:
-	TNT1 A 0 A_JumpIfInventory("AEoDDSparilStaff",1,"Ammo")
-	TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",8) <= 0,"Nothing")
-	TNT1 A 0 A_GiveInventory("Weapon8Count",1)
-	TNT1 A 0 A_GiveInventory("DSparilStaffDrop",1)
-	TNT1 A 0 A_GiveInventory("AEoDDSparilStaff",1)
-	TNT1 A 0 	
-	Stop
+		TNT1 A 0 A_JumpIfInventory("AEoDDSparilStaff",1,"Ammo")
+		TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",8) <= 0,"Nothing")
+		TNT1 A 0 A_GiveInventory("Weapon8Count",1)
+		TNT1 A 0 A_GiveInventory("DSparilStaffDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDDSparilStaff",1)
+		TNT1 A 0 	
+		Stop
 	Nothing:
-	TNT1 A 0 A_JumpIfInventory("AEoDDSparilStaff",1,"Ammo")
-	TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
-	Goto Pickup+2
-	
-	TNT1 A 0 ACS_NamedExecute("s798",0,8,0,0)
-	Fail
+		TNT1 A 0 A_JumpIfInventory("AEoDDSparilStaff",1,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
+		Goto Pickup+2
+		
+		TNT1 A 0 ACS_NamedExecute("s798",0,8,0,0)
+		Fail
 	Ammo:
-	TNT1 A 0 A_GiveInventory("AEoDDSparilStaff",1)
-	Stop
+		TNT1 A 0 A_GiveInventory("AEoDDSparilStaff",1)
+		Stop
 	}
 }
 
 Actor AEoDDSparilStaff : Weapon // 6081
 {
-+FLOORCLIP
-+INVENTORY.IGNORESKILL
-+WEAPON.CHEATNOTWEAPON
-+FLOATBOB
-Weapon.SelectionOrder 150
-Weapon.Ammotype1 "RedMana"
-Weapon.Ammotype2 "DarkMana"
-Weapon.AmmoGive1 10
-Weapon.AmmoGive2 4
-Weapon.AmmoUse1 8
-Weapon.AmmoUse2 2
-Obituary "%o was zapped by %k's D'Sparil Staff."
-Inventory.PickupMessage "You got D'Sparil's Staff! Let the fun begin."
-Inventory.PickupSound "weaponbuild"
-weapon.upsound "weapons/draw"
-Scale 0.75
-Tag "D'sparil staff"
-States
-{
-Spawn:
-	DTSP A 5
-	Loop
-Ready: 
-	DTSF A 0 A_Jump(3,2)
-	DTSF A 1 A_WeaponReady
-	Goto Ready
-	
-	DTSF R 0 A_PlaySound("dsparil/zap",7,0.5,0)
-	DTSF RSTUVWXYZ 1 A_WeaponReady
-	Goto Ready
-Deselect: 
-	TNT1 A 0 	
-	DTSF A 1 A_Lower
-	TNT1 AA 0 A_Lower
-	Loop
-Select: 
-	TNT1 A 0 	
-	DTSF A 1 A_Raise
-	TNT1 AA 0 A_Raise
-	Loop
-Fire: 
-	TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,"FireQuick")
-	DTSF A 2
-	DTSF B 1
-	TNT1 A 0 A_GunFlash
-	DTSF CDE 1
-	TNT1 A 0 A_PlaySound("dsparil/attack", CHAN_WEAPON, 1.0, 0)
-	TNT1 A 0 //ACS_NamedExecute("s851",0,60,random(-20,20),0)
-	DTSF F 0 A_Recoil(2)
-	DTSF F 0 A_FireCustomMissile("DsparilLightning", 0, 1, 0, 2)
-	DTSF GH 1 
-	DTSF IJJ 1 //ACS_NamedExecute("s851",0,-20,0,0)
-	DTSF K 1 
-	DTSF LMNOPQFEDCBA 1
-	Goto Ready
-FireQuick:
-	TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,1)
-	Goto Fire
-	
-	DTSF A 2
-	DTSF B 1
-	TNT1 A 0 A_GunFlash
-	DTSF CDE 1
-	TNT1 A 0 A_PlaySound("dsparil/attack", CHAN_WEAPON, 1.0, 0)
-	TNT1 A 0 //ACS_NamedExecute("s851",0,60,random(-20,20),0)
-	DTSF F 0 A_Recoil(2)
-	DTSF F 0 A_FireCustomMissile("DsparilLightning", 0, 1, 0, 2)
-	DTSF GH 1 
-	DTSF IJJ 1 //ACS_NamedExecute("s851",0,-20,0,0)
-	DTSF K 1 
-	DTSF NQDA 1
-	Goto Ready
-AltFire: 
-	TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,"AltFireQuick")
-	DTSF A 1
-	DTSF B 1
-	TNT1 A 0 A_GunFlash
-	DTSF CDE 1
-	TNT1 A 0 A_PlaySound("dsparil/attack", CHAN_WEAPON, 1.0, 0)
-	TNT1 A 0 //ACS_NamedExecute("s851",0,50,random(-20,20),0)
-	DTSF F 0 A_Recoil(2)
-	TNT1 A 0 A_FireCustomMissile("DsparilStaffLightningDisciple", -30, 0, 0, 8)
-	DTSF F 1 A_FireCustomMissile("DsparilStaffLightningDisciple", 30, 1, 0, 8)
-	DTSF G 1
-	DTSF HIJ 1 //ACS_NamedExecute("s851",0,-20,0,0)
-	DTSF J 1
-	DTSF JJKLMNOPQFEDCBA 1
-	Goto Ready
-AltFireQuick:
-	TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,1)
-	Goto AltFire
-	
-	DTSF A 1
-	DTSF B 1
-	TNT1 A 0 A_GunFlash
-	DTSF CDE 1
-	TNT1 A 0 A_PlaySound("dsparil/attack", CHAN_WEAPON, 1.0, 0)
-	TNT1 A 0 //ACS_NamedExecute("s851",0,50,random(-20,20),0)
-	DTSF F 0 A_Recoil(2)
-	TNT1 A 0 A_FireCustomMissile("DsparilStaffLightningDisciple", -30, 0, 0, 8)
-	DTSF F 1 A_FireCustomMissile("DsparilStaffLightningDisciple", 30, 1, 0, 8)
-	DTSF G 1
-	DTSF HIJ 1 //ACS_NamedExecute("s851",0,-20,0,0)
-	DTSF J 1
-	DTSF KNQDA 1
-	Goto Ready
-Flash:
-	TNT1 A 3 A_Light1
-	TNT1 A 2 A_Light2
-	TNT1 A 1 A_Light0
-	Stop
-} 
+	+FLOORCLIP
+	+INVENTORY.IGNORESKILL
+	+WEAPON.CHEATNOTWEAPON
+	+FLOATBOB
+	Weapon.SelectionOrder 150
+	Weapon.Ammotype1 "RedMana"
+	Weapon.Ammotype2 "DarkMana"
+	Weapon.AmmoGive1 10
+	Weapon.AmmoGive2 4
+	Weapon.AmmoUse1 8
+	Weapon.AmmoUse2 2
+	Weapon.SelectionOrder 13600
+	Obituary "%o was zapped by %k's D'Sparil Staff."
+	Inventory.PickupMessage "You got D'Sparil's Staff! Let the fun begin."
+	Inventory.PickupSound "weaponbuild"
+	weapon.upsound "weapons/draw"
+	Scale 0.75
+	Tag "D'sparil staff"
+	States
+	{
+	Spawn:
+		DTSP A 5
+		Loop
+	Ready: 
+		DTSF A 0 A_Jump(3,2)
+		DTSF A 1 A_WeaponReady
+		Goto Ready
+		
+		DTSF R 0 A_PlaySound("dsparil/zap",7,0.5,0)
+		DTSF RSTUVWXYZ 1 A_WeaponReady
+		Goto Ready
+	Deselect: 
+		TNT1 A 0 	
+		DTSF A 1 A_Lower
+		TNT1 AA 0 A_Lower
+		Loop
+	Select: 
+		TNT1 A 0 	
+		DTSF A 1 A_Raise
+		TNT1 AA 0 A_Raise
+		Loop
+	Fire: 
+		TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,"FireQuick")
+		DTSF A 2
+		DTSF B 1
+		TNT1 A 0 A_GunFlash
+		DTSF CDE 1
+		TNT1 A 0 A_PlaySound("dsparil/attack", CHAN_WEAPON, 1.0, 0)
+		TNT1 A 0 //ACS_NamedExecute("s851",0,60,random(-20,20),0)
+		DTSF F 0 A_Recoil(2)
+		DTSF F 0 A_FireCustomMissile("DsparilLightning", 0, 1, 0, 2)
+		DTSF GH 1 
+		DTSF IJJ 1 //ACS_NamedExecute("s851",0,-20,0,0)
+		DTSF K 1 
+		DTSF LMNOPQFEDCBA 1
+		Goto Ready
+	FireQuick:
+		TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,1)
+		Goto Fire
+		
+		DTSF A 2
+		DTSF B 1
+		TNT1 A 0 A_GunFlash
+		DTSF CDE 1
+		TNT1 A 0 A_PlaySound("dsparil/attack", CHAN_WEAPON, 1.0, 0)
+		TNT1 A 0 //ACS_NamedExecute("s851",0,60,random(-20,20),0)
+		DTSF F 0 A_Recoil(2)
+		DTSF F 0 A_FireCustomMissile("DsparilLightning", 0, 1, 0, 2)
+		DTSF GH 1 
+		DTSF IJJ 1 //ACS_NamedExecute("s851",0,-20,0,0)
+		DTSF K 1 
+		DTSF NQDA 1
+		Goto Ready
+	AltFire: 
+		TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,"AltFireQuick")
+		DTSF A 1
+		DTSF B 1
+		TNT1 A 0 A_GunFlash
+		DTSF CDE 1
+		TNT1 A 0 A_PlaySound("dsparil/attack", CHAN_WEAPON, 1.0, 0)
+		TNT1 A 0 //ACS_NamedExecute("s851",0,50,random(-20,20),0)
+		DTSF F 0 A_Recoil(2)
+		TNT1 A 0 A_FireCustomMissile("DsparilStaffLightningDisciple", -30, 0, 0, 8)
+		DTSF F 1 A_FireCustomMissile("DsparilStaffLightningDisciple", 30, 1, 0, 8)
+		DTSF G 1
+		DTSF HIJ 1 //ACS_NamedExecute("s851",0,-20,0,0)
+		DTSF J 1
+		DTSF JJKLMNOPQFEDCBA 1
+		Goto Ready
+	AltFireQuick:
+		TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,1)
+		Goto AltFire
+		
+		DTSF A 1
+		DTSF B 1
+		TNT1 A 0 A_GunFlash
+		DTSF CDE 1
+		TNT1 A 0 A_PlaySound("dsparil/attack", CHAN_WEAPON, 1.0, 0)
+		TNT1 A 0 //ACS_NamedExecute("s851",0,50,random(-20,20),0)
+		DTSF F 0 A_Recoil(2)
+		TNT1 A 0 A_FireCustomMissile("DsparilStaffLightningDisciple", -30, 0, 0, 8)
+		DTSF F 1 A_FireCustomMissile("DsparilStaffLightningDisciple", 30, 1, 0, 8)
+		DTSF G 1
+		DTSF HIJ 1 //ACS_NamedExecute("s851",0,-20,0,0)
+		DTSF J 1
+		DTSF KNQDA 1
+		Goto Ready
+	Flash:
+		TNT1 A 3 A_Light1
+		TNT1 A 2 A_Light2
+		TNT1 A 1 A_Light0
+		Stop
+	} 
 } 
 
 
