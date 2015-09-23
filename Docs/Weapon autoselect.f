@@ -13,6 +13,7 @@
  7750	PK shotgun
  7777	Pulse gun
  8000	Magic Crossbow
+ 8100	Tome of set
  8250	Riotgun
  8375	Righteous Bison
  8500	Assault shotgun
@@ -90,6 +91,7 @@
 13300	Rocket launcher
 13400	PMF mine layer
 13500	Meteorite rod
+13600	D'Sparil staff
 14500	Wyvern heart
 14900	Chicken launcher
 14960	Bouncer
