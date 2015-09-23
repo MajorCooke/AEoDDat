@@ -131,7 +131,7 @@ Actor NewFog replaces TeleportFog
 		X051 AAAA 1 Bright A_FadeIn(0.18)
 	FadingLoop:
 		X051 A 0 A_CheckSight("NoSight")
-		X051 A 0 A_SpawnItemEx("TeleSpark",0,0,0,random(8,16),0,random(-9,9),random(0,359),32,64)
+		X051 A 0 A_SpawnItemEx("TeleSpark",0,0,0,random(8,16),0,random(-9,9),random(0,359),SXF_NOCHECKPOSITION,64)
 	NoSight:
 		X051 A 1 Bright A_FadeOut(0.02)
 		Goto "FadingLoop"
@@ -156,7 +156,7 @@ Actor NewFogSimpler
 		X051 AAAA 1 Bright A_FadeIn(0.18)
 	FadingLoop:
 		X051 A 0 A_CheckSight("NoSight")
-		X051 A 0 A_SpawnItemEx("TeleSpark",0,0,0,random(8,16),0,random(-9,9),random(0,359),32,250)
+		X051 A 0 A_SpawnItemEx("TeleSpark",0,0,0,random(8,16),0,random(-9,9),random(0,359),SXF_NOCHECKPOSITION,250)
 	NoSight:
 		X051 A 1 Bright A_FadeOut(0.02)
 		Goto "FadingLoop"
@@ -172,27 +172,27 @@ Actor TeleSpark
 	{
 	Spawn:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		TNT1 A 1 A_ChangeVelocity(random(0,10),0,random(-9,9),3)
 		TNT1 A 0 A_SetAngle(angle+random(-70,70))
-		TNT1 A 1 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,32)
-		TNT1 A 1 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,32)
+		TNT1 A 1 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 1 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 
 		TNT1 A 1 A_ChangeVelocity(random(0,10),0,random(-9,9),3)
 		TNT1 A 0 A_SetAngle(angle+random(-70,70))
-		TNT1 A 1 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,32)
-		TNT1 A 1 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,32)
+		TNT1 A 1 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 1 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 
-		TNT1 A 0 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		TNT1 A 1 A_ChangeVelocity(random(0,10),0,random(-9,9),3)
 		TNT1 A 0 A_SetAngle(angle+random(-70,70))
-		TNT1 A 1 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,32)
-		TNT1 A 1 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,32)
+		TNT1 A 1 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 1 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 
-		TNT1 A 0 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		TNT1 A 1 A_ChangeVelocity(random(0,10),0,random(-9,9),3)
-		TNT1 A 1 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,32)
-		TNT1 A 1 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,32)
+		TNT1 A 1 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 1 A_SpawnItemEx("TeleSparkTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		Stop
 	}
 }
@@ -248,7 +248,7 @@ Actor NoBloodPuff
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay A_SpawnItemEx("NewPuff1",0,0,0,0,0,0,0,32,32)
+		TNT1 A 0 NoDelay A_SpawnItemEx("NewPuff1",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,32)
 		Stop
 	}
 }
@@ -273,19 +273,19 @@ Actor NewPuff1 : BulletPuff
 	Crash:
 	Death:	//structure
 		TNT1 A 0 A_CheckFloor("SpawnFloorSmoke")
-		TNT1 A 0 A_SpawnItemEx("PuffWallSmoke",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("PuffWallSmoke",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		TNT1 A 0 A_Jump(128,2)
 		TNT1 A 0 A_PlaySound("postal2/weapons/bullet_hit_ricochet")
-		TNT1 A 0 A_SpawnItemEx("Puff2FlareBig",0,0,0,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("Puff2Spark",2,0,0,frandom(3,9),0,frandom(-6,6),random(0,359),32)
-		TNT1 AAA 0 A_SpawnItemEx("Puff2Spark",2,0,0,frandom(3,9),0,frandom(-6,6),random(0,359),32,128)
+		TNT1 A 0 A_SpawnItemEx("Puff2FlareBig",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("Puff2Spark",2,0,0,frandom(3,9),0,frandom(-6,6),random(0,359),SXF_NOCHECKPOSITION)
+		TNT1 AAA 0 A_SpawnItemEx("Puff2Spark",2,0,0,frandom(3,9),0,frandom(-6,6),random(0,359),SXF_NOCHECKPOSITION,128)
 		TNT1 A 0 A_Jump(64,2)
 		TNT1 A 1
 		Stop
 		TNT1 A 3 Light("Puff2Light")
 		Stop
 	SpawnFloorSmoke:
-		TNT1 A 0 A_SpawnItemEx("PuffFloorSmoke",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("PuffFloorSmoke",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		Goto Death+2
 	XDeath:
 		TNT1 A 0 A_CheckFlag("INVULNERABLE","Death",AAPTR_TRACER)
@@ -308,10 +308,10 @@ Actor NewPuff1Silent : NewPuff1
 	Spawn:
 		TNT1 A 0
 		TNT1 A 0 A_CheckSight("Simple")
-		//TNT1 A 0 A_SpawnItemEx("TT5",1,0,0,0,0,frandom(0.1,0.3),random(0,359),32)
-		TNT1 AA 0 A_SpawnItemEx("Puff2FlareBig",0,0,0,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("Puff2Spark",2,0,0,frandom(3,9),0,frandom(-6,6),random(0,359),32)
-		TNT1 AAA 0 A_SpawnItemEx("Puff2Spark",2,0,0,frandom(3,9),0,frandom(-6,6),random(0,359),32,128)
+		//TNT1 A 0 A_SpawnItemEx("TT5",1,0,0,0,0,frandom(0.1,0.3),random(0,359),SXF_NOCHECKPOSITION)
+		TNT1 AA 0 A_SpawnItemEx("Puff2FlareBig",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("Puff2Spark",2,0,0,frandom(3,9),0,frandom(-6,6),random(0,359),SXF_NOCHECKPOSITION)
+		TNT1 AAA 0 A_SpawnItemEx("Puff2Spark",2,0,0,frandom(3,9),0,frandom(-6,6),random(0,359),SXF_NOCHECKPOSITION,128)
 		TNT1 A 0 A_Jump(64,1)
 		Stop
 		TNT1 A 3 Light("Puff2Light")
@@ -471,8 +471,8 @@ Actor MCBloodFXMain replaces Blood
 	{
 	Spawn:
 		TNT1 A 0
-		TNT1 A 2 A_SpawnItemEx("MCBloodParticle",frandom(0,2),0,random(1,4),frandom(0,1.5),0,frandom(0.1,2.0),random(0,359),33|SXF_USEBLOODCOLOR)
-		TNT1 AA 0 A_SpawnItemEx("MCBloodParticle",frandom(0,2),0,random(1,4),frandom(0,1.5),0,frandom(0.1,2.0),random(0,359),33|SXF_USEBLOODCOLOR,128)
+		TNT1 A 2 A_SpawnItemEx("MCBloodParticle",frandom(0,2),0,random(1,4),frandom(0,1.5),0,frandom(0.1,2.0),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR)
+		TNT1 AA 0 A_SpawnItemEx("MCBloodParticle",frandom(0,2),0,random(1,4),frandom(0,1.5),0,frandom(0.1,2.0),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,128)
 		Stop
 	}
 }
@@ -582,8 +582,8 @@ Actor NewBlood : Blood //replaces Blood  //Blood as in v5.03, kept for compatabi
 	{
 	Spawn:
 		BLD1 A 1
-//		TNT1 AAA 0 A_SpawnItemEx("ExtraBlood",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,1)
-		TNT1 AAA 0 A_SpawnItemEx("ExtraBlood",random(3,-3),random(3,-3),random(3,-3),1,0,0,random(1,359),1|SXF_USEBLOODCOLOR)
+//		TNT1 AAA 0 A_SpawnItemEx("ExtraBlood",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 AAA 0 A_SpawnItemEx("ExtraBlood",random(3,-3),random(3,-3),random(3,-3),1,0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR)
 		BLD1 ABCD 6
 		Stop
 	}
@@ -625,70 +625,70 @@ Actor GenericHumanBurn
 	Spawn:
 		TNT1 A 0
 		TNT1 A 0 A_Jump(160,"Burn2")
-		TNT1 A 0 A_SpawnItemEx("GenericHumanBurn1",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("GenericHumanBurn1",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		Stop
 	Burn2:
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN A 3 Bright A_PlaySound("bcultist/burned")
 		TNT1 A 0 A_Explode(8,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN B 3 Bright
 		TNT1 A 0 A_Explode(8,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN C 3 Bright
 		TNT1 A 0 A_Explode(7,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN D 3 Bright
 		TNT1 A 0 A_Explode(7,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN E 3 Bright
 		TNT1 A 0 A_Explode(7,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN F 3 Bright
 		TNT1 A 0 A_Explode(7,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN G 3 Bright
 		TNT1 A 0 A_Explode(7,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN H 3 Bright
 		TNT1 A 0 A_Explode(7,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN I 3 Bright
 		TNT1 A 0 A_Explode(7,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN J 3 Bright
 		TNT1 A 0 A_Explode(7,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN K 3 Bright
 		TNT1 A 0 A_Explode(7,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN L 3 Bright
 		TNT1 A 0 A_Explode(7,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN M 3 Bright
 		TNT1 A 0 A_Explode(6,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN N 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(20,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(20,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN O 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(20,45),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(20,45),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN P 3 Bright
 		TNT1 A 0 A_Explode(4,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(20,45),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(20,45),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN Q 3 Bright
 		TNT1 A 0 A_Explode(3,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(10,35),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(10,35),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN R 3 Bright
 		TNT1 A 0 A_Explode(3,32)
-		TNT1 A 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(10,35),0,0,frandom(0.5,3.0),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(10,35),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN S 3 Bright
 		TNT1 A 0 A_Explode(2,32)
-		TNT1 A 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(10,35),0,0,frandom(0.5,3.0),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(10,35),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN T 3 BrighT
 		TNT1 A 0 A_Explode(2,32)
-		TNT1 A 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(10,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(10,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN U 3 BrighT
 		TNT1 A 0 A_Explode(2,32)
 
@@ -719,41 +719,41 @@ Actor GenericHumanBurn1
 		TNT1 A 0 A_JumpIfInventory("Counter",5,"ScreamandDecide")
 		E16W A 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
-//		TNT1 A 0 A_SpawnItemEx("BurnMiniFlame",random(20,-20),random(20,-20),random(30,50),0,0,frandom(1.0,3.0),0,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+//		TNT1 A 0 A_SpawnItemEx("BurnMiniFlame",random(20,-20),random(20,-20),random(30,50),0,0,frandom(1.0,3.0),0,SXF_NOCHECKPOSITION)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16W A 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16W B 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16W B 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16W C 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16W C 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16W D 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16W D 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16W E 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16W E 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16W F 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16W F 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		TNT1 A 0 A_GiveInventory("Counter",1)
 		Goto Spawn+2
 
@@ -765,63 +765,63 @@ Actor GenericHumanBurn1
 	Burn1Fallen:
 		E16D A 2 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D A 2 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D B 2 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D B 2 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 
 		E16D C 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D D 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D E 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D F 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D G 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D H 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 
 		TNT1 A 0 A_Jump(90,"Burn1End")
 		E16D C 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D D 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D E 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D F 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D G 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D H 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		Goto Burn1Fallen+16	//was 12
 	Burn1End:
 		E16D I 3 
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(10,-10),random(10,-10),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(10,-10),random(10,-10),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D J 3 
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(10,-10),random(10,-10),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(10,-10),random(10,-10),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D K 3 Bright 
-		TNT1 A 0 A_SpawnItemEx("BurnSmoke",random(10,-10),random(10,-10),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmoke",random(10,-10),random(10,-10),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D L 4 
 		E16D M -1 A_QueueCorpse
 		Stop
@@ -846,22 +846,22 @@ Actor HexenHumanBurn
 	{
 	Spawn:
 		TNT1 A 0
-		FDTH G 4 Bright A_Explode(5,32)	TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
-		FDTH H 4 Bright A_Explode(5,32)	TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
-		FDTH I 4 Bright A_Explode(5,32)	TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
-		FDTH J 4 Bright A_Explode(5,32)	TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
-		FDTH K 4 Bright A_Explode(5,32)	TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
-		FDTH L 4 Bright A_Explode(5,32)	TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
-		FDTH M 4 Bright A_Explode(5,32)	TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
-		FDTH N 4 Bright A_Explode(5,32)	TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
-		FDTH O 4 Bright A_Explode(5,32)	TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
-		FDTH P 4 Bright A_Explode(5,32)	TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
-		FDTH Q 4 Bright A_Explode(5,32)	TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
-		FDTH R 4 Bright A_Explode(5,32)	TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
-		FDTH S 4 Bright A_Explode(5,32)	TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
-		FDTH T 4 Bright A_Explode(5,32)	TNT1 A 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
-		FDTH U 4 Bright A_Explode(5,32)	TNT1 A 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
-		FDTH V 4 Bright A_Explode(5,32) 	TNT1 A 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		FDTH G 4 Bright A_Explode(5,32)	TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
+		FDTH H 4 Bright A_Explode(5,32)	TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
+		FDTH I 4 Bright A_Explode(5,32)	TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
+		FDTH J 4 Bright A_Explode(5,32)	TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
+		FDTH K 4 Bright A_Explode(5,32)	TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
+		FDTH L 4 Bright A_Explode(5,32)	TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
+		FDTH M 4 Bright A_Explode(5,32)	TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
+		FDTH N 4 Bright A_Explode(5,32)	TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
+		FDTH O 4 Bright A_Explode(5,32)	TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
+		FDTH P 4 Bright A_Explode(5,32)	TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
+		FDTH Q 4 Bright A_Explode(5,32)	TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
+		FDTH R 4 Bright A_Explode(5,32)	TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
+		FDTH S 4 Bright A_Explode(5,32)	TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
+		FDTH T 4 Bright A_Explode(5,32)	TNT1 A 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
+		FDTH U 4 Bright A_Explode(5,32)	TNT1 A 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
+		FDTH V 4 Bright A_Explode(5,32) 	TNT1 A 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		Stop
 	}
 }
@@ -912,37 +912,37 @@ Actor SmallHumanBurn : GenericHumanBurn1
 		TNT1 A 0 A_PlaySound("lilcaleb/burn")
 
 		TNT1 A 0 A_JumpIfInventory("Counter",4,"ScreamandDecide")
-		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,SXF_NOCHECKPOSITION)
 		E16W A 2 Bright A_Wander
 		TNT1 A 0 A_Explode(3,20)
-		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,SXF_NOCHECKPOSITION)
 		E16W A 2 Bright A_Wander
 		TNT1 A 0 A_Explode(3,20)
-		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,SXF_NOCHECKPOSITION)
 		E16W B 2 Bright A_Wander
 		TNT1 A 0 A_Explode(3,20)
-		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,SXF_NOCHECKPOSITION)
 		E16W B 2 Bright A_Wander
 		TNT1 A 0 A_Explode(3,20)
-		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,SXF_NOCHECKPOSITION)
 		E16W C 2 Bright A_Wander
 		TNT1 A 0 A_Explode(3,20)
-		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,SXF_NOCHECKPOSITION)
 		E16W C 2 Bright A_Wander
 		TNT1 A 0 A_Explode(3,20)
-		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,SXF_NOCHECKPOSITION)
 		E16W D 2 Bright A_Wander
 		TNT1 A 0 A_Explode(3,20)
-		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,SXF_NOCHECKPOSITION)
 		E16W D 2 Bright A_Wander
 		TNT1 A 0 A_Explode(3,20)
-		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,SXF_NOCHECKPOSITION)
 		E16W E 2 Bright A_Wander
 		TNT1 A 0 A_Explode(3,20)
-		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,SXF_NOCHECKPOSITION)
 		E16W E 2 Bright A_Wander
 		TNT1 A 0 A_Explode(3,20)
-		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,SXF_NOCHECKPOSITION)
 		E16W F 2 Bright A_Wander
 		TNT1 A 0 A_Explode(3,20)
 		TNT1 A 0 A_GiveInventory("Counter",1)
@@ -957,63 +957,63 @@ Actor SmallHumanBurn : GenericHumanBurn1
 	Burn1Fallen:
 		E16D A 2 Bright
 		TNT1 A 0 A_Explode(3,20)
-		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,SXF_NOCHECKPOSITION)
 		E16D A 2 Bright
 		TNT1 A 0 A_Explode(3,20)
-		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,SXF_NOCHECKPOSITION)
 		E16D B 2 Bright
 		TNT1 A 0 A_Explode(3,20)
-		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,SXF_NOCHECKPOSITION)
 		E16D B 2 Bright
 		TNT1 A 0 A_Explode(3,20)
-		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,SXF_NOCHECKPOSITION)
 
 		E16D C 3 Bright
 		TNT1 A 0 A_Explode(3,20)
-		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,SXF_NOCHECKPOSITION)
 		E16D D 3 Bright
 		TNT1 A 0 A_Explode(3,20)
-		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,SXF_NOCHECKPOSITION)
 		E16D E 3 Bright
 		TNT1 A 0 A_Explode(3,20)
-		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,SXF_NOCHECKPOSITION)
 		E16D F 3 Bright
 		TNT1 A 0 A_Explode(3,20)
-		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,SXF_NOCHECKPOSITION)
 		E16D G 3 Bright
 		TNT1 A 0 A_Explode(3,20)
-		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,SXF_NOCHECKPOSITION)
 		E16D H 3 Bright
 		TNT1 A 0 A_Explode(3,20)
-		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,SXF_NOCHECKPOSITION)
 
 		TNT1 A 0 A_Jump(190,"Burn1End")
 		E16D C 3 Bright
 		TNT1 A 0 A_Explode(3,20)
-		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,SXF_NOCHECKPOSITION)
 		E16D D 3 Bright
 		TNT1 A 0 A_Explode(3,20)
-		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,SXF_NOCHECKPOSITION)
 		E16D E 3 Bright
 		TNT1 A 0 A_Explode(3,20)
-		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,SXF_NOCHECKPOSITION)
 		E16D F 3 Bright
 		TNT1 A 0 A_Explode(3,20)
-		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,SXF_NOCHECKPOSITION)
 		E16D G 3 Bright
 		TNT1 A 0 A_Explode(3,20)
-		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,SXF_NOCHECKPOSITION)
 		E16D H 3 Bright
 		TNT1 A 0 A_Explode(3,20)
-		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(10,25),0,0,frandom(0.2,1.5),0,SXF_NOCHECKPOSITION)
 		Goto Burn1Fallen+12
 	Burn1End:
 		E16D I 3 
-		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(8,15),0,0,frandom(0.2,1.5),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(8,15),0,0,frandom(0.2,1.5),0,SXF_NOCHECKPOSITION)
 		E16D J 3 
-		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(8,15),0,0,frandom(0.2,1.5),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(8,15),0,0,frandom(0.2,1.5),0,SXF_NOCHECKPOSITION)
 		E16D K 3 Bright 
-		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(8,15),0,0,frandom(0.2,1.5),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmokeSmall",random(8,-8),random(8,-8),random(8,15),0,0,frandom(0.2,1.5),0,SXF_NOCHECKPOSITION)
 		E16D L 4 
 		E16D M -1 A_QueueCorpse
 		Stop
@@ -1042,41 +1042,41 @@ Actor BastetBurn : GenericHumanBurn1
 		TNT1 A 0 A_JumpIfInventory("Counter",5,"ScreamandDecide")
 		E16W A 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
-//		TNT1 A 0 A_SpawnItemEx("BurnMiniFlame",random(20,-20),random(20,-20),random(30,50),0,0,frandom(1.0,3.0),0,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+//		TNT1 A 0 A_SpawnItemEx("BurnMiniFlame",random(20,-20),random(20,-20),random(30,50),0,0,frandom(1.0,3.0),0,SXF_NOCHECKPOSITION)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16W A 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16W B 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16W B 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16W C 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16W C 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16W D 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16W D 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16W E 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16W E 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16W F 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16W F 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		TNT1 A 0 A_GiveInventory("Counter",1)
 		Goto Spawn+2
 
@@ -1088,63 +1088,63 @@ Actor BastetBurn : GenericHumanBurn1
 	Burn1Fallen:
 		E16D A 2 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D A 2 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D B 2 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D B 2 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 
 		E16D C 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D D 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D E 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D F 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D G 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D H 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 
 		TNT1 A 0 A_Jump(90,"Burn1End")
 		E16D C 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D D 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D E 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D F 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D G 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D H 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		Goto Burn1Fallen+16	//was 12
 	Burn1End:
 		E16D I 3 
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(10,-10),random(10,-10),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(10,-10),random(10,-10),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D J 3 
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(10,-10),random(10,-10),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(10,-10),random(10,-10),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D K 3 Bright 
-		TNT1 A 0 A_SpawnItemEx("BurnSmoke",random(10,-10),random(10,-10),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmoke",random(10,-10),random(10,-10),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D L 4 
 		E16D M -1 A_QueueCorpse
 		Stop
@@ -1171,70 +1171,70 @@ Actor GenericHumanoidBurn : GenericHumanBurn
 	Spawn:
 		TNT1 A 0
 		TNT1 A 0 A_Jump(160,"Burn2")
-		TNT1 A 0 A_SpawnItemEx("GenericHumanBurn1",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("GenericHumanBurn1",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		Stop
 	Burn2:
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN A 3 Bright
 		TNT1 A 0 A_Explode(8,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN B 3 Bright
 		TNT1 A 0 A_Explode(8,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN C 3 Bright
 		TNT1 A 0 A_Explode(7,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN D 3 Bright
 		TNT1 A 0 A_Explode(7,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN E 3 Bright
 		TNT1 A 0 A_Explode(7,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN F 3 Bright
 		TNT1 A 0 A_Explode(7,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN G 3 Bright
 		TNT1 A 0 A_Explode(7,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN H 3 Bright
 		TNT1 A 0 A_Explode(7,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN I 3 Bright
 		TNT1 A 0 A_Explode(7,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN J 3 Bright
 		TNT1 A 0 A_Explode(7,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN K 3 Bright
 		TNT1 A 0 A_Explode(7,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN L 3 Bright
 		TNT1 A 0 A_Explode(7,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN M 3 Bright
 		TNT1 A 0 A_Explode(6,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN N 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(20,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(20,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN O 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(20,45),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(20,45),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN P 3 Bright
 		TNT1 A 0 A_Explode(4,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(20,45),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(20,45),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN Q 3 Bright
 		TNT1 A 0 A_Explode(3,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(10,35),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(10,35),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN R 3 Bright
 		TNT1 A 0 A_Explode(3,32)
-		TNT1 A 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(10,35),0,0,frandom(0.5,3.0),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(10,35),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN S 3 Bright
 		TNT1 A 0 A_Explode(2,32)
-		TNT1 A 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(10,35),0,0,frandom(0.5,3.0),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(10,35),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN T 3 BrighT
 		TNT1 A 0 A_Explode(2,32)
-		TNT1 A 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(10,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(10,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		BURN U 3 BrighT
 		TNT1 A 0 A_Explode(2,32)
 
@@ -1265,41 +1265,41 @@ Actor SpycrabBurn : GenericHumanBurn1
 		TNT1 A 0 A_JumpIfInventory("Counter",5,"ScreamandDecide")
 		E16W A 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
-//		TNT1 A 0 A_SpawnItemEx("BurnMiniFlame",random(20,-20),random(20,-20),random(30,50),0,0,frandom(1.0,3.0),0,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+//		TNT1 A 0 A_SpawnItemEx("BurnMiniFlame",random(20,-20),random(20,-20),random(30,50),0,0,frandom(1.0,3.0),0,SXF_NOCHECKPOSITION)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16W A 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16W B 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16W B 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16W C 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16W C 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16W D 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16W D 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16W E 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16W E 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16W F 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16W F 2 Bright A_Wander
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		TNT1 A 0 A_GiveInventory("Counter",1)
 		Goto Spawn+2
 
@@ -1311,63 +1311,63 @@ Actor SpycrabBurn : GenericHumanBurn1
 	Burn1Fallen:
 		E16D A 2 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D A 2 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D B 2 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D B 2 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(20,-20),random(20,-20),random(45,55),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 
 		E16D C 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D D 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D E 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D F 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D G 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D H 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 
 		TNT1 A 0 A_Jump(90,"Burn1End")
 		E16D C 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D D 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D E 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D F 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D G 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D H 3 Bright
 		TNT1 A 0 A_Explode(5,32)
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(15,-15),random(15,-15),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		Goto Burn1Fallen+16	//was 12
 	Burn1End:
 		E16D I 3 
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(10,-10),random(10,-10),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(10,-10),random(10,-10),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D J 3 
-		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(10,-10),random(10,-10),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 AA 0 A_SpawnItemEx("BurnSmoke",random(10,-10),random(10,-10),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D K 3 Bright 
-		TNT1 A 0 A_SpawnItemEx("BurnSmoke",random(10,-10),random(10,-10),random(20,25),0,0,frandom(0.5,3.0),0,32)
+		TNT1 A 0 A_SpawnItemEx("BurnSmoke",random(10,-10),random(10,-10),random(20,25),0,0,frandom(0.5,3.0),0,SXF_NOCHECKPOSITION)
 		E16D L 4 
 		E16D M -1 A_QueueCorpse
 		Stop
@@ -1403,7 +1403,7 @@ Actor NewMeat replaces Meat
 		TNT1 A 0 Thing_ChangeTID(0,0)
 		MEAT ABCDEFGHIJLKMNOPQRST 0 A_JumpIf(random(1,20) == 1,"Play")
 	Play:
-		"####" "##" 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,1|SXF_USEBLOODCOLOR)
+		"####" "##" 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR)
 		"####" "#" 0 A_CheckFloor("md1")
 		"####" "#" 0 A_SetUserVar(user_time,user_time+1)
 		"####" "#" 0 A_JumpIf(user_time < 87,"Play")
@@ -1437,11 +1437,11 @@ Actor GreenGib
 	Spawn:
 		TNT1 A 0
 		TNT1 A 0 A_CheckSight("Spawn2")
-		TNT1 AA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),1,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),SXF_TRANSFERTRANSLATION,0,tid)
 		TNT1 A 1
 		Stop
 	Spawn2:
-		TNT1 A 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),1,0,tid)
+		TNT1 A 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),SXF_TRANSFERTRANSLATION,0,tid)
 		TNT1 A 1
 		Stop
 	}
@@ -1455,16 +1455,16 @@ Actor GreenGibSp : GreenGib
 	Spawn:
 		TNT1 A 0
 		TNT1 A 0 A_CheckSight("Spawn2")
-		TNT1 AAAAAAAAAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),1,0,tid)
-		TNT1 AA 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
-		TNT1 AA 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
+		TNT1 AAAAAAAAAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),SXF_TRANSFERTRANSLATION,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),SXF_TRANSFERTRANSLATION,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),SXF_TRANSFERTRANSLATION,0,tid)
 		TNT1 A 1
 		Stop
 	Spawn2:
 		TNT1 A 0
-		TNT1 AAAA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),1,0,tid)
-		TNT1 A 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
-		TNT1 A 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
+		TNT1 AAAA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),SXF_TRANSFERTRANSLATION,0,tid)
+		TNT1 A 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),SXF_TRANSFERTRANSLATION,0,tid)
+		TNT1 A 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),SXF_TRANSFERTRANSLATION,0,tid)
 		TNT1 A 1
 		Stop
 	}
@@ -1485,7 +1485,7 @@ Actor BlueGib
 	Spawn:
 		TNT1 A 0
 		TNT1 A 0 A_CheckSight("Spawn2")
-		TNT1 AA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),1,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),SXF_TRANSFERTRANSLATION,0,tid)
 		TNT1 A 1
 		Stop
 	Spawn2:
@@ -1503,16 +1503,16 @@ Actor BlueGibSp : BlueGib
 	Spawn:
 		TNT1 A 0
 		TNT1 A 0 A_CheckSight("Spawn2")
-		TNT1 AAAAAAAAAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),1,0,tid)
-		TNT1 AA 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
-		TNT1 AA 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
+		TNT1 AAAAAAAAAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),SXF_TRANSFERTRANSLATION,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),SXF_TRANSFERTRANSLATION,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),SXF_TRANSFERTRANSLATION,0,tid)
 		TNT1 A 1
 		Stop
 	Spawn2:
 		TNT1 A 0
-		TNT1 AAAA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),1,0,tid)
-		TNT1 A 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
-		TNT1 A 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
+		TNT1 AAAA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),SXF_TRANSFERTRANSLATION,0,tid)
+		TNT1 A 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),SXF_TRANSFERTRANSLATION,0,tid)
+		TNT1 A 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),SXF_TRANSFERTRANSLATION,0,tid)
 		TNT1 A 1
 		Stop
 	}
@@ -1534,7 +1534,7 @@ Actor OrangeGib
 	Spawn:
 		TNT1 A 0
 		TNT1 A 0 A_CheckSight("Spawn2")
-		TNT1 A 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),1,0,tid)
+		TNT1 A 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),SXF_TRANSFERTRANSLATION,0,tid)
 		TNT1 A 0 A_TossGib
 		TNT1 A 1
 		Stop
@@ -1553,18 +1553,18 @@ Actor OrangeGibSp : GreenGib
 	Spawn:
 		TNT1 A 0
 		TNT1 A 0 A_CheckSight("Spawn2")
-		TNT1 AAAAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),1,0,tid)
+		TNT1 AAAAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),SXF_TRANSFERTRANSLATION,0,tid)
 		TNT1 AAAAA 0 A_TossGib
-		TNT1 AA 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
-		TNT1 AA 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),SXF_TRANSFERTRANSLATION,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),SXF_TRANSFERTRANSLATION,0,tid)
 		TNT1 A 1
 		Stop
 	Spawn2:
 		TNT1 A 0
-		TNT1 AA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),1,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),SXF_TRANSFERTRANSLATION,0,tid)
 		TMT1 AA 0 A_TossGib
-		TNT1 A 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
-		TNT1 A 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
+		TNT1 A 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),SXF_TRANSFERTRANSLATION,0,tid)
+		TNT1 A 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),SXF_TRANSFERTRANSLATION,0,tid)
 		TNT1 A 1
 		Stop
 	}
@@ -1586,7 +1586,7 @@ Actor GrayGib
 	Spawn:
 		TNT1 A 0
 		TNT1 A 0 A_CheckSight("Spawn2")
-		TNT1 AA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),1,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),SXF_TRANSFERTRANSLATION,0,tid)
 		TNT1 A 1
 		Stop
 	Spawn2:
@@ -1604,17 +1604,17 @@ Actor GrayGibSp : BlueGib
 	Spawn:
 		TNT1 A 0
 		TNT1 A 0 A_CheckSight("Spawn2")
-		TNT1 AAAAAAAAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),1,0,tid)
-		TNT1 AAAA 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
-		TNT1 AA 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
+		TNT1 AAAAAAAAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),SXF_TRANSFERTRANSLATION,0,tid)
+		TNT1 AAAA 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),SXF_TRANSFERTRANSLATION,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),SXF_TRANSFERTRANSLATION,0,tid)
 		TNT1 A 1
 		Stop
 	Spawn2:
 		TNT1 A 0
-		TNT1 AA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),1,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),SXF_TRANSFERTRANSLATION,0,tid)
 		TMT1 AA 0 A_TossGib
-		TNT1 A 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
-		TNT1 A 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
+		TNT1 A 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),SXF_TRANSFERTRANSLATION,0,tid)
+		TNT1 A 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),SXF_TRANSFERTRANSLATION,0,tid)
 		TNT1 A 1
 		Stop
 	}
@@ -1635,7 +1635,7 @@ Actor PurpleGib
 	Spawn:
 		TNT1 A 0
 		TNT1 A 0 A_CheckSight("Spawn2")
-		TNT1 A 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),1,0,tid)
+		TNT1 A 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),SXF_TRANSFERTRANSLATION,0,tid)
 		TNT1 A 0 A_TossGib
 		TNT1 A 1
 		Stop
@@ -1654,20 +1654,20 @@ Actor PurpleGibSp : GreenGib
 	Spawn:
 		TNT1 A 0
 		TNT1 A 0 A_CheckSight("Spawn2")
-		TNT1 AAAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),1,0,tid)
+		TNT1 AAAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),SXF_TRANSFERTRANSLATION,0,tid)
 		TNT1 AAAAAAAA 0 A_TossGib
-		TNT1 A 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
-		TNT1 A 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
-		TNT1 A 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),32,0,tid)
-		TNT1 A 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),32,0,tid)
+		TNT1 A 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),SXF_TRANSFERTRANSLATION,0,tid)
+		TNT1 A 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),SXF_TRANSFERTRANSLATION,0,tid)
+		TNT1 A 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),SXF_NOCHECKPOSITION,0,tid)
+		TNT1 A 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),SXF_NOCHECKPOSITION,0,tid)
 		TNT1 A 1
 		Stop
 	Spawn2:
 		TNT1 A 0
-		TNT1 AA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),1,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),SXF_TRANSFERTRANSLATION,0,tid)
 		TMT1 AA 0 A_TossGib
-		TNT1 A 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
-		TNT1 A 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
+		TNT1 A 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),SXF_TRANSFERTRANSLATION,0,tid)
+		TNT1 A 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),SXF_TRANSFERTRANSLATION,0,tid)
 		TNT1 A 1
 		Stop
 	}
@@ -1692,31 +1692,31 @@ Actor SmallGibDropper
 	Spawn:
 		TNT1 A 0 A_CheckSight("Simple")
 		TNT1 A 0 A_Jump(180,"Drop2","Drop3","Drop4")
-		TNT1 A 0 A_SpawnItemEx("HGib1Small",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 A 0 A_SpawnItemEx("HGib2Small",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 A 0 A_SpawnItemEx("HGib3Small",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("HGib1Small",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("HGib2Small",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("HGib3Small",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
 		TNT1 A 1
 		Stop
 	Drop2:
-		TNT1 A 0 A_SpawnItemEx("HGib1SmallMirr",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 A 0 A_SpawnItemEx("HGib2SmallMirr",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 A 0 A_SpawnItemEx("HGib3SmallMirr",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("HGib1SmallMirr",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("HGib2SmallMirr",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("HGib3SmallMirr",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
 		TNT1 A 1
 		Stop
 	Drop3:
-		TNT1 A 0 A_SpawnItemEx("HGib1Small",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 A 0 A_SpawnItemEx("HGib2SmallMirr",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 A 0 A_SpawnItemEx("HGib3Small",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("HGib1Small",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("HGib2SmallMirr",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("HGib3Small",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
 		TNT1 A 1
 		Stop
 	Drop4:
-		TNT1 A 0 A_SpawnItemEx("HGib1SmallMirr",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 A 0 A_SpawnItemEx("HGib2Small",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 A 0 A_SpawnItemEx("HGib3SmallMirr",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("HGib1SmallMirr",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("HGib2Small",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("HGib3SmallMirr",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
 		TNT1 A 1
 		Stop
 	Simple:
-		TNT1 A 0 A_SpawnItemEx("HGib1Small",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("HGib1Small",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
 		Stop
 	}
 }
@@ -1738,7 +1738,7 @@ Actor HGib1Small
 		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
 		TNT1 A 0 Thing_ChangeTID(0,0)
 		TNT1 A 1 ThrustThingZ(0,random(10,60),0,1)
-		GIB7 AABBCCDDEEFFGGHHIIJJKKLLMM 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
+		GIB7 AABBCCDDEEFFGGHHIIJJKKLLMM 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR)
 		Goto Death
 	Death:
 		GIB7 M 350 A_JumpIf(user_t != 0,1) //Skip the duration.
@@ -1757,7 +1757,7 @@ Actor HGib1SmallMirr : HGib1Small
 		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
 		TNT1 A 0 Thing_ChangeTID(0,0)
 		TNT1 A 1 ThrustThingZ(0,random(10,60),0,1)
-		GIB7 NNOOPPQQRRSSTTUUVVWWXXYYZZ 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
+		GIB7 NNOOPPQQRRSSTTUUVVWWXXYYZZ 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR)
 		Goto Death
 	Death:
 		GIB7 Z 360 A_JumpIf(user_t != 0,1)
@@ -1775,7 +1775,7 @@ Actor HGib2Small : HGib1Small
 		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
 		TNT1 A 0 Thing_ChangeTID(0,0)
 		TNT1 A 1 ThrustThingZ(0,random(10,60),0,1)
-		GIB8 AABBCCDDEEFFGGHHIIJJKKLLMM 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
+		GIB8 AABBCCDDEEFFGGHHIIJJKKLLMM 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR)
 		Goto Death
 	Death:
 		GIB8 M 340 A_JumpIf(user_t != 0,1)
@@ -1793,7 +1793,7 @@ Actor HGib2SmallMirr : HGib1Small
 		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
 		TNT1 A 0 Thing_ChangeTID(0,0)
 		TNT1 A 1 ThrustThingZ(0,random(10,60),0,1)
-		GIB8 NNOOPPQQRRSSTTUUVVWWXXYYZZ 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
+		GIB8 NNOOPPQQRRSSTTUUVVWWXXYYZZ 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR)
 		Goto Death
 	Death:
 		GIB8 Z 350 A_JumpIf(user_t != 0,1)
@@ -1811,7 +1811,7 @@ Actor HGib3Small : HGib1Small
 		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
 		TNT1 A 0 Thing_ChangeTID(0,0)
 		TNT1 A 1 ThrustThingZ(0,random(10,60),0,1)
-		GIB9 AABBCCDDEEFFGGHHIIJJKKLL 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
+		GIB9 AABBCCDDEEFFGGHHIIJJKKLL 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR)
 		Goto Death
 	Death:
 		GIB9 L 360 A_JumpIf(user_t != 0,1)
@@ -1829,7 +1829,7 @@ Actor HGib3SmallMirr : HGib1Small
 		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
 		TNT1 A 0 Thing_ChangeTID(0,0)
 		TNT1 A 1 ThrustThingZ(0,random(10,60),0,1)
-		GIB8 NNOOPPQQRRSSTTUUVVWWXXYYZZ 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
+		GIB8 NNOOPPQQRRSSTTUUVVWWXXYYZZ 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR)
 		Goto Death
 	Death:
 		GIB9 Z 350 A_JumpIf(user_t != 0,1)
@@ -1852,31 +1852,31 @@ Actor GibDropper
 		TNT1 A 0
 		TNT1 A 0 A_CheckSight("Simple")
 		TNT1 A 0 A_Jump(180,"Drop2","Drop3","Drop4")
-		TNT1 A 0 A_SpawnItemEx("HGib1",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 A 0 A_SpawnItemEx("HGib2",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 A 0 A_SpawnItemEx("HGib3",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("HGib1",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("HGib2",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("HGib3",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
 		TNT1 A 1
 		Stop
 	Drop2:
-		TNT1 A 0 A_SpawnItemEx("HGib1Mirr",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 A 0 A_SpawnItemEx("HGib2Mirr",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 A 0 A_SpawnItemEx("HGib3Mirr",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("HGib1Mirr",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("HGib2Mirr",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("HGib3Mirr",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
 		TNT1 A 1
 		Stop
 	Drop3:
-		TNT1 A 0 A_SpawnItemEx("HGib1",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 A 0 A_SpawnItemEx("HGib2Mirr",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 A 0 A_SpawnItemEx("HGib3",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("HGib1",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("HGib2Mirr",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("HGib3",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
 		TNT1 A 1
 		Stop
 	Drop4:
-		TNT1 A 0 A_SpawnItemEx("HGib1Mirr",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 A 0 A_SpawnItemEx("HGib2",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 A 0 A_SpawnItemEx("HGib3Mirr",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("HGib1Mirr",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("HGib2",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("HGib3Mirr",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
 		TNT1 A 1
 		Stop
 	Simple:
-		TNT1 A 0 A_SpawnItemEx("HGib1Small",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("HGib1Small",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
 		Stop
 	}
 }
@@ -1898,7 +1898,7 @@ Actor HGib1
 		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
 		TNT1 A 0 Thing_ChangeTID(0,0)
 		TNT1 A 1 ThrustThingZ(0,random(10,50),0,1)
-		GIB7 AABBCCDDEEFFGGHHIIJJKKLLMM 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
+		GIB7 AABBCCDDEEFFGGHHIIJJKKLLMM 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR)
 		Goto Death
 	Death:
 		GIB7 M 340 A_JumpIf(user_t != 0,1)
@@ -1915,7 +1915,7 @@ Actor HGib1Mirr : HGib1
 		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
 		TNT1 A 0 Thing_ChangeTID(0,0)
 		TNT1 A 1 ThrustThingZ(0,random(10,50),0,1)
-		GIB7 NNOOPPQQRRSSTTUUVVWWXXYYZZ 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
+		GIB7 NNOOPPQQRRSSTTUUVVWWXXYYZZ 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR)
 		Goto Death
 	Death:
 		GIB7 Z 330 A_JumpIf(user_t != 0,1)
@@ -1933,7 +1933,7 @@ Actor HGib2 : HGib1
 		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
 		TNT1 A 0 Thing_ChangeTID(0,0)
 		TNT1 A 1 ThrustThingZ(0,random(10,50),0,1)
-		GIB8 AABBCCDDEEFFGGHHIIJJKKLLMM 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
+		GIB8 AABBCCDDEEFFGGHHIIJJKKLLMM 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR)
 		Goto Death
 	Death:
 		GIB8 M 320 A_JumpIf(user_t != 0,1)
@@ -1952,7 +1952,7 @@ Actor HGib2Mirr : HGib1
 		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
 		TNT1 A 0 Thing_ChangeTID(0,0)
 		TNT1 A 1 ThrustThingZ(0,random(10,50),0,1)
-		GIB8 NNOOPPQQRRSSTTUUVVWWXXYYZZ 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
+		GIB8 NNOOPPQQRRSSTTUUVVWWXXYYZZ 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR)
 		Goto Death
 	Death:
 		GIB8 Z 350 A_JumpIf(user_t != 0,1)
@@ -1970,7 +1970,7 @@ Actor HGib3 : HGib1
 		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
 		TNT1 A 0 Thing_ChangeTID(0,0)
 		TNT1 A 1 ThrustThingZ(0,random(10,50),0,1)
-		GIB9 AABBCCDDEEFFGGHHIIJJKKLL 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
+		GIB9 AABBCCDDEEFFGGHHIIJJKKLL 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR)
 		Goto Death
 	Death:
 		GIB9 L 370 A_JumpIf(user_t != 0,1)
@@ -1988,7 +1988,7 @@ Actor HGib3Mirr : HGib1
 		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
 		TNT1 A 0 Thing_ChangeTID(0,0)
 		TNT1 A 1 ThrustThingZ(0,random(10,50),0,1)
-		GIB9 MMNNOOPPQQRRSSTTUUVVWWXX 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
+		GIB9 MMNNOOPPQQRRSSTTUUVVWWXX 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR)
 		Goto Death
 	Death:
 		GIB9 X 355 A_JumpIf(user_t != 0,1)
@@ -2021,31 +2021,31 @@ Actor QuakeGibDropper
 		TNT1 A 0
 		TNT1 A 0 A_CheckSight("Simple")
 		TNT1 AAA 0 A_Jump(180,"Drop2","Drop3","Drop4")
-		TNT1 AAA 0 A_SpawnItemEx("Gib1",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 A 0 A_SpawnItemEx("Gib2",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 A 0 A_SpawnItemEx("GibTorso",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 AAA 0 A_SpawnItemEx("Gib1",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("Gib2",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("GibTorso",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
 		TNT1 A 1
 		Stop
 	Drop2:
-		TNT1 AAA 0 A_SpawnItemEx("Gib1",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 AA 0 A_SpawnItemEx("Gib2",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 A 0 A_SpawnItemEx("GibTorso",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 AAA 0 A_SpawnItemEx("Gib1",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("Gib2",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("GibTorso",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
 		TNT1 A 1
 		Stop
 	Drop3:
-		TNT1 AA 0 A_SpawnItemEx("Gib1",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 AAA 0 A_SpawnItemEx("Gib2",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 A 0 A_SpawnItemEx("GibTorso",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("Gib1",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 AAA 0 A_SpawnItemEx("Gib2",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("GibTorso",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
 		TNT1 A 1
 		Stop
 	Drop4:
-		TNT1 AA 0 A_SpawnItemEx("Gib1",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 AA 0 A_SpawnItemEx("Gib2",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 A 0 A_SpawnItemEx("GibTorso",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("Gib1",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("Gib2",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("GibTorso",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
 		TNT1 A 1
 		Stop
 	Simple:
-		TNT1 A 0 A_SpawnItemEx("Gib1",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("Gib1",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
 		Stop
 	}
 }
@@ -2070,7 +2070,7 @@ Actor Gib1
 		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
 		TNT1 A 0 Thing_ChangeTID(0,0)
 		TNT1 A 1 ThrustThingZ(0,random(10,60),0,1)
-		Q99B BBCCDDEEFFGGHHIIJJKKLLMMNN 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
+		Q99B BBCCDDEEFFGGHHIIJJKKLLMMNN 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR)
 		Goto Death
 	Death:
 		Q99B N 350 A_JumpIf(user_t != 0,1)
@@ -2089,7 +2089,7 @@ Actor GibTorso : Gib1
 		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
 		TNT1 A 0 Thing_ChangeTID(0,0)
 		TNT1 A 1 ThrustThingZ(0,random(10,50),0,1)
-		Q99C AABBCCDDEEFF 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
+		Q99C AABBCCDDEEFF 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR)
 		Goto Death
 	Death:
 		Q99C F 380 A_JumpIf(user_t > 0,1)
@@ -2108,7 +2108,7 @@ Actor Gib2 : Gib1
 		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
 		TNT1 A 0 Thing_ChangeTID(0,0)
 		TNT1 A 1 ThrustThingZ(0,random(10,60),0,1)
-		Q99D AABBCCDDEE 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
+		Q99D AABBCCDDEE 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR)
 		Goto Death
 	Death:
 		Q99D F 366 A_JumpIf(user_t > 0,1)
@@ -2130,33 +2130,33 @@ Actor QuakeSmallGibDropper
 	Spawn:
 		TNT1 A 0 NoDelay A_CheckSight("Simple")
 		TNT1 AAA 0 A_Jump(180,"Drop2","Drop3","Drop4")
-		TNT1 AAA 0 A_SpawnItemEx("SmallGib1",0,0,0,random(-8,8),0,0,random(0,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 A 0 A_SpawnItemEx("SmallGib2",0,0,0,random(-8,8),0,0,random(0,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 A 0 A_SpawnItemEx("SmallGibTorso",0,0,0,random(-8,8),0,0,random(0,359),1|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 AAA 0 A_SpawnItemEx("SmallGib1",0,0,0,random(-8,8),0,0,random(0,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("SmallGib2",0,0,0,random(-8,8),0,0,random(0,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("SmallGibTorso",0,0,0,random(-8,8),0,0,random(0,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
 		TNT1 A 1
 		Stop
 	Drop2:
-		TNT1 AAA 0 A_SpawnItemEx("SmallGib1",0,0,0,random(-8,8),0,0,random(0,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 AA 0 A_SpawnItemEx("SmallGib2",0,0,0,random(-8,8),0,0,random(0,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 A 0 A_SpawnItemEx("SmallGibTorso",0,0,0,random(-8,8),0,0,random(0,359),1|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 AAA 0 A_SpawnItemEx("SmallGib1",0,0,0,random(-8,8),0,0,random(0,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("SmallGib2",0,0,0,random(-8,8),0,0,random(0,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("SmallGibTorso",0,0,0,random(-8,8),0,0,random(0,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
 		TNT1 A 1
 		Stop
 	Drop3:
-		TNT1 AA 0 A_SpawnItemEx("SmallGib1",0,0,0,random(-8,8),0,0,random(0,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 AAA 0 A_SpawnItemEx("SmallGib2",0,0,0,random(-8,8),0,0,random(0,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 A 0 A_SpawnItemEx("SmallGibTorso",0,0,0,random(-8,8),0,0,random(0,359),1|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("SmallGib1",0,0,0,random(-8,8),0,0,random(0,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 AAA 0 A_SpawnItemEx("SmallGib2",0,0,0,random(-8,8),0,0,random(0,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("SmallGibTorso",0,0,0,random(-8,8),0,0,random(0,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
 		TNT1 A 1
 		Stop
 	Drop4:
-		TNT1 AA 0 A_SpawnItemEx("SmallGib1",0,0,0,random(-8,8),0,0,random(0,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 AA 0 A_SpawnItemEx("SmallGib2",0,0,0,random(-8,8),0,0,random(0,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 A 0 A_SpawnItemEx("SmallGibTorso",0,0,0,random(-8,8),0,0,random(0,359),1|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("SmallGib1",0,0,0,random(-8,8),0,0,random(0,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("SmallGib2",0,0,0,random(-8,8),0,0,random(0,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("SmallGibTorso",0,0,0,random(-8,8),0,0,random(0,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
 		TNT1 A 1
 		Stop
 		Stop
 
 	Simple:
-		TNT1 A 0 A_SpawnItemEx("Gib1",0,0,0,random(-8,8),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("Gib1",0,0,0,random(-8,8),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
 		Stop
 	}
 }
@@ -2172,7 +2172,7 @@ Actor SmallGib1 : Gib1
 		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
 		TNT1 A 0 Thing_ChangeTID(0,0)
 		TNT1 A 1 ThrustThingZ(0,random(10,60),0,1)
-		Q99B BBCCDDEEFFGGHHIIJJKKLLMMNN 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR,128)
+		Q99B BBCCDDEEFFGGHHIIJJKKLLMMNN 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,128)
 		Goto Death
 	Death:
 		Q99B N 350 A_JumpIf(user_t > 0,1)
@@ -2191,7 +2191,7 @@ Actor SmallGibTorso : SmallGib1
 		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
 		TNT1 A 0 Thing_ChangeTID(0,0)
 		TNT1 A 1 ThrustThingZ(0,random(10,50),0,1)
-		Q99C AABBCCDDEEFF 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR,128)
+		Q99C AABBCCDDEEFF 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,128)
 		Goto Death
 	Death:
 		Q99C F 380 A_JumpIf(user_t > 0,1)
@@ -2211,7 +2211,7 @@ Actor SmallGib2 : SmallGib1
 		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
 		TNT1 A 0 Thing_ChangeTID(0,0)
 		TNT1 A 1 ThrustThingZ(0,random(10,60),0,1)
-		Q99D AABBCCDDEE 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,1|SXF_USEBLOODCOLOR)
+		Q99D AABBCCDDEE 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR)
 		Goto Death
 	Death:
 		Q99D F 366 A_JumpIf(user_t > 0,1)
@@ -2242,43 +2242,43 @@ Actor BloodGibDropper
 		TNT1 A 0
 		TNT1 A 0 A_CheckSight("Simple")
 		TNT1 A 0 A_Jump(180,"Drop2","Drop3","Drop4")
-		TNT1 AAAAAAAAAAAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,0,random(-7,7),random(-7,7),random(1,14),random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 AA 0 A_SpawnItemEx("BloodGib1",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 AA 0 A_SpawnItemEx("BloodGib2",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 AAA 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 A 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 AAAAAAAAAAAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,0,random(-7,7),random(-7,7),random(1,14),random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib1",0,0,0,random(-5,5),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib2",0,0,0,random(-5,5),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 AAA 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-5,5),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-5,5),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
 		TNT1 A 1
 		Stop
 	Drop2:
-		TNT1 AAAAAAAAAAAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,0,random(-7,7),random(-7,7),random(1,14),random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 AA 0 A_SpawnItemEx("BloodGib1",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 AA 0 A_SpawnItemEx("BloodGib2",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 AA 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 AA 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 AAAAAAAAAAAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,0,random(-7,7),random(-7,7),random(1,14),random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib1",0,0,0,random(-5,5),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib2",0,0,0,random(-5,5),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-5,5),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-5,5),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
 		TNT1 A 1
 		Stop
 	Drop3:
-		TNT1 AAAAAAAAAAAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,0,random(-7,7),random(-7,7),random(1,14),random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 A 0 A_SpawnItemEx("BloodGib1",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 AA 0 A_SpawnItemEx("BloodGib2",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 AAA 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 AA 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 AAAAAAAAAAAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,0,random(-7,7),random(-7,7),random(1,14),random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("BloodGib1",0,0,0,random(-5,5),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib2",0,0,0,random(-5,5),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 AAA 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-5,5),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-5,5),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
 		TNT1 A 1
 		Stop
 	Drop4:
-		TNT1 AAAAAAAAAAAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,0,random(-7,7),random(-7,7),random(1,14),random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 AA 0 A_SpawnItemEx("BloodGib1",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 A 0 A_SpawnItemEx("BloodGib2",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 AA 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 AAA 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 AAAAAAAAAAAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,0,random(-7,7),random(-7,7),random(1,14),random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib1",0,0,0,random(-5,5),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("BloodGib2",0,0,0,random(-5,5),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-5,5),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 AAA 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-5,5),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
 		TNT1 A 1
 		Stop
 	Simple:
-		TNT1 AAAA 0 A_SpawnItemEx("NewMeat",0,0,0,random(-7,7),random(-7,7),random(1,14),random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 A 0 A_SpawnItemEx("BloodGib1",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 A 0 A_SpawnItemEx("BloodGib2",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 A 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
-		TNT1 A 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-5,5),0,0,random(1,359),1|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 AAAA 0 A_SpawnItemEx("NewMeat",0,0,0,random(-7,7),random(-7,7),random(1,14),random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("BloodGib1",0,0,0,random(-5,5),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("BloodGib2",0,0,0,random(-5,5),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-5,5),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
+		TNT1 A 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-5,5),0,0,random(1,359),SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,tid)
 		TNT1 A 1
 		Stop
 	}
@@ -2300,8 +2300,8 @@ Actor BloodGib1
 		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
 		TNT1 A 0 Thing_ChangeTID(0,0)
 		ANYG AAAA 1 ThrustThingZ(0,random(3,20),0,1)
-		ANYG BBCCDD 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,1|SXF_USEBLOODCOLOR)
-		ANYG AABBCCDD 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,1|SXF_USEBLOODCOLOR)
+		ANYG BBCCDD 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR)
+		ANYG AABBCCDD 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR)
 		Goto Spawn+11
 	Death:
 		ANYG E 450 A_JumpIf(user_t != 0,1)
@@ -2320,8 +2320,8 @@ Actor BloodGib2 : BloodGib1		//eye
 		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
 		TNT1 A 0 Thing_ChangeTID(0,0)
 		ANYG FFFF 1 ThrustThingZ(0,random(3,20),0,1)
-		ANYG GGHHII 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,1|SXF_USEBLOODCOLOR)
-		ANYG FFGGHHII 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,1|SXF_USEBLOODCOLOR)
+		ANYG GGHHII 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR)
+		ANYG FFGGHHII 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR)
 		Goto Spawn+11
 	Crash:
 		ANYG J 560 A_JumpIf(user_t != 0,1)
@@ -2340,8 +2340,8 @@ Actor BloodGib3 : BloodGib1		//liver
 		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
 		TNT1 A 0 Thing_ChangeTID(0,0)
 		ANYG KKKK 1 ThrustThingZ(0,random(3,20),0,1)
-		ANYG LLMMNN 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,1|SXF_USEBLOODCOLOR)
-		ANYG KKLLMMNN 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,1|SXF_USEBLOODCOLOR)
+		ANYG LLMMNN 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR)
+		ANYG KKLLMMNN 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR)
 		Goto Spawn+11
 	Crash:
 		ANYG O 400 A_JumpIf(user_t != 0,1)
@@ -2360,8 +2360,8 @@ Actor BloodGib4 : BloodGib1		//bloodthing
 		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
 		TNT1 A 0 Thing_ChangeTID(0,0)
 		ANYG PPPP 1 ThrustThingZ(0,random(3,20),0,1)
-		ANYG QQRRSS 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,1|SXF_USEBLOODCOLOR)
-		ANYG PPQQRRSS 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,1|SXF_USEBLOODCOLOR)
+		ANYG QQRRSS 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR)
+		ANYG PPQQRRSS 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR)
 		Goto Spawn+11
 	Crash:
 		ANYG T 500 A_JumpIf(user_t != 0,1)
@@ -2600,7 +2600,7 @@ Actor FBeggar 8001
 		TNT1 A 0 A_Jump(256,"XDeathBlood")
 		GIBS M 5 A_XScream
 		GIBS N 5 A_NoBlocking
-		TNT1 AAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,0,random(-7,7),random(-7,7),random(1,16),random(1,359),1)
+		TNT1 AAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,0,random(-7,7),random(-7,7),random(1,16),random(1,359),SXF_TRANSFERTRANSLATION)
 		GIBS OP 5 
 		GIBS Q 5
 		GIBS RSTU 5 
@@ -2608,12 +2608,12 @@ Actor FBeggar 8001
 		Stop
 	XDeathBlood:
 		TNT1 A 0 A_PlaySound("other/gibdeath")
-		TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR)
 		TNT1 A 1 A_Fall
 		Stop
 	Burn:
 		TNT1 A 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("GenericHumanBurn",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("GenericHumanBurn",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		Stop
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
@@ -2623,8 +2623,8 @@ Actor FBeggar 8001
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 		TNT1 A 0 A_Stop	
 		TNT1 A 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
 		BEGR A 2 A_FadeOut(0.03)
 		Goto Disintegrate+6
 	}
@@ -2717,12 +2717,12 @@ Actor FPeasant 8002
 		Stop
 	XDeathBlood:
 		TNT1 A 0 A_PlaySound("other/gibdeath")
-		TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR)
 		TNT1 A 1 A_Fall
 		Stop
 	Burn:
 		TNT1 A 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("GenericHumanBurn",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("GenericHumanBurn",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		Stop
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
@@ -2732,8 +2732,8 @@ Actor FPeasant 8002
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 		TNT1 A 0 A_Stop	
 		TNT1 A 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
 		PEAS O 2 A_FadeOut(0.03)
 		Goto Disintegrate+6
 	}
@@ -2879,23 +2879,23 @@ Actor Spycrab 8003
 		TNT1 A 0 A_JumpIfInventory("DeadRinger",1,"DeadRinger")
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 AAAAAA 0 A_TossGib
-		TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR)
 		TNT1 A 0 A_Fall
 		Stop
 	DeadRinger:
-		TNT1 A 0 A_SpawnItemEx("DRSpycrab",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DRSpycrab",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 AAAAAA 0 A_TossGib
-		TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR)
 		Stop
 	Burn:
 		TNT1 A 0 A_JumpIfInventory("DeadRinger",1,"DRBurn")
 		TNT1 A 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("SpycrabBurn",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("SpycrabBurn",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		Stop
 	DRBurn:
-		TNT1 A 0 A_SpawnItemEx("DRSpycrab",0,0,0,0,0,0,0,32,0)
-		TNT1 A 0 A_SpawnItemEx("SpycrabBurn",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DRSpycrab",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
+		TNT1 A 0 A_SpawnItemEx("SpycrabBurn",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		Stop
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
@@ -2907,20 +2907,20 @@ Actor Spycrab 8003
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 		TNT1 A 0 A_Stop	
 		TNT1 A 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
 		SPYC HH 2 A_FadeOut(0.03)
 		Goto Disintegrate+8
 	DRDisintegrate:
-		TNT1 A 0 A_SpawnItemEx("DRSpycrab",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DRSpycrab",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		TNT1 A 0 A_SetTranslucent(1.0,0)
 		TNT1 A 0 Thing_SetTranslation(0,50)	
 		SPYC H 1 A_FadeOut(0.015)
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 		TNT1 A 0 A_Stop	
 		TNT1 A 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
 		SPYC HH 2 A_FadeOut(0.03)
 		Goto DRDisintegrate+8
 	}
@@ -2999,7 +2999,7 @@ Actor DRSpycrab
 	Death:
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 AAAAAA 0 A_TossGib
-		TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR)
 		TNT1 A 1 A_Fall
 		Stop
 	Pain:
@@ -3007,7 +3007,7 @@ Actor DRSpycrab
 		Goto See
 	Burn:
 		TNT1 A 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("SpycrabBurn",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("SpycrabBurn",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		Stop
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
@@ -3018,8 +3018,8 @@ Actor DRSpycrab
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 		TNT1 A 0 A_Stop	
 		TNT1 A 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
 		SPYC HH 2 A_FadeOut(0.03)
 		Goto Disintegrate+7
 	}
@@ -3073,12 +3073,12 @@ Actor BVictim
 		Stop
 	XDeath:
 		TNT1 A 0 A_PlaySound("other/gibdeath")
-		TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,1|SXF_USEBLOODCOLOR)
+		TNT1 A 0 A_SpawnItemEx("BloodGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR)
 		TNT1 A 1 A_Fall
 		Stop
 	Burn:
 		TNT1 A 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("GenericHumanBurn1",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("GenericHumanBurn1",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		Stop
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
@@ -3088,8 +3088,8 @@ Actor BVictim
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 		TNT1 A 0 A_Stop	
 		TNT1 A 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
 		LOON I 2 A_FadeOut(0.03)
 		Goto Disintegrate+6
 	}
@@ -3236,7 +3236,7 @@ Actor DisintegrateSparksSmall
 			(sin(-(user_p*0.1))*(user_vel*0.01)),random(0,359),32|SXF_TRANSFERSCALE)
 		TNT1 A 0 A_SetUserVar("user_count",user_count+1)
 		TNT1 A 0 A_JumpIf(user_count <= 2,"Act")
-		//TNT1 AA 2 A_SpawnItemEx("DisintegrateSparkSmall",random(0,7),0,random(-7,7),frandom(2.0,-2.0),frandom(2.0,-2.0),frandom(0.7,-0.7),random(15,-15),32)
+		//TNT1 AA 2 A_SpawnItemEx("DisintegrateSparkSmall",random(0,7),0,random(-7,7),frandom(2.0,-2.0),frandom(2.0,-2.0),frandom(0.7,-0.7),random(15,-15),SXF_NOCHECKPOSITION)
 		Stop
 	End:
 		TNT1 A 0
@@ -3268,7 +3268,7 @@ Actor DisintegrateSparksSmallMedium
 			(sin(-(user_p*0.1))*(user_vel*0.01)),random(0,359),32|SXF_TRANSFERSCALE)
 		TNT1 A 0 A_SetUserVar("user_count",user_count+1)
 		TNT1 A 0 A_JumpIf(user_count <= 2,"Act")
-		//TNT1 AA 2 A_SpawnItemEx("DisintegrateSpark",random(10,-10),random(10,-10),random(10,-10),frandom(2.5,-2.5),frandom(2.5,-2.5),frandom(0.7,-0.7),random(15,-15),32)
+		//TNT1 AA 2 A_SpawnItemEx("DisintegrateSpark",random(10,-10),random(10,-10),random(10,-10),frandom(2.5,-2.5),frandom(2.5,-2.5),frandom(0.7,-0.7),random(15,-15),SXF_NOCHECKPOSITION)
 		Stop
 	End:
 		TNT1 A 0
@@ -3299,7 +3299,7 @@ Actor DisintegrateSparksMedium
 			(sin(-(user_p*0.1))*(user_vel*0.01)),random(0,359),32|SXF_TRANSFERSCALE)
 		TNT1 A 0 A_SetUserVar("user_count",user_count+1)
 		TNT1 A 0 A_JumpIf(user_count <= 3,"Act")
-		//TNT1 AAA 2 A_SpawnItemEx("DisintegrateSpark",random(12,-12),random(12,-12),random(12,-12),frandom(3.0,-3.0),frandom(3.0,-3.0),frandom(0.7,-0.7),random(15,-15),32)
+		//TNT1 AAA 2 A_SpawnItemEx("DisintegrateSpark",random(12,-12),random(12,-12),random(12,-12),frandom(3.0,-3.0),frandom(3.0,-3.0),frandom(0.7,-0.7),random(15,-15),SXF_NOCHECKPOSITION)
 		Stop
 	End:
 		TNT1 A 0
@@ -3330,7 +3330,7 @@ Actor DisintegrateSparksMediumBig
 			(sin(-(user_p*0.1))*(user_vel*0.01)),random(0,359),32|SXF_TRANSFERSCALE)
 		TNT1 A 0 A_SetUserVar("user_count",user_count+1)
 		TNT1 A 0 A_JumpIf(user_count <= 3,"Act")
-		//TNT1 AAA 2 A_SpawnItemEx("DisintegrateSpark",random(22,-22),random(22,-22),random(22,-22),frandom(4.5,-4.5),frandom(4.5,-4.5),frandom(0.99,-0.99),random(15,-15),32)
+		//TNT1 AAA 2 A_SpawnItemEx("DisintegrateSpark",random(22,-22),random(22,-22),random(22,-22),frandom(4.5,-4.5),frandom(4.5,-4.5),frandom(0.99,-0.99),random(15,-15),SXF_NOCHECKPOSITION)
 		Stop
 	End:
 		TNT1 A 0
@@ -3362,7 +3362,7 @@ Actor DisintegrateSparksBig
 			(sin(-(user_p*0.1))*(user_vel*0.01)),random(0,359),32|SXF_TRANSFERSCALE)
 		TNT1 A 0 A_SetUserVar("user_count",user_count+1)
 		TNT1 A 0 A_JumpIf(user_count <= 4,"Act")
-		//TNT1 AAAA 2 A_SpawnItemEx("DisintegrateSparkBig",random(40,-40),random(40,-40),random(40,-40),frandom(6.5,-6.5),frandom(6.5,-6.5),frandom(1.5,-1.5),random(15,-15),32)
+		//TNT1 AAAA 2 A_SpawnItemEx("DisintegrateSparkBig",random(40,-40),random(40,-40),random(40,-40),frandom(6.5,-6.5),frandom(6.5,-6.5),frandom(1.5,-1.5),random(15,-15),SXF_NOCHECKPOSITION)
 		Stop
 	End:
 		TNT1 A 0
@@ -3386,7 +3386,7 @@ Actor DisintegrateShadowVerySmall
 		VORT ABCDEFGHI 2 Bright A_FadeOut(0.01)
 		TNT1 A 0 A_PlaySound("hl2/weapons/disintegrate",CHAN_WEAPON)
 		VORT JKLMN 2 Bright A_FadeOut(0.01)
-		TNT1 AAAA 0 A_SpawnItemEx("DisintegrateSparksVerySmall",0,0,0,0,0,0,0,32)
+		TNT1 AAAA 0 A_SpawnItemEx("DisintegrateSparksVerySmall",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		VORT OOPQRSTUVW 2 Bright A_FadeOut(0.01)
 		VORT XXYY 1 Bright A_FadeOut
 		Wait
@@ -3404,7 +3404,7 @@ Actor DisintegrateShadowSmall : DisintegrateShadowVerySmall
 		VORT ABCDEFGHI 2 Bright A_FadeOut(0.01)
 		TNT1 A 0 A_PlaySound("hl2/weapons/disintegrate",CHAN_WEAPON)
 		VORT JKLMN 2 Bright A_FadeOut(0.01)
-		TNT1 AAAAAA 0 A_SpawnItemEx("DisintegrateSparkSmall",0,0,0,0,0,0,0,32,0,2)
+		TNT1 AAAAAA 0 A_SpawnItemEx("DisintegrateSparkSmall",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0,2)
 		VORT OOPQRSTUVW 2 Bright A_FadeOut(0.01)
 		VORT XXYY 1 Bright A_FadeOut
 		Wait
@@ -3422,7 +3422,7 @@ Actor DisintegrateShadowSmallMedium : DisintegrateShadowVerySmall
 		VORT ABCDEFGHI 2 Bright A_FadeOut(0.01)
 		TNT1 A 0 A_PlaySound("hl2/weapons/disintegrate",CHAN_WEAPON)
 		VORT JKLMN 2 Bright A_FadeOut(0.01)
-		TNT1 AAAAAA 0 A_SpawnItemEx("DisintegrateSparksSmallMedium",0,0,0,0,0,0,0,32,0,2)
+		TNT1 AAAAAA 0 A_SpawnItemEx("DisintegrateSparksSmallMedium",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0,2)
 		VORT OOPQRSTUVW 2 Bright A_FadeOut(0.01)
 		VORT XXYY 1 Bright A_FadeOut
 		Wait
@@ -3439,7 +3439,7 @@ Actor DisintegrateShadowMedium : DisintegrateShadowVerySmall
 		VORT ABCDEFGHI 2 Bright A_FadeOut(0.01)
 		TNT1 A 0 A_PlaySound("hl2/weapons/disintegrate",CHAN_WEAPON)
 		VORT JKLMN 2 Bright A_FadeOut(0.01)
-		TNT1 AAAAAAAA 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,0,0,0,0,0,32,0,3)
+		TNT1 AAAAAAAA 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0,3)
 		VORT OOPQRSTUVW  2 Bright A_FadeOut(0.01)
 		VORT XXYY 1 Bright A_FadeOut
 		Wait
@@ -3457,7 +3457,7 @@ Actor DisintegrateShadowMediumBig : DisintegrateShadowVerySmall
 		VORT ABCDEFGHI 2 Bright A_FadeOut(0.01)
 		TNT1 A 0 A_PlaySound("hl2/weapons/disintegrate",CHAN_WEAPON)
 		VORT JKLMN 2 Bright A_FadeOut(0.01)
-		TNT1 AAAAAAAA 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,0,0,0,0,0,32,0,3)
+		TNT1 AAAAAAAA 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0,3)
 		VORT OOPQRSTUVW 2 Bright A_FadeOut(0.01)
 		VORT XXYY 1 Bright A_FadeOut
 		Wait
@@ -3475,7 +3475,7 @@ Actor DisintegrateShadowBig : DisintegrateShadowMedium
 		VORT ABCDEFGHI 2 Bright A_FadeOut(0.01)
 		TNT1 A 0 A_PlaySound("hl2/weapons/disintegrate",CHAN_WEAPON)
 		VORT JKLMN 2 Bright A_FadeOut(0.01)
-		TNT1 AAAAAAAAAAAAAAA 0 A_SpawnItemEx("DisintegrateSparksBig",0,0,0,0,0,0,0,32,0,4)
+		TNT1 AAAAAAAAAAAAAAA 0 A_SpawnItemEx("DisintegrateSparksBig",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0,4)
 		VORT OOPQRSTUVW 2 Bright A_FadeOut(0.01)
 		VORT XXYY 1 Bright A_FadeOut
 		Wait
@@ -3523,7 +3523,7 @@ Actor CaveSaysHi : CustomInventory
 		PLAY A -1 Bright
 		Stop
 	Use:
-		TNT1 A 0 A_SpawnItemEx("PlayCaveSaysHi",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("PlayCaveSaysHi",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		Stop
 	}
 }
@@ -3551,7 +3551,7 @@ Actor CaveSaySomething : CustomInventory
 	{
 	Use:
 		TNT1 A 0 A_Jump(128,"Nothing")
-		TNT1 A 0 A_SpawnItemEx("PlayCaveSays",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("PlayCaveSays",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		Stop
 	Nothing:
 		TNT1 A 0
@@ -3571,10 +3571,10 @@ Actor CaveSaySomethingHalfTheTimes : CustomInventory
 		Stop
 	Use:
 		TNT1 A 0 A_Jump(200,"Nothing")
-		TNT1 A 0 A_SpawnItemEx("PlayCaveSays",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("PlayCaveSays",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		Stop
 	Nothing:
-		TNT1 A 0 A_SpawnItemEx("Dummy2",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("Dummy2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		Stop
 	}
 }
@@ -3617,7 +3617,7 @@ States
 		PLAY A -1 Bright
 		Stop
 	Use:
-		TNT1 A 0 A_SpawnItemEx("PlayCaveIsPissed",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("PlayCaveIsPissed",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		Stop
 	}
 }
@@ -3669,8 +3669,8 @@ Actor DummyMonster
 		TNT1 A 0 A_SetShootable
 		TNT1 A 0 A_Die
 	Death:
-		TNT1 A 0 A_SpawnItemEx("L4DSmallMobRunner",0,0,0,0,0,0,random(0,359),32,210)
-		TNT1 A 0 A_SpawnItemEx("L4DMediumMobRunner",0,0,0,0,0,0,random(0,359),32,250)
+		TNT1 A 0 A_SpawnItemEx("L4DSmallMobRunner",0,0,0,0,0,0,random(0,359),SXF_NOCHECKPOSITION,210)
+		TNT1 A 0 A_SpawnItemEx("L4DMediumMobRunner",0,0,0,0,0,0,random(0,359),SXF_NOCHECKPOSITION,250)
 		TNT1 A 10 A_Fall
 		Stop	
 	}
@@ -3684,9 +3684,9 @@ Actor DummyMonsterBoss : DummyMonster
 	States
 	{
 	Death:
-		TNT1 A 0 A_SpawnItemEx("L4DSmallMobRunner",0,0,0,0,0,0,random(0,359),32,190)
-		TNT1 A 0 A_SpawnItemEx("L4DMediumMobRunner",0,0,0,0,0,0,random(0,359),32,230)
-		TNT1 A 0 A_SpawnItemEx("L4DLargeMobRunner",0,0,0,0,0,0,0,random(0,359),32,250)
+		TNT1 A 0 A_SpawnItemEx("L4DSmallMobRunner",0,0,0,0,0,0,random(0,359),SXF_NOCHECKPOSITION,190)
+		TNT1 A 0 A_SpawnItemEx("L4DMediumMobRunner",0,0,0,0,0,0,random(0,359),SXF_NOCHECKPOSITION,230)
+		TNT1 A 0 A_SpawnItemEx("L4DLargeMobRunner",0,0,0,0,0,0,0,random(0,359),SXF_NOCHECKPOSITION,250)
 		TNT1 A 1 A_Fall
 		TNT1 A 10 A_KillMaster
 		Stop
@@ -3766,15 +3766,15 @@ Actor L4DCountToggler : CustomInventory
 		TNT1 A 0 A_JumpIfInventory("L4DCountHudToken",1,"SwitchOff",AAPTR_PLAYER1)
 		TNT1 A 0 A_GiveInventory("L4DCountHudToken",1,AAPTR_PLAYER1)
 		TNT1 A 0 ACS_NamedExecute("L4DCountHudSwitcher",0,0)
-		TNT1 A 0 A_SpawnItemEx("L4DHudAnnouncer",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("L4DHudAnnouncer",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		Stop
 	SwitchOff:
 		TNT1 A 0 ACS_NamedExecute("L4DCountHudSwitcher",0,0)
 		TNT1 A 0 A_TakeInventory("L4DCountHudToken",9999,0,AAPTR_PLAYER1)
-		TNT1 A 0 A_SpawnItemEx("L4DHudAnnouncer",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("L4DHudAnnouncer",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		Stop
 	NotApplicable:
-		TNT1 A 0 A_SpawnItemEx("L4DHudAnnouncer",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("L4DHudAnnouncer",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		Stop
 	}
 }

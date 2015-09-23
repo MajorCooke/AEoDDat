@@ -238,7 +238,7 @@ Actor PsychLightning : FastProjectile
 		TNT1 A 1 
 		Loop
 	Death:
-		TNT1 AAAAA 0 A_SpawnItemEx("PsychLightningSpark",0,0,0,frandom(0.6,2.5),0,frandom(1.5,-1.5),random(0,359),32,64)
+		TNT1 AAAAA 0 A_SpawnItemEx("PsychLightningSpark",0,0,0,frandom(0.6,2.5),0,frandom(1.5,-1.5),random(0,359),SXF_NOCHECKPOSITION,64)
 		ZAP1 A 2 Bright
 		ZAP1 ABCD 2 Bright
 		ZAP1 E 2 Bright A_SetTranslucent(0.40, 1)
@@ -250,7 +250,7 @@ Actor PsychLightning : FastProjectile
 	XDeath:
 		TNT1 A 0 A_SetUserVar("user_angle",0)
 	Splitter:
-		TESL E 0 A_SpawnItemEx("TeslaTracer1",0,0,0,100,0,0,user_angle,48)
+		TESL E 0 A_SpawnItemEx("TeslaTracer1",0,0,0,100,0,0,user_angle,SXF_NOCHECKPOSITION|SXF_SETMASTER)
 		TNT1 A 0 A_SetUserVar("user_angle",user_angle+20)
 		TNT1 A 0 A_JumpIf(user_angle>=360,1)
 		Loop
@@ -323,11 +323,11 @@ Actor TeslaTracer1 : FastProjectile
 		TESL E 0 A_PlaySound("psychic/thunder2")
 		TNT1 A 0 A_SetUserVar("user_angle",0)
 	Splitter:
-		TESL E 0 A_SpawnItemEx("TeslaTracer2",0,0,0,100,0,0,user_angle,48)
+		TESL E 0 A_SpawnItemEx("TeslaTracer2",0,0,0,100,0,0,user_angle,SXF_NOCHECKPOSITION|SXF_SETMASTER)
 		TNT1 A 0 A_SetUserVar("user_angle",user_angle+20)
 		TNT1 A 0 A_JumpIf(user_angle>=360,1)
 		Loop
-		TNT1 AA 0 A_SpawnItemEx("PsychLightningSpark",0,0,0,frandom(0.3,2.0),0,frandom(1.5,-1.5),random(0,359),32,64)
+		TNT1 AA 0 A_SpawnItemEx("PsychLightningSpark",0,0,0,frandom(0.3,2.0),0,frandom(1.5,-1.5),random(0,359),SXF_NOCHECKPOSITION,64)
 		ZAP1 ABCD 2 Bright
 		ZAP1 E 2 Bright A_SetTranslucent(0.40, 1)
 		ZAP1 F 2 Bright A_SetTranslucent(0.55, 1)
@@ -349,7 +349,7 @@ Actor TeslaTracer2 : TeslaTracer1
 		TESL E 0 A_PlaySound("psychic/thunder3")
 		TNT1 A 0 A_SetUserVar("user_angle",0)
 	Splitter:
-		TESL E 0 A_SpawnItemEx("TeslaTracer3",0,0,0,100,0,0,user_angle,48)
+		TESL E 0 A_SpawnItemEx("TeslaTracer3",0,0,0,100,0,0,user_angle,SXF_NOCHECKPOSITION|SXF_SETMASTER)
 		TNT1 A 0 A_SetUserVar("user_angle",user_angle+20)
 		TNT1 A 0 A_JumpIf(user_angle>=360,1)
 		Loop
@@ -366,7 +366,7 @@ Actor TeslaTracer3 : TeslaTracer1
 	States
 	{
 	XDeath:
-		TNT1 AA 0 A_SpawnItemEx("PsychLightningSpark",0,0,0,frandom(0.3,2.0),0,frandom(1.5,-1.5),random(0,359),32,64)
+		TNT1 AA 0 A_SpawnItemEx("PsychLightningSpark",0,0,0,frandom(0.3,2.0),0,frandom(1.5,-1.5),random(0,359),SXF_NOCHECKPOSITION,64)
 		TESL E 0 A_PlaySound("psychic/thunder2")
 		ZAP1 A 2 Bright A_SetTranslucent(0.6, 1)
 		ZAP1 B 2 Bright A_SetTranslucent(0.5, 1)
@@ -386,7 +386,7 @@ Actor ShellShockerDrop : CustomInventory
 	{
 	Use:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DroppedShellShocker",0,0,32,8,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DroppedShellShocker",0,0,32,8,0,0,0,SXF_NOCHECKPOSITION,0)
 		Stop
 	}
 }
@@ -399,7 +399,7 @@ Actor DroppedShellShocker
 	{
 	Spawn:
 		SHOP A 15
-		TNT1 A 0 A_SpawnItemEx("AEoDShellShockerNoAmmo",0,0,0,0,0,0,0,48,0)
+		TNT1 A 0 A_SpawnItemEx("AEoDShellShockerNoAmmo",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER,0)
 		Stop
 	}
 }
@@ -586,7 +586,7 @@ Actor DesertEagleDrop : CustomInventory
 	{
 	Use:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DroppedDesertEagle",0,0,32,8,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DroppedDesertEagle",0,0,32,8,0,0,0,SXF_NOCHECKPOSITION,0)
 		Stop
 	}
 }
@@ -600,7 +600,7 @@ Actor DroppedDesertEagle
 	{
 	Spawn:
 		DEAG K 15
-		TNT1 A 0 A_SpawnItemEx("AEoDDesertEagleNoAmmo",0,0,0,0,0,0,0,48,0)
+		TNT1 A 0 A_SpawnItemEx("AEoDDesertEagleNoAmmo",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER,0)
 		Stop
 	}
 }
@@ -762,7 +762,7 @@ Actor GoldenColtsDrop : CustomInventory
 	{
 	Use:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DroppedGoldenColts",0,0,32,8,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DroppedGoldenColts",0,0,32,8,0,0,0,SXF_NOCHECKPOSITION,0)
 		Stop
 	}
 }
@@ -776,7 +776,7 @@ Actor DroppedGoldenColts
 	{
 	Spawn:
 		GCLT Q 15
-		TNT1 A 0 A_SpawnItemEx("AEoDGoldenColtsNoAmmo",0,0,0,0,0,0,0,48,0)
+		TNT1 A 0 A_SpawnItemEx("AEoDGoldenColtsNoAmmo",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER,0)
 		Stop
 	}
 }
@@ -1099,7 +1099,7 @@ Actor Mac10Drop : CustomInventory
 	{
 	Use:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DroppedMac10",0,0,32,8,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DroppedMac10",0,0,32,8,0,0,0,SXF_NOCHECKPOSITION,0)
 		TNT1 A 0 A_TakeInventory("AEoDMac10Count",1)
 		Stop
 	}
@@ -1113,7 +1113,7 @@ Actor DroppedMac10
 	{
 	Spawn:
 		USMG B 15
-		TNT1 A 0 A_SpawnItemEx("AEoDMac10NoAmmo",0,0,0,0,0,0,0,48,0)
+		TNT1 A 0 A_SpawnItemEx("AEoDMac10NoAmmo",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER,0)
 		Stop
 	}
 }
@@ -1297,7 +1297,7 @@ Actor SPASShotgunDrop : CustomInventory
 	{
 	Use:
 	   TNT1 A 0
-	   TNT1 A 0 A_SpawnItemEx("DroppedSPASShotgun",0,0,32,8,0,0,0,32,0)
+	   TNT1 A 0 A_SpawnItemEx("DroppedSPASShotgun",0,0,32,8,0,0,0,SXF_NOCHECKPOSITION,0)
 	   Stop
 	}
 }
@@ -1311,7 +1311,7 @@ Actor DroppedSPASShotgun
 	{
 	Spawn:
 		3SGH A 15
-		TNT1 A 0 A_SpawnItemEx("AEoDSPASShotgunNoAmmo",0,0,0,0,0,0,0,48,0)
+		TNT1 A 0 A_SpawnItemEx("AEoDSPASShotgunNoAmmo",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER,0)
 		Stop
 	}
 }
@@ -1508,7 +1508,7 @@ Actor MP5Drop : CustomInventory
 	{
 	Use:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DroppedMP5",0,0,32,8,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DroppedMP5",0,0,32,8,0,0,0,SXF_NOCHECKPOSITION,0)
 		Stop
 	}
 }
@@ -1522,7 +1522,7 @@ Actor DroppedMP5
 	{
 	Spawn:
 		USMG A 15
-		TNT1 A 0 A_SpawnItemEx("AEoDMP5NoAmmo",0,0,0,0,0,0,0,48,0)
+		TNT1 A 0 A_SpawnItemEx("AEoDMP5NoAmmo",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER,0)
 		Stop
 	}
 }
@@ -1761,7 +1761,7 @@ Actor TekBowArrow2Trail2
 	{
 	Spawn:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("ShuricaneSpark",0,0,0,frandom(2.0,-2.0),frandom(2.0,-2.0),frandom(2.0,-2.0),0,32,210)
+		TNT1 A 0 A_SpawnItemEx("ShuricaneSpark",0,0,0,frandom(2.0,-2.0),frandom(2.0,-2.0),frandom(2.0,-2.0),0,SXF_NOCHECKPOSITION,210)
 		FX04 D 1 Bright A_FadeOut(0.09)
 		Wait
 	}
@@ -1792,7 +1792,7 @@ Actor TekbowArrow2 : FastProjectile
 		Loop
 	Death:
 		R012 U 2
-		TNT1 A 0 A_SpawnItemEx("BulletPuff",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("BulletPuff",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		R012 U 2
 		Stop
 	}
@@ -1820,7 +1820,7 @@ Actor TekbowDrop : CustomInventory
 	Use:
 		TNT1 A 0
 		TNT1 A 0 A_StopSound(6)
-		TNT1 A 0 A_SpawnItemEx("DroppedTekbow",0,0,32,8,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DroppedTekbow",0,0,32,8,0,0,0,SXF_NOCHECKPOSITION,0)
 		Stop
 	}
 }
@@ -1833,7 +1833,7 @@ Actor DroppedTekbow
 	{
 	Spawn:
 		R012 V 15
-		TNT1 A 0 A_SpawnItemEx("AEoDTekbowNoAmmo",0,0,0,0,0,0,0,48,0)
+		TNT1 A 0 A_SpawnItemEx("AEoDTekbowNoAmmo",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER,0)
 		Stop
 	}
 }
@@ -1972,7 +1972,7 @@ Actor AEoDFlareGun : Weapon // 6114
 	{ 
 	Spawn: 
 		FLGN A 0
-		FLGN A 0 A_SpawnItemEx("AEoDFlareGunPickup",0,0,0,0,0,0,0,32,0)
+		FLGN A 0 A_SpawnItemEx("AEoDFlareGunPickup",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		Stop
 	Ready:
 		TNT1 A 0 A_TakeInventory("FlareGunDropCheck",1)
@@ -2032,7 +2032,7 @@ Actor AEoDFlareGun : Weapon // 6114
 		TNT1 A 0 A_JumpIfInventory("AEoDFlareGunCount",2,"AltFire2")
 		FLGN C 3
 		FLGN D 0 Bright A_PlayWeaponSound("caleb/flare")
-		FLGN D 0 Bright A_SpawnItemEx("FlareGunShotAltPlayer",0,8,(height-20),cos(-pitch)*28,0,sin(-pitch)*28,0,32|SXF_TRANSFERPITCH)
+		FLGN D 0 Bright A_SpawnItemEx("FlareGunShotAltPlayer",0,8,(height-20),cos(-pitch)*28,0,sin(-pitch)*28,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH)
 		FLGN D 0 Bright A_FireCustomMissile("PrototypeAmmoWaster",0,1,0,2)
 		FLGN D 3 A_GunFlash
 		FLGN E 3 Bright
@@ -2041,13 +2041,13 @@ Actor AEoDFlareGun : Weapon // 6114
 	AltFire2:
 		FLGN L 2
 		FLGN M 0 Bright A_PlayWeaponSound("caleb/flare")
-		FLGN M 0 Bright A_SpawnItemEx("FlareGunShotAltPlayer",0,8,(height-20),cos(-pitch)*28,0,sin(-pitch)*28,0,32|SXF_TRANSFERPITCH)
+		FLGN M 0 Bright A_SpawnItemEx("FlareGunShotAltPlayer",0,8,(height-20),cos(-pitch)*28,0,sin(-pitch)*28,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH)
 		FLGN M 0 Bright A_FireCustomMissile("PrototypeAmmoWaster",0,1,0,0)
 		FLGN M 3 Bright A_GunFlash
 		FLGN N 2 Bright
 		FLGN O 2
 		FLGN P 0 Bright A_PlayWeaponSound("caleb/flare")
-		FLGN M 0 Bright A_SpawnItemEx("FlareGunShotAltPlayer",0,-8,(height-20),cos(-pitch)*28,0,sin(-pitch)*28,0,32|SXF_TRANSFERPITCH)
+		FLGN M 0 Bright A_SpawnItemEx("FlareGunShotAltPlayer",0,-8,(height-20),cos(-pitch)*28,0,sin(-pitch)*28,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH)
 		FLGN P 0 Bright A_FireCustomMissile("PrototypeAmmoWaster",0,1,0,0)
 		FLGN P 3 Bright
 		FLGN Q 2 Bright
@@ -2093,18 +2093,18 @@ Actor FlareGunShotAltPlayer
 	Spawn:
 		TNT1 AAA 0 A_SpawnItemEx("Q2RocketExtra",0,0,0,1,0,random(-1,3),random(1,360))
 		FLAR I 3 Bright
-		TNT1 A 0 A_SpawnItemEx("FlareGunShot2",0,0,0,cos(-pitch)*28,2.8,(sin(-pitch)*28),0,32|SXF_TRANSFERPITCH)
-		TNT1 A 0 A_SpawnItemEx("FlareGunShot2",0,0,0,cos(-pitch)*28,-2.8,(sin(-pitch)*28),0,32|SXF_TRANSFERPITCH)
-		TNT1 A 0 A_SpawnItemEx("FlareGunShot2",0,0,0,cos(-pitch)*28,0,(sin(-pitch)*(28)+2.8),0,32|SXF_TRANSFERPITCH)
-		TNT1 A 0 A_SpawnItemEx("FlareGunShot2",0,0,0,cos(-pitch)*28,0,(sin(-pitch)*(28)-2.8),0,32|SXF_TRANSFERPITCH)
-		TNT1 A 0 A_SpawnItemEx("FlareGunShot2",0,0,0,cos(-pitch)*28,1,(sin(-pitch)*(28)+1),0,32|SXF_TRANSFERPITCH)
-		TNT1 A 0 A_SpawnItemEx("FlareGunShot2",0,0,0,cos(-pitch)*28,1,(sin(-pitch)*(28)-1),0,32|SXF_TRANSFERPITCH)
-		TNT1 A 0 A_SpawnItemEx("FlareGunShot2",0,0,0,cos(-pitch)*28,-1,(sin(-pitch)*(28)+1),0,32|SXF_TRANSFERPITCH)
-		TNT1 A 0 A_SpawnItemEx("FlareGunShot2",0,0,0,cos(-pitch)*28,-1,(sin(-pitch)*(28)-1),0,32|SXF_TRANSFERPITCH)
+		TNT1 A 0 A_SpawnItemEx("FlareGunShot2",0,0,0,cos(-pitch)*28,2.8,(sin(-pitch)*28),0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH)
+		TNT1 A 0 A_SpawnItemEx("FlareGunShot2",0,0,0,cos(-pitch)*28,-2.8,(sin(-pitch)*28),0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH)
+		TNT1 A 0 A_SpawnItemEx("FlareGunShot2",0,0,0,cos(-pitch)*28,0,(sin(-pitch)*(28)+2.8),0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH)
+		TNT1 A 0 A_SpawnItemEx("FlareGunShot2",0,0,0,cos(-pitch)*28,0,(sin(-pitch)*(28)-2.8),0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH)
+		TNT1 A 0 A_SpawnItemEx("FlareGunShot2",0,0,0,cos(-pitch)*28,1,(sin(-pitch)*(28)+1),0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH)
+		TNT1 A 0 A_SpawnItemEx("FlareGunShot2",0,0,0,cos(-pitch)*28,1,(sin(-pitch)*(28)-1),0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH)
+		TNT1 A 0 A_SpawnItemEx("FlareGunShot2",0,0,0,cos(-pitch)*28,-1,(sin(-pitch)*(28)+1),0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH)
+		TNT1 A 0 A_SpawnItemEx("FlareGunShot2",0,0,0,cos(-pitch)*28,-1,(sin(-pitch)*(28)-1),0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH)
 		Stop
 	Death:
 		TNT1 A 0 Bright A_Explode(320,60,0)
-		TNT1 A 1 Bright A_SpawnItemEx("FlareExplosionAlt",0,0,0,0,0,0,0,32)
+		TNT1 A 1 Bright A_SpawnItemEx("FlareExplosionAlt",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		Stop
 	}
 }
@@ -2141,7 +2141,7 @@ Actor FlareGunDrop : CustomInventory
 	{
 	Use:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DroppedFlareGun",0,0,32,8,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DroppedFlareGun",0,0,32,8,0,0,0,SXF_NOCHECKPOSITION,0)
 		TNT1 A 0 A_TakeInventory("AEoDFlareGunCount",1)
 		Stop
 	}
@@ -2156,7 +2156,7 @@ Actor DroppedFlareGun
 	{
 	Spawn:
 		FLGN A 15
-		TNT1 A 0 A_SpawnItemEx("AEoDFlareGunNoAmmo",0,0,0,0,0,0,0,48,0)
+		TNT1 A 0 A_SpawnItemEx("AEoDFlareGunNoAmmo",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER,0)
 		Stop
 	}
 }
@@ -2559,7 +2559,7 @@ Actor CrossbowArrow3
 		R009 IIIJJJ 1 Bright A_SpawnItemEx("CrossbowArrow3Trail",0,random(3,-3),random(3,-3),0,0,0.8,0,0)
 		Loop
 	Death:
-		TNT1 AAAAAAAAAAAA 0 A_SpawnItemEx("RubyWandExtra",0,0,0,random(1,4),random(1,4),random(1,4),random(0,359),1)
+		TNT1 AAAAAAAAAAAA 0 A_SpawnItemEx("RubyWandExtra",0,0,0,random(1,4),random(1,4),random(1,4),random(0,359),SXF_TRANSFERTRANSLATION)
 		FRFX HIJ 2 
 		FRFX J 0 A_CustomMissile ("DropFire",0,0,0,0)	//see WepClass5.AED
 		FRFX KLM 2
@@ -2589,7 +2589,7 @@ Actor CrossbowDrop : CustomInventory
 	Use:
 		TNT1 A 0
 		TNT1 A 0 A_StopSound(6)
-		TNT1 A 0 A_SpawnItemEx("DroppedCrossbow",0,0,32,8,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DroppedCrossbow",0,0,32,8,0,0,0,SXF_NOCHECKPOSITION,0)
 		Stop
 	}
 }
@@ -2603,7 +2603,7 @@ Actor DroppedCrossbow
 	{
 	Spawn:
 		R007 L 15
-		TNT1 A 0 A_SpawnItemEx("AEoDCrossbowNoAmmo",0,0,0,0,0,0,0,48,0)
+		TNT1 A 0 A_SpawnItemEx("AEoDCrossbowNoAmmo",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER,0)
 		Stop
 	}
 }
@@ -2827,7 +2827,7 @@ Actor AssaultShotgunDrop : CustomInventory
 	{
 	Use:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DroppedAssaultShotgun",0,0,32,8,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DroppedAssaultShotgun",0,0,32,8,0,0,0,SXF_NOCHECKPOSITION,0)
 		Stop
 	}
 }
@@ -2841,7 +2841,7 @@ Actor DroppedAssaultShotgun
 	{
 	Spawn:
 		WSGN A 15
-		TNT1 A 0 A_SpawnItemEx("AEoDAssaultShotgunNoAmmo",0,0,0,0,0,0,0,48,0)
+		TNT1 A 0 A_SpawnItemEx("AEoDAssaultShotgunNoAmmo",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER,0)
 		Stop
 	}
 }
@@ -2908,7 +2908,7 @@ Actor ElfBall1
 		FSFX C 3 Bright A_SpawnItemEx("ElfBall1Extra2",0,0,0,0,1,0,0,0)
 		Goto Spawn+1
 	Death:
-		TNT1 AAAAAAA 0 A_SpawnItemEx("ElfBall1Extra",0,0,0,random(1,4),random(1,4),random(1,4),random(0,359),1)
+		TNT1 AAAAAAA 0 A_SpawnItemEx("ElfBall1Extra",0,0,0,random(1,4),random(1,4),random(1,4),random(0,359),SXF_TRANSFERTRANSLATION)
 		FSFX DEFGHIJKLM 3 bright
 		stop
 	}
@@ -3226,7 +3226,7 @@ Actor BerettaDrop : CustomInventory
 	{
 	Use:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DroppedBeretta",0,0,32,8,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DroppedBeretta",0,0,32,8,0,0,0,SXF_NOCHECKPOSITION,0)
 		TNT1 A 0 A_TakeInventory("AEoDBerettaCount",1)
 		Stop
 	}
@@ -3243,7 +3243,7 @@ Actor DroppedBeretta
 	{
 	Spawn:
 		WBER A 15
-		TNT1 A 0 A_SpawnItemEx("AEoDBerettaNoAmmo",0,0,0,0,0,0,0,48,0)
+		TNT1 A 0 A_SpawnItemEx("AEoDBerettaNoAmmo",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER,0)
 		Stop
 	}
 }
@@ -3496,7 +3496,7 @@ Actor GargoyleWandDrop : CustomInventory
 	{
 	Use:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DroppedGargoyleWand",0,0,32,8,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DroppedGargoyleWand",0,0,32,8,0,0,0,SXF_NOCHECKPOSITION,0)
 		Stop
 	}
 }
@@ -3510,7 +3510,7 @@ Actor DroppedGargoyleWand
 	{
 	Spawn:
 		R068 D 15
-		TNT1 A 0 A_SpawnItemEx("AEoDGargoyleWandNoAmmo",0,0,0,0,0,0,0,48,0)
+		TNT1 A 0 A_SpawnItemEx("AEoDGargoyleWandNoAmmo",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER,0)
 		Stop
 	}
 }
@@ -3687,11 +3687,11 @@ Actor BlasterDrunkShot
 	{
 	Spawn:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("BlasterSmallTrail",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("BlasterSmallTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		LBA2 A 1 Light("OrangeMediumFlicker3") Bright A_Weave(random(4,-4),random(4,-4),2,2)
 		Loop
 	Death:
-		TNT1 A 4 A_SpawnItemEx("Q4BlasterProjSmallExplo",0,0,0,0,0,0,0,32)
+		TNT1 A 4 A_SpawnItemEx("Q4BlasterProjSmallExplo",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		Stop
 	}
 }
@@ -3712,10 +3712,10 @@ Actor BlasterBoltRed
 	States
 	{
 	Spawn:
-		LBA2 A 2 Light("OrangeMediumFlicker3") Bright A_SpawnItemEx("HyperBlasterRedTrail",0,0,0,0,0,0,0,32)
+		LBA2 A 2 Light("OrangeMediumFlicker3") Bright A_SpawnItemEx("HyperBlasterRedTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		Wait
 	Death:
-		TNT1 A 4 A_SpawnItemEx("BlasterBoltRedExplo",0,0,0,0,0,0,0,32)
+		TNT1 A 4 A_SpawnItemEx("BlasterBoltRedExplo",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		Stop
 	}
 }
@@ -3763,7 +3763,7 @@ Actor BlasterDrop : CustomInventory
 	{
 	Use:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DroppedBlaster",0,0,32,8,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DroppedBlaster",0,0,32,8,0,0,0,SXF_NOCHECKPOSITION,0)
 		Stop
 	}
 }
@@ -3777,7 +3777,7 @@ Actor DroppedBlaster
 	{
 	Spawn:
 		R071 F 15
-		TNT1 A 0 A_SpawnItemEx("AEoDBlasterNoAmmo",0,0,0,0,0,0,0,48,0)
+		TNT1 A 0 A_SpawnItemEx("AEoDBlasterNoAmmo",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER,0)
 		Stop
 	}
 }
