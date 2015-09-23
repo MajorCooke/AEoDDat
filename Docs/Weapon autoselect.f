@@ -13,6 +13,7 @@
  7750	PK shotgun
  7777	Pulse gun
  8000	Magic Crossbow
+ 8100	Tome of set
  8250	Riotgun
  8375	Righteous Bison
  8500	Assault shotgun
