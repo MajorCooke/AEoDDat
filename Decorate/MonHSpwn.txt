@@ -5034,6 +5034,7 @@ ACTOR MourningFallen 7502	// arch-vile
         FALN I 4 A_Gravity
         FALN JKL 4 A_FaceTarget
 		"####" "#" 0 A_QueueCorpse
+		"####" "#" 0 A_ChangeFlag("FLOATBOB",0)
 		"####" "#" 0 A_ChangeFlag("CORPSE",1)
         FALN M -1
     Crash:
@@ -5317,18 +5318,20 @@ Actor ShieldDemon : Ailsower 7503	// mancubus
 	TNT1 A 1 A_Fall
 	Stop
     Death.UnholyDisint:
-    Death.PlasmaDisint:
-    Disintegrate:
-	TNT1 A 0 Thing_SetTranslation(0,50)	
-	TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
-	CEN2 E 1 A_FadeOut(0.015)
-	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-	TNT1 a 0 A_Stop	
-	TNT1 a 0 A_Fall
-	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
-	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
-	CEN2 EE 2 A_FadeOut(0.03)
-	Goto Disintegrate+7
+	Death.PlasmaDisint:
+	Disintegrate:
+		"####" "#" 0 A_GiveInventory("L4DTankScore",1,AAPTR_PLAYER1)
+		"####" "#" 0 Thing_SetTranslation(0,50)
+		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
+		"####" "#" 1 A_FadeOut(0.015)
+		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
+		"####" "#" 0 A_Stop    
+		"####" "#" 0 A_Fall
+		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,32)
+	DisintCont:
+		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,32)
+		"####" "##" 2 A_FadeOut(0.03)
+		Loop
     }
 }
 
@@ -5367,7 +5370,8 @@ Actor HSSmallShieldDemon	// demon
     PainChance 64
     Monster	+DONTCORPSE	RipLevelMin 1 
     +FLOORCLIP
-    HitObituary "%o was chewed to death by a ailsower."
+	+SHIELDREFLECT
+    HitObituary "%o was chewed up by a small shield demon."
 	PainChance "Charm", 255
 	PainChance "Terror", 255
 	PainChance "Defile", 255
@@ -5406,16 +5410,16 @@ Actor HSSmallShieldDemon	// demon
 		CEN2 ABCD 5 A_Chase
 		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDecide")
 		Loop
-    Melee:
-	  CEN2 HI 6 A_FaceTarget
-	  CEN2 J 5 A_MeleeAttack
-	  Goto See
-    Pain:
-        CEN2 G 3 A_Pain
-	  TNT1 A 0 A_SetReflectiveInvulnerable
-	  CEN2 E 50
-	  TNT1 A 0 A_UnSetReflectiveInvulnerable
-        Goto See
+	Melee:
+		CEN2 HI 6 A_FaceTarget
+		CEN2 J 5 A_MeleeAttack
+		Goto See
+	Pain:
+		CEN2 G 3 A_Pain
+		CEN2 G 0 A_SetReflectiveInvulnerable
+		CEN2 E 32
+		CEN2 E 0 A_UnSetReflectiveInvulnerable
+		Goto See
     Death:
 	  TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDeath")
         CEN2 K 4
@@ -5441,6 +5445,21 @@ Actor HSSmallShieldDemon	// demon
 	TNT1 AA 0 A_TossGib
 	TNT1 A 1 A_Fall
 	Stop
+	Death.UnholyDisint:
+	Death.PlasmaDisint:
+	Disintegrate:
+		"####" "#" 0 A_GiveInventory("L4DTankScore",1,AAPTR_PLAYER1)
+		"####" "#" 0 Thing_SetTranslation(0,50)
+		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
+		"####" "#" 1 A_FadeOut(0.015)
+		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
+		"####" "#" 0 A_Stop    
+		"####" "#" 0 A_Fall
+		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,32)
+	DisintCont:
+		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,32)
+		"####" "##" 2 A_FadeOut(0.03)
+		Loop
     Raise:
 	  CEN2 TSRQPONMLK 3
 	  Goto See
