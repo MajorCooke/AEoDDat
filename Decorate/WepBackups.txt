@@ -51,7 +51,7 @@ Actor Portal1Destination : TeleportDest3	//the actual teleporter
 		TNT1 A 0 A_TakeInventory("Portal1Token",1,0,AAPTR_MASTER)
 		Stop
 	Setup:
-		TNT1 A 0 A_SpawnItemEx("AEPortal1FXAlt",0,0,0,0,0,0,0,32|SXF_SETMASTER|SXF_ORIGINATOR|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("AEPortal1FXAlt",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER|SXF_ORIGINATOR|SXF_TRANSFERPOINTERS)
 		TNT1 A 0 Thing_Remove (21001)
 		TNT1 A 1 Thing_Remove (21003)			
 		TNT1 A 0 Thing_ChangeTID (0, 21003)	
@@ -127,7 +127,7 @@ Actor Portal2Destination : TeleportDest3
 		TNT1 A 0 A_TakeInventory("Portal2Token",1,0,AAPTR_MASTER)
 		Stop
 	Setup:
-		TNT1 A 0 A_SpawnItemEx("AEPortal2FXAlt",0,0,0,0,0,0,0,32|SXF_SETMASTER|SXF_ORIGINATOR|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("AEPortal2FXAlt",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER|SXF_ORIGINATOR|SXF_TRANSFERPOINTERS)
 		TNT1 A 0 Thing_Remove(21002)
 		TNT1 A 1 Thing_Remove(21004)
 		TNT1 A 0 Thing_ChangeTID(0, 21004)
@@ -212,7 +212,7 @@ Inventory.PickupSound "weaponbuild"
 Inventory.PickupMessage "The Mystic Tome of Set is now yours!"
 Scale 0.8
 +INVENTORY.IGNORESKILL
-+CHEATNOTWEAPON
++WEAPON.CHEATNOTWEAPON
 +FLOORCLIP
 +FLOATBOB
 States
@@ -289,9 +289,9 @@ States
 {
 Spawn:
 	TNT1 A 0
-	TNT1 AAAAAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+	TNT1 AAAAAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 	TNT1 A 0 A_CustomMissile("LightningSpellMissile",0,0,random(-8,8),6,random(-8,8))
-	TNT1 A 1 //A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+	TNT1 A 1 //A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 	Stop
 Death:
 	TNT1 AAAAAAA 0 A_SpawnItemEx("TeslaFX",0,0,0,random(6,-6),random(6,-6),random(6,-6),0,0)
@@ -316,7 +316,7 @@ Spawn:
 	TNT1 A 5
 	Goto Death
 Death:
-	TNT1 A 0 A_SpawnItemEx("LightningTarget",0,0,0,0,0,0,0,32)
+	TNT1 A 0 A_SpawnItemEx("LightningTarget",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 	TNT1 A 1
 	Stop
 }
@@ -368,12 +368,12 @@ States
 {
 Spawn:
 	TNT1 A 0
-	TNT1 AAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+	TNT1 AAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 	TNT1 A 0 A_CustomMissile("LightningMissile2",0,0,0+random(-15,15),6,0+random(-15,15))
 	Stop
 Death:
 	TNT1 AAAAAAA 0 A_SpawnItemEx("TeslaFX",0,0,0,random(6,-6),random(6,-6),random(6,-6),0,0)
-	TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+	TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 	TNT1 A 0 A_Explode(15,20,0)
 	TNT1 A 1 A_Scream
 	Stop
@@ -387,13 +387,13 @@ States
 {
 Spawn:
 	TNT1 A 0
-	TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
-	TNT1 AAAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+	TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+	TNT1 AAAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 	TNT1 A 0 A_CustomMissile("LightningMissile3",0,0,0+random(-15,15),6,0+random(-15,15))
 	Stop
 Death:
 	TNT1 AAAAAAA 0 A_SpawnItemEx("TeslaFX",0,0,0,random(6,-6),random(6,-6),random(6,-6),0,0)
-	TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+	TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 	TNT1 A 0 A_Explode(15,20,0)
 	TNT1 A 1 A_Scream
 	Stop
@@ -406,13 +406,13 @@ States
 {
 Spawn:
 	TNT1 A 0
-	TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
-	TNT1 AAAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+	TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+	TNT1 AAAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 	TNT1 A 0 A_CustomMissile("LightningMissileTargetSeeker",0,0,0+random(-15,15),6,0+random(-15,15))
 	Stop
 Death:
 	TNT1 AAAAAAA 0 A_SpawnItemEx("TeslaFX",0,0,0,random(6,-6),random(6,-6),random(6,-6),0,0)
-	TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+	TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 	TNT1 A 0 A_Explode(15,20,0)
 	TNT1 A 1 A_Scream
 	Stop
@@ -426,9 +426,9 @@ States
 {
 Spawn:
 	TNT1 A 0
-	TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+	TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 	TNT1 A 0 A_JumpIfCloser(15, "Death")
-	TNT1 AAAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+	TNT1 AAAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 	TNT1 A 0 A_SeekerMissile(90,90)
 	Loop
 Death:
@@ -526,45 +526,45 @@ States
 {
 Spawn:
 	TNT1 A 0
-	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
 	ZAP7 A 1 Bright A_SeekerMissile(90,90)
-	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
 	ZAP7 A 1 Bright 
-	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
 	ZAP7 B 1 Bright A_SeekerMissile(90,90)
-	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
 	ZAP7 B 1 Bright //A_JumpIfCloser(30,"Death")
-	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
 	ZAP7 C 1 Bright A_SeekerMissile(90,90)
-	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
 	ZAP7 C 1 Bright //A_JumpIfCloser(30,"Death")
-	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
 	ZAP7 D 1 Bright A_SeekerMissile(90,90)
-	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
 	ZAP7 D 1 Bright //A_JumpIfCloser(30,"Death")
-	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
 	ZAP7 E 1 Bright A_SeekerMissile(90,90)
-	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
 	ZAP7 E 1 Bright //A_JumpIfCloser(30,"Death")
-	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
 	ZAP7 A 1 Bright A_SeekerMissile(90,90)
-	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
 	ZAP7 A 1 Bright 
-	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
 	ZAP7 B 1 Bright A_SeekerMissile(90,90)
-	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
 	ZAP7 B 1 Bright //A_JumpIfCloser(30,"Death")
-	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
 	ZAP7 C 1 Bright A_SeekerMissile(90,90)
-	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
 	ZAP7 C 1 Bright //A_JumpIfCloser(30,"Death")
-	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
 	ZAP7 D 1 Bright A_SeekerMissile(90,90)
-	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
 	ZAP7 D 1 Bright //A_JumpIfCloser(30,"Death")
-	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
 	ZAP7 E 1 Bright A_SeekerMissile(90,90)
-	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+	TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
 	ZAP7 E 1 Bright //A_JumpIfCloser(30,"Death")
 	Goto Death
 Death:
@@ -606,11 +606,11 @@ Actor StormSpawner //: FastProjectile //Added inheritance due to speed issues...
       Goto Death
    Death:
 		TNT1 A 0 A_Stop
-		TNT1 A 10 A_SpawnItemEx("CloudSpawner1",0,0,0,0,0,0,0,48)
+		TNT1 A 10 A_SpawnItemEx("CloudSpawner1",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
 	  //TNT1 A 0 A_PlaySound("weapons/thunderstormactive")
-	  //TNT1 AA 0 A_SpawnItemEx("LightningGenerator",0,0,0,0,0,0,0,48)
+	  //TNT1 AA 0 A_SpawnItemEx("LightningGenerator",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
       Stop
-	  //TNT1 A 0 A_SpawnItemEx("CeilingStormSpawner",0,0,0,0,0,0,0,48)
+	  //TNT1 A 0 A_SpawnItemEx("CeilingStormSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
 	 // Stop
    }
 }
@@ -635,7 +635,7 @@ Spawn:
 	Loop
 	TNT1 A 0 A_SetUserVar("user_cloudspawncount",0)
 	TNT1 A 0 A_PlaySound("weapons/thunderstormactive")
-	TNT1 AA 0 A_SpawnItemEx("LightningGenerator",0,0,0,0,0,0,0,48)
+	TNT1 AA 0 A_SpawnItemEx("LightningGenerator",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
 	CloudShoot2:
 	TNT1 AAA 0 A_SpawnItemEx("Cloud1",0,0,0,3,0,0,random(0,359),SXF_NOCHECKPOSITION)
 	TNT1 A 1 A_SetUserVar("user_cloudspawncount",user_cloudspawncount+1)
@@ -723,9 +723,9 @@ States
 {
 Spawn:
         TNT1 A 0
-        TNT1 AAAAAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 AAAAAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
         TNT1 A 0 A_CustomMissile("LightningSpellMissile",0,0,random(-8,8),6,random(-8,8))
-        TNT1 A 1 //A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 A 1 //A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
         Stop
 Death:
         TNT1 AAAAAAA 0 A_SpawnItemEx("TeslaFX",0,0,0,random(6,-6),random(6,-6),random(6,-6),0,0)
@@ -750,7 +750,7 @@ Spawn:
         TNT1 A 5
         Goto Death
 Death:
-        TNT1 A 0 A_SpawnItemEx("LightningTarget",0,0,0,0,0,0,0,32)
+        TNT1 A 0 A_SpawnItemEx("LightningTarget",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
         TNT1 A 1
         Stop
 }
@@ -803,12 +803,12 @@ States
 {
 Spawn:
         TNT1 A 0
-        TNT1 AAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 AAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
         TNT1 A 0 A_CustomMissile("LightningMissile2",0,0,0+random(-15,15),6,0+random(-15,15))
         Stop
 Death:
         TNT1 AAAAAAA 0 A_SpawnItemEx("TeslaFX",0,0,0,random(6,-6),random(6,-6),random(6,-6),0,0)
-        TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
         TNT1 A 0 A_Explode(15,20,0)
         TNT1 A 1 A_Scream
         Stop
@@ -822,13 +822,13 @@ States
 {
 Spawn:
         TNT1 A 0
-        TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
-        TNT1 AAAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+        TNT1 AAAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
         TNT1 A 0 A_CustomMissile("LightningMissile3",0,0,0+random(-15,15),6,0+random(-15,15))
         Stop
 Death:
         TNT1 AAAAAAA 0 A_SpawnItemEx("TeslaFX",0,0,0,random(6,-6),random(6,-6),random(6,-6),0,0)
-        TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
         TNT1 A 0 A_Explode(15,20,0)
         TNT1 A 1 A_Scream
         Stop
@@ -841,13 +841,13 @@ States
 {
 Spawn:
         TNT1 A 0
-        TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
-        TNT1 AAAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+        TNT1 AAAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
         TNT1 A 0 A_CustomMissile("LightningMissileTargetSeeker",0,0,0+random(-15,15),6,0+random(-15,15))
         Stop
 Death:
         TNT1 AAAAAAA 0 A_SpawnItemEx("TeslaFX",0,0,0,random(6,-6),random(6,-6),random(6,-6),0,0)
-        TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
         TNT1 A 0 A_Explode(15,20,0)
         TNT1 A 1 A_Scream
         Stop
@@ -861,9 +861,9 @@ States
 {
 Spawn:
         TNT1 A 0
-        TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
         TNT1 A 0 A_JumpIfCloser(15, "Death")
-        TNT1 AAAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 AAAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
         TNT1 A 0 A_SeekerMissile(90,90)
         Loop
 Death:
@@ -909,7 +909,7 @@ Actor LightningTrail
         {
         Spawn:
                 TNT1 A 0
-                TNT1 A 0 A_SpawnItemEx("LightningTrailDistortion",0,frandom(-5,5),frandom(-5,5),0,0,0,0,32)
+                TNT1 A 0 A_SpawnItemEx("LightningTrailDistortion",0,frandom(-5,5),frandom(-5,5),0,0,0,0,SXF_NOCHECKPOSITION)
                 Stop
         }
 }
@@ -974,45 +974,45 @@ States
 {
 Spawn:
         TNT1 A 0
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 A 1 Bright A_SeekerMissile(90,90)
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 A 1 Bright
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 B 1 Bright A_SeekerMissile(90,90)
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 B 1 Bright //A_JumpIfCloser(30,"Death")
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 C 1 Bright A_SeekerMissile(90,90)
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 C 1 Bright //A_JumpIfCloser(30,"Death")
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 D 1 Bright A_SeekerMissile(90,90)
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 D 1 Bright //A_JumpIfCloser(30,"Death")
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 E 1 Bright A_SeekerMissile(90,90)
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 E 1 Bright //A_JumpIfCloser(30,"Death")
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 A 1 Bright A_SeekerMissile(90,90)
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 A 1 Bright
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 B 1 Bright A_SeekerMissile(90,90)
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 B 1 Bright //A_JumpIfCloser(30,"Death")
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 C 1 Bright A_SeekerMissile(90,90)
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 C 1 Bright //A_JumpIfCloser(30,"Death")
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 D 1 Bright A_SeekerMissile(90,90)
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 D 1 Bright //A_JumpIfCloser(30,"Death")
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 E 1 Bright A_SeekerMissile(90,90)
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 E 1 Bright //A_JumpIfCloser(30,"Death")
         Goto Death
 Death:
@@ -1021,7 +1021,7 @@ Death:
         TNT1 A 7
         Stop
 CSpawner:
-        TNT1 A 0 A_SpawnItemEx("StormSpawner",0,0,-40,0,0,0,0,48)
+        TNT1 A 0 A_SpawnItemEx("StormSpawner",0,0,-40,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
         Stop
 }
 }
@@ -1058,11 +1058,11 @@ Actor StormSpawner //: FastProjectile //Added inheritance due to speed issues...
       Goto Death
    Death:
                 TNT1 A 0 A_Stop
-                TNT1 A 10 A_SpawnItemEx("CloudSpawner1",0,0,0,0,0,0,0,48)
+                TNT1 A 10 A_SpawnItemEx("CloudSpawner1",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
           //TNT1 A 0 A_PlaySound("weapons/thunderstormactive")
-          //TNT1 AA 0 A_SpawnItemEx("LightningGenerator",0,0,0,0,0,0,0,48)
+          //TNT1 AA 0 A_SpawnItemEx("LightningGenerator",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
       Stop
-          //TNT1 A 0 A_SpawnItemEx("CeilingStormSpawner",0,0,0,0,0,0,0,48)
+          //TNT1 A 0 A_SpawnItemEx("CeilingStormSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
          // Stop
    }
 }
@@ -1087,7 +1087,7 @@ Spawn:
         Loop
         TNT1 A 0 A_SetUserVar("user_cloudspawncount",0)
         TNT1 A 0 A_PlaySound("weapons/thunderstormactive")
-        TNT1 AA 0 A_SpawnItemEx("LightningGenerator",0,0,0,0,0,0,0,48)
+        TNT1 AA 0 A_SpawnItemEx("LightningGenerator",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
         CloudShoot2:
         TNT1 AAA 0 A_SpawnItemEx("Cloud1",0,0,0,3,0,0,random(0,359),SXF_NOCHECKPOSITION)
         TNT1 A 1 A_SetUserVar("user_cloudspawncount",user_cloudspawncount+1)
@@ -1115,7 +1115,7 @@ States
 {
 Spawn:
         TNT1 A 0
-        TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 1 A_SpawnItemEx("LightningShotRandom",0,0,0,50,0,random(-75,-10),random(0,359),48)//A_CustomMissile("LightningShotRandom",0,0,0+random(0,360),6,-10+random(-80,0))
+        TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 1 A_SpawnItemEx("LightningShotRandom",0,0,0,50,0,random(-75,-10),random(0,359),SXF_NOCHECKPOSITION|SXF_SETMASTER)//A_CustomMissile("LightningShotRandom",0,0,0+random(0,360),6,-10+random(-80,0))
         Goto Death
 Death:
         TNT1 A 0
@@ -1156,7 +1156,7 @@ States
 {
 Spawn:
         TNT1 AAAA 1 //A_CustomMissile("LightningTrail",0,0)
-        //TNT1 A 0 A_SpawnItemEx("LightningShotRandom",0,0,0,50,0,random(-30,30),random(-30,30),48)
+        //TNT1 A 0 A_SpawnItemEx("LightningShotRandom",0,0,0,50,0,random(-30,30),random(-30,30),SXF_NOCHECKPOSITION|SXF_SETMASTER)
         TNT1 A 0 A_SetAngle(angle+random(-30,30))
         TNT1 A 0 //A_SetPitch(pitch+random(-30,30))
         TNT1 A 0 A_ChangeVelocity(50,0,random(-30,30),3)
@@ -1176,7 +1176,7 @@ Actor TomeOfSetDrop : CustomInventory
     {
     Use:
 	TNT1 A 0
-	TNT1 A 0 A_SpawnItemEx("DroppedTomeOfSet",0,0,32,8,0,0,0,32,0)
+	TNT1 A 0 A_SpawnItemEx("DroppedTomeOfSet",0,0,32,8,0,0,0,SXF_NOCHECKPOSITION,0)
 	Stop
     }
 }
@@ -1190,7 +1190,7 @@ ACTOR DroppedTomeOfSet
     {
     Spawn:
 	WTME A 15 Bright 
-	TNT1 A 0 A_SpawnItemEx("AEoDTomeOfSetNoAmmo",0,0,0,0,0,0,0,48,0)
+	TNT1 A 0 A_SpawnItemEx("AEoDTomeOfSetNoAmmo",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER,0)
 	Stop
     }
 }
@@ -1365,7 +1365,7 @@ Weapon.AmmoType2 "AEClip"
 Weapon.AmmoGive1 50
 Weapon.AmmoUse1 1
 Weapon.AmmoUse2 1
-+CHEATNOTWEAPON
++WEAPON.CHEATNOTWEAPON
 Obituary "%o was shredded by %k's minigun."
 Inventory.PickupMessage "Picked up the Minigun!"
 Inventory.PickupSound "reilsss/weappickup/minigun" 
@@ -1606,7 +1606,7 @@ ACTOR AEoDVulcanCannon : Weapon // 6053
 { 
 +FLOORCLIP
 +INVENTORY.IGNORESKILL
-+CHEATNOTWEAPON
++WEAPON.CHEATNOTWEAPON
 Weapon.Kickback 90
 Weapon.AmmoType1 "AEClip" 
 Weapon.AmmoType2 "AEShell" 
@@ -1874,7 +1874,7 @@ Inventory.PickupSound "weaponbuild"
 Inventory.PickupMessage "The Mystic Tome of Set is now yours!"
 Scale 0.8
 +INVENTORY.IGNORESKILL
-+CHEATNOTWEAPON
++WEAPON.CHEATNOTWEAPON
 +FLOORCLIP
 +FLOATBOB
 Tag "Tome of set"
@@ -1956,9 +1956,9 @@ States
 {
 Spawn:
         TNT1 A 0
-        TNT1 AAAAAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 AAAAAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
         TNT1 A 0 A_CustomMissile("LightningSpellMissile",0,0,random(-8,8),6,random(-8,8))
-        TNT1 A 1 //A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 A 1 //A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
         Stop
 Death:
         TNT1 AAAAAAA 0 A_SpawnItemEx("TeslaFX",0,0,0,random(6,-6),random(6,-6),random(6,-6),0,0)
@@ -1983,7 +1983,7 @@ Spawn:
         TNT1 A 5
         Goto Death
 Death:
-        TNT1 A 0 A_SpawnItemEx("LightningTarget",0,0,0,0,0,0,0,32)
+        TNT1 A 0 A_SpawnItemEx("LightningTarget",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
         TNT1 A 1
         Stop
 }
@@ -2036,12 +2036,12 @@ States
 {
 Spawn:
         TNT1 A 0
-        TNT1 AAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 AAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
         TNT1 A 0 A_CustomMissile("LightningMissile2",0,0,0+random(-15,15),6,0+random(-15,15))
         Stop
 Death:
         TNT1 AAAAAAA 0 A_SpawnItemEx("TeslaFX",0,0,0,random(6,-6),random(6,-6),random(6,-6),0,0)
-        TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
         TNT1 A 0 A_Explode(15,20,0)
         TNT1 A 1 A_Scream
         Stop
@@ -2055,13 +2055,13 @@ States
 {
 Spawn:
         TNT1 A 0
-        TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
-        TNT1 AAAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+        TNT1 AAAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
         TNT1 A 0 A_CustomMissile("LightningMissile3",0,0,0+random(-15,15),6,0+random(-15,15))
         Stop
 Death:
         TNT1 AAAAAAA 0 A_SpawnItemEx("TeslaFX",0,0,0,random(6,-6),random(6,-6),random(6,-6),0,0)
-        TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
         TNT1 A 0 A_Explode(15,20,0)
         TNT1 A 1 A_Scream
         Stop
@@ -2074,13 +2074,13 @@ States
 {
 Spawn:
         TNT1 A 0
-        TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
-        TNT1 AAAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+        TNT1 AAAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
         TNT1 A 0 A_CustomMissile("LightningMissileTargetSeeker",0,0,0+random(-15,15),6,0+random(-15,15))
         Stop
 Death:
         TNT1 AAAAAAA 0 A_SpawnItemEx("TeslaFX",0,0,0,random(6,-6),random(6,-6),random(6,-6),0,0)
-        TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
         TNT1 A 0 A_Explode(15,20,0)
         TNT1 A 1 A_Scream
         Stop
@@ -2094,9 +2094,9 @@ States
 {
 Spawn:
         TNT1 A 0
-        TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
         TNT1 A 0 A_JumpIfCloser(15, "Death")
-        TNT1 AAAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,32)
+        TNT1 AAAA 1 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
         TNT1 A 0 A_SeekerMissile(90,90)
         Loop
 Death:
@@ -2142,7 +2142,7 @@ Actor LightningTrail
         {
         Spawn:
                 TNT1 A 0
-                TNT1 A 0 A_SpawnItemEx("LightningTrailDistortion",0,frandom(-5,5),frandom(-5,5),0,0,0,0,32)
+                TNT1 A 0 A_SpawnItemEx("LightningTrailDistortion",0,frandom(-5,5),frandom(-5,5),0,0,0,0,SXF_NOCHECKPOSITION)
                 Stop
         }
 }
@@ -2205,45 +2205,45 @@ Actor ThunderStormSpellShot
 	{
 	Spawn:
         TNT1 A 0
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 A 1 Bright A_SeekerMissile(90,90)
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 A 1 Bright
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 B 1 Bright A_SeekerMissile(90,90)
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 B 1 Bright
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 C 1 Bright A_SeekerMissile(90,90)
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 C 1 Bright
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 D 1 Bright A_SeekerMissile(90,90)
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 D 1 Bright
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 E 1 Bright A_SeekerMissile(90,90)
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 E 1 Bright
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 A 1 Bright A_SeekerMissile(90,90)
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 A 1 Bright
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 B 1 Bright
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 B 1 Bright
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 C 1 Bright A_SeekerMissile(90,90)
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 C 1 Bright
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 D 1 Bright A_SeekerMissile(90,90)
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 D 1 Bright
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 E 1 Bright A_SeekerMissile(90,90)
-        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,32)
+        TNT1 AA 0 A_SpawnItemEx("ThunderStormSpellShotTrail",random(5,-5),random(5,-5),random(5,-5),0,0,0,0,SXF_NOCHECKPOSITION)
         ZAP7 E 1 Bright
         Goto Death
 	Death:
@@ -2252,7 +2252,7 @@ Actor ThunderStormSpellShot
         TNT1 A 7
         Stop
 	CSpawner:
-        TNT1 A 0 A_SpawnItemEx("StormSpawner",0,0,-40,0,0,0,0,48)
+        TNT1 A 0 A_SpawnItemEx("StormSpawner",0,0,-40,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
         Stop
 	}
 }
@@ -2289,7 +2289,7 @@ Actor StormSpawner
       Goto Death
    Death:
       TNT1 A 0 A_Stop
-      TNT1 A 10 A_SpawnItemEx("CloudSpawner1",0,0,0,0,0,0,0,48)
+      TNT1 A 10 A_SpawnItemEx("CloudSpawner1",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
       Stop
    }
 }
@@ -2311,7 +2311,7 @@ Actor CloudSpawner1
         Loop
         TNT1 A 0 A_SetUserVar("user_cloudspawncount",0)
         TNT1 A 0 A_PlaySound("weapons/thunderstormactive")
-        TNT1 A 0 A_SpawnItemEx("LightningGenerator",0,0,0,0,0,0,0,48)
+        TNT1 A 0 A_SpawnItemEx("LightningGenerator",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
     CloudShoot2:
         TNT1 AAAAA 0 A_SpawnItemEx("Cloud1",0,0,0,6,0,0,random(0,359),SXF_NOCHECKPOSITION)
         TNT1 A 1 A_SetUserVar("user_cloudspawncount",user_cloudspawncount+1)
@@ -2333,7 +2333,7 @@ Actor LightningGenerator
         TNT1 A 0
 		TNT1 A 0 A_SetUserVar("user_count",0)
 	Shooter:
-        TNT1 AA 0 A_SpawnItemEx("LightningShotRandom",random(0,70),0,0,random(-50,50),0,random(-75,-45),random(0,359),48)//A_CustomMissile("LightningShotRandom",0,0,0+random(0,360),6,-10+random(-80,0))
+        TNT1 AA 0 A_SpawnItemEx("LightningShotRandom",random(0,70),0,0,random(-50,50),0,random(-75,-45),random(0,359),SXF_NOCHECKPOSITION|SXF_SETMASTER)//A_CustomMissile("LightningShotRandom",0,0,0+random(0,360),6,-10+random(-80,0))
 		TNT1 A 0 A_SetUserVar("user_count",user_count+1)
 		TNT1 A 1 A_JumpIf(user_count>=55,1)
         Loop
@@ -2370,7 +2370,7 @@ Actor LightningShotRandom : LightningMissile1
 	{
 	Spawn:
         TNT1 AAAA 1 //A_CustomMissile("LightningTrail",0,0)
-        //TNT1 A 0 A_SpawnItemEx("LightningShotRandom",0,0,0,50,0,random(-30,30),random(-30,30),48)
+        //TNT1 A 0 A_SpawnItemEx("LightningShotRandom",0,0,0,50,0,random(-30,30),random(-30,30),SXF_NOCHECKPOSITION|SXF_SETMASTER)
         TNT1 A 0 A_SetAngle(angle+random(-30,30))
         TNT1 A 0 //A_SetPitch(pitch+random(-30,30))
         TNT1 A 0 A_ChangeVelocity(random(-6,6),0,random(-6,6),1)
@@ -2386,7 +2386,7 @@ Actor LightningShotRandom : LightningMissile1
 Actor AEoDBloodShotgun : Weapon
 {
 	+FLOORCLIP
-	+CHEATNOTWEAPON
+	+WEAPON.CHEATNOTWEAPON
 	+INVENTORY.IGNORESKILL
 	+WEAPON.NOAUTOFIRE
 	Weapon.AmmoType "AEShell"

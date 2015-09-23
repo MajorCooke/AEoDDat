@@ -52,7 +52,7 @@ actor FBerserker 7380		// demon
 		Goto See
     Pain.Drain:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		Goto Pain
     Pain.Defile:
 		TNT1 A 0
@@ -99,15 +99,15 @@ actor FBerserker 7380		// demon
 		Stop
 		TNT1 A 0 A_Die
 		TNT1 A 0 A_NoBlocking
-		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		Goto XDeath+2
 	XDeath:
 		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"Defilement")
 		TNT1 C 0 A_PlaySound("other/gibdeath")
 		TNT1 A 0 A_fall
-		TNT1 AAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 AAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 A 0 A_SpawnItemEx("QuakeSmallGibDropper",0,0,random(20,40),0,0,0,0,1)
+		TNT1 AAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 AAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 A 0 A_SpawnItemEx("QuakeSmallGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
 		Stop
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
@@ -117,8 +117,8 @@ actor FBerserker 7380		// demon
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 		TNT1 a 0 A_Stop	
 		TNT1 a 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
 		BERP AA 2 A_FadeOut(0.03)
 		Goto Disintegrate+6
     Raise:
@@ -182,7 +182,7 @@ actor IronMaiden 7381	// hell knight
 		Goto See
     Pain.Drain:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		Goto Pain
     Spawn:
 		BITI AAAAAAAAAAAAAAAA 5 A_Look
@@ -224,9 +224,9 @@ actor IronMaiden 7381	// hell knight
     XDeath:
 		TNT1 C 0 A_PlaySound("other/gibdeath")
 		TNT1 A 0 A_fall
-		TNT1 AAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 AAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 A 0 A_SpawnItemEx("QuakeSmallGibDropper",0,0,random(20,40),0,0,0,0,1)
+		TNT1 AAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 AAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 A 0 A_SpawnItemEx("QuakeSmallGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
 		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		Stop
     Death.UnholyDisint:
@@ -237,8 +237,8 @@ actor IronMaiden 7381	// hell knight
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 		TNT1 a 0 A_Stop	
 		TNT1 a 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
 		BITP AA 2 A_FadeOut(0.03)
 		Goto Disintegrate+6
     Raise:
@@ -261,11 +261,11 @@ actor BitchRocket
     States
     {
     Spawn:
-		QROK A 2 A_SpawnItemEx("Q2RocketAltSmoke",-4,random(3,-3),0,0,frandom(0.3,-0.3),frandom(0.3,0.75),0,32)
+		QROK A 2 A_SpawnItemEx("Q2RocketAltSmoke",-4,random(3,-3),0,0,frandom(0.3,-0.3),frandom(0.3,0.75),0,SXF_NOCHECKPOSITION)
 		TNT1 A 0 A_SpawnItemEx("Q2RocketExtra",0,0,0,1,0,random(-1,1),random(1,360))
 		Loop
     Death:
-		TNT1 A 0 A_SpawnItemEx("MonExplosionMedium",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("MonExplosionMedium",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		TNT1 A 0 A_PlaySound("weapons/rockexplo")
 		TNT1 A 4 A_Explode(96,128)
 		Stop
@@ -357,7 +357,7 @@ actor FTankBoss 7382	// spider mastermind
     {
 	Pain.Drain:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		Goto Pain
     Spawn:
 		BS1W A 5 A_Look
@@ -375,7 +375,7 @@ actor FTankBoss 7382	// spider mastermind
 		BS1A FGGGGGGGG 10 A_FaceTarget
 		TNT1 A 0 A_PlaySound("weapons/howitzer/altfire",CHAN_VOICE,1.0,0,0.4)
 	//	TNT1 a 0 A_Recoil(10)
-		TNT1 AAAAA 0 A_SpawnItemEx("NewExploMediumSmoke",30,random(-36,-44),random(118,122),0,0,frandom(0.4,0.99),0,32)
+		TNT1 AAAAA 0 A_SpawnItemEx("NewExploMediumSmoke",30,random(-36,-44),random(118,122),0,0,frandom(0.4,0.99),0,SXF_NOCHECKPOSITION)
 		BS1A J 10 Bright A_CustomBulletAttack(5,5,1,3,"HowitzerPuff")
 		BS1A KLMN 14
 		Goto See
@@ -395,20 +395,20 @@ actor FTankBoss 7382	// spider mastermind
 		BS1A ABCD 5 A_FaceTarget
 		BS1A ABCD 4 A_FaceTarget
 		BS1A A 3 Bright A_CustomBulletAttack(6,6,2,5,"BulletDamagePuff")
-		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",24,44,102,0,0,0,0,32)
-		TNT1 a 0 A_SpawnItemEx("NewExploSmallSmoke",24,44,106,0,0,frandom(0.4,0.99),0,32,128)
+		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",24,44,102,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 a 0 A_SpawnItemEx("NewExploSmallSmoke",24,44,106,0,0,frandom(0.4,0.99),0,SXF_NOCHECKPOSITION,128)
 		BS1A Z 0 A_FaceTarget
 		BS1A B 3 Bright A_CustomBulletAttack(6,6,2,5,"BulletDamagePuff")
-		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",24,44,102,0,0,0,0,32)
-		TNT1 a 0 A_SpawnItemEx("NewExploSmallSmoke",24,44,106,0,0,frandom(0.4,0.99),0,32,128)
+		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",24,44,102,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 a 0 A_SpawnItemEx("NewExploSmallSmoke",24,44,106,0,0,frandom(0.4,0.99),0,SXF_NOCHECKPOSITION,128)
 		BS1A Z 0 A_FaceTarget
 		BS1A C 3 Bright A_CustomBulletAttack(6,6,2,5,"BulletDamagePuff")
-		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",24,44,102,0,0,0,0,32)
-		TNT1 a 0 A_SpawnItemEx("NewExploSmallSmoke",24,44,106,0,0,frandom(0.4,0.99),0,32,128)
+		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",24,44,102,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 a 0 A_SpawnItemEx("NewExploSmallSmoke",24,44,106,0,0,frandom(0.4,0.99),0,SXF_NOCHECKPOSITION,128)
 		BS1A Z 0 A_FaceTarget
 		BS1A D 3 Bright A_CustomBulletAttack(6,6,2,5,"BulletDamagePuff")
-		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",24,44,102,0,0,0,0,32)
-		TNT1 a 0 A_SpawnItemEx("NewExploSmallSmoke",24,44,106,0,0,frandom(0.4,0.99),0,32,128)
+		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",24,44,102,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 a 0 A_SpawnItemEx("NewExploSmallSmoke",24,44,106,0,0,frandom(0.4,0.99),0,SXF_NOCHECKPOSITION,128)
 		BS1A Z 0 A_FaceTarget
 		BS1A E 0 A_CPosRefire
 		BS1A A 0
@@ -424,23 +424,23 @@ actor FTankBoss 7382	// spider mastermind
 		BS1D B 6
 		BS1D C 6
 		BS1D D 6 A_Fall
-		TNT1 A 0 A_SpawnItemEx("BossDeathExplosion",random(0,35),0,random(0,70),0,0,0,random(0,359),32)
+		TNT1 A 0 A_SpawnItemEx("BossDeathExplosion",random(0,35),0,random(0,70),0,0,0,random(0,359),SXF_NOCHECKPOSITION)
 		TNT1 A 0 A_TossGib
 		TNT1 A 0 A_TossGib
 		BS1D EFG 6 
-		TNT1 A 0 A_SpawnItemEx("BossDeathExplosion",random(0,35),0,random(0,70),0,0,0,random(0,359),32)
+		TNT1 A 0 A_SpawnItemEx("BossDeathExplosion",random(0,35),0,random(0,70),0,0,0,random(0,359),SXF_NOCHECKPOSITION)
 		BS1D HIJ 6
-		TNT1 AAAA 0 A_SpawnItemEx("BossDeathExplosion",random(0,35),0,random(0,70),0,0,0,random(0,359),32)
+		TNT1 AAAA 0 A_SpawnItemEx("BossDeathExplosion",random(0,35),0,random(0,70),0,0,0,random(0,359),SXF_NOCHECKPOSITION)
 		TNT1 A 0 A_TossGib
 		TNT1 A 0 A_TossGib
 		TNT1 A 0 A_PlaySound("quake4/Misc/Body/Metal")
 		BS1D K 20
 		XTRA C 0 A_PlaySound("other/gibdeath")
-		TNT1 AAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 AAAAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 A 0 A_SpawnItemEx("QuakeGibDropper",0,0,random(20,40),0,0,0,0,1)
+		TNT1 AAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 AAAAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 A 0 A_SpawnItemEx("QuakeGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
 		TNT1 AAAAAAAAAAAAAAAAAAAAA 0 A_TossGib
-		TNT1 AAAAA 0 A_SpawnItemEx("BossDeathExplosion",random(0,35),0,random(0,70),0,0,0,random(0,359),32)
+		TNT1 AAAAA 0 A_SpawnItemEx("BossDeathExplosion",random(0,35),0,random(0,70),0,0,0,random(0,359),SXF_NOCHECKPOSITION)
 		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		Stop
 
@@ -453,8 +453,8 @@ actor FTankBoss 7382	// spider mastermind
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 		TNT1 a 0 A_Stop	
 		TNT1 a 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowBig",0,0,45,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksBig",0,0,45,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowBig",0,0,45,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksBig",0,0,45,0,0,0,0,SXF_NOCHECKPOSITION)
 		BS1P AA 2 A_FadeOut(0.03)
 		Goto Disintegrate+7
     }
@@ -477,12 +477,12 @@ actor BossTankRocket
     States
     {
     Spawn:
-		MI13 A 1 Bright A_SpawnItemEx("Q2RocketAltSmoke",-4,random(3,-3),0,0,frandom(0.3,-0.3),frandom(0.3,0.75),0,32)
+		MI13 A 1 Bright A_SpawnItemEx("Q2RocketAltSmoke",-4,random(3,-3),0,0,frandom(0.3,-0.3),frandom(0.3,0.75),0,SXF_NOCHECKPOSITION)
 		MISS A 0 A_CustomMissile("BarbasRocket1Trail2",random(3,-3),random(3,-3),0)
 		TNT1 AA 0 A_CustomMissile("BarbasRocket1Trail1",random(3,-3),random(3,-3),0)
 		Loop
     Death:
-		TNT1 A 0 A_SPawnItemEx("MonExplosionMedium",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("MonExplosionMedium",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		EXP3 A 0 Bright A_Explode(160,160)
 		Stop
     }
@@ -557,7 +557,7 @@ actor FHoverBoss 7383	// spider mastermind
     {
 	Pain.Drain:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		Goto Pain
     Spawn:
 		BS2W A 0 
@@ -571,10 +571,10 @@ actor FHoverBoss 7383	// spider mastermind
 		BS2A A 0 A_Jump(96,"Rockets") 
 		BS2A AAAA 4 A_FaceTarget
 		BS2A A 3 Bright A_CustomBulletAttack(9,9,2,5,"BulletDamagePuff")
-		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",60,60,80,0,0,frandom(0.4,0.99),0,32,128)
-		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",40,60,75,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",40,-60,80,0,0,frandom(0.4,0.99),0,32,128)
-		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",40,-60,75,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",60,60,80,0,0,frandom(0.4,0.99),0,SXF_NOCHECKPOSITION,128)
+		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",40,60,75,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",40,-60,80,0,0,frandom(0.4,0.99),0,SXF_NOCHECKPOSITION,128)
+		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",40,-60,75,0,0,0,0,SXF_NOCHECKPOSITION)
 		BS2A E 0 A_CPosRefire
 		BS2A A 0
 		Goto Missile+5
@@ -596,10 +596,10 @@ actor FHoverBoss 7383	// spider mastermind
 		BS2D A 0 A_StopSound
 		BS2D A 6 A_LowGravity
 		BS2D B 6 A_Scream
-		TNT1 A 0 A_SpawnItemEx("BossDeathExplosion",random(0,35),0,random(0,70),0,0,0,random(0,359),32)
+		TNT1 A 0 A_SpawnItemEx("BossDeathExplosion",random(0,35),0,random(0,70),0,0,0,random(0,359),SXF_NOCHECKPOSITION)
 		BS2D D 5 A_Fall
 		BS2D E 4 
-		TNT1 A 0 A_SpawnItemEx("BossDeathExplosion",random(0,35),0,random(0,70),0,0,0,random(0,359),32)
+		TNT1 A 0 A_SpawnItemEx("BossDeathExplosion",random(0,35),0,random(0,70),0,0,0,random(0,359),SXF_NOCHECKPOSITION)
 		BS2D G 5 A_JumpIf(z <= floorz || abs(velz) <= 0,"Crash")
 		Goto Death+7
     Crash:
@@ -607,22 +607,22 @@ actor FHoverBoss 7383	// spider mastermind
 		TNT1 A 0 A_PlaySound("quake4/Misc/Body/Metal")
 		BS2D H 6 A_SetFloorClip
 		BS2D I 6
-		TNT1 A 0 A_SpawnItemEx("BossDeathExplosion",random(0,35),0,random(0,70),0,0,0,random(0,359),32)
+		TNT1 A 0 A_SpawnItemEx("BossDeathExplosion",random(0,35),0,random(0,70),0,0,0,random(0,359),SXF_NOCHECKPOSITION)
 		BS2D J 6
 		BS2D K 6
 		BS2D L 6
 		BS2D M 6
-		TNT1 AA 0 A_SpawnItemEx("BossDeathExplosion",random(0,35),0,random(0,70),0,0,0,random(0,359),32)
+		TNT1 AA 0 A_SpawnItemEx("BossDeathExplosion",random(0,35),0,random(0,70),0,0,0,random(0,359),SXF_NOCHECKPOSITION)
 		BS2D N 6
 		BS2D O 6
-		TNT1 AA 0 A_SpawnItemEx("BossDeathExplosion",random(0,35),0,random(0,70),0,0,0,random(0,359),32)
+		TNT1 AA 0 A_SpawnItemEx("BossDeathExplosion",random(0,35),0,random(0,70),0,0,0,random(0,359),SXF_NOCHECKPOSITION)
 		BS2D P 20
 		XTRA C 0 A_PlaySound("other/gibdeath")
-		TNT1 AAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 AAAAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 A 0 A_SpawnItemEx("QuakeGibDropper",0,0,random(20,40),0,0,0,0,1)
+		TNT1 AAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 AAAAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 A 0 A_SpawnItemEx("QuakeGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
 		TNT1 AAAAAAAAAAAAAAAAAAAAA 0 A_TossGib
-		TNT1 AAA 0 A_SpawnItemEx("BossDeathExplosion",random(0,35),0,random(0,70),0,0,0,random(0,359),32)
+		TNT1 AAA 0 A_SpawnItemEx("BossDeathExplosion",random(0,35),0,random(0,70),0,0,0,random(0,359),SXF_NOCHECKPOSITION)
 		TNT1 A 1 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		Stop
     Death.UnholyDisint:
@@ -636,9 +636,9 @@ actor FHoverBoss 7383	// spider mastermind
 		"----" A 0 A_ChangeFlag("NOINTERACTION",1)
 		"----" A 0 A_Stop	
 		"----" A 0 A_Fall
-		"----" A 0 A_SpawnItemEx("DisintegrateShadowBig",0,0,45,0,0,0,0,32)
+		"----" A 0 A_SpawnItemEx("DisintegrateShadowBig",0,0,45,0,0,0,0,SXF_NOCHECKPOSITION)
 	DisLoop:
-		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksBig",0,0,45,0,0,0,0,32)
+		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksBig",0,0,45,0,0,0,0,SXF_NOCHECKPOSITION)
 		"####" "##" 2 A_FadeOut(0.03)
 		Loop
     }
@@ -694,7 +694,7 @@ actor FMakronPet 7384	// cyberdemon
     {
         Pain.Drain:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		Goto Pain
     Spawn:
 		BS4I A 5 A_Look
@@ -713,40 +713,40 @@ actor FMakronPet 7384	// cyberdemon
 		BS4C ABCD 5 A_FaceTarget
 		BS4C EF 4 A_FaceTarget
 		BS4C G 3 Bright A_CustomBulletAttack(4,4,1,5,"BulletDamagePuff")
-		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",35,-40,70,0,0,frandom(0.4,0.99),0,32,128)
-		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",35,-40,65,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",35,40,70,0,0,frandom(0.4,0.99),0,32,128)
-		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",35,40,65,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",35,-40,70,0,0,frandom(0.4,0.99),0,SXF_NOCHECKPOSITION,128)
+		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",35,-40,65,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",35,40,70,0,0,frandom(0.4,0.99),0,SXF_NOCHECKPOSITION,128)
+		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",35,40,65,0,0,0,0,SXF_NOCHECKPOSITION)
 		BS4C Z 0 A_FaceTarget
 		BS4C H 3 Bright A_CustomBulletAttack(4,4,1,5,"BulletDamagePuff")
-		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",35,-40,70,0,0,frandom(0.4,0.99),0,32,128)
-		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",35,-40,65,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",35,40,70,0,0,frandom(0.4,0.99),0,32,128)
-		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",35,40,65,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",35,-40,70,0,0,frandom(0.4,0.99),0,SXF_NOCHECKPOSITION,128)
+		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",35,-40,65,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",35,40,70,0,0,frandom(0.4,0.99),0,SXF_NOCHECKPOSITION,128)
+		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",35,40,65,0,0,0,0,SXF_NOCHECKPOSITION)
 		BS4C Z 0 A_FaceTarget
 		BS4C I 3 Bright A_CustomBulletAttack(4,4,1,5,"BulletDamagePuff")
-		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",35,-40,70,0,0,frandom(0.4,0.99),0,32,128)
-		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",35,-40,65,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",35,40,70,0,0,frandom(0.4,0.99),0,32,128)
-		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",35,40,65,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",35,-40,70,0,0,frandom(0.4,0.99),0,SXF_NOCHECKPOSITION,128)
+		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",35,-40,65,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",35,40,70,0,0,frandom(0.4,0.99),0,SXF_NOCHECKPOSITION,128)
+		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",35,40,65,0,0,0,0,SXF_NOCHECKPOSITION)
 		BS4C Z 0 A_FaceTarget
 		BS4C J 3 Bright A_CustomBulletAttack(4,4,1,5,"BulletDamagePuff")
-		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",35,-40,70,0,0,frandom(0.4,0.99),0,32,128)
-		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",35,-40,65,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",35,40,70,0,0,frandom(0.4,0.99),0,32,128)
-		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",35,40,65,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",35,-40,70,0,0,frandom(0.4,0.99),0,SXF_NOCHECKPOSITION,128)
+		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",35,-40,65,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",35,40,70,0,0,frandom(0.4,0.99),0,SXF_NOCHECKPOSITION,128)
+		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",35,40,65,0,0,0,0,SXF_NOCHECKPOSITION)
 		BS4C Z 0 A_FaceTarget
 		BS4C K 3 Bright A_CustomBulletAttack(4,4,1,5,"BulletDamagePuff")
-		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",35,-40,70,0,0,frandom(0.4,0.99),0,32,128)
-		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",35,-40,65,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",35,40,70,0,0,frandom(0.4,0.99),0,32,128)
-		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",35,40,65,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",35,-40,70,0,0,frandom(0.4,0.99),0,SXF_NOCHECKPOSITION,128)
+		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",35,-40,65,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",35,40,70,0,0,frandom(0.4,0.99),0,SXF_NOCHECKPOSITION,128)
+		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",35,40,65,0,0,0,0,SXF_NOCHECKPOSITION)
 		BS4C Z 0 A_FaceTarget
 		BS4C L 3 Bright A_CustomBulletAttack(4,4,1,5,"BulletDamagePuff")
-		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",35,-40,70,0,0,frandom(0.4,0.99),0,32,128)
-		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",35,-40,65,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",35,40,70,0,0,frandom(0.4,0.99),0,32,128)
-		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",35,40,65,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",35,-40,70,0,0,frandom(0.4,0.99),0,SXF_NOCHECKPOSITION,128)
+		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",35,-40,65,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",35,40,70,0,0,frandom(0.4,0.99),0,SXF_NOCHECKPOSITION,128)
+		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",35,40,65,0,0,0,0,SXF_NOCHECKPOSITION)
 		BS4C Z 0 A_FaceTarget
 		BS4C A 0 A_CPosRefire
 		BS4C M 0
@@ -762,18 +762,18 @@ actor FMakronPet 7384	// cyberdemon
 		BS4D BCDEFGHI 6
 		BS4D JKL 4
 		BS4D M 30 A_PlaySound("quake4/Misc/Body/Metal",6)
-		"----" A 0 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),32)
-		BS4D M 10 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),32)
-		BS4D M 50 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),32)
-		"----" A 0 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),32)
-		BS4D M 20 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),32)
+		"----" A 0 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),SXF_NOCHECKPOSITION)
+		BS4D M 10 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),SXF_NOCHECKPOSITION)
+		BS4D M 50 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),SXF_NOCHECKPOSITION)
+		"----" A 0 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),SXF_NOCHECKPOSITION)
+		BS4D M 20 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),SXF_NOCHECKPOSITION)
 		"----" AAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_TossGib
 		BS4D M 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("FMakron",0,0,0,0,0,0,0,32|SXF_TRANSFERSPECIAL|SXF_CLEARCALLERSPECIAL|SXF_CLEARCALLERTID|SXF_TRANSFERPOINTERS|SXF_ISTRACER,0,tid)
-		TNT1 A 0 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),32)
-		TNT1 A 0 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),32)
-		TNT1 A 0 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),32)
-		TNT1 A 0 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),32)
+		TNT1 A 0 A_SpawnItemEx("FMakron",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSPECIAL|SXF_CLEARCALLERSPECIAL|SXF_CLEARCALLERTID|SXF_TRANSFERPOINTERS|SXF_ISTRACER,0,tid)
+		TNT1 A 0 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),SXF_NOCHECKPOSITION)
 	Waiting:
 		TNT1 A 35
 		TNT1 A 0 A_JumpIf(IsPointerEqual(AAPTR_TRACER,AAPTR_NULL),"End")
@@ -790,34 +790,34 @@ actor FMakronPet 7384	// cyberdemon
 		BS4D BCDEFGHI 6
 		BS4D JKL 4
 		BS4D M 30 A_PlaySound("quake4/Misc/Body/Metal",6)
-		TNT1 A 0 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),32)
-		BS4D M 10 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),32)
-		BS4D M 50 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),32)
-		TNT1 A 0 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),32)
-		BS4D M 20 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),32)
+		TNT1 A 0 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),SXF_NOCHECKPOSITION)
+		BS4D M 10 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),SXF_NOCHECKPOSITION)
+		BS4D M 50 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),SXF_NOCHECKPOSITION)
+		BS4D M 20 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),SXF_NOCHECKPOSITION)
 		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_TossGib
 		BS4D M 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("FMakron",0,0,0,0,0,0,0,32|SXF_TRANSFERSPECIAL|SXF_CLEARCALLERSPECIAL|SXF_CLEARCALLERTID|SXF_SETMASTER,0,tid)
-		TNT1 A 0 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),32)
-		TNT1 A 0 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),32)
-		TNT1 A 0 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),32)
-		TNT1 A 1 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),32)
+		TNT1 A 0 A_SpawnItemEx("FMakron",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSPECIAL|SXF_CLEARCALLERSPECIAL|SXF_CLEARCALLERTID|SXF_SETMASTER,0,tid)
+		TNT1 A 0 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),SXF_NOCHECKPOSITION)
+		TNT1 A 1 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),SXF_NOCHECKPOSITION)
 		TNT1 A 75 A_KillChildren("Telefrag",KILS_FOILINVUL|KILS_FOILBUDDHA,"FMakron")
 		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		Stop
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
-		"####" "#" 0 A_SpawnItemEx("FMakron",0,0,0,0,0,0,0,32|SXF_TRANSFERSPECIAL|SXF_CLEARCALLERSPECIAL|SXF_CLEARCALLERTID|SXF_TRANSFERPOINTERS|SXF_ISTRACER,0,tid)
+		"####" "#" 0 A_SpawnItemEx("FMakron",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSPECIAL|SXF_CLEARCALLERSPECIAL|SXF_CLEARCALLERTID|SXF_TRANSFERPOINTERS|SXF_ISTRACER,0,tid)
 		"####" "#" 0 Thing_SetTranslation(0,50)
 		"####" "#" 0 A_StopSound(6)
 		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
 		"####" "#" 1 A_FadeOut(0.015,FTF_CLAMP)
 		"####" "#" 0 A_Stop    
 		"####" "#" 0 A_Fall
-		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowBig",0,0,45,0,0,0,0,32)
+		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowBig",0,0,45,0,0,0,0,SXF_NOCHECKPOSITION)
 		DisintegrateCont:
-		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksBig",0,0,45,0,0,0,0,32)
+		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksBig",0,0,45,0,0,0,0,SXF_NOCHECKPOSITION)
 		"####" "##" 2 A_FadeOut(0.03,FTF_CLAMP)
 		"####" "#" 0 A_JumpIf(alpha <= 0,"Waiting")
 		Loop
@@ -874,7 +874,7 @@ actor FMakron 7385
     {
 	Pain.Drain:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		Goto Pain
     Spawn:
 		BS5I A 5 A_Look
@@ -957,7 +957,7 @@ actor FMakron 7385
         Goto See
     Death:
 		TNT1 A 0 A_CustomMissile("MakronTorso",50,0,0+random(90,-90))
-		TNT1 AAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,1)
+		TNT1 AAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
 		BS5D B 25 A_Scream
 		BS5D C 20 A_Fall
 		BS5D D 6
@@ -976,8 +976,8 @@ actor FMakron 7385
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 		TNT1 a 0 A_Stop	
 		TNT1 a 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
 		BS5P AA 2 A_FadeOut(0.03)
 		Goto Disintegrate+7
     Ice:
@@ -1097,87 +1097,87 @@ Actor AEoDBFG10KShot2M
     {
 	Spawn:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),32)
+		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),SXF_NOCHECKPOSITION)
 		TNT1 AA 0 A_SpawnItemEx("BFG10KTrailB",0,0,10,random(-3,3),random(-3,3),random(-3,3),random(1,360))
 		BFS1 A 1 Bright A_CustomMissile("BFG10KTrailA",10+random(10,-10),0+random(10,-10),0+random(22,-22),0)
-		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),32)
+		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),SXF_NOCHECKPOSITION)
 		TNT1 AA 0 A_SpawnItemEx("BFG10KTrailB",0,0,10,random(-3,3),random(-3,3),random(-3,3),random(1,360))
 		BFS1 A 1 Bright A_CustomMissile("BFG10KTrailA",10+random(10,-10),0+random(10,-10),0+random(22,-22),0)
-		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),32)
+		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),SXF_NOCHECKPOSITION)
 		TNT1 AA 0 A_SpawnItemEx("BFG10KTrailB",0,0,10,random(-3,3),random(-3,3),random(-3,3),random(1,360))
 		BFS1 A 1 Bright A_CustomMissile("BFG10KTrailA",10+random(10,-10),0+random(10,-10),0+random(22,-22),0)
-		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),32)
+		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),SXF_NOCHECKPOSITION)
 		TNT1 AA 0 A_SpawnItemEx("BFG10KTrailB",0,0,10,random(-3,3),random(-3,3),random(-3,3),random(1,360))
 		BFS1 A 1 Bright A_CustomMissile("BFG10KTrailA",10+random(10,-10),0+random(10,-10),0+random(22,-22),0)
-		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),32)
+		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),SXF_NOCHECKPOSITION)
 		TNT1 AA 0 A_SpawnItemEx("BFG10KTrailB",0,0,10,random(-3,3),random(-3,3),random(-3,3),random(1,360))
 		BFS1 A 1 Bright A_CustomMissile("BFG10KTrailA",10+random(10,-10),0+random(10,-10),0+random(22,-22),0)
-		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),32)
+		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),SXF_NOCHECKPOSITION)
 		TNT1 AA 0 A_SpawnItemEx("BFG10KTrailB",0,0,10,random(-3,3),random(-3,3),random(-3,3),random(1,360))
 		BFS1 B 1 Bright A_CustomMissile("BFG10KTrailA",10+random(10,-10),0+random(10,-10),0+random(22,-22),0)
-		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),32)
+		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),SXF_NOCHECKPOSITION)
 		TNT1 AA 0 A_SpawnItemEx("BFG10KTrailB",0,0,10,random(-3,3),random(-3,3),random(-3,3),random(1,360))
 		BFS1 B 1 Bright A_CustomMissile("BFG10KTrailA",10+random(10,-10),0+random(10,-10),0+random(22,-22),0)
-		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),32)
+		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),SXF_NOCHECKPOSITION)
 		TNT1 AA 0 A_SpawnItemEx("BFG10KTrailB",0,0,10,random(-3,3),random(-3,3),random(-3,3),random(1,360))
 		BFS1 B 1 Bright A_CustomMissile("BFG10KTrailA",10+random(10,-10),0+random(10,-10),0+random(22,-22),0)
-		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),32)
+		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),SXF_NOCHECKPOSITION)
 		TNT1 AA 0 A_SpawnItemEx("BFG10KTrailB",0,0,10,random(-3,3),random(-3,3),random(-3,3),random(1,360))
 		BFS1 B 1 Bright A_CustomMissile("BFG10KTrailA",10+random(10,-10),0+random(10,-10),0+random(22,-22),0)
-		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),32)
+		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),SXF_NOCHECKPOSITION)
 		TNT1 AA 0 A_SpawnItemEx("BFG10KTrailB",0,0,10,random(-3,3),random(-3,3),random(-3,3),random(1,360))
 		BFS1 B 1 Bright A_CustomMissile("BFG10KTrailA",10+random(10,-10),0+random(10,-10),0+random(22,-22),0)
-		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),32)
+		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),SXF_NOCHECKPOSITION)
 		TNT1 AA 0 A_SpawnItemEx("BFG10KTrailB",0,0,10,random(-3,3),random(-3,3),random(-3,3),random(1,360))
 		BFS1 B 1 Bright A_CustomMissile("BFG10KTrailA",10+random(10,-10),0+random(10,-10),0+random(22,-22),0)
-		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),32)
+		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),SXF_NOCHECKPOSITION)
 		TNT1 AA 0 A_SpawnItemEx("BFG10KTrailB",0,0,10,random(-3,3),random(-3,3),random(-3,3),random(1,360))
 		Goto "Spawn2"
 	Spawn2:
-		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),32)
+		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),SXF_NOCHECKPOSITION)
 		TNT1 A 0 A_CustomMissile("BFGAlpha2M",0,0,0)
 		BFS1 A 1 Bright A_CustomMissile("BFG10KTrailA",10+random(10,-10),0+random(10,-10),0+random(22,-22),0)
 		TNT1 AA 0 A_SpawnItemEx("BFG10KTrailB",0,0,10,random(-3,3),random(-3,3),random(-3,3),random(1,360))
-		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),32)
+		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),SXF_NOCHECKPOSITION)
 		TNT1 A 0 A_CustomMissile("BFGAlpha2M",0,0,0)
 		BFS1 A 1 Bright A_CustomMissile("BFG10KTrailA",10+random(10,-10),0+random(10,-10),0+random(22,-22),0)
 		TNT1 AA 0 A_SpawnItemEx("BFG10KTrailB",0,0,10,random(-3,3),random(-3,3),random(-3,3),random(1,360))
-		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),32)
+		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),SXF_NOCHECKPOSITION)
 		TNT1 A 0 A_CustomMissile("BFGAlpha2M",0,0,0)
 		BFS1 A 1 Bright A_CustomMissile("BFG10KTrailA",10+random(10,-10),0+random(10,-10),0+random(22,-22),0)
 		TNT1 AA 0 A_SpawnItemEx("BFG10KTrailB",0,0,10,random(-3,3),random(-3,3),random(-3,3),random(1,360))
-		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),32)
+		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),SXF_NOCHECKPOSITION)
 		TNT1 A 0 A_CustomMissile("BFGAlpha2M",0,0,0)
 		BFS1 A 1 Bright A_CustomMissile("BFG10KTrailA",10+random(10,-10),0+random(10,-10),0+random(22,-22),0)
 		TNT1 AA 0 A_SpawnItemEx("BFG10KTrailB",0,0,10,random(-3,3),random(-3,3),random(-3,3),random(1,360))
-		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),32)
+		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),SXF_NOCHECKPOSITION)
 		TNT1 A 0 A_CustomMissile("BFGAlpha2M",0,0,0)
 		BFS1 A 1 Bright A_CustomMissile("BFG10KTrailA",10+random(10,-10),0+random(10,-10),0+random(22,-22),0)
 		TNT1 AA 0 A_SpawnItemEx("BFG10KTrailB",0,0,10,random(-3,3),random(-3,3),random(-3,3),random(1,360))
-		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),32)
+		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),SXF_NOCHECKPOSITION)
 		TNT1 A 0 A_CustomMissile("BFGAlpha2M",0,0,0)
 		BFS1 B 1 Bright A_CustomMissile("BFG10KTrailA",10+random(10,-10),0+random(10,-10),0+random(22,-22),0)
 		TNT1 AA 0 A_SpawnItemEx("BFG10KTrailB",0,0,10,random(-3,3),random(-3,3),random(-3,3),random(1,360))
-		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),32)
+		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),SXF_NOCHECKPOSITION)
 		TNT1 A 0 A_CustomMissile("BFGAlpha2M",0,0,0)
 		BFS1 B 1 Bright A_CustomMissile("BFG10KTrailA",10+random(10,-10),0+random(10,-10),0+random(22,-22),0)
 		TNT1 AA 0 A_SpawnItemEx("BFG10KTrailB",0,0,10,random(-3,3),random(-3,3),random(-3,3),random(1,360))
-		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),32)
+		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),SXF_NOCHECKPOSITION)
 		TNT1 A 0 A_CustomMissile("BFGAlpha2M",0,0,0)
 		BFS1 B 1 Bright A_CustomMissile("BFG10KTrailA",10+random(10,-10),0+random(10,-10),0+random(22,-22),0)
 		TNT1 AA 0 A_SpawnItemEx("BFG10KTrailB",0,0,10,random(-3,3),random(-3,3),random(-3,3),random(1,360))
-		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),32)
+		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),SXF_NOCHECKPOSITION)
 		TNT1 A 0 A_CustomMissile("BFGAlpha2M",0,0,0)
 		BFS1 B 1 Bright A_CustomMissile("BFG10KTrailA",10+random(10,-10),0+random(10,-10),0+random(22,-22),0)
 		TNT1 AA 0 A_SpawnItemEx("BFG10KTrailB",0,0,10,random(-3,3),random(-3,3),random(-3,3),random(1,360))
-		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),32)
+		TNT1 A 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),SXF_NOCHECKPOSITION)
 		TNT1 A 0 A_CustomMissile("BFGAlpha2M",0,0,0)
 		BFS1 B 1 Bright A_CustomMissile("BFG10KTrailA",10+random(10,-10),0+random(10,-10),0+random(22,-22),0)	
 		TNT1 AA 0 A_SpawnItemEx("BFG10KTrailB",0,0,10,random(-3,3),random(-3,3),random(-3,3),random(1,360))
 		Loop
 	Death:
 		BFE1 A 4 Bright A_Explode(256,64,1)
-		TNT1 AAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),32)
+		TNT1 AAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),SXF_NOCHECKPOSITION)
 		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BFG10Extra2",0,0,10,random(-4,4),random(-4,4),random(-4,4),random(1,360))
 		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BFG10Extra2",0,0,10,random(-4,4),random(-4,4),random(-4,4),random(1,360))
 		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BFG10Extra2",0,0,10,random(-4,4),random(-4,4),random(-4,4),random(1,360))
@@ -1304,7 +1304,7 @@ ACTOR FHover 7386	// cacodemon
 		Goto See
     Pain.Drain:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		Goto Pain
     Spawn: 
 		HVRW A 0 
@@ -1340,11 +1340,11 @@ ACTOR FHover 7386	// cacodemon
 		TNT1 A 0 A_JumpIfInventory("DisintegrateToken",1,"DisintegrateCont")
 		TNT1 A 0 A_PlaySound("quake4/Misc/Body/Beefy")
 		HVRD DEFGHIJ 3
-		TNT1 AAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 AAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 A 0 A_SpawnItemEx("QuakeSmallGibDropper",0,0,random(20,40),0,0,0,0,1)
+		TNT1 AAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 AAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 A 0 A_SpawnItemEx("QuakeSmallGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
 		TNT1 AAAAAAAA 0 A_TossGib
-		LYEP A 5 A_spawnItemEx("MonExplosionMedium",0,0,0,0,0,0,0,32)
+		LYEP A 5 A_SpawnItemEx("MonExplosionMedium",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		Stop
     Death.UnholyDisint:
     Death.PlasmaDisint:
@@ -1356,8 +1356,8 @@ ACTOR FHover 7386	// cacodemon
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 		TNT1 a 0 A_Stop	
 		TNT1 a 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
 		HVRP AA 2 A_FadeOut(0.03)
 		Goto DisintegrateCont+6
     } 
@@ -1450,7 +1450,7 @@ actor FTank 7387	// baron
 		Goto See
     Pain.Drain:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		Goto Pain
     Spawn:
 		TK1I A 5 A_Look
@@ -1477,8 +1477,8 @@ actor FTank 7387	// baron
 		TNT1 A 0 A_Jump(96,"Rockets")
 		TK1C ABCDE 4 A_FaceTarget
 	MgunLoop:
-		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlashSmall",20,20,45,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",20,20,48,0,0,frandom(0.4,0.99),0,32,128)
+		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlashSmall",20,20,45,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",20,20,48,0,0,frandom(0.4,0.99),0,SXF_NOCHECKPOSITION,128)
 		TK1C F 4 Bright A_CustomBulletAttack(8,8,1,4,"BulletDamagePuff")
 		TNT1 A 0 A_Jump(8,"MgunEnd")
 		TNT1 A 0 A_MonsterRefire(0,"MgunEnd")
@@ -1511,8 +1511,8 @@ actor FTank 7387	// baron
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 		TNT1 a 0 A_Stop	
 		TNT1 a 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
 		TK1P AA 2 A_FadeOut(0.03)
 		Goto Disintegrate+7
     Death:
@@ -1539,9 +1539,9 @@ actor FTank 7387	// baron
 		XTRA C 0 A_PlaySound("other/gibdeath")
 		TNT1 A 0 A_fall
 		TNT1 AAA 0 A_CustomMissile("BossDeathExplosion",0+Random(5,80),0+Random(35,-35),0+Random(0,370))
-		TNT1 AAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 AAAAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 A 0 A_SpawnItemEx("QuakeGibDropper",0,0,random(20,40),0,0,0,0,1)
+		TNT1 AAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 AAAAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 A 0 A_SpawnItemEx("QuakeGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
 		TNT1 AAAAAAAAAAAAAAAAAAA 0 A_TossGib
 		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		Stop
@@ -1611,7 +1611,7 @@ actor FGunner 7388	//revenant
 		Goto See
     Pain.Drain:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		Goto Pain
     Pain.Defile:
 		TNT1 A 0
@@ -1644,16 +1644,16 @@ actor FGunner 7388	//revenant
     MGun:
 		GNNA DEFG 5 A_FaceTarget
     MGunLoop:
-		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlashSmall",20,10,56,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",20,10,58,0,0,frandom(0.4,0.99),0,32)
+		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlashSmall",20,10,56,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",20,10,58,0,0,frandom(0.4,0.99),0,SXF_NOCHECKPOSITION)
 		GNNA H 4 Bright A_CustomBulletAttack(5,5,1,4,"BulletDamagePuff")
 		GNNA Z 0 A_FaceTarget
-		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlashSmall",20,10,56,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",20,10,58,0,0,frandom(0.4,0.99),0,32)
+		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlashSmall",20,10,56,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",20,10,58,0,0,frandom(0.4,0.99),0,SXF_NOCHECKPOSITION)
 		GNNA I 4 Bright A_CustomBulletAttack(5,5,1,3,"BulletDamagePuff")
 		GNNA Z 0 A_FaceTarget
-		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlashSmall",20,10,56,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",20,10,58,0,0,frandom(0.4,0.99),0,32)
+		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlashSmall",20,10,56,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",20,10,58,0,0,frandom(0.4,0.99),0,SXF_NOCHECKPOSITION)
 		GNNA J 4 Bright A_CustomBulletAttack(5,5,1,4,"BulletDamagePuff")
 		TNT1 A 0 A_Jump(16,"MGunEnd")
 		TNT1 A 0 A_MonsterRefire(0,"MGunEnd")
@@ -1678,15 +1678,15 @@ actor FGunner 7388	//revenant
 		Stop
 		TNT1 A 0 A_Die
 		TNT1 A 0 A_NoBlocking
-		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		Goto XDeath+2
     XDeath:
 		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"Defilement")
 		TNT1 C 0 A_PlaySound("other/gibdeath")
 		TNT1 A 0 A_fall
-		TNT1 AAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 AAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 A 0 A_SpawnItemEx("QuakeSmallGibDropper",0,0,random(20,40),0,0,0,0,1)
+		TNT1 AAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 AAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 A 0 A_SpawnItemEx("QuakeSmallGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
 		Stop
     Death.UnholyDisint:
     Death.PlasmaDisint:
@@ -1696,8 +1696,8 @@ actor FGunner 7388	//revenant
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 		TNT1 a 0 A_Stop	
 		TNT1 a 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
 		GNNP AA 2 A_FadeOut(0.03)
 		Goto Disintegrate+6
     Raise:
@@ -1724,10 +1724,10 @@ actor GunnerGrenade
     {
     Spawn:
 		TNT1 A 0
-		QGRP KJIHGFEDCBA 3 Bright A_SpawnItemEx("QuakeGrenSmokeTrail",random(0,-3),random(2,-2),random(2,-2),0,0,0.8,0,32)
+		QGRP KJIHGFEDCBA 3 Bright A_SpawnItemEx("QuakeGrenSmokeTrail",random(0,-3),random(2,-2),random(2,-2),0,0,0.8,0,SXF_NOCHECKPOSITION)
 		Goto Spawn+1
     Death:
-		TNT1 A 0 A_SpawnItemEx("MonExplosionMedium",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("MonExplosionMedium",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		TNT1 A 3 Bright A_Explode(40,64,1)
 		Stop
     }
@@ -1781,7 +1781,7 @@ ACTOR FQ2Soldier1 7389		// zombie
 		Goto See
     Pain.Drain:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		Goto Pain
     Pain.Defile:
 		TNT1 A 0
@@ -1820,15 +1820,15 @@ ACTOR FQ2Soldier1 7389		// zombie
 		Stop
 		TNT1 A 0 A_Die
 		TNT1 A 0 A_NoBlocking
-		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		Goto XDeath+2
     XDeath:
 		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"Defilement")
 		TNT1 C 0 A_PlaySound("other/gibdeath")
 		TNT1 A 0 A_fall
-		TNT1 AAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 AAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 A 0 A_SpawnItemEx("QuakeSmallGibDropper",0,0,random(20,40),0,0,0,0,1)
+		TNT1 AAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 AAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 A 0 A_SpawnItemEx("QuakeSmallGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
 		Stop
     Death.UnholyDisint:
     Death.PlasmaDisint:
@@ -1838,8 +1838,8 @@ ACTOR FQ2Soldier1 7389		// zombie
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 		TNT1 a 0 A_Stop	
 		TNT1 a 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
 		Q2SP AA 2 A_FadeOut(0.03)
 		Goto Disintegrate+6
     Raise:
@@ -1905,7 +1905,7 @@ ACTOR FQ2Soldier2 7390		// shotgun guy
 		Goto See
     Pain.Drain:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		Goto Pain
     Pain.Defile:
 		TNT1 A 0
@@ -1924,8 +1924,8 @@ ACTOR FQ2Soldier2 7390		// shotgun guy
 		Loop
     Missile:
 		Q2SA ABC 4 A_FaceTarget
-		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlashSmall",12,8,35,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",12,8,38,0,0,frandom(0.4,0.99),0,32)
+		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlashSmall",12,8,35,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",12,8,38,0,0,frandom(0.4,0.99),0,SXF_NOCHECKPOSITION)
 		Q2SA D 4 Bright A_CustomBulletAttack(5,5,3,5,"BulletDamagePuff")
 		Q2SA E 5 A_PlaySound("q2soldier/shotgunload")
 		Q2SA BCE 4
@@ -1946,7 +1946,7 @@ ACTOR FQ2Soldier2 7390		// shotgun guy
 		Stop
 		TNT1 A 0 A_Die
 		TNT1 A 0 A_NoBlocking
-		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		Goto XDeath+2
     XDeath:
 	TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"Defilement")
@@ -1964,8 +1964,8 @@ ACTOR FQ2Soldier2 7390		// shotgun guy
 	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 	TNT1 a 0 A_Stop	
 	TNT1 a 0 A_Fall
-	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
-	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
+	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
 	Q2SP AA 2 A_FadeOut(0.03)
 	Goto Disintegrate+6
     Raise:
@@ -2023,7 +2023,7 @@ ACTOR FQ2Soldier3 7391		// chaingun guy
 		Goto See
     Pain.Drain:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		Goto Pain
     Pain.Defile:
 		TNT1 A 0
@@ -2043,8 +2043,8 @@ ACTOR FQ2Soldier3 7391		// chaingun guy
     Missile:
 		Q2SA AB 3 A_FaceTarget
 		Q2SA B 1 A_FaceTarget
-		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",12,8,38,0,0,frandom(0.4,0.99),0,32,128)
-		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlashSmall",12,8,35,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",12,8,38,0,0,frandom(0.4,0.99),0,SXF_NOCHECKPOSITION,128)
+		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlashSmall",12,8,35,0,0,0,0,SXF_NOCHECKPOSITION)
 		Q2SA C 1 Bright A_CustomBulletAttack(4,2,1,2,"BulletDamagePuff")
 		Q2SA E 0 A_CPosRefire
 		Q2SA C 1 
@@ -2065,7 +2065,7 @@ ACTOR FQ2Soldier3 7391		// chaingun guy
 		Stop
 		TNT1 A 0 A_Die
 		TNT1 A 0 A_NoBlocking
-		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		Goto XDeath+2
     XDeath:
 		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"Defilement")
@@ -2083,8 +2083,8 @@ ACTOR FQ2Soldier3 7391		// chaingun guy
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 		TNT1 a 0 A_Stop	
 		TNT1 a 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
 		Q2SP AA 2 A_FadeOut(0.03)
 		Goto Disintegrate+6
     Raise:
@@ -2143,7 +2143,7 @@ ACTOR FParasite 7392	//imp
 		Goto See
     Pain.Drain:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		Goto Pain
     Pain.Defile:
 		TNT1 A 0
@@ -2194,15 +2194,15 @@ ACTOR FParasite 7392	//imp
 		Stop
 		TNT1 A 0 A_Die
 		TNT1 A 0 A_NoBlocking
-		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		Goto XDeath+2
     XDeath:
 		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"Defilement")
 		TNT1 C 0 A_PlaySound("other/gibdeath")
 		TNT1 A 0 A_fall
-		TNT1 AAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 AAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 A 0 A_SpawnItemEx("QuakeSmallGibDropper",0,0,random(20,40),0,0,0,0,1)
+		TNT1 AAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 AAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 A 0 A_SpawnItemEx("QuakeSmallGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
 		Stop
     Death.UnholyDisint:
     Death.PlasmaDisint:
@@ -2212,8 +2212,8 @@ ACTOR FParasite 7392	//imp
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 		TNT1 a 0 A_Stop	
 		TNT1 a 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
 		PARP AA 2 A_FadeOut(0.03)
 		Goto Disintegrate+6
     Raise:
@@ -2263,7 +2263,7 @@ Actor ParasiteTongue
 		Goto MoveOut
 		LPUF A 0 A_CheckSight(2)
 		LPUF A 0 A_JumpIf(user_life[0]>=4000,2)
-		LPUF A 0 A_SpawnItemEx("ParasitTongueTrail",0,0,0,0,0,0,0,32|SXF_ABSOLUTEMOMENTUM)
+		LPUF A 0 A_SpawnItemEx("ParasitTongueTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_ABSOLUTEMOMENTUM)
 		LPUF A 0 A_SetUserArray("user_life",0,user_life[0]+1)
 		Loop
 	MoveOut:
@@ -2348,7 +2348,7 @@ ACTOR FQ2Medic 7393	// arch-vile
 		Goto See
     Pain.Drain:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		Goto Pain
     Spawn:
 		MEDN A 10 A_Look
@@ -2410,9 +2410,9 @@ ACTOR FQ2Medic 7393	// arch-vile
     XDeath:
 		TNT1 C 0 A_PlaySound("other/gibdeath")
 		TNT1 A 0 A_fall
-		TNT1 AAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 AAAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 A 0 A_SpawnItemEx("QuakeSmallGibDropper",0,0,random(20,40),0,0,0,0,1)
+		TNT1 AAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 AAAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 A 0 A_SpawnItemEx("QuakeSmallGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
 		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		Stop
     Raise:
@@ -2426,8 +2426,8 @@ ACTOR FQ2Medic 7393	// arch-vile
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 		TNT1 a 0 A_Stop	
 		TNT1 a 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
 		MEDP AA 2 A_FadeOut(0.03)
 		Goto Disintegrate+6
     }
@@ -2516,7 +2516,7 @@ ACTOR FFlyer 7394	// lost soul
 		Goto See
 	Pain.Drain:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		Goto Pain
 	Spawn: 
 		LYEW A 0
@@ -2560,9 +2560,9 @@ ACTOR FFlyer 7394	// lost soul
 		Goto See 
 	Death: 
 		LYEP A 0 A_StopSound(6)
-		TNT1 AAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,1)
+		TNT1 AAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
 		TNT1 AAAAAAAA 0 A_TossGib
-		TNT1 A 4 A_SpawnItemEx("MonExplosionMedium",0,0,0,0,0,0,0,32)
+		TNT1 A 4 A_SpawnItemEx("MonExplosionMedium",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		Stop
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
@@ -2572,8 +2572,8 @@ ACTOR FFlyer 7394	// lost soul
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 		TNT1 a 0 A_Stop	
 		TNT1 a 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowSmallMedium",0,0,18,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksSmallMedium",0,0,18,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowSmallMedium",0,0,18,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksSmallMedium",0,0,18,0,0,0,0,SXF_NOCHECKPOSITION)
 		LYEP AA 2 A_FadeOut(0.03)
 		Goto Disintegrate+6
 	} 
@@ -2681,7 +2681,7 @@ ACTOR FQ2Brains 7395	// hell knight
 		Goto See
     Pain.Drain:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		Goto Pain
     Pain.Defile:
 		TNT1 A 0
@@ -2732,34 +2732,34 @@ ACTOR FQ2Brains 7395	// hell knight
 		BRNA A 5 A_FaceTarget
 		BRNA A 0 A_SpawnItem("Q2BrainsShieldup2",2,0,0)
 		BRNA A 0 A_PlaySound("ForceCube/Fire")
-		BRNA A 1 Bright A_SpawnItemEx("BrainRailAttack",38,0,44,0,0,0,0,32,0)
+		BRNA A 1 Bright A_SpawnItemEx("BrainRailAttack",38,0,44,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		BRNA A 0 Bright A_FaceTarget
-		BRNA A 1 Bright A_SpawnItemEx("BrainRailAttack",38,0,44,0,0,0,0,32,0)
+		BRNA A 1 Bright A_SpawnItemEx("BrainRailAttack",38,0,44,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		BRNA A 0 Bright A_FaceTarget
-		BRNA A 1 Bright A_SpawnItemEx("BrainRailAttack",38,0,44,0,0,0,0,32,0)
+		BRNA A 1 Bright A_SpawnItemEx("BrainRailAttack",38,0,44,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		BRNA A 0 Bright A_FaceTarget
-		BRNA A 1 Bright A_SpawnItemEx("BrainRailAttack",38,0,44,0,0,0,0,32,0)
+		BRNA A 1 Bright A_SpawnItemEx("BrainRailAttack",38,0,44,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		BRNA A 0 Bright A_FaceTarget
-		BRNA A 1 Bright A_SpawnItemEx("BrainRailAttack",38,0,44,0,0,0,0,32,0)
+		BRNA A 1 Bright A_SpawnItemEx("BrainRailAttack",38,0,44,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		BRNA A 0 Bright A_FaceTarget
-		BRNA A 1 Bright A_SpawnItemEx("BrainRailAttack",38,0,44,0,0,0,0,32,0)
+		BRNA A 1 Bright A_SpawnItemEx("BrainRailAttack",38,0,44,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		BRNA A 0 Bright A_FaceTarget
-		BRNA A 1 Bright A_SpawnItemEx("BrainRailAttack",38,0,44,0,0,0,0,32,0)
+		BRNA A 1 Bright A_SpawnItemEx("BrainRailAttack",38,0,44,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		BRNA A 0 A_SpawnItem("Q2BrainsShieldup2",2,0,0)
 		BRNA A 0 A_PlaySound("ForceCube/Fire")
-		BRNA A 1 Bright A_SpawnItemEx("BrainRailAttack",38,0,44,0,0,0,0,32,0)
+		BRNA A 1 Bright A_SpawnItemEx("BrainRailAttack",38,0,44,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		BRNA A 0 Bright A_FaceTarget
-		BRNA A 1 Bright A_SpawnItemEx("BrainRailAttack",38,0,44,0,0,0,0,32,0)
+		BRNA A 1 Bright A_SpawnItemEx("BrainRailAttack",38,0,44,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		BRNA A 0 Bright A_FaceTarget
-		BRNA A 1 Bright A_SpawnItemEx("BrainRailAttack",38,0,44,0,0,0,0,32,0)
+		BRNA A 1 Bright A_SpawnItemEx("BrainRailAttack",38,0,44,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		BRNA A 0 Bright A_FaceTarget
-		BRNA A 1 Bright A_SpawnItemEx("BrainRailAttack",38,0,44,0,0,0,0,32,0)
+		BRNA A 1 Bright A_SpawnItemEx("BrainRailAttack",38,0,44,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		BRNA A 0 Bright A_FaceTarget
-		BRNA A 1 Bright A_SpawnItemEx("BrainRailAttack",38,0,44,0,0,0,0,32,0)
+		BRNA A 1 Bright A_SpawnItemEx("BrainRailAttack",38,0,44,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		BRNA A 0 Bright A_FaceTarget
-		BRNA A 1 Bright A_SpawnItemEx("BrainRailAttack",38,0,44,0,0,0,0,32,0)
+		BRNA A 1 Bright A_SpawnItemEx("BrainRailAttack",38,0,44,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		BRNA A 0 Bright A_FaceTarget
-		BRNA A 1 Bright A_SpawnItemEx("BrainRailAttack",38,0,44,0,0,0,0,32,0)
+		BRNA A 1 Bright A_SpawnItemEx("BrainRailAttack",38,0,44,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		BRNA A 0 Bright A_SpawnItem("Q2BrainsShieldup3",4,0,0)
 		BRNA A 5 A_FaceTarget
 		Goto See
@@ -2784,16 +2784,16 @@ ACTOR FQ2Brains 7395	// hell knight
 		Stop
 		TNT1 A 0 A_Die
 		TNT1 A 0 A_NoBlocking
-		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		Goto XDeath+2
     XDeath:
 		TNT1 A 0
 		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"Defilement")
 		XTRA C 0 A_PlaySound("other/gibdeath")
 		TNT1 A 0 A_fall
-		TNT1 AAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 AAAAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 A 0 A_SpawnItemEx("QuakeGibDropper",0,0,random(20,40),0,0,0,0,1)
+		TNT1 AAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 AAAAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 A 0 A_SpawnItemEx("QuakeGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
 		Stop
     Death.UnholyDisint:
     Death.PlasmaDisint:
@@ -2803,8 +2803,8 @@ ACTOR FQ2Brains 7395	// hell knight
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 		TNT1 a 0 A_Stop	
 		TNT1 a 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
 		BRNP AA 2 A_FadeOut(0.03)
 		Goto Disintegrate+6
     Raise:
@@ -3303,7 +3303,7 @@ ACTOR FGladiator 7396		// mancubus
 		Goto See
 	Pain.Drain:
 		TNT1 A 0 A_StopSound(6)
-		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		Goto Pain
 	Spawn:
 		GLAI A 10 A_Look
@@ -3349,9 +3349,9 @@ ACTOR FGladiator 7396		// mancubus
 		GLAA D 0 A_StopSound(6)
 		XTRA C 0 A_PlaySound("other/gibdeath")
 		TNT1 A 0 A_Fall
-		TNT1 AAAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 AAAAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 A 0 A_SpawnItemEx("QuakeGibDropper",0,0,random(20,40),0,0,0,0,1)
+		TNT1 AAAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 AAAAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 A 0 A_SpawnItemEx("QuakeGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
 		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		Stop
 	Death.UnholyDisint:
@@ -3364,8 +3364,8 @@ ACTOR FGladiator 7396		// mancubus
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 		TNT1 a 0 A_Stop	
 		TNT1 a 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
 		GLAP AA 2 A_FadeOut(0.03)
 		Goto Disintegrate+8
 	Raise:
@@ -3429,7 +3429,7 @@ Actor FInfantry 7397	// chaingun guy
 		Goto See
 	Pain.Drain:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		Goto Pain
 	Pain.Defile:
 		TNT1 A 0
@@ -3458,8 +3458,8 @@ Actor FInfantry 7397	// chaingun guy
 		TNT1 A 0 A_SetUserVar("user_counter",0)
 		MisLoop:
 		TNT1 A 0 A_JumpIf(user_counter>=12,"MisEnd")
-		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlashSmall",20,5,40,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",20,5,42,0,0,frandom(0.2,0.5),0,32,128)
+		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlashSmall",20,5,40,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",20,5,42,0,0,frandom(0.2,0.5),0,SXF_NOCHECKPOSITION,128)
 		INFA Z 0 A_PlaySound("q2infantry/chaingunattack")
 		INFA F 4 Bright A_CustomBulletAttack(9,9,1,3,"BulletDamagePuff")
 		TNT1 A 0 A_SetUserVar("user_counter",user_counter+1)
@@ -3485,15 +3485,15 @@ Actor FInfantry 7397	// chaingun guy
 		Stop
 		TNT1 A 0 A_Die
 		TNT1 A 0 A_NoBlocking
-		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		Goto XDeath+2
 	XDeath:
 		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"Defilement")
 		TNT1 C 0 A_PlaySound("other/gibdeath")
 		TNT1 A 0 A_fall
-		TNT1 AAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 AAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 A 0 A_SpawnItemEx("QuakeSmallGibDropper",0,0,random(20,40),0,0,0,0,1)
+		TNT1 AAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 AAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 A 0 A_SpawnItemEx("QuakeSmallGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
 		Stop
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
@@ -3503,8 +3503,8 @@ Actor FInfantry 7397	// chaingun guy
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 		TNT1 a 0 A_Stop	
 		TNT1 a 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
 		INFP AA 2 A_FadeOut(0.03)
 		Goto Disintegrate+6
 	Raise:
@@ -3569,7 +3569,7 @@ ACTOR FQ2Mutant 7398	// demon
 		Goto See
 	Pain.Drain:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		Goto Pain
 	Pain.Defile:
 		TNT1 A 0
@@ -3628,15 +3628,15 @@ ACTOR FQ2Mutant 7398	// demon
 		Stop
 		TNT1 A 0 A_Die
 		TNT1 A 0 A_NoBlocking
-		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("RedMiteSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		Goto XDeath+2
 	XDeath:
 		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"Defilement")
 		XTRA C 0 A_PlaySound("other/gibdeath")
 		TNT1 A 0 A_fall
-		TNT1 AAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 AAAAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 A 0 A_SpawnItemEx("QuakeGibDropper",0,0,random(20,40),0,0,0,0,1)
+		TNT1 AAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 AAAAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 A 0 A_SpawnItemEx("QuakeGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
 		Stop
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
@@ -3646,8 +3646,8 @@ ACTOR FQ2Mutant 7398	// demon
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 		TNT1 a 0 A_Stop	
 		TNT1 a 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
 		Q2MP AA 2 A_FadeOut(0.03)
 		Goto Disintegrate+6
 	Raise:
@@ -3709,7 +3709,7 @@ ACTOR FCarrier 7399		// spider mastermind
 	{
 	Pain.Drain:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		Goto See
 	Spawn:
 		CARR A 4 A_Look
@@ -3723,10 +3723,10 @@ ACTOR FCarrier 7399		// spider mastermind
 		CARR A 0 A_FaceTarget
 		/*CARR A 0 A_CustomMissile("ShotSmoke",110,40,5+random(30,-30))
 		CARR A 0 A_CustomMissile("ShotSmoke",110,-40,5+Random(30,-30))*/
-		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",40,40,110,0,0,frandom(0.4,0.99),0,32,128)
-		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",40,40,108,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",40,-40,110,0,0,frandom(0.4,0.99),0,32,128)
-		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",40,-40,108,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",40,40,110,0,0,frandom(0.4,0.99),0,SXF_NOCHECKPOSITION,128)
+		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",40,40,108,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",40,-40,110,0,0,frandom(0.4,0.99),0,SXF_NOCHECKPOSITION,128)
+		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",40,-40,108,0,0,0,0,SXF_NOCHECKPOSITION)
 		CARR B 2 Bright A_CustomBulletAttack(9,9,2,4,"BulletDamagePuff")
 		CARR A 0 A_CPosRefire
 		CARR A 0
@@ -3765,10 +3765,10 @@ ACTOR FCarrier 7399		// spider mastermind
 		CARR A 0 A_NoBlocking
 		CARR A 6 A_LowGravity
 		CARR A 6 A_Scream
-		CARR A 5 A_SpawnItemEx("BossDeathExplosion",random(0,35),0,random(0,70),0,0,0,random(0,359),32)
+		CARR A 5 A_SpawnItemEx("BossDeathExplosion",random(0,35),0,random(0,70),0,0,0,random(0,359),SXF_NOCHECKPOSITION)
 		CARR A 5
 		CARR A 4 
-		CARR A 5 A_SpawnItemEx("BossDeathExplosion",random(0,35),0,random(0,70),0,0,0,random(0,359),32)
+		CARR A 5 A_SpawnItemEx("BossDeathExplosion",random(0,35),0,random(0,70),0,0,0,random(0,359),SXF_NOCHECKPOSITION)
 		CARR A 5 A_JumpIf(z <= floorz || abs(velz) <= 0,"Crash")
 		Goto Death+7
 	Crash:
@@ -3784,9 +3784,9 @@ ACTOR FCarrier 7399		// spider mastermind
 		TNT1 A 0 A_CustomMissile("BossDeathExplosion",0+Random(5,80),0+Random(35,-35),0+Random(0,370))
 		CARR A 20
 		TNT1 A 0 A_PlaySound("other/gibdeath")
-		TNT1 AAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 AAAAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 A 0 A_SpawnItemEx("QuakeGibDropper",0,0,random(20,40),0,0,0,0,1)
+		TNT1 AAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 AAAAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 A 0 A_SpawnItemEx("QuakeGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
 		TNT1 AAAAAAAAAAAAAAAAAAAAA 0 A_TossGib
 		TNT1 A 0 A_CustomMissile("BossDeathExplosion",0+Random(5,80),0+Random(35,-35),0+Random(0,370))
 		TNT1 A 0 A_CustomMissile("BossDeathExplosion",0+Random(5,80),0+Random(35,-35),0+Random(0,370))
@@ -3804,8 +3804,8 @@ ACTOR FCarrier 7399		// spider mastermind
 		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
 		"####" "#" 0 A_Stop	
 		"####" "#" 0 A_Fall
-		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowBig",0,0,45,0,0,0,0,32)
-		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksBig",0,0,45,0,0,0,0,32)
+		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowBig",0,0,45,0,0,0,0,SXF_NOCHECKPOSITION)
+		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksBig",0,0,45,0,0,0,0,SXF_NOCHECKPOSITION)
 		"####" "##" 2 A_FadeOut(0.03)
 		Goto DisintegrateCont+7
     }
@@ -3844,92 +3844,92 @@ ACTOR FShieldHover : FHover 7400	// painelement
     Spawn: 
 		HVRW A 0
 		HVRW A 0 A_PlaySound("q2hover/flying",6,0.4,5)
-		HVRW A 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,32,0)
+		HVRW A 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		HVRW A 7 A_Look
-		HVRW B 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,32,0)
+		HVRW B 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		HVRW B 7 A_Look 
-		HVRW C 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,32,0)
+		HVRW C 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		HVRW C 7 A_Look
-		HVRW C 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,32,0)
+		HVRW C 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		HVRW D 7 A_Look 
-		HVRW D 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,32,0)
+		HVRW D 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		HVRW E 7 A_Look
-		HVRW E 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,32,0)
+		HVRW E 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		HVRW F 7 A_Look 
-		HVRW F 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,32,0)
+		HVRW F 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		HVRW G 7 A_Look
-		HVRW G 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,32,0)
+		HVRW G 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		HVRW H 7 A_Look 
-		HVRW H 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,32,0)
+		HVRW H 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		HVRW I 7 A_Look
-		HVRW I 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,32,0)
+		HVRW I 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		HVRW J 7 A_Look 
-		HVRW J 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,32,0)
+		HVRW J 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		HVRW K 7 A_Look 
 		Loop 
     See: 
-		HVRW A 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,32,0)
+		HVRW A 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		HVRW A 7 A_Chase
-		HVRW B 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,32,0)
+		HVRW B 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		HVRW B 7 A_Chase 
-		HVRW C 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,32,0)
+		HVRW C 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		HVRW C 7 A_Chase
-		HVRW C 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,32,0)
+		HVRW C 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		HVRW D 7 A_Chase
-		HVRW D 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,32,0)
+		HVRW D 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		HVRW E 7 A_Chase
-		HVRW E 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,32,0)
+		HVRW E 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		HVRW F 7 A_Chase 
-		HVRW F 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,32,0)
+		HVRW F 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		HVRW G 7 A_Chase
-		HVRW G 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,32,0)
+		HVRW G 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		HVRW H 7 A_Chase 
-		HVRW H 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,32,0)
+		HVRW H 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		HVRW I 7 A_Chase
-		HVRW I 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,32,0)
+		HVRW I 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		HVRW J 7 A_Chase 
-		HVRW J 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,32,0)
+		HVRW J 0 A_SpawnItemEx("HoverShieldup",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		HVRW K 7 A_Chase 
 		Loop
     Missile:
-		HVRA A 0 A_SpawnItemEx("HoverShieldup2",12,0,0,0,0,0,0,32,0)
+		HVRA A 0 A_SpawnItemEx("HoverShieldup2",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		HVRA A 4 A_FaceTarget
-		HVRA B 0 A_SpawnItemEx("HoverShieldup2",12,0,0,0,0,0,0,32,0)
+		HVRA B 0 A_SpawnItemEx("HoverShieldup2",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		HVRA B 4 A_FaceTarget
-		HVRA C 0 A_SpawnItemEx("HoverShieldup2",12,0,0,0,0,0,0,32,0)
+		HVRA C 0 A_SpawnItemEx("HoverShieldup2",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		HVRA C 4 A_FaceTarget
-		HVRA D 0 A_SpawnItemEx("HoverShieldup2",12,0,0,0,0,0,0,32,0)
+		HVRA D 0 A_SpawnItemEx("HoverShieldup2",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		HVRA D 4 A_FaceTarget
-		HVRA E 0 A_SpawnItemEx("HoverShieldup2",12,0,0,0,0,0,0,32,0)
+		HVRA E 0 A_SpawnItemEx("HoverShieldup2",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		HVRA E 4 bright A_CustomMissile("HoverBeam2", 24, 0, 0, 1)
-		HVRA E 0 A_SpawnItemEx("HoverShieldup2",12,0,0,0,0,0,0,32,0)
-		HVRA E 4 bright A_CustomMissile("HoverBeam2", 24, 0, 0, 1)
-		HVRA E 0 A_FaceTarget
-		HVRA E 0 A_SpawnItemEx("HoverShieldup2",12,0,0,0,0,0,0,32,0)
-		HVRA E 4 bright A_CustomMissile("HoverBeam2", 24, 0, 0, 1)
-		HVRA E 0 A_SpawnItemEx("HoverShieldup2",12,0,0,0,0,0,0,32,0)
+		HVRA E 0 A_SpawnItemEx("HoverShieldup2",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		HVRA E 4 bright A_CustomMissile("HoverBeam2", 24, 0, 0, 1)
 		HVRA E 0 A_FaceTarget
-		HVRA E 0 A_SpawnItemEx("HoverShieldup2",12,0,0,0,0,0,0,32,0)
+		HVRA E 0 A_SpawnItemEx("HoverShieldup2",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		HVRA E 4 bright A_CustomMissile("HoverBeam2", 24, 0, 0, 1)
-		HVRA E 0 A_SpawnItemEx("HoverShieldup2",12,0,0,0,0,0,0,32,0)
-		HVRA E 4 bright A_CustomMissile("HoverBeam2", 24, 0, 0, 1)
-		HVRA E 0 A_FaceTarget
-		HVRA E 0 A_SpawnItemEx("HoverShieldup2",12,0,0,0,0,0,0,32,0)
-		HVRA E 4 bright A_CustomMissile("HoverBeam2", 24, 0, 0, 1)
-		HVRA E 0 A_SpawnItemEx("HoverShieldup2",12,0,0,0,0,0,0,32,0)
+		HVRA E 0 A_SpawnItemEx("HoverShieldup2",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		HVRA E 4 bright A_CustomMissile("HoverBeam2", 24, 0, 0, 1)
 		HVRA E 0 A_FaceTarget
-		HVRA F 0 A_SpawnItemEx("HoverShieldup2",12,0,0,0,0,0,0,32,0)
+		HVRA E 0 A_SpawnItemEx("HoverShieldup2",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
+		HVRA E 4 bright A_CustomMissile("HoverBeam2", 24, 0, 0, 1)
+		HVRA E 0 A_SpawnItemEx("HoverShieldup2",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
+		HVRA E 4 bright A_CustomMissile("HoverBeam2", 24, 0, 0, 1)
+		HVRA E 0 A_FaceTarget
+		HVRA E 0 A_SpawnItemEx("HoverShieldup2",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
+		HVRA E 4 bright A_CustomMissile("HoverBeam2", 24, 0, 0, 1)
+		HVRA E 0 A_SpawnItemEx("HoverShieldup2",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
+		HVRA E 4 bright A_CustomMissile("HoverBeam2", 24, 0, 0, 1)
+		HVRA E 0 A_FaceTarget
+		HVRA F 0 A_SpawnItemEx("HoverShieldup2",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		HVRA F 4 A_FaceTarget 
-		HVRA G 0 A_SpawnItemEx("HoverShieldup2",12,0,0,0,0,0,0,32,0)
+		HVRA G 0 A_SpawnItemEx("HoverShieldup2",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		HVRA G 4 A_FaceTarget 
-		HVRA H 0 A_SpawnItemEx("HoverShieldup2",12,0,0,0,0,0,0,32,0)
+		HVRA H 0 A_SpawnItemEx("HoverShieldup2",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		HVRA H 4 A_FaceTarget 
 		Goto See
     Pain:
 		HVRP A 1
-		HVRA H 0 A_SpawnItemEx("HoverShieldup2",12,0,0,0,0,0,0,32,0)
+		HVRA H 0 A_SpawnItemEx("HoverShieldup2",12,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		HVRP A 3 A_Pain 
 		Goto See
 	Pain.PillarDamage:
@@ -3985,33 +3985,33 @@ ACTOR FShieldGunner : FGunner 7401	// revenant
     States
     {
 	Spawn:
-		GNNI A 0 A_SpawnItemEx("Q2BrainsShieldup4",4,0,0,0,0,0,0,32,0)
+		GNNI A 0 A_SpawnItemEx("Q2BrainsShieldup4",4,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GNNI A 5 A_Look
 		Loop
 	See:
-		GNNW A 0 A_SpawnItemEx("GunnerShieldup",14,0,0,0,0,0,0,32,0)
+		GNNW A 0 A_SpawnItemEx("GunnerShieldup",14,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GNNW A 2 A_Chase
-		GNNW A 0 A_SpawnItemEx("GunnerShieldup",14,0,0,0,0,0,0,32,0)
+		GNNW A 0 A_SpawnItemEx("GunnerShieldup",14,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GNNW A 2 A_Chase
-		GNNW B 0 A_SpawnItemEx("GunnerShieldup",14,0,0,0,0,0,0,32,0)
+		GNNW B 0 A_SpawnItemEx("GunnerShieldup",14,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GNNW B 2 A_Chase
-		GNNW B 0 A_SpawnItemEx("GunnerShieldup",14,0,0,0,0,0,0,32,0)
+		GNNW B 0 A_SpawnItemEx("GunnerShieldup",14,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GNNW B 2 A_Chase
-		GNNW C 0 A_SpawnItemEx("GunnerShieldup",14,0,0,0,0,0,0,32,0)
+		GNNW C 0 A_SpawnItemEx("GunnerShieldup",14,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GNNW C 2 A_Chase
-		GNNW C 0 A_SpawnItemEx("GunnerShieldup",14,0,0,0,0,0,0,32,0)
+		GNNW C 0 A_SpawnItemEx("GunnerShieldup",14,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GNNW C 2 A_Chase
-		GNNW D 0 A_SpawnItemEx("GunnerShieldup",14,0,0,0,0,0,0,32,0)
+		GNNW D 0 A_SpawnItemEx("GunnerShieldup",14,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GNNW D 2 A_Chase
-		GNNW D 0 A_SpawnItemEx("GunnerShieldup",14,0,0,0,0,0,0,32,0)
+		GNNW D 0 A_SpawnItemEx("GunnerShieldup",14,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GNNW D 2 A_Chase
-		GNNW E 0 A_SpawnItemEx("GunnerShieldup",14,0,0,0,0,0,0,32,0)
+		GNNW E 0 A_SpawnItemEx("GunnerShieldup",14,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GNNW E 2 A_Chase
-		GNNW E 0 A_SpawnItemEx("GunnerShieldup",14,0,0,0,0,0,0,32,0)
+		GNNW E 0 A_SpawnItemEx("GunnerShieldup",14,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GNNW E 2 A_Chase
-		GNNW F 0 A_SpawnItemEx("GunnerShieldup",14,0,0,0,0,0,0,32,0)
+		GNNW F 0 A_SpawnItemEx("GunnerShieldup",14,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GNNW F 2 A_Chase
-		GNNW F 0 A_SpawnItemEx("GunnerShieldup",14,0,0,0,0,0,0,32,0)
+		GNNW F 0 A_SpawnItemEx("GunnerShieldup",14,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GNNW F 2 A_Chase
 		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,2)
 		TNT1 A 0
@@ -4021,67 +4021,67 @@ ACTOR FShieldGunner : FGunner 7401	// revenant
 	Missile:
 		TNT1 A 0
 		TNT1 A 0 A_Jump(128,"Mgun")
-		GNNA C 0 A_SpawnItemEx("GunnerShieldup2",4,0,0,0,0,0,0,32,0)
+		GNNA C 0 A_SpawnItemEx("GunnerShieldup2",4,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GNNA C 4 A_FaceTarget
-		GNNA C 0 A_SpawnItemEx("GunnerShieldup2",4,0,0,0,0,0,0,32,0)
+		GNNA C 0 A_SpawnItemEx("GunnerShieldup2",4,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GNNA C 4 A_FaceTarget
-		GNNA C 0 A_SpawnItemEx("GunnerShieldup2",4,0,0,0,0,0,0,32,0)
+		GNNA C 0 A_SpawnItemEx("GunnerShieldup2",4,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GNNA C 4 A_FaceTarget
 		GNNA A 0 A_PlaySound("GLFIRE")
-		GNNA A 0 A_SpawnItemEx("GunnerShieldup2",4,0,0,0,0,0,0,32,0)
+		GNNA A 0 A_SpawnItemEx("GunnerShieldup2",4,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GNNA A 4 A_CustomMissile("FragmentationGrenadeMon", 50, -20, 0)
-		GNNA B 0 A_SpawnItemEx("GunnerShieldup4",4,0,0,0,0,0,0,32,0)
+		GNNA B 0 A_SpawnItemEx("GunnerShieldup4",4,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GNNA BC 3 A_FaceTarget
 		GNNA A 0 A_PlaySound("GLFIRE")
-		GNNA A 0 A_SpawnItemEx("GunnerShieldup2",4,0,0,0,0,0,0,32,0)
+		GNNA A 0 A_SpawnItemEx("GunnerShieldup2",4,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GNNA A 4 A_CustomMissile("FragmentationGrenadeMon", 50, -20, 0)
-		GNNA A 0 A_SpawnItemEx("GunnerShieldup4",4,0,0,0,0,0,0,32,0)
+		GNNA A 0 A_SpawnItemEx("GunnerShieldup4",4,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GNNA BC 3 A_FaceTarget
 		Goto See
 	Mgun:
-		GNNA D 0 A_SpawnItemEx("GunnerShieldup3",4,0,0,0,0,0,0,32,0)
+		GNNA D 0 A_SpawnItemEx("GunnerShieldup3",4,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GNNA D 5 A_FaceTarget
-		GNNA E 0 A_SpawnItemEx("GunnerShieldup3",4,0,0,0,0,0,0,32,0)
+		GNNA E 0 A_SpawnItemEx("GunnerShieldup3",4,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GNNA E 5 A_FaceTarget
-		GNNA F 0 A_SpawnItemEx("GunnerShieldup3",4,0,0,0,0,0,0,32,0)
+		GNNA F 0 A_SpawnItemEx("GunnerShieldup3",4,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GNNA F 5 A_FaceTarget
-		GNNA G 0 A_SpawnItemEx("GunnerShieldup3",4,0,0,0,0,0,0,32,0)
+		GNNA G 0 A_SpawnItemEx("GunnerShieldup3",4,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GNNA G 5 A_FaceTarget
 	MgunLoop:
-		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlashSmall",20,10,56,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",20,10,58,0,0,frandom(0.4,0.99),0,32)
+		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlashSmall",20,10,56,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",20,10,58,0,0,frandom(0.4,0.99),0,SXF_NOCHECKPOSITION)
 		GNNA H 0 Bright A_PlaySound("weapons/nailshot")
 		GNNA H 0 Bright A_CustomMissile("GunnerNail",52,5,random(-2,2))
-		GNNA H 0 A_SpawnItemEx("GunnerShieldup",4,0,0,0,0,0,0,32,0)
+		GNNA H 0 A_SpawnItemEx("GunnerShieldup",4,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GNNA H 2 A_FaceTarget
-		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlashSmall",20,10,56,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",20,10,58,0,0,frandom(0.4,0.99),0,32)
+		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlashSmall",20,10,56,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",20,10,58,0,0,frandom(0.4,0.99),0,SXF_NOCHECKPOSITION)
 		GNNA I 0 Bright A_PlaySound("weapons/nailshot")
 		GNNA I 0 Bright A_CustomMissile("GunnerNail",52,5,random(-2,2))
-		GNNA I 0 A_SpawnItemEx("GunnerShieldup",4,0,0,0,0,0,0,32,0)
+		GNNA I 0 A_SpawnItemEx("GunnerShieldup",4,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GNNA I 2 A_FaceTarget
-		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlashSmall",20,10,56,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",20,10,58,0,0,frandom(0.4,0.99),0,32)
+		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlashSmall",20,10,56,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",20,10,58,0,0,frandom(0.4,0.99),0,SXF_NOCHECKPOSITION)
 		GNNA J 0 Bright A_PlaySound("weapons/nailshot")
 		GNNA J 0 Bright A_CustomMissile("GunnerNail",52,5,random(-2,2))
-		GNNA J 0 A_SpawnItemEx("GunnerShieldup",4,0,0,0,0,0,0,32,0)
+		GNNA J 0 A_SpawnItemEx("GunnerShieldup",4,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GNNA J 2 A_FaceTarget
 		TNT1 A 0 A_Jump(24,"MgunEnd")
 		TNT1 A 0 A_MonsterRefire(0,"MgunEnd")
 		Loop
 	MgunEnd:
-		GNNA J 0 A_SpawnItemEx("GunnerShieldup",4,0,0,0,0,0,0,32,0)
+		GNNA J 0 A_SpawnItemEx("GunnerShieldup",4,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GNNA J 2 A_FaceTarget
-		GNNA K 0 A_SpawnItemEx("GunnerShieldup4",4,0,0,0,0,0,0,32,0)
+		GNNA K 0 A_SpawnItemEx("GunnerShieldup4",4,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GNNA K 6
-		GNNA H 0 A_SpawnItemEx("GunnerShieldup4",4,0,0,0,0,0,0,32,0)
+		GNNA H 0 A_SpawnItemEx("GunnerShieldup4",4,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GNNA L 6
-		GNNA H 0 A_SpawnItemEx("GunnerShieldup4",4,0,0,0,0,0,0,32,0)
+		GNNA H 0 A_SpawnItemEx("GunnerShieldup4",4,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GNNA M 6
 		Goto See
 	Pain:
 		GNNP A 1
-		GNNP A 0 A_SpawnItemEx("GunnerShieldup4",4,0,0,0,0,0,0,32,0)
+		GNNP A 0 A_SpawnItemEx("GunnerShieldup4",4,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GNNP A 5 A_Pain
 		Goto See
 	Pain.PillarDamage:
@@ -4185,69 +4185,69 @@ ACTOR FShieldGladiator : FGladiator 7402		// baron
 	States
 	{
 	Spawn:
-		GLAI A 0 A_SpawnItemEx("GladiatorShieldUp2",4,0,0,0,0,0,0,32,0)
+		GLAI A 0 A_SpawnItemEx("GladiatorShieldUp2",4,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GLAI A 5 A_Look
-		GLAI A 0 A_SpawnItemEx("GladiatorShieldUp2",4,0,0,0,0,0,0,32,0)
+		GLAI A 0 A_SpawnItemEx("GladiatorShieldUp2",4,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GLAI A 5 A_Look
 		Loop
 	See:
 		GLAA D 0 A_StopSound(6)
-		GLAW A 0 A_SpawnItemEx("GladiatorShieldUp",17,0,0,0,0,0,0,32,0)
+		GLAW A 0 A_SpawnItemEx("GladiatorShieldUp",17,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GLAW A 4 A_Chase
-		GLAW B 0 A_SpawnItemEx("GladiatorShieldUp",17,0,0,0,0,0,0,32,0)
+		GLAW B 0 A_SpawnItemEx("GladiatorShieldUp",17,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GLAW B 4 A_Chase
-		GLAW C 0 A_SpawnItemEx("GladiatorShieldUp",17,0,0,0,0,0,0,32,0)
+		GLAW C 0 A_SpawnItemEx("GladiatorShieldUp",17,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GLAW C 4 A_Chase
-		GLAW D 0 A_SpawnItemEx("GladiatorShieldUp",17,0,0,0,0,0,0,32,0)
+		GLAW D 0 A_SpawnItemEx("GladiatorShieldUp",17,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GLAW D 4 A_Chase
-		GLAW E 0 A_SpawnItemEx("GladiatorShieldUp",17,0,0,0,0,0,0,32,0)
+		GLAW E 0 A_SpawnItemEx("GladiatorShieldUp",17,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GLAW E 4 A_Chase
-		GLAW F 0 A_SpawnItemEx("GladiatorShieldUp",17,0,0,0,0,0,0,32,0)
+		GLAW F 0 A_SpawnItemEx("GladiatorShieldUp",17,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GLAW F 4 A_Chase
 		Loop
 	Missile:
-		GLAA F 0 A_SpawnItemEx("GladiatorShieldUp3",4,0,0,0,0,0,0,32,0)
+		GLAA F 0 A_SpawnItemEx("GladiatorShieldUp3",4,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GLAA F 8 A_FaceTarget
 		TNT1 A 0 A_PlaySound("q2gladiator/phalanx")
-		GLAA F 0 A_SpawnItemEx("GladiatorShieldUp",4,0,0,0,0,0,0,32,0)
+		GLAA F 0 A_SpawnItemEx("GladiatorShieldUp",4,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GLAA F 4 A_CustomMissile("GladiatorPhalanx",45,22,0)
 		GLAA F 0 A_FaceTarget
-		GLAA F 0 A_SpawnItemEx("GladiatorShieldUp",4,0,0,0,0,0,0,32,0)
+		GLAA F 0 A_SpawnItemEx("GladiatorShieldUp",4,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GLAA G 4 A_CustomMissile("GladiatorPhalanx",45,22,0)
-		GLAA G 8 A_SpawnItemEx("GladiatorShieldUp3",4,0,0,0,0,0,0,32,0)
-		GLAA G 4 A_SpawnItemEx("GladiatorShieldUp",4,0,0,0,0,0,0,32,0)
+		GLAA G 8 A_SpawnItemEx("GladiatorShieldUp3",4,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
+		GLAA G 4 A_SpawnItemEx("GladiatorShieldUp",4,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		Goto See
 	Melee:
 		GLAA A 0 A_PlaySound("weapons/stroggarmsaw/up")
-		GLAA A 0 A_SpawnItemEx("GladiatorShieldUp2",4,0,0,0,0,0,0,32,0)
+		GLAA A 0 A_SpawnItemEx("GladiatorShieldUp2",4,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GLAA A 5 A_FaceTarget
-		GLAA A 0 A_SpawnItemEx("GladiatorShieldUp2",4,0,0,0,0,0,0,32,0)
+		GLAA A 0 A_SpawnItemEx("GladiatorShieldUp2",4,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GLAA B 5 A_FaceTarget
 		GLAA C 0 A_PlaySound("weapons/stroggarmsaw/running",6,0.8,1)
-		GLAA F 0 A_SpawnItemEx("GladiatorShieldUp",4,0,0,0,0,0,0,32,0)
+		GLAA F 0 A_SpawnItemEx("GladiatorShieldUp",4,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GLAA CC 2 A_MeleeAttack
-		GLAA F 0 A_SpawnItemEx("GladiatorShieldUp",4,0,0,0,0,0,0,32,0)
+		GLAA F 0 A_SpawnItemEx("GladiatorShieldUp",4,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GLAA CD 2 A_MeleeAttack
 	DistanceCheck:
 		GLAA D 0 A_JumpIfCloser(80,"ContinueMelee")
 		GLAA D 0 A_Jump(256,"MeleeEnd")
 	ContinueMelee:
 		GLAA D 0 A_PlaySound("weapons/stroggarmsaw/running",6,0.8,1)
-		GLAA F 0 A_SpawnItemEx("GladiatorShieldUp",4,0,0,0,0,0,0,32,0)
+		GLAA F 0 A_SpawnItemEx("GladiatorShieldUp",4,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GLAA DD 2 A_MeleeAttack
-		GLAA F 0 A_SpawnItemEx("GladiatorShieldUp",4,0,0,0,0,0,0,32,0)
+		GLAA F 0 A_SpawnItemEx("GladiatorShieldUp",4,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GLAA DD 2 A_MeleeAttack
 		TNT1 A 0 A_MonsterRefire(40,"MeleeEnd")
 		Goto DistanceCheck
 	MeleeEnd:
 		GLAA D 0 A_StopSound(6)
 		GLAA E 0 A_PlaySound("weapons/stroggarmsaw/down")
-		GLAA F 0 A_SpawnItemEx("GladiatorShieldUp",4,0,0,0,0,0,0,32,0)
+		GLAA F 0 A_SpawnItemEx("GladiatorShieldUp",4,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GLAA EF 4 A_FaceTarget
 		Goto See
 	Pain:
 		GLAA D 1 A_StopSound(6)
-		GLAP A 0 A_SpawnItemEx("GladiatorShieldUp",4,0,0,0,0,0,0,32,0)
+		GLAP A 0 A_SpawnItemEx("GladiatorShieldUp",4,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		GLAP A 4 A_Pain
 		Goto See
 	Pain.PillarDamage:
@@ -4274,9 +4274,9 @@ ACTOR FShieldGladiator : FGladiator 7402		// baron
 		GLAA D 0 A_StopSound(6)
 		XTRA C 0 A_PlaySound("other/gibdeath")
 		TNT1 A 0 A_Fall
-		TNT1 AAAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 AAAAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 A 0 A_SpawnItemEx("QuakeGibDropper",0,0,random(20,40),0,0,0,0,1)
+		TNT1 AAAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 AAAAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 A 0 A_SpawnItemEx("QuakeGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
 		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		Stop
 	Death.UnholyDisint:
@@ -4289,8 +4289,8 @@ ACTOR FShieldGladiator : FGladiator 7402		// baron
 		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
 		TNT1 a 0 A_Stop	
 		TNT1 a 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
 		GLAP AA 2 A_FadeOut(0.03)
 		Goto Disintegrate+8
     }
@@ -4408,7 +4408,7 @@ actor IronMaiden2     7403                           //arachno
 		Goto See
 	Pain.Drain:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		Goto Pain
 	Spawn:
 		BITI AAAAAAAAAAAAAAAA 5 A_Look
@@ -4466,9 +4466,9 @@ actor IronMaiden2     7403                           //arachno
 	XDeath:
 		TNT1 C 0 A_PlaySound("other/gibdeath")
 		TNT1 A 0 A_fall
-		TNT1 AAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 AAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 A 0 A_SpawnItemEx("QuakeSmallGibDropper",0,0,random(20,40),0,0,0,0,1)
+		TNT1 AAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 AAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 A 0 A_SpawnItemEx("QuakeSmallGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
 		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		Stop
 	Death.UnholyDisint:
@@ -4480,8 +4480,8 @@ actor IronMaiden2     7403                           //arachno
 		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
 		"####" "#" 0 A_Stop	
 		"####" "#" 0 A_Fall
-		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,32)
-		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,32)
+		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
+		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
 		"####" "##" 2 A_FadeOut(0.03)
 		Goto Disintegrate+7
 	Raise:
@@ -4592,7 +4592,7 @@ actor PrototypeContainer		7404   //arachno
 		Goto See
 	Pain.Drain:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		Goto Pain
 	Spawn:
 		BS5I A 5 A_Look
@@ -4673,7 +4673,7 @@ actor PrototypeContainer		7404   //arachno
 		Goto "SeeChase"
 	Death:
 		TNT1 A 0 A_CustomMissile("PContTorso",50,0,0+random(90,-90))
-		TNT1 AAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,1)
+		TNT1 AAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
 		BS5D B 25 A_Scream
 		BS5D C 20 A_Fall
 		BS5D D 6
@@ -4688,9 +4688,9 @@ actor PrototypeContainer		7404   //arachno
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 A 0 A_fall
 		TNT1 AAA 0 A_SpawnItemEx("BossDeathExplosion",random(0,25),0,random(0,70),0,0,0,0,random(0,359),32)
-		TNT1 AAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 AAAAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 A 0 A_SpawnItemEx("QuakeGibDropper",0,0,random(20,40),0,0,0,0,1)
+		TNT1 AAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 AAAAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 A 0 A_SpawnItemEx("QuakeGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
 		TNT1 AAAAAAAAAAAAAAAAAAA 0 A_TossGib
 
 		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
@@ -4704,8 +4704,8 @@ actor PrototypeContainer		7404   //arachno
 		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
 		"####" "#" 0 A_Stop	
 		"####" "#" 0 A_Fall
-		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,32)
-		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,32)
+		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
+		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
 		"####" "##" 2 A_FadeOut(0.03)
 		Goto Disintegrate+7
 
@@ -4808,7 +4808,7 @@ actor TankCommander 	// archvile
 		Goto See
 	Pain.Drain:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,32,0)
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 		Goto Pain
 	Spawn:
 		TK1I A 5 A_Look
@@ -4844,8 +4844,8 @@ actor TankCommander 	// archvile
 	Machinegun:
 		TK1C ABCDE 4 A_FaceTarget
 		TNT1 A 0 A_GiveInventory("Iwasattacking",1)
-		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",20,20,45,0,0,0,0,32)
-		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",20,20,48,0,0,frandom(0.4,0.99),0,32,128)
+		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlash",20,20,45,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("NewExploSmallSmoke",20,20,48,0,0,frandom(0.4,0.99),0,SXF_NOCHECKPOSITION,128)
 		TK1C F 3 Bright A_CustomBulletAttack(5,5,2,5,"BulletDamagePuff")
 		TNT1 A 0 A_CPosRefire
 		Goto Machinegun+6
@@ -4875,8 +4875,8 @@ actor TankCommander 	// archvile
 		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
 		"####" "#" 0 A_Stop	
 		"####" "#" 0 A_Fall
-		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,32)
-		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,32)
+		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
+		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
 		"####" "##" 2 A_FadeOut(0.03)
 		Goto Disintegrate+6
 	Death:
@@ -4898,9 +4898,9 @@ actor TankCommander 	// archvile
 		XTRA C 0 A_PlaySound("other/gibdeath")
 		TNT1 A 0 A_fall
 		TNT1 AAA 0 A_SpawnItemEx("BossDeathExplosion",random(0,25),0,random(0,70),0,0,0,0,random(0,359),32)
-		TNT1 AAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 AAAAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,1)
-		TNT1 A 0 A_SpawnItemEx("QuakeGibDropper",0,0,random(20,40),0,0,0,0,1)
+		TNT1 AAAAA 0 A_SpawnItemEx("GibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 AAAAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
+		TNT1 A 0 A_SpawnItemEx("QuakeGibDropper",0,0,random(20,40),0,0,0,0,SXF_TRANSFERTRANSLATION)
 		TNT1 AAAAAAAAAAAAAAAAAAA 0 A_TossGib
 		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
 		Stop

@@ -20,8 +20,8 @@ ACTOR AEoDSpellBook : Weapon 6046
     Weapon.AmmoUse 1
     Weapon.AmmoGive 5
     Inventory.MaxAmount 1
-    +NOALERT
-    //+CHEATNOTWEAPON
+    +WEAPON.NOALERT
+    //+WEAPON.CHEATNOTWEAPON
     +INVENTORY.IGNORESKILL
     States
     {
@@ -781,7 +781,7 @@ ACTOR RaisePickup : CustomInventory //6141
 {
     Inventory.PickupSound "weaponbuild"
     Inventory.PickupMessage "You got the Raise Spell!"
-    +AUTOACTIVATE
+    +INVENTORY.AUTOACTIVATE
     +FLOATBOB
     +INVENTORY.IGNORESKILL
     Scale 0.75
@@ -821,7 +821,7 @@ ACTOR CharmPickup : CustomInventory 6142
     Inventory.PickupSound "weaponbuild" 
     Inventory.PickupMessage "You got the Charm Spell!"
     +FLOATBOB
-    +AUTOACTIVATE
+    +INVENTORY.AUTOACTIVATE
     +INVENTORY.IGNORESKILL
     Scale 0.75
     States
@@ -862,7 +862,7 @@ ACTOR DefilePickup : CustomInventory 6143
     Inventory.PickupSound "weaponbuild" 
     Inventory.PickupMessage "You got the Defile Spell!"
     +FLOATBOB
-    +AUTOACTIVATE
+    +INVENTORY.AUTOACTIVATE
     +INVENTORY.IGNORESKILL
     Scale 0.75
     States
@@ -903,7 +903,7 @@ ACTOR TerrorPickup : CustomInventory 6144
     Inventory.PickupSound "weaponbuild" 
     Inventory.PickupMessage "You got the Terror Spell!"
     +FLOATBOB
-    +AUTOACTIVATE
+    +INVENTORY.AUTOACTIVATE
     +INVENTORY.IGNORESKILL
     Scale 0.75
     States
@@ -944,7 +944,7 @@ ACTOR DrainPickup : CustomInventory 6145
     Inventory.PickupSound "weaponbuild" 
     Inventory.PickupMessage "You got the Drain Spell!"
     +FLOATBOB
-    +AUTOACTIVATE
+    +INVENTORY.AUTOACTIVATE
     +INVENTORY.IGNORESKILL
     Scale 0.75
     States
@@ -985,7 +985,7 @@ ACTOR MorphPickup : CustomInventory 6146
     Inventory.PickupSound "weaponbuild" 
     Inventory.PickupMessage "You got the Morph Spell!"
     +FLOATBOB
-    +AUTOACTIVATE
+    +INVENTORY.AUTOACTIVATE
     +INVENTORY.IGNORESKILL
     Scale 0.75
     States
@@ -1027,7 +1027,7 @@ ACTOR ChaosPickup : CustomInventory 6147
     Inventory.PickupSound "weaponbuild" 
     Inventory.PickupMessage "You got the Chaos Spell!"
     +FLOATBOB
-    +AUTOACTIVATE
+    +INVENTORY.AUTOACTIVATE
     +INVENTORY.IGNORESKILL
     Scale 0.75
     States
@@ -1068,7 +1068,7 @@ ACTOR SlowPickup : CustomInventory 6148
     Inventory.PickupSound "weaponbuild" 
     Inventory.PickupMessage "You got the Slow Spell!"
     +FLOATBOB
-    +AUTOACTIVATE
+    +INVENTORY.AUTOACTIVATE
     +INVENTORY.IGNORESKILL
     Scale 0.75
     States
@@ -1120,21 +1120,21 @@ ACTOR SlowSpell
     States
     {
     Spawn:
-	SLOW AAA 1 Bright A_SpawnItemEx("SlowSpellTrail",8,0,0,0,0,0,0,32,0)
+	SLOW AAA 1 Bright A_SpawnItemEx("SlowSpellTrail",8,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 	SLOW A 0 A_BishopMissileWeave
-	SLOW BBB 1 Bright A_SpawnItemEx("SlowSpellTrail",8,0,0,0,0,0,0,32,0)
+	SLOW BBB 1 Bright A_SpawnItemEx("SlowSpellTrail",8,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 	SLOW B 0 A_BishopMissileWeave
-	SLOW CCC 1 Bright A_SpawnItemEx("SlowSpellTrail",8,0,0,0,0,0,0,32,0)
+	SLOW CCC 1 Bright A_SpawnItemEx("SlowSpellTrail",8,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 	SLOW C 0 A_BishopMissileWeave
-	SLOW DDD 1 Bright A_SpawnItemEx("SlowSpellTrail",8,0,0,0,0,0,0,32,0)
+	SLOW DDD 1 Bright A_SpawnItemEx("SlowSpellTrail",8,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 	SLOW D 0 A_BishopMissileWeave
-	SLOW EEE 1 Bright A_SpawnItemEx("SlowSpellTrail",8,0,0,0,0,0,0,32,0)
+	SLOW EEE 1 Bright A_SpawnItemEx("SlowSpellTrail",8,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 	SLOW E 0 A_BishopMissileWeave
-	SLOW FFF 1 Bright A_SpawnItemEx("SlowSpellTrail",8,0,0,0,0,0,0,32,0)
+	SLOW FFF 1 Bright A_SpawnItemEx("SlowSpellTrail",8,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 	SLOW F 0 A_BishopMissileWeave
 	Loop
     Death:
-	TNT1 A 0 A_SpawnItemEx("SlowSpellExplode",0,0,0,0,0,0,0,32,0)
+	TNT1 A 0 A_SpawnItemEx("SlowSpellExplode",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 	Stop
     }
 }
@@ -1186,7 +1186,7 @@ ACTOR RaiseSpellDrop : CustomInventory
     {
     Use:
 	TNT1 A 0
-	TNT1 A 0 A_SpawnItemEx("DroppedRaiseSpell",0,0,32,8,0,0,0,32,0)
+	TNT1 A 0 A_SpawnItemEx("DroppedRaiseSpell",0,0,32,8,0,0,0,SXF_NOCHECKPOSITION,0)
 	TNT1 A 0 A_TakeInventory("RaiseSpellDrop",1)
 	TNT1 A 0 A_TakeInventory("RaisePickupChecker",1)
 	TNT1 A 0 A_JumpIfInventory("CharmPickupChecker",1,14)
@@ -1233,7 +1233,7 @@ ACTOR DroppedRaiseSpell
     Spawn:
 	NCRO A 15
     Death:
-	TNT1 A 0 A_SpawnItemEx("RaisePickupNoAmmo",0,0,0,0,0,0,0,48,0)
+	TNT1 A 0 A_SpawnItemEx("RaisePickupNoAmmo",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER,0)
 	Stop
     }
 }
@@ -1277,7 +1277,7 @@ ACTOR CharmSpellDrop : CustomInventory
     {
     Use:
 	TNT1 A 0
-	TNT1 A 0 A_SpawnItemEx("DroppedCharmSpell",0,0,32,8,0,0,0,32,0)
+	TNT1 A 0 A_SpawnItemEx("DroppedCharmSpell",0,0,32,8,0,0,0,SXF_NOCHECKPOSITION,0)
 	TNT1 A 0 A_TakeInventory("CharmSpellDrop",1)
 	TNT1 A 0 A_TakeInventory("CharmPickupChecker",1)
 	TNT1 A 0 A_JumpIfInventory("DefilePickupChecker",1,14)
@@ -1323,7 +1323,7 @@ ACTOR DroppedCharmSpell
     Spawn:
 	NCRO B 15
     Death:
-	TNT1 A 0 A_SpawnItemEx("CharmPickupNoAmmo",0,0,0,0,0,0,0,48,0)
+	TNT1 A 0 A_SpawnItemEx("CharmPickupNoAmmo",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER,0)
 	Stop
     }
 }
@@ -1370,7 +1370,7 @@ ACTOR DefileSpellDrop : CustomInventory
     {
     Use:
 	TNT1 A 0
-	TNT1 A 0 A_SpawnItemEx("DroppedDefileSpell",0,0,32,8,0,0,0,32,0)
+	TNT1 A 0 A_SpawnItemEx("DroppedDefileSpell",0,0,32,8,0,0,0,SXF_NOCHECKPOSITION,0)
 	TNT1 A 0 A_TakeInventory("DefileSpellDrop",1)
 	TNT1 A 0 A_TakeInventory("DefilePickupChecker",1)
 	TNT1 A 0 A_JumpIfInventory("TerrorPickupChecker",1,14)
@@ -1416,7 +1416,7 @@ ACTOR DroppedDefileSpell
     Spawn:
 	NCRO C 15
     Death:
-	TNT1 A 0 A_SpawnItemEx("DefilePickupNoAmmo",0,0,0,0,0,0,0,48,0)
+	TNT1 A 0 A_SpawnItemEx("DefilePickupNoAmmo",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER,0)
 	Stop
     }
 }
@@ -1463,7 +1463,7 @@ ACTOR TerrorSpellDrop : CustomInventory
     {
     Use:
 	TNT1 A 0
-	TNT1 A 0 A_SpawnItemEx("DroppedTerrorSpell",0,0,32,8,0,0,0,32,0)
+	TNT1 A 0 A_SpawnItemEx("DroppedTerrorSpell",0,0,32,8,0,0,0,SXF_NOCHECKPOSITION,0)
 	TNT1 A 0 A_TakeInventory("TerrorSpellDrop",1)
 	TNT1 A 0 A_TakeInventory("TerrorPickupChecker",1)
 	TNT1 A 0 A_JumpIfInventory("DrainPickupChecker",1,14)
@@ -1509,7 +1509,7 @@ ACTOR DroppedTerrorSpell
     Spawn:
 	NCRO D 15
     Death:
-	TNT1 A 0 A_SpawnItemEx("TerrorPickupNoAmmo",0,0,0,0,0,0,0,48,0)
+	TNT1 A 0 A_SpawnItemEx("TerrorPickupNoAmmo",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER,0)
 	Stop
     }
 }
@@ -1556,7 +1556,7 @@ ACTOR DrainSpellDrop : CustomInventory
     {
     Use:
 	TNT1 A 0
-	TNT1 A 0 A_SpawnItemEx("DroppedDrainSpell",0,0,32,8,0,0,0,32,0)
+	TNT1 A 0 A_SpawnItemEx("DroppedDrainSpell",0,0,32,8,0,0,0,SXF_NOCHECKPOSITION,0)
 	TNT1 A 0 A_TakeInventory("DrainSpellDrop",1)
 	TNT1 A 0 A_TakeInventory("DrainPickupChecker",1)
 	TNT1 A 0 A_JumpIfInventory("MorphPickupChecker",1,14)
@@ -1602,7 +1602,7 @@ ACTOR DroppedDrainSpell
     Spawn:
 	NCRO E 15
     Death:
-	TNT1 A 0 A_SpawnItemEx("DrainPickupNoAmmo",0,0,0,0,0,0,0,48,0)
+	TNT1 A 0 A_SpawnItemEx("DrainPickupNoAmmo",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER,0)
 	Stop
     }
 }
@@ -1649,7 +1649,7 @@ ACTOR MorphSpellDrop : CustomInventory
     {
     Use:
 	TNT1 A 0
-	TNT1 A 0 A_SpawnItemEx("DroppedMorphSpell",0,0,32,8,0,0,0,32,0)
+	TNT1 A 0 A_SpawnItemEx("DroppedMorphSpell",0,0,32,8,0,0,0,SXF_NOCHECKPOSITION,0)
 	TNT1 A 0 A_TakeInventory("MorphSpellDrop",1)
 	TNT1 A 0 A_TakeInventory("MorphPickupChecker",1)
 	TNT1 A 0 A_JumpIfInventory("ChaosPickupChecker",1,14)
@@ -1695,7 +1695,7 @@ ACTOR DroppedMorphSpell
     Spawn:
 	NCRO F 15
     Death:
-	TNT1 A 0 A_SpawnItemEx("MorphPickupNoAmmo",0,0,0,0,0,0,0,48,0)
+	TNT1 A 0 A_SpawnItemEx("MorphPickupNoAmmo",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER,0)
 	Stop
     }
 }
@@ -1742,7 +1742,7 @@ ACTOR ChaosSpellDrop : CustomInventory
     {
     Use:
 	TNT1 A 0
-	TNT1 A 0 A_SpawnItemEx("DroppedChaosSpell",0,0,32,8,0,0,0,32,0)
+	TNT1 A 0 A_SpawnItemEx("DroppedChaosSpell",0,0,32,8,0,0,0,SXF_NOCHECKPOSITION,0)
 	TNT1 A 0 A_TakeInventory("ChaosSpellDrop",1)
 	TNT1 A 0 A_TakeInventory("ChaosPickupChecker",1)
 	TNT1 A 0 A_JumpIfInventory("SlowPickupChecker",1,14)
@@ -1788,7 +1788,7 @@ ACTOR DroppedChaosSpell
     Spawn:
 	NCRO G 15
     Death:
-	TNT1 A 0 A_SpawnItemEx("ChaosPickupNoAmmo",0,0,0,0,0,0,0,48,0)
+	TNT1 A 0 A_SpawnItemEx("ChaosPickupNoAmmo",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER,0)
 	Stop
     }
 }
@@ -1835,7 +1835,7 @@ ACTOR SlowSpellDrop : CustomInventory
     {
     Use:
 	TNT1 A 0
-	TNT1 A 0 A_SpawnItemEx("DroppedSlowSpell",0,0,32,8,0,0,0,32,0)
+	TNT1 A 0 A_SpawnItemEx("DroppedSlowSpell",0,0,32,8,0,0,0,SXF_NOCHECKPOSITION,0)
 	TNT1 A 0 A_TakeInventory("SlowSpellDrop",1)
 	TNT1 A 0 A_TakeInventory("SlowPickupChecker",1)
 	TNT1 A 0 A_JumpIfInventory("RaisePickupChecker",1,14)
@@ -1881,7 +1881,7 @@ ACTOR DroppedSlowSpell
     Spawn:
 	NCRO H 15
     Death:
-	TNT1 A 0 A_SpawnItemEx("SlowPickupNoAmmo",0,0,0,0,0,0,0,48,0)
+	TNT1 A 0 A_SpawnItemEx("SlowPickupNoAmmo",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER,0)
 	Stop
     }
 }

@@ -222,8 +222,8 @@ Actor FAllmap : Allmap
 ACTOR ScannerItem : CustomInventory
 {
     +COUNTITEM
-    +AUTOACTIVATE
-    +ALWAYSPICKUP
+    +INVENTORY.AUTOACTIVATE
+    +INVENTORY.ALWAYSPICKUP
 	+DONTGIB
 	+NOTELESTOMP
     Inventory.PickupMessage "You picked up the scanner."
@@ -244,8 +244,8 @@ ACTOR ScannerItem : CustomInventory
 
 ACTOR MapScanner : PowerupGiver replaces Scanner
 {
-    +AUTOACTIVATE
-    +ALWAYSPICKUP
+    +INVENTORY.AUTOACTIVATE
+    +INVENTORY.ALWAYSPICKUP
 	+DONTGIB
     Powerup.Type "Scanner"
     Powerup.Duration 2147483647
@@ -407,10 +407,10 @@ ACTOR ForceCube : CustomInventory
 	Use:
 		TNT1 A 0 A_JumpIfInventory("PowerDemonMorph",1,"End")
 		TNT1 A 0 A_JumpIfInventory("RightCubeToken",1,2)
-		TNT1 A 0 A_SpawnItemEx("RightCube",0,0,0,0,0,0,0,32|SXF_TRANSFERPITCH,0)
+		TNT1 A 0 A_SpawnItemEx("RightCube",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH,0)
 		Stop
 		TNT1 A 0 A_JumpIfInventory("LeftCubeToken",1,2)
-		TNT1 A 0 A_SpawnItemEx("LeftCube",0,0,0,0,0,0,0,32|SXF_TRANSFERPITCH,0)
+		TNT1 A 0 A_SpawnItemEx("LeftCube",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH,0)
 		Stop
 	End:
 		TNT1 A 0
@@ -523,7 +523,7 @@ Actor ForceCubeShot : FastProjectile
 		TNT1 A 0 NoDelay A_SeekerMissile(0,0,3,256)
 		TNT1 A 0 A_ScaleVelocity(4)
 	Movement:
-		TNT1 A 0 A_SpawnItemEx("ForceCubeTrail",cos(-pitch)*frandom(-2,2),frandom(-2,2),frandom(-2,2)+(sin(-pitch)*frandom(-2,2)),0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("ForceCubeTrail",cos(-pitch)*frandom(-2,2),frandom(-2,2),frandom(-2,2)+(sin(-pitch)*frandom(-2,2)),0,0,0,0,SXF_NOCHECKPOSITION)
 		TNT1 A 0 A_SetUserVar("user_failsafe",user_failsafe+1)
 		TNT1 A 0 A_JumpIf(user_failsafe>=5000,"Death")
 		//TNT1 A 1 A_Warp(AAPTR_DEFAULT,velx,vely,velz,0,WARPF_ABSOLUTEOFFSET,1)
@@ -540,7 +540,7 @@ Actor ForceCubeTrailSpawner
 	States
 	{
 	Spawn:
-		TNT1 A 0 A_SpawnItemEx("ForceCubeTrail",frandom(-2,2),frandom(-2,2),frandom(-2,2),0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("ForceCubeTrail",frandom(-2,2),frandom(-2,2),frandom(-2,2),0,0,0,0,SXF_NOCHECKPOSITION)
 		Stop
 	}
 }
@@ -617,7 +617,7 @@ ACTOR IceShield : CustomInventory
 		TNT1 A 0 A_JumpIfInventory("PowerIceShield",1,"End")		
 		TNT1 A 0 A_GiveInventory("IceShieldTimer",1)
 		TNT1 A 0 A_GiveInventory("IceShieldPalette",1)
-		TNT1 A 0 A_SpawnItemEx("IceShieldGiver",0,0,0,0,0,0,0,32|SXF_SETMASTER)
+		TNT1 A 0 A_SpawnItemEx("IceShieldGiver",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
 		Stop
 	End:
 		TNT1 A 0
@@ -633,7 +633,7 @@ ACTOR IceShieldPalette : PowerupGiver
     Powerup.Type "IceShield"
     Powerup.Color Cyan 0.1
     Powerup.Duration 1575
-    +AUTOACTIVATE
+    +INVENTORY.AUTOACTIVATE
 }
 
 ACTOR IceShield2 : CustomInventory
@@ -643,7 +643,7 @@ ACTOR IceShield2 : CustomInventory
     States
     {
     Pickup:
-        TNT1 A 0 A_SpawnItemEx("IceShieldEffect",0,0,16,0,0,0,0,32)
+        TNT1 A 0 A_SpawnItemEx("IceShieldEffect",0,0,16,0,0,0,0,SXF_NOCHECKPOSITION)
         Stop
     }
 }
@@ -667,7 +667,7 @@ ACTOR IceShieldGiver
         TNT1 A 0 NoDelay A_JumpIfInventory("PowerIceShield",1,1,AAPTR_TARGET)
         Goto End
 		TNT1 A 0 A_Warp(AAPTR_TARGET,0,0,16,0,WARPF_NOCHECKPOSITION)
-        TNT1 A 5 A_SpawnItemEx("IceShieldEffect",0,0,16,0,0,0,0,32)
+        TNT1 A 5 A_SpawnItemEx("IceShieldEffect",0,0,16,0,0,0,0,SXF_NOCHECKPOSITION)
         Loop
     End:
         TNT1 A 0 A_TakeInventory("IceShieldTimer",1000,AAPTR_TARGET)
@@ -729,7 +729,7 @@ ACTOR ThunderstormRune : CustomInventory
 		TNT1 A 0 A_JumpIfInventory("PowerThunderstorm",1,"End")
 		TNT1 A 0 A_GiveInventory("ThunderstormTimer",1)
 		TNT1 A 0 A_GiveInventory("ThunderstormPalette",1)
-		TNT1 A 0 A_SpawnItemEx("ThunderStormGiver",0,0,0,0,0,0,0,32|SXF_SETMASTER)
+		TNT1 A 0 A_SpawnItemEx("ThunderStormGiver",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
 		Stop
 	End:
 		TNT1 A 0
@@ -745,7 +745,7 @@ ACTOR ThunderstormPalette : PowerupGiver
     Powerup.Type "Thunderstorm"
     Powerup.Color Black 0.2
     Powerup.Duration 3150
-    +AUTOACTIVATE
+    +INVENTORY.AUTOACTIVATE
 }
 
 ACTOR ThunderstormTimer : Inventory
@@ -814,7 +814,7 @@ ACTOR ThunderstormGiver
 	Targeting:
 		//TNT1 A 0 A_CheckFlag("FRIENDLY","Check1",AAPTR_TRACER) //Dont attack friendlies.
 		TNT1 A 0 A_Warp(AAPTR_TRACER,0,0,1,0,WARPF_NOCHECKPOSITION)
-		TNT1 A 0 A_SpawnItemEx("ThunderstormDamage",0,0,0,0,0,0,0,32|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("ThunderstormDamage",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
 	CheckCont:
         TNT1 AAAAA 10 A_JumpIfInventory("PowerDemonMorph",1,"EndForced",AAPTR_MASTER)//A_GiveInventory("Thunderstorm2",1,AAPTR_MASTER)
         Goto Spawn
@@ -888,7 +888,7 @@ ACTOR ThunderstormEffect
     See:
         TNT1 A 0 A_Fire
         TNT1 A 0 A_FaceTarget
-        TNT1 A 0 A_SpawnItemEx("ThunderstormDamage",16,0,0,0,0,0,0,32,0)
+        TNT1 A 0 A_SpawnItemEx("ThunderstormDamage",16,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
         Stop
     }
 }
@@ -1304,7 +1304,7 @@ ACTOR PentagramOfProtection : CustomInventory
     {
     Spawn:
 		QPEI A 0 NoDelay A_Jump(224,"Form")
-		QPEI A 0 A_SpawnItemEx("DemonMorphPowerup",0,0,0,velx,vely,velz,0,32|SXF_ABSOLUTEMOMENTUM)
+		QPEI A 0 A_SpawnItemEx("DemonMorphPowerup",0,0,0,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_ABSOLUTEMOMENTUM)
 		Stop
 	Form:
 		QPEI ABCDEFGHIJKLMNOP 3 Bright
@@ -1318,7 +1318,7 @@ ACTOR PentagramOfProtection : CustomInventory
 		TNT1 A 0 A_TakeInventory("PentagramCountdown",9999,0)
 		TNT1 A 0 A_GiveInventory("PentagramCountdown",700) //THIS is the timer!
 		//Change this to change how long it lasts!
-		TNT1 A 0 A_SpawnItemEx("PentagramChecker",0,0,0,0,0,0,0,32|SXF_SETTARGET)
+		TNT1 A 0 A_SpawnItemEx("PentagramChecker",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTARGET)
 		Stop
 	Nope:
 		TNT1 A 0
@@ -1334,7 +1334,7 @@ ACTOR PentagramSpot
     {
     Spawn:
         TNT1 A 0
-        TNT1 A 0 A_SpawnItemEx("PentagramGiver",0,0,0,0,0,0,0,32,0)
+        TNT1 A 0 A_SpawnItemEx("PentagramGiver",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
         Stop
     }
 }
@@ -1615,7 +1615,7 @@ ACTOR StoneOfTemperance : CustomInventory
     Use:
 	TNT1 A 0 A_JumpIfInventory("PowerDemonMorph",1,"CannotUse")
 	TNT1 A 0 A_JumpIfInventory("SOTInUse",1,"CannotUse")
-	TNT1 A 0 A_SpawnItemEx("SOTTimer",0,0,0,0,0,0,0,32|SXF_SETTARGET)
+	TNT1 A 0 A_SpawnItemEx("SOTTimer",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTARGET)
 	TNT1 A 0 A_GiveInventory("SOTInUse",1)
 	TNT1 A 0 A_GiveInventory("NoSeekFlagger",1)
 	TNT1 A 0 A_GiveInventory("NoSeekPalette",1)
@@ -1693,7 +1693,7 @@ ACTOR NoSeekPalette : PowerupGiver
     Powerup.Type "NoSeek"
     Powerup.Color Magenta4 0.2
     Powerup.Duration 1575
-    +AUTOACTIVATE
+    +INVENTORY.AUTOACTIVATE
 }
 
 
@@ -1725,7 +1725,7 @@ ACTOR StoneOfRestoration : CustomInventory
 	TNT1 A 0 A_JumpIfInventory("MRegenTimer",1,"End")
 	TNT1 A 0 A_GiveInventory("MRegenTimer",1)
 	TNT1 A 0 A_GiveInventory("MRegenPalette",1)
-	TNT1 A 0 A_SpawnItemEx("MRegen1",0,0,0,0,0,0,0,32,0)
+	TNT1 A 0 A_SpawnItemEx("MRegen1",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 	Stop
 	End:
 	TNT1 A 0
@@ -1747,7 +1747,7 @@ ACTOR MRegenPalette : PowerupGiver
     Powerup.Type "ManaRegen"
     Powerup.Color PaleVioletRed1 0.2
     Powerup.Duration 2100
-    +AUTOACTIVATE
+    +INVENTORY.AUTOACTIVATE
 }
 
 ACTOR MRegen1
@@ -1760,7 +1760,7 @@ ACTOR MRegen1
     {
     Spawn:
         TNT1 A 0
-        TNT1 A 0 A_SpawnItemEx("MRegenGiver",0,0,0,0,0,0,0,32,0)
+        TNT1 A 0 A_SpawnItemEx("MRegenGiver",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
         Stop
     }
 }
@@ -1891,12 +1891,12 @@ ACTOR AntiChickenator : CustomInventory
 	TNT1 A 0 A_JumpIfInventory("NoMorphTimer",1,8)
 	TNT1 A 0 //A_JumpIfInventory("PowerInvulBase",1,3)
 	TNT1 A 0 A_GiveInventory("UnMorpher",1)
-	TNT1 A 0 A_SpawnItemEx("NoMorph1",0,0,0,0,0,0,0,32,0)
+	TNT1 A 0 A_SpawnItemEx("NoMorph1",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 	Stop
 	TNT1 A 0 //A_GiveInventory("PentagramInUse",1)
 	TNT1 A 1 //A_TakeInventory("PowerInvulBase",1)
 	TNT1 A 0 //A_GiveInventory("UnMorpher",1)
-	TNT1 A 0 //A_SpawnItemEx("NoMorph1",0,0,0,0,0,0,0,32,0)
+	TNT1 A 0 //A_SpawnItemEx("NoMorph1",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 	Stop
 	TNT1 A 0
 	Stop
@@ -1930,7 +1930,7 @@ ACTOR NoMorphPalette : PowerupGiver
     Powerup.Type "NoMorph"
     Powerup.Color "40 00 80" 0.2
     Powerup.Duration 2100
-    +AUTOACTIVATE
+    +INVENTORY.AUTOACTIVATE
 }
 
 ACTOR NoMorphTimer : CustomInventory
@@ -1968,14 +1968,14 @@ ACTOR NoMorph1
     {
     Spawn:
         TNT1 A 0
-	TNT1 A 0 A_SpawnItemEx("NoMorphGiver",0,0,0,0,0,0,0,32,0)
+	TNT1 A 0 A_SpawnItemEx("NoMorphGiver",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
         Stop
     }
 }
 
 ACTOR NoMorph2 : CustomInventory
 {
-    +AUTOACTIVATE
+    +INVENTORY.AUTOACTIVATE
     +NOTIMEFREEZE
     States
     {
@@ -1987,7 +1987,7 @@ ACTOR NoMorph2 : CustomInventory
 
 ACTOR NoMorph3 : CustomInventory
 {
-    +AUTOACTIVATE
+    +INVENTORY.AUTOACTIVATE
     +NOTIMEFREEZE
     States
     {
@@ -2019,7 +2019,7 @@ ACTOR NoMorphGiver
 	TNT1 A 0 A_JumpIfInTargetInventory("NoMorphTimer",1,4)
 	TNT1 A 0 A_GiveToTarget("NoMorphTimer",1)
 	TNT1 A 0 A_GiveToTarget("NoMorphPalette",1)
-	TNT1 A 0 A_SpawnItemEx("NoMorphGiver2",0,0,0,0,0,0,0,32,0)
+	TNT1 A 0 A_SpawnItemEx("NoMorphGiver2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 	Stop
 	TNT1 A 0
 	Stop
@@ -2047,13 +2047,13 @@ ACTOR NoMorphGiver2 : NoMorphGiver
 
 ACTOR PentagramInUse : CustomInventory
 {
-    +AUTOACTIVATE
+    +INVENTORY.AUTOACTIVATE
     +NOTIMEFREEZE
     States
     {
     Pickup:
 	TNT1 A 0
-        TNT1 A 0 A_SpawnItemEx("Pentagram1",0,0,0,0,0,0,0,32,0)
+        TNT1 A 0 A_SpawnItemEx("Pentagram1",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
         Stop
     }
 }
@@ -2068,7 +2068,7 @@ ACTOR Pentagram1
     {
     Spawn:
         TNT1 A 0
-	TNT1 A 0 A_SpawnItemEx("PentagramRestorer",0,0,0,0,0,0,0,32,0)
+	TNT1 A 0 A_SpawnItemEx("PentagramRestorer",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
         Stop
     }
 }
@@ -2150,7 +2150,7 @@ ACTOR DarkServantSummoner : SummoningDoll replaces SummoningDoll
 		SUMN A 4 Bright A_Summon
 		Stop
 	SummonSurvivor:
-		TNT1 A 0 A_SpawnItemEx("SurvivorSpawner",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("SurvivorSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		Stop
     }
 }
@@ -2170,29 +2170,29 @@ Actor SurvivorSpawner
 		TNT1 A 0
 		TNT1 A 0 A_RearrangePointers(AAPTR_PLAYER_GETTARGET,AAPTR_PLAYER1,AAPTR_DEFAULT,4)
 		TNT1 A 0 A_CopyFriendliness(AAPTR_PLAYER1)
-		TNT1 A 0 A_SpawnItemEx("TeleportFog",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("TeleportFog",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		TNT1 A 0 A_Jump(256,"S1","S2","S3","S4","S5","S6","S7")
 		//Not including Rochelle due to how much trouble she is with her chainsaw.
 	S1:
-		TNT1 A 0 A_SpawnItemEx("AEL4DBill",0,0,0,0,0,0,0,32|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("AEL4DBill",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
 		Stop
 	S2:
-		TNT1 A 0 A_SpawnItemEx("AEL4DLouis",0,0,0,0,0,0,0,32|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("AEL4DLouis",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
 		Stop
 	S3:
-		TNT1 A 0 A_SpawnItemEx("AEL4DFrancis",0,0,0,0,0,0,0,32|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("AEL4DFrancis",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
 		Stop
 	S4:
-		TNT1 A 0 A_SpawnItemEx("AEL4DZoey",0,0,0,0,0,0,0,32|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("AEL4DZoey",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
 		Stop
 	S5:
-		TNT1 A 0 A_SpawnItemEx("AEL4DNick",0,0,0,0,0,0,0,32|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("AEL4DNick",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
 		Stop
 	S6:
-		TNT1 A 0 A_SpawnItemEx("AEL4DEllis",0,0,0,0,0,0,0,32|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("AEL4DEllis",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
 		Stop
 	S7:
-		TNT1 A 0 A_SpawnItemEx("AEL4DCoach",0,0,0,0,0,0,0,32|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("AEL4DCoach",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
 		Stop
 	}
 }
@@ -2371,7 +2371,7 @@ ACTOR HeresiarchSummon : MinotaurFriend Replaces MinotaurFriend
 	Goto See
     Death:
 	SORC G 0 Bright A_Scream
-	SORC G 0 A_SpawnItemEx("HeresiarchSmoke",0,0,0,0,0,0,0,32,0)
+	SORC G 0 A_SpawnItemEx("HeresiarchSmoke",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 	SORC G 0 A_DamageMaster(10,"HCLoneDead")
 	SORC G 1 A_FadeOut(0.03)
 	Wait
@@ -2424,26 +2424,26 @@ ACTOR HSummonPhoenixShot
     States
     {
     Spawn:
-	PYBU AA 1 Bright A_SpawnItemEx("HPhoenixTrail",0,0,0,0,0,0,0,128)
+	PYBU AA 1 Bright A_SpawnItemEx("HPhoenixTrail",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
 	PYBU A 0 Bright A_SeekerMissile(2,2)
-	PYBU AA 1 Bright A_SpawnItemEx("HPhoenixTrail",0,0,0,0,0,0,0,128)
+	PYBU AA 1 Bright A_SpawnItemEx("HPhoenixTrail",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
 	PYBU A 0 Bright A_SeekerMissile(2,2)
-	PYBU BB 1 Bright A_SpawnItemEx("HPhoenixTrail",0,0,0,0,0,0,0,128)
+	PYBU BB 1 Bright A_SpawnItemEx("HPhoenixTrail",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
 	PYBU B 0 Bright A_SeekerMissile(2,2)
-	PYBU BB 1 Bright A_SpawnItemEx("HPhoenixTrail",0,0,0,0,0,0,0,128)
+	PYBU BB 1 Bright A_SpawnItemEx("HPhoenixTrail",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
 	PYBU B 0 Bright A_SeekerMissile(2,2)
-	PYBU CC 1 Bright A_SpawnItemEx("HPhoenixTrail",0,0,0,0,0,0,0,128)
+	PYBU CC 1 Bright A_SpawnItemEx("HPhoenixTrail",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
 	PYBU C 0 Bright A_SeekerMissile(2,2)
-	PYBU CC 1 Bright A_SpawnItemEx("HPhoenixTrail",0,0,0,0,0,0,0,128)
+	PYBU CC 1 Bright A_SpawnItemEx("HPhoenixTrail",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
 	PYBU C 0 Bright A_SeekerMissile(2,2)
 	Loop
     Death:
 	PYBU D 1 Bright A_Explode(32,32,0)
-	TNT1 AAAAAAA 0 A_SpawnItemEx("PhoenixRodExtraSFX",0,0,0,random(1,-1),random(1,-1),random(1,-1),random(0,359),32)
-	PYBU D 1 Bright A_SpawnItemEx("PhoenixSFX2",0,0,0,0,0,0,0,128)
+	TNT1 AAAAAAA 0 A_SpawnItemEx("PhoenixRodExtraSFX",0,0,0,random(1,-1),random(1,-1),random(1,-1),random(0,359),SXF_NOCHECKPOSITION)
+	PYBU D 1 Bright A_SpawnItemEx("PhoenixSFX2",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
 	PYBU D 1 bright
 	PYBU E 3 Bright
-	TNT1 A 0 A_SpawnItemEx("PhoenixSFX",0,0,0,0,0,0,0,128)
+	TNT1 A 0 A_SpawnItemEx("PhoenixSFX",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
 	Stop
     }
 }
@@ -2465,7 +2465,7 @@ ACTOR HSummonFloorIce
     States
     {
     Spawn:
-	TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 2 A_SpawnItemEx("HSummonFloorIce2",0,0,0,0,0,0,0,32,0)
+	TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 2 A_SpawnItemEx("HSummonFloorIce2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
 	TNT1 A 0 A_Jump(128,1)
 	Goto Spawn+28
 	TNT1 A 0 A_JumpIfInventory("SeekerCheck",1,"Spawn")
@@ -2579,11 +2579,11 @@ Actor LargeWeaponPowerOrbSpawn
     {
 	Spawn:
 	TNT1 A 0 
-	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,33)
+	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 	PS04 A 0 A_PlaySound("monster/bastet/warpin")
-	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,33)
+	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 	PS04 EFGH 3 
-	PS04 A 0 A_SpawnItemEx("BigWeaponPower",0,0,0,0,0,0,0,33)
+	PS04 A 0 A_SpawnItemEx("BigWeaponPower",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 	stop
     }
 }
@@ -2595,11 +2595,11 @@ Actor SmallWeaponPowerOrbSpawn : LargeWeaponPowerOrbSpawn
     {
 	Spawn:
 	TNT1 A 0 
-	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,33)
+	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 	PS04 A 0 A_PlaySound("monster/bastet/warpin")
-	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,33)
+	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 	PS04 EFGH 3 
-	PS04 A 0 A_SpawnItemEx("SmallWeaponPower",0,0,0,0,0,0,0,33)
+	PS04 A 0 A_SpawnItemEx("SmallWeaponPower",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 	stop
     }
 }
@@ -2611,11 +2611,11 @@ Actor FullWeaponPowerSpawner : LargeWeaponPowerOrbSpawn
     Spawn:
 	Spawn:
 	TNT1 A 0 
-	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(9.0,-9.0),frandom(9.0,-9.0),frandom(9.0,-9.0),0,33)
+	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(9.0,-9.0),frandom(9.0,-9.0),frandom(9.0,-9.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 	PS04 A 0 A_PlaySound("monster/bastet/warpin")
-	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(9.0,-9.0),frandom(9.0,-9.0),frandom(9.0,-9.0),0,3)
+	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(9.0,-9.0),frandom(9.0,-9.0),frandom(9.0,-9.0),0,SXF_TRANSFERTRANSLATION|SXF_ABSOLUTEPOSITION)
 	PS04 EFGH 3 
-	PS04 A 0 A_SpawnItemEx("FullWeaponPower",0,0,0,0,0,0,0,33)
+	PS04 A 0 A_SpawnItemEx("FullWeaponPower",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 	stop
     }
 }
@@ -2629,9 +2629,9 @@ Actor LargeHealthPowerOrbSpawn : LargeWeaponPowerOrbSpawn
     {
 	Spawn:
 	TNT1 A 0 
-	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvOrangeOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,32)
+	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvOrangeOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION)
 	PS04 A 0 A_PlaySound("monster/bastet/warpin")
-	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvOrangeOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,32)
+	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvOrangeOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION)
 	PS04 EFGH 3 
 	PS04 A 0 A_SpawnItem("BigHealthPower",0,0,0)
 	stop
@@ -2645,9 +2645,9 @@ Actor SmallHealthPowerOrbSpawn : LargeHealthPowerOrbSpawn
     {
 	Spawn:
 	TNT1 A 0 
-	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvOrangeOrbPartSmall",0,0,25,frandom(4.0,-4.0),frandom(4.0,-4.0),frandom(4.0,-4.0),0,32)
+	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvOrangeOrbPartSmall",0,0,25,frandom(4.0,-4.0),frandom(4.0,-4.0),frandom(4.0,-4.0),0,SXF_NOCHECKPOSITION)
 	PS04 A 0 A_PlaySound("monster/bastet/warpin")
-	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvOrangeOrbPartSmall",0,0,25,frandom(4.0,-4.0),frandom(4.0,-4.0),frandom(4.0,-4.0),0,32)
+	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvOrangeOrbPartSmall",0,0,25,frandom(4.0,-4.0),frandom(4.0,-4.0),frandom(4.0,-4.0),0,SXF_NOCHECKPOSITION)
 	PS04 EFGH 3 
 	PS04 A 0 A_SpawnItem("SmallHealthPower",0,0,0)
 	stop
@@ -2660,9 +2660,9 @@ Actor FullHealthPowerSpawner : LargeHealthPowerOrbSpawn
     {
     Spawn:
 	TNT1 A 0 
-	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvOrangeOrbPart",0,0,25,frandom(9.0,-9.0),frandom(9.0,-9.0),frandom(9.0,-9.0),0,32)
+	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvOrangeOrbPart",0,0,25,frandom(9.0,-9.0),frandom(9.0,-9.0),frandom(9.0,-9.0),0,SXF_NOCHECKPOSITION)
 	PS04 A 0 A_PlaySound("monster/bastet/warpin")
-	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvOrangeOrbPart",0,0,25,frandom(9.0,-9.0),frandom(9.0,-9.0),frandom(9.0,-9.0),0,32)
+	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvOrangeOrbPart",0,0,25,frandom(9.0,-9.0),frandom(9.0,-9.0),frandom(9.0,-9.0),0,SXF_NOCHECKPOSITION)
 	PS04 EFGH 3 
 	PS04 A 0 A_SpawnItem("FullHealthPower",0,0,0)
 	stop
@@ -2679,9 +2679,9 @@ Actor LargeShieldPowerOrbSpawn : LargeWeaponPowerOrbSpawn
     Spawn:
 	Spawn:
 	TNT1 A 0 
-	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvRedOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,32)
+	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvRedOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION)
 	PS04 A 0 A_PlaySound("monster/bastet/warpin")
-	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvRedOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,32)
+	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvRedOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION)
 	PS04 EFGH 3 
 	PS04 A 0 A_SpawnItem("BigShieldPower",0,0,0)
 	stop
@@ -2695,9 +2695,9 @@ Actor SmallShieldPowerOrbSpawn : LargeShieldPowerOrbSpawn
     {
     Spawn:
 	TNT1 A 0 
-	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvRedOrbPartSmall",0,0,25,frandom(4.0,-4.0),frandom(4.0,-4.0),frandom(4.0,-4.0),0,32)
+	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvRedOrbPartSmall",0,0,25,frandom(4.0,-4.0),frandom(4.0,-4.0),frandom(4.0,-4.0),0,SXF_NOCHECKPOSITION)
 	PS04 A 0 A_PlaySound("monster/bastet/warpin")
-	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvRedOrbPartSmall",0,0,25,frandom(4.0,-4.0),frandom(4.0,-4.0),frandom(4.0,-4.0),0,32)
+	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvRedOrbPartSmall",0,0,25,frandom(4.0,-4.0),frandom(4.0,-4.0),frandom(4.0,-4.0),0,SXF_NOCHECKPOSITION)
 	PS04 EFGH 3 
 	PS04 A 0 A_SpawnItem("SmallShieldPower",0,0,0)
 	stop
@@ -2770,24 +2770,24 @@ Actor BigWeaponPower
 		TNT1 A 0 A_JumpIf(user_Type==0,"C_AEoD")*/
 		Goto Normal
 	Magic:
-		TNT1 A 0 A_SpawnItemEx("BigWeaponPowerMagic",0,0,0,0,0,0,0,33)
+		TNT1 A 0 A_SpawnItemEx("BigWeaponPowerMagic",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 		Stop
 	Normal:
-		TNT1 A 0 A_SpawnItemEx("BigWeaponPowerNormal",0,0,0,0,0,0,0,33)
+		TNT1 A 0 A_SpawnItemEx("BigWeaponPowerNormal",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 		Stop
 	Tech:
-		TNT1 A 0 A_SpawnItemEx("BigWeaponPowerTech",0,0,0,0,0,0,0,33)
+		TNT1 A 0 A_SpawnItemEx("BigWeaponPowerTech",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 		Stop
 	C_AEoD:
-		TNT1 A 0 A_SpawnItemEx("BigWeaponPowerClassic",0,0,0,0,0,0,0,33)
+		TNT1 A 0 A_SpawnItemEx("BigWeaponPowerClassic",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 		Stop
 	}
 }
 Actor BigWeaponPowerMagic : CustomInventory
 {
 	+FLOATBOB
-	+FANCYPICKUPSOUND
-	+ALWAYSPICKUP
+	+INVENTORY.FANCYPICKUPSOUND
+	+INVENTORY.ALWAYSPICKUP
 	Gravity 0.15
     Height 20
     Radius 16
@@ -2848,8 +2848,8 @@ Actor BigWeaponPowerMagic : CustomInventory
 Actor BigWeaponPowerNormal : CustomInventory
 {
 	+FLOATBOB
-	+FANCYPICKUPSOUND
-	+ALWAYSPICKUP
+	+INVENTORY.FANCYPICKUPSOUND
+	+INVENTORY.ALWAYSPICKUP
     Height 20
     Radius 16
     Scale 0.7
@@ -2914,8 +2914,8 @@ Actor BigWeaponPowerNormal : CustomInventory
 Actor BigWeaponPowerTech : CustomInventory
 {
 	+FLOATBOB
-	+FANCYPICKUPSOUND
-	+ALWAYSPICKUP
+	+INVENTORY.FANCYPICKUPSOUND
+	+INVENTORY.ALWAYSPICKUP
     Height 20
     Radius 16
     Scale 0.7
@@ -2978,8 +2978,8 @@ Actor BigWeaponPowerTech : CustomInventory
 Actor BigWeaponPowerClassic : CustomInventory
 {
 	+FLOATBOB
-	+FANCYPICKUPSOUND
-	+ALWAYSPICKUP
+	+INVENTORY.FANCYPICKUPSOUND
+	+INVENTORY.ALWAYSPICKUP
     Height 20
     Radius 16
     Scale 0.7
@@ -3098,14 +3098,14 @@ Actor ShotgunOrbSpawnChooser
 		TNT1 A 0 
 		TNT1 A 0 A_JumpIfInventory("ShotgunGiven",1,"NormalAmmoSpawner",AAPTR_PLAYER1) // if player already picked one
 	WeaponOrbSpawns:
-		TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvGreenOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,33)
+		TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvGreenOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 		PS04 A 0 A_PlaySound("monster/bastet/warpin")
-		PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvGreenOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,33)
+		PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvGreenOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 		PS04 EFGH 3 
-		PS04 A 1 A_SpawnItemEx("ShotgunPowerOrb",0,0,0,0,0,0,0,33)
+		PS04 A 1 A_SpawnItemEx("ShotgunPowerOrb",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 		stop
 	NormalAmmoSpawner:
-		TNT1 A 0 A_SpawnItemEx("MonsterAmmoOrbSpawn",0,0,0,0,0,0,0,32)	//see orb below
+		TNT1 A 0 A_SpawnItemEx("MonsterAmmoOrbSpawn",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)	//see orb below
 		Stop
     }
 }
@@ -3132,26 +3132,26 @@ Actor ShotgunPowerOrb
 		TNT1 A 0 A_JumpIf(user_Type==0,"C_AEoD")*/
 		Goto Normal
 	Magic:
-		TNT1 A 0 A_SpawnItemEx("ShotgunOrbPowerMagic",0,0,0,0,0,0,0,33)
+		TNT1 A 0 A_SpawnItemEx("ShotgunOrbPowerMagic",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 		Stop
 		
 	Normal:
-		TNT1 A 0 A_SpawnItemEx("ShotgunOrbPowerNormal",0,0,0,0,0,0,0,33)
+		TNT1 A 0 A_SpawnItemEx("ShotgunOrbPowerNormal",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 		Stop
 		
 	Tech:
-		TNT1 A 0 A_SpawnItemEx("ShotgunOrbPowerTech",0,0,0,0,0,0,0,33)
+		TNT1 A 0 A_SpawnItemEx("ShotgunOrbPowerTech",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 		Stop
 	C_AEoD:
-		TNT1 A 0 A_SpawnItemEx("ShotgunOrbPowerClassic",0,0,0,0,0,0,0,33)
+		TNT1 A 0 A_SpawnItemEx("ShotgunOrbPowerClassic",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 		Stop
 	}
 }
 Actor ShotgunOrbPowerMagic : CustomInventory
 {
 	+FLOATBOB
-	+FANCYPICKUPSOUND
-	+ALWAYSPICKUP
+	+INVENTORY.FANCYPICKUPSOUND
+	+INVENTORY.ALWAYSPICKUP
 	Gravity 0.15
     Height 20
     Radius 16
@@ -3176,8 +3176,8 @@ Actor ShotgunOrbPowerMagic : CustomInventory
 Actor ShotgunOrbPowerNormal : CustomInventory
 {
 	+FLOATBOB
-	+FANCYPICKUPSOUND
-	+ALWAYSPICKUP
+	+INVENTORY.FANCYPICKUPSOUND
+	+INVENTORY.ALWAYSPICKUP
     Height 20
     Radius 16
     Scale 0.7
@@ -3201,8 +3201,8 @@ Actor ShotgunOrbPowerNormal : CustomInventory
 Actor ShotgunOrbPowerTech : CustomInventory
 {
 	+FLOATBOB
-	+FANCYPICKUPSOUND
-	+ALWAYSPICKUP
+	+INVENTORY.FANCYPICKUPSOUND
+	+INVENTORY.ALWAYSPICKUP
     Height 20
     Radius 16
     Scale 0.7
@@ -3226,8 +3226,8 @@ Actor ShotgunOrbPowerTech : CustomInventory
 Actor ShotgunOrbPowerClassic : CustomInventory
 {
 	+FLOATBOB
-	+FANCYPICKUPSOUND
-	+ALWAYSPICKUP
+	+INVENTORY.FANCYPICKUPSOUND
+	+INVENTORY.ALWAYSPICKUP
     Height 20
     Radius 16
     Scale 0.7
@@ -3294,11 +3294,11 @@ Actor MonsterAmmoOrbSpawn
     {
 	Spawn:
 	TNT1 A 0 
-	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(5.0,-5.0),frandom(5.0,-5.0),frandom(5.0,-5.0),0,33)
+	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(5.0,-5.0),frandom(5.0,-5.0),frandom(5.0,-5.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 	PS04 A 0 A_PlaySound("monster/bastet/warpin")
-	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(5.0,-5.0),frandom(5.0,-5.0),frandom(5.0,-5.0),0,33)
+	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(5.0,-5.0),frandom(5.0,-5.0),frandom(5.0,-5.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 	PS04 EFGH 3 
-	PS04 A 0 A_SpawnItemEx("MonsterAmmoPower",0,0,0,0,0,0,0,33)
+	PS04 A 0 A_SpawnItemEx("MonsterAmmoPower",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 	stop
     }
 }
@@ -3319,24 +3319,24 @@ Actor MonsterAmmoPower
 		TNT1 A 0 A_JumpIf(user_Type==0,"C_AEoD")*/
 		Goto Normal
 	Magic:
-		TNT1 A 0 A_SpawnItemEx("MonsterPowerMagic",0,0,0,0,0,0,0,33)
+		TNT1 A 0 A_SpawnItemEx("MonsterPowerMagic",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 		Stop
 	Normal:
-		TNT1 A 0 A_SpawnItemEx("MonsterPowerNormal",0,0,0,0,0,0,0,33)
+		TNT1 A 0 A_SpawnItemEx("MonsterPowerNormal",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 		Stop
 	Tech:
-		TNT1 A 0 A_SpawnItemEx("MonsterPowerTech",0,0,0,0,0,0,0,33)
+		TNT1 A 0 A_SpawnItemEx("MonsterPowerTech",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 		Stop
 	C_AEoD:
-		TNT1 A 0 A_SpawnItemEx("MonsterPowerClassic",0,0,0,0,0,0,0,33)
+		TNT1 A 0 A_SpawnItemEx("MonsterPowerClassic",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 		Stop
 	}
 }
 Actor MonsterPowerMagic : CustomInventory
 {
 	+FLOATBOB
-	+FANCYPICKUPSOUND
-	+ALWAYSPICKUP
+	+INVENTORY.FANCYPICKUPSOUND
+	+INVENTORY.ALWAYSPICKUP
 	Gravity 0.15
     Height 20
     Radius 16
@@ -3404,8 +3404,8 @@ Actor MonsterPowerMagic : CustomInventory
 Actor MonsterPowerNormal : CustomInventory
 {
 	+FLOATBOB
-	+FANCYPICKUPSOUND
-	+ALWAYSPICKUP
+	+INVENTORY.FANCYPICKUPSOUND
+	+INVENTORY.ALWAYSPICKUP
     Height 20
     Radius 16
     Scale 0.5
@@ -3476,8 +3476,8 @@ Actor MonsterPowerNormal : CustomInventory
 Actor MonsterPowerTech : CustomInventory
 {
 	+FLOATBOB
-	+FANCYPICKUPSOUND
-	+ALWAYSPICKUP
+	+INVENTORY.FANCYPICKUPSOUND
+	+INVENTORY.ALWAYSPICKUP
     Height 20
     Radius 16
     Scale 0.5
@@ -3546,8 +3546,8 @@ Actor MonsterPowerTech : CustomInventory
 Actor MonsterPowerClassic : CustomInventory
 {
 	+FLOATBOB
-	+FANCYPICKUPSOUND
-	+ALWAYSPICKUP
+	+INVENTORY.FANCYPICKUPSOUND
+	+INVENTORY.ALWAYSPICKUP
     Height 20
     Radius 16
     Scale 0.5
@@ -3651,7 +3651,7 @@ Actor BigHealthPower : Health
     Alpha 1
 //    +FLOORCLIP
     +FLOATBOB
-    +FANCYPICKUPSOUND
+    +INVENTORY.FANCYPICKUPSOUND
 	VisibleToPlayerClass AEoDmarine
     Scale 0.7
     Inventory.Amount 15
@@ -3674,7 +3674,7 @@ Actor SmallHealthPower : Health
     Alpha 1
 //    +FLOORCLIP
     +FLOATBOB
-    +FANCYPICKUPSOUND
+    +INVENTORY.FANCYPICKUPSOUND
 	VisibleToPlayerClass AEoDmarine
     Scale 0.5
     Inventory.Amount 5
@@ -3708,7 +3708,7 @@ Actor BigShieldPower : CustomInventory
     Alpha 1
 //    +FLOORCLIP
     +FLOATBOB
-    +FANCYPICKUPSOUND
+    +INVENTORY.FANCYPICKUPSOUND
     Translation "84:109=20:45","195:196=184:185","152:154=233:235","3:3=40:40"
     Scale 0.7
     Inventory.PickupMessage "Armor Increasing Orb."
@@ -3755,7 +3755,7 @@ Actor SmallShieldPower : CustomInventory
     Alpha 1
 //    +FLOORCLIP
     +FLOATBOB
-    +FANCYPICKUPSOUND
+    +INVENTORY.FANCYPICKUPSOUND
     Translation "84:109=20:45","195:196=184:185","152:154=233:235","3:3=40:40"
     Scale 0.5
     Inventory.PickupMessage "Armor Increasing Orb."
@@ -3801,7 +3801,7 @@ Actor FullHealthPower : Health
 //    +FLOORCLIP
     +FLOATBOB
     Scale 0.8
-    +FANCYPICKUPSOUND
+    +INVENTORY.FANCYPICKUPSOUND
     Inventory.Amount 500
     Inventory.PickupMessage "Full Health!"
     Inventory.PickupSound "misc/powerslavefullhealthpower"
@@ -3849,11 +3849,11 @@ Actor FullWeaponPower : LargeWeaponPowerOrbSpawn
     {
 	Spawn:
 	TNT1 A 0 
-	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,33)
+	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 	PS04 A 0 A_PlaySound("monster/bastet/warpin")
-	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,33)
+	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 	PS04 EFGH 3 
-	PS04 A 0 A_SpawnItemEx("FullWeaponPowerAmmoGive",0,0,0,0,0,0,0,33)
+	PS04 A 0 A_SpawnItemEx("FullWeaponPowerAmmoGive",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 	stop
     }
 }
@@ -3867,7 +3867,7 @@ Actor FullWeaponPowerAmmoGive : CustomInventory
     Scale 0.8
     RENDERSTYLE NORMAL
     Alpha 1
-    +FANCYPICKUPSOUND
+    +INVENTORY.FANCYPICKUPSOUND
     Inventory.PickupMessage "Full Ammo Power!"
     Inventory.PickupSound "misc/powerslavefullweaponpower"
     States
@@ -3903,11 +3903,11 @@ Actor HalfWeaponPower : FullWeaponPower
     {
 	Spawn:
 	TNT1 A 0 
-	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,33)
+	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 	PS04 A 0 A_PlaySound("monster/bastet/warpin")
-	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,33)
+	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 	PS04 EFGH 3 
-	PS04 A 0 A_SpawnItemEx("HalfWeaponPowerAmmoGive",0,0,0,0,0,0,0,33)
+	PS04 A 0 A_SpawnItemEx("HalfWeaponPowerAmmoGive",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 	stop
     }
 }
@@ -3920,7 +3920,7 @@ Actor HalfWeaponPowerAmmoGive : CustomInventory
     Scale 0.8
     RENDERSTYLE NORMAL
     Alpha 1
-    +FANCYPICKUPSOUND
+    +INVENTORY.FANCYPICKUPSOUND
     Inventory.PickupMessage "Half Ammo Power!"
     Inventory.PickupSound "misc/powerslavefullweaponpower"
     States
@@ -3956,11 +3956,11 @@ Actor MediumWeaponPower : FullWeaponPower
     {
 	Spawn:
 	TNT1 A 0 
-	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,33)
+	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 	PS04 A 0 A_PlaySound("monster/bastet/warpin")
-	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,33)
+	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 	PS04 EFGH 3 
-	PS04 A 0 A_SpawnItemEx("MediumWeaponPowerAmmoGive",0,0,0,0,0,0,0,33)
+	PS04 A 0 A_SpawnItemEx("MediumWeaponPowerAmmoGive",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 	stop
     }
 }
@@ -3973,7 +3973,7 @@ Actor MediumWeaponPowerAmmoGive : CustomInventory
     Scale 0.8
     RENDERSTYLE NORMAL
     Alpha 1
-    +FANCYPICKUPSOUND
+    +INVENTORY.FANCYPICKUPSOUND
     Inventory.PickupMessage "Very big Ammo Power!"
     Inventory.PickupSound "misc/powerslavefullweaponpower"
     States
@@ -4007,11 +4007,11 @@ Actor RandomWeaponPower : FullWeaponPower
     {
 	Spawn:
 	TNT1 A 0 
-	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,33)
+	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 	PS04 A 0 A_PlaySound("monster/bastet/warpin")
-	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,33)
+	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 	PS04 EFGH 3 
-	PS04 A 0 A_SpawnItemEx("RandomWeaponPowerAmmoGive",0,0,0,0,0,0,0,33)
+	PS04 A 0 A_SpawnItemEx("RandomWeaponPowerAmmoGive",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
 	stop
     }
 }
@@ -4024,7 +4024,7 @@ Actor RandomWeaponPowerAmmoGive : CustomInventory
     Scale 0.8
     RENDERSTYLE NORMAL
     Alpha 1
-    +FANCYPICKUPSOUND
+    +INVENTORY.FANCYPICKUPSOUND
     Inventory.PickupMessage "Random Ammo Power!"
     Inventory.PickupSound "misc/powerslavefullweaponpower"
     States
@@ -4077,18 +4077,18 @@ Actor DeadLightPowerup : CustomInventory
 		TNT1 A 0 A_JumpIfInventory("PowerCFDLProtector",1,"Deny")
 		TNT1 A 0 A_GiveInventory("CFDLPowerEffect",1)
 		TNT1 A 0 A_SetReflective
-		TNT1 A 0 A_SpawnItemEx("CFDLController",0,0,0,0,0,0,0,32|SXF_SETMASTER)
-		TNT1 A 0 A_SpawnItemEx("CFDLMonitor",0,0,0,0,0,0,0,32|SXF_SETMASTER)
+		TNT1 A 0 A_SpawnItemEx("CFDLController",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
+		TNT1 A 0 A_SpawnItemEx("CFDLMonitor",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
 		TNT1 A 0 A_PlaySound("powerups/pentagramuse",5,1,0,ATTN_NONE)
 		TNT1 A 0 A_PlaySound("powerups/pentagramuse",6,1,0,ATTN_NONE)
-		TNT1 A 0 A_SpawnItemEx("PlayerDeadLightWarp",0,0,30,12,0,0,0,32|SXF_SETMASTER)
-		TNT1 A 0 A_SpawnItemEx("PlayerDeadLightWarp",0,0,30,12,0,0,90,32|SXF_SETMASTER)
-		TNT1 A 0 A_SpawnItemEx("PlayerDeadLightWarp",0,0,30,12,0,0,180,32|SXF_SETMASTER)
-		TNT1 A 0 A_SpawnItemEx("PlayerDeadLightWarp",0,0,30,12,0,0,270,32|SXF_SETMASTER)
-		TNT1 A 0 A_SpawnItemEx("PlayerDeadLightWarp2",0,0,30,12,0,0,0,32|SXF_SETMASTER)
-		TNT1 A 0 A_SpawnItemEx("PlayerDeadLightWarp2",0,0,30,12,0,0,90,32|SXF_SETMASTER)
-		TNT1 A 0 A_SpawnItemEx("PlayerDeadLightWarp2",0,0,30,12,0,0,180,32|SXF_SETMASTER)
-		TNT1 A 0 A_SpawnItemEx("PlayerDeadLightWarp2",0,0,30,12,0,0,270,32|SXF_SETMASTER)
+		TNT1 A 0 A_SpawnItemEx("PlayerDeadLightWarp",0,0,30,12,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
+		TNT1 A 0 A_SpawnItemEx("PlayerDeadLightWarp",0,0,30,12,0,0,90,SXF_NOCHECKPOSITION|SXF_SETMASTER)
+		TNT1 A 0 A_SpawnItemEx("PlayerDeadLightWarp",0,0,30,12,0,0,180,SXF_NOCHECKPOSITION|SXF_SETMASTER)
+		TNT1 A 0 A_SpawnItemEx("PlayerDeadLightWarp",0,0,30,12,0,0,270,SXF_NOCHECKPOSITION|SXF_SETMASTER)
+		TNT1 A 0 A_SpawnItemEx("PlayerDeadLightWarp2",0,0,30,12,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
+		TNT1 A 0 A_SpawnItemEx("PlayerDeadLightWarp2",0,0,30,12,0,0,90,SXF_NOCHECKPOSITION|SXF_SETMASTER)
+		TNT1 A 0 A_SpawnItemEx("PlayerDeadLightWarp2",0,0,30,12,0,0,180,SXF_NOCHECKPOSITION|SXF_SETMASTER)
+		TNT1 A 0 A_SpawnItemEx("PlayerDeadLightWarp2",0,0,30,12,0,0,270,SXF_NOCHECKPOSITION|SXF_SETMASTER)
 		Stop
 	Deny:
 		TNT1 A 0
@@ -4440,7 +4440,7 @@ Actor DMSoulFragment : CustomInventory
 	Spawn:
 		TNT1 A 0 NoDelay A_SetUserVar(user_tid,tid)
 		TNT1 A 10 Thing_ChangeTID(0,0)
-		X099 A 0 A_SpawnItemEx("DMSoulTarget",0,0,0,0,0,0,0,32|SXF_SETMASTER|SXF_ORIGINATOR|SXF_TRANSFERTRANSLATION,0,tid)
+		X099 A 0 A_SpawnItemEx("DMSoulTarget",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER|SXF_ORIGINATOR|SXF_TRANSFERTRANSLATION,0,tid)
 		"####" "#" 0 A_JumpIf(z-floorz <= 10.0,"MoveUp")
 		"####" "#" 0 A_CheckFloor("MoveUp")
 		Goto ScalingUp
@@ -4516,7 +4516,7 @@ Actor DemonMorphStartSound
 }
 Actor DMSoulCheckMaster : CustomInventory
 {
-	+ALWAYSPICKUP
+	+INVENTORY.ALWAYSPICKUP
 	-COUNTITEM
 	States
 	{
@@ -4534,7 +4534,7 @@ Actor DMSoulCheckMaster : CustomInventory
 
 Actor SoulSeekOn : CustomInventory
 {
-	+ALWAYSPICKUP
+	+INVENTORY.ALWAYSPICKUP
 	-COUNTITEM
 	States
 	{
@@ -4550,7 +4550,7 @@ Actor SoulSeekOn : CustomInventory
 
 Actor SoulSeekOff : CustomInventory
 {
-	+ALWAYSPICKUP
+	+INVENTORY.ALWAYSPICKUP
 	States
 	{
 	Pickup:
@@ -4606,7 +4606,7 @@ Actor DMSoulTarget
 		TNT1 A 0 A_ChangeFlag("NOPAIN",1)
 		TNT1 A 0 A_UnSetShootable
 		TNT1 A 0 A_FaceTarget
-		TNT1 A 0 A_SpawnItemEx("DMSoulMissile",0,0,0,0,0,0,0,32|SXF_TRANSFERTRANSLATION|SXF_TRANSFERPOINTERS,0,tid)
+		TNT1 A 0 A_SpawnItemEx("DMSoulMissile",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION|SXF_TRANSFERPOINTERS,0,tid)
 		TNT1 A 1 A_RemoveMaster(RMVF_EVERYTHING,"DMSoulFragment")
 		Stop
 	Death:
@@ -4659,7 +4659,7 @@ Actor DMSoulMissile
 		TNT1 A 0 A_GiveInventory("DMSoulFragment",1,AAPTR_TRACER)
 		Stop
 	E2:
-		TNT1 A 0 A_SpawnItemEx("DMSoulFragment",0,0,8,0,0,1,0,32,0,tid)
+		TNT1 A 0 A_SpawnItemEx("DMSoulFragment",0,0,8,0,0,1,0,SXF_NOCHECKPOSITION,0,tid)
 		Stop
 	}
 }
@@ -4667,7 +4667,7 @@ Actor DMSoulMissile
 
 Actor DMSoulCount : Inventory
 {	
-	+IGNORESKILL
+	+INVENTORY.IGNORESKILL
 	Inventory.Amount 1
 	Inventory.MaxAmount 2000
 	Inventory.InterHubAmount 2000
@@ -4675,7 +4675,7 @@ Actor DMSoulCount : Inventory
 
 Actor DMSoulHealth : HealthBonus
 {
-	+IGNORESKILL
+	+INVENTORY.IGNORESKILL
 	Inventory.MaxAmount 666
 	Inventory.Amount 1
 }
@@ -4740,8 +4740,8 @@ Actor DemonMorphPowerup : CustomInventory
 		Goto Spawn
 	Cont:
 		QPEI A 2 A_CheckSight("Simple")
-		QPEI A 0 A_SpawnItemEx("DMBlackParticle",0,0,15.5,frandom(2.0,4.0),0,0,random(0,359),32)
-		QPEI AAAAAAAA 0 A_SpawnItemEx("DMBlackParticle",0,0,15.5,frandom(2.0,4.0),0,0,random(0,359),32,192)
+		QPEI A 0 A_SpawnItemEx("DMBlackParticle",0,0,15.5,frandom(2.0,4.0),0,0,random(0,359),SXF_NOCHECKPOSITION)
+		QPEI AAAAAAAA 0 A_SpawnItemEx("DMBlackParticle",0,0,15.5,frandom(2.0,4.0),0,0,random(0,359),SXF_NOCHECKPOSITION,192)
 		Goto S2
 	Simple:
 		QPEI A 4 A_SetUserVar("user_tick",user_tick+2)
@@ -4821,13 +4821,13 @@ Actor DemonPlayerMorph : DoomPlayer
 
 Actor AEoDDemonMorphHand : Weapon
 {
-	+CHEATNOTWEAPON
-	+ALWAYSPICKUP
-	//+QUIET
-	+NOSCREENFLASH
+	+WEAPON.CHEATNOTWEAPON
+	+INVENTORY.ALWAYSPICKUP
+	//+INVENTORY.QUIET
+	+INVENTORY.NOSCREENFLASH
 	+WEAPON.AMMO_OPTIONAL
-	+UNDROPPABLE
-	+UNTOSSABLE
+	+INVENTORY.UNDROPPABLE
+	+INVENTORY.UNTOSSABLE
 	States
 	{
 	Spawn:
@@ -4954,7 +4954,7 @@ Actor AEoDDemonMorphHand : Weapon
 	Fire:
 		M666 A 0 A_JumpIf(!CheckClass("DemonPlayerMorph",AAPTR_DEFAULT,0),"Remove")
 		M666 A 0 A_RailAttack(20000,0,0,none,none,RGF_SILENT,0,"DeathTouchPuff",0,0,32766,0,16,0,"DemonMorphExploder")
-		M666 A 0 A_SpawnItemEx("DemonMorphShootingSound",0,0,0,0,0,0,0,32)//A_PlaySound("DemonMorph/Shoot",CHAN_WEAPON|CHAN_NOPAUSE,1,0)
+		M666 A 0 A_SpawnItemEx("DemonMorphShootingSound",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)//A_PlaySound("DemonMorph/Shoot",CHAN_WEAPON|CHAN_NOPAUSE,1,0)
 		M666 A 1 A_ZoomFactor(2.00,ZOOM_INSTANT|ZOOM_NOSCALETURNING)
 		M666 A 1 A_ZoomFactor(1.5,ZOOM_INSTANT|ZOOM_NOSCALETURNING)
 		M666 A 1 A_ZoomFactor(1.25,ZOOM_INSTANT|ZOOM_NOSCALETURNING)

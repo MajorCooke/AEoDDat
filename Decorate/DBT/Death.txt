@@ -64,7 +64,7 @@ Actor DBTSGPortalMissile
 	Looping:
 		//PARS A 0 A_Weave(0,2,0,4.0)
 		PARS A 0 A_ChangeVelocity(-2,0,0,CVF_RELATIVE)
-		PARS A 0 A_SpawnItemEx("DBTSGTrail",0,0,0,0,0,0,0,33|SXF_TRANSFERSCALE)
+		PARS A 0 A_SpawnItemEx("DBTSGTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION|SXF_TRANSFERSCALE)
 		PARS A 2 A_SetUserVar("user_count",user_count+1)
 		PARS A 0 A_JumpIf(user_count>=19,"Explosion")
 		Loop
@@ -72,10 +72,10 @@ Actor DBTSGPortalMissile
 	Explosion:
 		TNT1 A 0 A_Stop
 		PARS A 0 A_PlaySound("greatwraith/death",CHAN_AUTO,1,0)
-		TNT1 A 0 A_SpawnItemEx("DBTDSPortal",0,0,0,0,0,0,0,32)
+		TNT1 A 0 A_SpawnItemEx("DBTDSPortal",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		TNT1 A 0 A_TransferPointer(AAPTR_TARGET,AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_TRACER)
 		TNT1 A 0 A_FaceTracer
-		TNT1 A 0 A_SpawnItemEx("DBTDeathStorm",0,0,0,7,0,0,0,32|SXF_TRANSFERPOINTERS|SXF_TRANSFERPITCH)
+		TNT1 A 0 A_SpawnItemEx("DBTDeathStorm",0,0,0,7,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERPITCH)
 		Stop
 	}
 }
@@ -122,22 +122,22 @@ Actor DBTDeathStorm
 		SPIR P 0 A_FaceTracer
 		//SPIR P 0 A_ScaleVelocity(7)
 	Spiritbomb:
-		SPIR P 0 A_SpawnItemEx("DBTDeathSpirit",user_count*-7,random(-16,16),random(-16,16),velx,vely,velz,0,32|SXF_ABSOLUTEMOMENTUM)
-		SPIR PPP 0 A_SpawnItemEx("DBTDeathSpirit",user_count*-7,random(-16,16),random(-16,16),velx,vely,velz,0,32|SXF_ABSOLUTEMOMENTUM,192)
-		SPIR P 0 A_SpawnItemEx("DBTDeathCloud",0,0,0,0,0,0,32|SXF_TRANSFERPITCH)
-		SPIR PPP 0 A_SpawnItemEx("DBTDeathCloud",0,0,0,0,0,0,32|SXF_TRANSFERPITCH,192)
+		SPIR P 0 A_SpawnItemEx("DBTDeathSpirit",user_count*-7,random(-16,16),random(-16,16),velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_ABSOLUTEMOMENTUM)
+		SPIR PPP 0 A_SpawnItemEx("DBTDeathSpirit",user_count*-7,random(-16,16),random(-16,16),velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_ABSOLUTEMOMENTUM,192)
+		SPIR P 0 A_SpawnItemEx("DBTDeathCloud",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH)
+		SPIR PPP 0 A_SpawnItemEx("DBTDeathCloud",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH,192)
 		SPIR P 1 A_Explode(random(500,1000),256,0)
 		SPIR P 0 A_SetUserVar("user_count",user_count+1)
 		SPIR P 0 A_JumpIf(user_count==29,"DBTBloodShedderSpawn")
 		SPIR P 0 A_JumpIf(user_count>=59,1)
 		Loop
 	Looping:
-		SPIR P 0 A_SpawnItemEx("DBTDeathCloud",0,0,0,0,0,0,32|SXF_TRANSFERPITCH)
-		SPIR PPP 0 A_SpawnItemEx("DBTDeathCloud",0,0,0,0,0,0,32|SXF_TRANSFERPITCH,192)
+		SPIR P 0 A_SpawnItemEx("DBTDeathCloud",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH)
+		SPIR PPP 0 A_SpawnItemEx("DBTDeathCloud",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH,192)
 		SPIR P 1 A_Explode(random(500,1000),256,0)
 		Loop
 	DBTBloodShedderSpawn:
-		SPIR P 0 A_SpawnItemEx("DBTBloodShedder",0,0,0,velx,vely,velz,0,32|SXF_ABSOLUTEMOMENTUM)
+		SPIR P 0 A_SpawnItemEx("DBTBloodShedder",0,0,0,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_ABSOLUTEMOMENTUM)
 		Goto Spiritbomb
 	Death:
 		TNT1 A 0
@@ -283,8 +283,8 @@ Actor DBTBleeder : CustomInventory
 		TNT1 A 0 A_CheckFlag("NOBLOOD","End")
 		TNT1 A 0 A_CheckFlag("INVULNERABLE","End")
 		TNT1 A 0 A_CheckFlag("NONSHOOTABLE","End")
-		TNT1 A 0 A_SpawnItemEx("MCBloodParticle",random(0,(radius+10)),0,random((height*0.2),(height*0.8)),0,0,0,random(0,359),32|SXF_USEBLOODCOLOR)
-		TNT1 AAA 0 A_SpawnItemEx("MCBloodParticle",random(0,(radius/2)),0,random((height*0.2),(height*0.8)),0,0,0,random(0,359),32|SXF_USEBLOODCOLOR,192)
+		TNT1 A 0 A_SpawnItemEx("MCBloodParticle",random(0,(radius+10)),0,random((height*0.2),(height*0.8)),0,0,0,random(0,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR)
+		TNT1 AAA 0 A_SpawnItemEx("MCBloodParticle",random(0,(radius/2)),0,random((height*0.2),(height*0.8)),0,0,0,random(0,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,192)
 		Stop
 	End:
 		TNT1 A 0
