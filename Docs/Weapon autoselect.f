@@ -10,18 +10,24 @@
  7375	War axe
  7400	Crawler
  7500	Combat Shotgun
+ 7600	PK SMG
  7750	PK shotgun
  7777	Pulse gun
+ 7800	Bone shotgun
  8000	Magic Crossbow
  8100	Tome of set
+ 8200	Mindblower
  8250	Riotgun
  8375	Righteous Bison
  8500	Assault shotgun
  8750	Nailgun
  9000	Mac 10 SMG
+ 9050	Gut flinger
+ 9100	Ion Cannon
  9191	Nova
  9250	Popcorn Gun
  9300	Dark Matter gun
+ 9400	Flak cannon
  9500	Tekbow
  9750	Flare gun
  9777	Crystal Gun
@@ -34,6 +40,7 @@
  9950	Apocalypse
  9933	Soul leech
  9970	Hyperblaster
+ 9999	Shredder staff
 10000	Minigun
 10050	Ice wand
 10250	Voodoo doll
@@ -68,13 +75,17 @@
 11840	Inferno syphon
 11850	Demonstaff
 11860	Ripper gun
+11880	Pulse cannon
 11900	Razor
+11911	Stake gun
 11930	Wormwood arbalest
+11950	Railgun
 11955	Guardian head
 11960	Wraithverge
 11970	Lightning rod
 11975	Bloodscourge
 11978	Hellcore
+11979	Sniper Railgun
 11980	Scarab staff
 11985	Railgun prototype
 11990	Enlightenment Staff
@@ -83,23 +94,33 @@
 12121	Screamer revolver
 12321	Drakan blade
 12345	Firestorm spell
+12400	Boneduster
 12500	Flamethrower
 12521	Missile launcher
 12525	Devastator
 12530	Concussion rocket launcher
 12550	Howitzer
+12700	Raven staff
+13000	Death ray
+13200	Flail gun
 13300	Rocket launcher
 13400	PMF mine layer
 13500	Meteorite rod
 13600	D'Sparil staff
+14000	Napalm Launcher
+14300	Lich staff
+14400	Mortar Launcher
 14500	Wyvern heart
+14600	Phalanx
 14900	Chicken launcher
 14960	Bouncer
 14970	Grenade launcher
 14980	Frag grenade launcher
 14987	Proteus Dynamo
 14990	Heavy rocket launcher
+14993	HE Grenade launcher
 14995	Incinerator
+14998	Incendiary
 
 15243	Perforator
 15500	Volcano Cannon
