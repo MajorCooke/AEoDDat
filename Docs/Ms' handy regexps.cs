@@ -25,7 +25,7 @@ Actor $1 : $2 { $3 }
 == Add a line after each GOTO not followed by a state label ==
 
 # Find:
-\r\n([\t]+)Goto ([a-zA-Z0-9\+"]+)\r\n([\t]+)([a-zA-Z0-9]{4} )
+\r\n([\t]+)Goto ([a-zA-Z0-9\+"]+)[ \t]*\r\n([\t]+)([a-zA-Z0-9]{4} )
 
 # Replace ():
 \r\n$1Goto $2\r\n$3\r\n$3$4
