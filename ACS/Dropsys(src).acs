@@ -264,7 +264,7 @@ script "s799" (int wepnumber)		//identifies which weapon(of the arrangement) bei
 					slot=10;wep=33;	// cycles end
 				}
 	*/
-				
+	Terminate;		
 	// Does nothing instead.
 	// Anti-cheat system is disabled for now.
 }
@@ -294,7 +294,7 @@ script "s800" (void)		//this one, well, is another part of the dropping script
 }
 
 
-script "WeaponSlotToggle" (void)		//the script that changes the Limits to "on" or "off". Activated through a bound key in the menu.
+script "WeaponSlotToggle" (void) net	//the script that changes the Limits to "on" or "off". Activated through a bound key in the menu.
 {
 	int plrnum = PlayerNumber();
 	if(!(GetUserCvar(plrnum,"user_WeaponSlotLimits")))
@@ -311,7 +311,7 @@ script "WeaponSlotToggle" (void)		//the script that changes the Limits to "on" o
 	}
 }
 
-Script "WeaponSlotLimitCheck" (int class) //Checks to see what the current max of the current category is.
+Script "WeaponSlotLimitCheck" (int class) net //Checks to see what the current max of the current category is.
 {
 	int plrnum = PlayerNumber();
 	str wepcnt = StrParam(s:"Weapon",i:class,s:"Count");
@@ -341,17 +341,17 @@ Script "WeaponSlotLimitCheck" (int class) //Checks to see what the current max o
 //	Developed by Major Cooke
 //==============================================================================
 
-Script "SelectAEoDWeapon" (int class)
+Script "SelectAEoDWeapon" (int class) net
 {
+	if ((GetActorProperty(0,APROP_Dormant)) || (GetActorProperty(0,APROP_HEALTH) <= 0)
+		|| CheckInventory("cammin") > 0 || (GetWeapon() == "AEoDDemonMorphHand"))	Terminate;
+		
 	int c = class % 10;
 	str wc = StrParam(s:"Weapon",d:c,s:"Count");
 	if(!CheckInventory(wc)) Terminate;
 	
 	str aew = StrParam(s:"user_AEWeaps",d:class);
 	int slotmax = GetCvar(aew); //Get the current maximum number of weapons available in that category.
-	
-	if ((GetActorProperty(0,APROP_Dormant)) || (GetActorProperty(0,APROP_HEALTH) <= 0)
-		|| CheckInventory("cammin") > 0 || (GetWeapon() == "AEoDDemonMorphHand"))	Terminate;
 		
 	int curslot = class - 1; //Goes from 1 to 10, not 0 to 9. And yet, the giant array at the top did not take that into account...
 	
@@ -366,6 +366,9 @@ Script "SelectAEoDWeapon" (int class)
 	int wep;
 	int t;
 
+	//The hold number is what weapon we're currently on by ID. 
+	//Check first to see if we're on the same slot.
+	//If not, reset the current ID and index back to the start.
 	if (class != prevslot)
 	{
 		slotSwitched = true;
@@ -379,11 +382,13 @@ Script "SelectAEoDWeapon" (int class)
 	
 	int index = 1;
 	
-	// The better way to do this is by sorting ids by indices.
+	// [MS]The better way to do this is by sorting ids by indices.
 	// If using quick sort, time complexity can be O((n log n)+n).
 	// This is space for improvement in future.
 	
-	//Prepare index-ordered weapons list (quadratic complexity)
+	// [MC] I have no idea what you're talking about, Michaelis. :P
+	
+	// Prepare index-ordered weapons list (quadratic complexity)
 	while(index <= slotmax)
 	{
 		int found = 0;
@@ -397,6 +402,7 @@ Script "SelectAEoDWeapon" (int class)
 		}
 		if(!found)
 		{
+			//[MC] OI. What happened to my conflict detections here!?
 			Print(s:"Missing weapon priority detected!\nChange this in the config options.\nMissing priority: ", d:index, s:" / ", d:slotmax, s:"\nIn Slot: ", d:class);
 			Terminate;
 		}
@@ -407,7 +413,7 @@ Script "SelectAEoDWeapon" (int class)
 	for(holdnumber = 1; 
 		stricmp(curWeap, weapOrder[holdnumber]) && (holdnumber<slotmax); 
 		++holdnumber);
-	if(holdnumber==slotmax) holdnumber=0;	// holding weapon from another slot
+	if(holdnumber==slotmax) holdnumber=0;	// holding weapon at the END of the slot, go back to the start.
 
 	//Push the selector forward. If the selector's beyond slotmax, loop
 	//sets it back right in the beginning.
