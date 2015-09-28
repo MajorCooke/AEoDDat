@@ -27,5 +27,15 @@ Actor $1 : $2 { $3 }
 # Find:
 \r\n([\t]+)Goto ([a-zA-Z0-9\+"]+)[ \t]*\r\n([\t]+)([a-zA-Z0-9]{4} )
 
-# Replace ():
+# Replace:
 \r\n$1Goto $2\r\n$3\r\n$3$4
+
+
+
+== Replace where s851 lines with duration of 1 with A_SetPitch ==
+
+# Find:
+1[ \t]*//.+s851",0,([\-0-9]+).+
+
+# Replace:
+1 A_SetPitch\($1/16384+pitch\)
