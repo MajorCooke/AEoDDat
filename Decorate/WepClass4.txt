@@ -3873,60 +3873,110 @@ Actor AEoDShockRifle : Weapon // 6102
 	States
 	{ 
 	Spawn:  
-		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("AEoDShockRiflePickup",0,0,0,0,0,0,0,0)
+		TNT1 A 0 NoDelay A_SpawnItemEx("AEoDShockRiflePickup",0,0,0,0,0,0,0,0)
 		Stop
 	Ready:
-		TNT1 A 0 A_TakeInventory("ShockRifleDropCheck",1)
-		TNT1 A 0 A_JumpIfInventory("AEoDShockRifleCount",2,"Ready2")
-		TNT1 A 0 A_PlaySound("reilsss/weapons/electricidle4", 6, 0.6, 1)
+		R018 A 0 A_PlaySound("reilsss/weapons/electricidle4", 6, 0.6, 1)
+	ReadyLoop:
+		R018 A 0 A_TakeInventory("ShockRifleDropCheck",1)
+		R018 A 0 A_JumpIfInventory("AEoDShockRifleCount",2,"Ready2")
 		R018 A 1 A_WeaponReady
 		Loop
 	Ready2:
-		TNT1 A 0 A_JumpIfInventory("ShockRifleDropCheck",1,"Ready")
-		TNT1 A 0 A_PlaySound("reilsss/weapons/electricidle4", 6, 0.6, 1)
+		R018 Q 0 A_JumpIfInventory("ShockRifleDropCheck",1,"Ready")
 		R018 Q 1 A_WeaponReady
 		Loop
-	Deselect:
-		TNT1 A 0 A_StopSound(6)
-		TNT1 A 0 	
-		TNT1 A 0 A_JumpIfInventory("AEoDShockRifleCount",2,"Deselect2")
-		R018 A 1 A_Lower
-		TNT1 AA 0 A_Lower
+	//We don't need two deselect loops when you have the use last frame option.
+	Deselect: 
+		"----" A 0 A_StopSound(6)
+	DesLoop:
+		"----" A 1 A_Lower
+		"----" AA 0 A_Lower
 		Loop
-	Deselect2:
-		TNT1 A 0 A_StopSound(6)
-		TNT1 A 0 	
-		R018 Q 1 A_Lower
-		TNT1 AA 0 A_Lower
-		Loop
+	//SURPRISE! You can do the same thing here too. Just a matter of using the
+	//right jumps at the right frames, and the right times. :D
 	Select:
-		TNT1 A 0 	
-		TNT1 A 0 A_JumpIfInventory("AEoDShockRifleCount",2,"Select2")
-		R018 A 1 A_Raise
-		TNT1 AA 0 A_Raise
-		Loop
-	Select2:
-		TNT1 A 0 	
-		R018 Q 1 A_Raise
-		TNT1 AA 0 A_Raise
+		R018 Q 0 A_JumpIfInventory("AEoDShockRifleCount",2,"SelLoop")
+		R018 A 0 A_Jump(256,"SelLoop")
+	SelLoop:
+		"----" A 1 A_Raise
+		"----" AA 0 A_Raise
 		Loop
 	Fire:
-		TNT1 A 0 A_JumpIfInventory("AEoDShockRifleCount",2,"Fire2")
-		TNT1 A 0 A_StopSound(6)
-		TNT1 A 0 A_GunFlash
-		TNT1 A 0 A_PlaySound("reilsss/weapons/shockriflefire", CHAN_WEAPON, 1.0, 0)
-		R018 C 2 
-		TNT1 A 0 //ACS_NamedExecute("s851",0,30,0,0)
-		TNT1 A 0 A_FireBullets(2,2,10,(1),"ShockExploderPuff",0)
-		R018 D 4 Bright A_RailAttack(random(50,120),5,1,"none","Blue",2,0,"ShockRiflePuff")
-		R018 EE 1 Bright //ACS_NamedExecute("s851",0,-15,0,0)
-		R018 E 2 Bright
-		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,5,7)
-		R018 F 3 Bright
-		R018 G 5
-		R018 A 4
+		R018 A 0 A_JumpIfInventory("AEoDShockRifleCount",2,"Fire21")
+		"####" A 0 A_StopSound(6)
+		"####" A 0 A_GunFlash
+		"####" A 0 A_PlaySound("reilsss/weapons/shockriflefire", CHAN_WEAPON, 1.0, 0)
+		"####" C 2 
+		"####" D 0 A_FireBullets(2,2,10,(1),"ShockExploderPuff",0)
+		"####" D 0 Bright A_RailAttack(random(50,120),5,1,"none","Blue",RGF_SILENT,0,"ShockRiflePuff")
+		"####" "#" 0 Bright A_SetPitch(pitch-1)
+		"####" "####" 1 bright A_SetPitch(pitch+0.25)
+		"####" E 4 Bright
+		"####" F 4 Bright A_FireCustomMissile("GunSmallSmokeSpawner",0,0,5,7)
+		"####" GA 4
 		Goto Ready
+	Fire21:
+		R018 Q 0 A_JumpIfInventory("ShockRifleAltToken",1,"Fire22")
+		R018 Q 0 A_GiveInventory("ShockRifleAltToken",1)
+		"----" A 0 A_StopSound(6)
+		"----" A 0 A_GunFlash
+		"----" A 0 A_PlaySound("reilsss/weapons/shockriflefire", CHAN_WEAPON, 1.0, 0)
+		"####" T 0 bright A_FireBullets(2,2,10,(1),"ShockExploderPuff",0)
+		"####" T 0 Bright A_RailAttack(random(50,120),5,1,"none","Blue",RGF_SILENT,0,"ShockRiflePuff")
+		"####" T 0 A_SetPitch(pitch-1)
+		"####" TTTT 1 A_SetPitch(pitch+0.25)
+		"####" Q 8 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,5,7)
+		"####" Q 0 A_Refire("Fire22")
+		Goto Ready
+	Fire22:
+		"####" V 0 A_TakeInventory("ShockRifleAltToken",1000)
+		"####" V 0 A_StopSound(6)
+		"####" V 0 A_GunFlash
+		"----" V 0 A_PlaySound("reilsss/weapons/shockriflefire", CHAN_WEAPON, 1.0, 0)
+		"####" V 0 bright A_FireBullets(2,2,10,(1),"ShockExploderPuff",0)
+		"####" V 0 Bright A_RailAttack(random(50,120),-5,1,"none","Blue",RGF_SILENT,0,"ShockRiflePuff")
+		"####" V 0 A_SetPitch(pitch-1)
+		"####" VVVV 1 A_SetPitch(pitch+0.25)
+		"####" Q 8 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,-5,7)
+		"####" Q 0 A_Refire("Fire21")
+		Goto Ready
+	AltFire:
+		R018 C 0 A_JumpIfInventory("AEoDShockRifleCount",2,"AltFire21")
+		"####" C 0 A_StopSound(6)
+		"####" C 0 A_GunFlash
+		"####" C 2 A_PlaySound("reilsss/weapons/shockriflealtfire", CHAN_WEAPON, 1.0, 0) 
+		"####" D 0 Bright A_FireCustomMissile("ShockBolt", 0, 1, 6, 0)
+		"####" "#" 0 Bright A_SetPitch(pitch-1)
+		"####" "####" 1 bright A_SetPitch(pitch+0.25)
+		"####" E 4 Bright
+		"####" F 4 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,5,7)
+		"####" GA 4
+		Goto Ready
+	AltFire21:
+		R018 Q 0 A_JumpIfInventory("ShockRifleAltToken",1,"AltFire22")
+		R018 Q 0 A_GiveInventory("ShockRifleAltToken",1)
+		"----" A 0 A_StopSound(6)
+		"----" A 0 A_GunFlash
+		"----" A 0 A_PlaySound("reilsss/weapons/shockriflealtfire", CHAN_WEAPON, 1.0, 0)
+		"####" T 0 Bright A_FireCustomMissile("ShockBolt", 0, 1, 6, 0)
+		"####" T 0 A_SetPitch(pitch-2)
+		"####" TTTT 1 A_SetPitch(pitch+0.5)
+		"####" Q 8 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,5,7)
+		"####" Q 0 A_Refire("AltFire22")
+		Goto Ready
+	AltFire22:
+		"####" V 0 A_TakeInventory("ShockRifleAltToken",1000)
+		"####" V 0 A_StopSound(6)
+		"####" V 0 A_GunFlash
+		"----" V 0 A_PlaySound("reilsss/weapons/shockriflealtfire", CHAN_WEAPON, 1.0, 0)
+		"####" V 0 Bright A_FireCustomMissile("ShockBolt", 0, 1, -6, 0)
+		"####" V 0 A_SetPitch(pitch-2)
+		"####" VVVV 1 A_SetPitch(pitch+0.5)
+		"####" Q 8 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,-5,7)
+		"####" Q 0 A_Refire("AltFire21")
+		Goto Ready
+		/*
 	Fire2:
 		TNT1 A 0 A_StopSound(6)
 		TNT1 A 0 A_GunFlash
@@ -3934,7 +3984,7 @@ Actor AEoDShockRifle : Weapon // 6102
 		R018 R 2
 		TNT1 A 0 //ACS_NamedExecute("s851",0,50,0,0)
 		TNT1 A 0 A_FireBullets(2,2,10,(1),"ShockExploderPuff",0)
-		R018 S 4 Bright A_RailAttack(random(50,120),5,1,"none","Blue",2,0,"ShockRiflePuff")
+		R018 S 4 Bright A_RailAttack(random(50,120),5,1,"none","Blue",RGF_SILENT,0,"ShockRiflePuff")
 		TNT1 A 0 A_PlaySound("reilsss/weapons/shockriflefire", CHAN_WEAPON, 1.0, 0)
 		R018 TT 1 Bright //ACS_NamedExecute("s851",0,-25,0,0)
 		R018 T 2 Bright
@@ -3947,49 +3997,16 @@ Actor AEoDShockRifle : Weapon // 6102
 		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,-5,7)
 		R018 W 2 Bright
 		R018 Q 2
-		Goto Ready
-		
-	AltFire:
-		TNT1 A 0 A_JumpIfInventory("AEoDShockRifleCount",2,"AltFire2")
-		TNT1 A 0 A_StopSound(6)
-		TNT1 A 0 A_GunFlash
-		TNT1 A 0 A_PlaySound("reilsss/weapons/shockriflealtfire", CHAN_WEAPON, 1.0, 0)
-		R018 C 4 
-		TNT1 A 0 //ACS_NamedExecute("s851",0,50,0,0)
-		R018 D 4 Bright A_FireCustomMissile("ShockBolt", 0, 1, 6, 0)
-		R018 EE 1 Bright //ACS_NamedExecute("s851",0,-25,0,0)
-		R018 E 2
-		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,5,7)
-		R018 F 4 Bright 
-		R018 G 4
-		R018 A 4
-		Goto Ready
-	AltFire2:
-		TNT1 A 0 A_StopSound(6)
-		TNT1 A 0 A_GunFlash
-		TNT1 A 0 A_PlaySound("reilsss/weapons/shockriflealtfire", CHAN_WEAPON, 1.0, 0)
-		R018 R 2
-		TNT1 A 0 //ACS_NamedExecute("s851",0,50,0,0)
-		R018 S 4 Bright A_FireCustomMissile("ShockBolt", 0, 1, 6, 0)
-		TNT1 A 0 A_PlaySound("reilsss/weapons/shockriflealtfire", CHAN_WEAPON, 1.0, 0)
-		R018 TT 1 Bright //ACS_NamedExecute("s851",0,-25,0,0)
-		R018 T 2 Bright
-		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,5,7)
-		TNT1 A 0 //ACS_NamedExecute("s851",0,50,0,0)
-		R018 U 4 Bright A_FireCustomMissile("ShockBolt", 0, 1, -6, 0)
-		R018 VV 1 Bright //ACS_NamedExecute("s851",0,-25,0,0)
-		R018 V 2 Bright
-		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,-5,7)
-		R018 W 2 Bright
-		R018 Q 4
-		Goto Ready
+		Goto Ready*/
 	Flash: 
 		TNT1 A 1 Bright A_Light1 
 		TNT1 A 1 Bright A_Light2
 		TNT1 A 2 Bright A_Light0
 		Stop 
 	} 
-} 
+}
+
+Actor ShockRifleAltToken : Inventory { }
 
 Actor ShockExploderPuff
 {
