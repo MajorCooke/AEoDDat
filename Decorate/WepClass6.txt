@@ -6437,7 +6437,15 @@ Actor ManglerSparkSpawner1
 	You may very well find her on the battlefield...
 //==============================================================================
 //============================================================================*/
-
+Actor EnlightenEssence : Ammo
+{
+	+IGNORESKILL
+	Inventory.MaxAmount 1000
+	Ammo.BackpackMaxAmount 1000
+	Ammo.BackpackAmount 0
+	Inventory.Icon "TNT1A0"
+	
+}
 Actor AEoDEnlightenmentStaffItem : CustomInventory
 {
 	+FLOORCLIP
@@ -6475,17 +6483,17 @@ Actor AEoDEnlightenmentStaffItem : CustomInventory
 Actor AEoDEnlightenmentStaff : Weapon // 6132
 {
 	+FLOORCLIP
-	+INVENTORY.IGNORESKILL
-	+WEAPON.CHEATNOTWEAPON
+	+IGNORESKILL
+	+CHEATNOTWEAPON
 	+FLOATBOB
-	+WEAPON.NOAUTOAIM
-	+WEAPON.NOAUTOFIRE
-	Weapon.AmmoType1 "BlueMana"
-	Weapon.AmmoType2 "AECell"
-	Weapon.AmmoGive1 1
-	Weapon.AmmoGive2 1
-	Weapon.AmmoUse1 2
-	Weapon.AmmoUse2 40
+	+NOAUTOAIM
+	+NOAUTOFIRE
+	+AMMO_OPTIONAL
+	+ALT_AMMO_OPTIONAL
+	+NOALERT
+	Weapon.AmmoType1 "EnlightenEssence"
+	Weapon.AmmoGive1 100
+	Weapon.AmmoUse1 1
 	Weapon.SelectionOrder 11990
 	Inventory.PickupMessage "You found the Enlightenment staff! Hot and fluffy!"
 	Inventory.PickupSound "weaponbuild"
@@ -6497,81 +6505,120 @@ Actor AEoDEnlightenmentStaff : Weapon // 6132
 	Spawn:
 		R6RO ABCDEFGHIJKL 3
 		Loop
+	Deselect:
+		"----" A 1 A_Lower
+		"----" AA 0 A_Lower
+		Loop
+	Select:
+		R06A A 0 A_JumpIfInventory("EnlightenEssence",1,2)
+		R06A N 0
+	SelLoop:
+		"----" A 1 A_Raise
+		"----" AA 0 A_Raise
+		Loop
 	Ready:
-		//R06A A 0 A_TakeInventory("EnlightenStreamToken",10000)
-	//ReadyLoop:
 		R06A A 0 A_JumpIfInventory("EnlightenStreamToken",1,"Hold")
+		R06A A 0 A_JumpIfNoAmmo("ReadyEmpty")
 		R06A AAAABBBBCCCCDDDD 1 A_WeaponReady
 		Loop
-	Deselect:
-		R06A A 0 A_KillChildren("Normal",KILS_KILLMISSILES|KILS_NOMONSTERS,"ArcaneBlackholeEffect")
-		R06A A 0 A_TakeInventory("EnlightenStreamToken",10000)
-	DesLoop:
-		R06A A 1 A_Lower
-		R06A AA 0 A_Lower
+	ReadyEmpty:
+		"####" J 0 A_JumpIfInventory("EnlightenEmptyToken",1,"EmptyLoop")
+		"####" J 0 A_GiveInventory("EnlightenEmptyToken",1) //Merely to switch the weapon back and forth is all.
+		"####" JJKKLLMM 1 A_WeaponReady
+	EmptyLoop:
+		"####" N 0 A_JumpIfInventory("EnlightenEssence",1,"Restore")
+		"####" N 1 A_WeaponReady
 		Loop
-	Select:	
-		R06A A 1 A_Raise
-		R06A AA 0 A_Raise
-		Loop
+	Restore:
+		"####" M 0 A_TakeInventory("EnlightenEmptyToken",10000)
+		"####" MMLLKKJJ 1 A_WeaponReady
+		Goto Ready
 	Fire:
-		R06A E 0 A_JumpIfInventory("EnlightenStreamToken",1,"Reposition")
-		R06A E 0 A_PlaySound("weapons/enlightenmentstaff/start",5,1.0,0)
-		R06A E 0 A_PlaySound("hhh/charge1",6,1,0)
-		R06A EFGHEFGHEFGH 4 //Charge up Frames
-		R06A A 0 Bright A_GunFlash
-		R06A A 0 bright A_GiveInventory("EnlightenStreamToken",1)
-		R06A A 0 A_StopSound(6)
-		R06A A 0 A_PlaySound("reilsss/weapons/darkmattercannonfire", CHAN_WEAPON,1.0,0)
+		"####" "#" 0 A_JumpIfNoAmmo("EmptyLoop")
+		"####" E 0 A_JumpIfInventory("EnlightenStreamToken",1,"Reposition")
+		"####" E 0 A_PlaySound("weapons/enlightenmentstaff/start",5,1.0,0)
+		"####" E 0 A_PlaySound("hhh/charge1",CHAN_WEAPON,1,0)
+		"####" EFGHEFGHEFGH 4 //Charge up Frames
+		"####" E 0 Bright A_GunFlash
+		"####" E 0 bright A_GiveInventory("EnlightenStreamToken",1)
+		"####" E 0 A_PlaySound("reilsss/weapons/darkmattercannonfire", CHAN_WEAPON,1.0,0)
+		"####" E 0 A_SpawnItemEx("EnlightenAmmoTaker",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
 		"####" E 0 A_SpawnItemEx("ArcaneBlackholeEffect",cos(-pitch)*(radius/2),0,32+sin(-pitch)*(radius/2),0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH)//A_FireCustomMissile("ArcaneBlackholeEffect",0,0,0)
-		
 		Goto Hold
 		//R06A J 0 A_StopSound(CHAN_WEAPON)
 		//R06A JKL 4
 		//Goto Ready
 	Reposition:
-		R06A E 0 A_KillChildren("Normal",KILS_KILLMISSILES|KILS_NOMONSTERS,"ArcaneBlackholeEffect")
-		R06A A 0 A_PlaySound("reilsss/weapons/darkmattercannonfire", CHAN_WEAPON,1.0,0)
+		"####" E 0 A_KillChildren("Normal",KILS_KILLMISSILES|KILS_NOMONSTERS,"ArcaneBlackholeEffect")
+		"####" E 0 A_PlaySound("reilsss/weapons/darkmattercannonfire", CHAN_WEAPON,1.0,0)
 		"####" E 0 A_SpawnItemEx("ArcaneBlackholeEffect",cos(-pitch)*(radius/2),0,32+sin(-pitch)*(radius/2),0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH)
 	Hold:
-		R06A E 1 Bright 
+		"####" E 1 Bright A_JumpIfInventory("EnlightenStreamToken",1,1)		Goto Reload
 	Hold2:
-		"####" EEEE 1 Bright A_WeaponReady
-		"####" FFFF 1 Bright A_WeaponReady
-		"####" GGGG 1 Bright A_WeaponReady
-		"####" HHHH 1 Bright A_WeaponReady
-		Loop
-	StopFire:
-		R06A A 0 A_TakeInventory("EnlightenStreamToken",10000)
-		R06A A 0 A_KillChildren("Normal",KILS_KILLMISSILES|KILS_NOMONSTERS,"ArcaneBlackholeEffect")
-		R06A J 0 A_StopSound(CHAN_WEAPON)
-		R06A JKL 4
-		R06A J 0 A_Refire("AltFire")
+		"####" EEEE 1 Bright A_WeaponReady(WRF_ALLOWRELOAD)
+		"####" "#" 0 A_JumpIfInventory("EnlightenStreamToken",1,1)		Goto Reload
+		"####" FFFF 1 Bright A_WeaponReady(WRF_ALLOWRELOAD)
+		"####" "#" 0 A_JumpIfInventory("EnlightenStreamToken",1,1)		Goto Reload
+		"####" GGGG 1 Bright A_WeaponReady(WRF_ALLOWRELOAD)
+		"####" "#" 0 A_JumpIfInventory("EnlightenStreamToken",1,1)		Goto Reload
+		"####" HHHH 1 Bright A_WeaponReady(WRF_ALLOWRELOAD)
+		"####" "#" 0 A_JumpIfInventory("EnlightenStreamToken",1,"Hold2")		Goto Reload
+	Reload:
+		"####" J 0 A_TakeInventory("EnlightenStreamToken",10000)
+		"####" J 0 A_RemoveChildren(1,RMVF_EVERYTHING,"EnlightenAmmoTaker")
+		"####" J 0 A_KillChildren("Normal",KILS_KILLMISSILES|KILS_NOMONSTERS,"ArcaneBlackholeEffect")
+		"####" J 0 A_StopSound(CHAN_WEAPON)
+		"####" JK 4
+		"####" K 0 A_Refire("AltFire")
 		Goto Ready
 	AltFire:
-		R06A E 0 A_JumpIfInventory("EnlightenStreamToken",1,"StopFire")
-		R06A E 0 A_PlaySound("weapons/enlightenmentstaff/start",CHAN_BODY,1.0,0)
-		R06A EFGH 4
-		R06A IJKL 3
-		R06A M 2
-		R06A N 0 Bright A_GunFlash
-		R06A N 0 A_PlaySound("reilsss/weapons/enligthingstafffire",CHAN_WEAPON,1.0,0)
-		R06A N 4 A_FireCustomMissile("CrossExplosion",0,1,0,0)
-		R06A NML 4 //Calm down Frames (Ball returns to Center)
-		R06A ABCD 4 //Calm down Frames (Normal Sequenz)
-		R06A D 0 A_Refire("AltFire")
+		"####" E 0 A_JumpIfInventory("EnlightenEssence",1,1)
+		Goto AltInstant
+		"####" E 0 A_PlaySound("weapons/enlightenmentstaff/start",CHAN_BODY,1.0,0)
+		"####" EFGH 4 bright
+		"####" IJKL 3 bright
+		"####" M 2 Bright
+	AltInstant:
+		"####" N 0 A_GunFlash
+		"####" N 0 A_PlaySound("reilsss/weapons/enligthingstafffire",CHAN_WEAPON,1.0,0)
+		"####" N 4 Bright A_FireCustomMissile("CrossExplosion",0,1,0,0)
+		"####" MLABCD 4 Bright //Calm down Frames (Ball returns to Center)
+		//R06A ABCD 4 //Calm down Frames (Normal Sequence)
+		"####" D 0 A_Refire("AltFire")
 		Goto Ready
+	
 	Flash:
 		REMG Z 3 Bright A_Light2
 		REMG Z 3 Bright A_Light1
 		REMG Z 3 Bright A_Light0
 		Stop
 	AltFlash:
-		REMG Z 5 Bright A_LightInverse
+		REMG Z 5 Bright A_Light2 //A_LightInverse
 		REMG Z 5 Bright A_Light0
 		Stop
 	}
 }
+
+Actor EnlightenAmmoTaker
+{
+	+NOINTERACTION
+	RenderStyle None
+	States
+	{
+	Spawn:
+		//DO NOT add NoDelay here.
+		TNT1 A 4 A_TakeInventory("EnlightenEssence",1,TIF_NOTAKEINFINITE,AAPTR_MASTER)
+		TNT1 A 0 A_JumpIf(CheckClass("DemonPlayerMorph",AAPTR_MASTER,1),"End")
+		TNT1 A 0 A_JumpIfInventory("EnlightenEssence",1,1,AAPTR_MASTER)
+		Goto End
+		TNT1 A 0 A_JumpIfInventory("EnlightenStreamToken",1,"Spawn",AAPTR_MASTER)
+	End:
+		TNT1 A 0 A_TakeInventory("EnlightenStreamToken",1000,0,AAPTR_MASTER)
+		Stop
+	}
+}
+
+Actor EnlightenEmptyToken : Inventory { Inventory.InterHubAmount 1 }
 
 Actor ArcaneBlackholeEffect
 {
@@ -6595,12 +6642,6 @@ Actor ArcaneBlackholeEffect
 		TNT1 A 0 NoDelay A_RearrangePointers(AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_TARGET,4)
 		TNT1 A 0 A_Stop
 		TNT1 A 0 A_SetPitch(-pitch)
-		//TNT1 A 0 A_SeekerMissile(90,90,SMF_PRECISE)
-		//TNT1 A 0 A_SetAngle(angle+180)
-		//TNT1 A 0 A_SetPitch(-pitch)
-		//TNT1 A 0 A_SetUserVar(user_x,x)
-		//TNT1 A 0 A_SetUserVar(user_y,y)
-		//TNT1 A 1 A_SpawnItemEx("ArcaneBlackholeAdjuster",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTRACER|SXF_ORIGINATOR)
 		TNT1 A 0 A_SpawnItemEx("ArcaneStreamer",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_SETMASTER|SXF_ORIGINATOR|SXF_TRANSFERPITCH)
 		Q27A ABCDEFGHIJ 1 bright A_FadeIn(0.1,FTF_CLAMP)
 	Looping:
@@ -6611,7 +6652,7 @@ Actor ArcaneBlackholeEffect
 	Death:
 		"####" "#" 0 A_RemoveChildren(1,RMVF_EVERYTHING,"ArcaneStreamer")
 		"####" "#" 0 A_JumpIfInventory("EnlightenStreamToken",1,"FastDie",AAPTR_MASTER)
-		"####" "####################" 1 A_FadeOut(0.05,0)
+		"####" "####################" 1 A_FadeOut(0.05)
 	FastDie:
 		TNT1 A 0
 		Stop
@@ -6654,17 +6695,17 @@ Actor ArcaneStreamer
 		R053 A 0 A_ChangeVelocity(cos(-pitch)*25,0,sin(pitch)*25,CVF_REPLACE|CVF_RELATIVE)
 		TNT1 A 0 A_SetUserVar(user_pitch,pitch)
 	Looping:
-		TNT1 A 0 A_JumpIf(user_mc < 35*3,"L2")
+		TNT1 A 0 A_JumpIf(user_mc < 35*2,"L2")
 		TNT1 A 0 A_SpawnItemEx("SunArcStrBlast02",0,0,0,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERPOINTERS|SXF_ABSOLUTEVELOCITY)
 		TNT1 AA 0 A_SpawnItemEx("SunArcStrBlast02",0,0,0,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERPOINTERS|SXF_ABSOLUTEVELOCITY,85)
 	L2:
 		TNT1 A 1 A_SpawnItemEx("SunArcStrBlast01",0,0,0,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERPOINTERS|SXF_ABSOLUTEVELOCITY,0,user_count) 
 		TNT1 A 0 A_Warp(AAPTR_MASTER,0,0,0,0,WARPF_NOCHECKPOSITION)		
+		TNT1 A 0 A_JumpIf(user_mc >= 35*2,2)
+		TNT1 A 0 A_SetUserVar(user_mc,user_mc+1)
 		TNT1 A 0 A_SetUserVar(user_count,user_count+2)
 		TNT1 A 0 A_JumpIf(user_count < 355,"Looping")
 		TNT1 A 0 A_SetUserVar(user_count,2)
-		TNT1 A 0 A_JumpIf(user_mc >= 35*3,"Looping")
-		TNT1 A 0 A_SetUserVar(user_mc,user_mc+1)
 		Goto Looping
 		//TNT1 A 0 A_JumpIf(user_count < 20,"Looping")
 	}

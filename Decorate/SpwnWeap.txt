@@ -337,6 +337,7 @@ Actor PlasmaRifleReplacer : CustomInventory replaces PlasmaRifle
 
 	Magic:
 		TNT1 A 0 A_Jump(2,"MagR01","MagR02")
+		TNT1 A 0 A_Jump(8,"Gl01")
 		TNT1 A 0 A_Jump(24,"MagU01","MagU02")
 		TNT1 A 0 A_Jump(256,"MagC01","MagC02")
 		MagC01:	TNT1 A 0 A_SpawnItemEx("AEoDMindBlowerItem",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)	Goto End
@@ -346,7 +347,7 @@ Actor PlasmaRifleReplacer : CustomInventory replaces PlasmaRifle
 		MagR01:	TNT1 A 0 A_SpawnItemEx("AEoDSoulleechItem",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)	Goto End
 		MagR02:	TNT1 A 0 A_SpawnItemEx("AEoDGuardianHeadItem",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)	Goto End
 	Normal:
-		TNT1 A 0 A_Jump(8,"NrmR01","NrmR02")
+		TNT1 A 0 A_Jump(8,"NrmR01","NrmR02","Gl01")
 		TNT1 A 0 A_Jump(24,"NrmU01","NrmU02")
 		TNT1 A 0 A_Jump(256,"NrmC01")
 		NrmC01:	TNT1 A 0 A_SpawnItemEx("AEoDPlasmaRifleItem",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)	Goto End
@@ -357,6 +358,7 @@ Actor PlasmaRifleReplacer : CustomInventory replaces PlasmaRifle
 		NrmR02:	TNT1 A 0 A_SpawnItemEx("AEoDFlamethrowerItem",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)	Goto End
 	Tech:
 		TNT1 A 0 A_Jump(4,"TchR01")
+		TNT1 A 0 A_Jump(8,"Gl01")
 		TNT1 A 0 A_Jump(16,"TchU01","TchU02")
 		TNT1 A 0 A_Jump(256,"TchC01","TchC02")
 		TchC01:	TNT1 A 0 A_SpawnItemEx("AEoDLasergunItem",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)	Goto End
@@ -364,13 +366,14 @@ Actor PlasmaRifleReplacer : CustomInventory replaces PlasmaRifle
 		TchU01:	TNT1 A 0 A_SpawnItemEx("AEoDIonCannonItem",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)	Goto End
 		TchU02:	TNT1 A 0 A_SpawnItemEx("AEoDPrismaCannonItem",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)	Goto End
 		TchR01:	TNT1 A 0 A_SpawnItemEx("AEoDThunderBoltItem",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)	Goto End
-
 	C_AEoD:
+		TNT1 A 0 A_Jump(4,"Gl01") //Gains a tiny extra chance to jump there. THIS IS ON PURPOSE.
 		TNT1 A 0 A_Jump(256,"Magic","Normal","Tech")
 		//TNT1 A 0 A_Jump(1,"MagR01","MagR02","NrmR01","NrmR02","TchR01")
 		//TNT1 A 0 A_Jump(6,"MagU01","MagU02","NrmU01","NrmU02","TchU01","TchU02")
 		//TNT1 A 0 A_Jump(256,"MagC01","MagC02","NrmC01","TchC01","TchC02")
 		Stop
+		Gl01:	TNT1 A 0 A_SpawnItemEx("AEoDEnlightenmentStaffItem",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)	Goto End
 	End:
 		TNT1 A -1
 		Loop
