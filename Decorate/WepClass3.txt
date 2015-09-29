@@ -2685,19 +2685,18 @@ Actor AEoDAssaultShotgunItem : CustomInventory 6068
 	}
 }
 
-Actor AEoDAssaultShotgun : Weapon
+ACTOR AEoDAssaultShotgun : Weapon
 {
 	+FLOORCLIP
 	+INVENTORY.IGNORESKILL
 	+WEAPON.AMMO_OPTIONAL
-	+WEAPON.CHEATNOTWEAPON
+	+CHEATNOTWEAPON
 	Weapon.Kickback 10
 	Weapon.AmmoType1 "Doom3ShotgunClip"
 	Weapon.AmmoType2 "AEShell"
 	Weapon.AmmoGive1 0
 	Weapon.AmmoGive2 16
 	Weapon.AmmoUse1 0
-	Weapon.SelectionOrder 8500
 	Inventory.PickupMessage "You got the assault Shotgun!"
 	Inventory.PickupSound "weapons/stroggarmsaw/pickup"
 	weapon.upsound "weapons/draw"
@@ -2709,7 +2708,7 @@ Actor AEoDAssaultShotgun : Weapon
 		WSGN A -1
 		Loop
 	Ready: 
-		Q4SG A 1 A_WeaponReady
+		Q4SG A 1 A_WeaponReady(WRF_ALLOWRELOAD)
 		Loop
 	Deselect:
 		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
@@ -2729,93 +2728,100 @@ Actor AEoDAssaultShotgun : Weapon
 		Goto Ready
 		TNT1 A 0
 		Goto AltFire+1
+		TNT1 A 0 /*Offset(1,32)*/ A_WeaponReady(WRF_NOFIRE)
 		TNT1 A 0 A_GunFlash
 		TNT1 A 0 A_Recoil(1)
 		TNT1 A 0 A_JumpIfInventory("PowerEconomizer",1,2)
 		TNT1 A 0 A_TakeInventory("Doom3ShotgunClip",1)
 		TNT1 A 0 A_FireCustomMissile("GunSmokeSpawner",0,0,4,8)
 		TNT1 A 0 A_FireBullets(3, 2, 11, 5, "BulletDamagePuff", 0)
-		TNT1 A 0 //ACS_NamedExecute("s851",0,50,random(-4,4),0)
-		Q4SG B 2 A_PlaySound("weapons/shotgun/fire", CHAN_WEAPON, 1.0, 0)
-		Q4SG BB 1 //ACS_NamedExecute("s851",0,-25,0,0)
-		Q4SG A 3
+		TNT1 A 0 ACS_NamedExecute("s851",0,50,random(-4,4),0)
+		Q4SG B 2 Bright A_PlaySound("weapons/shotgun/fire", CHAN_WEAPON, 1.0, 0)
+		Q4SG CCC 1 Bright ACS_NamedExecute("s851",0,-25,0,0)
+		Q4SG D 3
 		TNT1 A 0 A_FireCustomMissile("ShotgunCasingSpawnerInverted",-35,0, 0,0)
-		Q4SG C 4 A_PlaySound("reilsss/weapons/riflereload2", 7, 1.0, 0)
-		Q4SG DE 3
-		Q4SG FGH 2
+		Q4SG D 4 A_PlaySound("reilsss/weapons/riflereload2", 7, 1.0, 0)
+		Q4SG EF 3
+		Q4SG GG 2
 		Q4SG A 3 A_ReFire
 		Goto Ready
+		
 	AltFire:
+	Reload:
 		TNT1 A 0 A_JumpIfInventory("ShotgunReloadCheck",1,"Fire") //Line 1
 		TNT1 A 0 A_JumpIfInventory("Doom3ShotgunClip", 8, "Ready") //Line 2
 		TNT1 A 0 A_JumpIfInventory("AEShell", 1, 1) //Line 3
 		Goto Ready
-		Q4SG I 1 A_GiveInventory("ShotgunReloadCheck",1) //Line 4
-		Q4SG J 1 //Line 5
-		Q4SG K 1 //Line 6
-		Q4SG L 1 //Line 7
-		Q4SG M 1 //Line 8
-		Q4SG N 1 //Line 9
-		Q4SG O 1 //Line 10
-		Q4SG P 1 //Line 11
-		Q4SG Q 1 //Line 12
-		Q4SG R 1 //Line 13
-		Q4SG S 1 //Line 14
-		Q4SG T 1 //Line 15
+		Q4SG A 1 Offset(0,32) A_GiveInventory("ShotgunReloadCheck",1) //Line 4
+		Q4SG A 1 Offset(5,35)
+		Q4SG A 1 Offset(10,40)
+		Q4SG A 1 Offset(15,45)
+		Q4SG A 1 Offset(20,50)
+		Q4SG A 1 Offset(25,55)
+		Q4SG A 1 Offset(30,60)
+		Q4SG A 1 Offset(35,65)
+		Q4SG A 1 Offset(40,70)
+		Q4SG A 1 Offset(45,80)
+		Q4SG A 1 Offset(50,90)
+		Q4SG A 1 Offset(50,100)
 		//Reload
 		TNT1 A 0 A_JumpIfInventory("Doom3ShotgunClip",1,1) //Line 16 //If no ammo in clip go to uninterruptible sequence
-		Goto AltFire+49
+		Goto ReloadNoInterruption
+	StartReload:
 		TNT1 A 0 //Line17 //Start of Reload
 		TNT1 A 0 A_JumpIfInventory("Doom3ShotgunClip", 8, 18) //Line 18
 		TNT1 A 0 A_JumpIfInventory("AEShell",1,2) //Line 19
-		Q4S2 A 1 A_WeaponReady //Line 20
-		Q4S2 B 2 A_WeaponReady //Line 21
-		Q4S2 C 1 A_WeaponReady //Line 22
-		Q4S2 D 2 A_WeaponReady //Line 23
-		Q4S2 E 1 A_WeaponReady //Line 24
-		Q4S2 F 2 A_PlayWeaponSound("weapons/shotgun/in") //Line 25
+		Q4SG A 1 Offset(50,100) A_WeaponReady(WRF_NOBOB) //Line 20
+		Q4SG A 2 Offset(50,95) A_WeaponReady(WRF_NOBOB) //Line 21
+		Q4SG A 1 Offset(50,90) A_WeaponReady(WRF_NOBOB) //Line 22
+		Q4SG A 2 Offset(50,88) A_WeaponReady(WRF_NOBOB) //Line 23
+		Q4SG A 1 Offset(50,86) A_WeaponReady(WRF_NOBOB) //Line 24	
+	ContinueReload:
+		Q4SG A 2 Offset(50,84) A_PlayWeaponSound("weapons/shotgun/in") //Line 25
 		TNT1 A 0 A_TakeInventory("AEShell",1) //Line 26
-		Q4S2 G 1 A_GiveInventory("Doom3ShotgunClip",1) //Line 27
-		Q4S2 H 2 A_WeaponReady //Line 28
-		Q4S2 I 1 A_WeaponReady //Line 29
-		Q4S2 J 2 A_WeaponReady //Line 30
-		Q4S2 K 1 A_WeaponReady //Line 31
+		Q4SG A 1 Offset(50,82) A_GiveInventory("Doom3ShotgunClip",1) //Line 27
+		Q4SG A 2 Offset(50,80) A_WeaponReady(WRF_NOBOB) //Line 28
+		Q4SG A 1 Offset(50,88) A_WeaponReady(WRF_NOBOB) //Line 29
+		Q4SG A 2 Offset(50,95) A_WeaponReady(WRF_NOBOB) //Line 30
+		Q4SG A 1 Offset(50,100) A_WeaponReady(WRF_NOBOB) //Line 31
 		TNT1 A 0 A_JumpIfInventory("Doom3ShotgunClip",8,4) //Line 32 //If Clip full stop
 		TNT1 A 0 A_JumpIfInventory("AEShell",1,2) //Line 33 //If still ammo there reload again
 		TNT1 A 0 //Line 34
-		Goto AltFire+35 //Jump to Reload Finished
+		Goto ReloadFinished //Jump to Reload Finished
 		TNT1 A 0 //Line 35
-		Goto AltFire+16 //Jump to Start Reload
+		Goto StartReload //Jump to Start Reload
+	ReloadFinished:
 		TNT1 A 0 //Line 36 Reload Finished
-		Q4SG T 1 //Line 37
-		Q4SG S 1 //Line 38
-		Q4SG R 1 //Line 39
-		Q4SG Q 1 //Line 40
-		Q4SG P 1 //Line 41
-		Q4SG O 1 //Line 42
-		Q4SG N 1 //Line 43
-		Q4SG M 1 //Line 44
-		Q4SG L 2 A_PlaySound("reilsss/weapons/riflereload2", 7, 1.0, 0) //Line 45
-		Q4SG K 2 //Line 46
-		Q4SG J 2 //Line 47
-		Q4SG I 2 //Line 48
+		Q4SG A 1 Offset(50,100) //Line 37
+		Q4SG A 1 Offset(50,90) //Line 38
+		Q4SG A 1 Offset(45,80) //Line 39
+		Q4SG A 1 Offset(40,70) //Line 40
+		Q4SG A 1 Offset(35,65) //Line 41
+		Q4SG A 1 Offset(30,60) //Line 42
+		Q4SG A 1 Offset(25,55) //Line 43
+		Q4SG A 1 Offset(20,50) //Line 44
+		Q4SG A 2 Offset(15,45) A_PlaySound("reilsss/weapons/riflereload2", 7, 1.0, 0) //Line 45
+		Q4SG A 2 Offset(10,40) //Line 46
+		Q4SG A 2 Offset(5,35) //Line 47
+		Q4SG A 2 Offset(0,32) A_WeaponReady(WRF_NOBOB|WRF_NOFIRE) //Line 48
 		Q4SG A 0 A_TakeInventory("ShotgunReloadCheck",1) //Line 49
 		Goto Ready
+	ReloadNoInterruption:
 		TNT1 A 0 A_JumpIfInventory("Doom3ShotgunClip", 8, "Ready") //Line 50	// uninterruptible sequence prevents endless looping if
 		TNT1 A 0 A_JumpIfInventory("AEShell",1,2) //Line 51			// fire/alt-fire button is held down and there's no
-		Q4S2 A 2 //Line 52							// ammo in the clip
-		Q4S2 B 1 //Line 53
-		Q4S2 C 2 //Line 54
-		Q4S2 D 1 //Line 55
-		Q4S2 E 2 //Line 56
-		Goto AltFire+24
+		Q4SG A 1 Offset(50,100) //Line 52    // ammo in the clip
+		Q4SG A 2 Offset(50,95) //Line 53
+		Q4SG A 1 Offset(50,90) //Line 54
+		Q4SG A 2 Offset(50,88) //Line 55
+		Q4SG A 1 Offset(50,86) //Line 56
+		Goto ContinueReload
 	Flash:
 		TNT1 A 1 A_Light1
 		TNT1 A 0 A_FireCustomMissile("GunSmokeSpawner",0,0,7,8)
 		TNT1 A 2
 		TNT1 A 2
 		TNT1 A 0 A_Light0
-		Stop
+		stop
 	}
 }
 

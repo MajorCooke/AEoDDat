@@ -6800,19 +6800,19 @@ Actor AEoDSniperRailgunItem : CustomInventory 6161
 		Stop
 	}
 }
-Actor AEoDSniperRailgun : Weapon // 6161
+
+ACTOR AEoDSniperRailgun : Weapon // 6161
 {
 	+FLOORCLIP
 	+INVENTORY.IGNORESKILL
-	+WEAPON.CHEATNOTWEAPON
+	+CHEATNOTWEAPON
 	Weapon.AmmoType1 "AEShell"
 	Weapon.AmmoGive1 24
 	Weapon.AmmoUse1 3
-	Weapon.SelectionOrder 11979
 	Inventory.PickupMessage "You got the Sniper RailGun!"
 	Inventory.PickupSound "weapons/stroggarmsaw/pickup"
 	weapon.upsound "weapons/plasma/draw"
-	Scale 0.23
+	scale 0.23
 	AttackSound "RGSTEREO"
 	Weapon.Kickback 2
 	Tag "Sniper railgun"
@@ -6822,20 +6822,20 @@ Actor AEoDSniperRailgun : Weapon // 6161
 		RRGN A -1
 		Loop
 	Select:
-		TNT1 A 0 	
+		TNT1 A 0 //ACS_NamedExecute("s799",0,17,0,0)
 		RRG1 A 1 A_Raise
 		TNT1 AA 0 A_Raise
 		Goto Select
 	Deselect:
 		TNT1 A 0 A_JumpIfInventory("SniperRailgunZoomMode", 1, "ZoomDeselect")
 		TNT1 A 0 A_TakeInventory("SniperRailgunZoomMode",1)
-		TNT1 A 0 	
+		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
 		TNT1 A 0 A_StopSound(6)
 		RRG1 A 1 A_Lower
 		TNT1 AA 0 A_Lower
 		Goto Deselect+3
 	ZoomDeselect:
-		TNT1 A 0 	
+		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
 		TNT1 A 0 A_TakeInventory("SniperRailgunZoomMode",1)
 		//Zoom Out
 		TNT1 A 0 A_ZoomFactor(1.0)
@@ -6843,7 +6843,8 @@ Actor AEoDSniperRailgun : Weapon // 6161
 		RRG1 A 5
 		Goto Deselect+3
 	Ready:
-		TNT1 A 0 
+		//TNT1 A 0 A_PlaySound("reilsss/weapons/railgunidle2", 6, 0.45, 1)
+		TNT1 A 0 //A_PlaySound("RG_HUM", 6, 1.0, 1)
 		TNT1 A 0 A_JumpIfInventory("SniperRailgunZoomMode", 1, "ZoomReady")
 		RRG1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 3 A_WeaponReady
 		Goto Ready+1
@@ -6859,10 +6860,10 @@ Actor AEoDSniperRailgun : Weapon // 6161
 		TNT1 A 0 A_PlaySound("RLFIRE0", CHAN_WEAPON, 1.0, 0)
 		TNT1 A 0 A_FireCustomMissile(Q4RailStereo,0,0,0,0)
 		TNT1 A 0 A_RailAttack(random(350,500),5,1,Red,"Green",1,0,"ExtremeBulletPuff")
-		TNT1 A 0 //ACS_NamedExecute("s851",0,120,random(-8,8),0)
-		RRG1 A 1 Bright A_GunFlash
+		TNT1 A 0 ACS_NamedExecute("s851",0,120,random(-8,8),0)
+		RRG1 A 1 bright A_GunFlash
 		TNT1 A 0 A_PlaySound("RLCHARGE", 5, 1.0, 0)
-		RRG1 ABB 1 //ACS_NamedExecute("s851",0,-40,0,0)
+		RRG1 ABB 1 ACS_NamedExecute("s851",0,-40,0,0)
 		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,10,4)
 		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,7,5)
 		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,4,4)
@@ -6875,10 +6876,10 @@ Actor AEoDSniperRailgun : Weapon // 6161
 		TNT1 A 0 A_PlaySound("RLFIRE0", CHAN_WEAPON, 1.0, 0)
 		TNT1 A 0 A_FireCustomMissile(Q4RailStereo,0,0,0,0)
 		TNT1 A 0 A_RailAttack(random(250,600),1,1,Red,"Green",1,0,"ExtremeBulletPuff")
-		TNT1 A 0 //ACS_NamedExecute("s851",0,120,random(-8,8),0)
+		TNT1 A 0 ACS_NamedExecute("s851",0,120,random(-8,8),0)
 		R016 N 1 Bright A_GunFlash
 		TNT1 A 0 A_PlaySound("RLCHARGE", 5, 1.0, 0)
-		R016 NNN 1 //ACS_NamedExecute("s851",0,-40,0,0)
+		R016 NNN 1 ACS_NamedExecute("s851",0,-40,0,0)
 		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,10,4)
 		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,7,5)
 		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,4,4)
@@ -6891,10 +6892,10 @@ Actor AEoDSniperRailgun : Weapon // 6161
 		TNT1 A 0 A_PlaySound("RLFIRE0", CHAN_WEAPON, 1.0, 0)
 		TNT1 A 0 A_FireCustomMissile(Q4RailStereo,0,0,0,0)
 		TNT1 A 0 A_RailAttack(random(250,600),1,1,Red,"Green",1,0,"ExtremeBulletPuff")
-		TNT1 A 0 //ACS_NamedExecute("s851",0,120,random(-8,8),0)
+		TNT1 A 0 ACS_NamedExecute("s851",0,120,random(-8,8),0)
 		R016 O 1 Bright A_GunFlash
 		TNT1 A 0 A_PlaySound("RLCHARGE", 5, 1.0, 0)
-		R016 OOO 1 //ACS_NamedExecute("s851",0,-40,0,0)
+		R016 OOO 1 ACS_NamedExecute("s851",0,-40,0,0)
 		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,10,4)
 		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,7,5)
 		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,4,4)
@@ -6908,7 +6909,7 @@ Actor AEoDSniperRailgun : Weapon // 6161
 		TNT1 A 1 Bright A_SetBlend("Red",0.225,8)
 		TNT1 A 2 A_Light1
 		TNT1 A 0 A_Light0
-		Stop  
+		stop  
 	AltFire:  //scopes the weapon and fires on release
 		//Zoom In
 		TNT1 A 0 A_JumpIfInventory("SniperRailgunZoomMode", 1, "ZoomOut")
@@ -6918,6 +6919,7 @@ Actor AEoDSniperRailgun : Weapon // 6161
 		TNT1 A 0 A_GiveInventory("SniperRailgunZoomMode",1)
 		TNT1 A 0 A_GiveInventory("Aiming",1)
 		R016 N 9
+		//TNT1 A 0 A_PlaySound("reilsss/weapons/sniperzoomidle", 6, 0.6, 1)	
 		Goto Ready
 	ZoomOut:
 		//Zoom Out
@@ -6925,11 +6927,12 @@ Actor AEoDSniperRailgun : Weapon // 6161
 		TNT1 A 0 A_StopSound(6)
 		TNT1 A 0 A_PlaySound("weapons/AWP/zoom", 8, 1.0, 0)
 		TNT1 A 0 A_TakeInventory("SniperRailgunZoomMode",1)
-		TNT1 A 0 
+		TNT1 A 0 //A_FireCustomMissile("GunSmallSmokeSpawner",0,0,6,7)
 		RRG1 A 10
 		Goto Ready
 	}
 }
+
 
 
 

@@ -5595,7 +5595,6 @@ Actor AEoDCarbine : Weapon
 	Weapon.AmmoGive1 20
 	Weapon.AmmoUse1 1
 	Weapon.AmmoUse2 1
-	Weapon.SelectionOrder 10375
 	Obituary "%o thought %g was safe from %k."
 	Inventory.PickupMessage "You found a 9A-91 Carbine Rifle!"
 	Inventory.PickupSound "weapons/stroggarmsaw/pickup"
@@ -5608,20 +5607,20 @@ Actor AEoDCarbine : Weapon
 		Q4MG F -1
 		Loop
 	Select:
-		TNT1 A 0 	
+		TNT1 A 0 //ACS_NamedExecute("s799",0,17,0,0)
 		Q4MG A 1 A_Raise
 		TNT1 AA 0 A_Raise
 		Loop
 	Deselect:
 		TNT1 A 0 A_JumpIfInventory("MachinegunAutomatic", 1, "ZoomDeselect")
 		TNT1 A 0 A_TakeInventory("MachinegunAutomatic",1)
-		TNT1 A 0 	
+		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
 		TNT1 A 0 A_StopSound(6)
 		Q4MG A 1 A_Lower
 		TNT1 AA 0 A_Lower
 		Goto Deselect+3
 	ZoomDeselect:
-		TNT1 A 0 	
+		TNT1 A 0 //ACS_NamedExecute("s799",0,0,0,0)
 		TNT1 A 0 A_TakeInventory("MachinegunAutomatic",1)
 		//Zoom Out
 		TNT1 A 0 A_ZoomFactor(1.0)
@@ -5635,48 +5634,50 @@ Actor AEoDCarbine : Weapon
 		Goto Ready+2
 	ZoomReady:
 		TNT1 A 0 A_JumpIfTargetInLOS("ZoomReadyLockedOn")
+		//TNT1 A 0 A_FireCustomMissile("LaserSightSpawner", 0, 0, 0, 4)
 		TNT1 A 0 A_FireBullets(0,0,1,0,"LaserSight",0)
 		R016 N 1 A_WeaponReady
 		Goto Ready
 	ZoomReadyLockedOn:
+		//TNT1 A 0 A_FireCustomMissile("LaserSightSpawner", 0, 0, 0, 4)
 		TNT1 A 0 A_FireBullets(0,0,1,0,"LaserSight",0)
 		R016 O 1 A_WeaponReady
 		Goto Ready
 	Fire:
 		TNT1 A 0 A_JumpIfInventory("MachinegunAutomatic", 1, "ZoomFire")
 		TNT1 A 0 A_Light1
-		TNT1 A 0 //ACS_NamedExecute("s851",0,12,random(-8,8),0)
+		TNT1 A 0 ACS_NamedExecute("s851",0,12,random(-8,8),0)
 		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,4,8)
 		TNT1 A 0 A_FireCustomMissile("PistolCasingSpawnerInvertedLow",-30,0, 0,2)
 		TNT1 A 0 A_PlaySound("machinegun/fire", CHAN_WEAPON, 1.0)
 		Q4MG B 1 Bright A_FireBullets(2,2,1,13,"BulletDamagePuff",1)
 		TNT1 A 0 A_Light0
-		Q4MG BC 1 Bright //ACS_NamedExecute("s851",0,-6,0,0)
+		Q4MG BC 1 Bright ACS_NamedExecute("s851",0,-6,0,0)
 		Q4MG C 1
-		Q4MG DE 1 A_ReFire
+		Q4MG CC 1 A_ReFire
 		Goto Ready
 	ZoomFire:
 		TNT1 A 0 A_JumpIfTargetInLOS("ZoomFireLockedOn")
 		TNT1 A 0 A_Light1
-		TNT1 A 0 //ACS_NamedExecute("s851",0,12,random(-8,8),0)
+		TNT1 A 0 ACS_NamedExecute("s851",0,12,random(-8,8),0)
 		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,4,8)
 		TNT1 A 0 A_FireCustomMissile("PistolCasingSpawnerInvertedLow",-30,0, 0,2)
 		TNT1 A 0 A_PlaySound("machinegun/fire", CHAN_WEAPON, 1.0)
 		R016 N 1 Bright A_FireBullets(0,0,1,13,"BulletDamagePuff",1)
 		TNT1 A 0 A_Light0
-		R016 NN 1 Bright //ACS_NamedExecute("s851",0,-6,0,0) 
+		R016 NN 1 Bright ACS_NamedExecute("s851",0,-6,0,0) 
 		R016 N 1
 		R016 NN 1 A_ReFire
 		Goto Ready
 	ZoomFireLockedOn:
 		TNT1 A 0 A_Light1
-		TNT1 A 0 //ACS_NamedExecute("s851",0,12,random(-8,8),0)
+		TNT1 A 0 ACS_NamedExecute("s851",0,12,random(-8,8),0)
 		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,4,8)
 		TNT1 A 0 A_FireCustomMissile("PistolCasingSpawnerInvertedLow",-30,0, 0,2)
 		TNT1 A 0 A_PlaySound("machinegun/fire", CHAN_WEAPON, 1.0)
 		R016 O 1 Bright A_FireBullets(0,0,1,13,"BulletDamagePuff",1)
 		TNT1 A 0 A_Light0
-		R016 OO 1 Bright //ACS_NamedExecute("s851",0,-6,0,0) 
+		R016 OO 1 Bright ACS_NamedExecute("s851",0,-6,0,0) 
 		R016 O 1
 		R016 OO 1 A_ReFire
 		Goto Ready	
@@ -5689,6 +5690,7 @@ Actor AEoDCarbine : Weapon
 		TNT1 A 0 A_GiveInventory("MachinegunAutomatic",1)
 		TNT1 A 0 A_GiveInventory("Aiming",1)
 		R016 N 9
+		//TNT1 A 0 A_PlaySound("reilsss/weapons/sniperzoomidle", 6, 0.6, 1)	
 		Goto Ready
 	ZoomOut:
 		//Zoom Out
