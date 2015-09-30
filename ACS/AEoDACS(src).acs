@@ -283,37 +283,8 @@ script "s850" (void)
 }
 
 
-//This is a more precise recoil, it eliminates the randomization multiplier factor in the 
-//"climb" (vertical) pitch change.
-script "s851" (int climb, int twist)
-{ 
-	int playerpitch = GetActorPitch(0) -(climb*8); // ((random(1,3)+5)*climb);
-	if (playerpitch > -5780)
-		{
-		SetActorPitch (0, playerpitch);
-		}
-	int playerangle = GetActorAngle(0) - ((random(1,2)+4)*twist);
-	SetActorAngle (0, playerangle);
-}
-
-
-
-//is the same as the last one, except it is used for the thunderbolt, and no matter
-//that the recoil is disabled, this one will execute
-script "s852" (int climb, int twist)
-{ 
-	if(recoilactive==1)
-	{
-
-	int playerpitch = GetActorPitch(0) - ((random(1,3)+5)*climb);
-	if (playerpitch > -5780)
-		{
-		SetActorPitch (0, playerpitch);
-		}
-	int playerangle = GetActorAngle(0) - ((random(1,2)+4)*twist);
-	SetActorAngle (0, playerangle);
-	}
-}
+// [MC] s851 and s852 are gone now.
+// Please use A_SetPitch and A_SetAngle instead.
 
 
 //============================================================================================================
