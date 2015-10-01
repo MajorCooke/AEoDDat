@@ -32,7 +32,7 @@ Actor $1 : $2 { $3 }
 
 
 
-== Replace where s851 lines with duration of 1 with A_SetPitch ==
+== Replace all s851 lines with duration of 1 with A_SetPitch ==
 
 # Find:
 1[ \t]*//.+s851",0,([\-0-9]+).+

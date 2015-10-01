@@ -151,5 +151,7 @@
 25000	Magic axe
 26000	MP5
 27000	SPAS Shotgun
+28500	Sticky Mine
+29000	Hand Grenade
 31000	Katana
 32000	Knife
