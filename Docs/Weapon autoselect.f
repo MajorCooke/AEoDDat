@@ -151,7 +151,16 @@
 25000	Magic axe
 26000	MP5
 27000	SPAS Shotgun
+28000	Jackbomb
 28500	Sticky Mine
+28999	Lemon Nade
 29000	Hand Grenade
+29500	Remote Detonator
+29750	Glyph
+30000	Proxy Detonator
+30500	TNT
 31000	Katana
+31337	Necromantic Bonestaff
+31666	TNT Bunny
+31999	Portal Gun
 32000	Knife
