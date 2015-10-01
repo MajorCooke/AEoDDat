@@ -241,8 +241,8 @@ script "s797" enter
 str PrettyNames[256] = {
 /*  0-  7*/	"TNT Bunny","Hand Grenade","Sticky Mine","Glyph","Proximity Detonator","Remote Detonator","TNT","Jackbomb",
 /*  8- 15*/	"Necromantic Bone Staff","Portal Gun","Lemon 'nade","Knife","Medieval Axe","Gauntlets","Katana","Vorpal Blade",
-/* 16- 23*/	"Scythe","Strogg Arm Saw","Chainsaw","Painkiller","Spy Knife","Beretta","Blaster","Gargoyle Wand",
-/* 24- 31*/	"MP5","Assault Shotgun","Golden Colts","SPAS Shotgun","Crossbow","Tekbow","Desert Eagle","Mac10",
+/* 16- 23*/	"Unholy Scythe","Strogg Arm Saw","Chainsaw","Painkiller","Spy Knife","Beretta","Blaster","Gargoyle Wand",
+/* 24- 31*/	"MP5","Assault Shotgun","Golden Colts","SPAS Shotgun","Magic Crossbow","Tekbow","Desert Eagle","Mac-10",
 /* 32- 39*/	"Flare Gun","Shell Shocker","Serpent Staff","Riotgun","Disruptor","Demon Orb","Carbine","Combat Shotgun",
 /* 40- 47*/	"Crystal Gun","Voodoo Doll","Blood Shotgun","Bio Rifle","Dragon Claw","Boltgun","Shock Rifle","Painkiller Shotgun",
 /* 48- 55*/	"Combat Manual Rifle","Gas Rocket Launcher","Righteous Bison","Head Hunter Sniper Rifle","AWP Sniper Rifle","Ice Storm Rod","Lasergun","Nailgun",
@@ -273,6 +273,19 @@ script "s798" (int slotmsg, int prettyname)		//slot x full
 		hudmessage(s:"Can't pick \ck",s:PrettyNames[prettyname];HUDMSG_FADEOUT,101,3,0.5,0.83,2.0,0.5);
 	else
 		hudmessage(s:"Can't pick some not configured yet weapon";HUDMSG_FADEOUT,101,3,0.5,0.83,2.0,0.5);
+}
+
+script "idfka" (void) // misprint intentional
+{
+	for(int i=0; i<10; i++) for(int j=0; j<32; j++)
+	{
+		hudmessage(s:"C H E A T E R ' S   P A R A D I S E ! ! !";HUDMSG_FADEOUT,101,2,0.5,0.77,2.0,0.5);
+		SpawnProjectile(0, StrParam(s:Weaps[i][j][0],s:"Item"), 
+			random(0, 255), random(8,random(10,60))*8, random(8,random(10,60))*8, 1, 0);
+		SpawnProjectile(0, StrParam(s:Weaps[i][j][0],s:"NoAmmo"), 
+			random(0, 255), random(8,random(10,60))*8, random(8,random(10,60))*8, 1, 0);
+		Delay(random(0,random(0,1)));
+	}
 }
 
 script "s799" (int wepnumber)		//identifies which weapon(of the arrangement) being is used 
