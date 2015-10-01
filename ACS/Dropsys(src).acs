@@ -270,9 +270,9 @@ script "s798" (int slotmsg, int prettyname)		//slot x full
 		   s:" full";
 	HUDMSG_FADEOUT,100,3,0.5,0.8,2.0,0.5);
 	if(prettyname > 0 && prettyname < 256)
-		hudmessage(s:"Can't pick \ck",s:PrettyNames[prettyname];HUDMSG_FADEOUT,101,3,0.5,0.8,2.0,0.5);
+		hudmessage(s:"Can't pick \ck",s:PrettyNames[prettyname];HUDMSG_FADEOUT,101,3,0.5,0.83,2.0,0.5);
 	else
-		hudmessage(s:"Can't pick some not configured yet weapon";HUDMSG_FADEOUT,101,3,0.5,0.875,2.0,0.5);
+		hudmessage(s:"Can't pick some not configured yet weapon";HUDMSG_FADEOUT,101,3,0.5,0.83,2.0,0.5);
 }
 
 script "s799" (int wepnumber)		//identifies which weapon(of the arrangement) being is used 
@@ -314,7 +314,7 @@ script "s800" (void)		//this one, well, is another part of the dropping script
 				else	// if that multi-wieldable was the last one, OR
 				{		// if the akimbo counter is "nothing" (weapon isn't dual-wieldable)
 					TakeInventory(Weaps[slot][wep][0], 1);	// take weapon
-					TakeInventory(strparam(s:"Weapon", d:(slot+1) ,s:"Count"),1);	// take token
+					TakeInventory(strparam(s:"Weapon", d:(slot+1)%10 ,s:"Count"),1);	// take token
 				}
 				GiveInventory(Weaps[slot][wep][1],1); 	// get dropper
 				UseInventory(Weaps[slot][wep][1]);		// use dropper
