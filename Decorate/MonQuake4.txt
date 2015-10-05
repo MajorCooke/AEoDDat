@@ -611,6 +611,8 @@ Actor Q4Roller		//chainguy
 		TNT1 A 0 A_PlaySound("quake4/Sentry/Machinegun")
 		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlashSmall",5,15,37,0,0,0,0,SXF_NOCHECKPOSITION)
 		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlashSmall",5,-15,37,0,0,0,0,SXF_NOCHECKPOSITION)
+		"----" A 0 A_CustomMissile("BulletTracerFX",37,15,random(-3,3),CMF_OFFSETPITCH,random(-3,3))
+		"----" A 0 A_CustomMissile("BulletTracerFX",37,-15,random(-3,3),CMF_OFFSETPITCH,random(-3,3))
 		Q03A D 4 A_CustomBulletAttack(3,3,1,4)
 		TNT1 A 0 A_MonsterRefire(0,"MissileEnd")
 		TNT1 A 0 A_Jump(10,"MissileEnd")
@@ -708,9 +710,10 @@ Actor Q4FailedTransfer		//shotguy
 		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDecide")
 		Loop
 	Missile:
-		Q04I AAAAA 3 A_FaceTarget
+		Q04I AAAAA 3 A_FaceTarget(0,0)
 		TNT1 A 0 A_PlaySound("quake4/Weapons/Shotgun/Fire",4)
 		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlashSmall",18,2,32,0,0,0,0,SXF_NOCHECKPOSITION)
+		"----" AAAA 0 A_CustomMissile("BulletTracerFX",32,2,random(-6,6),CMF_OFFSETPITCH,random(-6,6))
 		TNT1 A 0 A_CustomBulletAttack(6,6,4,4)
 		Q04A BC 2 
 		Q04A CBA 5
@@ -1242,9 +1245,10 @@ Actor Q4Grunt		//Demon
 		Goto SeeBerserk
 	Missile:
 	MGunAtt:
-		Q06I AAA 3 A_FaceTarget
+		Q06I AAA 3 A_FaceTarget(0,0)
 		TNT1 A 0 A_PlaySound("quake4/Grunt/MachineGunShot")
 		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlashSmall",10,-9,41,0,0,0,0,SXF_NOCHECKPOSITION)
+		"----" A 0 A_CustomMissile("BulletTracerFX",41,-9,random(-9,9),CMF_OFFSETPITCH,random(-9,9))
 		Q06A A 5 A_CustomBulletAttack(9,9,1,2)	//pretty weak, since it's not supposed to be it's main attack
 		TNT1 A 0 A_CPosRefire
 		TNT1 A 0 A_Jump(20,"See")
@@ -3894,10 +3898,12 @@ Actor Q4Sentry		//caco
 		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDecide")
 		Loop
 	Missile:
-		Q17A A 0 A_FaceTarget
+		Q17A A 0 A_FaceTarget(0,0)
 		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlashSmall",15,9,33,0,0,0,0,SXF_NOCHECKPOSITION)
+		"----" A 0 A_CustomMissile("BulletTracerFX",33,9,random(-3,3),CMF_OFFSETPITCH,random(-3,3))
 		Q17A A 2 A_CustomBulletAttack(7,7,1,4)
 		Q17A B 2
+		"----" A 0 A_CustomMissile("BulletTracerFX",33,9,random(-3,3),CMF_OFFSETPITCH,random(-3,3))
 		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlashSmall",15,-9,33,0,0,0,0,SXF_NOCHECKPOSITION)
 		Q17A C 2 A_CustomBulletAttack(7,7,1,4)
 		Q17A D 2
@@ -4451,21 +4457,29 @@ Actor Q4StroggHover		//pain elemental
 		TNT1 A 0 A_Jump(160,"Bullet")
 		Goto Rocket
 	Bullet:
-		TNT1 A 0 A_FaceTarget
+		TNT1 A 0 A_FaceTarget(0,0)
+		"----" A 0 A_CustomMissile("BulletTracerFX",15,24,random(-7,7),CMF_OFFSETPITCH,random(-7,7))
 		TNT1 A 0 A_CustomBulletAttack(7,7,1,5)
 		Q20W A 4 A_SpawnItemEx("MonMuzzleFlash",24,0,15,0,0,0,0,SXF_NOCHECKPOSITION) TNT1 A 0 A_FaceTarget
+		"----" A 0 A_CustomMissile("BulletTracerFX",15,24,random(-7,7),CMF_OFFSETPITCH,random(-7,7))
 		TNT1 A 0 A_CustomBulletAttack(7,7,1,5)
 		Q20W B 4 A_SpawnItemEx("MonMuzzleFlash",24,0,15,0,0,0,0,SXF_NOCHECKPOSITION) TNT1 A 0 A_FaceTarget
+		"----" A 0 A_CustomMissile("BulletTracerFX",15,24,random(-7,7),CMF_OFFSETPITCH,random(-7,7))
 		TNT1 A 0 A_CustomBulletAttack(7,7,1,5)
 		Q20W C 4 A_SpawnItemEx("MonMuzzleFlash",24,0,15,0,0,0,0,SXF_NOCHECKPOSITION) TNT1 A 0 A_FaceTarget
+		"----" A 0 A_CustomMissile("BulletTracerFX",15,24,random(-7,7),CMF_OFFSETPITCH,random(-7,7))
 		TNT1 A 0 A_CustomBulletAttack(7,7,1,5)
 		Q20W D 4 A_SpawnItemEx("MonMuzzleFlash",24,0,15,0,0,0,0,SXF_NOCHECKPOSITION) TNT1 A 0 A_FaceTarget
+		"----" A 0 A_CustomMissile("BulletTracerFX",15,24,random(-7,7),CMF_OFFSETPITCH,random(-7,7))
 		TNT1 A 0 A_CustomBulletAttack(7,7,1,5)
 		Q20W E 4 A_SpawnItemEx("MonMuzzleFlash",24,0,15,0,0,0,0,SXF_NOCHECKPOSITION) TNT1 A 0 A_FaceTarget
+		"----" A 0 A_CustomMissile("BulletTracerFX",15,24,random(-7,7),CMF_OFFSETPITCH,random(-7,7))
 		TNT1 A 0 A_CustomBulletAttack(7,7,1,5)
 		Q20W F 4 A_SpawnItemEx("MonMuzzleFlash",24,0,15,0,0,0,0,SXF_NOCHECKPOSITION) TNT1 A 0 A_FaceTarget
+		"----" A 0 A_CustomMissile("BulletTracerFX",15,24,random(-7,7),CMF_OFFSETPITCH,random(-7,7))
 		TNT1 A 0 A_CustomBulletAttack(7,7,1,5)
 		Q20W G 4 A_SpawnItemEx("MonMuzzleFlash",24,0,15,0,0,0,0,SXF_NOCHECKPOSITION) TNT1 A 0 A_FaceTarget
+		"----" A 0 A_CustomMissile("BulletTracerFX",15,24,random(-7,7),CMF_OFFSETPITCH,random(-7,7))
 		TNT1 A 0 A_CustomBulletAttack(7,7,1,5)
 		Q20W H 4 A_SpawnItemEx("MonMuzzleFlash",24,0,15,0,0,0,0,SXF_NOCHECKPOSITION) TNT1 A 0 A_FaceTarget
 		Goto See
@@ -4717,8 +4731,9 @@ Actor Q4MachinegunGuard	//chainguy
 	Missile:
 		TNT1 a 0 A_PlaySound("quake4/StroggMarine/ReadyMachinegun",5)
 		Q22A AB 4 A_FaceTarget
-		Q22A CC 2 A_FaceTarget
+		Q22A CC 2 A_FaceTarget(0,0)
 		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlashSmall",18,7,25,0,0,0,0,SXF_NOCHECKPOSITION)
+		"----" A 0 A_CustomMissile("BulletTracerFX",25,7,random(-9,9),CMF_OFFSETPITCH,random(-9,9))
 		Q22A D 3 A_CustomBulletAttack(9,9,1,4)
 		TNT1 a 0 A_MonsterRefire(0,"MissileEnd")
 		Goto Missile+4
@@ -4833,8 +4848,9 @@ Actor Q4ShotgunGuard		//shotguy
 		Loop
 	Missile:
 		Q21A A 0 A_PlaySound("quake4/StroggMarine/ReadyShotgun",6)
-		Q23A ABBBBBB 4 A_FaceTarget
+		Q23A ABBBBBB 4 A_FaceTarget(0,0)
 		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlashSmall",24,2,42,0,0,0,0,SXF_NOCHECKPOSITION)
+		"----" AAAAA 0 A_CustomMissile("BulletTracerFX",42,2,random(-12,12),CMF_OFFSETPITCH,random(-12,12))
 		TNT1 A 0 A_CustomBulletAttack(12,12,5,4)
 		Q23A CCD 4 A_FaceTarget
 		TNT1 A 0 A_Jump(170,"MissileEnd")
@@ -5206,20 +5222,27 @@ Actor Q4TeleportDropper		//archvile
 		Goto Summon
 	Machinegun:
 		Q26I A 4
-		Q26A AB 4 A_FaceTarget
+		Q26A AB 4 A_FaceTarget(0,0)
 		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlashSmall",5,0,33,0,0,0,0,SXF_NOCHECKPOSITION)
+		"----" A 0 A_CustomMissile("BulletTracerFX",33,0,random(-4,4),CMF_OFFSETPITCH,random(-4,4))
 		Q26A C 3 A_CustomBulletAttack(4,4,1,6)	TNT1 a 0 A_FaceTarget
 		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlashSmall",5,0,33,0,0,0,0,SXF_NOCHECKPOSITION)
+		"----" A 0 A_CustomMissile("BulletTracerFX",33,0,random(-4,4),CMF_OFFSETPITCH,random(-4,4))
 		Q26A C 3 A_CustomBulletAttack(4,4,1,6)	TNT1 a 0 A_FaceTarget
 		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlashSmall",5,0,33,0,0,0,0,SXF_NOCHECKPOSITION)
+		"----" A 0 A_CustomMissile("BulletTracerFX",33,0,random(-4,4),CMF_OFFSETPITCH,random(-4,4))
 		Q26A C 3 A_CustomBulletAttack(4,4,1,6)	TNT1 a 0 A_FaceTarget
 		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlashSmall",5,0,33,0,0,0,0,SXF_NOCHECKPOSITION)
+		"----" A 0 A_CustomMissile("BulletTracerFX",33,0,random(-4,4),CMF_OFFSETPITCH,random(-4,4))
 		Q26A C 3 A_CustomBulletAttack(4,4,1,6)	TNT1 a 0 A_FaceTarget
 		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlashSmall",5,0,33,0,0,0,0,SXF_NOCHECKPOSITION)
+		"----" A 0 A_CustomMissile("BulletTracerFX",33,0,random(-4,4),CMF_OFFSETPITCH,random(-4,4))
 		Q26A C 3 A_CustomBulletAttack(4,4,1,6)	TNT1 a 0 A_FaceTarget
 		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlashSmall",5,0,33,0,0,0,0,SXF_NOCHECKPOSITION)
+		"----" A 0 A_CustomMissile("BulletTracerFX",33,0,random(-4,4),CMF_OFFSETPITCH,random(-4,4))
 		Q26A C 3 A_CustomBulletAttack(4,4,1,6)	TNT1 a 0 A_FaceTarget
 		TNT1 A 0 A_SpawnItemEx("MonMuzzleFlashSmall",5,0,33,0,0,0,0,SXF_NOCHECKPOSITION)
+		"----" A 0 A_CustomMissile("BulletTracerFX",33,0,random(-4,4),CMF_OFFSETPITCH,random(-4,4))
 		Q26A C 3 A_CustomBulletAttack(4,4,1,6)
 		Q26A BA 7
 		Goto See

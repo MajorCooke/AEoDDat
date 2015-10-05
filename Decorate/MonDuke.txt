@@ -63,7 +63,7 @@ Actor FWarLord 7210	// spider mastermind
 		TNT1 A 0 A_Jump(64,"Grenade")
 		F03M A 1 A_FaceTarget(0,0) //IMPORTANT. Need to set max pitch to 0 or it won't set its pitch at all!
 		"####" A 0 A_PlaySound("weapons/dnchaingun")
-		F03M B 0 A_CustomMissile("BulletTracerFX",10,25,random(-10,10),CMF_OFFSETPITCH,random(-10,10))
+		"----" A 0 A_CustomMissile("BulletTracerFX",10,25,random(-10,10),CMF_OFFSETPITCH,random(-10,10))
 		F03M B 2 Bright A_CustomBulletAttack(10,10,1,5,"BulletDamagePuff")
 		F03M B 1 A_SpidRefire 
 		Goto Missile+1
@@ -236,7 +236,8 @@ Actor FDinoChaingun 7211	// chaingun guy
 		Loop
 	Missile:
 		TNT1 A 0 A_Jump(80,"GreenThing")
-		F09M A 1 A_FaceTarget
+		F09M A 1 A_FaceTarget(0,0)
+		"----" A 0 A_CustomMissile("BulletTracerFX",20,0,random(-5,5),CMF_OFFSETPITCH,random(-4,4))
 		F09M B 1 Bright A_CustomBulletAttack(5,4,1,2,"BulletDamagePuff")
 		F09M A 2 A_SpidRefire 
 		Goto Missile+1
@@ -1322,13 +1323,15 @@ Actor FDNPig 7216	// shotgun guy
 		Loop
 	Missile:
 		TNT1 A 0 A_Jump(80,"Crouch")
-		F08M B 9 A_FaceTarget
+		F08M B 9 A_FaceTarget(0,0)
+		"----" A 0 A_CustomMissile("BulletTracerFX",20,0,random(-4,4),CMF_OFFSETPITCH,random(-4,4))
 		F08M C 8 Bright A_CustomBulletAttack(4,4,3,5,"BulletDamagePuff")
 		TNT1 A 0 A_PlaySound("weapons/shtgn2rl")
 		F08M BA 4 A_FaceTarget 
 		Goto See
 	Crouch:
-		F08C AABB 4 A_FaceTarget
+		F08C AABB 4 A_FaceTarget(0,0)
+		"----" A 0 A_CustomMissile("BulletTracerFX",20,0,random(-4,4),CMF_OFFSETPITCH,random(-4,4))
 		F08C C 8 Bright A_CustomBulletAttack(4,4,3,5,"BulletDamagePuff")
 		TNT1 A 0 A_PlaySound("weapons/shtgn2rl")
 		F08C BB 8 A_FaceTarget 
@@ -1607,9 +1610,10 @@ Actor FDukeNukem 7218	// baron
 		Goto See
 	Missile:
 		TNT1 A 0 A_Jump(158,6)
-		F07I A 12 A_FaceTarget
+		F07I A 12 A_FaceTarget(0,0)
 		F07I A 0 A_PlaySound("weapons/dnchaingun")
 		TNT1 A 0 A_CustomMissile("FakeAttackLightning",0,0,0)
+		"----" A 0 A_CustomMissile("BulletTracerFX",20,0,random(-2,2),CMF_OFFSETPITCH,random(-2,2))
 		F07I A 2 Bright A_CustomBulletAttack(2,2,1,4,"BulletDamagePuff")
 		F07I A 2 A_SpidRefire 
 		Goto Missile+2
@@ -1619,9 +1623,10 @@ Actor FDukeNukem 7218	// baron
 		F07I A 5 A_FaceTarget
 		Goto See
 		TNT1 A 0 A_Jump(128,8)
-		F07I A 9 A_FaceTarget
+		F07I A 9 A_FaceTarget(0,0)
 		TNT1 A 0 A_PlaySound("weapons/shtgn2fr")
 		TNT1 A 0 A_CustomMissile("FakeAttackLightning",0,0,0)
+		"----" A 0 A_CustomMissile("BulletTracerFX",20,0,random(-4,4),CMF_OFFSETPITCH,random(-4,4))
 		F07I A 8 Bright A_CustomBulletAttack(4,4,4,5,"BulletDamagePuff")
 		TNT1 A 0 A_PlaySound("weapons/shtgn2rl")
 		F07I AA 8 A_FaceTarget 
@@ -2219,9 +2224,10 @@ Actor FDukeNukemEnhanced 7222	// cyberdemon
 	Missile:
 		TNT1 A 0 A_Jump(255, "Chaingun","Rockets","Shotgun","Freeze","Devastator")
 	Chaingun:
-		F07I A 12 A_FaceTarget
+		F07I A 12 A_FaceTarget(0,0)
 		F07I A 0 A_PlaySound("weapons/dnchaingun")
 		TNT1 A 0 A_CustomMissile("FakeAttackLightning",0,0,0)
+		"----" A 0 A_CustomMissile("BulletTracerFX",20,0,random(-5,5),CMF_OFFSETPITCH,random(-5,5))
 		F07I A 2 Bright A_CustomBulletAttack(5,5,1,4,"BulletDamagePuff")
 		F07I A 2 A_SpidRefire 
 		Goto "Chaingun"+1
@@ -2239,16 +2245,18 @@ Actor FDukeNukemEnhanced 7222	// cyberdemon
 		F07I AA 10 A_FaceTarget
 		Goto See
 	Shotgun:
-		F07I A 9 A_FaceTarget
+		F07I A 9 A_FaceTarget(0,0)
 		TNT1 A 0 A_PlaySound("weapons/shtgn2fr")
 		TNT1 A 0 A_CustomMissile("FakeAttackLightning",0,0,0)
+		"----" AAAAAAAA 0 A_CustomMissile("BulletTracerFX",20,0,random(-4,4),CMF_OFFSETPITCH,random(-4,4))
 		F07I A 8 Bright A_CustomBulletAttack(4,4,8,6,"BulletDamagePuff")
 		TNT1 A 0 A_PlaySound("weapons/shtgn2rl")
 		F07I AAA 8 A_FaceTarget 
 		TNT1 A 0 A_Jump(32,"See")
-		F07I A 9 A_FaceTarget
+		F07I A 9 A_FaceTarget(0,0)
 		TNT1 A 0 A_PlaySound("weapons/shtgn2fr")
 		TNT1 A 0 A_CustomMissile("FakeAttackLightning",0,0,0)
+		"----" AAAAAAAA 0 A_CustomMissile("BulletTracerFX",20,0,random(-4,4),CMF_OFFSETPITCH,random(-4,4))
 		F07I A 8 Bright A_CustomBulletAttack(4,4,8,6,"BulletDamagePuff")
 		TNT1 A 0 A_PlaySound("weapons/shtgn2rl")
 		F07I AAA 8 A_FaceTarget 
@@ -2410,8 +2418,9 @@ Actor Marauder 7223	// hell knight
 	Missile:
 		TNT1 A 0 A_Jump(80,"Missile2")
 		F03M A 4 A_FaceTarget
-		F03M A 1 A_FaceTarget
+		F03M A 1 A_FaceTarget(0,0)
 		TNT1 A 0 A_PlaySound("weapons/dnchaingun")
+		"----" A 0 A_CustomMissile("BulletTracerFX",20,0,random(-6,6),CMF_OFFSETPITCH,random(-6,6))
 		F03M B 2 Bright A_CustomBulletAttack(6,6,1,5,"BulletDamagePuff")
 		F03M A 2 A_SpidRefire 
 		Goto Missile+2
