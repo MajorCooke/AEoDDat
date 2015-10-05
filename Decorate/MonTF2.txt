@@ -1330,6 +1330,7 @@ Actor SniperBulletSydney : FastProjectile
 	var int user_jarate;
 	Projectile
 	+SEEKERMISSILE
+	+HITTRACER
 	Damage 5
 	Speed 120
 	Radius 4
@@ -1342,22 +1343,26 @@ Actor SniperBulletSydney : FastProjectile
 		TNT1 A 1
 		Loop
 	Death:
-		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-		TNT1 A 0 A_SeekerMissile(0,0,3,256)
-		TNT1 A 0 A_Stop
-		TNT1 A 0 A_JumpIfTracerCloser(64,"Stickening")
 		TNT1 A 0 A_SpawnItemEx("NewPuff1",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		Stop
+	XDeath:
+	Crash:
+		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+		TNT1 A 0 A_SetUserVar("user_jarate",35*5)
 	Stickening:
-		TNT1 A 0 A_JumpIfInventory("PlayerToken",1,"StickyPlayer",AAPTR_TRACER)
+		TNT1 A 0 A_JumpIf(CheckClass("PlayerPawn",AAPTR_TRACER,1),"StickyPlayer")
 		TNT1 A 0 A_GiveInventory("PowerJarate",1,AAPTR_TRACER)
 		TNT1 A 0 A_SetUserVar("user_jarate",35*5)
 		Goto StickyTime
 	StickyPlayer:
+		TNT1 A 0 A_CheckFlag("INVULNERABLE","End",AAPTR_TRACER)
+		TNT1 A 0 A_JumpIfInventory("PowerInvulBase",1,"End",AAPTR_TRACER)
+		TNT1 A 0 A_JumpIfInventory("PowerNoSeek",1,"End",AAPTR_TRACER)
 		TNT1 A 0 A_GiveInventory("JarateEffect",1,AAPTR_TRACER)
 		TNT1 A 0 A_SetUserVar("user_jarate",35*5)
 		Goto StickyTime
 	StickyTime:
+		TNT1 A 0 A_CheckFlag("INVULNERABLE","End",AAPTR_TRACER)
 		TNT1 A 0 A_JumpIfInventory("PowerInvulBase",1,"End",AAPTR_TRACER)
 		TNT1 A 0 A_JumpIfInventory("PowerNoSeek",1,"End",AAPTR_TRACER)
 		TNT1 A 0 A_Warp(AAPTR_TRACER,0,0,32,0,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE)
@@ -1366,8 +1371,8 @@ Actor SniperBulletSydney : FastProjectile
 		TNT1 A 1 A_JumpIf(user_jarate<=0,"End")
 		Loop
 	End:
-		TNT1 A 0 A_TakeInventory("PowerJarate",1,0,AAPTR_TRACER)
-		TNT1 A 0 A_TakeInventory("JarateEffect",1,0,AAPTR_TRACER)
+		TNT1 A 0 A_TakeInventory("PowerJarate",1000,0,AAPTR_TRACER)
+		TNT1 A 0 A_TakeInventory("JarateEffect",1000,0,AAPTR_TRACER)
 		Stop
 	}
 }
