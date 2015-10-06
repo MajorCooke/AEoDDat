@@ -6321,6 +6321,7 @@ Actor PostalDude 		//cyberdemon
 		"----" A 0 A_CustomMissile("BulletTracerFX",20,0,0,CMF_OFFSETPITCH,0)
 		DUDE A 0 A_CustomBulletAttack(0,0,1,8,"PostalDudePuffCheck")	//notice how this is the only one that is special, only if it hits a target will activate
 		TNT1 A 0 A_JumpIfInventory("PostalToken",1,"MockChecker")
+	PistolCont:
 		DUDE EBC 5 A_Chase("","",CHF_FASTCHASE)		// 4-1-2
 		DUDE C 1 A_FaceTarget(0,0)
 		DUDE A 0 A_SpawnItemEx("MonMuzzleFlash",7,5,35,0,0,0,0,SXF_NOCHECKPOSITION)
@@ -6341,6 +6342,7 @@ Actor PostalDude 		//cyberdemon
 		"----" A 0 A_CustomMissile("BulletTracerFX",20,0,random(-3,3),CMF_OFFSETPITCH,random(-3,3))
 		DUDE A 0 A_CustomBulletAttack(3,3,1,8,"BulletDamagePuff")		//and it doesnt
 		TNT1 A 0 A_CposRefire
+	PistolCont2:
 		//it repeats the whole thing here, because of the 4 stages shown above, and because then, every 8 will
 		//check to say one of the "and one for..." phrases. Every 4 was too repeatedly, hence why i doubled that
 		DUDE BCD 5 A_Chase("","",CHF_FASTCHASE)
@@ -6369,9 +6371,9 @@ Actor PostalDude 		//cyberdemon
 		"----" A 0 A_CustomMissile("BulletTracerFX",20,0,random(-3,3),CMF_OFFSETPITCH,random(-3,3))
 		DUDE A 0 A_CustomBulletAttack(3,3,1,8,"BulletDamagePuff")
 		TNT1 A 0 A_CposRefire
-		Loop
+		Goto Pistol
 	MockChecker:
-		TNT1 A 0 A_JumpIfInventory("PostalToken",8,"OutOfMocks")
+		TNT1 A 0 A_JumpIfInventory("PostalToken",8,"PistolCont2")
 		TNT1 A 0 A_JumpIfInventory("PostalToken",7,"Mock7")
 		TNT1 A 0 A_JumpIfInventory("PostalToken",6,"Mock6")
 		TNT1 A 0 A_JumpIfInventory("PostalToken",5,"Mock5")
@@ -6379,30 +6381,27 @@ Actor PostalDude 		//cyberdemon
 		TNT1 A 0 A_JumpIfInventory("PostalToken",3,"Mock3")
 		TNT1 A 0 A_JumpIfInventory("PostalToken",2,"Mock2")
 		TNT1 A 0 A_JumpIfInventory("PostalToken",1,"Mock1")
-	OutOfMocks:
-		TNT1 A 0 
-		Goto Pistol+8
 	Mock1:
 		TNT1 A 0 A_PlaySound("pd/x07",CHAN_VOICE,1,0,ATTN_NONE)
-		Goto Pistol+8
+		Goto PistolCont
 	Mock2:
 		TNT1 A 0 A_PlaySound("pd/x06",CHAN_VOICE,1,0,ATTN_NONE)
-		Goto Pistol+8
+		Goto PistolCont
 	Mock3:
 		TNT1 A 0 A_PlaySound("pd/x05",CHAN_VOICE,1,0,ATTN_NONE)
-		Goto Pistol+8
+		Goto PistolCont
 	Mock4:
 		TNT1 A 0 A_PlaySound("pd/x04",CHAN_VOICE,1,0,ATTN_NONE)
-		Goto Pistol+8
+		Goto PistolCont
 	Mock5:
 		TNT1 A 0 A_PlaySound("pd/x03",CHAN_VOICE,1,0,ATTN_NONE)
-		Goto Pistol+8
+		Goto PistolCont
 	Mock6:
 		TNT1 A 0 A_PlaySound("pd/x02",CHAN_VOICE,1,0,ATTN_NONE)
-		Goto Pistol+8
+		Goto PistolCont
 	Mock7:
 		TNT1 A 0 A_PlaySound("pd/x01",CHAN_VOICE,1,0,ATTN_NONE)
-		Goto Pistol+8
+		Goto PistolCont
 	Machinegun:
 		DUDE A 4 A_FaceTarget(0,0)
 		DUDE A 0 A_SpawnItemEx("MonMuzzleFlash",7,5,35,0,0,0,0,SXF_NOCHECKPOSITION)
