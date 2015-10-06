@@ -6649,54 +6649,44 @@ ACTOR AEoDSniperRailgun : Weapon // 6161
 		TNT1 A 0 A_JumpIfInventory("SniperRailgunZoomMode", 1, "ZoomFire")
 		TNT1 A 0 A_PlaySound("Rage/Wep/RailgunFire", CHAN_WEAPON, 1.0, 0)
 		TNT1 A 0 A_FireCustomMissile(Q4RailStereo,0,0,0,0)
-		TNT1 A 0 A_RailAttack(random(350,500),9,1,Red,"Green",RGF_SILENT|RGF_FULLBRIGHT,0,"ExtremeBulletPuff",0,0,0)
-		TNT1 A 0 //ACS_NamedExecute("s851",0,120,random(-8,8),0)
-		RLGG A 1 Bright A_GunFlash
+		TNT1 A 0 A_RailAttack(random(350,500),9,1,Red,"Green",RGF_SILENT|RGF_FULLBRIGHT,0,"ExtremeBulletPuff",0,0,0,0,3.0,1.0,"RailgunTrail")
+		TNT1 A 0 A_GunFlash
+		RLGG A 1 Bright A_SetPitch(pitch-3)
 		TNT1 A 0 A_PlaySound("RLCHARGE", 5, 1.0, 0)
-		RLGG AA 1 Bright //ACS_NamedExecute("s851",0,-40,0,0)
+		RLGG A 1 Bright A_SetPitch(pitch-3)
+		RLGG AA 1 Bright
 		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,10,4)
 		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,7,5)
 		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,4,4)
 		RLGG BC 3 
-		RLGG DEF 4
+		RLGG DDDDEEEE 1 A_SetPitch(pitch+0.7)
+		RLGG F 1 A_SetPitch(pitch+0.4)
+		RLGG F 3
 		RLGG GH 5
+		RLGG I 10
 		TNT1 A 0 A_ReFire
 		Goto Ready
 	ZoomFire:
-		TNT1 A 0 A_JumpIfTargetInLOS("ZoomFireLockedOn")
 		TNT1 A 0 A_PlaySound("Rage/Wep/RailgunFire", CHAN_WEAPON, 1.0, 0)
 		TNT1 A 0 A_FireCustomMissile(Q4RailStereo,0,0,0,0)
-		TNT1 A 0 A_RailAttack(random(250,600),1,1,Red,"Green",1,0,"ExtremeBulletPuff")
-		TNT1 A 0 //ACS_NamedExecute("s851",0,120,random(-8,8),0)
-		R016 N 1 Bright A_GunFlash
+		TNT1 A 0 A_RailAttack(random(350,500),1,1,Red,"Green",RGF_SILENT|RGF_FULLBRIGHT,0,"ExtremeBulletPuff",0,0,0,0,3.0,1.0,"RailgunTrail")
+		TNT1 A 0 A_GunFlash
+		R016 N 1 Bright A_SetPitch(pitch-1.5)
 		TNT1 A 0 A_PlaySound("RLCHARGE", 5, 1.0, 0)
-		R016 NNN 1 //ACS_NamedExecute("s851",0,-40,0,0)
+		R016 N 1 Bright A_SetPitch(pitch-1.5)
+		R016 AA 1 Bright
 		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,10,4)
 		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,7,5)
 		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,4,4)
-		R016 NNNN 1
-		R016 NNNNNNNNNNNN 1
-		TNT1 A 0 A_ReFire
-		Goto Ready
-	ZoomFireLockedOn:
-		TNT1 A 0 A_PlaySound("Rage/Wep/RailgunFire", CHAN_WEAPON, 1.0, 0)
-		TNT1 A 0 A_FireCustomMissile(Q4RailStereo,0,0,0,0)
-		TNT1 A 0 A_RailAttack(random(250,600),1,1,Red,"Green",1,0,"ExtremeBulletPuff")
-		TNT1 A 0 //ACS_NamedExecute("s851",0,120,random(-8,8),0)
-		R016 O 1 Bright A_GunFlash
-		TNT1 A 0 A_PlaySound("RLCHARGE", 5, 1.0, 0)
-		R016 OOO 1 //ACS_NamedExecute("s851",0,-40,0,0)
-		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,10,4)
-		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,7,5)
-		TNT1 A 0 A_FireCustomMissile("GunSmallSmokeSpawner",0,0,4,4)
-		R016 OOOO 1
-		R016 OOOOOOOOOO 2
-		R016 N 4
+		R016 N 6
+		R016 NNNNNNNN 1 A_SetPitch(pitch+0.35)
+		R016 N 1 A_SetPitch(pitch+0.2)
+		R016 N 23
 		TNT1 A 0 A_ReFire
 		Goto Ready
 	Flash:
 		TNT1 A 0 A_Light2
-		TNT1 A 1 Bright A_SetBlend("Red",0.225,8)
+		TNT1 A 1 Bright A_SetBlend("Green",0.25,15)
 		TNT1 A 2 A_Light1
 		TNT1 A 0 A_Light0
 		stop  
@@ -6724,7 +6714,21 @@ ACTOR AEoDSniperRailgun : Weapon // 6161
 }
 
 
-
+actor RailgunTrail
+{
+    RenderStyle Add
+    Alpha 1
+    Scale 0.02
+    +NOINTERACTION
+    Translation "80:111=112:127"
+    states
+    {
+    Spawn:
+		X099 A 10 Bright
+		X099 A 2 bright A_FadeOut (0.075)
+		Wait
+    }
+}
 
 Actor Q4RailStereo
 {
