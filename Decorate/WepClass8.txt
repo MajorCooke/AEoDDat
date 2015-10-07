@@ -5086,7 +5086,7 @@ Actor AEoDShredderStaff : Weapon // 6106
 		Goto Ready
 	AltFire:
 		S04I A 0 A_StopSound(CHAN_BODY)
-		S04I G 3 
+		S04I G 1 
 		S04I H 0 A_PlaySound("shredderstaff/altfire", CHAN_WEAPON, 1.0, 0)
 		S04I A 0 
 		S04I A 0 A_SetBlend("Green",0.5,3)
@@ -5095,7 +5095,8 @@ Actor AEoDShredderStaff : Weapon // 6106
 		S04I H 2 A_FireBullets(0,0,1,200,"ShredderExplosion",FBF_NORANDOMPUFFZ)
 		S04I I 5 
 		S04I J 4
-		S04I FABCDE 5
+		S04I BCDE 5
+		S04I F 3
 		Goto Ready
 	}
 }
@@ -5159,6 +5160,7 @@ Actor ShredderExplosion
 	+DONTSPLASH
 	+SKYEXPLODE
 	+EXPLODEONWATER
+	+FORCERADIUSDMG
 	Radius 4
 	Height 4
 	RenderStyle Add
@@ -5172,7 +5174,7 @@ Actor ShredderExplosion
 		TNT1 A 0 A_Explode(450,256,0,0,128)
 		SRBA FFFFGGGGHHHHIIII 1 Bright A_FadeOut(0.02)
 		SRBA J 1 Bright A_FadeOut(0.1)
-		Stop
+		Loop
 	}
 }
 
