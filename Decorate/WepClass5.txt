@@ -5047,93 +5047,92 @@ Actor AEoDGaussGun : Weapon
 		Loop
 	Ready: 
 		R084 A 0 A_PlaySound("NGSPINSL", 6, 1.0, 1)
-		R084 A 3 A_WeaponReady
+		R084 J 3 A_WeaponReady
 		Loop
-	Ready2: 
-		R081 A 0 A_PlaySound("NGSPINSL", 6, 1.0, 1)
-		R081 ABCDEFGHIJ 3 A_WeaponReady
-		Goto Ready+1
 	Deselect:
 		TNT1 A 0 A_StopSound(6)
 		TNT1 A 0 A_StopSound(7)
 		TNT1 A 0 	
-		R084 A 1 A_Lower
+		R084 J 1 A_Lower
 		TNT1 AA 0 A_Lower
 		Goto Deselect+2
 	Select:
 		TNT1 A 0 	
-		R084 A 1 A_Raise
+		R084 J 1 A_Raise
 		TNT1 AA 0 A_Raise
 		Goto Select
 	Fire: 
 		TNT1 A 0 A_StopSound(6)
 		TNT1 A 0 A_PlaySound ("NGSPINUP")  
-		R084 BCD 3 
-		R084 EFGI 2
-		R084 JLN 1 
-		R084 RST 1 
+		R084 JKL 3 
+		R084 MJK 2
+		R084 LM 1 
+		R084 JK 1 
 		TNT1 A 0 A_ReFire
 		Goto "Deaccel"
 	Deaccel: 
 		TNT1 A 0 A_StopSound(6)
 		TNT1 A 0 A_PlaySound ("NGSPINDW")
-		R083 ACDEFGHIJKLMN 2 A_WeaponReady
+		R084 JMLKJMLKJMLKJ 2 A_WeaponReady
 		Goto Ready
 	Hold: 
 		TNT1 A 0 A_PlaySound("NGSPINFS", 6, 1.0, 1)
+		R084 AB 2
 		TNT1 A 0 A_PlaySound ("halflife/weapons/gaussshot",CHAN_WEAPON,0.8,0)
-		TNT1 A 0 Bright //ACS_NamedExecute("s851",0,20,0,0)
+		TNT1 A 0 A_SetPitch(pitch-0.5)
 		TNT1 A 0 A_FireCustomMissile("GaussGunBeam",0,1,5,4)
-		R082 F 2 Bright A_GunFlash
-		R082 A 3 //ACS_NamedExecute("s851",0,-20,0,0)
+		R084 C 1 Bright A_GunFlash
+		TNT1 A 0 A_SetPitch(pitch+0.5)
+		R084 DE 2
 		TNT1 A 0 A_PlaySound ("halflife/weapons/gaussshot",CHAN_WEAPON,0.8,0)
-		TNT1 A 0 Bright //ACS_NamedExecute("s851",0,20,0,0)
+		TNT1 A 0 A_SetPitch(pitch-0.5)
 		TNT1 A 0 A_FireCustomMissile("GaussGunBeam",0,1,5,4)
-		R082 B 2 Bright A_GunFlash
-		R082 C 3 //ACS_NamedExecute("s851",0,-20,0,0)
+		R084 F 1 Bright A_GunFlash
+		TNT1 A 0 A_SetPitch(pitch+0.5)
+		R084 GH 2
 		TNT1 A 0 A_PlaySound ("halflife/weapons/gaussshot",CHAN_WEAPON,0.8,0)
-		TNT1 A 0 Bright //ACS_NamedExecute("s851",0,20,0,0)
+		TNT1 A 0 A_SetPitch(pitch-0.5)
 		TNT1 A 0 A_FireCustomMissile("GaussGunBeam",0,1,5,4)
-		R082 D 2 Bright A_GunFlash
-		R082 E 3 //ACS_NamedExecute("s851",0,-20,0,0)
+		R084 I 1 Bright A_GunFlash
+		TNT1 A 0 A_SetPitch(pitch+0.5)
 		TNT1 A 0 A_ReFire
 		TNT1 A 0 A_StopSound(6)
 		TNT1 A 0 A_PlaySound ("NGSPINDW")
-		R083 ACDEFGHIJKLMN 2 A_Refire
-		Goto Ready
+		Goto Deaccel
 	AltFire:
 		TNT1 A 0 A_StopSound(6)
 		TNT1 A 0 A_PlaySound ("NGSPINUP")  
-		R084 BCD 3 
-		R084 EFGI 2
-		R084 JLN 1 
-		R084 RST 1 
+		R084 JKL 3 
+		R084 MJK 2
+		R084 LM 1 
+		R084 JK 1 
 		TNT1 A 0 A_ReFire
-		Goto "Deaccel"
-	AltHold:
-		TNT1 A 0 A_PlaySound("NGFIRE", 6, 0.6, 0)
-		TNT1 A 0 Bright //ACS_NamedExecute("s851",0,20,0,0)
-		TNT1 A 0 A_RailAttack(random(15,25),5,1,none,"BF A7 8F",3,1,"BulletDamagePuff", 0,0,0, 10,2.0,1.5)
-		TNT1 A 0 Bright A_FireCustomMissile("Q4NailTrail",0,0,5,4)
-		R082 F 2 Bright A_GunFlash
-		R082 A 2 //ACS_NamedExecute("s851",0,-20,0,0)
-		TNT1 A 0 A_PlaySound("NGFIRE", 6, 0.6, 0)
-		TNT1 A 0 Bright //ACS_NamedExecute("s851",0,20,0,0)
-		TNT1 A 0 A_RailAttack(random(15,25),5,1,none,"BF A7 8F",3,1,"BulletDamagePuff", 0,0,0, 10,2.0,1.5)
-		TNT1 A 0 Bright A_FireCustomMissile("Q4NailTrail",0,0,5,4)
-		R082 B 2 Bright A_GunFlash
-		R082 C 2 //ACS_NamedExecute("s851",0,-20,0,0)
-		TNT1 A 0 A_PlaySound("NGFIRE", 6, 0.6, 0)
-		TNT1 A 0 Bright //ACS_NamedExecute("s851",0,20,0,0)
-		TNT1 A 0 A_RailAttack(random(15,25),5,1,none,"BF A7 8F",3,1,"BulletDamagePuff", 0,0,0, 10,2.0,1.5)
-		TNT1 A 0 Bright A_FireCustomMissile("Q4NailTrail",0,0,5,4)
-		R082 D 2 Bright A_GunFlash
-		R082 E 2 //ACS_NamedExecute("s851",0,-20,0,0)
+		Goto "Deaccel"	
+	AltHold: 
+		TNT1 A 0 A_PlaySound("NGSPINFS", 6, 1.0, 1)
+		R084 AB 2
+		TNT1 A 0 A_PlaySound ("NGFIRE",CHAN_WEAPON,0.8,0)
+		TNT1 A 0 A_SetPitch(pitch-0.5)
+		TNT1 A 0 A_RailAttack(random(20,35),5,1,none,"BF A7 8F",RGF_SILENT|RGF_EXPLICITANGLE|RGF_FULLBRIGHT,1,"BulletDamagePuff", 0,0,0, 10,2.0,1.5)
+		R084 C 1 Bright A_GunFlash
+		TNT1 A 0 A_SetPitch(pitch+0.5)
+		R084 DE 2
+		TNT1 A 0 A_PlaySound ("NGFIRE",CHAN_WEAPON,0.8,0)
+		TNT1 A 0 A_SetPitch(pitch-0.5)
+		TNT1 A 0 A_RailAttack(random(20,35),5,1,none,"BF A7 8F",RGF_SILENT|RGF_EXPLICITANGLE|RGF_FULLBRIGHT,1,"BulletDamagePuff", 0,0,0, 10,2.0,1.5)
+		R084 F 1 Bright A_GunFlash
+		TNT1 A 0 A_SetPitch(pitch+0.5)
+		R084 GH 2
+		TNT1 A 0 A_PlaySound ("NGFIRE",CHAN_WEAPON,0.8,0)
+		TNT1 A 0 A_SetPitch(pitch-0.5)
+		TNT1 A 0 A_RailAttack(random(20,35),5,1,none,"BF A7 8F",RGF_SILENT|RGF_EXPLICITANGLE|RGF_FULLBRIGHT,1,"BulletDamagePuff", 0,0,0, 10,2.0,1.5)
+		R084 I 1 Bright A_GunFlash
+		TNT1 A 0 A_SetPitch(pitch+0.5)
 		TNT1 A 0 A_ReFire
 		TNT1 A 0 A_StopSound(6)
 		TNT1 A 0 A_PlaySound ("NGSPINDW")
-		R083 ACDEFGHIJKLMN 2 A_Refire
-		Goto Ready
+		Goto Deaccel
+
 	Flash:
 		TNT1 A 2 A_Light1
 		TNT1 A 0 A_Light0
