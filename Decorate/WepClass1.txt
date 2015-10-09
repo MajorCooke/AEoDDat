@@ -48,7 +48,6 @@ Actor AEoDHandGrenadeItem : CustomInventory 6019
 	}
 }
 
-
 Actor AEoDHandGrenade : Weapon // 6019
 {
 	+FLOORCLIP
@@ -77,15 +76,11 @@ Actor AEoDHandGrenade : Weapon // 6019
 	ReadyEmpty:
 		TNT1 AAAAAA 0 A_CheckReload
 		Goto Deselect
-	Deselect:
-		TNT1 A 0 	
-		TNT1 A 0 A_JumpIfInventory("AEGrenade",1,4)
-		TNT1 A 1 A_Lower
-		TNT1 AA 0 A_Lower
-		Loop
-		TNT1 A 0 	
-		R013 A 1 A_Lower
-		TNT1 AA 0 A_Lower
+	Deselect:	
+		R013 A 0 A_JumpIfInventory("AEGrenade",1,2)
+		TNT1 A 0
+		"----" A 1 A_Lower
+		"----" AA 0 A_Lower
 		Loop
 	Select:
 		TNT1 A 0 	
@@ -98,6 +93,14 @@ Actor AEoDHandGrenade : Weapon // 6019
 		R013 BCD 2
 		R013 E 2 A_PlaySound("reilsss/weapons/handGrenadetick", CHAN_WEAPON, 1.0, 0)
 		R013 FGHH 2
+		TNT1 A 2 A_GunFlash
+	HoldingLoop:
+		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",16,2)
+		TNT1 A 0 A_GiveInventory("TNTThrowForce",1)
+		TNT1 A 2
+		TNT1 A 0 A_Refire("HoldingLoop")
+		R013 I 2
+		R013 J 0 A_PlaySound("reilsss/weapons/handGrenadethrow", CHAN_WEAPON, 1.0, 0)
 		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",16,"ThrowGrenadeG")
 		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",15,"ThrowGrenadeG")
 		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",14,"ThrowGrenadeF")
@@ -114,188 +117,68 @@ Actor AEoDHandGrenade : Weapon // 6019
 		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",3,"ThrowGrenade4")
 		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",2,"ThrowGrenade3")
 		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",1,"ThrowGrenade2")
-		TNT1 A 0 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 2 A_GunFlash
-		TNT1 A 0 A_ReFire
 	ThrowGrenade1:
-		R013 I 2
-		R013 J 0 A_PlaySound("reilsss/weapons/handGrenadethrow", CHAN_WEAPON, 1.0, 0)
-		TNT1 A 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownGrenade1",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R013 XWVUTS 1
-		Goto Ready
+		Goto EndThrow
 	ThrowGrenade2:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlaySound("reilsss/weapons/handGrenadethrow", CHAN_WEAPON, 1.0, 0)
-		TNT1 A 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownGrenade2",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R013 XWVUTS 1
-		Goto Ready
+		Goto EndThrow
 	ThrowGrenade3:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlaySound("reilsss/weapons/handGrenadethrow", CHAN_WEAPON, 1.0, 0)
-		TNT1 A 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownGrenade3",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R013 XWVUTS 1
-		Goto Ready
+		Goto EndThrow
 	ThrowGrenade4:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlaySound("reilsss/weapons/handGrenadethrow", CHAN_WEAPON, 1.0, 0)
-		TNT1 A 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownGrenade4",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R013 XWVUTS 1
-		Goto Ready
+		Goto EndThrow
 	ThrowGrenade5:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlaySound("reilsss/weapons/handGrenadethrow", CHAN_WEAPON, 1.0, 0)
-		TNT1 A 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownGrenade5",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R013 XWVUTS 1
-		Goto Ready
+		Goto EndThrow
 	ThrowGrenade6:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlaySound("reilsss/weapons/handGrenadethrow", CHAN_WEAPON, 1.0, 0)
-		TNT1 A 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownGrenade6",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R013 XWVUTS 1
-		Goto Ready
+		Goto EndThrow
 	ThrowGrenade7:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlaySound("reilsss/weapons/handGrenadethrow", CHAN_WEAPON, 1.0, 0)
-		TNT1 A 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownGrenade7",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R013 XWVUTS 1
-		Goto Ready
+		Goto EndThrow
 	ThrowGrenade8:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlaySound("reilsss/weapons/handGrenadethrow", CHAN_WEAPON, 1.0, 0)
-		TNT1 A 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownGrenade8",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R013 XWVUTS 1
-		Goto Ready
+		Goto EndThrow
 	ThrowGrenade9:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlaySound("reilsss/weapons/handGrenadethrow", CHAN_WEAPON, 1.0, 0)
-		TNT1 A 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownGrenade9",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R013 XWVUTS 1
-		Goto Ready
+		Goto EndThrow
 	ThrowGrenadeA:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlaySound("reilsss/weapons/handGrenadethrow", CHAN_WEAPON, 1.0, 0)
-		TNT1 A 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownGrenadeA",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R013 XWVUTS 1
-		Goto Ready
+		Goto EndThrow
 	ThrowGrenadeB:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlaySound("reilsss/weapons/handGrenadethrow", CHAN_WEAPON, 1.0, 0)
-		TNT1 A 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownGrenadeB",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R013 XWVUTS 1
-		Goto Ready
+		Goto EndThrow
 	ThrowGrenadeC:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlaySound("reilsss/weapons/handGrenadethrow", CHAN_WEAPON, 1.0, 0)
-		TNT1 A 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownGrenadeC",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R013 XWVUTS 1
-		Goto Ready
+		Goto EndThrow
 	ThrowGrenadeD:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlaySound("reilsss/weapons/handGrenadethrow", CHAN_WEAPON, 1.0, 0)
-		TNT1 A 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownGrenadeD",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R013 XWVUTS 1
-		Goto Ready
+		Goto EndThrow
 	ThrowGrenadeE:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlaySound("reilsss/weapons/handGrenadethrow", CHAN_WEAPON, 1.0, 0)
-		TNT1 A 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownGrenadeE",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R013 XWVUTS 1
-		Goto Ready
+		Goto EndThrow
 	ThrowGrenadeF:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlaySound("reilsss/weapons/handGrenadethrow", CHAN_WEAPON, 1.0, 0)
-		TNT1 A 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownGrenadeF",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R013 XWVUTS 1
-		Goto Ready
+		Goto EndThrow
 	ThrowGrenadeG:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlaySound("reilsss/weapons/handGrenadethrow", CHAN_WEAPON, 1.0, 0)
-		TNT1 A 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownGrenadeG",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R013 XWVUTS 1
-		Goto Ready
+		Goto EndThrow
 	Altfire:
 		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",1,9)
 		R013 BCD 2
 		R013 E 2 A_PlaySound("reilsss/weapons/handGrenadetick", CHAN_WEAPON, 1.0, 0)
 		R013 FGHH 2
+		TNT1 A 2 A_GunFlash
+		TNT1 A 0 A_ReFire("HoldingLoopAlt")
+	HoldingLoopAlt:
+		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",16,2)
+		TNT1 A 0 A_GiveInventory("TNTThrowForce",1)
+		TNT1 A 2
+		TNT1 A 0 A_Refire("HoldingLoopAlt")
+		R013 I 2
+		R013 J 0 A_PlaySound("reilsss/weapons/handGrenadethrow", CHAN_WEAPON, 1.0, 0)
 		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",16,"ThrowNapalmG")
 		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",15,"ThrowNapalmG")
 		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",14,"ThrowNapalmF")
@@ -312,179 +195,56 @@ Actor AEoDHandGrenade : Weapon // 6019
 		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",3,"ThrowNapalm4")
 		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",2,"ThrowNapalm3")
 		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",1,"ThrowNapalm2")
-		TNT1 A 0 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 2 A_GunFlash
-		TNT1 A 0 A_ReFire
 	ThrowNapalm1:
-		R013 I 2
-		R013 J 0 A_PlaySound("reilsss/weapons/handGrenadethrow", CHAN_WEAPON, 1.0, 0)
-		TNT1 A 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownNapalmGrenade1",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R013 XWVUTS 1
-		Goto Ready
+		Goto EndThrow
 	ThrowNapalm2:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlaySound("reilsss/weapons/handGrenadethrow", CHAN_WEAPON, 1.0, 0)
-		TNT1 A 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownNapalmGrenade2",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R013 XWVUTS 1
-		Goto Ready
+		Goto EndThrow
 	ThrowNapalm3:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlaySound("reilsss/weapons/handGrenadethrow", CHAN_WEAPON, 1.0, 0)
-		TNT1 A 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownNapalmGrenade3",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R013 XWVUTS 1
-		Goto Ready
+		Goto EndThrow
 	ThrowNapalm4:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlaySound("reilsss/weapons/handGrenadethrow", CHAN_WEAPON, 1.0, 0)
-		TNT1 A 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownNapalmGrenade4",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R013 XWVUTS 1
-		Goto Ready
+		Goto EndThrow
 	ThrowNapalm5:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlaySound("reilsss/weapons/handGrenadethrow", CHAN_WEAPON, 1.0, 0)
-		TNT1 A 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownNapalmGrenade5",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R013 XWVUTS 1
-		Goto Ready
+		Goto EndThrow
 	ThrowNapalm6:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlaySound("reilsss/weapons/handGrenadethrow", CHAN_WEAPON, 1.0, 0)
-		TNT1 A 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownNapalmGrenade6",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R013 XWVUTS 1
-		Goto Ready
+		Goto EndThrow
 	ThrowNapalm7:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlaySound("reilsss/weapons/handGrenadethrow", CHAN_WEAPON, 1.0, 0)
-		TNT1 A 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownNapalmGrenade7",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R013 XWVUTS 1
-		Goto Ready
+		Goto EndThrow
 	ThrowNapalm8:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlaySound("reilsss/weapons/handGrenadethrow", CHAN_WEAPON, 1.0, 0)
-		TNT1 A 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownNapalmGrenade8",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R013 XWVUTS 1
-		Goto Ready
+		Goto EndThrow
 	ThrowNapalm9:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlaySound("reilsss/weapons/handGrenadethrow", CHAN_WEAPON, 1.0, 0)
-		TNT1 A 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownNapalmGrenade9",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R013 XWVUTS 1
-		Goto Ready
+		Goto EndThrow
 	ThrowNapalmA:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlaySound("reilsss/weapons/handGrenadethrow", CHAN_WEAPON, 1.0, 0)
-		TNT1 A 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownNapalmGrenadeA",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R013 XWVUTS 1
-		Goto Ready
+		Goto EndThrow
 	ThrowNapalmB:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlaySound("reilsss/weapons/handGrenadethrow", CHAN_WEAPON, 1.0, 0)
-		TNT1 A 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownNapalmGrenadeB",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R013 XWVUTS 1
-		Goto Ready
+		Goto EndThrow
 	ThrowNapalmC:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlaySound("reilsss/weapons/handGrenadethrow", CHAN_WEAPON, 1.0, 0)
-		TNT1 A 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownNapalmGrenadeC",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R013 XWVUTS 1
-		Goto Ready
+		Goto EndThrow
 	ThrowNapalmD:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlaySound("reilsss/weapons/handGrenadethrow", CHAN_WEAPON, 1.0, 0)
-		TNT1 A 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownNapalmGrenadeD",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R013 XWVUTS 1
-		Goto Ready
+		Goto EndThrow
 	ThrowNapalmE:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlaySound("reilsss/weapons/handGrenadethrow", CHAN_WEAPON, 1.0, 0)
-		TNT1 A 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownNapalmGrenadeE",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R013 XWVUTS 1
-		Goto Ready
+		Goto EndThrow
 	ThrowNapalmF:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlaySound("reilsss/weapons/handGrenadethrow", CHAN_WEAPON, 1.0, 0)
-		TNT1 A 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownNapalmGrenadeF",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R013 XWVUTS 1
-		Goto Ready
+		Goto EndThrow
 	ThrowNapalmG:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlaySound("reilsss/weapons/handGrenadethrow", CHAN_WEAPON, 1.0, 0)
-		TNT1 A 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownNapalmGrenadeG",0,1,8,0)
+		Goto EndThrow		
+	EndThrow:
+		R013 J 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 JKLMNOPQ 1
 		TNT1 A 10
 		R013 XWVUTS 1
@@ -1009,40 +769,40 @@ Actor AEoDStickyMine : Weapon // 6023
 		R014 F -1
 		Loop
 	Deselect: 
-		TNT1 A 0 	
 		R014 B 1 A_Lower
-		TNT1 AA 0 A_Lower
-		Goto Deselect+1
+		R014 BB 0 A_Lower
+		Goto Deselect
 	Select:
-		TNT1 A 0 A_JumpIfInventory("StickyMineFireMode",1,6)
-		TNT1 A 0 	
-		TNT1 A 0 A_TakeInventory("TNTThrowForce",999) 
-		R014 B 1 A_Raise
-		TNT1 AA 0 A_Raise
-		Loop
-		TNT1 A 0 	
-		TNT1 A 0 A_TakeInventory("TNTThrowForce",999)
-		R014 A 1 A_Raise
-		TNT1 AA 0 A_Raise
+		"----" A 0 A_TakeInventory("TNTThrowForce",999999999) 
+		R014 A 0 A_JumpIfInventory("StickyMineFireMode",1,"SelLoop")
+		R014 B 0 
+	SelLoop:
+		"----" A 1 A_Raise
+		"----" AA 0 A_Raise
 		Loop
 	Ready:
 		TNT1 A 0 A_JumpIfInventory("StickyMineFireMode",1,"Ready2")
-		R014 B 4 A_WeaponReady
-		Goto Ready+1
+		R014 B 1 A_WeaponReady
+		Goto Ready
 	Ready2:
 		TNT1 A 0 A_JumpIfInventory("StickyMineFireMode",1,1)
 		Goto Ready
-		
-		R014 A 4 A_WeaponReady
-		Goto Ready2+1
+		R014 A 1 A_WeaponReady
+		Goto Ready2
 	Fire:
-		TNT1 A 0 A_JumpIfInventory("AEGrenade",1,1)
-		Goto Ready
-		
+		TNT1 A 0 A_JumpIfNoAmmo("Ready")
 		TNT1 A 0 A_JumpIfInventory("StickyMineFireMode",1,"Sticky")
 	Mine:
-		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",1,5)
+		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",1,"Hold")
 		R014 GHII 2
+		TNT1 A 0 A_GunFlash
+	Hold:
+		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",16,2)
+		TNT1 A 0 A_GiveInventory("TNTThrowForce",1)
+		TNT1 A 2
+		TNT1 A 0 A_Refire
+		R013 I 2
+		R013 J 0 A_PlayWeaponSound("reilsss/weapons/stickyminethrow")
 		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",16,"ThrowMineG")
 		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",15,"ThrowMineG")
 		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",14,"ThrowMineF")
@@ -1059,179 +819,57 @@ Actor AEoDStickyMine : Weapon // 6023
 		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",3,"ThrowMine4")
 		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",2,"ThrowMine3")
 		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",1,"ThrowMine2")
-		TNT1 A 0 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 2 A_GunFlash
-		TNT1 A 0 A_ReFire
+		Goto ThrowMine1
 	ThrowMine1:
-		R013 I 2
-		R013 J 0 A_PlayWeaponSound("reilsss/weapons/stickyminethrow")
-		R013 J 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownMine1",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R014 NOP 2
-		Goto Ready
+		Goto EndThrow
 	ThrowMine2:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlayWeaponSound("reilsss/weapons/stickyminethrow")
-		R013 J 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownMine2",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R014 NOP 2
-		Goto Ready
+		Goto EndThrow
 	ThrowMine3:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlayWeaponSound("reilsss/weapons/stickyminethrow")
-		R013 J 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownMine3",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R014 NOP 2
-		Goto Ready
+		Goto EndThrow
 	ThrowMine4:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlayWeaponSound("reilsss/weapons/stickyminethrow")
-		R013 J 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownMine4",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R014 NOP 2
-		Goto Ready
+		Goto EndThrow
 	ThrowMine5:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlayWeaponSound("reilsss/weapons/stickyminethrow")
-		R013 J 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownMine5",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R014 NOP 2
-		Goto Ready
+		Goto EndThrow
 	ThrowMine6:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlayWeaponSound("reilsss/weapons/stickyminethrow")
-		R013 J 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownMine6",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R014 NOP 2
-		Goto Ready
+		Goto EndThrow
 	ThrowMine7:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlayWeaponSound("reilsss/weapons/stickyminethrow")
-		R013 J 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownMine7",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R014 NOP 2
-		Goto Ready
+		Goto EndThrow
 	ThrowMine8:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlayWeaponSound("reilsss/weapons/stickyminethrow")
-		R013 J 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownMine8",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R014 NOP 2
-		Goto Ready
+		Goto EndThrow
 	ThrowMine9:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlayWeaponSound("reilsss/weapons/stickyminethrow")
-		R013 J 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownMine9",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R014 NOP 2
-		Goto Ready
+		Goto EndThrow
 	ThrowMineA:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlayWeaponSound("reilsss/weapons/stickyminethrow")
-		R013 J 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownMineA",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R014 NOP 2
-		Goto Ready
+		Goto EndThrow
 	ThrowMineB:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlayWeaponSound("reilsss/weapons/stickyminethrow")
-		R013 J 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownMineB",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R014 NOP 2
-		Goto Ready
+		Goto EndThrow
 	ThrowMineC:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlayWeaponSound("reilsss/weapons/stickyminethrow")
-		R013 J 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownMineC",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R014 NOP 2
-		Goto Ready
+		Goto EndThrow
 	ThrowMineD:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlayWeaponSound("reilsss/weapons/stickyminethrow")
-		R013 J 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownMineD",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R014 NOP 2
-		Goto Ready
+		Goto EndThrow
 	ThrowMineE:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlayWeaponSound("reilsss/weapons/stickyminethrow")
-		R013 J 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownMineE",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R014 NOP 2
-		Goto Ready
+		Goto EndThrow
 	ThrowMineF:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlayWeaponSound("reilsss/weapons/stickyminethrow")
-		R013 J 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownMineF",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R014 NOP 2
-		Goto Ready
+		Goto EndThrow
 	ThrowMineG:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlayWeaponSound("reilsss/weapons/stickyminethrow")
-		R013 J 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownMineG",0,1,8,0)
+		Goto EndThrow
+	EndThrow:
+		R013 J 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 JKLMNOPQ 1
 		TNT1 A 10
 		R014 NOP 2
@@ -1239,6 +877,14 @@ Actor AEoDStickyMine : Weapon // 6023
 	Sticky:
 		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",1,5)
 		R014 JLMM 2
+		TNT1 A 0 A_GunFlash
+	StickyHold:
+		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",16,2)
+		TNT1 A 0 A_GiveInventory("TNTThrowForce",1)
+		TNT1 A 2
+		TNT1 A 0 A_Refire("StickyHold")
+		R013 I 2
+		R013 J 0 A_PlayWeaponSound("reilsss/weapons/stickyminethrow")
 		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",16,"ThrowStickyG")
 		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",15,"ThrowStickyG")
 		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",14,"ThrowStickyF")
@@ -1255,183 +901,54 @@ Actor AEoDStickyMine : Weapon // 6023
 		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",3,"ThrowSticky4")
 		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",2,"ThrowSticky3")
 		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",1,"ThrowSticky2")
-		TNT1 A 0 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 2 A_GunFlash
-		TNT1 A 0 A_ReFire
 	ThrowSticky1:
-		R013 I 2
-		R013 J 0 A_PlayWeaponSound("reilsss/weapons/stickyminethrow")
-		R013 J 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownSticky1",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R014 NOP 2
-		Goto Ready
+		Goto EndThrow
 	ThrowSticky2:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlayWeaponSound("reilsss/weapons/stickyminethrow")
-		R013 J 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownSticky2",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R014 NOP 2
-		Goto Ready
+		Goto EndThrow
 	ThrowSticky3:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlayWeaponSound("reilsss/weapons/stickyminethrow")
-		R013 J 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownSticky3",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R014 NOP 2
-		Goto Ready
+		Goto EndThrow
 	ThrowSticky4:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlayWeaponSound("reilsss/weapons/stickyminethrow")
-		R013 J 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownSticky4",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R014 NOP 2
-		Goto Ready
+		Goto EndThrow
 	ThrowSticky5:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlayWeaponSound("reilsss/weapons/stickyminethrow")
-		R013 J 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownSticky5",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R014 NOP 2
-		Goto Ready
+		Goto EndThrow
 	ThrowSticky6:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlayWeaponSound("reilsss/weapons/stickyminethrow")
-		R013 J 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownSticky6",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R014 NOP 2
-		Goto Ready
+		Goto EndThrow
 	ThrowSticky7:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlayWeaponSound("reilsss/weapons/stickyminethrow")
-		R013 J 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownSticky7",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R014 NOP 2
-		Goto Ready
+		Goto EndThrow
 	ThrowSticky8:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlayWeaponSound("reilsss/weapons/stickyminethrow")
-		R013 J 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownSticky8",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R014 NOP 2
-		Goto Ready
+		Goto EndThrow
 	ThrowSticky9:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlayWeaponSound("reilsss/weapons/stickyminethrow")
-		R013 J 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownSticky9",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R014 NOP 2
-		Goto Ready
+		Goto EndThrow
 	ThrowStickyA:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlayWeaponSound("reilsss/weapons/stickyminethrow")
-		R013 J 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownStickyA",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R014 NOP 2
-		Goto Ready
+		Goto EndThrow
 	ThrowStickyB:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlayWeaponSound("reilsss/weapons/stickyminethrow")
-		R013 J 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownStickyB",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R014 NOP 2
-		Goto Ready
+		Goto EndThrow
 	ThrowStickyC:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlayWeaponSound("reilsss/weapons/stickyminethrow")
-		R013 J 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownStickyC",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R014 NOP 2
-		Goto Ready
+		Goto EndThrow
 	ThrowStickyD:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlayWeaponSound("reilsss/weapons/stickyminethrow")
-		R013 J 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownStickyD",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R014 NOP 2
-		Goto Ready
+		Goto EndThrow
 	ThrowStickyE:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlayWeaponSound("reilsss/weapons/stickyminethrow")
-		R013 J 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownStickyE",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R014 NOP 2
-		Goto Ready
+		Goto EndThrow
 	ThrowStickyF:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlayWeaponSound("reilsss/weapons/stickyminethrow")
-		R013 J 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownStickyF",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R014 NOP 2
-		Goto Ready
+		Goto EndThrow
 	ThrowStickyG:
-		TNT1 A 2 A_GiveInventory("TNTThrowForce",1)
-		TNT1 A 0 A_Refire
-		R013 I 2
-		R013 J 0 A_PlayWeaponSound("reilsss/weapons/stickyminethrow")
-		R013 J 0 A_TakeInventory("TNTThrowForce",999999)
 		R013 J 0 A_FireCustomMissile("ThrownStickyG",0,1,8,0)
-		R013 JKLMNOPQ 1
-		TNT1 A 10
-		R014 NOP 2
-		Goto Ready
+		Goto EndThrow
 	AltFire:
 		BFGN E 0 A_JumpIfInventory("StickyMineFireMode",1,"AltFire2")	
 	AltFire1:
@@ -1542,11 +1059,12 @@ Actor ThrownMine1
 	States
 	{
 	Spawn:
-		TNT1 A 0 
-		TNT1 A 0 ThrustThingZ(0,random(10,12),0,1)
+		TNT1 A 0 NoDelay ThrustThingZ(0,random(10,12),0,1)
+	S2:
 		TNT1 A 0 A_AlertMonsters
+	S3:
 		R014 C 2
-		Goto Spawn+3
+		Loop
 	Death:
 		TNT1 A 0 A_PlaySound("reilsss/weapons/stickymineexplode")
 		EXP3 A 0 Bright A_Explode(250,140,1)
@@ -1566,75 +1084,69 @@ Actor ThrownMine4 : ThrownMine1
 	States
 	{
 	Spawn:
-		TNT1 A 0 
-		TNT1 A 0 ThrustThingZ(0,random(12,14),0,1)
-		R014 C 2 
-		Goto Spawn+2
+		TNT1 A 0 NoDelay ThrustThingZ(0,random(12,14),0,1)
+		Goto "Super::S2"
 	}
 }
 
-Actor ThrownMine5 : ThrownMine4 { Speed 12 }
+Actor ThrownMine5 : ThrownMine1 { Speed 12 }
 
-Actor ThrownMine6 : ThrownMine4 { Speed 13 }
+Actor ThrownMine6 : ThrownMine1 { Speed 13 }
 
-Actor ThrownMine7 : ThrownMine4
+Actor ThrownMine7 : ThrownMine1
 {
 	Speed 15
 	States
 	{
 	Spawn:
-		TNT1 A 0 
-		TNT1 A 0 ThrustThingZ(0,random(14,16),0,1)
-		R014 C 2 
-		Goto Spawn+2
+		TNT1 A 0 NoDelay ThrustThingZ(0,random(14,16),0,1)
+		Goto "Super::S2"
 	}
 }
 
-Actor ThrownMine8 : ThrownMine7 { Speed 16 }
+Actor ThrownMine8 : ThrownMine1 { Speed 16 }
 
-Actor ThrownMine9 : ThrownMine7 { Speed 18 }
+Actor ThrownMine9 : ThrownMine1 { Speed 18 }
 
-Actor ThrownMineA : ThrownMine7
+Actor ThrownMineA : ThrownMine1
 {
 	Speed 19
 	States
 	{
 	Spawn:
-		TNT1 A 0 
-		TNT1 A 0 ThrustThingZ(0,random(16,18),0,1)
-		R014 C 2 
-		Goto Spawn+2
+		TNT1 A 0 NoDelay ThrustThingZ(0,random(16,18),0,1)
+		Goto "Super::S2"
 	}
 }
 
-Actor ThrownMineB : ThrownMineA { Speed 21 }
+Actor ThrownMineB : ThrownMine1 { Speed 21 }
 
-Actor ThrownMineC : ThrownMineA { Speed 22 }
+Actor ThrownMineC : ThrownMine1 { Speed 22 }
 
-Actor ThrownMineD : ThrownMineA
+Actor ThrownMineD : ThrownMine1
 {
 	Speed 24
 	States
 	{
 	Spawn:
-		TNT1 A 0 
-		TNT1 A 0 ThrustThingZ(0,random(18,20),0,1)
+		TNT1 A 0 NoDelay ThrustThingZ(0,random(18,20),0,1)
 		R014 C 2 
 		Goto Spawn+2
 	}
 }
 
-Actor ThrownMineE : ThrownMineD { Speed 25 }
+Actor ThrownMineE : ThrownMine1 { Speed 25 }
 
-Actor ThrownMineF : ThrownMineD { Speed 27 }
+Actor ThrownMineF : ThrownMine1 { Speed 27 }
 
-Actor ThrownMineG : ThrownMineD { Speed 28 }
+Actor ThrownMineG : ThrownMine1 { Speed 28 }
 
 Actor ThrownSticky1
 {
 	Projectile
 	+Shootable //So alt fire works.
-	+SeekerMissile //So A_Fire works.
+	//+SeekerMissile //So A_Fire works.
+	+HITTRACER
 	+DontSplash
 	+ForceRadiusDmg
 	+EXTREMEDEATH
@@ -1651,18 +1163,12 @@ Actor ThrownSticky1
 	States
 	{
 	Spawn:
-		TNT1 A 0 
-		TNT1 A 0 ThrustThingZ(0,random(10,12),0,1)
+		TNT1 A 0 NoDelay ThrustThingZ(0,random(10,12),0,1)
+	S2:
 		TNT1 A 0 A_AlertMonsters
+	S3:
 		R014 DE 2
-		Goto Spawn+4
-	Stickening:
-		TNT1 A 0 A_ChangeFlag("THRUACTORS",1)
-		TNT1 A 0 A_NoGravity
-		TNT1 A 0 A_SeekerMissile(0,0,1,256,0)
-		R014 DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD 1 Bright A_Warp(AAPTR_TRACER,0,0,32,0,WARPF_COPYINTERPOLATION|WARPF_NOCHECKPOSITION)
-		R014 DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD 1 Bright A_Warp(AAPTR_TRACER,0,0,32,0,WARPF_COPYINTERPOLATION|WARPF_NOCHECKPOSITION)
-		Goto StickyMineOnEnemy
+		Loop
 	Death:
 		R014 D 0 A_ChangeFlag("THRUACTORS",1)
 		R014 D 0 A_NoGravity
@@ -1671,10 +1177,16 @@ Actor ThrownSticky1
 		TNT1 A 0 Bright A_Explode(250,140,1)
 		TNT1 A 10 A_SpawnItemEx("NewExplosionMedium",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		Stop
+	Stickening:
+		R014 DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD 1 Bright A_Warp(AAPTR_TRACER,0,0,32,0,WARPF_COPYINTERPOLATION|WARPF_NOCHECKPOSITION)
+		R014 DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD 1 Bright A_Warp(AAPTR_TRACER,0,0,32,0,WARPF_COPYINTERPOLATION|WARPF_NOCHECKPOSITION)
+		Goto Explode
 	XDeath:
-		TNT1 A 0 A_Stop
+		TNT1 A 0 A_ChangeFlag("THRUACTORS",1)
+		TNT1 A 0 A_Stop		
+		TNT1 A 0 A_NoGravity
 		Goto Stickening
-	StickyMineOnEnemy:
+	Explode:
 		TNT1 A 0 A_PlaySound("reilsss/weapons/stickymineexplode")
 		TNT1 A 0 Bright A_Explode(250,140,1)
 		TNT1 A 10 A_SpawnItemEx("NewExplosionMedium",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
@@ -1692,69 +1204,61 @@ Actor ThrownSticky4 : ThrownSticky1
 	States
 	{
 	Spawn:
-		TNT1 A 0 
-		TNT1 A 0 ThrustThingZ(0,random(12,14),0,1)
-		R014 DE 2 
-		Goto Spawn+2
+		TNT1 A 0 NoDelay ThrustThingZ(0,random(12,14),0,1)
+		Goto "Super::S2"
 	}
 }
 
-Actor ThrownSticky5 : ThrownSticky4 { Speed 12 }
+Actor ThrownSticky5 : ThrownSticky1 { Speed 12 }
 
-Actor ThrownSticky6 : ThrownSticky4 { Speed 13 }
+Actor ThrownSticky6 : ThrownSticky1 { Speed 13 }
 
-Actor ThrownSticky7 : ThrownSticky4
+Actor ThrownSticky7 : ThrownSticky1
 {
 	Speed 15
 	States
 	{
 	Spawn:
-		TNT1 A 0 
 		TNT1 A 0 ThrustThingZ(0,random(14,16),0,1)
-		R014 DE 2
-		Goto Spawn+2
+		Goto "Super::S2"
 	}
 }
 
-Actor ThrownSticky8 : ThrownSticky7 { Speed 16 }
+Actor ThrownSticky8 : ThrownSticky1 { Speed 16 }
 
-Actor ThrownSticky9 : ThrownSticky7 { Speed 18 }
+Actor ThrownSticky9 : ThrownSticky1 { Speed 18 }
 
-Actor ThrownStickyA : ThrownSticky7
+Actor ThrownStickyA : ThrownSticky1
 {
 	Speed 19
 	States
 	{
 	Spawn:
-		TNT1 A 0 
-		TNT1 A 0 ThrustThingZ(0,random(16,18),0,1)
-		R014 DE 2 
-		Goto Spawn+2
+		TNT1 A 0 NoDelay ThrustThingZ(0,random(16,18),0,1)
+		Goto "Super::S2"
 	}
 }
 
-Actor ThrownStickyB : ThrownStickyA { Speed 21 }
+Actor ThrownStickyB : ThrownSticky1 { Speed 21 }
 
-Actor ThrownStickyC : ThrownStickyA { Speed 22 }
+Actor ThrownStickyC : ThrownSticky1 { Speed 22 }
 
-Actor ThrownStickyD : ThrownStickyA
+Actor ThrownStickyD : ThrownSticky1
 {
 	Speed 24
 	States
 	{
 	Spawn:
-		TNT1 A 0 
-		TNT1 A 0 ThrustThingZ(0,random(18,20),0,1)
-		R014 DE 2 
-		Goto Spawn+2
+		TNT1 A 0 NoDelay ThrustThingZ(0,random(18,20),0,1)
+		Goto "Super::S2"
 	}
 }
 
-Actor ThrownStickyE : ThrownStickyD { Speed 25 }
+Actor ThrownStickyE : ThrownSticky1 { Speed 25 }
 
-Actor ThrownStickyF : ThrownStickyD { Speed 27 }
+Actor ThrownStickyF : ThrownSticky1 { Speed 27 }
 
-Actor ThrownStickyG : ThrownStickyD { Speed 28 }
+Actor ThrownStickyG : ThrownSticky1 { Speed 28 }
 
 Actor StickyMineDrop : CustomInventory
 {
@@ -1832,13 +1336,13 @@ Actor AEoDStickyMineNoAmmo : AEoDStickyMineItem
 // [Ms] This weapon has very bad energy in it. 
 // Rename "BoneStaff" items to "NecromanticBoneStaff" to prevent future corruption.
 
-Actor AEoDNecromanticBoneStaffItem : CustomInventory 6035
+Actor AEoDBoneStaffItem : CustomInventory 6035
 {
 	+FLOORCLIP
 	+INVENTORY.IGNORESKILL
 	Scale 0.5
 	Inventory.Amount 1
-	Inventory.PickupMessage "You found the Necromantic Bonestaff"
+	Inventory.PickupMessage "You found the Necromantic Bone Staff!"
 	Inventory.PickupSound "pickuppiece"
 	States
 	{
@@ -1846,27 +1350,27 @@ Actor AEoDNecromanticBoneStaffItem : CustomInventory 6035
 		NBSP A -1
 		Loop
 	Pickup:
-		TNT1 A 0 A_JumpIfInventory("AEoDNecromanticBoneStaff",1,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("AEoDBoneStaff",1,"Ammo")
 		TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",1) <= 0,"Nothing")
 		TNT1 A 0 A_GiveInventory("Weapon1Count",1)
 		TNT1 A 0 A_GiveInventory("BoneStaffDrop",1)
-		TNT1 A 0 A_GiveInventory("AEoDNecromanticBoneStaff",1)
+		TNT1 A 0 A_GiveInventory("AEoDBoneStaff",1)
 		TNT1 A 0 	
 		Stop
 	Nothing:
-		TNT1 A 0 A_JumpIfInventory("AEoDNecromanticBoneStaff",1,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("AEoDBoneStaff",1,"Ammo")
 		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
 		Goto Pickup+2
 		
 		TNT1 A 0 ACS_NamedExecute("s798",0,1,8,0)
 		Fail
 	Ammo:
-		TNT1 A 0 A_GiveInventory("AEoDNecromanticBoneStaff",1)
+		TNT1 A 0 A_GiveInventory("AEoDBoneStaff",1)
 		Stop
 	}
 }
 
-Actor AEoDNecromanticBoneStaff : Weapon // 6035
+Actor AEoDBoneStaff : Weapon // 6035
 {
 	+FLOORCLIP
 	+WEAPON.CHEATNOTWEAPON
@@ -1877,10 +1381,10 @@ Actor AEoDNecromanticBoneStaff : Weapon // 6035
 	Weapon.AmmoUse1 1
 	Weapon.AmmoUse2 2
 	Weapon.SelectionOrder 31337	// I totally mean it.
-	Inventory.PickupMessage "You found the Necromantic Bonestaff"
+	Inventory.PickupMessage "You found the Necromantic Bone Staff!"
 	Inventory.PickupSound "pickuppiece"
 	Weapon.UpSound "weapons/draw"
-	Tag "Necromantic Bonestaff"
+	Tag "Necromantic Bone Staff"
 	Scale 0.5
 	States 
 	{ 
@@ -2104,18 +1608,18 @@ Actor DroppedBoneStaff
 	{
 	Spawn:
 		NBSP A 15
-		TNT1 A 0 A_SpawnItemEx("AEoDNecromanticBoneStaffNoAmmo",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER,0)
+		TNT1 A 0 A_SpawnItemEx("AEoDBoneStaffNoAmmo",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER,0)
 		Stop
 	}
 }
 
-Actor AEoDNecromanticBoneStaffNoAmmo : AEoDNecromanticBoneStaffItem
+Actor AEoDBoneStaffNoAmmo : AEoDBoneStaffItem
 {
 	+FLOORCLIP
 	+INVENTORY.IGNORESKILL
 	Scale 0.5
 	Inventory.Amount 1
-	Inventory.PickupMessage "You found the Necromantic Bonestaff"
+	Inventory.PickupMessage "You found the Necromantic Bone Staff!"
 	Inventory.PickupSound "pickuppiece"
 	States
 	{
@@ -2125,15 +1629,15 @@ Actor AEoDNecromanticBoneStaffNoAmmo : AEoDNecromanticBoneStaffItem
 	Pickup:
 		TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",1) <= 0,"Nothing")
 		TNT1 A 0 A_JumpIfInventory("DarkMana",6,"Ammo")
-		TNT1 A 0 A_JumpIfInventory("AEoDNecromanticBoneStaff",1,2)
+		TNT1 A 0 A_JumpIfInventory("AEoDBoneStaff",1,2)
 		TNT1 A 0 A_GiveInventory("Weapon1Count",1)
 		TNT1 A 0 A_GiveInventory("BoneStaffDrop",1)
-		TNT1 A 0 A_GiveInventory("AEoDNecromanticBoneStaff",1)
+		TNT1 A 0 A_GiveInventory("AEoDBoneStaff",1)
 		TNT1 A 0 A_TakeInventory("DarkMana",6)
 		TNT1 A 0 	
 		Stop
 	Nothing:
-		TNT1 A 0 A_JumpIfInventory("AEoDNecromanticBoneStaff",1,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("AEoDBoneStaff",1,"Ammo")
 		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
 		Goto Pickup+2
 		
@@ -2141,10 +1645,10 @@ Actor AEoDNecromanticBoneStaffNoAmmo : AEoDNecromanticBoneStaffItem
 		Fail
 	Ammo:
 		TNT1 A 0 A_TakeInventory("DarkMana",6)
-		TNT1 A 0 A_JumpIfInventory("AEoDNecromanticBoneStaff",1,2)
+		TNT1 A 0 A_JumpIfInventory("AEoDBoneStaff",1,2)
 		TNT1 A 0 A_GiveInventory("Weapon1Count",1)
 		TNT1 A 0 A_GiveInventory("BoneStaffDrop",1)
-		TNT1 A 0 A_GiveInventory("AEoDNecromanticBoneStaff",1)
+		TNT1 A 0 A_GiveInventory("AEoDBoneStaff",1)
 		Stop
 	}
 }
@@ -2447,6 +1951,13 @@ Actor AEoDTNTItem : CustomInventory 6121
 	}
 }
 
+// [MC] I overhauled the code on this weapon big time. Cleaned it right the
+// fuck out. Lets keep it this way. There's no reason to be going through
+// what feels like an encyclopedia lengthed piece of code because someone
+// didn't know what state jumps are for, let along how much easier it is to
+// jump to STATE LABELS instead of OFFSETS. I hope I never have to do this
+// again but this time I felt obliged to.
+
 Actor AEoDTNT : Weapon // 6121
 {
 	+FLOORCLIP
@@ -2468,842 +1979,247 @@ Actor AEoDTNT : Weapon // 6121
 		ZIPL A 10
 		Loop
 	Ready:
-		DYN1 A 1
-		DYN1 B 1 	
+		DYN1 A 1 A_TakeInventory("TNTThrowForce",10000)
+		DYN1 B 1 A_TakeInventory("TNTCheck",10000)
 		DYN1 C 1 A_PlayWeaponSound("weapons/tnt/zippotop")
-		DYN1 D 1
-		DYN1 E 2
+		DYN1 D 1 
+		DYN1 E 2 
 		DYN1 F 1 A_PlayWeaponSound("weapons/tnt/zippolight")
 		DYN1 GH 1 Bright
+	ReadyLoop:
 		DYN1 IIIIJJJJKKKK 1 Bright A_WeaponReady
-		Goto Ready+8
+		Loop
 	Deselect:
-		DYN1 L 0 A_TakeInventory("TNTCheck",1)
-		DYN1 L 0 A_TakeInventory("TNTThrowForce",999999)
-		DYN1 L 0 A_TakeInventory("TNTTimer",33)
+		DYN1 L 0 A_TakeInventory("TNTCheck",10000)
+		DYN1 L 0 A_TakeInventory("TNTThrowForce",10000)
 		DYN1 LM 1 Bright A_Lower
 		DYN1 N 1 A_PlayWeaponSound("weapons/tnt/zippotop")
 		DYN1 OPQ 1 A_Lower
-		TNT1 A 0 	
+	DesLoop:
 		TNT1 A 1 A_Lower
-		TNT1 A 0 A_Lower
-		Goto Deselect+9
-		
-		DY1T M 1 A_Lower
-		TNT1 A 0 	
 		TNT1 AA 0 A_Lower
-		Goto Deselect+13
+		Loop
+	DesNoAmmo:
+		DY1T M 1 A_Lower
+	DesNoLoop:
+		"----" A 0 A_Lower
+		"----" AA 0 A_Lower
+		Loop
 	Select:
-		DYN1 L 0 A_TakeInventory("TNTCheck",1)
+		DYN1 L 0 A_TakeInventory("TNTCheck",10000)
 		DYN1 L 0 A_TakeInventory("TNTThrowForce",999999)
-		DYN1 L 0 A_TakeInventory("TNTTimer",33)
+	SelLoop:
 		TNT1 AA 0 A_Raise
-		Goto Select+3
-	Fire:
-		DY1L A 0 Bright A_JumpIfInventory("TNTCheck",1,6)
-		DY1L A 2 Bright
-		DY1L B 2 Bright A_PlaySoundEx("weapons/tnt/fuse","Weapon",1,0)
-		DY1L CD 2 Bright
-		DY1F A 0 A_GiveInventory("TNTCheck",1)
-		DY1F P 0 A_JumpIfInventory("TNTTimer",33,435)
-		DY1F P 0 A_JumpIfInventory("TNTTimer",32,423)
-		DY1F P 0 A_JumpIfInventory("TNTTimer",31,411)
-		DY1F P 0 A_JumpIfInventory("TNTTimer",30,399)
-		DY1F P 0 A_JumpIfInventory("TNTTimer",29,387)
-		DY1F P 0 A_JumpIfInventory("TNTTimer",28,375)
-		DY1F P 0 A_JumpIfInventory("TNTTimer",27,363)
-		DY1F P 0 A_JumpIfInventory("TNTTimer",26,351)
-		DY1F P 0 A_JumpIfInventory("TNTTimer",25,339)
-		DY1F P 0 A_JumpIfInventory("TNTTimer",24,327)
-		DY1F P 0 A_JumpIfInventory("TNTTimer",23,315)
-		DY1F P 0 A_JumpIfInventory("TNTTimer",22,303)
-		DY1F P 0 A_JumpIfInventory("TNTTimer",21,291)
-		DY1F P 0 A_JumpIfInventory("TNTTimer",20,279)
-		DY1F P 0 A_JumpIfInventory("TNTTimer",19,267)
-		DY1F P 0 A_JumpIfInventory("TNTTimer",18,255)
-		DY1F P 0 A_JumpIfInventory("TNTTimer",17,243)
-		DY1F P 0 A_JumpIfInventory("TNTTimer",16,231)
-		DY1F A 0 A_JumpIfInventory("TNTThrowForce",16,208)
-		DY1F A 0 A_JumpIfInventory("TNTThrowForce",15,196)
-		DY1F A 0 A_JumpIfInventory("TNTThrowForce",14,183)
-		DY1F A 0 A_JumpIfInventory("TNTThrowForce",13,170)
-		DY1F A 0 A_JumpIfInventory("TNTThrowForce",12,157)
-		DY1F A 0 A_JumpIfInventory("TNTThrowForce",11,144)
-		DY1F A 0 A_JumpIfInventory("TNTThrowForce",10,131)
-		DY1F A 0 A_JumpIfInventory("TNTThrowForce",9,118)
-		DY1F A 0 A_JumpIfInventory("TNTThrowForce",8,105)
-		DY1F A 0 A_JumpIfInventory("TNTThrowForce",7,92)
-		DY1F A 0 A_JumpIfInventory("TNTThrowForce",6,79)
-		DY1F A 0 A_JumpIfInventory("TNTThrowForce",5,66)
-		DY1F A 0 A_JumpIfInventory("TNTThrowForce",4,53)
-		DY1F A 0 A_JumpIfInventory("TNTThrowForce",3,40)
-		DY1F A 0 A_JumpIfInventory("TNTThrowForce",2,27)
-		DY1F A 0 A_JumpIfInventory("TNTThrowForce",1,14)
-		DY1F A 0 A_GiveInventory("TNTTimer",1)
-		DY1F A 0 A_GiveInventory("TNTThrowForce",1)
-		DY1F A 2 Bright A_GunFlash
-		DY1F A 0 Bright A_ReFire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNT1",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F A 0 Bright A_GiveInventory("TNTTimer",1)
-		DY1F A 2 Bright A_GiveInventory("TNTThrowForce",1)
-		DY1F A 0 Bright A_Refire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNT2",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F B 0 Bright A_GiveInventory("TNTTimer",1)
-		DY1F B 2 Bright A_GiveInventory("TNTThrowForce",1)
-		DY1F B 0 Bright A_Refire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNT3",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F B 0 Bright A_GiveInventory("TNTTimer",1)
-		DY1F B 2 Bright A_GiveInventory("TNTThrowForce",1)
-		DY1F B 0 Bright A_Refire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNT4",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F C 0 Bright A_GiveInventory("TNTTimer",1)
-		DY1F C 2 Bright A_GiveInventory("TNTThrowForce",1)
-		DY1F C 0 Bright A_Refire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNT5",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F C 0 Bright A_GiveInventory("TNTTimer",1)
-		DY1F C 2 Bright A_GiveInventory("TNTThrowForce",1)
-		DY1F C 0 Bright A_Refire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNT6",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F D 0 Bright A_GiveInventory("TNTTimer",1)
-		DY1F D 2 Bright A_GiveInventory("TNTThrowForce",1)
-		DY1F D 0 Bright A_Refire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNT7",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F D 0 Bright A_GiveInventory("TNTTimer",1)
-		DY1F D 2 Bright A_GiveInventory("TNTThrowForce",1)
-		DY1F D 0 Bright A_Refire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNT8",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F E 0 Bright A_GiveInventory("TNTTimer",1)
-		DY1F E 2 Bright A_GiveInventory("TNTThrowForce",1)
-		DY1F E 0 Bright A_Refire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNT9",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F E 0 Bright A_GiveInventory("TNTTimer",1)
-		DY1F E 2 Bright A_GiveInventory("TNTThrowForce",1)
-		DY1F E 0 Bright A_Refire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTA",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F F 0 Bright A_GiveInventory("TNTTimer",1)
-		DY1F F 2 Bright A_GiveInventory("TNTThrowForce",1)
-		DY1F F 0 Bright A_Refire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTB",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F F 0 Bright A_GiveInventory("TNTTimer",1)
-		DY1F F 2 Bright A_GiveInventory("TNTThrowForce",1)
-		DY1F F 0 Bright A_Refire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTC",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F G 0 Bright A_GiveInventory("TNTTimer",1)
-		DY1F G 2 Bright A_GiveInventory("TNTThrowForce",1)
-		DY1F G 0 Bright A_Refire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTD",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F G 0 Bright A_GiveInventory("TNTTimer",1)
-		DY1F G 2 Bright A_GiveInventory("TNTThrowForce",1)
-		DY1F G 0 Bright A_Refire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTE",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F H 0 Bright A_GiveInventory("TNTTimer",1)
-		DY1F H 2 Bright A_GiveInventory("TNTThrowForce",1)
-		DY1F H 0 Bright A_Refire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTF",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F H 0 Bright A_GiveInventory("TNTTimer",1)
-		DY1F H 2 Bright A_GiveInventory("TNTThrowForce",1)
-		DY1F H 0 Bright A_Refire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTG",0,1,8,0)
-		Goto EndOfFire
-		
-	EndOfFire:
-		DY1T H 0 Bright A_TakeInventory("TNTCheck")
-		DY1T H 0 Bright A_TakeInventory("TNTTimer",33)
-		DY1T HIJKL 2 Bright
-		DY1T M 0 Bright A_JumpIfInventory("AEGrenade",1,7)
-		DY1T AAAAAA 0 A_CheckReload
-		Goto Deselect+11
-		
-		DY1T MNOPQRS 2 Bright
-		Goto Ready+8
-		
-		DY1F I 4 Bright A_GiveInventory("TNTTimer",1)
-		DY1F I 0 Bright A_ReFire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTG",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F J 4 Bright A_GiveInventory("TNTTimer",1)
-		DY1F J 0 Bright A_ReFire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTG",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F K 4 Bright A_GiveInventory("TNTTimer",1)
-		DY1F K 0 Bright A_ReFire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTG",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F L 4 Bright A_GiveInventory("TNTTimer",1)
-		DY1F L 0 Bright A_ReFire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTG",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F M 4 Bright A_GiveInventory("TNTTimer",1)
-		DY1F M 0 Bright A_ReFire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTG",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F N 4 Bright A_GiveInventory("TNTTimer",1)
-		DY1F N 0 Bright A_ReFire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTG",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F O 4 Bright A_GiveInventory("TNTTimer",1)
-		DY1F O 0 Bright A_ReFire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTG",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F P 4 Bright A_GiveInventory("TNTTimer",1)
-		DY1F P 0 Bright A_ReFire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTG",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F Q 4 Bright A_GiveInventory("TNTTimer",1)
-		DY1F Q 0 Bright A_ReFire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTG",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F R 4 Bright A_GiveInventory("TNTTimer",1)
-		DY1F R 0 Bright A_ReFire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTG",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F S 4 Bright A_GiveInventory("TNTTimer",1)
-		DY1F S 0 Bright A_ReFire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTG",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F T 4 Bright A_GiveInventory("TNTTimer",1)
-		DY1F T 0 Bright A_ReFire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTG",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F U 4 Bright A_GiveInventory("TNTTimer",1)
-		DY1F U 0 Bright A_ReFire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTG",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F V 4 Bright A_GiveInventory("TNTTimer",1)
-		DY1F V 0 Bright A_ReFire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTG",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F W 4 Bright A_GiveInventory("TNTTimer",1)
-		DY1F W 0 Bright A_ReFire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTG",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F X 4 Bright A_GiveInventory("TNTTimer",1)
-		DY1F X 0 Bright A_ReFire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTG",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F Y 4 Bright A_GiveInventory("TNTTimer",1)
-		DY1F Y 0 Bright A_ReFire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTG",0,1,8,0)
-		Goto EndOfFire
-		
-		TNT1 A 0 A_StopSoundEx("Weapon")
-		TNT1 A 0 A_TakeInventory("TNTCheck",1)
-		TNT1 A 0 A_TakeInventory("TNTThrowForce",999999)
-		TNT1 A 0 A_TakeInventory("TNTTimer",33)
-		TNT1 A 20 Bright A_FireCustomMissile("PlayerTNToops",0,1,0,0)
-		Goto Ready
+		Loop
 	AltFire:
+		DY1L A 0 A_GiveInventory("TNTAltToken",1)
+		Goto Cont
+	Fire:
+		DY1L A 0 A_TakeInventory("TNTAltToken",10000)
+	Cont:
 		DY1L A 0 Bright A_JumpIfInventory("TNTCheck",1,6)
 		DY1L A 2 Bright
 		DY1L B 2 Bright A_PlaySoundEx("weapons/tnt/fuse","Weapon",1,0)
 		DY1L CD 2 Bright
 		DY1F A 0 A_GiveInventory("TNTCheck",1)
-		DY1F P 0 A_JumpIfInventory("TNTTimer",33,435)
-		DY1F P 0 A_JumpIfInventory("TNTTimer",32,423)
-		DY1F P 0 A_JumpIfInventory("TNTTimer",31,411)
-		DY1F P 0 A_JumpIfInventory("TNTTimer",30,399)
-		DY1F P 0 A_JumpIfInventory("TNTTimer",29,387)
-		DY1F P 0 A_JumpIfInventory("TNTTimer",28,375)
-		DY1F P 0 A_JumpIfInventory("TNTTimer",27,363)
-		DY1F P 0 A_JumpIfInventory("TNTTimer",26,351)
-		DY1F P 0 A_JumpIfInventory("TNTTimer",25,339)
-		DY1F P 0 A_JumpIfInventory("TNTTimer",24,327)
-		DY1F P 0 A_JumpIfInventory("TNTTimer",23,315)
-		DY1F P 0 A_JumpIfInventory("TNTTimer",22,303)
-		DY1F P 0 A_JumpIfInventory("TNTTimer",21,291)
-		DY1F P 0 A_JumpIfInventory("TNTTimer",20,279)
-		DY1F P 0 A_JumpIfInventory("TNTTimer",19,267)
-		DY1F P 0 A_JumpIfInventory("TNTTimer",18,255)
-		DY1F P 0 A_JumpIfInventory("TNTTimer",17,243)
-		DY1F P 0 A_JumpIfInventory("TNTTimer",16,231)
-		DY1F A 0 A_JumpIfInventory("TNTThrowForce",16,208)
-		DY1F A 0 A_JumpIfInventory("TNTThrowForce",15,196)
-		DY1F A 0 A_JumpIfInventory("TNTThrowForce",14,183)
-		DY1F A 0 A_JumpIfInventory("TNTThrowForce",13,170)
-		DY1F A 0 A_JumpIfInventory("TNTThrowForce",12,157)
-		DY1F A 0 A_JumpIfInventory("TNTThrowForce",11,144)
-		DY1F A 0 A_JumpIfInventory("TNTThrowForce",10,131)
-		DY1F A 0 A_JumpIfInventory("TNTThrowForce",9,118)
-		DY1F A 0 A_JumpIfInventory("TNTThrowForce",8,105)
-		DY1F A 0 A_JumpIfInventory("TNTThrowForce",7,92)
-		DY1F A 0 A_JumpIfInventory("TNTThrowForce",6,79)
-		DY1F A 0 A_JumpIfInventory("TNTThrowForce",5,66)
-		DY1F A 0 A_JumpIfInventory("TNTThrowForce",4,53)
-		DY1F A 0 A_JumpIfInventory("TNTThrowForce",3,40)
-		DY1F A 0 A_JumpIfInventory("TNTThrowForce",2,27)
-		DY1F A 0 A_JumpIfInventory("TNTThrowForce",1,14)
-		DY1F A 0 A_GiveInventory("TNTTimer",1)
 		DY1F A 0 A_GiveInventory("TNTThrowForce",1)
 		DY1F A 2 Bright A_GunFlash
-		DY1F A 0 Bright A_ReFire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimed1",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F A 0 Bright A_GiveInventory("TNTTimer",1)
+		DY1F A 0 Bright A_ReFire("Hold1")
+		Goto PreEndFire
+	Hold1:
 		DY1F A 2 Bright A_GiveInventory("TNTThrowForce",1)
-		DY1F A 0 Bright A_Refire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimed2",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F B 0 Bright A_GiveInventory("TNTTimer",1)
+		DY1F A 0 Bright A_Refire("Hold2")	Goto PreEndFire
+	Hold2:
 		DY1F B 2 Bright A_GiveInventory("TNTThrowForce",1)
-		DY1F B 0 Bright A_Refire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimed3",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F B 0 Bright A_GiveInventory("TNTTimer",1)
+		DY1F B 0 Bright A_Refire("Hold3")	Goto PreEndFire
+	Hold3:
 		DY1F B 2 Bright A_GiveInventory("TNTThrowForce",1)
-		DY1F B 0 Bright A_Refire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimed4",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F C 0 Bright A_GiveInventory("TNTTimer",1)
+		DY1F B 0 Bright A_Refire("Hold4")	Goto PreEndFire
+	Hold4:
 		DY1F C 2 Bright A_GiveInventory("TNTThrowForce",1)
-		DY1F C 0 Bright A_Refire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimed5",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F C 0 Bright A_GiveInventory("TNTTimer",1)
+		DY1F C 0 Bright A_Refire("Hold5")	Goto PreEndFire
+	Hold5:
 		DY1F C 2 Bright A_GiveInventory("TNTThrowForce",1)
-		DY1F C 0 Bright A_Refire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimed6",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F D 0 Bright A_GiveInventory("TNTTimer",1)
+		DY1F C 0 Bright A_Refire("Hold6")	Goto PreEndFire
+	Hold6:
 		DY1F D 2 Bright A_GiveInventory("TNTThrowForce",1)
-		DY1F D 0 Bright A_Refire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimed7",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F D 0 Bright A_GiveInventory("TNTTimer",1)
+		DY1F D 0 Bright A_Refire("Hold7")	Goto PreEndFire
+	Hold7:
 		DY1F D 2 Bright A_GiveInventory("TNTThrowForce",1)
-		DY1F D 0 Bright A_Refire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimed8",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F E 0 Bright A_GiveInventory("TNTTimer",1)
+		DY1F D 0 Bright A_Refire("Hold8")	Goto PreEndFire
+	Hold8:
 		DY1F E 2 Bright A_GiveInventory("TNTThrowForce",1)
-		DY1F E 0 Bright A_Refire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimed9",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F E 0 Bright A_GiveInventory("TNTTimer",1)
+		DY1F E 0 Bright A_Refire("Hold9")	Goto PreEndFire
+	Hold9:
 		DY1F E 2 Bright A_GiveInventory("TNTThrowForce",1)
-		DY1F E 0 Bright A_Refire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimedA",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F F 0 Bright A_GiveInventory("TNTTimer",1)
+		DY1F E 0 Bright A_Refire("Hold10")	Goto PreEndFire
+	Hold10:
 		DY1F F 2 Bright A_GiveInventory("TNTThrowForce",1)
-		DY1F F 0 Bright A_Refire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimedB",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F F 0 Bright A_GiveInventory("TNTTimer",1)
+		DY1F F 0 Bright A_Refire("Hold11")	Goto PreEndFire
+	Hold11:
 		DY1F F 2 Bright A_GiveInventory("TNTThrowForce",1)
-		DY1F F 0 Bright A_Refire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimedC",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F G 0 Bright A_GiveInventory("TNTTimer",1)
+		DY1F F 0 Bright A_Refire("Hold12")	Goto PreEndFire
+	Hold12:
 		DY1F G 2 Bright A_GiveInventory("TNTThrowForce",1)
-		DY1F G 0 Bright A_Refire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimedD",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F G 0 Bright A_GiveInventory("TNTTimer",1)
+		DY1F G 0 Bright A_Refire("Hold13")	Goto PreEndFire
+	Hold13:
 		DY1F G 2 Bright A_GiveInventory("TNTThrowForce",1)
-		DY1F G 0 Bright A_Refire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimedE",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F H 0 Bright A_GiveInventory("TNTTimer",1)
+		DY1F G 0 Bright A_Refire("Hold14")	Goto PreEndFire
+	Hold14:
 		DY1F H 2 Bright A_GiveInventory("TNTThrowForce",1)
-		DY1F H 0 Bright A_Refire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimedF",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F H 0 Bright A_GiveInventory("TNTTimer",1)
+		DY1F H 0 Bright A_Refire("Hold15")	Goto PreEndFire
+	Hold15:
 		DY1F H 2 Bright A_GiveInventory("TNTThrowForce",1)
-		DY1F H 0 Bright A_Refire
+		DY1F H 0 Bright A_Refire("HoldA")	Goto PreEndFire
+	Throw1:
+		DY1T G 0 A_JumpIfInventory("TNTAltToken",1,2)
+		DY1T G 2 Bright A_FireCustomMissile("PlayerTNT1",0,1,8,0)		Goto EndOfFire
+		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimed1",0,1,8,0)	Goto EndOfFire
+	Throw2:
+		DY1T G 0 A_JumpIfInventory("TNTAltToken",1,2)
+		DY1T G 2 Bright A_FireCustomMissile("PlayerTNT2",0,1,8,0)		Goto EndOfFire
+		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimed2",0,1,8,0)	Goto EndOfFire
+	Throw3:
+		DY1T G 0 A_JumpIfInventory("TNTAltToken",1,2)
+		DY1T G 2 Bright A_FireCustomMissile("PlayerTNT3",0,1,8,0)		Goto EndOfFire
+		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimed3",0,1,8,0)	Goto EndOfFire
+	Throw4:
+		DY1T G 0 A_JumpIfInventory("TNTAltToken",1,2)
+		DY1T G 2 Bright A_FireCustomMissile("PlayerTNT4",0,1,8,0)		Goto EndOfFire
+		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimed4",0,1,8,0)	Goto EndOfFire
+	Throw5:
+		DY1T G 0 A_JumpIfInventory("TNTAltToken",1,2)
+		DY1T G 2 Bright A_FireCustomMissile("PlayerTNT5",0,1,8,0)		Goto EndOfFire
+		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimed5",0,1,8,0)	Goto EndOfFire
+	Throw6:
+		DY1T G 0 A_JumpIfInventory("TNTAltToken",1,2)
+		DY1T G 2 Bright A_FireCustomMissile("PlayerTNT6",0,1,8,0)		Goto EndOfFire
+		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimed6",0,1,8,0)	Goto EndOfFire
+	Throw7:
+		DY1T G 0 A_JumpIfInventory("TNTAltToken",1,2)
+		DY1T G 2 Bright A_FireCustomMissile("PlayerTNT7",0,1,8,0)		Goto EndOfFire
+		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimed7",0,1,8,0)	Goto EndOfFire
+	Throw8:
+		DY1T G 0 A_JumpIfInventory("TNTAltToken",1,2)
+		DY1T G 2 Bright A_FireCustomMissile("PlayerTNT8",0,1,8,0)		Goto EndOfFire
+		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimed8",0,1,8,0)	Goto EndOfFire
+	Throw9:
+		DY1T G 0 A_JumpIfInventory("TNTAltToken",1,2)
+		DY1T G 2 Bright A_FireCustomMissile("PlayerTNT9",0,1,8,0)		Goto EndOfFire
+		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimed9",0,1,8,0)	Goto EndOfFire
+	ThrowA:
+		DY1T G 0 A_JumpIfInventory("TNTAltToken",1,2)
+		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTA",0,1,8,0)		Goto EndOfFire
+		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimedA",0,1,8,0)	Goto EndOfFire
+	ThrowB:
+		DY1T G 0 A_JumpIfInventory("TNTAltToken",1,2)
+		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTB",0,1,8,0)		Goto EndOfFire
+		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimedB",0,1,8,0)	Goto EndOfFire
+	ThrowC:
+		DY1T G 0 A_JumpIfInventory("TNTAltToken",1,2)
+		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTC",0,1,8,0)		Goto EndOfFire
+		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimedC",0,1,8,0)	Goto EndOfFire
+	ThrowD:
+		DY1T G 0 A_JumpIfInventory("TNTAltToken",1,2)
+		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTD",0,1,8,0)		Goto EndOfFire
+		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimedD",0,1,8,0)	Goto EndOfFire
+	ThrowE:
+		DY1T G 0 A_JumpIfInventory("TNTAltToken",1,2)
+		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTE",0,1,8,0)		Goto EndOfFire
+		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimedE",0,1,8,0)	Goto EndOfFire	
+	ThrowF:
+		DY1T G 0 A_JumpIfInventory("TNTAltToken",1,2)
+		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTF",0,1,8,0)		Goto EndOfFire
+		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimedF",0,1,8,0)	Goto EndOfFire
+	ThrowG:
+		DY1T G 0 A_JumpIfInventory("TNTAltToken",1,2)
+		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTG",0,1,8,0)		Goto EndOfFire
+		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimedG",0,1,8,0)	Goto EndOfFire
+	PreEndFire:
 		DY1T A 2 Bright
 		DY1T B 5 Bright
 		DY1T CDEF 2 Bright
 		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimedG",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1T H 0 Bright A_TakeInventory("TNTCheck")
-		DY1T H 0 Bright A_TakeInventory("TNTTimer",33)
+		"----" A 0 A_JumpIfInventory("TNTThrowForce",16,"ThrowG")
+		"----" A 0 A_JumpIfInventory("TNTThrowForce",15,"ThrowF")
+		"----" A 0 A_JumpIfInventory("TNTThrowForce",14,"ThrowE")
+		"----" A 0 A_JumpIfInventory("TNTThrowForce",13,"ThrowD")
+		"----" A 0 A_JumpIfInventory("TNTThrowForce",12,"ThrowC")
+		"----" A 0 A_JumpIfInventory("TNTThrowForce",11,"ThrowB")
+		"----" A 0 A_JumpIfInventory("TNTThrowForce",10,"ThrowA")
+		"----" A 0 A_JumpIfInventory("TNTThrowForce",9,"Throw9")
+		"----" A 0 A_JumpIfInventory("TNTThrowForce",8,"Throw8")
+		"----" A 0 A_JumpIfInventory("TNTThrowForce",7,"Throw7")
+		"----" A 0 A_JumpIfInventory("TNTThrowForce",6,"Throw6")
+		"----" A 0 A_JumpIfInventory("TNTThrowForce",5,"Throw5")
+		"----" A 0 A_JumpIfInventory("TNTThrowForce",4,"Throw4")
+		"----" A 0 A_JumpIfInventory("TNTThrowForce",3,"Throw3")
+		"----" A 0 A_JumpIfInventory("TNTThrowForce",2,"Throw2")
+		"----" A 0 A_JumpIfInventory("TNTThrowForce",1,"Throw1")
+		Goto Throw1		
+	EndOfFire:
+		DY1T H 0 A_TakeInventory("TNTAltToken",10000)
+		DY1T H 0 A_TakeInventory("TNTThrowForce",999999)
+		DY1T H 0 A_TakeInventory("TNTCheck",10000)
 		DY1T HIJKL 2 Bright
-		DY1T M 0 Bright A_JumpIfInventory("AEGrenade",1,7)
-		DY1T AAAAAA 0 A_CheckReload
-		Goto Deselect+11
-		
+		DY1T M 0 A_JumpIfNoAmmo("DesNoAmmo")		
 		DY1T MNOPQRS 2 Bright
 		Goto Ready+8
-		
-		DY1F I 4 Bright A_GiveInventory("TNTTimer",1)
-		DY1F I 0 Bright A_ReFire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimedG",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F J 4 Bright A_GiveInventory("TNTTimer",1)
-		DY1F J 0 Bright A_ReFire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimedG",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F K 4 Bright A_GiveInventory("TNTTimer",1)
-		DY1F K 0 Bright A_ReFire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimedG",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F L 4 Bright A_GiveInventory("TNTTimer",1)
-		DY1F L 0 Bright A_ReFire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimedG",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F M 4 Bright A_GiveInventory("TNTTimer",1)
-		DY1F M 0 Bright A_ReFire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimedG",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F N 4 Bright A_GiveInventory("TNTTimer",1)
-		DY1F N 0 Bright A_ReFire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimedG",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F O 4 Bright A_GiveInventory("TNTTimer",1)
-		DY1F O 0 Bright A_ReFire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimedG",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F P 4 Bright A_GiveInventory("TNTTimer",1)
-		DY1F P 0 Bright A_ReFire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimedG",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F Q 4 Bright A_GiveInventory("TNTTimer",1)
-		DY1F Q 0 Bright A_ReFire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimedG",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F R 4 Bright A_GiveInventory("TNTTimer",1)
-		DY1F R 0 Bright A_ReFire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimedG",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F S 4 Bright A_GiveInventory("TNTTimer",1)
-		DY1F S 0 Bright A_ReFire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimedG",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F T 4 Bright A_GiveInventory("TNTTimer",1)
-		DY1F T 0 Bright A_ReFire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimedG",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F U 4 Bright A_GiveInventory("TNTTimer",1)
-		DY1F U 0 Bright A_ReFire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimedG",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F V 4 Bright A_GiveInventory("TNTTimer",1)
-		DY1F V 0 Bright A_ReFire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimedG",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F W 4 Bright A_GiveInventory("TNTTimer",1)
-		DY1F W 0 Bright A_ReFire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimedG",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F X 4 Bright A_GiveInventory("TNTTimer",1)
-		DY1F X 0 Bright A_ReFire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimedG",0,1,8,0)
-		Goto EndOfFire
-		
-		DY1F Y 4 Bright A_GiveInventory("TNTTimer",1)
-		DY1F Y 0 Bright A_ReFire
-		DY1T A 2 Bright
-		DY1T B 5 Bright
-		DY1T CDEF 2 Bright
-		DY1T G 0 Bright A_PlayWeaponSound("caleb/tnt")
-		DY1T G 0 Bright A_TakeInventory("TNTThrowForce",999999)
-		DY1T G 2 Bright A_FireCustomMissile("PlayerTNTTimedG",0,1,8,0)
-		Goto EndOfFire
-		
+	HoldA:
+		DY1F I 4 Bright
+		DY1F I 0 A_ReFire("HoldB")	Goto PreEndFire
+	HoldB:
+		DY1F J 4 Bright
+		DY1F J 0 A_ReFire("HoldC")	Goto PreEndFire
+	HoldC:	
+		DY1F K 4 Bright 
+		DY1F K 0 A_ReFire("HoldD")	Goto PreEndFire
+	HoldD:
+		DY1F L 4 Bright 
+		DY1F L 0 A_ReFire("HoldE")	Goto PreEndFire
+	HoldE:
+		DY1F M 4 Bright 
+		DY1F M 0 A_ReFire("HoldF")	Goto PreEndFire
+	HoldF:
+		DY1F N 4 Bright 
+		DY1F N 0 A_ReFire("HoldG")	Goto PreEndFire
+	HoldG:
+		DY1F O 4 Bright 
+		DY1F O 0 A_ReFire("HoldH")	Goto PreEndFire
+	HoldH:
+		DY1F P 4 Bright
+		DY1F P 0 A_ReFire("HoldI")	Goto PreEndFire
+	HoldI:
+		DY1F Q 4 Bright
+		DY1F Q 0 A_ReFire("HoldJ")	Goto PreEndFire
+	HoldJ:
+		DY1F R 4 Bright
+		DY1F R 0 A_ReFire("HoldK")	Goto PreEndFire
+	HoldK:
+		DY1F S 4 Bright
+		DY1F S 0 A_ReFire("HoldL")	Goto PreEndFire
+	HoldL:
+		DY1F T 4 Bright
+		DY1F T 0 A_ReFire("HoldM")	Goto PreEndFire
+	HoldM:
+		DY1F U 4 Bright
+		DY1F U 0 A_ReFire("HoldN")	Goto PreEndFire
+	HoldN:
+		DY1F V 4 Bright
+		DY1F V 0 A_ReFire("HoldO")	Goto PreEndFire
+	HoldO:
+		DY1F W 4 Bright
+		DY1F W 0 A_ReFire("HoldP")	Goto PreEndFire
+	HoldP:
+		DY1F X 4 Bright
+		DY1F X 0 A_ReFire("HoldQ")	Goto PreEndFire
+	HoldQ:
+		DY1F Y 4 Bright
+		DY1F Y 0 A_ReFire("Overheld")	Goto PreEndFire
+	Overheld:
 		TNT1 A 0 A_StopSoundEx("Weapon")
-		TNT1 A 0 A_TakeInventory("TNTCheck",1)
+		TNT1 A 0 A_TakeInventory("TNTCheck",10000)
 		TNT1 A 0 A_TakeInventory("TNTThrowForce",999999)
-		TNT1 A 0 A_TakeInventory("TNTTimer",33)
 		TNT1 A 20 Bright A_FireCustomMissile("PlayerTNToops",0,1,0,0)
 		Goto Ready
 	Flash:
@@ -3359,6 +2275,8 @@ Actor AEoDTNT : Weapon // 6121
 		Loop
 	}
 }
+
+Actor TNTAltToken : Inventory { }
 
 Actor SuperRocketBit2I : SuperRocketBit
 {
@@ -3443,9 +2361,9 @@ Actor PlayerTNT7 : PlayerTNT1
 	}
 }
 
-Actor PlayerTNT8 : PlayerTNT7 { Speed 16 }
+Actor PlayerTNT8 : PlayerTNT1 { Speed 16 }
 
-Actor PlayerTNT9 : PlayerTNT7 { Speed 18 }
+Actor PlayerTNT9 : PlayerTNT1 { Speed 18 }
 
 Actor PlayerTNTA : PlayerTNT1
 {
@@ -3460,9 +2378,9 @@ Actor PlayerTNTA : PlayerTNT1
 	}
 }
 
-Actor PlayerTNTB : PlayerTNTA { Speed 21 }
+Actor PlayerTNTB : PlayerTNT1 { Speed 21 }
 
-Actor PlayerTNTC : PlayerTNTA { Speed 22 }
+Actor PlayerTNTC : PlayerTNT1 { Speed 22 }
 
 Actor PlayerTNTD : PlayerTNT1
 {
@@ -3477,11 +2395,11 @@ Actor PlayerTNTD : PlayerTNT1
 	}
 }
 
-Actor PlayerTNTE : PlayerTNTD { Speed 25 }
+Actor PlayerTNTE : PlayerTNT1 { Speed 25 }
 
-Actor PlayerTNTF : PlayerTNTD { Speed 27 }
+Actor PlayerTNTF : PlayerTNT1 { Speed 27 }
 
-Actor PlayerTNTG : PlayerTNTD { Speed 28 }
+Actor PlayerTNTG : PlayerTNT1 { Speed 28 }
 
 Actor PlayerTNTTimed
 {
@@ -3673,8 +2591,6 @@ Actor TNTCheck : Inventory {}
 
 Actor TNTThrowForce : Inventory { Inventory.MaxAmount 16 }
 
-Actor TNTTimer : Inventory { Inventory.MaxAmount 33 }
-
 Actor TNTDrop : CustomInventory
 {
 	Inventory.MaxAmount 1
@@ -3806,51 +2722,52 @@ Actor AEoDRemoteDetonator : Weapon // 6119
 		REMD A 10
 		Loop
 	Ready:
-		TNT1 A 1
+		TNT1 A 1 A_TakeInventory("TNTThrowForce",100000)
 		DYN2 A 0 A_JumpIfInventory("AEGrenade",1,1)
 		Goto Ready+7
-		
+	ReadyUp:
 		DYN2 A 0 A_JumpIfInventory("TNTRemoteReady",1,5)
 		DYN2 ABCD 1
-		Goto Ready+48
-		
+		Goto R2
+	ReadyRemoteUp:
 		DYN2 MNOP 1
-		DYN2 Q 0 A_JumpIfInventory("TNTAmmo",1,25)
-		DYN2 Q 0 A_JumpIfInventory("AEGrenade",1,48)
+	ReadyNoAmmo:
+		DYN2 Q 0 A_JumpIfInventory("TNTAmmo",1,"R1")
+		DYN2 Q 0 A_JumpIfInventory("AEGrenade",1,"R3")
 		DYN2 Q 1 A_WeaponReady
-		DYN2 Q 0 A_JumpIfInventory("AEGrenade",1,46)
+		DYN2 Q 0 A_JumpIfInventory("AEGrenade",1,"R3")
 		DYN2 Q 1 A_WeaponReady
-		DYN2 R 0 A_JumpIfInventory("AEGrenade",1,44)
+		DYN2 R 0 A_JumpIfInventory("AEGrenade",1,"R3")
 		DYN2 R 1 A_WeaponReady
-		DYN2 R 0 A_JumpIfInventory("AEGrenade",1,42)
+		DYN2 R 0 A_JumpIfInventory("AEGrenade",1,"R3")
 		DYN2 R 1 A_WeaponReady
-		DYN2 S 0 A_JumpIfInventory("AEGrenade",1,40)
+		DYN2 S 0 A_JumpIfInventory("AEGrenade",1,"R3")
 		DYN2 S 1 A_WeaponReady
-		DYN2 S 0 A_JumpIfInventory("AEGrenade",1,38)
+		DYN2 S 0 A_JumpIfInventory("AEGrenade",1,"R3")
 		DYN2 S 1 A_WeaponReady
-		DYN2 T 0 A_JumpIfInventory("AEGrenade",1,36)
+		DYN2 T 0 A_JumpIfInventory("AEGrenade",1,"R3")
 		DYN2 T 1 A_WeaponReady
-		DYN2 T 0 A_JumpIfInventory("AEGrenade",1,34)
+		DYN2 T 0 A_JumpIfInventory("AEGrenade",1,"R3")
 		DYN2 T 1 A_WeaponReady
-		DYN2 S 0 A_JumpIfInventory("AEGrenade",1,32)
+		DYN2 S 0 A_JumpIfInventory("AEGrenade",1,"R3")
 		DYN2 S 1 A_WeaponReady
-		DYN2 S 0 A_JumpIfInventory("AEGrenade",1,30)
+		DYN2 S 0 A_JumpIfInventory("AEGrenade",1,"R3")
 		DYN2 S 1 A_WeaponReady
-		DYN2 R 0 A_JumpIfInventory("AEGrenade",1,28)
+		DYN2 R 0 A_JumpIfInventory("AEGrenade",1,"R3")
 		DYN2 R 1 A_WeaponReady
-		DYN2 R 0 A_JumpIfInventory("AEGrenade",1,26)
+		DYN2 R 0 A_JumpIfInventory("AEGrenade",1,"R3")
 		DYN2 R 1 A_WeaponReady
-		Goto Ready+12
-		
+		Loop
+	R1: //No TNT
 		DYN2 QQRRSSTTSSRR 2 A_WeaponReady
-		Goto Ready+11
-		
+		Loop
+	R2: //With TNT
 		DYN2 EEFFGGHHGGFF 2 A_WeaponReady
-		Goto Ready+48
-		
+		Loop
+	R3: //Raise TNT
 		DY2T N 0 A_GiveInventory("TNTAmmo",1)
 		DY2T NOPQ 2
-		Goto Ready+48
+		Goto R2
 	Deselect:
 		DYN2 I 0 A_JumpIfInventory("AEGrenade",1,1)
 		Goto Deselect+10
@@ -3877,272 +2794,121 @@ Actor AEoDRemoteDetonator : Weapon // 6119
 		TNT1 AA 0 A_Raise
 		Goto Select+4
 	Fire:
-		DYN2 E 0 A_JumpIfInventory("TNTRemoteReady",1,282)
+		DYN2 E 0 A_GiveInventory("TNTRemoteToken",1)
+		DYN2 E 0 A_JumpIfInventory("TNTRemoteReady",1,"Detonate")
 		DYN2 E 0 A_JumpIfInventory("AEGrenade",1,1)
-		Goto Ready+11
-		
-		DYN2 E 0 A_JumpIfInventory("TNTRemoteLight",6,268)
-		DYN2 E 0 A_JumpIfInventory("TNTRemoteLight",5,255)
-		DYN2 E 0 A_JumpIfInventory("TNTRemoteLight",4,242)
-		DYN2 E 0 A_JumpIfInventory("TNTRemoteLight",3,229)
-		DYN2 E 0 A_JumpIfInventory("TNTRemoteLight",2,216)
-		DYN2 E 0 A_JumpIfInventory("TNTRemoteLight",1,203)
-		DYN2 E 0 A_JumpIfInventory("TNTThrowForce",16,193)
-		DYN2 E 0 A_JumpIfInventory("TNTThrowForce",15,181)
-		DYN2 E 0 A_JumpIfInventory("TNTThrowForce",14,169)
-		DYN2 E 0 A_JumpIfInventory("TNTThrowForce",13,157)
-		DYN2 E 0 A_JumpIfInventory("TNTThrowForce",12,145)
-		DYN2 E 0 A_JumpIfInventory("TNTThrowForce",11,133)
-		DYN2 E 0 A_JumpIfInventory("TNTThrowForce",10,121)
-		DYN2 E 0 A_JumpIfInventory("TNTThrowForce",9,109)
-		DYN2 E 0 A_JumpIfInventory("TNTThrowForce",8,97)
-		DYN2 E 0 A_JumpIfInventory("TNTThrowForce",7,85)
-		DYN2 E 0 A_JumpIfInventory("TNTThrowForce",6,73)
-		DYN2 E 0 A_JumpIfInventory("TNTThrowForce",5,61)
-		DYN2 E 0 A_JumpIfInventory("TNTThrowForce",4,49)
-		DYN2 E 0 A_JumpIfInventory("TNTThrowForce",3,37)
-		DYN2 E 0 A_JumpIfInventory("TNTThrowForce",2,25)
-		DYN2 E 0 A_JumpIfInventory("TNTThrowForce",1,13)
+		Goto ReadyRemoteUp
 		DYN2 E 0 A_GiveInventory("TNTThrowForce",1)
 		DYN2 E 2 A_GunFlash
 		DYN2 E 0 A_ReFire
+		Goto EndFire
+		
+	EndFire:
 		DY2T A 2
 		DY2T B 5
 		DY2T CDEF 2
 		DY2T G 0 A_PlayWeaponSound("caleb/tnt")
-		DY2T G 0 A_TakeInventory("TNTThrowForce",999999)
-		DY2T G 2 A_FireCustomMissile("PlayerTNTRemote1",0,1,8,0)
-		Goto Fire+202
-		
-		DYN2 F 2 A_GiveInventory("TNTThrowForce",1)
-		DYN2 F 0 A_Refire
-		DY2T A 2
-		DY2T B 5
-		DY2T CDEF 2
-		DY2T G 0 A_PlayWeaponSound("caleb/tnt")
-		DY2T G 0 A_TakeInventory("TNTThrowForce",999999)
-		DY2T G 2 A_FireCustomMissile("PlayerTNTRemote2",0,1,8,0)
-		Goto Fire+202
-		
-		DYN2 G 2 A_GiveInventory("TNTThrowForce",1)
-		DYN2 G 0 A_Refire
-		DY2T A 2
-		DY2T B 5
-		DY2T CDEF 2
-		DY2T G 0 A_PlayWeaponSound("caleb/tnt")
-		DY2T G 0 A_TakeInventory("TNTThrowForce",999999)
-		DY2T G 2 A_FireCustomMissile("PlayerTNTRemote3",0,1,8,0)
-		Goto Fire+202
-		
-		DYN2 H 2 A_GiveInventory("TNTThrowForce",1)
-		DYN2 H 0 A_Refire
-		DY2T A 2
-		DY2T B 5
-		DY2T CDEF 2
-		DY2T G 0 A_PlayWeaponSound("caleb/tnt")
-		DY2T G 0 A_TakeInventory("TNTThrowForce",999999)
-		DY2T G 2 A_FireCustomMissile("PlayerTNTRemote4",0,1,8,0)
-		Goto Fire+202
-		
-		DYN2 G 2 A_GiveInventory("TNTThrowForce",1)
-		DYN2 G 0 A_Refire
-		DY2T A 2
-		DY2T B 5
-		DY2T CDEF 2
-		DY2T G 0 A_PlayWeaponSound("caleb/tnt")
-		DY2T G 0 A_TakeInventory("TNTThrowForce",999999)
-		DY2T G 2 A_FireCustomMissile("PlayerTNTRemote5",0,1,8,0)
-		Goto Fire+202
-		
-		DYN2 F 2 A_GiveInventory("TNTThrowForce",1)
-		DYN2 F 0 A_Refire
-		DY2T A 2
-		DY2T B 5
-		DY2T CDEF 2
-		DY2T G 0 A_PlayWeaponSound("caleb/tnt")
-		DY2T G 0 A_TakeInventory("TNTThrowForce",999999)
-		DY2T G 2 A_FireCustomMissile("PlayerTNTRemote6",0,1,8,0)
-		Goto Fire+202
-		
-		DYN2 E 1 A_GiveInventory("TNTThrowForce",1)
-		DYN2 E 0 A_Refire
-		DY2T A 2
-		DY2T B 5
-		DY2T CDEF 2
-		DY2T G 0 A_PlayWeaponSound("caleb/tnt")
-		DY2T G 0 A_TakeInventory("TNTThrowForce",999999)
-		DY2T G 2 A_FireCustomMissile("PlayerTNTRemote7",0,1,8,0)
-		Goto Fire+202
-		
-		DYN2 F 2 A_GiveInventory("TNTThrowForce",1)
-		DYN2 F 0 A_Refire
-		DY2T A 2
-		DY2T B 5
-		DY2T CDEF 2
-		DY2T G 0 A_PlayWeaponSound("caleb/tnt")
-		DY2T G 0 A_TakeInventory("TNTThrowForce",999999)
-		DY2T G 2 A_FireCustomMissile("PlayerTNTRemote8",0,1,8,0)
-		Goto Fire+202
-		
-		DYN2 G 2 A_GiveInventory("TNTThrowForce",1)
-		DYN2 G 0 A_Refire
-		DY2T A 2
-		DY2T B 5
-		DY2T CDEF 2
-		DY2T G 0 A_PlayWeaponSound("caleb/tnt")
-		DY2T G 0 A_TakeInventory("TNTThrowForce",999999)
-		DY2T G 2 A_FireCustomMissile("PlayerTNTRemote9",0,1,8,0)
-		Goto Fire+202
-		
-		DYN2 H 2 A_GiveInventory("TNTThrowForce",1)
-		DYN2 H 0 A_Refire
-		DY2T A 2
-		DY2T B 5
-		DY2T CDEF 2
-		DY2T G 0 A_PlayWeaponSound("caleb/tnt")
-		DY2T G 0 A_TakeInventory("TNTThrowForce",999999)
-		DY2T G 2 A_FireCustomMissile("PlayerTNTRemoteA",0,1,8,0)
-		Goto Fire+202
-		
-		DYN2 G 2 A_GiveInventory("TNTThrowForce",1)
-		DYN2 G 0 A_Refire
-		DY2T A 2
-		DY2T B 5
-		DY2T CDEF 2
-		DY2T G 0 A_PlayWeaponSound("caleb/tnt")
-		DY2T G 0 A_TakeInventory("TNTThrowForce",999999)
-		DY2T G 2 A_FireCustomMissile("PlayerTNTRemoteB",0,1,8,0)
-		Goto Fire+202
-		
-		DYN2 F 2 A_GiveInventory("TNTThrowForce",1)
-		DYN2 F 0 A_Refire
-		DY2T A 2
-		DY2T B 5
-		DY2T CDEF 2
-		DY2T G 0 A_PlayWeaponSound("caleb/tnt")
-		DY2T G 0 A_TakeInventory("TNTThrowForce",999999)
-		DY2T G 2 A_FireCustomMissile("PlayerTNTRemoteC",0,1,8,0)
-		Goto Fire+202
-		
-		DYN2 E 2 A_GiveInventory("TNTThrowForce",1)
-		DYN2 E 0 A_Refire
-		DY2T A 2
-		DY2T B 5
-		DY2T CDEF 2
-		DY2T G 0 A_PlayWeaponSound("caleb/tnt")
-		DY2T G 0 A_TakeInventory("TNTThrowForce",999999)
-		DY2T G 2 A_FireCustomMissile("PlayerTNTRemoteD",0,1,8,0)
-		Goto Fire+202
-		
-		DYN2 F 2 A_GiveInventory("TNTThrowForce",1)
-		DYN2 F 0 A_Refire
-		DY2T A 2
-		DY2T B 5
-		DY2T CDEF 2
-		DY2T G 0 A_PlayWeaponSound("caleb/tnt")
-		DY2T G 0 A_TakeInventory("TNTThrowForce",999999)
-		DY2T G 2 A_FireCustomMissile("PlayerTNTRemoteE",0,1,8,0)
-		Goto Fire+202
-		
-		DYN2 G 2 A_GiveInventory("TNTThrowForce",1)
-		DYN2 G 0 A_Refire
-		DY2T A 2
-		DY2T B 5
-		DY2T CDEF 2
-		DY2T G 0 A_PlayWeaponSound("caleb/tnt")
-		DY2T G 0 A_TakeInventory("TNTThrowForce",999999)
-		DY2T G 2 A_FireCustomMissile("PlayerTNTRemoteF",0,1,8,0)
-		Goto Fire+202
-		
-		DYN2 H 0 A_GiveInventory("TNTRemoteLight",1)
-		DYN2 H 2 A_GiveInventory("TNTThrowForce",1)
-		DYN2 H 0 A_Refire
-		DY2T A 2
-		DY2T B 5
-		DY2T CDEF 2
-		DY2T G 0 A_PlayWeaponSound("caleb/tnt")
-		DY2T G 0 A_TakeInventory("TNTThrowForce",999999)
-		DY2T G 2 A_FireCustomMissile("PlayerTNTRemoteG",0,1,8,0)
-		Goto Fire+202
-		
-		DY2T H 0 A_JumpIfInventory("AEGrenade",1,2)
-		DY2T H 0 A_TakeInventory("TNTAmmo",1)
-		DY2T HIJKL 2
-		DY2T M 0 A_GiveInventory("TNTRemoteReady",1)
-		Goto Ready+10
-		
-		DYN2 G 2 A_GiveInventory("TNTRemoteLight",1)
-		DYN2 G 0 A_Refire
-		DY2T A 2
-		DY2T B 5
-		DY2T CDEF 2
-		DY2T G 0 A_PlayWeaponSound("caleb/tnt")
-		DY2T G 0 A_TakeInventory("TNTThrowForce",999999)
-		DY2T G 0 A_TakeInventory("TNTRemoteLight",5)
-		DY2T G 2 A_FireCustomMissile("PlayerTNTRemoteG",0,1,8,0)
-		Goto Fire+202
-		
-		DYN2 F 2 A_GiveInventory("TNTRemoteLight",1)
-		DYN2 F 0 A_Refire
-		DY2T A 2
-		DY2T B 5
-		DY2T CDEF 2
-		DY2T G 0 A_PlayWeaponSound("caleb/tnt")
-		DY2T G 0 A_TakeInventory("TNTThrowForce",999999)
-		DY2T G 0 A_TakeInventory("TNTRemoteLight",5)
-		DY2T G 2 A_FireCustomMissile("PlayerTNTRemoteG",0,1,8,0)
-		Goto Fire+202
-		
-		DYN2 E 2 A_GiveInventory("TNTRemoteLight",1)
-		DYN2 E 0 A_Refire
-		DY2T A 2
-		DY2T B 5
-		DY2T CDEF 2
-		DY2T G 0 A_PlayWeaponSound("caleb/tnt")
-		DY2T G 0 A_TakeInventory("TNTThrowForce",999999)
-		DY2T G 0 A_TakeInventory("TNTRemoteLight",5)
-		DY2T G 2 A_FireCustomMissile("PlayerTNTRemoteG",0,1,8,0)
-		Goto Fire+202
-		
-		DYN2 F 2 A_GiveInventory("TNTRemoteLight",1)
-		DYN2 F 0 A_Refire
-		DY2T A 2
-		DY2T B 5
-		DY2T CDEF 2
-		DY2T G 0 A_PlayWeaponSound("caleb/tnt")
-		DY2T G 0 A_TakeInventory("TNTThrowForce",999999)
-		DY2T G 0 A_TakeInventory("TNTRemoteLight",5)
-		DY2T G 2 A_FireCustomMissile("PlayerTNTRemoteG",0,1,8,0)
-		Goto Fire+202
-		
-		DYN2 G 2 A_GiveInventory("TNTRemoteLight",1)
-		DYN2 G 0 A_Refire
-		DY2T A 2
-		DY2T B 5
-		DY2T CDEF 2
-		DY2T G 0 A_PlayWeaponSound("caleb/tnt")
-		DY2T G 0 A_TakeInventory("TNTThrowForce",999999)
-		DY2T G 0 A_TakeInventory("TNTRemoteLight",5)
-		DY2T G 2 A_FireCustomMissile("PlayerTNTRemoteG",0,1,8,0)
-		Goto Fire+202
-		
-		DYN2 H 2 A_TakeInventory("TNTRemoteLight",5)
-		DYN2 H 0 A_Refire
-		DY2T A 2
-		DY2T B 5
-		DY2T CDEF 2
-		DY2T G 0 A_PlayWeaponSound("caleb/tnt")
-		DY2T G 0 A_TakeInventory("TNTThrowForce",999999)
-		DY2T G 0 A_TakeInventory("TNTRemoteLight",5)
-		DY2T G 2 A_FireCustomMissile("PlayerTNTRemoteG",0,1,8,0)
-		Goto Fire+202
-		
-		DY2D A 0 A_TakeInventory("TNTRemoteLight",6)
+		DYN2 E 0 A_JumpIfInventory("TNTThrowForce",16,"ThrowG")
+		DYN2 E 0 A_JumpIfInventory("TNTThrowForce",15,"ThrowF")
+		DYN2 E 0 A_JumpIfInventory("TNTThrowForce",14,"ThrowE")
+		DYN2 E 0 A_JumpIfInventory("TNTThrowForce",13,"ThrowD")
+		DYN2 E 0 A_JumpIfInventory("TNTThrowForce",12,"ThrowC")
+		DYN2 E 0 A_JumpIfInventory("TNTThrowForce",11,"ThrowB")
+		DYN2 E 0 A_JumpIfInventory("TNTThrowForce",10,"ThrowA")
+		DYN2 E 0 A_JumpIfInventory("TNTThrowForce",9,"Throw9")
+		DYN2 E 0 A_JumpIfInventory("TNTThrowForce",8,"Throw8")
+		DYN2 E 0 A_JumpIfInventory("TNTThrowForce",7,"Throw7")
+		DYN2 E 0 A_JumpIfInventory("TNTThrowForce",6,"Throw6")
+		DYN2 E 0 A_JumpIfInventory("TNTThrowForce",5,"Throw5")
+		DYN2 E 0 A_JumpIfInventory("TNTThrowForce",4,"Throw4")
+		DYN2 E 0 A_JumpIfInventory("TNTThrowForce",3,"Throw3")
+		DYN2 E 0 A_JumpIfInventory("TNTThrowForce",2,"Throw2")
+		Goto Throw1
+	Throw1:		
+		DY2T G 2 A_FireCustomMissile("PlayerTNTRemote1",0,1,8,0)	Goto EndFire2
+	Throw2:
+		DY2T G 2 A_FireCustomMissile("PlayerTNTRemote2",0,1,8,0)	Goto EndFire2
+	Throw3:		
+		DY2T G 2 A_FireCustomMissile("PlayerTNTRemote3",0,1,8,0)	Goto EndFire2
+	Throw4:
+		DY2T G 2 A_FireCustomMissile("PlayerTNTRemote4",0,1,8,0)	Goto EndFire2
+	Throw5:		
+		DY2T G 2 A_FireCustomMissile("PlayerTNTRemote5",0,1,8,0)	Goto EndFire2
+	Throw6:
+		DY2T G 2 A_FireCustomMissile("PlayerTNTRemote6",0,1,8,0)	Goto EndFire2
+	Throw7:		
+		DY2T G 2 A_FireCustomMissile("PlayerTNTRemote7",0,1,8,0)	Goto EndFire2
+	Throw8:
+		DY2T G 2 A_FireCustomMissile("PlayerTNTRemote8",0,1,8,0)	Goto EndFire2
+	Throw9:		
+		DY2T G 2 A_FireCustomMissile("PlayerTNTRemote9",0,1,8,0)	Goto EndFire2
+	ThrowA:
+		DY2T G 2 A_FireCustomMissile("PlayerTNTRemoteA",0,1,8,0)	Goto EndFire2
+	ThrowB:		
+		DY2T G 2 A_FireCustomMissile("PlayerTNTRemoteB",0,1,8,0)	Goto EndFire2
+	ThrowC:
+		DY2T G 2 A_FireCustomMissile("PlayerTNTRemoteC",0,1,8,0)	Goto EndFire2
+	ThrowD:		
+		DY2T G 2 A_FireCustomMissile("PlayerTNTRemoteD",0,1,8,0)	Goto EndFire2
+	ThrowE:
+		DY2T G 2 A_FireCustomMissile("PlayerTNTRemoteE",0,1,8,0)	Goto EndFire2
+	ThrowF:		
+		DY2T G 2 A_FireCustomMissile("PlayerTNTRemoteF",0,1,8,0)	Goto EndFire2
+	ThrowG:
+		DY2T G 2 A_FireCustomMissile("PlayerTNTRemoteG",0,1,8,0)	Goto EndFire2
+	Hold1:
+		DYN2 G 0 A_JumpIfInventory("TNTThrowForce",16,2)
+		"----" A 0 A_GiveInventory("TNTThrowForce",1)
+		"----" A 2
+		"----" A 0 A_Refire("Hold2")
+		Goto EndFire
+	Hold2:
+		DYN2 H 0 A_JumpIfInventory("TNTThrowForce",16,2)
+		"----" A 0 A_GiveInventory("TNTThrowForce",1)
+		"----" A 2
+		"----" A 0 A_Refire("Hold3")
+		Goto EndFire
+	Hold3:
+		DYN2 G 0 A_JumpIfInventory("TNTThrowForce",16,2)
+		"----" A 0 A_GiveInventory("TNTThrowForce",1)
+		"----" A 2
+		"----" A 0 A_Refire("Hold4")
+		Goto EndFire
+	Hold4:
+		DYN2 F 0 A_JumpIfInventory("TNTThrowForce",16,2)
+		"----" A 0 A_GiveInventory("TNTThrowForce",1)
+		"----" A 2
+		"----" A 0 A_Refire("Hold5")
+		Goto EndFire
+	Hold5:
+		DYN2 E 0 A_JumpIfInventory("TNTThrowForce",16,2)
+		"----" A 0 A_GiveInventory("TNTThrowForce",1)
+		"----" A 2
+		"----" A 0 A_Refire("Hold6")
+		Goto EndFire
+	Hold6:
+		DYN2 F 0 A_JumpIfInventory("TNTThrowForce",16,2)
+		"----" A 0 A_GiveInventory("TNTThrowForce",1)
+		"----" A 2
+		"----" A 0 A_Refire("Hold1")
+		Goto EndFire
+	EndFire2:
+		DY2D A 0 A_TakeInventory("TNTThrowForce",100000)
+		DY2T A 0 A_JumpIfInventory("TNTRemoteReady",1,8)
+		DY2T A 2 A_PlayWeaponSound("caleb/tnt")
+		DY2T B 0 A_GiveInventory("TNTRemoteReady",1)
+		DY2T B 4
+		DYN2 STSR 2
+		Goto R3
+	Detonate:
+		DY2D A 0 A_TakeInventory("TNTThrowForce",100000)
 		DY2D A 0 A_TakeInventory("TNTRemoteReady",1)
 		DY2D A 2 A_PlayWeaponSound("weapons/tnt/detonate")
 		DY2D B 2
-		DY2D C 1 Thing_Destroy(4567)
-		DY2D C 1 Thing_Destroy(4568)
+		//DY2D C 0 A_ChangeFlag("DOHARMSPECIES",true)
+		//DY2D C 0 A_KillChildren("Normal",KILS_KILLMISSILES|KILS_EITHER,"PlayerTNTRemote", "PlayerTNT")
+		DY2D C 1 A_GiveToChildren("RemoteExploder",1)
+		//DY2D C 0 A_ChangeFlag("DOHARMSPECIES",false)
 		DY2D DE 2
 		DY2D E 0 A_JumpIfInventory("AEGrenade",1,7)
 		DY2D AAAAAA 0 A_CheckReload
@@ -4150,21 +2916,24 @@ Actor AEoDRemoteDetonator : Weapon // 6119
 		
 		DY2D E 0
 		Goto Ready
-		AltFire:
-		DY2T A 0 A_JumpIfInventory("AEGrenade",1,2)
+	AltFire:
+		DY2T A 0 A_JumpIfInventory("TNTRemoteToken",1,2)
+		DY2T A 0 A_GiveInventory("TNTRemoteToken",1)
+		DY2T A 0 A_JumpIfNoAmmo(1)
+		Goto AltReset 
 		DY2T A 0 A_TakeInventory("TNTAmmo",1)
-		Goto Ready+11
-		
-		DY2T A 0 A_JumpIfInventory("TNTRemoteReady",1,8)
+		Goto R2 
+	AltReset:
+		DY2T A 0 A_JumpIfInventory("TNTRemoteReady",1,"AltDrop")
 		DY2T A 2 A_PlayWeaponSound("caleb/tnt")
 		DY2T B 0 A_GiveInventory("TNTRemoteReady",1)
 		DY2T B 4 A_FireCustomMissile("PlayerTNTRemoteDrop",0,1,8,0)
 		DYN2 STSR 2
-		Goto Ready+11
-		
+		Goto R3
+	AltDrop:
 		DY2T N 0 A_TakeInventory("TNTRemoteReady",1)
 		DY2T NOPQ 2
-		Goto Ready+48
+		Goto R1
 	Flash:
 		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",16,32)
 		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",15,30)
@@ -4219,23 +2988,28 @@ Actor AEoDRemoteDetonator : Weapon // 6119
 	}
 }
 
-Actor TNTAmmo : Inventory
-{
-	Inventory.Amount 1
-	Inventory.MaxAmount 1
-}
+Actor TNTAmmo : Inventory { }
 
 Actor TNTRemoteLight : Inventory
-{
-	Inventory.Amount 1
-	Inventory.MaxAmount 6
-}
+{	Inventory.MaxAmount 6	}
 
 Actor TNTRemoteReady : Inventory
+{ Inventory.InterhubAmount 0 }
+
+Actor TNTRemoteToken : Inventory { }
+
+Actor RemoteExploder : CustomInventory
 {
-	Inventory.InterHubAmount 0
-	Inventory.Amount 1
-	Inventory.MaxAmount 1
+	+ALWAYSPICKUP
+	States
+	{
+	Pickup:
+		TNT1 A 0 A_JumpIf(CheckClass("PlayerTNTRemote",AAPTR_DEFAULT,1) ||
+						  CheckClass("PlayerTNTRemote1",AAPTR_DEFAULT,1),1)
+		Stop
+		TNT1 A 0 A_Die
+		Stop
+	}
 }
 
 Actor PlayerTNTRemote
@@ -4246,19 +3020,25 @@ Actor PlayerTNTRemote
 	Health 10
 	Damage 16
 	ReactionTime 70
+	Monster
+	-FRIENDLY
+	-SOLID
+	+NEVERTARGET
 	+EXTREMEDEATH
 	+SHOOTABLE
 	+FORCERADIUSDMG
 	+NOBLOOD
 	-COUNTKILL
+	+DOHARMSPECIES
+	Species "PlayerTNT"
 	States
 	{
 	Spawn:
-		TNT4 A 0
-		TNT4 A 0 Thing_ChangeTID(0,4568)
-		TNT4 A 2 Bright
-		TNT4 B 15
-		Goto Spawn+2
+		TNT4 A 0 NoDelay A_RearrangePointers(AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_DEFAULT,4)
+		TNT4 A 0 A_ChangeFlag("FRIENDLY",0)
+		TNT4 AA 2 Bright
+		TNT4 BBBBBBB 2
+		Loop
 	Death:
 		TNT1 A 0 A_PlaySoundEx("caleb/tnt/explode","SoundSlot5")
 		FRME A 0 Bright A_Explode(300,140,1)
@@ -4289,6 +3069,7 @@ Actor PlayerTNTRemote1
 	Gravity 0.65
 	Scale 0.5
 	PROJECTILE
+	-FRIENDLY
 	+GRENADETRAIL
 	-NOGRAVITY
 	-SOLID
@@ -4299,18 +3080,18 @@ Actor PlayerTNTRemote1
 	+CANBOUNCEWATER
 	+PAINLESS
 	+SHOOTABLE
+	+DONTREFLECT
 	BounceFactor 0.4
 	BounceCount 6
 	States
 	{
 	Spawn:
-		TNT5 A 0
-		TNT5 A 0 Thing_ChangeTID(0,4567)
+		TNT5 A 0 NoDelay A_RearrangePointers(AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_DEFAULT,4)
 		TNT5 A 0 ThrustThingZ(0,random(10,15),0,1)
 		TNT5 ABCDEFGH 3 Bright 
 		Goto Spawn+3
 	Death:
-		TNT1 A 0 A_SpawnItemEx("PlayerTNTRemote",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
+		TNT1 A 0 A_SpawnItemEx("PlayerTNTRemote",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS,0)
 		Stop
 	}
 }
@@ -4325,8 +3106,7 @@ Actor PlayerTNTRemote4 : PlayerTNTRemote1
 	States
 	{
 	Spawn:
-		TNT5 A 0
-		TNT5 A 0 Thing_ChangeTID(0,4567)
+		TNT5 A 0 NoDelay A_RearrangePointers(AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_DEFAULT,4)
 		TNT5 A 0 ThrustThingZ(0,random(12,14),0,1)
 		TNT5 ABCDEFGH 3 Bright 
 		Goto Spawn+3
@@ -4343,8 +3123,7 @@ Actor PlayerTNTRemote7 : PlayerTNTRemote1
 	States
 	{
 	Spawn:
-		TNT5 A 0
-		TNT5 A 0 Thing_ChangeTID(0,4567)
+		TNT5 A 0 NoDelay A_RearrangePointers(AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_DEFAULT,4)
 		TNT5 A 0 ThrustThingZ(0,random(14,16),0,1)
 		TNT5 ABCDEFGH 3 Bright 
 		Goto Spawn+3
@@ -4361,8 +3140,7 @@ Actor PlayerTNTRemoteA : PlayerTNTRemote1
 	States
 	{
 	Spawn:
-		TNT5 A 0
-		TNT5 A 0 Thing_ChangeTID(0,4567)
+		TNT5 A 0 NoDelay A_RearrangePointers(AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_DEFAULT,4)
 		TNT5 A 0 ThrustThingZ(0,random(16,18),0,1)
 		TNT5 ABCDEFGH 3 Bright 
 		Goto Spawn+3
@@ -4379,8 +3157,7 @@ Actor PlayerTNTRemoteD : PlayerTNTRemote1
 	States
 	{
 	Spawn:
-		TNT5 A 0
-		TNT5 A 0 Thing_ChangeTID(0,4567)
+		TNT5 A 0 NoDelay A_RearrangePointers(AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_DEFAULT,4)
 		TNT5 A 0 ThrustThingZ(0,random(18,20),0,1)
 		TNT5 ABCDEFGH 3 Bright
 		Goto Spawn+3
@@ -4401,9 +3178,7 @@ Actor PlayerTNTRemoteDrop : PlayerTNTRemote1
 	States
 	{
 	Spawn:
-		TNT5 A 0
-		TNT5 A 0 Thing_ChangeTID(0,4567)
-		TNT5 A 0
+		TNT5 A 0 NoDelay A_RearrangePointers(AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_DEFAULT,4)
 		TNT5 ABCDEFGH 3 Bright 
 		Goto Spawn+3
 	}
