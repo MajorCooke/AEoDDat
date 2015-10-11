@@ -2901,14 +2901,14 @@ Actor AEoDRemoteDetonator : Weapon // 6119
 		DYN2 STSR 2
 		Goto R3
 	Detonate:
+	//A_KillChildren won't work here if the player has friendly fire disabled.
+	//So instead, use A_GiveToChildren which targets the class PlayerTNTRemote
+	//and have it call A_Die instead. Simple as that.
 		DY2D A 0 A_TakeInventory("TNTThrowForce",100000)
 		DY2D A 0 A_TakeInventory("TNTRemoteReady",1)
 		DY2D A 2 A_PlayWeaponSound("weapons/tnt/detonate")
 		DY2D B 2
-		//DY2D C 0 A_ChangeFlag("DOHARMSPECIES",true)
-		//DY2D C 0 A_KillChildren("Normal",KILS_KILLMISSILES|KILS_EITHER,"PlayerTNTRemote", "PlayerTNT")
 		DY2D C 1 A_GiveToChildren("RemoteExploder",1)
-		//DY2D C 0 A_ChangeFlag("DOHARMSPECIES",false)
 		DY2D DE 2
 		DY2D E 0 A_JumpIfInventory("AEGrenade",1,7)
 		DY2D AAAAAA 0 A_CheckReload
