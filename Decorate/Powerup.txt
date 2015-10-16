@@ -1719,18 +1719,17 @@ ACTOR StoneOfRestoration : CustomInventory
     States
     {
     Spawn:
-	SUST ABCDEFGHIJKLMNOPQRSTUVWX 2
-	Loop
+		SUST ABCDEFGHIJKLMNOPQRSTUVWX 2
+		Loop
     Use:
-	TNT1 A 0 A_JumpIfInventory("PowerDemonMorph",1,"End")
-	TNT1 A 0 A_JumpIfInventory("MRegenTimer",1,"End")
-	TNT1 A 0 A_GiveInventory("MRegenTimer",1)
-	TNT1 A 0 A_GiveInventory("MRegenPalette",1)
-	TNT1 A 0 A_SpawnItemEx("MRegen1",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
-	Stop
+		TNT1 A 0 A_JumpIfInventory("PowerDemonMorph",1,"End")
+		TNT1 A 0 A_JumpIfInventory("PowerManaRegen",1,"End")
+		TNT1 A 0 A_GiveInventory("MRegenPalette",1)
+		TNT1 A 0 A_SpawnItemEx("MRegen1",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
+		Stop
 	End:
-	TNT1 A 0
-	Fail
+		TNT1 A 0
+		Fail
     }
 }
 
@@ -1753,42 +1752,21 @@ ACTOR MRegenPalette : PowerupGiver
 
 ACTOR MRegen1
 {
-    Radius 0
-    Height 0
-    +NOTIMEFREEZE
-    +NOFEAR
-    States
-    {
-    Spawn:
-        TNT1 A 0
-        TNT1 A 0 A_SpawnItemEx("MRegenGiver",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
-        Stop
-    }
-}
-
-ACTOR MRegenTimer : CustomInventory
-{
-   +NOTIMEFREEZE
-   +INVENTORY.INTERHUBSTRIP
-   States
-   {
-   Use:
-       TNT1 A 0
-       Stop
-   }
-}
-
-ACTOR MRegenTimer2 : Inventory
-{
-    +NOTIMEFREEZE
-    Inventory.Amount 1
-    Inventory.MaxAmount 60
-    States
-    {
-    Spawn:
-        TNT1 A 0
-        Stop
-    }
+	Projectile
+	+NOTIMEFREEZE
+	+NOINTERACTION
+	+NOTONAUTOMAP
+	RenderStyle None
+	States
+	{
+	Spawn:
+		TNT1 A 35 A_GiveInventory("MRegenGiver1",1,AAPTR_MASTER)
+		TNT1 A 0 A_JumpIfInventory("PowerManaRegen",1,1,AAPTR_MASTER)
+		Stop
+		TNT1 A 35 A_GiveInventory("MRegenGiver2",1,AAPTR_MASTER)
+		TNT1 A 0 A_JumpIfInventory("PowerManaRegen",1,"Spawn",AAPTR_MASTER)
+		Stop
+	}
 }
 
 ACTOR RestoreHealth : HealthBonus
@@ -1804,66 +1782,54 @@ Actor RestoreArmor : ArmorBonus
     Armor.MaxSaveAmount 500
 }
 
-ACTOR MRegenGiver
+Actor MRegenGiver1 : CustomInventory
 {
-    Health 1000000000
-    Radius 0
-    Height 0
-    Speed 0
-    +NONSHOOTABLE
-    +MISSILEMORE
-    +MISSILEEVENMORE
-    +NOTIMEFREEZE
-    +NOFEAR
-    MinMissileChance 0
-    States
-    {
-    Spawn:
-        TNT1 A 1 A_Look
-        Loop
-    See:
-        TNT1 A 1 A_Chase
-        Loop
-    Missile:
-        TNT1 A 0 A_JumpIfInTargetInventory("MRegenTimer",1,2)
-        TNT1 A 0 A_Jump(256,"Death")
-        TNT1 A 0 A_JumpIfInventory("MRegenTimer2",60,"Death")
-        TNT1 A 0 A_GiveInventory("MRegenTimer2",1)
-	TNT1 A 0 A_GiveToTarget("BlueMana",3)
-	TNT1 A 0 A_GiveToTarget("GreenMana",2)
-	TNT1 A 0 A_GiveToTarget("RedMana",1)
-	TNT1 A 0 A_GiveToTarget("AEClip",3)
-	TNT1 A 0 A_GiveToTarget("AENails",3)
-	TNT1 A 0 A_GiveToTarget("AEShell",1)
-	TNT1 A 0 A_GiveToTarget("AECell",4)
-	TNT1 A 0 A_GiveToTarget("PlasmaRod",4)
-	TNT1 A 0 A_GiveToTarget("ASTF",2)
-	TNT1 A 0 A_GiveToTarget("MiniRockets",2)
-	
-	TNT1 A 0 A_jump(128,2)	//will give it 1/2 of the iterations (average says you'll get 20)
-	TNT1 A 0 A_GiveToTarget("AEGrenade",1)
-	TNT1 A 0 A_jump(172,2)	//1/3
-	TNT1 A 0 A_GiveToTarget("AERocket",1)
-	TNT1 A 0 A_jump(172,2)	//1/3
-	TNT1 A 0 A_GiveToTarget("DarkMana",1)
-	
-	TNT1 A 0 A_GiveInventory("MRegenCheck",1)
-	TNT1 A 0 A_JumpIfInventory("MRegenCheck",3,2)
-	TNT1 A 0 A_Jump(256,3)
-	TNT1 A 0 A_TakeInventory("MRegenCheck",3)
-	TNT1 A 0 A_GiveToTarget("RestoreHealth",1)
-	TNT1 A 35 A_GiveToTarget("RestoreArmor",1)
-        Loop
-    Death:
-        TNT1 A 0 A_TakeFromTarget("MRegenTimer",1)
-        Stop
+	+ALWAYSPICKUP
+	States
+	{
+	Pickup:
+		TNT1 A 0 A_GiveInventory("BlueMana",3)
+		TNT1 A 0 A_GiveInventory("GreenMana",2)
+		TNT1 A 0 A_GiveInventory("RedMana",1)
+		TNT1 A 0 A_GiveInventory("AEClip",3)
+		TNT1 A 0 A_GiveInventory("AENails",3)
+		TNT1 A 0 A_GiveInventory("AEShell",1)
+		TNT1 A 0 A_GiveInventory("AECell",4)
+		TNT1 A 0 A_GiveInventory("PlasmaRod",4)
+		TNT1 A 0 A_GiveInventory("ASTF",2)
+		TNT1 A 0 A_GiveInventory("MiniRockets",2)
+		TNT1 A 0 A_GiveInventory("AEGrenade",1)
+		TNT1 A 0 A_GiveInventory("AERocket",1)
+		TNT1 A 0 A_GiveInventory("DarkMana",1)
+		TNT1 A 0 A_GiveInventory("RestoreHealth",1)
+		TNT1 A 0 A_GiveInventory("RestoreArmor",1)
+		Stop
     }
 }
 
-ACTOR MRegenCheck : Inventory
+Actor MRegenGiver2 : CustomInventory
 {
-    Inventory.Amount 1
-    Inventory.MAxAmount 3
+	+ALWAYSPICKUP
+	States
+	{
+	Pickup:
+		TNT1 A 0 A_GiveInventory("BlueMana",3)
+		TNT1 A 0 A_GiveInventory("GreenMana",2)
+		TNT1 A 0 A_GiveInventory("RedMana",1)
+		TNT1 A 0 A_GiveInventory("AEClip",3)
+		TNT1 A 0 A_GiveInventory("AENails",3)
+		TNT1 A 0 A_GiveInventory("AEShell",1)
+		TNT1 A 0 A_GiveInventory("AECell",4)
+		TNT1 A 0 A_GiveInventory("PlasmaRod",4)
+		TNT1 A 0 A_GiveInventory("ASTF",2)
+		TNT1 A 0 A_GiveInventory("MiniRockets",2)
+		//TNT1 A 0 A_GiveInventory("AEGrenade",1)
+		//TNT1 A 0 A_GiveInventory("AERocket",1)
+		//TNT1 A 0 A_GiveInventory("DarkMana",1)
+		TNT1 A 0 A_GiveInventory("RestoreHealth",1)
+		TNT1 A 0 A_GiveInventory("RestoreArmor",1)
+		Stop
+    }
 }
 
 //--------------------------------------------------------------------
@@ -1886,144 +1852,143 @@ ACTOR AntiChickenator : CustomInventory
     States
     {
     Spawn:
-	NOMO ABCDEFGHIJKLMNOPQRSTUVWX 2
-	Loop
+		NOMO ABCDEFGHIJKLMNOPQRSTUVWX 2
+		Loop
     Use:
-	TNT1 A 0 A_JumpIfInventory("NoMorphTimer",1,8)
-	TNT1 A 0 //A_JumpIfInventory("PowerInvulBase",1,3)
-	TNT1 A 0 A_GiveInventory("UnMorpher",1)
-	TNT1 A 0 A_SpawnItemEx("NoMorph1",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
-	Stop
-	TNT1 A 0 //A_GiveInventory("PentagramInUse",1)
-	TNT1 A 1 //A_TakeInventory("PowerInvulBase",1)
-	TNT1 A 0 //A_GiveInventory("UnMorpher",1)
-	TNT1 A 0 //A_SpawnItemEx("NoMorph1",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
-	Stop
-	TNT1 A 0
-	Stop
+		TNT1 A 0 A_JumpIfInventory("NoMorphTimer",1,8)
+		TNT1 A 0 //A_JumpIfInventory("PowerInvulBase",1,3)
+		TNT1 A 0 A_GiveInventory("UnMorpher",1)
+		TNT1 A 0 A_SpawnItemEx("NoMorph1",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
+		Stop
+		TNT1 A 0 //A_GiveInventory("PentagramInUse",1)
+		TNT1 A 1 //A_TakeInventory("PowerInvulBase",1)
+		TNT1 A 0 //A_GiveInventory("UnMorpher",1)
+		TNT1 A 0 //A_SpawnItemEx("NoMorph1",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
+		Stop
+		TNT1 A 0
+		Stop
     }
 }
 
 ACTOR UnMorpher : ArtiTomeOfPower
 {
-    Game Doom
-    +INVENTORY.AUTOACTIVATE
-    +INVENTORY.QUIET
-    -INVENTORY.INVBAR
-    -INVENTORY.PICKUPFLASH
-    -COUNTITEM
-    -FLOATBOB
-    Inventory.PickupMessage ""
-    Powerup.Duration 1
+	+INVENTORY.AUTOACTIVATE
+	+INVENTORY.QUIET
+	-INVENTORY.INVBAR
+	-INVENTORY.PICKUPFLASH
+	-COUNTITEM
+	-FLOATBOB
+	Inventory.PickupMessage ""
+	Powerup.Duration 1
 }
 
 ACTOR PowerNoMorph : PowerProtection
 {
-    DamageFactor "Normal", 0.75
-    Inventory.Icon "ARTNOMOA"
+	DamageFactor "Normal", 0.75
+	Inventory.Icon "ARTNOMOA"
 }
 
 ACTOR NoMorphPalette : PowerupGiver
 {
-    -INVENTORY.INVBAR
-    +INVENTORY.INTERHUBSTRIP
-    Inventory.MaxAmount 1
-    Powerup.Type "NoMorph"
-    Powerup.Color "40 00 80" 0.2
-    Powerup.Duration 2100
-    +INVENTORY.AUTOACTIVATE
+	-INVENTORY.INVBAR
+	+INVENTORY.INTERHUBSTRIP
+	Inventory.MaxAmount 1
+	Powerup.Type "NoMorph"
+	Powerup.Color "40 00 80" 0.2
+	Powerup.Duration 2100
+	+INVENTORY.AUTOACTIVATE
 }
 
 ACTOR NoMorphTimer : CustomInventory
 {
-   +NOTIMEFREEZE
-   +INVENTORY.INTERHUBSTRIP
-   States
-   {
-   Use:
-       TNT1 A 0
-       Stop
-   }
+	+NOTIMEFREEZE
+	+INVENTORY.INTERHUBSTRIP
+	States
+	{
+	Use:
+	   TNT1 A 0
+	   Stop
+	}
 }
 
 ACTOR NoMorphTimer2 : Inventory
 {
-    +NOTIMEFREEZE
-    Inventory.Amount 1
-    Inventory.MaxAmount 2100
-    States
-    {
-    Spawn:
-        TNT1 A 0
-        Stop
-    }
+	+NOTIMEFREEZE
+	Inventory.Amount 1
+	Inventory.MaxAmount 2100
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		Stop
+	}
 }
 
 ACTOR NoMorph1
 {
-    Radius 0
-    Height 0
-    +NOTIMEFREEZE
-    +NOFEAR
-    States
-    {
-    Spawn:
-        TNT1 A 0
+	Radius 0
+	Height 0
+	+NOTIMEFREEZE
+	+NOFEAR
+	States
+	{
+	Spawn:
+		TNT1 A 0
 	TNT1 A 0 A_SpawnItemEx("NoMorphGiver",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
-        Stop
-    }
+		Stop
+	}
 }
 
 ACTOR NoMorph2 : CustomInventory
 {
-    +INVENTORY.AUTOACTIVATE
-    +NOTIMEFREEZE
-    States
-    {
-    Pickup:
-        TNT1 A 0 A_ChangeFlag("DONTMORPH",1)
-        Stop
-    }
+	+INVENTORY.AUTOACTIVATE
+	+NOTIMEFREEZE
+	States
+	{
+	Pickup:
+		TNT1 A 0 A_ChangeFlag("DONTMORPH",1)
+		Stop
+	}
 }
 
 ACTOR NoMorph3 : CustomInventory
 {
-    +INVENTORY.AUTOACTIVATE
-    +NOTIMEFREEZE
-    States
-    {
-    Pickup:
-        TNT1 A 0 A_ChangeFlag("DONTMORPH",0)
-        Stop
-    }
+	+INVENTORY.AUTOACTIVATE
+	+NOTIMEFREEZE
+	States
+	{
+	Pickup:
+		TNT1 A 0 A_ChangeFlag("DONTMORPH",0)
+		Stop
+	}
 }
 
 ACTOR NoMorphGiver
 {
-    Health 100000000
-    Radius 0
-    Height 0
-    Speed 0
-    +NONSHOOTABLE
-    +MISSILEMORE
-    +MISSILEEVENMORE
-    +NOTIMEFREEZE
-    +NOFEAR
-    MinMissileChance 0
-    States
-    {
-    Spawn:
-        TNT1 A 1 A_Look
-        Loop
-    See:
-    Missile:
-	TNT1 A 0 A_JumpIfInTargetInventory("NoMorphTimer",1,4)
-	TNT1 A 0 A_GiveToTarget("NoMorphTimer",1)
-	TNT1 A 0 A_GiveToTarget("NoMorphPalette",1)
-	TNT1 A 0 A_SpawnItemEx("NoMorphGiver2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
-	Stop
-	TNT1 A 0
-	Stop
+	Health 100000000
+	Radius 0
+	Height 0
+	Speed 0
+	+NONSHOOTABLE
+	+MISSILEMORE
+	+MISSILEEVENMORE
+	+NOTIMEFREEZE
+	+NOFEAR
+	MinMissileChance 0
+	States
+	{
+	Spawn:
+		TNT1 A 1 A_Look
+		Loop
+	See:
+	Missile:
+		TNT1 A 0 A_JumpIfInTargetInventory("NoMorphTimer",1,4)
+		TNT1 A 0 A_GiveToTarget("NoMorphTimer",1)
+		TNT1 A 0 A_GiveToTarget("NoMorphPalette",1)
+		TNT1 A 0 A_SpawnItemEx("NoMorphGiver2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
+		Stop
+		TNT1 A 0
+		Stop
     }
 }
 
@@ -2033,16 +1998,16 @@ ACTOR NoMorphGiver2 : NoMorphGiver
     {
     See:
     Missile:
-	TNT1 A 0 A_JumpIfInTargetInventory("NoMorphTimer",1,2)
-	TNT1 A 0 A_Jump(256,"Death")
-	TNT1 A 0 A_GiveToTarget("NoMorph2",1)
-	TNT1 A 0 A_JumpIfInventory("NoMorphTimer2",2100,"Death")
-	TNT1 A 1 A_GiveInventory("NoMorphTimer2",1)
-	Goto Missile+3
+		TNT1 A 0 A_JumpIfInTargetInventory("NoMorphTimer",1,2)
+		TNT1 A 0 A_Jump(256,"Death")
+		TNT1 A 0 A_GiveToTarget("NoMorph2",1)
+		TNT1 A 0 A_JumpIfInventory("NoMorphTimer2",2100,"Death")
+		TNT1 A 1 A_GiveInventory("NoMorphTimer2",1)
+		Goto Missile+3
     Death:
-        TNT1 A 0 A_GiveToTarget("NoMorph3",1)
-	TNT1 A 0 A_TakeFromTarget("NoMorphTimer",1)
-        Stop
+		TNT1 A 0 A_GiveToTarget("NoMorph3",1)
+		TNT1 A 0 A_TakeFromTarget("NoMorphTimer",1)
+		Stop
     }
 }
 
@@ -2061,16 +2026,16 @@ ACTOR PentagramInUse : CustomInventory
 
 ACTOR Pentagram1
 {
-    Radius 0
-    Height 0
-    +NOTIMEFREEZE
-    +NOFEAR
-    States
-    {
-    Spawn:
-        TNT1 A 0
-	TNT1 A 0 A_SpawnItemEx("PentagramRestorer",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
-        Stop
+	Radius 0
+	Height 0
+	+NOTIMEFREEZE
+	+NOFEAR
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("PentagramRestorer",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
+		Stop
     }
 }
 
@@ -2084,9 +2049,9 @@ ACTOR PentagramRestorer : NoMorphGiver
     {
     See:
     Missile:
-	TNT1 A 0 A_TakeFromTarget("PentagramInUse",1)
-	TNT1 A 0 A_GiveToTarget("PowerInvulBase",1)
-        Stop
+		TNT1 A 0 A_TakeFromTarget("PentagramInUse",1)
+		TNT1 A 0 A_GiveToTarget("PowerInvulBase",1)
+		Stop
     }
 }
 
@@ -2223,159 +2188,159 @@ ACTOR HeresiarchSummon : MinotaurFriend Replaces MinotaurFriend
     States
     {
     Spawn:
-	SORC A 15 A_SetTranslucent(0.66, 0)
-	SORC A 3 A_SetTranslucent(1, 0)
-	SORC A 0 A_SetShootable
-	SORC A 4 A_Look
+		SORC A 15 A_SetTranslucent(0.66, 0)
+		SORC A 3 A_SetTranslucent(1, 0)
+		SORC A 0 A_SetShootable
+		SORC A 4 A_Look
     See:
-	SORC A 5 A_Chase
-	SORC A 0 A_GiveInventory("SummonLimit",1)
-	SORC A 0 A_JumpIfInventory("SummonLimit",200,"Death")
-	SORC B 5 A_Chase
-	SORC A 0 A_GiveInventory("SummonLimit",1)
-	SORC A 0 A_JumpIfInventory("SummonLimit",200,"Death")
-	SORC C 5 A_Chase
-	SORC A 0 A_GiveInventory("SummonLimit",1)
-	SORC A 0 A_JumpIfInventory("SummonLimit",200,"Death")
-	SORC D 5 A_Chase
-	SORC A 0 A_GiveInventory("SummonLimit",1)
-	SORC A 0 A_JumpIfInventory("SummonLimit",200,"Death")
-	Loop
+		SORC A 5 A_Chase
+		SORC A 0 A_GiveInventory("SummonLimit",1)
+		SORC A 0 A_JumpIfInventory("SummonLimit",200,"Death")
+		SORC B 5 A_Chase
+		SORC A 0 A_GiveInventory("SummonLimit",1)
+		SORC A 0 A_JumpIfInventory("SummonLimit",200,"Death")
+		SORC C 5 A_Chase
+		SORC A 0 A_GiveInventory("SummonLimit",1)
+		SORC A 0 A_JumpIfInventory("SummonLimit",200,"Death")
+		SORC D 5 A_Chase
+		SORC A 0 A_GiveInventory("SummonLimit",1)
+		SORC A 0 A_JumpIfInventory("SummonLimit",200,"Death")
+		Loop
     Melee:
 	Stop
     Missile:
-	SORC F 0 A_Jump(48,"Lightning")
-	SORC F 0 A_Jump(48,"FireSpell")
-	SORC F 0 A_Jump(40,"FloorIce")
-	SORC F 0 A_Jump(32,"Teleport")
-	Loop
+		SORC F 0 A_Jump(48,"Lightning")
+		SORC F 0 A_Jump(48,"FireSpell")
+		SORC F 0 A_Jump(40,"FloorIce")
+		SORC F 0 A_Jump(32,"Teleport")
+		Loop
     Lightning:
-	SORC F 0 A_JumpIfCloser(1800,1)
-	Goto Missile+1
-	SORC F 0 A_PlaySound("heresiarch/spellcast",CHAN_BODY,1.0,0,ATTN_NONE)
-	SORC FFFFF 4 Bright A_FaceTarget
-	SORC F 0 A_PlaySound("heresiarch/lightning",CHAN_VOICE,1.0,1,ATTN_NONE)
-	SORC EE 0 Bright A_CustomMissile("HSummonLightning",52,0,random(5,-5))
-	SORC E 1 Bright A_FaceTarget
-	SORC E 0 Bright A_GiveInventory("HLightningCount",1)
-	SORC E 0 Bright A_JumpIfInventory("HLightningCount",90,1)
-	Goto Lightning+7
-	SORC E 0 Bright A_StopSound(CHAN_VOICE)
-	SORC E 0 Bright A_TakeInventory("HLightningCount",90)
-	SORC E 8 Bright A_FaceTarget
-	Goto See
+		SORC F 0 A_JumpIfCloser(1800,1)
+		Goto Missile+1
+		SORC F 0 A_PlaySound("heresiarch/spellcast",CHAN_BODY,1.0,0,ATTN_NONE)
+		SORC FFFFF 4 Bright A_FaceTarget
+		SORC F 0 A_PlaySound("heresiarch/lightning",CHAN_VOICE,1.0,1,ATTN_NONE)
+		SORC EE 0 Bright A_CustomMissile("HSummonLightning",52,0,random(5,-5))
+		SORC E 1 Bright A_FaceTarget
+		SORC E 0 Bright A_GiveInventory("HLightningCount",1)
+		SORC E 0 Bright A_JumpIfInventory("HLightningCount",90,1)
+		Goto Lightning+7
+		SORC E 0 Bright A_StopSound(CHAN_VOICE)
+		SORC E 0 Bright A_TakeInventory("HLightningCount",90)
+		SORC E 8 Bright A_FaceTarget
+		Goto See
     FloorIce:
-	SORC F 0 A_PlaySound("heresiarch/spellcast",CHAN_BODY,1.0,0,ATTN_NONE)
-	SORC FFFFF 4 Bright A_FaceTarget
-	SORC E 0 Bright A_PlaySound("MaulatorHamSwing",CHAN_VOICE,1.0,0,ATTN_NONE)
-	SORC E 1 Bright A_CustomMissile("HSummonFloorIce",0,0,24)
-	SORC E 1 Bright A_CustomMissile("HSummonFloorIce",0,0,16)
-	SORC E 1 Bright A_CustomMissile("HSummonFloorIce",0,0,8)
-	SORC E 1 Bright A_CustomMissile("HSummonFloorIce",0,0,0)
-	SORC E 1 Bright A_CustomMissile("HSummonFloorIce",0,0,-8)
-	SORC E 1 Bright A_CustomMissile("HSummonFloorIce",0,0,-16)
-	SORC E 1 Bright A_CustomMissile("HSummonFloorIce",0,0,-24)
-	SORC E 8 Bright A_FaceTarget
-	Goto See
+		SORC F 0 A_PlaySound("heresiarch/spellcast",CHAN_BODY,1.0,0,ATTN_NONE)
+		SORC FFFFF 4 Bright A_FaceTarget
+		SORC E 0 Bright A_PlaySound("MaulatorHamSwing",CHAN_VOICE,1.0,0,ATTN_NONE)
+		SORC E 1 Bright A_CustomMissile("HSummonFloorIce",0,0,24)
+		SORC E 1 Bright A_CustomMissile("HSummonFloorIce",0,0,16)
+		SORC E 1 Bright A_CustomMissile("HSummonFloorIce",0,0,8)
+		SORC E 1 Bright A_CustomMissile("HSummonFloorIce",0,0,0)
+		SORC E 1 Bright A_CustomMissile("HSummonFloorIce",0,0,-8)
+		SORC E 1 Bright A_CustomMissile("HSummonFloorIce",0,0,-16)
+		SORC E 1 Bright A_CustomMissile("HSummonFloorIce",0,0,-24)
+		SORC E 8 Bright A_FaceTarget
+		Goto See
     FireSpell:
-	SORC F 0 A_PlaySound("heresiarch/spellcast",CHAN_BODY,1.0,0,ATTN_NONE)
-	SORC FFFFF 4 Bright A_FaceTarget
-	SORC E 0 Bright A_PlaySound("reilsss/weapons/macefire",CHAN_VOICE,1.0,0,ATTN_NONE)
-	SORC E 4 Bright A_CustomMissile("HSummonPhoenixShot",56,12,random(2,-2))
-	SORC E 0 Bright A_FaceTarget
-	SORC E 0 Bright A_PlaySound("reilsss/weapons/macefire",CHAN_VOICE,1.0,0,ATTN_NONE)
-	SORC E 4 Bright A_CustomMissile("HSummonPhoenixShot",56,-12,random(2,-2))
-	SORC E 0 Bright A_FaceTarget
-	SORC E 0 Bright A_PlaySound("reilsss/weapons/macefire",CHAN_VOICE,1.0,0,ATTN_NONE)
-	SORC E 4 Bright A_CustomMissile("HSummonPhoenixShot",56,12,random(2,-2))
-	SORC E 0 Bright A_FaceTarget
-	SORC E 0 Bright A_PlaySound("reilsss/weapons/macefire",CHAN_VOICE,1.0,0,ATTN_NONE)
-	SORC E 4 Bright A_CustomMissile("HSummonPhoenixShot",56,-12,random(2,-2))
-	SORC E 0 Bright A_FaceTarget
-	SORC E 0 Bright A_PlaySound("reilsss/weapons/macefire",CHAN_VOICE,1.0,0,ATTN_NONE)
-	SORC E 4 Bright A_CustomMissile("HSummonPhoenixShot",56,12,random(2,-2))
-	SORC E 0 Bright A_FaceTarget
-	SORC E 0 Bright A_PlaySound("reilsss/weapons/macefire",CHAN_VOICE,1.0,0,ATTN_NONE)
-	SORC E 4 Bright A_CustomMissile("HSummonPhoenixShot",56,-12,random(2,-2))
-	SORC E 0 Bright A_FaceTarget
-	SORC E 0 Bright A_PlaySound("reilsss/weapons/macefire",CHAN_VOICE,1.0,0,ATTN_NONE)
-	SORC E 4 Bright A_CustomMissile("HSummonPhoenixShot",56,12,random(2,-2))
-	SORC E 0 Bright A_FaceTarget
-	SORC E 0 Bright A_PlaySound("reilsss/weapons/macefire",CHAN_VOICE,1.0,0,ATTN_NONE)
-	SORC E 4 Bright A_CustomMissile("HSummonPhoenixShot",56,-12,random(2,-2))
-	SORC E 0 Bright A_FaceTarget
-	SORC E 0 Bright A_PlaySound("reilsss/weapons/macefire",CHAN_VOICE,1.0,0,ATTN_NONE)
-	SORC E 4 Bright A_CustomMissile("HSummonPhoenixShot",56,12,random(2,-2))
-	SORC E 0 Bright A_FaceTarget
-	SORC E 0 Bright A_PlaySound("reilsss/weapons/macefire",CHAN_VOICE,1.0,0,ATTN_NONE)
-	SORC E 4 Bright A_CustomMissile("HSummonPhoenixShot",56,-12,random(2,-2))
-	SORC E 0 Bright A_FaceTarget
-	SORC E 0 Bright A_PlaySound("reilsss/weapons/macefire",CHAN_VOICE,1.0,0,ATTN_NONE)
-	SORC E 4 Bright A_CustomMissile("HSummonPhoenixShot",56,12,random(2,-2))
-	SORC E 0 Bright A_FaceTarget
-	SORC E 0 Bright A_PlaySound("reilsss/weapons/macefire",CHAN_VOICE,1.0,0,ATTN_NONE)
-	SORC E 4 Bright A_CustomMissile("HSummonPhoenixShot",56,-12,random(2,-2))
-	SORC E 0 Bright A_FaceTarget
-	SORC E 0 Bright A_PlaySound("reilsss/weapons/macefire",CHAN_VOICE,1.0,0,ATTN_NONE)
-	SORC E 4 Bright A_CustomMissile("HSummonPhoenixShot",56,12,random(2,-2))
-	SORC E 0 Bright A_FaceTarget
-	SORC E 0 Bright A_PlaySound("reilsss/weapons/macefire",CHAN_VOICE,1.0,0,ATTN_NONE)
-	SORC E 4 Bright A_CustomMissile("HSummonPhoenixShot",56,-12,random(2,-2))
-	SORC E 0 Bright A_FaceTarget
-	SORC E 0 Bright A_PlaySound("reilsss/weapons/macefire",CHAN_VOICE,1.0,0,ATTN_NONE)
-	SORC E 4 Bright A_CustomMissile("HSummonPhoenixShot",56,12,random(2,-2))
-	SORC E 0 Bright A_FaceTarget
-	SORC E 0 Bright A_PlaySound("reilsss/weapons/macefire",CHAN_VOICE,1.0,0,ATTN_NONE)
-	SORC E 4 Bright A_CustomMissile("HSummonPhoenixShot",56,-12,random(2,-2))
-	SORC E 8 Bright A_FaceTarget
-	Goto See
+		SORC F 0 A_PlaySound("heresiarch/spellcast",CHAN_BODY,1.0,0,ATTN_NONE)
+		SORC FFFFF 4 Bright A_FaceTarget
+		SORC E 0 Bright A_PlaySound("reilsss/weapons/macefire",CHAN_VOICE,1.0,0,ATTN_NONE)
+		SORC E 4 Bright A_CustomMissile("HSummonPhoenixShot",56,12,random(2,-2))
+		SORC E 0 Bright A_FaceTarget
+		SORC E 0 Bright A_PlaySound("reilsss/weapons/macefire",CHAN_VOICE,1.0,0,ATTN_NONE)
+		SORC E 4 Bright A_CustomMissile("HSummonPhoenixShot",56,-12,random(2,-2))
+		SORC E 0 Bright A_FaceTarget
+		SORC E 0 Bright A_PlaySound("reilsss/weapons/macefire",CHAN_VOICE,1.0,0,ATTN_NONE)
+		SORC E 4 Bright A_CustomMissile("HSummonPhoenixShot",56,12,random(2,-2))
+		SORC E 0 Bright A_FaceTarget
+		SORC E 0 Bright A_PlaySound("reilsss/weapons/macefire",CHAN_VOICE,1.0,0,ATTN_NONE)
+		SORC E 4 Bright A_CustomMissile("HSummonPhoenixShot",56,-12,random(2,-2))
+		SORC E 0 Bright A_FaceTarget
+		SORC E 0 Bright A_PlaySound("reilsss/weapons/macefire",CHAN_VOICE,1.0,0,ATTN_NONE)
+		SORC E 4 Bright A_CustomMissile("HSummonPhoenixShot",56,12,random(2,-2))
+		SORC E 0 Bright A_FaceTarget
+		SORC E 0 Bright A_PlaySound("reilsss/weapons/macefire",CHAN_VOICE,1.0,0,ATTN_NONE)
+		SORC E 4 Bright A_CustomMissile("HSummonPhoenixShot",56,-12,random(2,-2))
+		SORC E 0 Bright A_FaceTarget
+		SORC E 0 Bright A_PlaySound("reilsss/weapons/macefire",CHAN_VOICE,1.0,0,ATTN_NONE)
+		SORC E 4 Bright A_CustomMissile("HSummonPhoenixShot",56,12,random(2,-2))
+		SORC E 0 Bright A_FaceTarget
+		SORC E 0 Bright A_PlaySound("reilsss/weapons/macefire",CHAN_VOICE,1.0,0,ATTN_NONE)
+		SORC E 4 Bright A_CustomMissile("HSummonPhoenixShot",56,-12,random(2,-2))
+		SORC E 0 Bright A_FaceTarget
+		SORC E 0 Bright A_PlaySound("reilsss/weapons/macefire",CHAN_VOICE,1.0,0,ATTN_NONE)
+		SORC E 4 Bright A_CustomMissile("HSummonPhoenixShot",56,12,random(2,-2))
+		SORC E 0 Bright A_FaceTarget
+		SORC E 0 Bright A_PlaySound("reilsss/weapons/macefire",CHAN_VOICE,1.0,0,ATTN_NONE)
+		SORC E 4 Bright A_CustomMissile("HSummonPhoenixShot",56,-12,random(2,-2))
+		SORC E 0 Bright A_FaceTarget
+		SORC E 0 Bright A_PlaySound("reilsss/weapons/macefire",CHAN_VOICE,1.0,0,ATTN_NONE)
+		SORC E 4 Bright A_CustomMissile("HSummonPhoenixShot",56,12,random(2,-2))
+		SORC E 0 Bright A_FaceTarget
+		SORC E 0 Bright A_PlaySound("reilsss/weapons/macefire",CHAN_VOICE,1.0,0,ATTN_NONE)
+		SORC E 4 Bright A_CustomMissile("HSummonPhoenixShot",56,-12,random(2,-2))
+		SORC E 0 Bright A_FaceTarget
+		SORC E 0 Bright A_PlaySound("reilsss/weapons/macefire",CHAN_VOICE,1.0,0,ATTN_NONE)
+		SORC E 4 Bright A_CustomMissile("HSummonPhoenixShot",56,12,random(2,-2))
+		SORC E 0 Bright A_FaceTarget
+		SORC E 0 Bright A_PlaySound("reilsss/weapons/macefire",CHAN_VOICE,1.0,0,ATTN_NONE)
+		SORC E 4 Bright A_CustomMissile("HSummonPhoenixShot",56,-12,random(2,-2))
+		SORC E 0 Bright A_FaceTarget
+		SORC E 0 Bright A_PlaySound("reilsss/weapons/macefire",CHAN_VOICE,1.0,0,ATTN_NONE)
+		SORC E 4 Bright A_CustomMissile("HSummonPhoenixShot",56,12,random(2,-2))
+		SORC E 0 Bright A_FaceTarget
+		SORC E 0 Bright A_PlaySound("reilsss/weapons/macefire",CHAN_VOICE,1.0,0,ATTN_NONE)
+		SORC E 4 Bright A_CustomMissile("HSummonPhoenixShot",56,-12,random(2,-2))
+		SORC E 8 Bright A_FaceTarget
+		Goto See
     Teleport:
-	SORC F 0 A_PlaySound("heresiarch/spellcast",CHAN_BODY,1.0,0,ATTN_NONE)
-	SORC FFFFF 4 A_FaceTarget
-	SORC E 0 A_UnSetShootable
-	SORC E 1 A_SetTranslucent(0.9,0)
-	SORC E 1 A_SetTranslucent(0.8,0)
-	SORC E 1 A_SetTranslucent(0.7,0)
-	SORC E 1 A_SetTranslucent(0.6,0)
-	SORC E 1 A_SetTranslucent(0.5,0)
-	SORC E 1 A_SetTranslucent(0.4,0)
-	SORC E 1 A_SetTranslucent(0.3,0)
-	SORC E 1 A_SetTranslucent(0.2,0)
-	SORC E 1 A_SetTranslucent(0.1,0)
-	SORC E 0 A_PlaySound("misc/teleport")
-	TNT1 A 5
-	TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_Wander
-	TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_Wander
-	TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_Wander
-	TNT1 A 5
-	SORC E 0 A_PlaySound("misc/teleport")
-	SORC E 1 A_SetTranslucent(0.1,0)
-	SORC E 1 A_SetTranslucent(0.2,0)
-	SORC E 1 A_SetTranslucent(0.3,0)
-	SORC E 1 A_SetTranslucent(0.4,0)
-	SORC E 1 A_SetTranslucent(0.5,0)
-	SORC E 1 A_SetTranslucent(0.6,0)
-	SORC E 1 A_SetTranslucent(0.7,0)
-	SORC E 1 A_SetTranslucent(0.8,0)
-	SORC E 1 A_SetTranslucent(0.9,0)
-	SORC E 1 A_SetTranslucent(1,0)
-	SORC E 0 A_SetShootable
-	SORC E 5
-	Goto See
+		SORC F 0 A_PlaySound("heresiarch/spellcast",CHAN_BODY,1.0,0,ATTN_NONE)
+		SORC FFFFF 4 A_FaceTarget
+		SORC E 0 A_UnSetShootable
+		SORC E 1 A_SetTranslucent(0.9,0)
+		SORC E 1 A_SetTranslucent(0.8,0)
+		SORC E 1 A_SetTranslucent(0.7,0)
+		SORC E 1 A_SetTranslucent(0.6,0)
+		SORC E 1 A_SetTranslucent(0.5,0)
+		SORC E 1 A_SetTranslucent(0.4,0)
+		SORC E 1 A_SetTranslucent(0.3,0)
+		SORC E 1 A_SetTranslucent(0.2,0)
+		SORC E 1 A_SetTranslucent(0.1,0)
+		SORC E 0 A_PlaySound("misc/teleport")
+		TNT1 A 5
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_Wander
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_Wander
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_Wander
+		TNT1 A 5
+		SORC E 0 A_PlaySound("misc/teleport")
+		SORC E 1 A_SetTranslucent(0.1,0)
+		SORC E 1 A_SetTranslucent(0.2,0)
+		SORC E 1 A_SetTranslucent(0.3,0)
+		SORC E 1 A_SetTranslucent(0.4,0)
+		SORC E 1 A_SetTranslucent(0.5,0)
+		SORC E 1 A_SetTranslucent(0.6,0)
+		SORC E 1 A_SetTranslucent(0.7,0)
+		SORC E 1 A_SetTranslucent(0.8,0)
+		SORC E 1 A_SetTranslucent(0.9,0)
+		SORC E 1 A_SetTranslucent(1,0)
+		SORC E 0 A_SetShootable
+		SORC E 5
+		Goto See
     Pain:
-	SORC G 0 A_StopSound(CHAN_VOICE)
-	SORC G 8 A_TakeInventory("HLightningCount",90)
-	SORC G 8 A_Pain
-	SORC G 0 A_Jump(192,1)
-	Goto Teleport
-	SORC G 0
-	Goto See
+		SORC G 0 A_StopSound(CHAN_VOICE)
+		SORC G 8 A_TakeInventory("HLightningCount",90)
+		SORC G 8 A_Pain
+		SORC G 0 A_Jump(192,1)
+		Goto Teleport
+		SORC G 0
+		Goto See
     Death:
-	SORC G 0 Bright A_Scream
-	SORC G 0 A_SpawnItemEx("HeresiarchSmoke",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
-	SORC G 0 A_DamageMaster(10,"HCLoneDead")
-	SORC G 1 A_FadeOut(0.03)
-	Wait
+		SORC G 0 Bright A_Scream
+		SORC G 0 A_SpawnItemEx("HeresiarchSmoke",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
+		SORC G 0 A_DamageMaster(10,"HCLoneDead")
+		SORC G 1 A_FadeOut(0.03)
+		Wait
     }
 }
 
@@ -2396,16 +2361,16 @@ ACTOR HSummonLightning
     States
     {
     Spawn:
-	HSPL ABCDEFGHIJABCDEFGHIJ 3 Bright
-	HSPL ABCDEFGHIJ 3 Bright A_FadeOut
-	Stop
+		HSPL ABCDEFGHIJABCDEFGHIJ 3 Bright
+		HSPL ABCDEFGHIJ 3 Bright A_FadeOut
+		Stop
     Death:
-	TNT1 A 0
-	Stop
+		TNT1 A 0
+		Stop
     Crash:
     XDeath:
-	TNT1 A 20 A_Scream
-	Stop
+		TNT1 A 20 A_Scream
+		Stop
     }
 }
 
@@ -2425,27 +2390,27 @@ ACTOR HSummonPhoenixShot
     States
     {
     Spawn:
-	PYBU AA 1 Bright A_SpawnItemEx("HPhoenixTrail",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
-	PYBU A 0 Bright A_SeekerMissile(2,2)
-	PYBU AA 1 Bright A_SpawnItemEx("HPhoenixTrail",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
-	PYBU A 0 Bright A_SeekerMissile(2,2)
-	PYBU BB 1 Bright A_SpawnItemEx("HPhoenixTrail",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
-	PYBU B 0 Bright A_SeekerMissile(2,2)
-	PYBU BB 1 Bright A_SpawnItemEx("HPhoenixTrail",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
-	PYBU B 0 Bright A_SeekerMissile(2,2)
-	PYBU CC 1 Bright A_SpawnItemEx("HPhoenixTrail",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
-	PYBU C 0 Bright A_SeekerMissile(2,2)
-	PYBU CC 1 Bright A_SpawnItemEx("HPhoenixTrail",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
-	PYBU C 0 Bright A_SeekerMissile(2,2)
-	Loop
+		PYBU AA 1 Bright A_SpawnItemEx("HPhoenixTrail",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
+		PYBU A 0 Bright A_SeekerMissile(2,2)
+		PYBU AA 1 Bright A_SpawnItemEx("HPhoenixTrail",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
+		PYBU A 0 Bright A_SeekerMissile(2,2)
+		PYBU BB 1 Bright A_SpawnItemEx("HPhoenixTrail",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
+		PYBU B 0 Bright A_SeekerMissile(2,2)
+		PYBU BB 1 Bright A_SpawnItemEx("HPhoenixTrail",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
+		PYBU B 0 Bright A_SeekerMissile(2,2)
+		PYBU CC 1 Bright A_SpawnItemEx("HPhoenixTrail",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
+		PYBU C 0 Bright A_SeekerMissile(2,2)
+		PYBU CC 1 Bright A_SpawnItemEx("HPhoenixTrail",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
+		PYBU C 0 Bright A_SeekerMissile(2,2)
+		Loop
     Death:
-	PYBU D 1 Bright A_Explode(32,32,0)
-	TNT1 AAAAAAA 0 A_SpawnItemEx("PhoenixRodExtraSFX",0,0,0,random(1,-1),random(1,-1),random(1,-1),random(0,359),SXF_NOCHECKPOSITION)
-	PYBU D 1 Bright A_SpawnItemEx("PhoenixSFX2",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
-	PYBU D 1 bright
-	PYBU E 3 Bright
-	TNT1 A 0 A_SpawnItemEx("PhoenixSFX",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
-	Stop
+		PYBU D 1 Bright A_Explode(32,32,0)
+		TNT1 AAAAAAA 0 A_SpawnItemEx("PhoenixRodExtraSFX",0,0,0,random(1,-1),random(1,-1),random(1,-1),random(0,359),SXF_NOCHECKPOSITION)
+		PYBU D 1 Bright A_SpawnItemEx("PhoenixSFX2",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
+		PYBU D 1 bright
+		PYBU E 3 Bright
+		TNT1 A 0 A_SpawnItemEx("PhoenixSFX",0,0,0,0,0,0,0,SXF_CLIENTSIDE)
+		Stop
     }
 }
 
@@ -2466,16 +2431,16 @@ ACTOR HSummonFloorIce
     States
     {
     Spawn:
-	TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 2 A_SpawnItemEx("HSummonFloorIce2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
-	TNT1 A 0 A_Jump(128,1)
-	Goto Spawn+28
-	TNT1 A 0 A_JumpIfInventory("SeekerCheck",1,"Spawn")
-	TNT1 AA 0 A_SeekerMissile(90,90)
-	TNT1 A 0 A_GiveInventory("SeekerCheck",1)
-	Loop
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 2 A_SpawnItemEx("HSummonFloorIce2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
+		TNT1 A 0 A_Jump(128,1)
+		Goto Spawn+28
+		TNT1 A 0 A_JumpIfInventory("SeekerCheck",1,"Spawn")
+		TNT1 AA 0 A_SeekerMissile(90,90)
+		TNT1 A 0 A_GiveInventory("SeekerCheck",1)
+		Loop
     Death:
-	TNT1 A 0
-	Stop
+		TNT1 A 0
+		Stop
     }
 }
 
@@ -2500,10 +2465,10 @@ ACTOR HSummonFloorIce2
     States
     {
     Spawn:
-	FX13 DC 4 Bright
-	FX13 BCDE 5 Bright
-	FX13 FGH 4 Bright
-	Stop
+		FX13 DC 4 Bright
+		FX13 BCDE 5 Bright
+		FX13 FGH 4 Bright
+		Stop
     }
 }
 
@@ -2545,26 +2510,26 @@ Actor PowerSlaveSpawner //This Spawns Weapon power or Health orbs randomly.
     height 0
     +NOCLIP
 //    +FLOORCLIP
-    states
-    {
-    Spawn:
-	TNT1 A 20
-	//TNT1 A 0 A_PlaySound("monster/bastet/warpin")
-	TNT1 A 0 A_Jump(170,"AmmoSpawner")
-	TNT1 A 0 A_Jump(256,"Choose")
-    Choose:
-	TNT1 A 0 A_Jump(190,"Health1","Armor1")
-	TNT1 A 0 A_Jump(256,"Health2","Armor2")
-    Health1:
-	TNT1 A 0 A_SpawnItem("SmallHealthPowerOrbSpawn",0,0,0)	stop
-    Health2:
-	TNT1 A 0 A_SpawnItem("LargeHealthPowerOrbSpawn",0,0,0)	stop
-    Armor1:
-	TNT1 A 0 A_SpawnItem("SmallShieldPowerOrbSpawn",0,0,0)	stop
-    Armor2:
-	TNT1 A 0 A_SpawnItem("LargeShieldPowerOrbSpawn",0,0,0)	stop
-    AmmoSpawner:
-      TNT1 A 0 A_SpawnItem("LargeWeaponPowerOrbSpawn",0,0,0)	stop
+	states
+	{
+	Spawn:
+		TNT1 A 20
+		//TNT1 A 0 A_PlaySound("monster/bastet/warpin")
+		TNT1 A 0 A_Jump(170,"AmmoSpawner")
+		TNT1 A 0 A_Jump(256,"Choose")
+	Choose:
+		TNT1 A 0 A_Jump(190,"Health1","Armor1")
+		TNT1 A 0 A_Jump(256,"Health2","Armor2")
+	Health1:
+		TNT1 A 0 A_SpawnItem("SmallHealthPowerOrbSpawn",0,0,0)	stop
+	Health2:
+		TNT1 A 0 A_SpawnItem("LargeHealthPowerOrbSpawn",0,0,0)	stop
+	Armor1:
+		TNT1 A 0 A_SpawnItem("SmallShieldPowerOrbSpawn",0,0,0)	stop
+	Armor2:
+		TNT1 A 0 A_SpawnItem("LargeShieldPowerOrbSpawn",0,0,0)	stop
+	AmmoSpawner:
+		TNT1 A 0 A_SpawnItem("LargeWeaponPowerOrbSpawn",0,0,0)	stop
     }
 }
 
@@ -2579,13 +2544,13 @@ Actor LargeWeaponPowerOrbSpawn
     states
     {
 	Spawn:
-	TNT1 A 0 
-	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
-	PS04 A 0 A_PlaySound("monster/bastet/warpin")
-	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
-	PS04 EFGH 3 
-	PS04 A 0 A_SpawnItemEx("BigWeaponPower",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
-	stop
+		TNT1 A 0 
+		TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+		PS04 A 0 A_PlaySound("monster/bastet/warpin")
+		PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+		PS04 EFGH 3 
+		PS04 A 0 A_SpawnItemEx("BigWeaponPower",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+		stop
     }
 }
 
@@ -2595,13 +2560,13 @@ Actor SmallWeaponPowerOrbSpawn : LargeWeaponPowerOrbSpawn
     states
     {
 	Spawn:
-	TNT1 A 0 
-	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
-	PS04 A 0 A_PlaySound("monster/bastet/warpin")
-	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
-	PS04 EFGH 3 
-	PS04 A 0 A_SpawnItemEx("SmallWeaponPower",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
-	stop
+		TNT1 A 0 
+		TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+		PS04 A 0 A_PlaySound("monster/bastet/warpin")
+		PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+		PS04 EFGH 3 
+		PS04 A 0 A_SpawnItemEx("SmallWeaponPower",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+		stop
     }
 }
 
@@ -2610,13 +2575,13 @@ Actor FullWeaponPowerSpawner : LargeWeaponPowerOrbSpawn
     states
     {
     Spawn:
-	TNT1 A 0 
-	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(9.0,-9.0),frandom(9.0,-9.0),frandom(9.0,-9.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
-	PS04 A 0 A_PlaySound("monster/bastet/warpin")
-	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(9.0,-9.0),frandom(9.0,-9.0),frandom(9.0,-9.0),0,SXF_TRANSFERTRANSLATION|SXF_ABSOLUTEPOSITION)
-	PS04 EFGH 3 
-	PS04 A 0 A_SpawnItemEx("FullWeaponPower",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
-	stop
+		TNT1 A 0 
+		TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(9.0,-9.0),frandom(9.0,-9.0),frandom(9.0,-9.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+		PS04 A 0 A_PlaySound("monster/bastet/warpin")
+		PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(9.0,-9.0),frandom(9.0,-9.0),frandom(9.0,-9.0),0,SXF_TRANSFERTRANSLATION|SXF_ABSOLUTEPOSITION)
+		PS04 EFGH 3 
+		PS04 A 0 A_SpawnItemEx("FullWeaponPower",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+		stop
     }
 }
 
@@ -2628,13 +2593,13 @@ Actor LargeHealthPowerOrbSpawn : LargeWeaponPowerOrbSpawn
     states
     {
 	Spawn:
-	TNT1 A 0 
-	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvOrangeOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION)
-	PS04 A 0 A_PlaySound("monster/bastet/warpin")
-	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvOrangeOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION)
-	PS04 EFGH 3 
-	PS04 A 0 A_SpawnItem("BigHealthPower",0,0,0)
-	stop
+		TNT1 A 0 
+		TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvOrangeOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION)
+		PS04 A 0 A_PlaySound("monster/bastet/warpin")
+		PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvOrangeOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION)
+		PS04 EFGH 3 
+		PS04 A 0 A_SpawnItem("BigHealthPower",0,0,0)
+		stop
     }
 }
 
@@ -2644,13 +2609,13 @@ Actor SmallHealthPowerOrbSpawn : LargeHealthPowerOrbSpawn
     states
     {
 	Spawn:
-	TNT1 A 0 
-	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvOrangeOrbPartSmall",0,0,25,frandom(4.0,-4.0),frandom(4.0,-4.0),frandom(4.0,-4.0),0,SXF_NOCHECKPOSITION)
-	PS04 A 0 A_PlaySound("monster/bastet/warpin")
-	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvOrangeOrbPartSmall",0,0,25,frandom(4.0,-4.0),frandom(4.0,-4.0),frandom(4.0,-4.0),0,SXF_NOCHECKPOSITION)
-	PS04 EFGH 3 
-	PS04 A 0 A_SpawnItem("SmallHealthPower",0,0,0)
-	stop
+		TNT1 A 0 
+		TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvOrangeOrbPartSmall",0,0,25,frandom(4.0,-4.0),frandom(4.0,-4.0),frandom(4.0,-4.0),0,SXF_NOCHECKPOSITION)
+		PS04 A 0 A_PlaySound("monster/bastet/warpin")
+		PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvOrangeOrbPartSmall",0,0,25,frandom(4.0,-4.0),frandom(4.0,-4.0),frandom(4.0,-4.0),0,SXF_NOCHECKPOSITION)
+		PS04 EFGH 3 
+		PS04 A 0 A_SpawnItem("SmallHealthPower",0,0,0)
+		stop
     }
 }
 
@@ -2659,13 +2624,13 @@ Actor FullHealthPowerSpawner : LargeHealthPowerOrbSpawn
     states
     {
     Spawn:
-	TNT1 A 0 
-	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvOrangeOrbPart",0,0,25,frandom(9.0,-9.0),frandom(9.0,-9.0),frandom(9.0,-9.0),0,SXF_NOCHECKPOSITION)
-	PS04 A 0 A_PlaySound("monster/bastet/warpin")
-	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvOrangeOrbPart",0,0,25,frandom(9.0,-9.0),frandom(9.0,-9.0),frandom(9.0,-9.0),0,SXF_NOCHECKPOSITION)
-	PS04 EFGH 3 
-	PS04 A 0 A_SpawnItem("FullHealthPower",0,0,0)
-	stop
+		TNT1 A 0 
+		TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvOrangeOrbPart",0,0,25,frandom(9.0,-9.0),frandom(9.0,-9.0),frandom(9.0,-9.0),0,SXF_NOCHECKPOSITION)
+		PS04 A 0 A_PlaySound("monster/bastet/warpin")
+		PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvOrangeOrbPart",0,0,25,frandom(9.0,-9.0),frandom(9.0,-9.0),frandom(9.0,-9.0),0,SXF_NOCHECKPOSITION)
+		PS04 EFGH 3 
+		PS04 A 0 A_SpawnItem("FullHealthPower",0,0,0)
+		stop
     }
 }
 
@@ -2677,13 +2642,13 @@ Actor LargeShieldPowerOrbSpawn : LargeWeaponPowerOrbSpawn
     states
     {
     Spawn:
-	TNT1 A 0 
-	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvRedOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION)
-	PS04 A 0 A_PlaySound("monster/bastet/warpin")
-	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvRedOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION)
-	PS04 EFGH 3 
-	PS04 A 0 A_SpawnItem("BigShieldPower",0,0,0)
-	stop
+		TNT1 A 0 
+		TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvRedOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION)
+		PS04 A 0 A_PlaySound("monster/bastet/warpin")
+		PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvRedOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION)
+		PS04 EFGH 3 
+		PS04 A 0 A_SpawnItem("BigShieldPower",0,0,0)
+		stop
     }
 }
 
@@ -2693,13 +2658,13 @@ Actor SmallShieldPowerOrbSpawn : LargeShieldPowerOrbSpawn
     states
     {
     Spawn:
-	TNT1 A 0 
-	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvRedOrbPartSmall",0,0,25,frandom(4.0,-4.0),frandom(4.0,-4.0),frandom(4.0,-4.0),0,SXF_NOCHECKPOSITION)
-	PS04 A 0 A_PlaySound("monster/bastet/warpin")
-	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvRedOrbPartSmall",0,0,25,frandom(4.0,-4.0),frandom(4.0,-4.0),frandom(4.0,-4.0),0,SXF_NOCHECKPOSITION)
-	PS04 EFGH 3 
-	PS04 A 0 A_SpawnItem("SmallShieldPower",0,0,0)
-	stop
+		TNT1 A 0 
+		TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvRedOrbPartSmall",0,0,25,frandom(4.0,-4.0),frandom(4.0,-4.0),frandom(4.0,-4.0),0,SXF_NOCHECKPOSITION)
+		PS04 A 0 A_PlaySound("monster/bastet/warpin")
+		PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvRedOrbPartSmall",0,0,25,frandom(4.0,-4.0),frandom(4.0,-4.0),frandom(4.0,-4.0),0,SXF_NOCHECKPOSITION)
+		PS04 EFGH 3 
+		PS04 A 0 A_SpawnItem("SmallShieldPower",0,0,0)
+		stop
     }
 }
 
@@ -3266,17 +3231,17 @@ Actor ShotgunOrbPowerClassic : CustomInventory
 
 Actor PowerSlaveSpawnerMonsterAmmo 
 {
-    radius 0
-    height 0
-    +NOCLIP
+	radius 0
+	height 0
+	+NOCLIP
 	VisibleToPlayerClass AEoDmarine
-//    +FLOORCLIP
-    states
-    {
-    Spawn:
-	TNT1 A 20
-    AmmoSpawner:
-      TNT1 A 0 A_SpawnItem("MonsterAmmoOrbSpawn",0,0,0)	
+	//    +FLOORCLIP
+	states
+	{
+	Spawn:
+		TNT1 A 20
+	AmmoSpawner:
+		TNT1 A 0 A_SpawnItem("MonsterAmmoOrbSpawn",0,0,0)	
 	stop
     }
 }
@@ -3292,13 +3257,13 @@ Actor MonsterAmmoOrbSpawn
     states
     {
 	Spawn:
-	TNT1 A 0 
-	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(5.0,-5.0),frandom(5.0,-5.0),frandom(5.0,-5.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
-	PS04 A 0 A_PlaySound("monster/bastet/warpin")
-	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(5.0,-5.0),frandom(5.0,-5.0),frandom(5.0,-5.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
-	PS04 EFGH 3 
-	PS04 A 0 A_SpawnItemEx("MonsterAmmoPower",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
-	stop
+		TNT1 A 0 
+		TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(5.0,-5.0),frandom(5.0,-5.0),frandom(5.0,-5.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+		PS04 A 0 A_PlaySound("monster/bastet/warpin")
+		PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(5.0,-5.0),frandom(5.0,-5.0),frandom(5.0,-5.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+		PS04 EFGH 3 
+		PS04 A 0 A_SpawnItemEx("MonsterAmmoPower",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+		stop
     }
 }
 Actor MonsterAmmoPower
@@ -3660,8 +3625,8 @@ Actor BigHealthPower : Health
     States
     {
     Spawn:
-	PS03 A -1 Bright NoDelay 
-	Stop
+		PS03 A -1 Bright NoDelay 
+		Stop
     }	
 }
 
@@ -3682,8 +3647,8 @@ Actor SmallHealthPower : Health
     States
     {
     Spawn:
-	PS03 A -1 Bright NoDelay 
-	Stop
+		PS03 A -1 Bright NoDelay 
+		Stop
     }	
 }
 
@@ -3694,8 +3659,8 @@ ACTOR PSArmorBonus : ArmorBonus
     States
     {
     Spawn:
-	TNT1 A 0
-	Stop
+		TNT1 A 0
+		Stop
     }
 }
 
@@ -3715,34 +3680,17 @@ Actor BigShieldPower : CustomInventory
     States
     {
     Spawn:
-	PS02 A -1 Bright 
-	Stop
+		PS02 A -1 Bright 
+		Stop
     Pickup:
-	PS02 A 0 Bright A_JumpIfInventory("BasicArmor",500,16)
-	PS02 A 0 Bright A_GiveInventory("Q2ArmorShard",1)
-	PS02 A 0 Bright A_GiveInventory("Q2ArmorShard",1)
-	PS02 A 0 Bright A_GiveInventory("ArmorHelm",1)
-	PS02 A 0 A_Jump(128,1)
-	Stop
-	PS02 A 0 Bright A_GiveInventory("PSArmorBonus",1)
-	PS02 A 0 A_Jump(128,1)
-	Stop
-	PS02 A 0 Bright A_GiveInventory("PSArmorBonus",1)
-	PS02 A 0 A_Jump(128,1)
-	Stop
-	PS02 A 0 Bright A_GiveInventory("PSArmorBonus",1)
-	PS02 A 0 A_Jump(128,1)
-	Stop
-	PS02 A 0 Bright A_GiveInventory("PSArmorBonus",1)
-	PS02 A 0 A_Jump(128,1)
-	Stop
-	PS02 A 0 Bright A_GiveInventory("PSArmorBonus",1)
-	PS02 A 0 A_Jump(128,1)
-	Stop
-	PS02 A 0 Bright A_GiveInventory("PSArmorBonus",1)
-	Stop
-	TNT1 A 0
-	Fail
+		PS02 A 0 Bright A_JumpIfInventory("BasicArmor",500,"Full")
+		PS02 A 0 Bright A_GiveInventory("Q2ArmorShard",2)
+		PS02 A 0 Bright A_GiveInventory("ArmorHelm",1)
+		PS02 A 0 Bright A_GiveInventory("PSArmorBonus",random(1,6))
+		Stop
+	Full:
+		TNT1 A 0
+		Fail
     }	
 }
 
@@ -3762,33 +3710,17 @@ Actor SmallShieldPower : CustomInventory
     States
     {
     Spawn:
-	PS02 A -1 Bright 
-	Stop
+		PS02 A -1 Bright 
+		Stop
     Pickup:
-	PS02 A 0 Bright A_JumpIfInventory("BasicArmor",500,15)
-	PS02 A 0 Bright A_GiveInventory("ArmorHelm",1)
-	PS02 A 0 Bright A_GiveInventory("ArmorHelm",1)
-	PS02 A 0 A_Jump(128,1)
-	Stop
-	PS02 A 0 Bright A_GiveInventory("PSArmorBonus",1)
-	PS02 A 0 A_Jump(128,1)
-	Stop
-	PS02 A 0 Bright A_GiveInventory("PSArmorBonus",1)
-	PS02 A 0 A_Jump(128,1)
-	Stop
-	PS02 A 0 Bright A_GiveInventory("PSArmorBonus",1)
-	PS02 A 0 A_Jump(128,1)
-	Stop
-	PS02 A 0 Bright A_GiveInventory("PSArmorBonus",1)
-	PS02 A 0 A_Jump(128,1)
-	Stop
-	PS02 A 0 Bright A_GiveInventory("PSArmorBonus",1)
-	PS02 A 0 A_Jump(128,1)
-	Stop
-	PS02 A 0 Bright A_GiveInventory("PSArmorBonus",1)
-	Stop
-	TNT1 A 0
-	Fail
+		PS02 A 0 Bright A_JumpIfInventory("BasicArmor",500,"Full")
+		PS02 A 0 Bright A_GiveInventory("Q2ArmorShard",1)
+		PS02 A 0 Bright A_GiveInventory("ArmorHelm",1)
+		PS02 A 0 Bright A_GiveInventory("PSArmorBonus",random(1,6))
+		Stop
+	Full:
+		TNT1 A 0
+		Fail
     }	
 }
 
@@ -3807,8 +3739,8 @@ Actor FullHealthPower : Health
     states
     {
     Spawn:
-	PS06 ABCD 3 Bright
-	loop
+		PS06 ABCD 3 Bright
+		loop
     }
 }
   
@@ -3828,8 +3760,8 @@ Actor LifeBloodRecepticle : Health
     States
     {
     Spawn:
-	PS01 ABCDEF 6
-	loop
+		PS01 ABCDEF 6
+		loop
     }	
 }
 
@@ -3847,13 +3779,13 @@ Actor FullWeaponPower : LargeWeaponPowerOrbSpawn
     states
     {
 	Spawn:
-	TNT1 A 0 
-	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
-	PS04 A 0 A_PlaySound("monster/bastet/warpin")
-	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
-	PS04 EFGH 3 
-	PS04 A 0 A_SpawnItemEx("FullWeaponPowerAmmoGive",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
-	stop
+		TNT1 A 0 
+		TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+		PS04 A 0 A_PlaySound("monster/bastet/warpin")
+		PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+		PS04 EFGH 3 
+		PS04 A 0 A_SpawnItemEx("FullWeaponPowerAmmoGive",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+		stop
     }
 }
 
@@ -3872,25 +3804,25 @@ Actor FullWeaponPowerAmmoGive : CustomInventory
     States
     {
     Spawn:
-	PS05 ABCD 3 Bright
-	loop
+		PS05 ABCD 3 Bright
+		loop
     Pickup:
-	PS02 A 0 A_GiveInventory("AEClip",500)
-	PS02 A 0 A_GiveInventory("AEShell",120)
-	PS02 A 0 A_GiveInventory("AERocket",100)
-	PS02 A 0 A_GiveInventory("AECell",500)
-	PS02 A 0 A_GiveInventory("BlueMana",400)
-	PS02 A 0 A_GiveInventory("RedMana",200)
-	PS02 A 0 A_GiveInventory("GreenMana",300)
-	PS02 A 0 A_GiveInventory("DarkMana",100)
-	PS02 A 0 A_GiveInventory("MiniRockets",200)
-	PS02 A 0 A_GiveInventory("PlasmaRod",500)
-	PS02 A 0 A_GiveInventory("BunnyAmmo",6)
-	PS02 A 0 A_GiveInventory("ASTF",200)
-	PS02 A 0 A_GiveInventory("AEGrenade",100)
-	PS02 A 0 A_GiveInventory("AENails",300)
-	PS02 A 0 A_GiveInventory("Mojo",100)
-    stop
+		PS02 A 0 A_GiveInventory("AEClip",500)
+		PS02 A 0 A_GiveInventory("AEShell",120)
+		PS02 A 0 A_GiveInventory("AERocket",100)
+		PS02 A 0 A_GiveInventory("AECell",500)
+		PS02 A 0 A_GiveInventory("BlueMana",400)
+		PS02 A 0 A_GiveInventory("RedMana",200)
+		PS02 A 0 A_GiveInventory("GreenMana",300)
+		PS02 A 0 A_GiveInventory("DarkMana",100)
+		PS02 A 0 A_GiveInventory("MiniRockets",200)
+		PS02 A 0 A_GiveInventory("PlasmaRod",500)
+		PS02 A 0 A_GiveInventory("BunnyAmmo",6)
+		PS02 A 0 A_GiveInventory("ASTF",200)
+		PS02 A 0 A_GiveInventory("AEGrenade",100)
+		PS02 A 0 A_GiveInventory("AENails",300)
+		PS02 A 0 A_GiveInventory("Mojo",100)
+		stop
     }	
 }
 
@@ -3901,13 +3833,13 @@ Actor HalfWeaponPower : FullWeaponPower
     states
     {
 	Spawn:
-	TNT1 A 0 
-	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
-	PS04 A 0 A_PlaySound("monster/bastet/warpin")
-	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
-	PS04 EFGH 3 
-	PS04 A 0 A_SpawnItemEx("HalfWeaponPowerAmmoGive",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
-	stop
+		TNT1 A 0 
+		TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+		PS04 A 0 A_PlaySound("monster/bastet/warpin")
+		PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+		PS04 EFGH 3 
+		PS04 A 0 A_SpawnItemEx("HalfWeaponPowerAmmoGive",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+		stop
     }
 }
 Actor HalfWeaponPowerAmmoGive : CustomInventory
@@ -3925,25 +3857,25 @@ Actor HalfWeaponPowerAmmoGive : CustomInventory
     States
     {
     Spawn:
-	PS05 ABCD 3 Bright
-	loop
+		PS05 ABCD 3 Bright
+		loop
     Pickup:
-	PS02 A 0 A_GiveInventory("AEClip",250)
-	PS02 A 0 A_GiveInventory("AEShell",60)
-	PS02 A 0 A_GiveInventory("AERocket",50)
-	PS02 A 0 A_GiveInventory("AECell",250)
-	PS02 A 0 A_GiveInventory("BlueMana",200)
-	PS02 A 0 A_GiveInventory("GreenMana",150)
-	PS02 A 0 A_GiveInventory("RedMana",100)
-	PS02 A 0 A_GiveInventory("DarkMana",30)
-	PS02 A 0 A_GiveInventory("MiniRockets",100)
-	PS02 A 0 A_GiveInventory("PlasmaRod",250)
-	PS02 A 0 A_GiveInventory("BunnyAmmo",3)
-	PS02 A 0 A_GiveInventory("ASTF",100)
-	PS02 A 0 A_GiveInventory("AEGrenade",50)
-	PS02 A 0 A_GiveInventory("AENails",150)
-	PS02 A 0 A_GiveInventory("Mojo",100)
-    stop
+		PS02 A 0 A_GiveInventory("AEClip",250)
+		PS02 A 0 A_GiveInventory("AEShell",60)
+		PS02 A 0 A_GiveInventory("AERocket",50)
+		PS02 A 0 A_GiveInventory("AECell",250)
+		PS02 A 0 A_GiveInventory("BlueMana",200)
+		PS02 A 0 A_GiveInventory("GreenMana",150)
+		PS02 A 0 A_GiveInventory("RedMana",100)
+		PS02 A 0 A_GiveInventory("DarkMana",30)
+		PS02 A 0 A_GiveInventory("MiniRockets",100)
+		PS02 A 0 A_GiveInventory("PlasmaRod",250)
+		PS02 A 0 A_GiveInventory("BunnyAmmo",3)
+		PS02 A 0 A_GiveInventory("ASTF",100)
+		PS02 A 0 A_GiveInventory("AEGrenade",50)
+		PS02 A 0 A_GiveInventory("AENails",150)
+		PS02 A 0 A_GiveInventory("Mojo",100)
+		stop
     }	
 }
 
@@ -3978,24 +3910,24 @@ Actor MediumWeaponPowerAmmoGive : CustomInventory
     States
     {
     Spawn:
-	PS05 ABCD 3 Bright
-	loop
+		PS05 ABCD 3 Bright
+		loop
     Pickup:
-	PS02 A 0 A_GiveInventory("AEClip",50)
-	PS02 A 0 A_GiveInventory("AEShell",20)
-	PS02 A 0 A_GiveInventory("AERocket",10)
-	PS02 A 0 A_GiveInventory("AECell",50)
-	PS02 A 0 A_GiveInventory("BlueMana",35)
-	PS02 A 0 A_GiveInventory("GreenMana",20)
-	PS02 A 0 A_GiveInventory("RedMana",15)
-	PS02 A 0 A_GiveInventory("DarkMana",5)
-	PS02 A 0 A_GiveInventory("MiniRockets",25)
-	PS02 A 0 A_GiveInventory("PlasmaRod",50)
-	PS02 A 0 A_GiveInventory("BunnyAmmo",1)
-	PS02 A 0 A_GiveInventory("ASTF",20)
-	PS02 A 0 A_GiveInventory("AEGrenade",8)
-	PS02 A 0 A_GiveInventory("AENails",50)
-    stop
+		PS02 A 0 A_GiveInventory("AEClip",50)
+		PS02 A 0 A_GiveInventory("AEShell",20)
+		PS02 A 0 A_GiveInventory("AERocket",10)
+		PS02 A 0 A_GiveInventory("AECell",50)
+		PS02 A 0 A_GiveInventory("BlueMana",35)
+		PS02 A 0 A_GiveInventory("GreenMana",20)
+		PS02 A 0 A_GiveInventory("RedMana",15)
+		PS02 A 0 A_GiveInventory("DarkMana",5)
+		PS02 A 0 A_GiveInventory("MiniRockets",25)
+		PS02 A 0 A_GiveInventory("PlasmaRod",50)
+		PS02 A 0 A_GiveInventory("BunnyAmmo",1)
+		PS02 A 0 A_GiveInventory("ASTF",20)
+		PS02 A 0 A_GiveInventory("AEGrenade",8)
+		PS02 A 0 A_GiveInventory("AENails",50)
+		stop
     }	
 }
 
@@ -4005,13 +3937,13 @@ Actor RandomWeaponPower : FullWeaponPower
     states
     {
 	Spawn:
-	TNT1 A 0 
-	TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
-	PS04 A 0 A_PlaySound("monster/bastet/warpin")
-	PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
-	PS04 EFGH 3 
-	PS04 A 0 A_SpawnItemEx("RandomWeaponPowerAmmoGive",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
-	stop
+		TNT1 A 0 
+		TNT1 AAAAAAAAAAAA 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+		PS04 A 0 A_PlaySound("monster/bastet/warpin")
+		PS04 AAABBBCCCDDD 1 Bright A_SpawnItemEx("PwrSlvBlueOrbPart",0,0,25,frandom(7.0,-7.0),frandom(7.0,-7.0),frandom(7.0,-7.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+		PS04 EFGH 3 
+		PS04 A 0 A_SpawnItemEx("RandomWeaponPowerAmmoGive",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
+		stop
     }
 }
 Actor RandomWeaponPowerAmmoGive : CustomInventory
@@ -4029,24 +3961,24 @@ Actor RandomWeaponPowerAmmoGive : CustomInventory
     States
     {
     Spawn:
-	PS05 ABCD 3 Bright
-	loop
+		PS05 ABCD 3 Bright
+		loop
     Pickup:
-	PS02 A 0 A_GiveInventory("AEClip",random(0,50))
-	PS02 A 0 A_GiveInventory("AEShell",random(0,20))
-	PS02 A 0 A_GiveInventory("AERocket",random(0,10))
-	PS02 A 0 A_GiveInventory("AECell",random(0,50))
-	PS02 A 0 A_GiveInventory("BlueMana",random(0,35))
-	PS02 A 0 A_GiveInventory("GreenMana",random(0,20))
-	PS02 A 0 A_GiveInventory("RedMana",random(0,15))
-	PS02 A 0 A_GiveInventory("DarkMana",random(0,3))
-	PS02 A 0 A_GiveInventory("MiniRockets",random(0,25))
-	PS02 A 0 A_GiveInventory("PlasmaRod",random(0,50))
-	PS02 A 0 A_GiveInventory("BunnyAmmo",random(0,1))
-	PS02 A 0 A_GiveInventory("ASTF",random(0,20))
-	PS02 A 0 A_GiveInventory("AEGrenade",random(0,8))
-	PS02 A 0 A_GiveInventory("AENails",random(0,50))
-    stop
+		PS02 A 0 A_GiveInventory("AEClip",random(0,50))
+		PS02 A 0 A_GiveInventory("AEShell",random(0,20))
+		PS02 A 0 A_GiveInventory("AERocket",random(0,10))
+		PS02 A 0 A_GiveInventory("AECell",random(0,50))
+		PS02 A 0 A_GiveInventory("BlueMana",random(0,35))
+		PS02 A 0 A_GiveInventory("GreenMana",random(0,20))
+		PS02 A 0 A_GiveInventory("RedMana",random(0,15))
+		PS02 A 0 A_GiveInventory("DarkMana",random(0,3))
+		PS02 A 0 A_GiveInventory("MiniRockets",random(0,25))
+		PS02 A 0 A_GiveInventory("PlasmaRod",random(0,50))
+		PS02 A 0 A_GiveInventory("BunnyAmmo",random(0,1))
+		PS02 A 0 A_GiveInventory("ASTF",random(0,20))
+		PS02 A 0 A_GiveInventory("AEGrenade",random(0,8))
+		PS02 A 0 A_GiveInventory("AENails",random(0,50))
+		stop
     }	
 }
 
@@ -4086,6 +4018,7 @@ Actor DeadLightPowerup : CustomInventory
 	Inventory.PickupMessage "You won the Dead Lights! Drive your enemies through multi-colored madness!"
 	+INVENTORY.INVBAR
 	+VISIBILITYPULSE
+	+DONTGIB
 	Inventory.Icon "X091A0"
 	//+FLOATBOB
 	Tag "Invulnerable when hit, floating deadlights hurt nearby enemies, reflecting attacks"
@@ -4456,6 +4389,7 @@ Actor DMSoulFragment : CustomInventory
 	+NOTELESTOMP
 	-TELESTOMP
 	-COUNTITEM
+	+DONTGIB
 	Scale 0.0
 	RenderStyle Add
 	Inventory.PickupSound "reilsss/health/soul"
@@ -4464,7 +4398,8 @@ Actor DMSoulFragment : CustomInventory
 	{
 	Spawn:
 		TNT1 A 0 NoDelay A_SetUserVar(user_tid,tid)
-		TNT1 A 10 Thing_ChangeTID(0,0)
+		TNT1 A 0 Thing_ChangeTID(0,0)
+		TNT1 A 10 A_Stop
 		X099 A 0 A_SpawnItemEx("DMSoulTarget",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER|SXF_ORIGINATOR|SXF_TRANSFERTRANSLATION,0,tid)
 		"####" "#" 0 A_JumpIf(z-floorz <= 10.0,"MoveUp")
 		"####" "#" 0 A_CheckFloor("MoveUp")
@@ -4977,6 +4912,7 @@ Actor AEoDDemonMorphHand : Weapon
 		Loop
 	AltFire:
 	Fire:
+		//Note: The damage has been moved directly to the puff itself so it can ignore damagefactors.
 		M666 A 0 A_JumpIf(!CheckClass("DemonPlayerMorph",AAPTR_DEFAULT,0),"Remove")
 		M666 A 0 A_RailAttack(20000,0,0,none,none,RGF_SILENT,0,"DeathTouchPuff",0,0,32766,0,16,0,"DemonMorphExploder")
 		M666 A 0 A_SpawnItemEx("DemonMorphShootingSound",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)//A_PlaySound("DemonMorph/Shoot",CHAN_WEAPON|CHAN_NOPAUSE,1,0)
@@ -5063,7 +4999,7 @@ Actor DemonMorphExploder
 	+PUFFGETSOWNER
 	+NOTONAUTOMAP
 	DamageType "TempestLightning"
-	PainType "Normal"
+	PainType "Telefrag"
 	DeathType "Telefrag"
 	States
 	{
@@ -5083,12 +5019,15 @@ Actor DeathTouchPuff
 	+PUFFONACTORS
 	+NOTIMEFREEZE
 	+NOTONAUTOMAP
+	+HITTRACER
 	DamageType "Extreme"
+	PainType "Telefrag"
 	DeathType "Telefrag"
 	States
 	{
 	Spawn:
 		TNT1 A 0 NoDelay A_Explode(666,66,0,0,66)
+		//A_DamageTracer(20000,"Telefrag",DMSS_NOFACTOR)
 		Stop
 	}
 }

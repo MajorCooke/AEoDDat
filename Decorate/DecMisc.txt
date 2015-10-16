@@ -57,6 +57,8 @@ Actor Counter : inventory		//general purpose counter
 Actor OldFog : TeleportFog // 4.0 - 5.25
 {
 	+NOTIMEFREEZE
+	+NOTELESTOMP
+	+NOTONAUTOMAP
 	RenderStyle None
 	States
 	{
@@ -119,7 +121,8 @@ Actor NewFog replaces TeleportFog
 {
 	Projectile
 	+NOINTERACTION
-	-TELESTOMP
+	+NOTELESTOMP
+	+NOTONAUTOMAP
 	//+NOTIMEFREEZE
 	RenderStyle Add
 	Scale 0.30
@@ -144,7 +147,8 @@ Actor NewFogSimpler
 {
 	Projectile
 	+NOINTERACTION
-	-TELESTOMP
+	+NOTELESTOMP
+	+NOTONAUTOMAP
 	//+NOTIMEFREEZE
 	RenderStyle Add
 	Scale 0.30
@@ -169,6 +173,8 @@ Actor TeleSpark
 {
 	Projectile
 	+NOINTERACTION
+	+NOTELESTOMP
+	+NOTONAUTOMAP
 	MissileType "TeleSparkTrail"
 	States
 	{
@@ -247,6 +253,8 @@ Actor TelFogXtra
 Actor NoBloodPuff
 {
 	+NOINTERACTION
+	+NOTELESTOMP
+	+NOTONAUTOMAP
 	States
 	{
 	Spawn:
@@ -261,6 +269,8 @@ Actor NewPuff1 : BulletPuff
 	+NOINTERACTION
 	+PUFFONACTORS
 	+HITTRACER
+	+NOTELESTOMP
+	+NOTONAUTOMAP
 	VSpeed 0
 	Speed 0
 	Scale 0.2
@@ -279,7 +289,7 @@ Actor NewPuff1 : BulletPuff
 		TNT1 A 0 A_JumpIf(!IsPointerEqual(AAPTR_TRACER,AAPTR_NULL),2)
 		TNT1 A 0 A_SpawnItemEx("PuffWallSmoke",0,0,0,0,0,0,0,32)
 		TNT1 A 0 A_Jump(128,2)
-		TNT1 A 0 A_PlaySound("postal2/weapons/bullet_hit_ricochet")
+		TNT1 A 0 A_PlaySound("postal2/weapons/bullet_hit_ricochet",6,0.5)
 		TNT1 A 0 A_SpawnItemEx("Puff2FlareBig",0,0,0,0,0,0,0,32)
 		TNT1 A 0 A_SpawnItemEx("Puff2Spark",2,0,0,frandom(3,9),0,frandom(-6,6),random(0,359),32)
 		TNT1 AAA 0 A_SpawnItemEx("Puff2Spark",2,0,0,frandom(3,9),0,frandom(-6,6),random(0,359),32,128)
@@ -300,7 +310,7 @@ Actor NewPuff1 : BulletPuff
 	Simple:
 		TNT1 A 0 A_Jump(128,1)
 		Stop
-		TNT1 A 1 A_PlaySound("postal2/weapons/bullet_hit_ricochet")
+		TNT1 A 1 A_PlaySound("postal2/weapons/bullet_hit_ricochet",6,0.5)
 		Stop
 	}
 }
@@ -332,6 +342,8 @@ Actor NewPuff1Silent : NewPuff1
 Actor PuffWallSmoke
 {
 	+NOINTERACTION
+	+NOTELESTOMP
+	+NOTONAUTOMAP
 	RenderStyle Add
 	Scale 0.13
 	States
@@ -349,6 +361,8 @@ Actor PuffWallSmoke
 Actor PuffFloorSmoke
 {
 	+NOINTERACTION
+	+NOTELESTOMP
+	+NOTONAUTOMAP
 	RenderStyle Add
 	States
 	{
@@ -381,10 +395,12 @@ Actor Puff2Spark : FastProjectile
 {
 	Projectile
 	+THRUACTORS
+	+NOTELESTOMP
+	+NOTONAUTOMAP
 	BounceType "Doom"
 	Radius 1
 	Height 1
-	BounceFActor 1
+	BounceFactor 1
 	WallBounceFActor 1
 	MissileType "Puff2Flare"
 	MissileHeight 7
@@ -440,6 +456,8 @@ Actor PuffSmoke //: TT1
 {
 	Projectile
 	+NOINTERACTION
+	+NOTELESTOMP
+	+NOTONAUTOMAP
 	Scale 0.02
 	RenderStyle Translucent
 	Alpha 0.67
@@ -582,6 +600,7 @@ Actor NewBlood : Blood //replaces Blood  //Blood as in v5.03, kept for compatabi
 {
 	+DONTSPLASH
 	+DONTBLAST
+	+NOTELESTOMP
 	+NOTONAUTOMAP
 	Scale 0.15
 	Gravity 0.44
@@ -711,7 +730,6 @@ Actor GenericHumanBurn1
 	-COUNTKILL
 	+DONTSPLASH
 	+FLOORCLIP
-	+NOTONAUTOMAP
 	+NOTELESTOMP
 	Radius 20
 	Height 56
@@ -844,7 +862,6 @@ Actor HexenHumanBurn
 	-COUNTKILL
 	+DONTSPLASH
 	+FLOORCLIP
-	+NOTONAUTOMAP
 	+NOTELESTOMP
 	Radius 20
 	Height 56
@@ -1407,6 +1424,7 @@ Actor NewMeat replaces Meat
 	+DROPOFF
 	+NOTELEPORT
 	+NOTELESTOMP
+	+NOTONAUTOMAP
 	-NOGRAVITY
 	+BOUNCEONWALLS
 	+BOUNCEONFLOORS
@@ -2206,6 +2224,7 @@ Actor BloodGibDropper
 	const int RAdd = 5;
 	var int user_t;
 	+NOINTERACTION
+	+NOTONAUTOMAP
 	RenderStyle None
 	States
 	{
@@ -2374,18 +2393,15 @@ Actor GunSmallSmokeSpawner
 	PROJECTILE
 //	+NOCLIP
 	+NOTIMEFREEZE
+	+NOTONAUTOMAP
+	+THRUACTORS
 	Radius 1
 	Height 1
 	Speed 14
 	States
 	{
 	Spawn:
-		TNT1 A 1
-		TNT1 A 0 A_Die
-		Goto Death
-	Death:
-		TNT1 A 0 A_CustomMissile("GunSmallSmoke",-2,0,0)	
-		TNT1 A 2
+		TNT1 A 0 NoDelay A_CustomMissile("GunSmallSmoke",-2,0,0)	
 		Stop
 	}
 }
@@ -2407,7 +2423,7 @@ Actor GunSmallSmoke
 	{
 	Spawn:
 //	   TNT1 AA 0 ThrustThingZ(0,1,0,1)
-	   TNT1 A 0
+	   TNT1 A 0 NoDelay A_SetScale(ScaleX*randompick(-1,1),ScaleY*randompick(-1,1))
 	   TNT1 A 0 A_Jump(210,4,6,8,10,12)
 	   WPXS ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_FadeOut(0.01)
  	   WPXZ ABC 1 A_FadeOut(0.01)
@@ -2438,6 +2454,7 @@ Actor GunSmokeSpawner
 {
 	PROJECTILE
 //	+NOCLIP
+	+NOINTERACTION
 	+NOTIMEFREEZE
 	Radius 1
 	Height 1
@@ -2445,12 +2462,8 @@ Actor GunSmokeSpawner
 	States
 	{
 	Spawn:
-		TNT1 A 1
-		TNT1 A 0 A_Die
-		Goto Death
-	Death:
 //		TNT1 A 0 A_CustomMissile("GunSmoke2",-2,0,0)
-		TNT1 A 0 A_CustomMissile("GunSmoke",-2,0,0)
+		TNT1 A 0 NoDelay A_CustomMissile("GunSmoke",-2,0,0)
 		Stop
 	}
 }
@@ -2472,7 +2485,7 @@ Actor GunSmoke
 	{
 	Spawn:
 //	   TNT1 AA 0 ThrustThingZ(0,1,0,1)
-	   TNT1 A 0
+	   TNT1 A 0 NoDelay A_SetScale(ScaleX*randompick(-1,1),ScaleY*randompick(-1,1))
 	   TNT1 A 0 A_Jump(210,6,8,10,12,14)
 	   WPXS ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_FadeOut(0.01)
  	   WPXZ ABC 1 A_FadeOut(0.01)
@@ -2501,7 +2514,7 @@ Actor GunSmoke2
 //==========================================================
 //==========================================================
 
-Actor FBeggar 8001
+Actor FBeggar //8001
 {
 	Monster
 	-ISMONSTER
