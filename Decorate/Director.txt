@@ -287,8 +287,6 @@ Actor MCLargeMobRunner
 	//[0] = Cyberdemon or Spider Mastermind?
 	//[1] = Have we chosen to spawn the big baddies above?
 	var int user_dlimit;
-	var int user_x[3];
-	var int user_y[3];
 	var int user_t;
 	var int user_tid;
 	Monster
@@ -341,8 +339,6 @@ Actor MCLargeMobRunner
 		Loop
 	See:
 	Wanderbout:
-		TNT1 A 0 A_SetUserArray("user_x",0,x)
-		TNT1 A 0 A_SetUserArray("user_y",0,y)
 		TNT1 A 0 A_JumpIfInventory("DirectorIsLeaving",1,"Death",AAPTR_MASTER)
 		TNT1 A 0 A_JumpIfInventory("RemoveDirector",1,"Death",AAPTR_TARGET)
 		TNT1 A 0 A_JumpIfInventory("FreezeDirector",1,"Frozen",AAPTR_TARGET)
@@ -352,9 +348,9 @@ Actor MCLargeMobRunner
 		TNT1 A 0 A_SetUserVar(user_t,user_t+1)
 		TNT1 A 0 A_JumpIf(user_t < 70,2)
 		TNT1 A 0 A_ChangeFlag("CANTLEAVEFLOORPIC",0)
-		TNT1 A 0 A_SetUserArray("user_x",1,x)
-		TNT1 A 0 A_SetUserArray("user_y",1,y)
-		TNT1 A 0 A_JumpIf((user_x[0]==user_x[1])&&(user_y[0]==user_y[1]),"Stuck")
+		TNT1 A 0 A_ChangeFlag("NOBLOCKMAP",0)
+		TNT1 A 0 A_CheckBlock("Stuck")
+		TNT1 A 0 A_ChangeFlag("NOBLOCKMAP",1)
 	Mobmaking:
 		TNT1 A 0 A_JumpIfTargetInLOS("Wanderbout",360)
 		TNT1 A 0 A_JumpIfCloser(250,"Wanderbout")
@@ -446,8 +442,6 @@ Actor MCMediumMobRunner
 	Radius 64
 	Height 40
 	var int user_dlimit;
-	var int user_x[2];
-	var int user_y[2];
 	var int user_t;
 	var int user_tid;
 	Monster
@@ -495,8 +489,6 @@ Actor MCMediumMobRunner
 		Loop
 	See:
 	Wanderbout:
-		TNT1 A 0 A_SetUserArray("user_x",0,x)
-		TNT1 A 0 A_SetUserArray("user_y",0,y)
 		TNT1 A 0 Thing_ChangeTID(0,0)
 		TNT1 A 0 A_JumpIfInventory("RemoveDirector",1,"Death",AAPTR_TARGET)
 		TNT1 A 0 A_JumpIfInventory("DirectorIsLeaving",1,"Death",AAPTR_MASTER)
@@ -507,9 +499,9 @@ Actor MCMediumMobRunner
 		TNT1 A 0 A_SetUserVar(user_t,user_t+1)
 		TNT1 A 0 A_JumpIf(user_t < 70,2)
 		TNT1 A 0 A_ChangeFlag("CANTLEAVEFLOORPIC",0)
-		TNT1 A 0 A_SetUserArray("user_x",1,x)
-		TNT1 A 0 A_SetUserArray("user_y",1,y)
-		TNT1 A 0 A_JumpIf((user_x[0]==user_x[1])&&(user_y[0]==user_y[1]),"Stuck")
+		TNT1 A 0 A_ChangeFlag("NOBLOCKMAP",0)
+		TNT1 A 0 A_CheckBlock("Stuck")
+		TNT1 A 0 A_ChangeFlag("NOBLOCKMAP",1)
 	Mobmaking:
 		TNT1 A 0 A_JumpIfTargetInLOS("Wanderbout",360)
 		TNT1 A 0 A_JumpIfCloser(250,"Wanderbout")
@@ -596,8 +588,6 @@ Actor MCMediumMobRunner
 Actor MCSmallMobRunner
 {
 	var int user_dlimit;
-	var int user_x[2];
-	var int user_y[2];
 	var int user_t;
 	var int user_tid;
 	Radius 30
@@ -648,8 +638,6 @@ Actor MCSmallMobRunner
 		Loop
 	See:
 	Wanderbout:
-		TNT1 A 0 A_SetUserArray("user_x",0,x)
-		TNT1 A 0 A_SetUserArray("user_y",0,y)
 		TNT1 A 0 Thing_ChangeTID(0,0)
 		TNT1 A 0 A_JumpIfInventory("RemoveDirector",1,"Death",AAPTR_TARGET)
 		TNT1 A 0 A_JumpIfInventory("DirectorIsLeaving",1,"Death",AAPTR_MASTER)
@@ -660,9 +648,9 @@ Actor MCSmallMobRunner
 		TNT1 A 0 A_SetUserVar(user_t,user_t+1)
 		TNT1 A 0 A_JumpIf(user_t < 70,2)
 		TNT1 A 0 A_ChangeFlag("CANTLEAVEFLOORPIC",0)
-		TNT1 A 0 A_SetUserArray("user_x",1,x)
-		TNT1 A 0 A_SetUserArray("user_y",1,y)
-		TNT1 A 0 A_JumpIf((user_x[0]==user_x[1])&&(user_y[0]==user_y[1]),"Stuck")
+		TNT1 A 0 A_ChangeFlag("NOBLOCKMAP",0)
+		TNT1 A 0 A_CheckBlock("Stuck")
+		TNT1 A 0 A_ChangeFlag("NOBLOCKMAP",1)
 	Mobmaking:
 		TNT1 A 0 A_JumpIfTargetInLOS("Wanderbout",360)
 		TNT1 A 0 A_JumpIfCloser(250,"Wanderbout")
