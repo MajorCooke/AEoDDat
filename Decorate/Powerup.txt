@@ -4033,10 +4033,10 @@ Actor DeadLightPowerup : CustomInventory
 	Use:
 		TNT1 A 0 A_JumpIfInventory("PowerDemonMorph",1,"Deny")
 		TNT1 A 0 A_JumpIfInventory("PowerCFDLProtector",1,"Deny")
-		TNT1 A 0 A_GiveInventory("CFDLPowerEffect",1)
+		TNT1 A 0 A_GiveInventory("DLPowerEffect",1)
 		TNT1 A 0 A_SetReflective
-		TNT1 A 0 A_SpawnItemEx("CFDLController",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
-		TNT1 A 0 A_SpawnItemEx("CFDLMonitor",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
+		TNT1 A 0 A_SpawnItemEx("DLController",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
+		TNT1 A 0 A_SpawnItemEx("DLMonitor",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
 		TNT1 A 0 A_PlaySound("powerups/pentagramuse",5,1,0,ATTN_NONE)
 		TNT1 A 0 A_PlaySound("powerups/pentagramuse",6,1,0,ATTN_NONE)
 		TNT1 A 0 A_SpawnItemEx("PlayerDeadLightWarp",0,0,30,12,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
@@ -4054,7 +4054,7 @@ Actor DeadLightPowerup : CustomInventory
 	}
 }
 
-Actor PowerCFDLProtector : PowerProtection
+Actor PowerDLProtector : PowerProtection
 {
 	DamageFactor "Normal", 0.6
 	Inventory.Icon "X091A0"
@@ -4065,7 +4065,7 @@ Actor PowerFake : PowerProtection
 	DamageFactor "Normal", 0.0
 }
 
-Actor CFDLPowerEffect : PowerupGiver
+Actor DLPowerEffect : PowerupGiver
 {
 	Powerup.Type "CFDLProtector"
 	Powerup.Duration -120
@@ -4085,7 +4085,7 @@ Actor DLFlasher1 : PowerupGiver
 	+INVENTORY.AUTOACTIVATE
 }
 
-Actor CFDLMonitor
+Actor DLMonitor
 {
 	Projectile
 	+NOINTERACTION
@@ -4098,10 +4098,10 @@ Actor CFDLMonitor
 	Looping:
 		TNT1 A 1
 		TNT1 A 0 A_CheckFlag("JUSTHIT","Wipe",AAPTR_MASTER)
-		TNT1 A 0 A_JumpIfInventory("PowerCFDLProtector",1,"Looping",AAPTR_MASTER)
+		TNT1 A 0 A_JumpIfInventory("PowerDLProtector",1,"Looping",AAPTR_MASTER)
 		Stop
 	Wipe:
-		TNT1 A 0 A_GiveInventory("CFDLInvulEffect",1,AAPTR_MASTER)
+		TNT1 A 0 A_GiveInventory("DLInvulEffect",1,AAPTR_MASTER)
 		TNT1 A 0 A_GiveInventory("DLFlasher1",1,AAPTR_MASTER)
 		TNT1 A 5
 		//TNT1 A 0 A_TakeInventory("PowerFake",1000,0,AAPTR_PLAYER1)
@@ -4130,7 +4130,7 @@ Actor CFDLMonitor
 		TNT1 A 5
 		TNT1 A 0 A_TakeInventory("PowerFake",10000,0,AAPTR_MASTER)
 		TNT1 A 0 A_JumpIfInventory("PowerDemonMorph",1,"End",AAPTR_MASTER)
-		TNT1 A 0 A_GiveInventory("CFDLDeInvul",1,AAPTR_MASTER)
+		TNT1 A 0 A_GiveInventory("DLDeInvul",1,AAPTR_MASTER)
 		Goto Looping
 	End:
 		TNT1 A 0
@@ -4138,7 +4138,7 @@ Actor CFDLMonitor
 	}
 }
 
-Actor CFDLInvulEffect : CustomInventory
+Actor DLInvulEffect : CustomInventory
 {
 	+INVENTORY.ALWAYSPICKUP
 	+INVENTORY.AUTOACTIVATE
@@ -4153,7 +4153,7 @@ Actor CFDLInvulEffect : CustomInventory
 	}
 }
 
-Actor CFDLDeInvul : CustomInventory
+Actor DLDeInvul : CustomInventory
 {
 	+INVENTORY.ALWAYSPICKUP
 	+INVENTORY.AUTOACTIVATE
@@ -4174,7 +4174,7 @@ Actor CFDLDeInvul : CustomInventory
 	}
 }
 
-Actor CFDLController
+Actor DLController
 {
 	var int user_time;
 	Projectile
@@ -4187,16 +4187,16 @@ Actor CFDLController
 		TNT1 A 0
 	Looping:
 		TNT1 A 35
-		TNT1 A 0 A_JumpIfInventory("PowerCFDLProtector",1,"Looping",AAPTR_MASTER)
+		TNT1 A 0 A_JumpIfInventory("PowerDLProtector",1,"Looping",AAPTR_MASTER)
 	End:
-		TNT1 A 0 A_GiveInventory("CFDLDeInvul",1)
-		TNT1 A 0 A_GiveInventory("CFDLReverter",1,AAPTR_MASTER)
+		TNT1 A 0 A_GiveInventory("DLDeInvul",1)
+		TNT1 A 0 A_GiveInventory("DLReverter",1,AAPTR_MASTER)
 		TNT1 A 1 A_TakeInventory("DeadlightToken",1000,0,AAPTR_MASTER)
 		Stop
 	}
 }
 
-Actor CFDLReverter : CustomInventory
+Actor DLReverter : CustomInventory
 {
 	+INVENTORY.ALWAYSPICKUP
 	States
@@ -4800,7 +4800,6 @@ Actor AEoDDemonMorphHand : Weapon
 		M666 A 0 A_JumpIf(!CheckClass("DemonPlayerMorph",AAPTR_DEFAULT,0),"Remove")
 		M666 A 0 A_ChangeFlag("NOPAIN",1)
 		M666 A 0 A_SetInvulnerable
-		M666 A 0 A_ChangeFlag("INVULNERABLE",1)
 	SeleLoop:
 		M666 A 0 A_Raise
 		Loop
@@ -5001,6 +5000,7 @@ Actor DemonMorphExploder
 	DamageType "TempestLightning"
 	PainType "Telefrag"
 	DeathType "Telefrag"
+	Renderstyle None
 	States
 	{
 	Spawn:
@@ -5012,6 +5012,7 @@ Actor DemonMorphExploder
 Actor DeathTouchPuff
 {
 	Projectile
+	+ALWAYSPUFF
 	+NOINTERACTION
 	+DONTSPLASH
 	+PUFFGETSOWNER
@@ -5019,15 +5020,16 @@ Actor DeathTouchPuff
 	+PUFFONACTORS
 	+NOTIMEFREEZE
 	+NOTONAUTOMAP
-	+HITTRACER
-	DamageType "Extreme"
+	//+HITTRACER
+	DamageType "Telefrag"
 	PainType "Telefrag"
 	DeathType "Telefrag"
+	Renderstyle None
 	States
 	{
-	Spawn:
-		TNT1 A 0 NoDelay A_Explode(666,66,0,0,66)
-		//A_DamageTracer(20000,"Telefrag",DMSS_NOFACTOR)
+	Spawn: //Initial damage is 
+		TNT1 A 0 NoDelay A_SetDamageType("TempestLightning")
+		TNT1 A 0 A_Explode(666,66,0,0,66)
 		Stop
 	}
 }
