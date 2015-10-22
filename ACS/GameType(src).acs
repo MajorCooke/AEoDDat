@@ -21,6 +21,9 @@ global str 20:MiniMode[];
 global int 21:L4DIntensity;
 global int 22:MonIntensity;
 
+#define L4DMode 1
+#define BlitzkriegMode 2
+
 str GameTypesText[28]={"Classic",	//0
 		"Doom/demon-esque",	//1		
 		"Dark sci-fi",		//2
@@ -154,9 +157,6 @@ Script "s901" enter
 		{
 			if(CheckInventory("FearRune")==0)	//and player has no fear rune
 				GiveInventory("FearRune",1);	//i will give one
-				
-			ACS_NamedExecute("s914",0,0,0,0);	//Start up the body count script.
-			GiveInventory("L4DCountHudToken",1);
 		}
 	
 	
@@ -283,25 +283,72 @@ script "s906" (void)		//debug to print the actual level number
 	Log(s:"And you have played ",d:LevelsPlayed,s:" levels.");
 }
 
-Script "L4DCountHudSwitcher" (void)
+Script "CheckL4DHud" Enter
 {
-	if (CheckInventory("L4DCountHudToken"))
-	{
-		ACS_NamedTerminate("s914",0);
-		for (int zz = 666; zz < 690; zz++)
-		{
-			HudMessage(s:""; HUDMSG_PLAIN,zz,0,0,0,1,0);
-		}
-		TakeInventory("L4DCountHudToken",10000);
-	}
-	else
+	//Need to give it a tic so the game mode system can determine the
+	//appropriate values.
+	if (!(ScriptSetup))
+		Delay(1);
+	
+	//Don't bother starting this up if the L4D Director is not enabled.
+	if (!(L4DDir))
+		Terminate;
+		
+	int plr = PlayerNumber();	
+	//if (CheckInventory("L4DCountHudToken") > 0 && GetUserCvar(plr,"user_L4DKillCounter") > 0)
+	if (GetUserCvar(plr,"user_L4DKillCounter") > 0)
 	{
 		GiveInventory("L4DCountHudToken",1);
 		ACS_NamedExecuteAlways("s914",0,0,0,0);
 	}
 }
 
-script "s914" (int hudsizex, int hudsizey)
+Script "L4DCountHudSwitcher" (void) net
+{
+	if (!(ScriptSetup))
+		Delay(1);
+	
+	int plr = PlayerNumber();
+	int hud = CheckInventory("L4DCountHudToken");
+	
+	//Allow switching of preference even if not available. Just give a subtle
+	//hint that it won't show up without the L4D Director.
+	if (!(L4DDir))
+	{
+		if (GetUserCvar(plr,"user_L4DKillCounter" > 0))
+		{
+			Print(s:"L4D Kill Counter Disabled\n\cb(Not available without L4D director or mode)");
+			SetUserCvar(plr,"user_L4DKillCounter",0);
+		}
+		else
+		{
+			Print(s:"L4D Kill Counter Enabled\n\cb(Not available without L4D director or mode)");
+			SetUserCvar(plr,"user_L4DKillCounter",1);			
+		}
+		Terminate;
+	}
+		
+	if (hud)
+	{
+		PrintBold(s:"L4D Kill Counter Disabled");
+		ACS_NamedTerminate("s914",0);
+		TakeInventory("L4DCountHudToken",10000);
+		SetUserCvar(plr,"user_L4DKillCounter",0);
+		for (int zz = 666; zz < 690; zz++)
+		{
+			HudMessage(s:""; HUDMSG_PLAIN,zz,0,0,0,1,0);
+		}
+	}
+	else
+	{
+		PrintBold(s:"L4D Kill Counter Enabled");
+		SetUserCvar(plr,"user_L4DKillCounter",1);
+		GiveInventory("L4DCountHudToken",1);
+		ACS_NamedExecuteAlways("s914",0,0,0,0);
+	}
+}
+
+script "s914" (int hudsizex, int hudsizey) net
 {
 	if (!CheckInventory("L4DCountHudToken"))
 	{
@@ -768,5 +815,31 @@ Script "DirectorIntensity" (int type)
 		res = 0; //Should trigger the directors into giving a warning.
 		SetResultValue(res);
 		Terminate;
+	}
+}
+
+//Toggles the directors on or off. 
+//Enable debugging to allow freezing of all directors regardless of gametype.
+#define DirDebug 0
+Script "FreezeDirector" (void)
+{
+	SetActivator(0,AAPTR_PLAYER1);
+	
+	if (AEoDGameMode > 0 && DirDebug == 0)
+	{
+		PrintBold(s:"Directors cannot be disabled in this game mode");
+		TakeInventory("FreezeDirector",10000); //You panzies.
+		//PLAY IT RIGHT OR GTFO.
+		Terminate;
+	}
+	if (CheckInventory("FreezeDirector") > 0)
+	{
+		PrintBold(s:"Directors Disabled");
+		GiveInventory("FreezeDirector",1);
+	}
+	else
+	{
+		PrintBold(s:"Directors Enabled");
+		TakeInventory("FreezeDirector",10000);
 	}
 }

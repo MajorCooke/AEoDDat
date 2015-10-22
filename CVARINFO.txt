@@ -1,11 +1,16 @@
 //==============================================================================
+//==============================================================================
 //							Player Dependant Vars
+//==============================================================================
 //==============================================================================
 //	The following are user variables, as it appears a few people have invested
 //	themselves in wishing to create multiplayer with AEoD. While we don't
 //	support multiplayer (yet), the least we can do is, from that day forth,
 //	minimize the work needed to be done.
 
+//==============================================================================
+//							  Weapon Slot Limits
+//==============================================================================
 //	Determines whether to enable weapon slots or not.
 user bool user_WeaponSlotLimits = true;
 user int user_MaxWeapons0	= 3;
@@ -19,20 +24,7 @@ user int user_MaxWeapons7	= 3;
 user int user_MaxWeapons8	= 3;
 user int user_MaxWeapons9	= 3;
 
-//	Play demon morph music?
-user bool user_AllowDemonMorphMusic = true;
 
-//	Don't touch this if you know what's good for you.
-user noarchive bool user_dmmusic = false;
-
-//==============================================================================
-//								  Game Modes
-//==============================================================================
-//	Currently, only Left 4 Dead mode exists. It overrides all other themes,
-//	monsters, and extras. The only two options that are considered are Joke,  
-//	and Infected Mayhem.
-server bool user_L4DMode		= false;
-server int user_GameMode 		= 0;
 
 //==============================================================================
 //								     HUDs
@@ -43,6 +35,41 @@ server int user_GameMode 		= 0;
 //		1 -- Arcanum,	2 -- Crawl,	3 -- Cult
 //		4 -- E.D.F.,	5 -- Cabal,	6 -- U.A.C.
 user int user_hud			= 0;
+
+//==============================================================================
+//								 Uncategorized
+//==============================================================================
+//	Stuff that doesn't fit anywhere else goes here.
+
+//	Play demon morph music?
+user bool user_AllowDemonMorphMusic = true;
+
+//	Tracks and remembers if a user wants a hud or not whenever L4D Directors
+//	are enabled.
+user bool user_L4DKillCounter = true;
+
+
+
+
+
+//==============================================================================
+//==============================================================================
+//							Server Dependant Vars
+//==============================================================================
+//==============================================================================
+//	The following all depends on the server owner for control. 
+//	All modifications by other clients are overridden. These are all the
+//	default settings. It would be wise not to mess with them HERE.
+//	Rather, one should do it in-game instead.
+
+//==============================================================================
+//								  Game Modes
+//==============================================================================
+//	Currently, only Left 4 Dead mode exists. It overrides all other themes,
+//	monsters, and extras. The only two options that are considered are Joke,  
+//	and Infected Mayhem.
+server bool user_L4DMode		= false;
+server int user_GameMode 		= 0;
 
 //==============================================================================
 //									Themes
@@ -79,6 +106,8 @@ server bool user_Joke			= false;
 //==============================================================================
 //								  Directors
 //==============================================================================
+//	Director related vars used by scripts to determine different aspects such
+//	as intensities.
 server bool user_L4DDir			= false;
 server bool user_NorDir			= false;
 server bool user_MonsterMayhem 	= false;
@@ -90,6 +119,12 @@ server int user_MonIntensity 	= 3;
 //==============================================================================
 //	Special effects that can be changed.
 server bool user_TracerFX = true;
+
+//==============================================================================
+//								Miscellaneous
+//==============================================================================
+//	Stuff that doesn't fit in elsewhere goes here.
+
 
 //==============================================================================
 //								  Incomplete
@@ -123,82 +158,82 @@ user int user_AEoDProxDetonator			= 7;
 user int user_AEoDRemoteDetonator		= 6;
 user int user_AEoDTNT					= 5;		
 user int user_AEoDJackBomb				= 4;
-user int user_AEoDBoneStaff	= 3;
+user int user_AEoDBoneStaff				= 3;
 user int user_AEoDPortalGun				= 2;
 user int user_AEoDLemonNade				= 1;
 //---
 //2
 //---
-server noarchive int user_AEWeaps2	= 10;
-user int user_AEoDKnife 			= 10;
-user int user_AEoDMedievalAxe 		= 9;
-user int user_AEoDGauntlets 		= 8;
-user int user_AEoDKatana 			= 7;
-user int user_AEoDVorpalBlade 		= 6;
-user int user_AEoDScythe 			= 5;
-user int user_AEoDStroggArmSaw 		= 4;
-user int user_AEoDChainsaw 			= 3;
-user int user_AEoDPainkiller 		= 2;
-user int user_AEoDSpyKnife 			= 1;
+server noarchive int user_AEWeaps2		= 10;
+user int user_AEoDKnife 				= 10;
+user int user_AEoDMedievalAxe 			= 9;
+user int user_AEoDGauntlets 			= 8;
+user int user_AEoDKatana 				= 7;
+user int user_AEoDVorpalBlade 			= 6;
+user int user_AEoDScythe 				= 5;
+user int user_AEoDStroggArmSaw 			= 4;
+user int user_AEoDChainsaw 				= 3;
+user int user_AEoDPainkiller 			= 2;
+user int user_AEoDSpyKnife 				= 1;
 //---
 //3
 //---
-server noarchive int user_AEWeaps3	= 13;
-user int user_AEoDBeretta 			= 13;
-user int user_AEoDBlaster 			= 12;
-user int user_AEoDGargoyleWand 		= 11;
-user int user_AEoDMP5 				= 10;
-user int user_AEoDAssaultShotgun 	= 9;
-user int user_AEoDGoldenColts 		= 8;
-user int user_AEoDSPASShotgun 		= 7;
-user int user_AEoDCrossbow 			= 6;
-user int user_AEoDTekbow 			= 5;
-user int user_AEODDesertEagle 		= 4;
-user int user_AEoDMac10 			= 3;
-user int user_AEoDFlaregun 			= 2;
-user int user_AEoDShellShocker		= 1;
+server noarchive int user_AEWeaps3		= 13;
+user int user_AEoDBeretta 				= 13;
+user int user_AEoDBlaster 				= 12;
+user int user_AEoDGargoyleWand 			= 11;
+user int user_AEoDMP5 					= 10;
+user int user_AEoDAssaultShotgun 		= 9;
+user int user_AEoDGoldenColts 			= 8;
+user int user_AEoDSPASShotgun 			= 7;
+user int user_AEoDCrossbow 				= 6;
+user int user_AEoDTekbow 				= 5;
+user int user_AEODDesertEagle 			= 4;
+user int user_AEoDMac10 				= 3;
+user int user_AEoDFlaregun 				= 2;
+user int user_AEoDShellShocker			= 1;
 //---
 //4
 //---
-server noarchive int user_AEWeaps4	= 19;
-user int user_AEoDSerpentStaff 		= 19;
-user int user_AEoDRiotgun 			= 18;
-user int user_AEoDDisruptor 		= 17;
-user int user_AEoDDemonOrb 			= 16;
-user int user_AEoDCarbine 			= 15;
-user int user_AEoDCombatShotgun 	= 14;
-user int user_AEoDCrystalGun 		= 13;
-user int user_AEoDVoodooDoll 		= 12;
-user int user_AEoDBloodShotgun 		= 11;
-user int user_AEoDBioRifle 			= 10;
-user int user_AEoDDragonClaw 		= 9;
-user int user_AEoDBoltGun 			= 8;
-user int user_AEoDShockRifle 		= 7;
-user int user_AEoDPKShotgun 		= 6;
-user int user_AEoDCMRifle 			= 5;
-user int user_AEoDGasLauncher 		= 4;
-user int user_AEoDBison 			= 3;
-user int user_AEoDHeadHunter 		= 2;
-user int user_AEoDAWP				= 1;
+server noarchive int user_AEWeaps4		= 19;
+user int user_AEoDSerpentStaff 			= 19;
+user int user_AEoDRiotgun 				= 18;
+user int user_AEoDDisruptor 			= 17;
+user int user_AEoDDemonOrb 				= 16;
+user int user_AEoDCarbine 				= 15;
+user int user_AEoDCombatShotgun 		= 14;
+user int user_AEoDCrystalGun 			= 13;
+user int user_AEoDVoodooDoll 			= 12;
+user int user_AEoDBloodShotgun 			= 11;
+user int user_AEoDBioRifle 				= 10;
+user int user_AEoDDragonClaw 			= 9;
+user int user_AEoDBoltGun 				= 8;
+user int user_AEoDShockRifle 			= 7;
+user int user_AEoDPKShotgun 			= 6;
+user int user_AEoDCMRifle 				= 5;
+user int user_AEoDGasLauncher 			= 4;
+user int user_AEoDBison 				= 3;
+user int user_AEoDHeadHunter 			= 2;
+user int user_AEoDAWP					= 1;
 //---
 //5
 //---
-server noarchive int user_AEWeaps5	= 15;
-user int user_AEoDIceStormRod 		= 15;
-user int user_AEoDLasergun 			= 14;
-user int user_AEoDNailGun 			= 13;
-user int user_AEoDDemonStaff 		= 12;
-user int user_AEoDGaussGun 			= 11;
-user int user_AEoDNailgunMK2 		= 10;
-user int user_AEoDHornetGun 		= 9;
-user int user_AEoDWyvernHeart 		= 8;
-user int user_AEoDPlasmaRifle 		= 7;
-user int user_AEoDFlamethrower 		= 6;
-user int user_AEoDFreezethrower 	= 5;
-user int user_AEoDSkullRod 			= 4;
-user int user_AEoDHyperBlaster 		= 3;
-user int user_AEoDMinigun 			= 2;
-user int user_AEoDPeaceMaker		= 1;
+server noarchive int user_AEWeaps5		= 15;
+user int user_AEoDIceStormRod 			= 15;
+user int user_AEoDLasergun 				= 14;
+user int user_AEoDNailGun 				= 13;
+user int user_AEoDDemonStaff 			= 12;
+user int user_AEoDGaussGun 				= 11;
+user int user_AEoDNailgunMK2 			= 10;
+user int user_AEoDHornetGun 			= 9;
+user int user_AEoDWyvernHeart 			= 8;
+user int user_AEoDPlasmaRifle 			= 7;
+user int user_AEoDFlamethrower 			= 6;
+user int user_AEoDFreezethrower 		= 5;
+user int user_AEoDSkullRod 				= 4;
+user int user_AEoDHyperBlaster 			= 3;
+user int user_AEoDMinigun 				= 2;
+user int user_AEoDPeaceMaker			= 1;
 //---
 //6
 //---
@@ -312,6 +347,16 @@ user int user_AEoDDeathsHand 			= 4;
 user int user_AEoDSoulReaper 			= 3;
 user int user_AEoDHandOfGod 			= 2;
 user int user_AEoDHellHeavenHand		= 1;
+
+//==============================================================================
+//						The Big Fat "DO NOT TOUCH" Section
+//==============================================================================
+//	If you know what's good for you, you won't touch these. At all.
+//	Don't come crying like a bitch about the features being fucked up
+//	otherwise. You will have no sympathy from me! D:< 
+//	Sincerely,
+//	Major Cooke
+user noarchive bool user_dmmusic = false;
 
 
 //==============================================================================
