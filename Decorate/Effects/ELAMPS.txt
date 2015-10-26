@@ -5,69 +5,70 @@
 
 Actor GlassPart : BarrelPart
 {
-bouncefactor 0.2
-speed 6
-seesound ""
-renderstyle translucent
-alpha 0.4
-scale 0.2
-translation "0:255=4:4"
-states
+	bounceFactor 0.2
+	Speed 6
+	Seesound ""
+	RenderStyle translucent
+	Alpha 0.4
+	Scale 0.2
+	Translation "0:255=4:4"
+	States
 	{
 	Spawn:
 		TNT1 A 0
 		TNT1 A 0 Thing_ChangeTID(0,390)
 		BPRT ABCDEFGH 2
-		loop
-   Death:
-   	TNT1 A 0
-   	TNT1 A 0 A_jump(96,"death1")
-   	TNT1 A 0 A_jump(96,"death2")
-   	TNT1 A 0 A_jump(96,"death3")
-   	TNT1 A 0 A_jump(96,"death4")   
-   	TNT1 A 0 A_jump(96,"death5")   
-	goto death6
-Death1:
-      BPRT A 1 A_Fadeout(0.001)
-      loop
-Death2:
-      BPRT C 1 A_Fadeout(0.001)
-      loop
-Death3:
-      BPRT E 1 A_Fadeout(0.001)
-      loop
-Death4:
-      BPRT G 1 A_Fadeout(0.001)
-      loop
-Death5:
-      BPRT B 1 A_Fadeout(0.001)
-      loop
-Death6:
-      BPRT D 1 A_Fadeout(0.001)
-      loop
-   }
+		Loop
+	Death:
+		TNT1 A 0
+		TNT1 A 0 A_jump(96,"death1")
+		TNT1 A 0 A_jump(96,"death2")
+		TNT1 A 0 A_jump(96,"death3")
+		TNT1 A 0 A_jump(96,"death4")   
+		TNT1 A 0 A_jump(96,"death5")   
+	Goto death6
+	Death1:
+		BPRT A 1 A_Fadeout(0.001)
+		Loop
+	Death2:
+		BPRT C 1 A_Fadeout(0.001)
+		Loop
+	Death3:
+		BPRT E 1 A_Fadeout(0.001)
+		Loop
+	Death4:
+		BPRT G 1 A_Fadeout(0.001)
+		Loop
+	Death5:
+		BPRT B 1 A_Fadeout(0.001)
+		Loop
+	Death6:
+		BPRT D 1 A_Fadeout(0.001)
+		Loop
+	}
 }
 
 Actor Column1 : Column replaces Column
 {
-+LOOKALLAROUND
-+SHOOTABLE
-+NOBLOOD
-health 15
-deathheight 48
-  mass 0xFFFFFFFF
-activesound "props/lamp"
-states
+	+LOOKALLAROUND
+	+SHOOTABLE
+	+NOBLOOD
+	+FORCEYBILLBOARD
+	Health 15
+	DeathHeight 48
+	Mass 0xFFFFFFFF
+	Activesound "props/lamp"
+	States
 	{
 	Spawn:
-		COLU A 1 bright A_Look
-		loop
+		COLU A 1 Bright A_Look
+		Loop
 	See:
 		TNT1 A 0
 		TNT1 A 0 A_FaceTarget
 		COLU A 0 A_LoopActiveSound
-		COLU A 1 bright A_SpawnItem("LensFlare",0,38)
-		loop
+		COLU A 1 Bright A_SpawnItem("LensFlare",0,38)
+		Loop
 	Death:
 		COLU E 0 A_StopSound
 		COLU B 1 A_Playsound("glasscrack")
@@ -81,30 +82,31 @@ states
 		TNT1 A 0 A_CustomMissile("GlassPart",16,random(-3,3),random(0,360),2,random(40,70))
 		TNT1 A 0 A_CustomMissile("GlassPart",16,random(-3,3),random(0,360),2,random(40,70))
 		COLU B -1
-		stop
+		Stop
 	}
 }
 
 Actor TechLamp1 : TechLamp replaces TechLamp
 {
-+LOOKALLAROUND
-+SHOOTABLE
-+NOBLOOD
-health 15
-deathheight 80
-  mass 0xFFFFFFFF
-activesound "props/lamp"
-states
+	+LOOKALLAROUND
+	+SHOOTABLE
+	+NOBLOOD
+	+FORCEYBILLBOARD
+	Health 15
+	DeathHeight 80
+	Mass 0xFFFFFFFF
+	Activesound "props/lamp"
+	States
 	{
 	Spawn:
 		TLMP ABCD 4 Bright A_Look
-		loop
+		Loop
 	See:
 		TNT1 A 0
 		TNT1 A 0 A_FaceTarget
 		TLMP A 0 A_LoopActiveSound
 		TLMP ABCD 4 Bright A_SpawnItem("LensFlare1",0,70)
-		loop
+		Loop
 	Death:
 		TLMP E 0 A_StopSound
 		TLMP E 1 A_Playsound("glasscrack")
@@ -120,30 +122,31 @@ states
 		TNT1 A 0 A_CustomMissile("GlassPart",48,random(-3,3),random(0,360),2,random(40,70))
 		TNT1 A 0 A_CustomMissile("GlassPart",48,random(-3,3),random(0,360),2,random(40,70))
 		TLMP E -1
-		stop
+		Stop
 	}
 }
 
 Actor TechLamp21 : TechLamp2 replaces TechLamp2
 {
-+LOOKALLAROUND
-+SHOOTABLE
-+NOBLOOD
-health 15
-deathheight 60
-  mass 0xFFFFFFFF
-activesound "world/techlamp"
-states
+	+LOOKALLAROUND
+	+SHOOTABLE
+	+NOBLOOD
+	+FORCEYBILLBOARD
+	Health 15
+	DeathHeight 60
+	Mass 0xFFFFFFFF
+	Activesound "world/techlamp"
+	States
 	{
 	Spawn:
 		TLP2 ABCD 4 Bright A_Look
-		loop
+		Loop
 	See:
 		TNT1 A 0
 		TNT1 A 0 A_FaceTarget
 		TLP2 A 0 A_LoopActiveSound
 		TLP2 ABCD 4 Bright A_SpawnItem("LensFlare1",0,50)
-		loop
+		Loop
 	Death:
 		TLP2 E 0 A_StopSound
 		TLP2 E 1 A_Playsound("glasscrack")
@@ -159,21 +162,18 @@ states
 		TNT1 A 0 A_CustomMissile("GlassPart",30,random(-3,3),random(0,360),2,random(40,70))
 		TNT1 A 0 A_CustomMissile("GlassPart",30,random(-3,3),random(0,360),2,random(40,70))
 		TLP2 E -1
-		stop
+		Stop
 	}
 }
 
 Actor TechPillar1 : TechPillar replaces TechPillar
 {
-/*+SHOOTABLE
-+NODAMAGE
-+NOBLOOD
-  mass 0xFFFFFFFF     */
-activesound "world/techpillar"
-  states
-  {
-  Spawn:
-    ELEC A 4 A_LoopActiveSound
-    loop
-  }
+	+FORCEYBILLBOARD
+	Activesound "world/techpillar"
+	States
+	{
+	Spawn:
+		ELEC A 4 A_LoopActiveSound
+		Loop
+	}
 }
