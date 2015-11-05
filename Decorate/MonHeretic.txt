@@ -1389,82 +1389,79 @@ Actor Sorcerer22 : Sorcerer2 replaces Sorcerer2
 	DamageFactor "AEMagic", 0.75
     States
     {
-    Pain.Chaos:
-	"####" "#" 1
-	TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
-	TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
-	Goto See
     Pain.Drain:
-	"####" "#" 1
-	TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
-	Goto Pain
+		"####" "#" 1
+		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
+		Goto Pain
     See:
-	SOR2 MNOP 4 A_Chase
-	Loop
+		SOR2 MNOP 4 A_Chase
+		Loop
     Missile:
-	SOR2 R 0 A_Jump(96,"SummonMonsters","Teleport")
+		SOR2 R 0 A_Jump(96,"SummonMonsters","Teleport")
     LightningBolt:
-	SOR2 R 7
-	SOR2 S 7 A_FaceTarget
-	SOR2 T 0 A_PlaySoundEx("dsparil/attack","Voice",0,2)
-	"####" "#" 0 A_Jump(160,3)
-	"####" "##" 0 A_CustomMissile("FSorcerer2FX1",32,0,random(15,-15))
-	SOR2 T 15 A_CustomMissile("FSorcerer2FX1",32,0)
-	"####" "#" 0 A_Jump(64,"Teleport")
-	"####" "#" 0 A_CposRefire
-	Loop
+		SOR2 R 7
+		SOR2 S 7 A_FaceTarget
+		SOR2 T 0 A_PlaySoundEx("dsparil/attack","Voice",0,2)
+		"####" "#" 0 A_Jump(160,3)
+		"####" "##" 0 A_CustomMissile("FSorcerer2FX1",32,0,random(15,-15))
+		SOR2 T 15 A_CustomMissile("FSorcerer2FX1",32,0)
+		"####" "#" 0 A_Jump(64,"Teleport")
+		"####" "#" 0 A_CposRefire
+		Loop
     SummonMonsters:
-	SOR2 R 9
-	SOR2 S 9 A_FaceTarget
-	SOR2 T 0 A_PlaySoundEx("dsparil/attack","Voice",0,2)
-	SOR2 TTTT 0 A_CustomMissile("Sorcerer2FX2",32,0,random(80,-80))
-	SOR2 T 20 A_CustomMissile("Sorcerer2FX2",32,0,0)
-	Goto See
-     Teleport:
-	SOR2 G 0 A_UnSetShootable
-	SOR2 GHIJKL 3
-	SOR2 L 0 A_PlaySound("misc/teleport")
-	TNT1 A 5
-	TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_Wander
-	TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_Wander
-	TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_Wander
-	TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_Wander
-	TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_Wander
-	TNT1 A 5
-	SOR2 L 0 A_PlaySound("misc/teleport")
-	SOR2 LKJIHG 3
-	SOR2 G 0 A_SetShootable
-	Goto See
+		SOR2 R 9
+		SOR2 S 9 A_FaceTarget
+		SOR2 T 0 A_PlaySoundEx("dsparil/attack","Voice",0,2)
+		SOR2 TTTT 0 A_CustomMissile("Sorcerer2FX2",32,0,random(80,-80))
+		SOR2 T 20 A_CustomMissile("Sorcerer2FX2",32,0,0)
+		Goto See
+	Teleport:
+		SOR2 G 0 A_ChangeFlag("NOPAIN",1)
+		SOR2 G 0 A_ChangeFlag("NONSHOOTABLE",1)
+		SOR2 GHIJKL 3
+		SOR2 L 0 A_PlaySound("misc/teleport")
+		TNT1 A 5
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_Wander
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_Wander
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_Wander
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_Wander
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_Wander
+		SOR2 L 0 A_PlaySound("misc/teleport")
+		SOR2 G 0 A_SetShootable
+		
+		SOR2 LKJIHG 3
+		SOR2 G 0 A_ChangeFlag("NOPAIN",0)
+		Goto See
     Death:
-	SDTH A 0 A_PlaySound("dsparil/scream")
-	SDTH ABC 5 Bright
-	SDTH DEFDEF 6 Bright
-	SDTH DEFDEF 6 Bright
-	SDTH DEFDEF 6 Bright
-	SDTH A 0 A_PlaySound("dsparil/explode")
-	TNT1 AAAAAAAAAAAAAA 0 A_TossGib
-	SDTH G 9 Bright A_Fall
-	SDTH H 6 Bright
-	SDTH IJK 6
-	SDTH A 0 A_PlaySound("dsparil/bones")
-	SDTH LMN 6
-	"####" "#" 0 A_QueueCorpse
-	"####" "#" 0 A_ChangeFlag("CORPSE",1)
-	SDTH O -1 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
-	Stop
+		SDTH A 0 A_PlaySound("dsparil/scream")
+		SDTH ABC 5 Bright
+		SDTH DEFDEF 6 Bright
+		SDTH DEFDEF 6 Bright
+		SDTH DEFDEF 6 Bright
+		SDTH A 0 A_PlaySound("dsparil/explode")
+		TNT1 AAAAAAAAAAAAAA 0 A_TossGib
+		SDTH G 9 Bright A_Fall
+		SDTH H 6 Bright
+		SDTH IJK 6
+		SDTH A 0 A_PlaySound("dsparil/bones")
+		SDTH LMN 6
+		"####" "#" 0 A_QueueCorpse
+		"####" "#" 0 A_ChangeFlag("CORPSE",1)
+		SDTH O -1 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")
+		Stop
     Death.UnholyDisint:
     Death.PlasmaDisint:
     Disintegrate:
-	TNT1 A 0 Thing_SetTranslation(0,50)	
-	SDTH O 1 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")		//755 is for cyberdemon
-	SOR2 Q 1 A_FadeOut(0.015)
-	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-	TNT1 a 0 A_Stop	
-	TNT1 a 0 A_Fall
-	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
-	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
-	SOR2 QQ 2 A_FadeOut(0.03)
-	Goto Disintegrate+7
+		TNT1 A 0 Thing_SetTranslation(0,50)	
+		SDTH O 1 A_KillMaster("Massacre",KILS_FOILINVUL,"None","AEoDSpawner")		//755 is for cyberdemon
+		SOR2 Q 1 A_FadeOut(0.015)
+		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+		TNT1 a 0 A_Stop	
+		TNT1 a 0 A_Fall
+		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
+		SOR2 QQ 2 A_FadeOut(0.03)
+		Goto Disintegrate+7
     }
 }
 
