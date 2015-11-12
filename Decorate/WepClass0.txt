@@ -11096,9 +11096,9 @@ Actor PenetratorDrill : FastProjectile
 
 Actor DrillerGrinding
 {
-	var int user_angle;
+	var int user_angle[2];
 	var int user_ripper;
-	var int user_z[3];
+	var int user_z;
 	Projectile
 	+NOCLIP
 	+SEEKERMISSILE
@@ -11113,30 +11113,20 @@ Actor DrillerGrinding
 	States
 	{
 	Spawn:
-		TNT1 A 0
-	Check1:
-		TNT1 A 0 A_SetUserArray("user_z",0,z)
-		R021 G 0 A_SeekerMissile(0,0,1,256)
-		TNT1 A 0 A_SetUserVar("user_angle",angle)
-		TNT1 A 0 A_Warp(AAPTR_TRACER,16,0,0,user_angle,WARPF_NOCHECKPOSITION)
-		TNT1 A 0 A_SetUserArray("user_z",1,z)
-		TNT1 A 0 A_SetUserArray("user_z",2,user_z[0]-user_z[1])
-		D008 P 0 A_JumpIfTargetInLOS("Grind",0,JLOSF_PROJECTILE|JLOSF_DEADNOJUMP|JLOSF_NOSIGHT)
+		TNT1 A 0 NoDelay A_SetUserArray(user_angle,0,angle)
+		TNT1 A 0 A_SetUserVar(user_z,z)
+		TNT1 A 0 A_Warp(AAPTR_TRACER,0,0,0,0,WARPF_NOCHECKPOSITION)
+		TNT1 A 0 A_SetUserArray(user_angle,1,angle)
+		TNT1 A 0 A_SetUserVar(user_z,user_z-z)
+		TNT1 A 0 A_Warp(AAPTR_TRACER,0,0,user_z,user_angle[0]-user_angle[1],WARPF_NOCHECKPOSITION,"Grind",0,-0.75)
 		Goto End
 	Grind:
 		R021 G 0 A_FaceTracer
 		R021 GGG 0 A_CustomRailgun(random(4,8),0,none,none,3,0,0,"DrillerPuff")
 		R021 G 1 A_SetUserVar("user_ripper",user_ripper+1)
 		R021 G 0 A_JumpIf(user_ripper>=(35*4),"End")
-		R021 G 0 A_JumpIfTargetInLOS(1,0,JLOSF_PROJECTILE|JLOSF_DEADNOJUMP|JLOSF_NOSIGHT)
-		Goto NoGood
-		
-		TNT1 A 0 A_Warp(AAPTR_TRACER,16,0,user_z[2],user_angle,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE,"Grind")
-		Goto NoGood
-		
-		TNT1 A 0 A_SeekerMissile(0,0)
-	NoGood:
-		D008 P 0 A_Warp(AAPTR_TRACER,16,0,user_z[2],user_angle,WARPF_INTERPOLATE|WARPF_NOCHECKPOSITION)
+		R021 G 0 A_JumpIfHealthLower(1,"End",AAPTR_TRACER)
+		"####" "#" 0 A_Warp(AAPTR_TRACER,0,0,user_z,user_angle[0]-user_angle[1],WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE,"Grind",0,-0.75)
 		Goto End
 	End:
 		TNT1 A 0 A_SpawnItemEx("NewExplosionSmall",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION) 
