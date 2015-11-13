@@ -1769,14 +1769,14 @@ Actor AEoDPlasmaRifle : Weapon // 6072
 		TNT1 A 0 A_PlaySound("reilsss/weapons/plasmariflefire", CHAN_WEAPON, 1.0, 0)
 		D3PG B 1 A_GunFlash
 		D3PG C 0 Bright A_FireCustomMissile("D3PlasmaBall", 0, 1, 4, 3)
-		D3PG D 1
+		D3PG D 1 
 		D3PG E 0 
 		D3PG A 1 A_Refire
 		Goto Ready
 	AltFire:
 		TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,"AltFireQuick")
 		TNT1 A 0 A_StopSound(CHAN_BODY)
-		TNT1 A 0 A_PlaySound("reilsss/weapons/plasmagunfire1", CHAN_WEAPON, 1.0, 0)
+		TNT1 A 0 A_PlaySound("reilsss/weapons/plasmariflefire", CHAN_WEAPON, 1.0, 0)
 		D3PG B 1 A_GunFlash
 		D3PG C 1 Bright A_FireCustomMissile("BouncingPlasmaBall", 0, 1, 4, 3)
 		D3PG D 1 
@@ -1787,10 +1787,10 @@ Actor AEoDPlasmaRifle : Weapon // 6072
 		TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,1)
 		Goto AltFire
 		TNT1 A 0 A_StopSound(CHAN_BODY)
-		TNT1 A 0 A_PlaySound("reilsss/weapons/plasmagunfire1", CHAN_WEAPON, 1.0, 0)
+		TNT1 A 0 A_PlaySound("reilsss/weapons/plasmariflefire", CHAN_WEAPON, 1.0, 0)
 		D3PG B 1 A_GunFlash
 		D3PG C 0 Bright A_FireCustomMissile("BouncingPlasmaBall", 0, 1, 4, 3)
-		D3PG D 1 
+		D3PG D 1
 		D3PG E 0
 		D3PG A 1 A_Refire
 		Goto Ready
@@ -1815,7 +1815,7 @@ Actor D3PlasmaBall
 	Speed 27
 	Height 8
 	Radius 5
-	Damage 6
+	Damage 14
 	RenderStyle Add
 	DamageType "Plasma"
 	AlphA 0.75
@@ -1862,16 +1862,24 @@ Actor plasmatrail
 	}
 }
 
-Actor BouncingPlasmaBall : PlasmaBall
+Actor BouncingPlasmaBall //: PlasmaBall
 {
+	var int user_c;
+	Projectile
 	+CANBOUNCEWATER
+	+DONTREFLECT
+	+BOUNCEONACTORS
+	+ALLOWBOUNCEONACTORS
+	+HITTRACER
+	+USEBOUNCESTATE
 	Speed 37
-	Damage 5
+	Damage 7
 	Radius 5
 	Scale 0.7
 	BounceType "Hexen"
 	BounceFactor 1.0
 	BounceCount 4
+	ReactionTime 2
 	SeeSound ""
 	DamageType "Plasma"
 	BounceSound "reilsss/weapons/plasmagunfire1"
@@ -1880,30 +1888,39 @@ Actor BouncingPlasmaBall : PlasmaBall
 	{
 	Spawn:
 		XANS A 2 Bright A_SpawnItemEx("BouncingPBTrail1",0,0,0,0,0,0,0,0)
-		TNT1 A 0 A_SpawnItemEx("BouncingPBTrail2",0,0,0,0,0,0,0,0)
+		"----" A 0 A_SpawnItemEx("BouncingPBTrail2",0,0,0,0,0,0,0,0)
 		XANS A 2 Bright A_SpawnItemEx("BouncingPBTrail1",0,0,0,0,0,0,0,0)
-		TNT1 A 0 A_SpawnItemEx("BouncingPBTrail2",0,0,0,0,0,0,0,0)
+		"----" A 0 A_SpawnItemEx("BouncingPBTrail2",0,0,0,0,0,0,0,0)
 		XANS B 2 Bright A_SpawnItemEx("BouncingPBTrail1",0,0,0,0,0,0,0,0)
-		TNT1 A 0 A_SpawnItemEx("BouncingPBTrail2",0,0,0,0,0,0,0,0)
+		"----" A 0 A_SpawnItemEx("BouncingPBTrail2",0,0,0,0,0,0,0,0)
 		XANS B 2 Bright A_SpawnItemEx("BouncingPBTrail1",0,0,0,0,0,0,0,0)
-		TNT1 A 0 A_SpawnItemEx("BouncingPBTrail2",0,0,0,0,0,0,0,0)
+		"----" A 0 A_SpawnItemEx("BouncingPBTrail2",0,0,0,0,0,0,0,0)
 		XANS C 2 Bright A_SpawnItemEx("BouncingPBTrail1",0,0,0,0,0,0,0,0)
-		TNT1 A 0 A_SpawnItemEx("BouncingPBTrail2",0,0,0,0,0,0,0,0)
+		"----" A 0 A_SpawnItemEx("BouncingPBTrail2",0,0,0,0,0,0,0,0)
 		XANS C 2 Bright A_SpawnItemEx("BouncingPBTrail1",0,0,0,0,0,0,0,0)
-		TNT1 A 0 A_SpawnItemEx("BouncingPBTrail2",0,0,0,0,0,0,0,0)
+		"----" A 0 A_SpawnItemEx("BouncingPBTrail2",0,0,0,0,0,0,0,0)
 		XANS D 2 Bright A_SpawnItemEx("BouncingPBTrail1",0,0,0,0,0,0,0,0)
-		TNT1 A 0 A_SpawnItemEx("BouncingPBTrail2",0,0,0,0,0,0,0,0)
+		"----" A 0 A_SpawnItemEx("BouncingPBTrail2",0,0,0,0,0,0,0,0)
 		XANS D 2 Bright A_SpawnItemEx("BouncingPBTrail1",0,0,0,0,0,0,0,0)
-		TNT1 A 0 A_SpawnItemEx("BouncingPBTrail2",0,0,0,0,0,0,0,0)
+		"----" A 0 A_SpawnItemEx("BouncingPBTrail2",0,0,0,0,0,0,0,0)
 		XANS E 2 Bright A_SpawnItemEx("BouncingPBTrail1",0,0,0,0,0,0,0,0)
-		TNT1 A 0 A_SpawnItemEx("BouncingPBTrail2",0,0,0,0,0,0,0,0)
+		"----" A 0 A_SpawnItemEx("BouncingPBTrail2",0,0,0,0,0,0,0,0)
 		XANS E 2 Bright A_SpawnItemEx("BouncingPBTrail1",0,0,0,0,0,0,0,0)
-		TNT1 A 0 A_SpawnItemEx("BouncingPBTrail2",0,0,0,0,0,0,0,0)
+		"----" A 0 A_SpawnItemEx("BouncingPBTrail2",0,0,0,0,0,0,0,0)
 		XANS F 2 Bright A_SpawnItemEx("BouncingPBTrail1",0,0,0,0,0,0,0,0)
-		TNT1 A 0 A_SpawnItemEx("BouncingPBTrail2",0,0,0,0,0,0,0,0)
+		"----" A 0 A_SpawnItemEx("BouncingPBTrail2",0,0,0,0,0,0,0,0)
 		XANS F 2 Bright A_SpawnItemEx("BouncingPBTrail1",0,0,0,0,0,0,0,0)
-		TNT1 A 0 A_SpawnItemEx("BouncingPBTrail2",0,0,0,0,0,0,0,0)
-		Loop
+		"----" A 0 A_SpawnItemEx("BouncingPBTrail2",0,0,0,0,0,0,0,0)
+		"----" A 0 A_SetUserVar(user_c,user_c+1)
+		"----" A 0 A_JumpIf(user_c < 100,"Spawn")
+		"----" A 0 A_Stop
+		"----" A 0 A_ChangeFlag("NOINTERACTION",1)
+		Goto Death
+	Bounce.Actor:
+		"----" A 0 A_CheckFlag("SHOOTABLE",1,AAPTR_TRACER)
+		Goto Spawn
+		"----" A 0 A_Countdown
+		Goto Spawn
 	Death:
 		XANE ABCDEF 3 Bright A_FadeOut
 		Stop
