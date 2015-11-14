@@ -31,6 +31,7 @@ Actor LostSoulReplacer replaces LostSoul
 	+NOTRIGGER
 	//-SOLID
 	+NOTONAUTOMAP
+	//+NOBLOCKMAP
 	Species "AEoDSpawner"
 	DamageFactor "Normal", 0.0	DamageFactor "Massacre", 666
 	States
@@ -210,12 +211,13 @@ Actor LostSoulReplacer replaces LostSoul
 	//	Special / End of spawner states
 	//-------------------------------------------------------------------------------------------------------
 	End:
-		TNT1 A 0 A_ChangeFlag("THRUACTORS",1)
 		TNT1 A 0 A_RadiusGive("AEoDToken",16,RGF_MONSTERS,1)
+		TNT1 A 0 A_ChangeFlag("THRUACTORS",1)
+		TNT1 A 0 A_ChangeFlag("NOBLOCKMAP",1)
 		TNT1 A 1 A_Die
 		Wait
 	Death:
-		TNT1 A 1
+		TNT1 A 1 A_ChangeFlag("THRUACTORS",1)
 		Stop
 	}
 }
