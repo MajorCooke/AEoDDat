@@ -39,6 +39,9 @@ actor DBTVulnerableThing
     +DONTTHRUST
 	+QUICKTORETALIATE
 	+GHOST
+	+NODAMAGE
+	+NOPAIN
+	+INVULNERABLE
     Health 1000
     Radius 30
     Height 56
@@ -52,6 +55,10 @@ actor DBTVulnerableThing
     {
     Spawn:
 		TNT1 A 0 NoDelay A_SetUserVar(user_hp,health)
+		TNT1 A 0 A_RearrangePointers(AAPTR_NULL,AAPTR_DEFAULT,AAPTR_DEFAULT,PTROP_NOSAFEGUARDS)
+		TNT1 A 0 A_ChangeFlag("NODAMAGE",0)
+		TNT1 A 0 A_ChangeFlag("NOPAIN",0)
+		TNT1 A 0 A_UnsetInvulnerable
 		TNT1 A 70 
 		Stop
 	Pain:
