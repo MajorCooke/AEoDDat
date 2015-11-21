@@ -40,6 +40,8 @@ OptionMenu "AEoDConfigMenu"
 	StaticText " "
 	Option "Tracer Effects",				"user_TracerFX",	"OnOff"
 	Option "Demon Morph Music",				"user_AllowDemonMorphMusic", "OnOff"
+	Option "Short Gib Life",				"user_ShortGibLives", "OnOff"
+	Option "Spells Switch On Pickup",		"user_SpellSwitchOnPickup", "OnOff"
 }
 
 OptionMenu "AEControls"
@@ -59,7 +61,17 @@ OptionMenu "AEControls"
 	Control         "Set HUD: UAC (Quake 3)",		"pukename AESetHud 6"
 	StaticText      ""
 	StaticText      "Spells", 1
-	Control         "Use selected spell",			"pukename s654"
+	Control         "Use selected spell",			"pukename SpellScript always 0 8"
+	Control         "Next spell",                   "pukename SpellScript always 0 0 2"
+	Control         "Previous spell",               "pukename SpellScript always 0 0 1"
+	Control			"Quick Chaos Spell",			"pukename SpellScript always 0 1"
+	Control			"Quick Charm Spell",			"pukename SpellScript always 0 2"
+	Control			"Quick Defile Spell",			"pukename SpellScript always 0 3"
+	Control			"Quick Drain Spell",			"pukename SpellScript always 0 4"
+	Control			"Quick Morph Spell",			"pukename SpellScript always 0 5"
+	Control			"Quick Raise Spell",			"pukename SpellScript always 0 6"
+	Control			"Quick Terror Spell",			"pukename SpellScript always 0 7"
+/*	Control         "Use selected spell",			"pukename s654"
 	Control         "Next spell",                   "pukename s652"
 	Control         "Previous spell",               "pukename s653"
 	Control			"Quick Chaos Spell",			"pukename s656 1"
@@ -69,6 +81,7 @@ OptionMenu "AEControls"
 	Control			"Quick Morph Spell",			"pukename s656 5"
 	Control			"Quick Raise Spell",			"pukename s656 6"
 	Control			"Quick Terror Spell",			"pukename s656 7"
+*/
   
 	StaticText      ""
 	StaticText      "Items", 1
@@ -198,11 +211,16 @@ OptionMenu "AEWeaponConfig"
 	Submenu "Customize Slot 08",			"AEWeaponLineup8" 
 	Submenu "Customize Slot 09",			"AEWeaponLineup9" 
 	Submenu "Customize Slot 10",			"AEWeaponLineup10" 
-	StaticText " "
-	StaticText "AEoD Weapon Keybinds", 1
+	StaticText 		" "
+	StaticText 		"AEoD Weapon Keybinds", 1
 	Control         "AEOD Drop Weapon",             "pukename s800"
 	Control         "Toggle Weapon Limits", 		"pukename WeaponSlotToggle"
-	Control			"Toggle Custom Switching",		"UseLineupDefault"
+	Control			"Toggle Custom Switching[!]",		"UseLineupDefault"
+	StaticText " "
+	StaticText "[!]Custom keybinds will be lost for", 1
+	StaticText "keys 1-9 and 0 if non-vanilla/AEoD bound.", 1
+	StaticText "See the readme for more information.", 1
+	StaticText " "
 	Control			"AEoD Weapon Slot 1",		"pukename SelectAEoDWeapon always 1" //"slot 1"
 	Control			"AEoD Weapon Slot 2",		"pukename SelectAEoDWeapon always 2" //"slot 2"
 	Control			"AEoD Weapon Slot 3",		"pukename SelectAEoDWeapon always 3" //"slot 3"

@@ -4753,7 +4753,7 @@ Actor PowerDemonMorph : PowerMorph
 {
 	PowerMorph.PlayerClass "DemonPlayerMorph"
 	//2 | 16 | 32 | 64 | 128 | 256 | 512 | 2048
-	PowerMorph.MorphStyle MRF_WHENINVULNERABLE|MRF_UNDOBYDEATH|MRF_UNDOBYDEATHSAVES|MRF_LOSEACTUALWEAPON|MRF_NEWTIDBEHAVIOUR
+	PowerMorph.MorphStyle MRF_UNDOALWAYS|MRF_WHENINVULNERABLE|MRF_UNDOBYDEATH|MRF_UNDOBYDEATHSAVES|MRF_LOSEACTUALWEAPON|MRF_NEWTIDBEHAVIOUR
 	PowerMorph.MorphFlash "OldFog"
 	PowerMorph.UnmorphFlash "DemonMorphFogOff"
 }
@@ -4761,12 +4761,12 @@ Actor PowerDemonMorph : PowerMorph
 Actor DemonPlayerMorph : DoomPlayer
 {
 	//POWER OVERWHELMING MOTHERFUCKERS!!!
+	RipLevelMin 666
 	DamageFactor 0.0
 	+NORADIUSDMG
 	+NODAMAGE
 	+NOPAIN
 	+DONTMORPH
-	RipLevelMin 666
 	+PICKUP
 	+NOTIMEFREEZE
 	+INVULNERABLE
@@ -4774,6 +4774,7 @@ Actor DemonPlayerMorph : DoomPlayer
 	+PLAYERPAWN.CROUCHABLEMORPH
 	+DONTTHRUST
 	+TELESTOMP
+	+LAXTELEFRAGDMG
 	Player.Maxhealth 666
 	Health 666
 	Player.MorphWeapon "AEoDDemonMorphHand"
@@ -5022,15 +5023,15 @@ Actor DeathTouchPuff
 	+NOTONAUTOMAP
 	//+HITTRACER
 	+EXTREMEDEATH
-	DamageType "Telefrag"
+	DamageType "DemonMorph"
 	PainType "Telefrag"
 	DeathType "Telefrag"
 	Renderstyle None
 	States
 	{
 	Spawn: //Initial damage is 
-		TNT1 A 0 NoDelay A_SetDamageType("TempestLightning")
-		TNT1 A 0 A_Explode(666,66,0,0,66)
+		//TNT1 A 0 NoDelay //A_SetDamageType("TempestLightning")
+		TNT1 A 0 NoDelay A_Explode(666,66,0,0,66)
 		Stop
 	}
 }

@@ -4,41 +4,201 @@
 
 global int 3: splslct;	//the main control number representing, of the spell selected
 			//item to give, font, display text, pickup/weapon name, fontempty
-str spellcall[8][5]={{"empty","empty","empty","empty","empty"},
-			  {"ChaosSpItem",		"ChaosF",	"Chaos",	"ChaosPresent","ChaosEm"},
-			  {"CharmSpItem",		"CharmF",	"Charm",	"CharmPresent","CharmEm"},
-			  {"DefileSpItem",	"DefileF",	"Defile",	"DefilePresent","DefileEm"},
-			  {"DrainSpItem",		"DrainF",	"Drain",	"DrainPresent","DrainEm"},
-			  {"MorphSpItem",		"MorphF",	"Morph",	"MorphPresent","MorphEm"},
-			  {"RaiseSpItem",		"RaiseF",	"Raise",	"RaisePresent","RaiseEm"},
-			  {"TerrorSpItem",	"TerrorF",	"Terror",	"TerrorPresent","TerrorEm"}};
+str spellcall[8][6]={{"empty","empty","empty","empty","empty","empty"},
+			  {"ChaosSpItem",		"ChaosF",	"Chaos",	"ChaosPresent","ChaosEm",	"user_ChaosPresent"},
+			  {"CharmSpItem",		"CharmF",	"Charm",	"CharmPresent","CharmEm",	"user_CharmPresent"},
+			  {"DefileSpItem",	"DefileF",	"Defile",	"DefilePresent","DefileEm",		"user_DefilePresent"},
+			  {"DrainSpItem",		"DrainF",	"Drain",	"DrainPresent","DrainEm",	"user_DrainPresent"},
+			  {"MorphSpItem",		"MorphF",	"Morph",	"MorphPresent","MorphEm",	"user_MorphPresent"},
+			  {"RaiseSpItem",		"RaiseF",	"Raise",	"RaisePresent","RaiseEm",	"user_RaisePresent"},
+			  {"TerrorSpItem",	"TerrorF",	"Terror",	"TerrorPresent","TerrorEm",		"user_TerrorPresent"}};
 int spellpresent[8]={0,0,0,0,0,0,0,0};	//to track which spells are accesible
 int spellcost[8]={0,2,1,2,1,3,2,1};
 int spellcoord[8]={0,120,150,180,210,240,270,300};		//Y coords to use for the spell icon printing
-int direction,atleastonespell;
+int direction, atleastonespell, lastspell;
+
+
+
+//Note: Need to execute this ALWAYS.
+Script "SpellScript" (int swiitch, int fire, int cycle) net
+{
+	bool debugStatement = false; //Just prints where shit goes wrong.
+	int plr = PlayerNumber();
+	if (fire)
+	{
+		if (CheckInventory("SpellCooldown"))
+		{
+			if (debugStatement)
+				log(s:"Spells on cooldown.\n");
+			Terminate;
+		}
+		
+		int ff = fire;
+		//Anything higher just means use the one selected. So this merges the functionality
+		//of the quickfire too.
+		
+		if (fire > 7 || fire < 1) 
+			ff = GetUserCvar(plr,"user_SpellSelection");
+			
+		if (debugStatement)
+			log(i:fire, s: " ", i: ff, s:"\n");
+			
+		if(ff > 0 && GetActorProperty(0, APROP_HEALTH) > 0)
+		{			
+			if(CheckInventory(spellcall[ff][3]) && //If we have the spell...
+			(CheckInventory("DarkMana") >= spellcost[ff] || //and ammo or inf ammo...
+			GetCVar("sv_infiniteammo") == 1	|| 
+			CheckInventory("PowerEconomizer") > 0))
+			{
+				GiveInventory(spellcall[ff][0],1); //Open up this can of worms!
+				if(GetCVar("sv_infiniteammo") == 0 || !CheckInventory("PowerEconomizer"))
+					TakeInventory("DarkMana",spellcost[ff]);
+				GiveInventory("SpellCooldown",1);
+				delay(35);
+				TakeInventory("SpellCooldown",1);
+			}
+		}
+		else
+		{
+			if (debugStatement)
+				log(i:fire, s: " ", i: ff, s:"\n");
+			Terminate;
+		}
+		Terminate;
+	}
+	
+	//swiitch = direct one we're switching to
+	//fire = firing this spell
+	//cycle = forwards or backwards?
+	//	1 = forwards
+	//	2 = backwards
+	//CHECK FIRST: Are we picking up a spell?
+
+	bool successCount = false;
+	int t = 0;	
+	
+	for (t = 1; t <= 7; t++)
+	{
+	//Make sure we have a valid spell collected.
+		if (CheckInventory(spellcall[t][3]))
+		{
+			SetUserCvar(plr,spellcall[t][5],true);
+			spellpresent[t] = 1;
+			successCount = true;
+			
+			//Display it.
+			SetHudSize(800,600,1);
+			SetFont(spellcall[t][4]);		//gets the font/image name and...
+			HudMessage(s:"A"; HUDMSG_PLAIN, t+399, 0, 780.0, spellcoord[t]*1.0, 0); //will print the faded/non-selected icon			
+		}
+		else
+		{
+			SetUserCvar(plr,spellcall[t][5],false);
+			spellpresent[t] = 0;
+		}
+	}
+	
+	//If no spells found, or if spells found and no adjustments made, end it.
+	if (!successCount || !(cycle || swiitch))	
+	{
+		if (debugStatement)
+			log(s:"No spells found or no cycles/switches performed.\n");
+		Terminate;
+	}
+	
+	
+	int permNum = GetUserCvar(plr,"user_SpellSelection");
+	//If we're set to switch or we don't have a permNum selected,
+	if (swiitch || !permNum)
+	{
+		//If no spell found originally or
+		//if swiitch wants to change and our player wants it to change on pickup of
+		//new spell, set the new number as the one specified.
+		bool notfirst = GetUserCvar(plr,"user_HasSpell");
+		bool allowswitch = GetUserCvar(plr,"user_SpellSwitchOnPickup");
+		if ((!notfirst) || (swiitch > 0 && swiitch < 8) && allowswitch)
+		{
+			permNum = swiitch;
+			SetUserCvar(plr,"user_SpellSelection",permNum);
+		}
+	}
+	
+	if (!permNum)	
+	{
+		if (debugStatement)
+			Log(s:"Spell not found! permNum was 0!\n");
+		Terminate; //Something done fucked up.
+	}
+	
+	if (cycle)
+	{
+		if (cycle == 1)
+		{	//Move up
+			t = permNum; t++;
+			while(spellpresent[t] == 0)
+			{
+				if (t > 7)	t = 1;
+				else		t++;
+			}
+			
+			permNum = t;
+			if (debugStatement)
+				log(i:permNum, s:"\n");
+		}
+			
+		if (cycle == 2)
+		{	//Move down
+			t = permNum - 1;
+			while(spellpresent[t] == 0)
+			{
+				if (t < 1)	t = 7;
+				else		t--;
+			}
+			permNum = t;
+			if (debugStatement)
+				log(i:permNum, s:"\n");
+		}
+		SetUserCvar(plr,"user_SpellSelection",permNum);
+	}
+		
+	SetHudSize(800,600,1);
+	setfont(spellcall[permNum][1]);
+	HudMessage(s:"a"; HUDMSG_PLAIN, 399, 0, 780.0, spellcoord[permNum]*1.0, 0);
+	SetFont("SMALLFONT2");
+	HudMessage(s:spellcall[permNum][2]; HUDMSG_PLAIN, 2, 0, 780.2, spellcoord[permNum]*1.0, 0);
+	
+	if (!notfirst)
+		SetUserCvar(plr,"user_HasFirst",true);
+	
+}
 
 // Upon entering the game, if one of the items is there, then it displays the HUD elements
 script "s650" (void) //is called by script 901 in "Gametype.o"
 {
 	int i;
-		for(i=1;i<=7;i++)	
+	for(i=1;i<=7;i++)	
+	{
+		if(CheckInventory(spellcall[i][3])==1)	//then, let's record what spells we have available
 		{
-			if(CheckInventory(spellcall[i][3])==1)	//then, let's record what spells we have available
-			{
-				atleastonespell=1;
-				spellpresent[i]=1;
-			}
+			atleastonespell=1;
+			spellpresent[i]=1;
 		}
-		if(atleastonespell==1)		//if there is at least one spell, will print the icons
-			ACS_NamedExecute("s651",0,splslct,0,0);
+	}
+	if(atleastonespell==1)		//if there is at least one spell, will print the icons
+		ACS_NamedExecute("s651",0,splslct,0,0);
 
 }
 
-script "s651" (int spellpicked)	//main HUD spell icon, called by "weapon" pickups
+script "s651" (int spellpicked, int notshortcut) net	//main HUD spell icon, called by "weapon" pickups
 {
+	int plr = PlayerNumber();
 	atleastonespell=1;	//it tells the game that at least one spell has been obtained
 	spellpresent[spellpicked]=1;	//records on the main spell prescence tracker that this spell was obtained
 	splslct=spellpicked;	//the passed arg to this script is assigned to the main control spell pos variable
+	
+	if (lastspell > 0)
+		splslct = lastspell;
+	
 	SetHudSize(800,600,1);
 	for(int i=1;i<=7;i++)	
 	{
@@ -48,10 +208,16 @@ script "s651" (int spellpicked)	//main HUD spell icon, called by "weapon" pickup
 			HudMessage(s:"A"; HUDMSG_PLAIN, i+399, 0, 780.0, spellcoord[i]*1.0, 0); //will print the faded/non-selected icon
 		}
 	}
+	
 	ACS_NamedExecute("s655",0,0,0,0);
+	if (atleastonespell && !notshortcut && !GetUserCvar(plr,"user_SpellSwitchOnPickup"))
+	{
+		//lastspell = splslct;
+		lastspell = spellpicked;
+	}
 }
 
-script "s652" (void)	//cycle forwards/down
+script "s652" (void) net	//cycle forwards/down
 {
 	direction=1;
 	if(atleastonespell==1)
@@ -67,7 +233,7 @@ script "s652" (void)	//cycle forwards/down
 		ACS_NamedExecute("s655",0,0,0,0);
 	}
 }
-script "s653" (void) //cycle backwards/up
+script "s653" (void) net //cycle backwards/up
 {
 	direction=-1;
 	if(atleastonespell==1)
@@ -85,12 +251,14 @@ script "s653" (void) //cycle backwards/up
 }
 
 // fire selected spell
-script "s654" (void)	//gives the inventory item that fires the projectile(s)
+script "s654" (void) net	//gives the inventory item that fires the projectile(s)
 {
 	if(GetActorProperty(0, APROP_HEALTH)>0)
 	{
 		if(splslct!=0)
-			if(CheckInventory("DarkMana")>=spellcost[splslct] || GetCVar("sv_infiniteammo") == 1)
+		{
+			if(CheckInventory("DarkMana") >= spellcost[splslct] || GetCVar("sv_infiniteammo") == 1
+			|| CheckInventory("PowerEconomizer") > 0)
 			{
 				GiveInventory(spellcall[splslct][0],1);
 				if(GetCVar("sv_infiniteammo") == 0)
@@ -98,6 +266,7 @@ script "s654" (void)	//gives the inventory item that fires the projectile(s)
 					
 				delay(35);
 			}
+		}
 	}
 }
 
@@ -115,7 +284,7 @@ script "s655" (void)
 //---------------------------------------------------------------------------------
 //This is the quick spell call. Depending the key pressed, it passes an arg to this
 //which is used to identify which spell was attempted
-script "s656" (int quickspell)
+script "s656" (int quickspell) net
 {
 	if(GetActorProperty(0, APROP_HEALTH)>0)
 	{
