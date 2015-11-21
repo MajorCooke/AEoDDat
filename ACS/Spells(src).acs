@@ -108,18 +108,23 @@ Script "SpellScript" (int swiitch, int fire, int cycle) net
 	
 	
 	int permNum = GetUserCvar(plr,"user_SpellSelection");
+	int restoreNum = permNum;
+	bool hasspell = GetUserCvar(plr,"user_HasSpell");
 	//If we're set to switch or we don't have a permNum selected,
 	if (swiitch || !permNum)
 	{
 		//If no spell found originally or
 		//if swiitch wants to change and our player wants it to change on pickup of
 		//new spell, set the new number as the one specified.
-		bool notfirst = GetUserCvar(plr,"user_HasSpell");
+		
 		bool allowswitch = GetUserCvar(plr,"user_SpellSwitchOnPickup");
-		if ((!notfirst) || (swiitch > 0 && swiitch < 8) && allowswitch)
+		if (swiitch > 0 && swiitch < 8)
 		{
-			permNum = swiitch;
-			SetUserCvar(plr,"user_SpellSelection",permNum);
+			if (!hasspell || allowswitch)
+			{
+				permNum = swiitch;
+				SetUserCvar(plr,"user_SpellSelection",permNum);
+			}
 		}
 	}
 	
@@ -167,8 +172,8 @@ Script "SpellScript" (int swiitch, int fire, int cycle) net
 	SetFont("SMALLFONT2");
 	HudMessage(s:spellcall[permNum][2]; HUDMSG_PLAIN, 2, 0, 780.2, spellcoord[permNum]*1.0, 0);
 	
-	if (!notfirst)
-		SetUserCvar(plr,"user_HasFirst",true);
+	if (!hasspell)
+		SetUserCvar(plr,"user_HasSpell",true);
 	
 }
 

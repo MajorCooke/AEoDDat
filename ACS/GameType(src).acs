@@ -823,23 +823,21 @@ Script "DirectorIntensity" (int type)
 #define DirDebug 0
 Script "FreezeDirector" (void)
 {
-	SetActivator(0,AAPTR_PLAYER1);
-	
 	if (AEoDGameMode > 0 && DirDebug == 0)
 	{
 		PrintBold(s:"Directors cannot be disabled in this game mode");
-		TakeInventory("FreezeDirector",10000); //You panzies.
+		TakeInventory("FreezeDirector",32767); //You panzies.
 		//PLAY IT RIGHT OR GTFO.
 		Terminate;
 	}
-	if (CheckInventory("FreezeDirector") > 0)
+	if (CheckInventory("FreezeDirector"))
 	{
-		PrintBold(s:"Directors Disabled");
-		GiveInventory("FreezeDirector",1);
+		PrintBold(s:"Directors Enabled");
+		TakeInventory("FreezeDirector",32767);
 	}
 	else
 	{
-		PrintBold(s:"Directors Enabled");
-		TakeInventory("FreezeDirector",10000);
+		PrintBold(s:"Directors Disabled");
+		GiveInventory("FreezeDirector",1);
 	}
 }
