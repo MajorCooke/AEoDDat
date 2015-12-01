@@ -2715,7 +2715,7 @@ Actor SuccubusBallBlueExp2
 //=====================================================================================
 //=====================================================================================
 
-ACTOR Necromancer 7274	//archvile
+ACTOR Necromancer //7274	//archvile
 {
 	DropItem "AEoDRavenStaffItem" 128
 	DropItem "Mana2Ammo"
@@ -2763,10 +2763,6 @@ ACTOR Necromancer 7274	//archvile
 		TNT1 A 0
 		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
 		Goto See
-    Pain.Drain:
-		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
-		Goto Pain
     Spawn:
         PNBI A 5 A_Look
         Loop
@@ -3023,15 +3019,19 @@ ACTOR RavenProjectileNecro
     Scale 0.1
     PROJECTILE
 	DamageType "Unholy"
+	ReactionTime 15
     States
     {
     Spawn:
 		WRPW AAAAAAAAAAAAAAAAAA 1 Bright A_SeekerMissile(10,10)
+		WRPW A 0 A_CountDown
 		TNT1 A 0 A_Jump(128,1)
 		TNT1 A 0 A_PlaySound("h2ravenprojectile/echosqueak")
 		WRPW AAAAAAAAAAAAAAAAAA 1 Bright A_SeekerMissile(30,30)
+		WRPW A 0 A_CountDown
 		WRPW A 1 A_Jump(26,1)
 		Loop
+	Death:
 		TNT1 A 1 A_PlaySound("h2ravenprojectile/death")
 		Stop
     }
