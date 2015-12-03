@@ -55,12 +55,15 @@ str GameTypesText[28]={"Classic",	//0
 
 Script "s901" enter
 {
+	int plr = PlayerNumber();
+	int sp = GetUserCvar(plr,"user_SpellSelection");
 	//ACS_NamedExecuteWait("SpawnerSetup",0,0,0,0);	
 	if (!(GameStarted))
 		delay(1);
 	if (CheckInventory("NotATrueMapToken") == 1) //Needed for the Title Map.
 		Terminate;
-	ACS_NamedExecute("s650",0,0,0,0);		//starts the spells script
+	//ACS_NamedExecute("s650",0,0,0,0);		//starts the spells script
+	ACS_NamedExecute("SpellScript",0,sp,0,0);
 	ACS_NamedExecute("s903",0,0,0,0);		//level checker
 	int NoWeapons = 0;
 	
