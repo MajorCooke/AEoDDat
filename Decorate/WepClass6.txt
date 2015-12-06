@@ -6167,7 +6167,7 @@ Actor CowManglerAltShot : CowManglerShot
 		TNT1 A 0 A_Explode(384,128,0)
 		TNT1 A 0 A_PlaySound("shredderstaff/blasthit")
 		TNT1 A 0 A_SpawnItemEx("ManglerBeamerFloor",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
-		TNT1 A 0 A_SpawnItemEx("ManglerBeamerCeiling",0,0,8,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("ManglerBeamerCeiling",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
 		Stop
 	}
 }
@@ -6196,8 +6196,6 @@ Actor ManglerBeamerFloor
 
 Actor ManglerBeamerCeiling
 {
-	var int user_z;
-	var int user_ceiling;
 	Projectile
 	+THRUACTORS
 	+SPAWNCEILING
@@ -6208,19 +6206,13 @@ Actor ManglerBeamerCeiling
 	States
 	{
 	Spawn:
-		TNT1 A 0
-	Warping:
-		TNT1 A 0 A_Warp(AAPTR_DEFAULT,0,0,1,0,0,"Warping")
-		TNT1 A 0 A_Warp(AAPTR_DEFAULT,0,0,-8,0,0,1)
+		TNT1 A 0 NoDelay A_Warp(AAPTR_DEFAULT,x,y,ceilingz-8,0,WARPF_NOCHECKPOSITION|WARPF_ABSOLUTEPOSITION)
 		TNT1 A 0 A_SpawnItemEx("ManglerBeamRay2",0,0,-4,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
 		TNT1 A 0 A_SpawnItemEx("ManglerBeamRay2",0,0,-4,0,0,0,60,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
 		TNT1 A 0 A_SpawnItemEx("ManglerBeamRay2",0,0,-4,0,0,0,120,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
 		TNT1 A 0 A_SpawnItemEx("ManglerBeamRay2",0,0,-4,0,0,0,180,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
 		TNT1 A 0 A_SpawnItemEx("ManglerBeamRay2",0,0,-4,0,0,0,240,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
 		TNT1 A 0 A_SpawnItemEx("ManglerBeamRay2",0,0,-4,0,0,0,300,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
-		Stop
-	Failure:
-		TNT1 A 0 A_PrintBold("Failed")
 		Stop
 	}
 }
@@ -6283,8 +6275,9 @@ Actor ManglerCutter
 {
 	Projectile
 	+RIPPER
-	RipperLevel 2
 	+DONTREFLECT
+	+BLOODLESSIMPACT
+	RipperLevel 2
 	Damage (random(1,4))
 	Height 4
 	Radius 5
@@ -6297,6 +6290,8 @@ Actor ManglerCutter
 	States
 	{
 	Spawn:
+		LPUF A 0 A_JumpIf(random(1,10) >= 7,"Moving")
+		LPUF A 0 A_ChangeFlag(BLOODLESSIMPACT,0)
 		LPUF A 10 bright
 		Loop
 	Death:
