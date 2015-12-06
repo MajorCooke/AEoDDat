@@ -112,15 +112,15 @@ actor FBerserker //7380		// demon
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
-		TNT1 A 0 Thing_SetTranslation(0,50)	
-		BERP A 1 A_FadeOut(0.015)
-		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-		TNT1 a 0 A_Stop	
-		TNT1 a 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
-		BERP AA 2 A_FadeOut(0.03)
-		Goto Disintegrate+6
+		"----" A 0 A_ChangeFlag("NOINTERACTION",1)
+		"----" A 0 A_Stop	
+		"----" A 0 A_Fall
+		"----" A 0 A_SpawnItemEx("DisintegrationShadow",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSCALE|SXF_TRANSFERSPRITEFRAME,0,
+		Medium
+		)
+		TNT1 A 35
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
+		Stop
     Raise:
         BERD HGFEDCBA 6
         Goto See
@@ -232,15 +232,15 @@ actor IronMaiden //7381	// hell knight
     Death.UnholyDisint:
     Death.PlasmaDisint:
     Disintegrate:
-		TNT1 A 0 Thing_SetTranslation(0,50)	
-		BITP A 1 A_FadeOut(0.015)
-		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-		TNT1 a 0 A_Stop	
-		TNT1 a 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
-		BITP AA 2 A_FadeOut(0.03)
-		Goto Disintegrate+6
+		"----" A 0 A_ChangeFlag("NOINTERACTION",1)
+		"----" A 0 A_Stop	
+		"----" A 0 A_Fall
+		"----" A 0 A_SpawnItemEx("DisintegrationShadow",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSCALE|SXF_TRANSFERSPRITEFRAME,0,
+		Medium
+		)
+		TNT1 A 35
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
+		Stop
     Raise:
 		BITD ONMLKJIHGFEDCBA 4
 		Goto See
@@ -451,16 +451,15 @@ actor FTankBoss //7382	// spider mastermind
     Death.UnholyDisint:
     Death.PlasmaDisint:
     Disintegrate:
-		TNT1 A 0 Thing_SetTranslation(0,50)	
-		TNT1 a 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
-		BS1P A 1 A_FadeOut(0.15)
-		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-		TNT1 a 0 A_Stop	
-		TNT1 a 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowBig",0,0,45,0,0,0,0,SXF_NOCHECKPOSITION)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksBig",0,0,45,0,0,0,0,SXF_NOCHECKPOSITION)
-		BS1P AA 2 A_FadeOut(0.03)
-		Goto Disintegrate+7
+		"----" A 0 A_ChangeFlag("NOINTERACTION",1)
+		"----" A 0 A_Stop	
+		"----" A 0 A_Fall
+		"----" A 0 A_SpawnItemEx("DisintegrationShadow",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSCALE|SXF_TRANSFERSPRITEFRAME,0,
+		Big
+		)
+		TNT1 A 35
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
+		Stop
     }
 }
 
@@ -636,17 +635,15 @@ actor FHoverBoss //7383	// spider mastermind
     Disintegrate:
 		BS2P A 0 A_GiveInventory("DisintegrateToken",1)
     DisintegrateCont:
-		"####" "#" 0 Thing_SetTranslation(0,50)	
-		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
-		"####" "#" 1 A_FadeOut(0.015)
 		"----" A 0 A_ChangeFlag("NOINTERACTION",1)
 		"----" A 0 A_Stop	
 		"----" A 0 A_Fall
-		"----" A 0 A_SpawnItemEx("DisintegrateShadowBig",0,0,45,0,0,0,0,SXF_NOCHECKPOSITION)
-	DisLoop:
-		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksBig",0,0,45,0,0,0,0,SXF_NOCHECKPOSITION)
-		"####" "##" 2 A_FadeOut(0.03)
-		Loop
+		"----" A 0 A_SpawnItemEx("DisintegrationShadow",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSCALE|SXF_TRANSFERSPRITEFRAME,0,
+		Big
+		)
+		TNT1 A 35
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
+		Stop
     }
 }
 
@@ -814,26 +811,23 @@ actor FMakronPet //7384	// cyberdemon
 	Death.PlasmaDisint:
 	Disintegrate:
 		"----" A 0 A_ChangeFlag("NOBLOCKMAP",1) //Make sure no sudden changes can happen to it via inventory items...
-		"####" "#" 0 A_SpawnItemEx("FMakron",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSPECIAL|SXF_CLEARCALLERSPECIAL|SXF_CLEARCALLERTID|SXF_TRANSFERPOINTERS|SXF_ISTRACER,0,tid)
-		"####" "#" 0 Thing_SetTranslation(0,50)
-		"####" "#" 0 A_StopSound(6)
-		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
-		"####" "#" 1 A_FadeOut(0.015,FTF_CLAMP)
-		"####" "#" 0 A_Stop    
-		"####" "#" 0 A_Fall
-		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowBig",0,0,45,0,0,0,0,SXF_NOCHECKPOSITION)
-		DisintegrateCont:
-		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksBig",0,0,45,0,0,0,0,SXF_NOCHECKPOSITION)
-		"####" "##" 2 A_FadeOut(0.03,FTF_CLAMP)
-		"####" "#" 0 A_JumpIf(alpha <= 0,"Waiting")
-		Loop
+		"----" A 0 A_SpawnItemEx("FMakron",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSPECIAL|SXF_CLEARCALLERSPECIAL|SXF_CLEARCALLERTID|SXF_TRANSFERPOINTERS|SXF_ISTRACER,0,tid)
+		"----" A 0 A_ChangeFlag("NOINTERACTION",1)
+		"----" A 0 A_Stop	
+		"----" A 0 A_Fall
+		"----" A 0 A_SpawnItemEx("DisintegrationShadow",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSCALE|SXF_TRANSFERSPRITEFRAME,0,
+		Big
+		)
+		TNT1 A 35
+		//TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
+		Goto Waiting
     }
 }
 
 //===========================================================================
 //===========================================================================
 
-actor FMakron 7385
+actor FMakron //7385
 {
 	DropItem "AEoDBioForceGunItem" 64
 	DropItem "CellBigAmmo"
@@ -976,16 +970,15 @@ actor FMakron 7385
     Death.UnholyDisint:
     Death.PlasmaDisint:
     Disintegrate:
+		"----" A 0 A_ChangeFlag("NOINTERACTION",1)
+		"----" A 0 A_Stop	
+		"----" A 0 A_Fall
+		"----" A 0 A_SpawnItemEx("DisintegrationShadow",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSCALE|SXF_TRANSFERSPRITEFRAME,0,
+		MediumBig
+		)
+		TNT1 A 35
 		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
-		TNT1 A 0 Thing_SetTranslation(0,50)	
-		BS5P A 1 A_FadeOut(0.015)
-		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-		TNT1 a 0 A_Stop	
-		TNT1 a 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
-		BS5P AA 2 A_FadeOut(0.03)
-		Goto Disintegrate+7
+		Stop
     Ice:
 		"####" "#" 5 A_GenericFreezeDeath
 		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
@@ -1358,16 +1351,16 @@ ACTOR FHover //7386	// cacodemon
     Death.PlasmaDisint:
     Disintegrate:
 		TNT1 A 0 A_GiveInventory("DisintegrateToken",1)
-		DisintegrateCont:
-		TNT1 A 0 Thing_SetTranslation(0,50)	
-		HVRP A 1 A_FadeOut(0.015)
-		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-		TNT1 a 0 A_Stop	
-		TNT1 a 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
-		HVRP AA 2 A_FadeOut(0.03)
-		Goto DisintegrateCont+6
+	DisintegrateCont:
+		"----" A 0 A_ChangeFlag("NOINTERACTION",1)
+		"----" A 0 A_Stop	
+		"----" A 0 A_Fall
+		"----" A 0 A_SpawnItemEx("DisintegrationShadow",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSCALE|SXF_TRANSFERSPRITEFRAME,0,
+		Medium
+		)
+		TNT1 A 35
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
+		Stop
     } 
 } 
 
@@ -1514,16 +1507,15 @@ actor FTank 7387	// baron
     Death.UnholyDisint:
     Death.PlasmaDisint:
     Disintegrate:
-		TNT1 A 0 Thing_SetTranslation(0,50)	
+		"----" A 0 A_ChangeFlag("NOINTERACTION",1)
+		"----" A 0 A_Stop	
+		"----" A 0 A_Fall
+		"----" A 0 A_SpawnItemEx("DisintegrationShadow",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSCALE|SXF_TRANSFERSPRITEFRAME,0,
+		MediumBig
+		)
+		TNT1 A 35
 		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
-		TK1P A 1 A_FadeOut(0.015)
-		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-		TNT1 a 0 A_Stop	
-		TNT1 a 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
-		TK1P AA 2 A_FadeOut(0.03)
-		Goto Disintegrate+7
+		Stop
     Death:
 		TNT1 AAA 0 A_TossGib
 		TK1D A 1 A_Scream
@@ -1703,15 +1695,15 @@ actor FGunner 7388	//revenant
     Death.UnholyDisint:
     Death.PlasmaDisint:
     Disintegrate:
-		TNT1 A 0 Thing_SetTranslation(0,50)	
-		GNNP A 1 A_FadeOut(0.015)
-		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-		TNT1 a 0 A_Stop	
-		TNT1 a 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
-		GNNP AA 2 A_FadeOut(0.03)
-		Goto Disintegrate+6
+		"----" A 0 A_ChangeFlag("NOINTERACTION",1)
+		"----" A 0 A_Stop	
+		"----" A 0 A_Fall
+		"----" A 0 A_SpawnItemEx("DisintegrationShadow",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSCALE|SXF_TRANSFERSPRITEFRAME,0,
+		Medium
+		)
+		TNT1 A 35
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
+		Stop
     Raise:
 		GNND KJIHGFEDCBA 4
 		Goto See
@@ -1845,15 +1837,15 @@ ACTOR FQ2Soldier1 7389		// zombie
     Death.UnholyDisint:
     Death.PlasmaDisint:
     Disintegrate:
-		TNT1 A 0 Thing_SetTranslation(0,50)	
-		Q2SP A 1 A_FadeOut(0.015)
-		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-		TNT1 a 0 A_Stop	
-		TNT1 a 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
-		Q2SP AA 2 A_FadeOut(0.03)
-		Goto Disintegrate+6
+		"----" A 0 A_ChangeFlag("NOINTERACTION",1)
+		"----" A 0 A_Stop	
+		"----" A 0 A_Fall
+		"----" A 0 A_SpawnItemEx("DisintegrationShadow",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSCALE|SXF_TRANSFERSPRITEFRAME,0,
+		Medium
+		)
+		TNT1 A 35
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
+		Stop
     Raise:
 		Q2SD JIHGFEDCBA 3
 		Goto See
@@ -1972,15 +1964,15 @@ ACTOR FQ2Soldier2 7390		// shotgun guy
     Death.UnholyDisint:
     Death.PlasmaDisint:
     Disintegrate:
-	TNT1 A 0 Thing_SetTranslation(0,50)	
-	Q2SP A 1 A_FadeOut(0.015)
-	TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-	TNT1 a 0 A_Stop	
-	TNT1 a 0 A_Fall
-	TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
-	TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
-	Q2SP AA 2 A_FadeOut(0.03)
-	Goto Disintegrate+6
+		"----" A 0 A_ChangeFlag("NOINTERACTION",1)
+		"----" A 0 A_Stop	
+		"----" A 0 A_Fall
+		"----" A 0 A_SpawnItemEx("DisintegrationShadow",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSCALE|SXF_TRANSFERSPRITEFRAME,0,
+		Medium
+		)
+		TNT1 A 35
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
+		Stop
     Raise:
         Q2SD JIHGFEDCBA 3
         Goto See
@@ -2092,15 +2084,15 @@ ACTOR FQ2Soldier3 7391		// chaingun guy
     Death.UnholyDisint:
     Death.PlasmaDisint:
     Disintegrate:
-		TNT1 A 0 Thing_SetTranslation(0,50)	
-		Q2SP A 1 A_FadeOut(0.015)
-		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-		TNT1 a 0 A_Stop	
-		TNT1 a 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
-		Q2SP AA 2 A_FadeOut(0.03)
-		Goto Disintegrate+6
+		"----" A 0 A_ChangeFlag("NOINTERACTION",1)
+		"----" A 0 A_Stop	
+		"----" A 0 A_Fall
+		"----" A 0 A_SpawnItemEx("DisintegrationShadow",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSCALE|SXF_TRANSFERSPRITEFRAME,0,
+		Medium
+		)
+		TNT1 A 35
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
+		Stop
     Raise:
         Q2SD JIHGFEDCBA 3
         Goto See
@@ -2221,15 +2213,15 @@ ACTOR FParasite 7392	//imp
     Death.UnholyDisint:
     Death.PlasmaDisint:
     Disintegrate:
-		TNT1 A 0 Thing_SetTranslation(0,50)	
-		PARP A 1 A_FadeOut(0.015)
-		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-		TNT1 a 0 A_Stop	
-		TNT1 a 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
-		PARP AA 2 A_FadeOut(0.03)
-		Goto Disintegrate+6
+		"----" A 0 A_ChangeFlag("NOINTERACTION",1)
+		"----" A 0 A_Stop	
+		"----" A 0 A_Fall
+		"----" A 0 A_SpawnItemEx("DisintegrationShadow",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSCALE|SXF_TRANSFERSPRITEFRAME,0,
+		Medium
+		)
+		TNT1 A 35
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
+		Stop
     Raise:
         PARD GFEDCBA 3
         Goto See
@@ -2435,15 +2427,15 @@ ACTOR FQ2Medic 7393	// arch-vile
     Death.UnholyDisint:
     Death.PlasmaDisint:
     Disintegrate:
-		TNT1 A 0 Thing_SetTranslation(0,50)	
-		MEDP A 1 A_FadeOut(0.015)
-		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-		TNT1 a 0 A_Stop	
-		TNT1 a 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
-		MEDP AA 2 A_FadeOut(0.03)
-		Goto Disintegrate+6
+		"----" A 0 A_ChangeFlag("NOINTERACTION",1)
+		"----" A 0 A_Stop	
+		"----" A 0 A_Fall
+		"----" A 0 A_SpawnItemEx("DisintegrationShadow",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSCALE|SXF_TRANSFERSPRITEFRAME,0,
+		MediumBig
+		)
+		TNT1 A 35
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
+		Stop
     }
 }
 
@@ -2583,15 +2575,15 @@ ACTOR FFlyer //7394	// lost soul
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
-		TNT1 A 0 Thing_SetTranslation(0,50)	
-		LYEP A 1 A_FadeOut(0.015)
-		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-		TNT1 a 0 A_Stop	
-		TNT1 a 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowSmallMedium",0,0,18,0,0,0,0,SXF_NOCHECKPOSITION)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksSmallMedium",0,0,18,0,0,0,0,SXF_NOCHECKPOSITION)
-		LYEP AA 2 A_FadeOut(0.03)
-		Goto Disintegrate+6
+		"----" A 0 A_ChangeFlag("NOINTERACTION",1)
+		"----" A 0 A_Stop	
+		"----" A 0 A_Fall
+		"----" A 0 A_SpawnItemEx("DisintegrationShadow",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSCALE|SXF_TRANSFERSPRITEFRAME,0,
+		SmallMedium
+		)
+		TNT1 A 35
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
+		Stop
 	} 
 } 
 
@@ -2814,15 +2806,15 @@ ACTOR FQ2Brains 7395	// hell knight
     Death.UnholyDisint:
     Death.PlasmaDisint:
     Disintegrate:
-		TNT1 A 0 Thing_SetTranslation(0,50)	
-		BRNP A 1 A_FadeOut(0.015)
-		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-		TNT1 a 0 A_Stop	
-		TNT1 a 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
-		BRNP AA 2 A_FadeOut(0.03)
-		Goto Disintegrate+6
+		"----" A 0 A_ChangeFlag("NOINTERACTION",1)
+		"----" A 0 A_Stop	
+		"----" A 0 A_Fall
+		"----" A 0 A_SpawnItemEx("DisintegrationShadow",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSCALE|SXF_TRANSFERSPRITEFRAME,0,
+		MediumBig
+		)
+		TNT1 A 35
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
+		Stop
     Raise:
         BRND EDCBA 4
         Goto See
@@ -3373,17 +3365,15 @@ ACTOR FGladiator 7396		// mancubus
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
-		GLAA D 0 A_StopSound(6)
-		TNT1 A 0 Thing_SetTranslation(0,50)	
+		"----" A 0 A_ChangeFlag("NOINTERACTION",1)
+		"----" A 0 A_Stop	
+		"----" A 0 A_Fall
+		"----" A 0 A_SpawnItemEx("DisintegrationShadow",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSCALE|SXF_TRANSFERSPRITEFRAME,0,
+		MediumBig
+		)
+		TNT1 A 35
 		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
-		GLAP A 1 A_FadeOut(0.015)
-		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-		TNT1 a 0 A_Stop	
-		TNT1 a 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
-		GLAP AA 2 A_FadeOut(0.03)
-		Goto Disintegrate+8
+		Stop
 	Raise:
 		GLAD LKJIHGFEDCBA 3
 		Goto See
@@ -3515,15 +3505,15 @@ Actor FInfantry 7397	// chaingun guy
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
-		TNT1 A 0 Thing_SetTranslation(0,50)	
-		INFP A 1 A_FadeOut(0.015)
-		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-		TNT1 a 0 A_Stop	
-		TNT1 a 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
-		INFP AA 2 A_FadeOut(0.03)
-		Goto Disintegrate+6
+		"----" A 0 A_ChangeFlag("NOINTERACTION",1)
+		"----" A 0 A_Stop	
+		"----" A 0 A_Fall
+		"----" A 0 A_SpawnItemEx("DisintegrationShadow",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSCALE|SXF_TRANSFERSPRITEFRAME,0,
+		Medium
+		)
+		TNT1 A 35
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
+		Stop
 	Raise:
 		INFD TSRQPONMLKJIHGFEDCBA 3
 		Goto See
@@ -3658,15 +3648,15 @@ ACTOR FQ2Mutant 7398	// demon
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
-		TNT1 A 0 Thing_SetTranslation(0,50)	
-		Q2MP A 1 A_FadeOut(0.015)
-		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-		TNT1 a 0 A_Stop	
-		TNT1 a 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
-		Q2MP AA 2 A_FadeOut(0.03)
-		Goto Disintegrate+6
+		"----" A 0 A_ChangeFlag("NOINTERACTION",1)
+		"----" A 0 A_Stop	
+		"----" A 0 A_Fall
+		"----" A 0 A_SpawnItemEx("DisintegrationShadow",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSCALE|SXF_TRANSFERSPRITEFRAME,0,
+		Medium
+		)
+		TNT1 A 35
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
+		Stop
 	Raise:
 		Q2MD IHGFEDCBA 4
 		Goto See
@@ -3816,16 +3806,15 @@ ACTOR FCarrier //7399		// spider mastermind
 	Disintegrate:
 		"####" "#" 0 A_GiveInventory("DisintegrateToken",1)
 	DisintegrateCont:
-		"####" "#" 0 Thing_SetTranslation(0,50)	
-		"####" "#" 1 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
-		"####" "#" 1 A_FadeOut(0.015)
-		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
-		"####" "#" 0 A_Stop	
-		"####" "#" 0 A_Fall
-		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowBig",0,0,45,0,0,0,0,SXF_NOCHECKPOSITION)
-		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksBig",0,0,45,0,0,0,0,SXF_NOCHECKPOSITION)
-		"####" "##" 2 A_FadeOut(0.03)
-		Goto DisintegrateCont+7
+		"----" A 0 A_ChangeFlag("NOINTERACTION",1)
+		"----" A 0 A_Stop	
+		"----" A 0 A_Fall
+		"----" A 0 A_SpawnItemEx("DisintegrationShadow",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSCALE|SXF_TRANSFERSPRITEFRAME,0,
+		Big
+		)
+		TNT1 A 35
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
+		Stop
     }
 }
 
@@ -4300,17 +4289,16 @@ ACTOR FShieldGladiator : FGladiator 7402		// baron
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
-		GLAA D 0 A_StopSound(6)
-		TNT1 A 0 Thing_SetTranslation(0,50)	
+		"####" "#" 0 A_StopSound(6)
+		"----" A 0 A_ChangeFlag("NOINTERACTION",1)
+		"----" A 0 A_Stop	
+		"----" A 0 A_Fall
+		"----" A 0 A_SpawnItemEx("DisintegrationShadow",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSCALE|SXF_TRANSFERSPRITEFRAME,0,
+		MediumBig
+		)
+		TNT1 A 35
 		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
-		GLAP A 1 A_FadeOut(0.015)
-		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
-		TNT1 a 0 A_Stop	
-		TNT1 a 0 A_Fall
-		TNT1 A 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
-		TNT1 A 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
-		GLAP AA 2 A_FadeOut(0.03)
-		Goto Disintegrate+8
+		Stop
     }
 }
 
@@ -4492,16 +4480,15 @@ actor IronMaiden2     7403                           //arachno
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
-		"####" "#" 0 Thing_SetTranslation(0,50)	
-		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
-		"####" "#" 1 A_FadeOut(0.015)
-		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
-		"####" "#" 0 A_Stop	
-		"####" "#" 0 A_Fall
-		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
-		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
-		"####" "##" 2 A_FadeOut(0.03)
-		Goto Disintegrate+7
+		"----" A 0 A_ChangeFlag("NOINTERACTION",1)
+		"----" A 0 A_Stop	
+		"----" A 0 A_Fall
+		"----" A 0 A_SpawnItemEx("DisintegrationShadow",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSCALE|SXF_TRANSFERSPRITEFRAME,0,
+		MediumBig
+		)
+		TNT1 A 35
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
+		Stop
 	Raise:
 		BITD ONMLKJIHGFEDCBA 4
 		Goto See
@@ -4717,16 +4704,15 @@ actor PrototypeContainer		7404   //arachno
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
-		"####" "#" 0 Thing_SetTranslation(0,50)	
-		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
-		"####" "#" 1 A_FadeOut(0.015)
-		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
-		"####" "#" 0 A_Stop	
-		"####" "#" 0 A_Fall
-		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
-		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
-		"####" "##" 2 A_FadeOut(0.03)
-		Goto Disintegrate+7
+		"----" A 0 A_ChangeFlag("NOINTERACTION",1)
+		"----" A 0 A_Stop	
+		"----" A 0 A_Fall
+		"----" A 0 A_SpawnItemEx("DisintegrationShadow",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSCALE|SXF_TRANSFERSPRITEFRAME,0,
+		MediumBig
+		)
+		TNT1 A 35
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
+		Stop
 
 	Ice:
 		"####" "#" 5 A_GenericFreezeDeath
@@ -4890,15 +4876,15 @@ actor TankCommander 	// archvile
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
-		"####" "#" 0 Thing_SetTranslation(0,50)	
-		"####" "#" 1 A_FadeOut(0.015)
-		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
-		"####" "#" 0 A_Stop	
-		"####" "#" 0 A_Fall
-		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
-		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
-		"####" "##" 2 A_FadeOut(0.03)
-		Goto Disintegrate+6
+		"----" A 0 A_ChangeFlag("NOINTERACTION",1)
+		"----" A 0 A_Stop	
+		"----" A 0 A_Fall
+		"----" A 0 A_SpawnItemEx("DisintegrationShadow",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSCALE|SXF_TRANSFERSPRITEFRAME,0,
+		MediumBig
+		)
+		TNT1 A 35
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
+		Stop
 	Death:
 		TNT1 AAA 0 A_TossGib
 		TK1D A 1 A_Scream

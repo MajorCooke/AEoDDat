@@ -64,18 +64,7 @@ Actor TF2Demoman	//cyberdemon
 	DamageFactor "AEBullet", 0.5
 	DamageFactor "DemoDamager", 1000
 	States
-	{
-	Pain.Chaos:
-		TNT1 A 0 A_CustomMissile("ChaosExpl1",0,0,0)
-		TNT1 A 0 A_CustomMissile("ChaosExpl2",0,0,0)
-		Goto See
-	Pain.ChaosExpl1:
-		TNT1 A 0 A_ClearTarget
-		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",1)
-		Goto Spawn
-	Pain.ChaosExpl2:		TNT1 A 0 A_ChangeFlag("QUICKTORETALIATE",0)		Goto See
-	Pain.Drain:			TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)	Goto Pain	
-	
+	{	
 	Spawn:
 		N001 A 0
 		N001 A 0 A_SpawnItemEx("DemomanReloadChecker",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
@@ -242,17 +231,15 @@ Actor TF2Demoman	//cyberdemon
 	Disintegrate:
 		"----" A 0 A_RemoveChildren(1,RMVF_EVERYTHING,"DemomanUllapool")
 		"----" A 0 A_RemoveChildren(1,RMVF_EVERYTHING,"DemomanReloadChecker")
-		"####" "#" 0 Thing_SetTranslation(0,50)
-		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
-		"####" "#" 1 A_FadeOut(0.015,0)
-		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
-		"####" "#" 0 A_Stop
-		"####" "#" 0 A_Fall
-		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
-	DisLoop:
-		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
-		"####" "##" 2 A_FadeOut(0.03)
-		Loop
+		"----" A 0 A_ChangeFlag("NOINTERACTION",1)
+		"----" A 0 A_Stop	
+		"----" A 0 A_Fall
+		"----" A 0 A_SpawnItemEx("DisintegrationShadow",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSCALE|SXF_TRANSFERSPRITEFRAME,0,
+		Medium
+		)
+		TNT1 A 35
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
+		Stop
 	Ice:
 		"####" "#" 5 A_GenericFreezeDeath
 		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
@@ -551,16 +538,15 @@ Actor TF2Soldier	//cyberdemon
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
-		"####" "#" 0 Thing_SetTranslation(0,50)
-		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
-		"####" "#" 1 A_FadeOut(0.015)
-		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
-		"####" "#" 0 A_Stop    
-		"####" "#" 0 A_Fall
-		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
-		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
-		"####" "##" 2 A_FadeOut(0.03)
-		Goto Disintegrate+7
+		"----" A 0 A_ChangeFlag("NOINTERACTION",1)
+		"----" A 0 A_Stop	
+		"----" A 0 A_Fall
+		"----" A 0 A_SpawnItemEx("DisintegrationShadow",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSCALE|SXF_TRANSFERSPRITEFRAME,0,
+		MediumBig
+		)
+		TNT1 A 35
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
+		Stop
 
 	Ice:
 		"####" "#" 5 A_GenericFreezeDeath
@@ -786,16 +772,15 @@ Actor TF2Heavy		//spidermastermind
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
-		"####" "#" 0 Thing_SetTranslation(0,50)
-		"####" "#" 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
-		"####" "#" 1 A_FadeOut(0.015)
-		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
-		"####" "#" 0 A_Stop    
-		"####" "#" 0 A_Fall
-		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
-		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
-		"####" "##" 2 A_FadeOut(0.03)
-		Goto Disintegrate+7
+		"----" A 0 A_ChangeFlag("NOINTERACTION",1)
+		"----" A 0 A_Stop	
+		"----" A 0 A_Fall
+		"----" A 0 A_SpawnItemEx("DisintegrationShadow",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSCALE|SXF_TRANSFERSPRITEFRAME,0,
+		MediumBig
+		)
+		TNT1 A 35
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
+		Stop
 
 	Ice:
 		"####" "#" 5 A_GenericFreezeDeath
@@ -1022,15 +1007,15 @@ Actor TF2Scout //hellknight
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
-		"####" "#" 0 Thing_SetTranslation(0,50)
-		"####" "#" 1 A_FadeOut(0.015)
-		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
-		"####" "#" 0 A_Stop    
-		"####" "#" 0 A_Fall
-		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
-		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
-		"####" "##" 2 A_FadeOut(0.03)
-		Goto Disintegrate+6
+		"----" A 0 A_ChangeFlag("NOINTERACTION",1)
+		"----" A 0 A_Stop	
+		"----" A 0 A_Fall
+		"----" A 0 A_SpawnItemEx("DisintegrationShadow",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSCALE|SXF_TRANSFERSPRITEFRAME,0,
+		Medium
+		)
+		TNT1 A 35
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
+		Stop
 	}
 }
 
@@ -1226,15 +1211,15 @@ Actor TF2Sniper	//archvile
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
-		"####" "#" 0 Thing_SetTranslation(0,50)
-		"####" "#" 1 A_FadeOut(0.015)
-		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
-		"####" "#" 0 A_Stop    
-		"####" "#" 0 A_Fall
-		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
-		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
-		"####" "##" 2 A_FadeOut(0.03)
-		Goto Disintegrate+6
+		"----" A 0 A_ChangeFlag("NOINTERACTION",1)
+		"----" A 0 A_Stop	
+		"----" A 0 A_Fall
+		"----" A 0 A_SpawnItemEx("DisintegrationShadow",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSCALE|SXF_TRANSFERSPRITEFRAME,0,
+		Medium
+		)
+		TNT1 A 35
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
+		Stop
 	}
 }
 
@@ -1681,15 +1666,15 @@ Actor TF2Spy		//archvile
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
 	Disintegrate:
-		"####" "#" 0 Thing_SetTranslation(0,50)
-		"####" "#" 1 A_FadeOut(0.015)
-		"####" "#" 0 A_ChangeFlag("NOINTERACTION",1)
-		"####" "#" 0 A_Stop    
-		"####" "#" 0 A_Fall
-		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
-		"####" "#" 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,30,0,0,0,0,SXF_NOCHECKPOSITION)
-		"####" "##" 2 A_FadeOut(0.03)
-		Goto Disintegrate+6
+		"----" A 0 A_ChangeFlag("NOINTERACTION",1)
+		"----" A 0 A_Stop	
+		"----" A 0 A_Fall
+		"----" A 0 A_SpawnItemEx("DisintegrationShadow",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSCALE|SXF_TRANSFERSPRITEFRAME,0,
+		Medium
+		)
+		TNT1 A 35
+		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
+		Stop
 	}
 }
 
