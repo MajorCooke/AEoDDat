@@ -4,14 +4,14 @@
 
 global int 3: splslct;	//the main control number representing, of the spell selected
 			//item to give, font, display text, pickup/weapon name, fontempty
-str spellcall[8][6]={{"empty","empty","empty","empty","empty","empty"},
-			  {"ChaosSpItem",		"ChaosF",	"Chaos",	"ChaosPresent","ChaosEm",	"user_ChaosPresent"},
-			  {"CharmSpItem",		"CharmF",	"Charm",	"CharmPresent","CharmEm",	"user_CharmPresent"},
-			  {"DefileSpItem",	"DefileF",	"Defile",	"DefilePresent","DefileEm",		"user_DefilePresent"},
-			  {"DrainSpItem",		"DrainF",	"Drain",	"DrainPresent","DrainEm",	"user_DrainPresent"},
-			  {"MorphSpItem",		"MorphF",	"Morph",	"MorphPresent","MorphEm",	"user_MorphPresent"},
-			  {"RaiseSpItem",		"RaiseF",	"Raise",	"RaisePresent","RaiseEm",	"user_RaisePresent"},
-			  {"TerrorSpItem",	"TerrorF",	"Terror",	"TerrorPresent","TerrorEm",		"user_TerrorPresent"}};
+str spellcall[8][5]={{"empty","empty","empty","empty","empty"},
+			  {"ChaosSpItem",	"ChaosF",	"Chaos",	"ChaosPresent",		"ChaosEm"},
+			  {"CharmSpItem",	"CharmF",	"Charm",	"CharmPresent",		"CharmEm"},
+			  {"DefileSpItem",	"DefileF",	"Defile",	"DefilePresent",	"DefileEm"},
+			  {"DrainSpItem",	"DrainF",	"Drain",	"DrainPresent",		"DrainEm"},
+			  {"MorphSpItem",	"MorphF",	"Morph",	"MorphPresent",		"MorphEm"},
+			  {"RaiseSpItem",	"RaiseF",	"Raise",	"RaisePresent",		"RaiseEm"},
+			  {"TerrorSpItem",	"TerrorF",	"Terror",	"TerrorPresent",	"TerrorEm"}};
 int spellpresent[8]={0,0,0,0,0,0,0,0};	//to track which spells are accesible
 int spellcost[8]={0,2,1,2,1,3,2,1};
 int spellcoord[8]={0,120,150,180,210,240,270,300};		//Y coords to use for the spell icon printing
@@ -24,6 +24,8 @@ Script "SpellScript" (int swiitch, int fire, int cycle) net
 {
 	bool debugStatement = false; //Just prints where shit goes wrong.
 	int plr = PlayerNumber();
+	
+	//Activating a spell
 	if (fire)
 	{
 		if (CheckInventory("SpellCooldown"))
@@ -62,7 +64,6 @@ Script "SpellScript" (int swiitch, int fire, int cycle) net
 		{
 			if (debugStatement)
 				log(i:fire, s: " ", i: ff, s:"\n");
-			Terminate;
 		}
 		Terminate;
 	}
@@ -75,14 +76,14 @@ Script "SpellScript" (int swiitch, int fire, int cycle) net
 	//CHECK FIRST: Are we picking up a spell?
 
 	bool successCount = false;
-	int t = 0;	
-	
+	int t = 0;
+
 	for (t = 1; t <= 7; t++)
 	{
 	//Make sure we have a valid spell collected.
 		if (CheckInventory(spellcall[t][3]))
 		{
-			SetUserCvar(plr,spellcall[t][5],true);
+			//SetUserCvar(plr,spellcall[t][5],true);
 			spellpresent[t] = 1;
 			successCount = true;
 			
@@ -93,11 +94,11 @@ Script "SpellScript" (int swiitch, int fire, int cycle) net
 		}
 		else
 		{
-			SetUserCvar(plr,spellcall[t][5],false);
+			//SetUserCvar(plr,spellcall[t][5],false);
 			spellpresent[t] = 0;
 		}
 	}
-	
+
 	//If no spells found, or if spells found and no adjustments made, end it.
 	if (!successCount || !(cycle || swiitch))	
 	{
@@ -111,7 +112,7 @@ Script "SpellScript" (int swiitch, int fire, int cycle) net
 	int restoreNum = permNum;
 	bool hasspell = GetUserCvar(plr,"user_HasSpell");
 	//If we're set to switch or we don't have a permNum selected,
-	if (swiitch || !permNum)
+	if (swiitch > 0 || !permNum)
 	{
 		//If no spell found originally or
 		//if swiitch wants to change and our player wants it to change on pickup of
@@ -150,8 +151,7 @@ Script "SpellScript" (int swiitch, int fire, int cycle) net
 			if (debugStatement)
 				log(i:permNum, s:"\n");
 		}
-			
-		if (cycle == 1)
+		else
 		{	//Move down
 			t = permNum - 1;
 			while(spellpresent[t] == 0)

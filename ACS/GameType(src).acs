@@ -57,13 +57,17 @@ Script "s901" enter
 {
 	int plr = PlayerNumber();
 	int sp = GetUserCvar(plr,"user_SpellSelection");
+	bool hasspell = GetUserCvar(plr,"user_HasSpell");
 	//ACS_NamedExecuteWait("SpawnerSetup",0,0,0,0);	
 	if (!(GameStarted))
 		delay(1);
 	if (CheckInventory("NotATrueMapToken") == 1) //Needed for the Title Map.
 		Terminate;
-	//ACS_NamedExecute("s650",0,0,0,0);		//starts the spells script
-	ACS_NamedExecute("SpellScript",0,sp,0,0);
+	
+	if (hasspell)
+		ACS_NamedExecute("SpellScript",0,sp,0,0); //starts the spells script
+	
+	ACS_NamedExecute("AESoulCount",0,0,0,0);
 	ACS_NamedExecute("s903",0,0,0,0);		//level checker
 	int NoWeapons = 0;
 	
@@ -100,7 +104,8 @@ Script "s901" enter
 				GiveInventory("L4DMode",1);
 			if((AEoDGameMode == 1) || L4DDir)		//if L4D gives special weapon and ammo
 			{
-				//Zombie health is determined
+				//Zombie health is determined by intensity. 
+				//The lesser the intensity, the greater the health.
 				int zhd = 1;
 				if (L4DIntensity > 3)
 					zhd++;
