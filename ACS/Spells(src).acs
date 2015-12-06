@@ -76,9 +76,9 @@ Script "SpellScript" (int swiitch, int fire, int cycle) net
 	//CHECK FIRST: Are we picking up a spell?
 
 	bool successCount = false;
-	int t = 0;
+	int t = 1;
 
-	for (t = 1; t <= 7; t++)
+	while (t < 8)
 	{
 	//Make sure we have a valid spell collected.
 		if (CheckInventory(spellcall[t][3]))
@@ -90,13 +90,14 @@ Script "SpellScript" (int swiitch, int fire, int cycle) net
 			//Display it.
 			SetHudSize(800,600,1);
 			SetFont(spellcall[t][4]);		//gets the font/image name and...
-			HudMessage(s:"A"; HUDMSG_PLAIN, t+399, 0, 780.0, spellcoord[t]*1.0, 0); //will print the faded/non-selected icon			
+			HudMessage(s:"A"; HUDMSG_PLAIN, t+799, 0, 780.0, spellcoord[t]*1.0, 0); //will print the faded/non-selected icon			
 		}
 		else
 		{
 			//SetUserCvar(plr,spellcall[t][5],false);
 			spellpresent[t] = 0;
 		}
+		t++;
 	}
 
 	//If no spells found, or if spells found and no adjustments made, end it.
@@ -119,7 +120,7 @@ Script "SpellScript" (int swiitch, int fire, int cycle) net
 		//new spell, set the new number as the one specified.
 		
 		bool allowswitch = GetUserCvar(plr,"user_SpellSwitchOnPickup");
-		if (swiitch > 0 && swiitch < 8)
+		if (swiitch > 0)
 		{
 			if (!hasspell || allowswitch)
 			{
@@ -136,11 +137,11 @@ Script "SpellScript" (int swiitch, int fire, int cycle) net
 		Terminate; //Something done fucked up.
 	}
 	
-	if (cycle)
+	if (cycle > 0 && cycle < 3)
 	{
 		if (cycle == 2)
 		{	//Move up
-			t = permNum; t++;
+			t = GetUserCvar(plr,"user_SpellSelection"); t++;
 			while(spellpresent[t] == 0)
 			{
 				if (t > 7)	t = 1;
@@ -153,7 +154,7 @@ Script "SpellScript" (int swiitch, int fire, int cycle) net
 		}
 		else
 		{	//Move down
-			t = permNum - 1;
+			t = GetUserCvar(plr,"user_SpellSelection"); t--;
 			while(spellpresent[t] == 0)
 			{
 				if (t < 1)	t = 7;
