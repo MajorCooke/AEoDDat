@@ -1243,7 +1243,7 @@ Actor PowerFlyingRune : PowerFlight
 	Inventory.icon "ARTAIRH"
 }
 
-Actor AirSymbol : PowerupGiver
+Actor AirSymbol : CustomInventory
 {
 	inventory.pickupmessage "You found a magic element symbol: freedom of air."
 	inventory.maxamount 10
@@ -1253,17 +1253,55 @@ Actor AirSymbol : PowerupGiver
 	+FLOATBOB
 	+COUNTITEM
 	+INVENTORY.FANCYPICKUPSOUND
+	+INVENTORY.INVBAR
 	+DONTGIB
 	Inventory.icon "HARTAIR"
-	powerup.type "FlyingRune"
-	powerup.duration 2100
 	Tag "Fly (timed)"
 	states
 	{
 	Spawn:
 		H2E1 ABCDEFGHIJKLMNOPQR 3
 		loop
+	Use:
+		TNT1 A 0 A_JumpIfInventory("MorphOverrideable",1,"Spec")
+		TNT1 A 0 A_JumpIfInventory("AirSymbol2",1,"Nope")
+		TNT1 A 0 A_GiveInventory("AirSymbol2",1)
+		Stop
+	Nope:
+		TNT1 A 0
+		Fail
+	Spec:
+		TNT1 A 0 A_ChangeFlag("NOGRAVITY",1)
+		TNT1 A 0 A_JumpIfInventory("AirSymbolInfinite",1,2)
+		TNT1 A 0 A_GiveInventory("AirSymbolInfinite",1)
+		TNT1 A 0 A_JumpIfInventory("TempFlyToken",1,"S2")		
+		TNT1 A 0 A_GiveInventory("TempFlyToken",1)
+		Goto S2
+	S2:
+		TNT1 A 0 A_JumpIfInventory("FlyToken",1,"Nope")
+		TNT1 A 0 A_GiveInventory("FlyToken",1)
+		TNT1 A 0 A_GiveInventory("AirSymbol",1)
+		Stop
 	}
+}
+
+Actor FlyToken 			: Inventory { Inventory.InterhubAmount 0 }
+Actor TempFlyToken		: Inventory { Inventory.InterhubAmount 0 }
+
+Actor AirSymbol2 : PowerupGiver
+{
+	+INVENTORY.QUIET
+	+INVENTORY.AUTOACTIVATE
+	powerup.type "FlyingRune"
+	powerup.duration 2100
+}
+
+Actor AirSymbolInfinite : PowerupGiver
+{
+	+INVENTORY.QUIET
+	+INVENTORY.AUTOACTIVATE
+	powerup.type "FlyingRune"
+	powerup.duration 999999999
 }
 
 //--------------------------------------------------------------------
