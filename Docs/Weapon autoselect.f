@@ -55,6 +55,7 @@
 10850	Thunderbolt
 10877	Cow Mangler
 10900	Freezethrower
+10950	Fusion Chaingun
 11000	Serpent staff
 11050	Eidechsenesser
 11100	Laser gun
