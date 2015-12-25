@@ -8,7 +8,7 @@ Actor HeadOnAStick1 : HeadOnAStick replaces HeadOnAStick
 {
 +SHOOTABLE
 health 20
-  mass 0xFFFFFFFF
+  +DONTTHRUST
 deathheight 56
   states
   {
@@ -66,7 +66,7 @@ actor HeadsOnAStick1 : HeadsOnAStick replaces HeadsOnAStick
 {
 +SHOOTABLE
 health 20
-  mass 0xFFFFFFFF
+  +DONTTHRUST
 states
 	{
 	Spawn:
@@ -154,21 +154,21 @@ states
 
 actor BloodyTwitch1 : BloodyTwitch replaces BloodyTwitch
 {
-health 60
-painsound "shotguy/pain"
-deathsound "shotguy/death"
-painchance 255
-+SHOOTABLE
-+DONTFALL
-  mass 0xFFFFFFFF
-states
+	health 60
+	painsound "shotguy/pain"
+	deathsound "shotguy/death"
+	painchance 255
+	+SHOOTABLE
+	+DONTFALL
+	+DONTTHRUST
+	states
 	{
-  Spawn:
-    GOR1 A 12 A_Spawnitem("BloodSpill")
-    GOR1 B 10
-    GOR1 C 12
-    GOR1 B 10
-    loop
+	Spawn:
+		GOR1 A 12 A_Spawnitem("BloodSpill")
+		GOR1 B 10
+		GOR1 C 12
+		GOR1 B 10
+		loop
 	Pain:
 		TNT1 AAAAAAAA 0 A_SpawnItemEx("BloodDrop",0,0,frandom(24,48),frandom(0,2),frandom(0,2),0,random(0,360),SXF_NOCHECKPOSITION,0)
 		GOR1 A 4 A_Pain
@@ -183,13 +183,13 @@ states
 
 actor DeadStick1 : DeadStick replaces DeadStick
 {
-+SHOOTABLE
-painchance 255
-  mass 0xFFFFFFFF
-health 60
-deathheight 64
-+LOOKALLAROUND
-states
+	+SHOOTABLE
+	painchance 255
+	+DONTTHRUST
+	health 60
+	deathheight 64
+	+LOOKALLAROUND
+	states
 	{
 	Spawn:
 		POL1 A 1 A_Look
@@ -211,12 +211,12 @@ states
 
 Actor HangBNoBrain1 : HangBNoBrain replaces HangBNoBrain
 {
-+SHOOTABLE
-+DONTFALL
-health 30
-  mass 0xFFFFFFFF
-painchance 255
-+LOOKALLAROUND
+	+SHOOTABLE
+	+DONTFALL
+	health 30
+	+DONTTHRUST
+	painchance 255
+	+LOOKALLAROUND
 states
 	{
 	Spawn:
@@ -240,8 +240,8 @@ states
 
 actor BodyNoBrain
 {
-deathsound "gibs/splash"
-states
+	deathsound "gibs/splash"
+	states
 	{
 	Spawn:
 		HDD2 ABCD 3
@@ -254,19 +254,20 @@ states
 
 Actor HangNoGuts1 : HangNoGuts replaces HangNoGuts
 {
-+SHOOTABLE
-+DONTFALL
-health 30
-  mass 0xFFFFFFFF
-painchance 255
-+LOOKALLAROUND
-states
+	+SHOOTABLE
+	+DONTFALL
+	health 30
+	+DONTTHRUST
+	painchance 255
+	+LOOKALLAROUND
+	states
 	{
 	Spawn:
-		HDB1 A 1 A_Look
+		HDB1 A 35 A_Look
 		loop
 	See:
 		HDB1 A 35 A_Spawnitem("BloodSpill")
+		"####" A 0 A_ClearTarget
 		TNT1 A 0 A_CheckSight("Spawn")
 		loop
 	Pain:
@@ -282,8 +283,8 @@ states
 
 actor BodyNoGuts
 {
-deathsound "gibs/splash"
-states
+	deathsound "gibs/splash"
+	states
 	{
 	Spawn:
 		HDD1 ABCD 3
@@ -296,23 +297,24 @@ states
 
 Actor HangTLookingDown1 : HangTLookingDown replaces HangTLookingDown
 {
-+SHOOTABLE
-+DONTFALL
-health 30
-  mass 0xFFFFFFFF
-painchance 255
-+LOOKALLAROUND
-states
+	+SHOOTABLE
+	+DONTFALL
+	health 30
+	  +DONTTHRUST
+	painchance 255
+	+LOOKALLAROUND
+	states
 	{
 	Spawn:
-		HDB3 A 1 A_Look
+		HDB3 A 35 A_Look
 		loop
 	See:
 		HDB3 A 35 A_Spawnitem("BloodSpill")
-		TNT1 A 0 A_CheckSight("Spawn")
+		"####" A 0 A_ClearTarget
+		"####" A 0 A_CheckSight("Spawn")
 		loop
 	Pain:
-		TNT1 AAAAAAAA 0 A_SpawnItemEx("BloodDrop",0,0,frandom(24,48),frandom(0,2),frandom(0,2),0,random(0,360),SXF_NOCHECKPOSITION,0)
+		"####" AAAAAAAA 0 A_SpawnItemEx("BloodDrop",0,0,frandom(24,48),frandom(0,2),frandom(0,2),0,random(0,360),SXF_NOCHECKPOSITION,0)
 		HDB3 A 1
 		goto spawn
 	Death:
@@ -324,8 +326,8 @@ states
 
 actor TorsoLookingDown
 {
-deathsound "gibs/splash"
-states
+	deathsound "gibs/splash"
+	states
 	{
 	Spawn:
 		HDD3 ABCD 3
@@ -338,23 +340,21 @@ states
 
 Actor HangTSkull1 : HangTSkull replaces HangTSkull
 {
-+SHOOTABLE
-+DONTFALL
-health 30
-  mass 0xFFFFFFFF
-painchance 255
-+LOOKALLAROUND
-states
+	+SHOOTABLE
+	+DONTFALL
+	health 30
+	  +DONTTHRUST
+	painchance 255
+	+LOOKALLAROUND
+	states
 	{
 	Spawn:
-		HDB4 A 1 A_Look
-		loop
-	See:
-		HDB4 A 35 A_Spawnitem("BloodSpill")
-		TNT1 A 0 A_CheckSight("Spawn")
+		HDB4 A 35
+		"####" A 0 A_CheckSight("Spawn")
+		"####" A 0 A_SpawnItem("BloodSpill")		
 		loop
 	Pain:
-		TNT1 AAAAAAAA 0 A_SpawnItemEx("BloodDrop",0,0,frandom(24,48),frandom(0,2),frandom(0,2),0,random(0,360),SXF_NOCHECKPOSITION,0)
+		"####" AAAAAAAA 0 A_SpawnItemEx("BloodDrop",0,0,frandom(24,48),frandom(0,2),frandom(0,2),0,random(0,360),SXF_NOCHECKPOSITION,0)
 		HDB4 A 1
 		goto spawn
 	Death:
@@ -366,8 +366,8 @@ states
 
 actor TorsoSkull
 {
-deathsound "gibs/splash"
-states
+	deathsound "gibs/splash"
+	states
 	{
 	Spawn:
 		HDD4 ABCD 3
@@ -380,23 +380,21 @@ states
 
 Actor HangTLookingUp1 : HangTLookingUp replaces HangTLookingUp
 {
-+SHOOTABLE
-+DONTFALL
-health 30
-  mass 0xFFFFFFFF
-painchance 255
-+LOOKALLAROUND
-states
+	+SHOOTABLE
+	+DONTFALL
+	health 30
+	+DONTTHRUST
+	painchance 255
+	+LOOKALLAROUND
+	states
 	{
 	Spawn:
-		HDB5 A 1 A_Look
-		loop
-	See:
-		HDB5 A 35 A_Spawnitem("BloodSpill")
-		TNT1 A 0 A_CheckSight("Spawn")
-		loop
+		HDB5 A 35
+		"####" A 0 A_CheckSight("Spawn")
+		"####" A 0 A_SpawnItem("BloodSpill")		
+		Loop
 	Pain:
-		TNT1 AAAAAAAA 0 A_SpawnItemEx("BloodDrop",0,0,frandom(24,48),frandom(0,2),frandom(0,2),0,random(0,360),SXF_NOCHECKPOSITION,0)
+		"####" AAAAAAAA 0 A_SpawnItemEx("BloodDrop",0,0,frandom(24,48),frandom(0,2),frandom(0,2),0,random(0,360),SXF_NOCHECKPOSITION,0)
 		HDB5 A 1
 		goto spawn
 	Death:
@@ -408,8 +406,8 @@ states
 
 actor TorsoLookingUp
 {
-deathsound "gibs/splash"
-states
+	deathsound "gibs/splash"
+	states
 	{
 	Spawn:
 		HDD5 ABCD 3
@@ -422,20 +420,18 @@ states
 
 Actor HangTNoBrain1 : HangTNoBrain replaces HangTNoBrain
 {
-+SHOOTABLE
-+DONTFALL
-health 30
-  mass 0xFFFFFFFF
-painchance 255
-+LOOKALLAROUND
-states
+	+SHOOTABLE
+	+DONTFALL
+	health 30
+	+DONTTHRUST
+	painchance 255
+	+LOOKALLAROUND
+	states
 	{
 	Spawn:
-		HDB6 A 1 A_Look
-		loop
-	See:
-		HDB6 A 35 A_Spawnitem("BloodSpill")
-		TNT1 A 0 A_CheckSight("Spawn")
+		HDB6 A 35
+		"####" A 0 A_CheckSight("Spawn")
+		"####" A 0 A_SpawnItem("BloodSpill")		
 		loop
 	Pain:
 		TNT1 AAAAAAAA 0 A_SpawnItemEx("BloodDrop",0,0,frandom(24,48),frandom(0,2),frandom(0,2),0,random(0,360),SXF_NOCHECKPOSITION,0)
@@ -450,8 +446,8 @@ states
 
 actor TorsoNoBrain
 {
-deathsound "gibs/splash"
-states
+	deathsound "gibs/splash"
+	states
 	{
 	Spawn:
 		HDD6 ABCD 3
@@ -465,18 +461,18 @@ states
 
 Actor Meat21 : Meat2 replaces Meat2
 {
-+SHOOTABLE
-+NODAMAGE
-+NOBLOOD
-  mass 0xFFFFFFFF
-painchance 255
-states
+	+SHOOTABLE
+	+NODAMAGE
+	+NOBLOOD
+	+DONTTHRUST
+	painchance 255
+	states
 	{
 	Spawn:
-		GOR2 A 1
+		GOR2 A -1
 		loop
 	Pain:
-		TNT1 AAAAAAAA 0 A_SpawnItemEx("BloodDrop",0,0,frandom(24,48),frandom(0,2),frandom(0,2),0,random(0,360),SXF_NOCHECKPOSITION,0)
+		"####" AAAAAAAA 0 A_SpawnItemEx("BloodDrop",0,0,frandom(24,48),frandom(0,2),frandom(0,2),0,random(0,360),SXF_NOCHECKPOSITION,0)
 		GOR2 A 1
 		goto spawn
 	}
@@ -484,23 +480,21 @@ states
 
 Actor Meat31 : Meat3 replaces Meat3
 {
-+SHOOTABLE
-+NODAMAGE
-+NOBLOOD
-  mass 0xFFFFFFFF
-painchance 255
-+LOOKALLAROUND
-states
+	+SHOOTABLE
+	+NODAMAGE
+	+NOBLOOD
+	+DONTTHRUST
+	painchance 255
+	+LOOKALLAROUND
+	states
 	{
 	Spawn:
-		GOR3 A 1 A_Look
-		loop
-	See:
-		GOR3 A 35 A_Spawnitem("BloodSpill",0,30)
-		TNT1 A 0 A_CheckSight("Spawn")
+		GOR3 A 35
+		"####" A 0 A_CheckSight("Spawn")
+		"####" A 0 A_SpawnItem("BloodSpill")		
 		loop
 	Pain:
-		TNT1 AAAAAAAA 0 A_SpawnItemEx("BloodDrop",0,0,frandom(24,48),frandom(0,2),frandom(0,2),0,random(0,360),SXF_NOCHECKPOSITION,0)
+		"####" AAAAAAAA 0 A_SpawnItemEx("BloodDrop",0,0,frandom(24,48),frandom(0,2),frandom(0,2),0,random(0,360),SXF_NOCHECKPOSITION,0)
 		GOR3 A 1
 		goto spawn
 	}
@@ -508,23 +502,21 @@ states
 
 Actor Meat41 : Meat4 replaces Meat4
 {
-+SHOOTABLE
-+NODAMAGE
-+NOBLOOD
-  mass 0xFFFFFFFF
-painchance 255
-+LOOKALLAROUND
-states
+	+SHOOTABLE
+	+NODAMAGE
+	+NOBLOOD
+	+DONTTHRUST
+	painchance 255
+	+LOOKALLAROUND
+	states
 	{
 	Spawn:
-		GOR4 A 1 A_Look
-		loop
-	See:
-		GOR4 A 35 A_Spawnitem("BloodSpill")
-		TNT1 A 0 A_CheckSight("Spawn")
+		GOR4 A 35
+		"####" A 0 A_CheckSight("Spawn")
+		"####" A 0 A_SpawnItem("BloodSpill")		
 		loop
 	Pain:
-		TNT1 AAAAAAAA 0 A_SpawnItemEx("BloodDrop",0,0,frandom(24,48),frandom(0,2),frandom(0,2),0,random(0,360),SXF_NOCHECKPOSITION,0)
+		"####" AAAAAAAA 0 A_SpawnItemEx("BloodDrop",0,0,frandom(24,48),frandom(0,2),frandom(0,2),0,random(0,360),SXF_NOCHECKPOSITION,0)
 		GOR4 A 1
 		goto spawn
 	}
@@ -532,20 +524,18 @@ states
 
 Actor Meat51 : Meat5 replaces Meat5
 {
-+SHOOTABLE
-+NODAMAGE
-+NOBLOOD
-  mass 0xFFFFFFFF
-painchance 255
-+LOOKALLAROUND
-states
+	+SHOOTABLE
+	+NODAMAGE
+	+NOBLOOD
+	+DONTTHRUST
+	painchance 255
+	+LOOKALLAROUND
+	states
 	{
 	Spawn:
-		GOR5 A 1 A_Look
-		loop
-	See:
-		GOR5 A 35 A_Spawnitem("BloodSpill")
-		TNT1 A 0 A_CheckSight("Spawn")
+		GOR5 A 35
+		"####" A 0 A_CheckSight("Spawn")
+		"####" A 0 A_SpawnItem("BloodSpill")		
 		loop
 	Pain:
 		TNT1 AAAAAAAA 0 A_SpawnItemEx("BloodDrop",0,0,frandom(24,48),frandom(0,2),frandom(0,2),0,random(0,360),SXF_NOCHECKPOSITION,0)
@@ -556,20 +546,20 @@ states
 
 actor LiveStick1 : LiveStick replaces LiveStick
 {
-health 40
-painsound "grunt/pain"
-deathsound "grunt/death"
-painchance 255
-deathheight 64
-+SHOOTABLE
-+DONTFALL
-  mass 0xFFFFFFFF
-states
+	health 40
+	painsound "grunt/pain"
+	deathsound "grunt/death"
+	painchance 255
+	deathheight 64
+	+SHOOTABLE
+	+DONTFALL
+	+DONTTHRUST
+	states
 	{
-  Spawn:
-    POL6 A 6
-    POL6 B 8
-    loop
+	Spawn:
+		POL6 A 6
+		POL6 B 8
+		loop
 	Pain:
 		TNT1 AAAAAAAA 0 A_SpawnItemEx("BloodDrop",0,0,frandom(24,48),frandom(0,2),frandom(0,2),0,random(0,360),SXF_NOCHECKPOSITION,0)
 		POL6 B 4 A_Pain
@@ -585,18 +575,18 @@ states
 
 Actor NonsolidTwitch1 : BloodyTwitch1 replaces NonsolidTwitch
 {
--SOLID
--SHOOTABLE
+	-SOLID
+	-SHOOTABLE
 }
 
 Actor NonsolidMeat21 : Meat21 replaces NonsolidMeat2
 {
--SOLID
--SHOOTABLE
+	-SOLID
+	-SHOOTABLE
 }
 
 Actor NonsolidMeat51 : Meat51 replaces NonsolidMeat5
 {
--SOLID
--SHOOTABLE
+	-SOLID
+	-SHOOTABLE
 }
