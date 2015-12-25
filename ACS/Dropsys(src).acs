@@ -386,6 +386,13 @@ Script "WeaponSlotLimitCheck" (int class) net //Checks to see what the current m
 
 Script "SelectAEoDWeapon" (int class) net
 {
+	if (CheckInventory("MorphOverrideable"))
+	{
+		TakeInventory("WeaponModeToken",1000);
+		GiveInventory("WeaponModeToken",class);
+		Terminate;
+	}
+
 	if ((GetActorProperty(0,APROP_Dormant)) || (GetActorProperty(0,APROP_HEALTH) <= 0)
 		|| CheckInventory("cammin") > 0 || (GetWeapon() == "AEoDDemonMorphHand"))	Terminate;
 		
