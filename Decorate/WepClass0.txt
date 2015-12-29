@@ -2215,28 +2215,28 @@ Actor AEoDBFG9000 : Weapon // 6073
 		Goto Ready+2
 	Deselect:
 		BFG3 A 0 A_StopSound(6)
-		BFG3 A 0 	
+		"####" "#" 0 A_RemoveChildren(1,RMVF_EVERYTHING,"D3BFGBallMuzzle")
+	DesLoop:
 		BFG3 A 1 A_Lower
 		BFG3 AA 0 A_Lower
 		Goto Deselect+1
-	Select:
-		BFG3 A 0 	
+	Select:	
 		BFG3 A 1 A_Raise
 		BFG3 AA 0 A_Raise
 		Loop
 	Fire:
-		BFG3 B 0
 		BFG3 B 0 A_JumpIfInventory("InfiniteAmmo",1,6)
 		BFG3 B 0 A_JumpIfInventory("PowerEconomizer",1,5)
 		BFG3 B 0 A_JumpIfInventory("BFGHolder", 10, 4)
 		BFG3 B 0 A_JumpIfInventory("PlasmaRod", 1, 2)
-		BFG3 B 0
+		BFG3 B 1
 		Goto Ready
 		
 		BFG3 B 0
 		Goto AltFire
 		
 		BFG3 B 0 A_PlaySound("reilsss/weapons/bfg9kcharge", 5, 1.0, 0)
+		BFG3 B 0 A_SpawnItemEx("D3BFGBallMuzzle",8,0,32,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
 		BFG3 B 1 A_SetBlend("00 99 00",0.15,4)
 		BFG3 B 0 A_ReFire
 		Goto Hold
@@ -2298,6 +2298,7 @@ Actor AEoDBFG9000 : Weapon // 6073
 		BFGI D 0 A_TakeInventory("BFGCharge", 100)
 		BFGI D 0 A_TakeInventory("BFGToken", 10)
 		BFGI D 1 A_SetBlend("Green",0.6,7)
+		"####" "#" 0 A_RemoveChildren(1,RMVF_EVERYTHING,"D3BFGBallMuzzle")
 		BFGI E 3 A_FireCustomMissile("D3BFGBall1", 0, 1, 1, 0)
 		BFGI F 2 A_SetPitch(pitch-4)
 		BFG3 A 1 A_SetPitch(pitch+2)
@@ -2318,6 +2319,7 @@ Actor AEoDBFG9000 : Weapon // 6073
 		BFGI D 0 A_TakeInventory("BFGCharge", 100)
 		BFGI D 0 A_TakeInventory("BFGToken", 10)
 		BFGI G 1 A_SetBlend("Green",0.7,9)
+		"####" "#" 0 A_RemoveChildren(1,RMVF_EVERYTHING,"D3BFGBallMuzzle")
 		BFGI H 3 A_FireCustomMissile("D3BFGBall2", 0, 1, 1, 0)	
 		BFGI I 2 A_SetPitch(pitch-4)
 		BFG3 A 2 A_SetPitch(pitch-2)
@@ -2337,6 +2339,7 @@ Actor AEoDBFG9000 : Weapon // 6073
 		BFGI D 0 A_TakeInventory("BFGToken", 10)
 		BFGI J 0 A_SetBlend("Green",0.75,12)
 		BFGI J 2
+		"####" "#" 0 A_RemoveChildren(1,RMVF_EVERYTHING,"D3BFGBallMuzzle")
 		BFGI K 1 A_FireCustomMissile("D3BFGBall3", 0, 1, 1, 0)	
 		BFGI L 3 A_SetPitch(pitch-5)
 		BFG3 A 1 A_SetPitch(pitch-3)
@@ -2358,6 +2361,7 @@ Actor AEoDBFG9000 : Weapon // 6073
 		BFGI D 0 A_TakeInventory("BFGToken", 10)
 		BFGI M 0 A_SetBlend("Green",0.8,14)
 		BFGI M 1
+		"####" "#" 0 A_RemoveChildren(1,RMVF_EVERYTHING,"D3BFGBallMuzzle")
 		BFGI N 3 A_FireCustomMissile("D3BFGBall4", 0, 1, 1, 0)	
 		BFGI O 2 A_SetPitch(pitch-5)
 		BFG3 A 2 A_SetPitch(pitch-3)
@@ -2370,6 +2374,7 @@ Actor AEoDBFG9000 : Weapon // 6073
 		BFG3 A 0 A_TakeInventory("BFGToken", 10)
 		BFG3 A 0 A_TakeInventory("BFGCharge", 100)
 		BFG3 A 0 A_PlaySound("reilsss/weapons/bfg9kexplosion",7)
+		"####" "#" 0 A_RemoveChildren(1,RMVF_EVERYTHING,"D3BFGBallMuzzle")
 		BFG3 A 0 A_Explode(random(400,1000),256,0)		//this one is to hurt other stuff around
 		BFG3 A 1 A_Explode(190,32)
 		TNT1 A 0 A_ClearRefire
@@ -2436,6 +2441,32 @@ Actor BFGBallSmoke
 		X003 PQRST 2 Bright A_FadeOut(0.03)
 		TNT1 A 0 A_ScaleVelocity(0.5)
 		X003 UVWXYZ 2 Bright A_FadeOut(0.03)
+		Stop
+	}
+}
+
+Actor D3BFGBallMuzzle
+{
+	const int Distance = 20;
+	const int YOff = 8;
+	const int ZOff = 38;
+	var int user_t;
+	Projectile
+	+NOINTERACTION
+	Scale 0.30
+	Alpha 0.8
+	RenderStyle Add
+	Translation "0:255=%[0,0,0]:[0,1,0]"
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_Warp(AAPTR_MASTER,cos(-pitch)*(Distance+4),YOff,ZOff+sin(-pitch)*Distance,0,WARPF_NOCHECKPOSITION|WARPF_COPYPITCH)
+		//To avoid jumping and ugly visual crap, do it one more time.
+		TNT1 A 0 A_Warp(AAPTR_MASTER,cos(-pitch)*(Distance+4),YOff,ZOff+sin(-pitch)*Distance,0,WARPF_NOCHECKPOSITION|WARPF_COPYPITCH|WARPF_COPYVELOCITY|WARPF_INTERPOLATE)
+	Moving:
+		X018 AABBCCDDEEFFGGHHIIJJKKLLMMNNOOPPQQRRSSTTUUVVWWXXYY 1 Bright A_Warp(AAPTR_MASTER,cos(-pitch)*(Distance+4),YOff,ZOff+sin(-pitch)*Distance,0,WARPF_NOCHECKPOSITION|WARPF_COPYPITCH|WARPF_COPYVELOCITY|WARPF_INTERPOLATE)
+		"####" "#" 0 A_SetUserVar(user_t,user_t+1)
+		"####" "#" 0 A_JumpIf(user_t < 6,"Moving")
 		Stop
 	}
 }
