@@ -1,3 +1,8 @@
+//==============================================================================
+//==============================================================================
+//									Fusion Chaingun
+//==============================================================================
+//==============================================================================
 
 // Basically, _the_ Face Melter.
 //
@@ -5,7 +10,9 @@
 // Accelerates and decelerates too slow for immediate action.
 // Secondary fires a few bolts instantly, but reloads even slower.
 
-Actor AEoDFusionChaingun : Weapon // 6072
+// Slot 5: rapid-fire
+
+Actor AEoDFusionChaingun : Weapon
 {
 	+FLOORCLIP
 	+INVENTORY.IGNORESKILL
@@ -16,7 +23,7 @@ Actor AEoDFusionChaingun : Weapon // 6072
 	Weapon.AmmoUse2 1
 	Weapon.Kickback 10
 	Weapon.SelectionOrder 10950
-	Inventory.PickupMessage "You got the Fusion Chaingun!"
+	Inventory.PickupMessage "You got the Fusion Chaingun! Fuse them together!"
 	Inventory.PickupSound "reilsss/weappickup/plasmagun"
 	Weapon.UpSound "weapons/plasma/draw"
 	Scale 0.125
@@ -189,7 +196,7 @@ Actor AEoDFusionChaingun : Weapon // 6072
 
 Actor FusionChaingunBall
 {
-	var int user_deviation; // one third amount to move outward before setting on course as a power of 2.
+	var int user_deviation; // just a freaked out iterator that bit-shifts instead of decrementing
 	var int user_xs; // \
 	var int user_ys; //  } original vector to be restored after deviation
 	var int user_zs; // /
@@ -208,7 +215,6 @@ Actor FusionChaingunBall
 	DamageType "Plasma"
 	Alpha 1
 	Scale 0.15
-	//Translation "160:167=%[0.0,0.0,0.0]:[1.5,0.0,0.0]", "232:239=%[0.0,0.0,0.0]:[2.0,0.0,0.0]", "48:79=%[0.8,0.0,0.0]:[2.0,1.0,1.0]"
 	States
 	{
 	Spawn:
@@ -263,16 +269,12 @@ Actor FusionChaingunFlare
 	RenderStyle Add
 	Alpha 0.0
 	Scale 0.18
-	//Translation "0:255=%[0,0,0]:[1.0,0.5,0.2]"
 	States
 	{
 	Spawn:
 		TNT1 A 0 NoDelay A_Jump(256,1,2,3,4,5,6)
-		//R053 DEFGH 1 A_JumpIf(true,"Looper")
-		//MUZ2 ABCDEF 1 A_JumpIf(true,"Looper")
 	Looper:
 		R053 DEFGH 1 Bright A_Warp(AAPTR_MASTER, -5,0,0,0, WARPF_INTERPOLATE)
-		//"####" "#" 1 Bright A_Warp(AAPTR_MASTER, -5,0,0,0, WARPF_INTERPOLATE)
 		"####" "#" 0 A_FadeTo(1)
 		Goto Looper
 	}
@@ -332,7 +334,7 @@ Actor DroppedFusionChaingun
 	}
 }
 
-Actor AEoDFusionChaingunItem : CustomInventory // 6072
+Actor AEoDFusionChaingunItem : CustomInventory
 {
 	+FLOORCLIP
 	+INVENTORY.IGNORESKILL
@@ -401,3 +403,217 @@ Actor AEoDFusionChaingunNoAmmo : AEoDFusionChaingunItem
 		Stop
 	}
 }
+
+
+
+//==============================================================================
+//==============================================================================
+//							C-14 "Impaler" Gauss Rifle
+//==============================================================================
+//==============================================================================
+
+// The most versatile weapon of Koprulu sector.
+// Wildly customizable. Up to 16 different ways to upgrade, all picked up from
+// individual pieces scattered across the battlefield.
+
+// Slot 4: assault
+
+Actor AEoDGaussRifleItem : CustomInventory
+{
+	+FLOORCLIP
+	+INVENTORY.IGNORESKILL
+	Scale 0.2
+	Inventory.Amount 1
+	Inventory.PickupMessage "You found the C-14 \"Impaler\" Gauss Rifle!"
+	Inventory.PickupSound "weapons/stroggarmsaw/pickup"
+	States
+	{
+	Spawn:
+		O003 Z -1
+		Loop
+	Pickup:
+		TNT1 A 0 A_JumpIfInventory("AEoDGaussRifle",1,"Ammo")
+		TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",7) <= 0,"Nothing")
+		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
+		TNT1 A 0 A_GiveInventory("GaussRifleDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDGaussRifle",1)
+		TNT1 A 0 	
+		Stop
+	Nothing:
+		TNT1 A 0 A_JumpIfInventory("AEoDGaussRifle",1,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
+		Goto Pickup+2
+		TNT1 A 0 ACS_NamedExecute("s798",0,7,83,0)
+		Fail
+	Ammo:
+		TNT1 A 0 A_GiveInventory("AEoDGaussRifle",1)
+		Stop
+	}
+}
+
+
+
+Actor GaussRifleDrop : CustomInventory
+{
+	Inventory.MaxAmount 1
+	States
+	{
+	Use:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("DroppedGaussRifle",0,0,32,8,0,0,0,SXF_NOCHECKPOSITION,0)
+		Stop
+	}
+}
+
+Actor DroppedGaussRifle
+{
+	Radius 16
+	Height 20
+	Scale 0.2
+	States
+	{
+	Spawn:
+		O003 Z 15
+		TNT1 A 0 A_SpawnItemEx("AEoDGaussRifleNoAmmo",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER,0)
+		Stop
+	}
+}
+
+Actor AEoDGaussRifleNoAmmo : AEoDGaussRifleItem
+{
+	+INVENTORY.IGNORESKILL
+	States
+	{
+	Spawn:
+		O003 Z -1
+		Loop
+	Pickup:
+		TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",7) <= 0,"Nothing")
+		TNT1 A 0 A_JumpIfInventory("AEClip",60,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("MiniRockets",15,"Ammo3")
+		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
+		TNT1 A 0 A_GiveInventory("GaussRifleDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDGaussRifle",1)
+		TNT1 A 0 A_TakeInventory("AEClip",60)
+		TNT1 A 0 A_TakeInventory("MiniRockets",15)
+		TNT1 A 0 	
+		Stop
+	Nothing:
+		TNT1 A 0 A_JumpIfInventory("AEoDGaussRifle",1,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
+		Goto Pickup+2
+		TNT1 A 0 ACS_NamedExecute("s798",0,7,83,0)
+		Fail
+	Ammo:
+		TNT1 A 0 A_JumpIfInventory("MiniRockets",15,1)
+		Goto Ammo2
+		TNT1 A 0 A_TakeInventory("AEClip",60)
+		TNT1 A 0 A_TakeInventory("MiniRockets",15)
+		TNT1 A 0 A_JumpIfInventory("AEoDGaussRifle",1,2)
+		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
+		TNT1 A 0 A_GiveInventory("GaussRifleDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDGaussRifle",1)
+		Stop
+	Ammo2:
+		TNT1 A 0 A_TakeInventory("AEClip",60)
+		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
+		TNT1 A 0 A_GiveInventory("GaussRifleDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDGaussRifle",1)
+		TNT1 A 0 A_TakeInventory("MiniRockets",15)
+		Stop
+	Ammo3:
+		TNT1 A 0 A_TakeInventory("MiniRockets",15)
+		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
+		TNT1 A 0 A_GiveInventory("GaussRifleDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDGaussRifle",1)
+		TNT1 A 0 A_TakeInventory("AEClip",60)
+		Stop
+	}
+}
+
+Actor AEoDGaussRifle : Weapon
+{
+	Weapon.AmmoType "AEClip"
+	Weapon.AmmoUse 1
+	Weapon.AmmoGive 60
+	Weapon.AmmoType2 "MiniRockets"
+	Weapon.AmmoUse2 3
+	Weapon.AmmoGive2 15
+	Weapon.SelectionOrder 11050
+	Scale 0.25
+	Inventory.PickupSound "painkiller/weapon/chaingun/PickWeapon"
+	weapon.upsound "weapons/draw"
+	AttackSound "reilsss/weapons/mp5fire2"
+	Inventory.PickupMessage "You found the GaussRifle!"
+	Tag "GaussRifle"
+	States
+	{
+	Spawn:
+		O003 Z -1
+		Stop
+	Ready:
+		O003 A 2 Offset(184, 120) A_WeaponReady
+		Loop
+	Ready:
+		O003 A 1 Offset(192, 191) 
+		O003 A 1 Offset(189, 176)
+		O003 A 1 Offset(179, 159)
+		O003 A 1 Offset(167, 134)
+		O003 A 1 Offset(148, 116)
+		O003 A 1 Offset(123, 110)
+	ReallyReady:
+		O003 A 2 Offset(184, 120) A_WeaponReady
+		Loop
+	Deselect:
+		TNT1 A 0 A_StopSound(CHAN_BODY)
+		O003 A 1 Offset(123, 110)
+		O003 A 1 Offset(148, 116)
+		O003 A 1 Offset(167, 134)
+		O003 A 1 Offset(179, 159)
+		O003 A 1 Offset(189, 176)
+		O003 A 1 Offset(192, 191) 
+		TNT1 A 0 A_Lower
+		Wait
+	Select:
+		TNT1 A 0 A_Raise
+		Wait
+	Fire:
+		TNT1 A 0 A_FireBullets(5,5,1,20,"BulletPuff")
+	Shot:
+		O003 A 1 Offset(197, 128) A_SetPitch(pitch-1)
+		O003 A 1 Offset(191, 123) A_SetPitch(pitch+1)
+		O003 A 1 Offset(187, 121) A_FireCustomMissile("PistolCasingSpawner",-50,0, 0,0)
+		//Loop
+		O003 A 1
+		//TNT1 A 0 A_Refire("Type2")
+		Goto ReallyReady
+	Type2:
+		TNT1 A 0 A_FireBullets(5,5,1,20,"BulletPuff")
+		O003 A 1 Bright A_SetPitch(pitch-1)
+		TNT1 A 0 A_FireCustomMissile("PistolCasingSpawner",-50,0, 0,0)
+		O003 A 1 Bright A_SetPitch(pitch+1)
+		O003 A 1 
+		O003 A 1
+		TNT1 A 0 A_Refire("Fire")
+		Goto ReallyReady
+	AltFire:
+		TNT1 A 0 A_FireCustomMissile("MuzzleFlashOrange",0,0,4,7)
+		TNT1 A 0 A_PlayWeaponSound("painkiller/weapon/smallchaingun/RocketShoot")
+		TNT1 A 0 Bright A_FireCustomMissile("MCHBomb",0,1,0,0)
+		TNT1 A 0 Bright A_FireCustomMissile("MCHBomb2",0,0,0,0)
+		TNT1 A 0 Bright A_FireCustomMissile("MCHBomb3",0,0,0,0)
+		TNT1 A 0 A_SetPitch(pitch-6)
+		TNT1 A 0 A_GunFlash("AltFlash")
+		D016 LMN 1 Bright
+		D016 OPZ 1 Bright A_SetPitch(pitch+1)
+		O003 AFF 1 A_SetPitch(pitch+1)
+		O003 AHIJKL 4
+		Goto ReallyReady
+	AltFlash:
+		O003 A 4
+		O003 A 2
+		Stop
+	}
+}
+
+
