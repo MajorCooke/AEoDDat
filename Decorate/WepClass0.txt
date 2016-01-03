@@ -2447,6 +2447,7 @@ Actor BFGBallSmoke
 
 Actor D3BFGBallMuzzle
 {
+	const int Flags = WARPF_NOCHECKPOSITION|WARPF_COPYPITCH|WARPF_COPYVELOCITY|WARPF_INTERPOLATE;
 	const int Distance = 20;
 	const int YOff = 8;
 	const int ZOff = 38;
@@ -2460,11 +2461,13 @@ Actor D3BFGBallMuzzle
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay A_Warp(AAPTR_MASTER,cos(-pitch)*(Distance+4),YOff,ZOff+sin(-pitch)*Distance,0,WARPF_NOCHECKPOSITION|WARPF_COPYPITCH)
+		TNT1 A 0 NoDelay A_Warp(AAPTR_MASTER,cos(-pitch)*(Distance+4),YOff,ZOff+sin(-pitch)*Distance,0,
+			WARPF_NOCHECKPOSITION|WARPF_COPYPITCH)
 		//To avoid jumping and ugly visual crap, do it one more time.
-		TNT1 A 0 A_Warp(AAPTR_MASTER,cos(-pitch)*(Distance+4),YOff,ZOff+sin(-pitch)*Distance,0,WARPF_NOCHECKPOSITION|WARPF_COPYPITCH|WARPF_COPYVELOCITY|WARPF_INTERPOLATE)
+		TNT1 A 0 A_Warp(AAPTR_MASTER,cos(-pitch)*(Distance+4),YOff,ZOff+sin(-pitch)*Distance,0,Flags)
 	Moving:
-		X018 AABBCCDDEEFFGGHHIIJJKKLLMMNNOOPPQQRRSSTTUUVVWWXXYY 1 Bright A_Warp(AAPTR_MASTER,cos(-pitch)*(Distance+4),YOff,ZOff+sin(-pitch)*Distance,0,WARPF_NOCHECKPOSITION|WARPF_COPYPITCH|WARPF_COPYVELOCITY|WARPF_INTERPOLATE)
+		X018 AABBCCDDEEFFGGHHIIJJKKLLMMNNOOPPQQRRSSTTUUVVWWXXYY 1 Bright A_Warp(AAPTR_MASTER,
+			cos(-pitch)*(Distance+4),YOff,ZOff+sin(-pitch)*Distance,0,Flags)
 		"####" "#" 0 A_SetUserVar(user_t,user_t+1)
 		"####" "#" 0 A_JumpIf(user_t < 6,"Moving")
 		Stop
@@ -6265,10 +6268,10 @@ Actor AEoDDarkMatterGun : Weapon // 6088
 		DMG2 P 1 Offset(1,31)
 		DMG2 P 1 A_WeaponReady(WRF_NOFIRE)
 
-		DMG2 QRSTUV 2 A_WeaponReady(WRF_NOFIRE)
-		DMGA ABCDEFGHIJKL 2 A_WeaponReady(WRF_NOFIRE)
+		DMG2 QRSTUV 1 A_WeaponReady(WRF_NOFIRE)
+		DMGA ABCDEFGHIJKL 1 A_WeaponReady(WRF_NOFIRE)
 		TNT1 A 0 A_PlaySound("reilsss/weapons/fusionidle1", 6, 1.0, 1)
-		DMGA MNOPQRSTUVWXYZ 2 A_WeaponReady(WRF_NOFIRE)
+		DMGA MNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE)
 		TNT1 A 0 A_ReFire
 		Goto ReadyAmmoContinuation
 	Flash:
@@ -6429,7 +6432,7 @@ Actor DMGShotPlayer
 		TNT1 A 0 A_Explode(512,384,0,0,256)
 		TNT1 A 0 A_SpawnItemEx("DMGExplosionFX",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 	Afterburner:
-		TNT1 AAAA 1 A_RadiusThrust(-100,(256+64),RTF_AFFECTSOURCE|RTF_NOIMPACTDAMAGE,64)
+		TNT1 AAAA 1 A_RadiusThrust(-200,(256+64),RTF_AFFECTSOURCE|RTF_NOIMPACTDAMAGE,64)
 		TNT1 A 0 A_Explode(128,256,1,1,64)
 		TNT1 A 0 A_SetUserVar("user_count",user_count+1)
 		TNT1 A 0 A_JumpIf(user_count>=50,"FinalExplo")
@@ -6725,7 +6728,7 @@ Actor DMGSuction
 		Q27A ABCDEFGHIJ 1 Bright Light("DMGDarkness") A_FadeIn(0.1,FTF_CLAMP)
 		Q27A KLMNOPQRSTUVWXYZ 1 Bright Light("DMGDarkness") A_JumpIf(ScaleX <= 0.0,"Death")
 	Looping:
-		Q27B ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 Bright Light("DMGDarkness") A_JumpIf(ScaleX <= 0.0,"Death")
+		Q27B ABCDEFGHIJKLMNOPQRSTUVWX 1 Bright Light("DMGDarkness") A_JumpIf(ScaleX <= 0.0,"Death")
 		Q27A ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 Bright Light("DMGDarkness") A_JumpIf(ScaleX <= 0.0,"Death")
 		Loop
 	Death:
