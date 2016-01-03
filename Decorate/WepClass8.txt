@@ -7050,7 +7050,7 @@ For the firing frames, we'll want it to perform a reload after the shells are sp
 		QDBS AAAAAAAAAA 0 A_RailAttack(random(20,60),0,0,none,none,RGF_SILENT,0,"bdpuffpainless",4,2)
 		QDBS A 0 A_RailAttack(1,0,0,none,none,RGF_SILENT,0,"BDPuffPainful")
 		QDBS A 0 A_FireCustomMissile("BDHeatWavePartial",0,0,0,0)
-		QDBS A 0 A_RailAttack(1,0,0,none,none,RGF_SILENT,0,"BDPuffPainful")
+		//QDBS A 0 A_RailAttack(1,0,0,none,none,RGF_SILENT,0,"BDPuffPainful")
 		QDBS A 0 A_TakeInventory("BoneDusterClip",5) //Force it. Only total ammo is unaffected.
 		
 	SharedFire:
@@ -7082,7 +7082,7 @@ For the firing frames, we'll want it to perform a reload after the shells are sp
 		QDBS A 0 A_JumpIfInventory("BoneDusterClip",5,"Alt1")
 		Goto Reload
 	Alt4:
-		QDBS A 0 A_FireCustomMissile("MassChanger",0,0,0,0)
+		//QDBS A 0 A_FireCustomMissile("MassChanger",0,0,0,0)
 		QDBS A 0 A_FireCustomMissile("BDHeatWaveFull",0,0,0,0)
 		QDBS A 0 A_PlaySound("BoneDuster/AltFire",CHAN_WEAPON,1)
 		QDBS AAAAAAAAAAAA 0 A_FireCustomMissile("BDFire",frandom(-6,6),0,frandom(3,6),6)
@@ -7319,15 +7319,7 @@ Actor BDPuff : NewPuff1
 	DeathType "Extreme"
 }
 
-Actor BDPuffPainless : NewPuff1
-{
-	+PUFFGETSOWNER
-	+NOINTERACTION
-	+EXTREMEDEATH
-	+SEEKERMISSILE
-	+PAINLESS
-	DeathType "Extreme"
-}
+
 
 Actor BDPuff2 : NewPuff1
 {
@@ -7361,6 +7353,18 @@ Actor ExtremeBulletPuffBloodless : NewPuff1
 		TNT1 A 0 A_SpawnItemEx("NewPuff1",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
 		Stop
 	}
+}
+
+Actor BDPuffPainless : ExtremeBulletPuffBloodless
+{
+	+PUFFGETSOWNER
+	+NOINTERACTION
+	+EXTREMEDEATH
+	+SEEKERMISSILE
+	-FORCEPAIN
+	-CAUSEPAIN
+	+PAINLESS
+	DeathType "Extreme"
 }
 
 //******************************************************
