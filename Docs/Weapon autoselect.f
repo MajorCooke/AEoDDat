@@ -7,6 +7,7 @@
  5500	Disruptor
  7000	Golden Colts
  7250	Dragon Claw
+ 7300	Gauss Rifle
  7375	War axe
  7400	Crawler
  7500	Combat Shotgun

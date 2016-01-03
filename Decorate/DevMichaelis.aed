@@ -540,39 +540,36 @@ Actor AEoDGaussRifle : Weapon
 	Weapon.AmmoType2 "MiniRockets"
 	Weapon.AmmoUse2 3
 	Weapon.AmmoGive2 15
-	Weapon.SelectionOrder 11050
+	Weapon.SelectionOrder 7300
 	Scale 0.25
 	Inventory.PickupSound "painkiller/weapon/chaingun/PickWeapon"
 	weapon.upsound "weapons/draw"
 	AttackSound "Sc2/Wep/GaussRifle"
-	Inventory.PickupMessage "You found the GaussRifle!"
-	Tag "GaussRifle"
+	Inventory.PickupMessage "You found the C-14 \"Impaler\" Gauss Rifle!"
+	Tag "Impaler Rifle"
 	States
 	{
 	Spawn:
 		O003 Z -1
 		Stop
 	Ready:
-		O003 A 2 Offset(184, 120) A_WeaponReady
-		Loop
-	Ready:
-		O003 A 1 Offset(192, 191) 
-		O003 A 1 Offset(189, 176)
-		O003 A 1 Offset(179, 159)
-		O003 A 1 Offset(167, 134)
-		O003 A 1 Offset(148, 116)
-		O003 A 1 Offset(123, 110)
+		O003 A 1 Offset(292, 191) 
+		O003 A 1 Offset(279, 176)
+		O003 A 1 Offset(259, 159)
+		O003 A 1 Offset(237, 134)
+		O003 A 1 Offset(218, 126)
+		O003 A 1 Offset(193, 120)
 	ReallyReady:
-		O003 A 2 Offset(184, 120) A_WeaponReady
+		O003 A 1 Offset(184, 120) A_WeaponReady (WRF_NOBOB)	// Bobbing cancels custom offsets
 		Loop
 	Deselect:
 		TNT1 A 0 A_StopSound(CHAN_BODY)
-		O003 A 1 Offset(123, 110)
-		O003 A 1 Offset(148, 116)
-		O003 A 1 Offset(167, 134)
-		O003 A 1 Offset(179, 159)
-		O003 A 1 Offset(189, 176)
-		O003 A 1 Offset(192, 191) 
+		O003 A 1 Offset(193, 120)
+		O003 A 1 Offset(218, 126)
+		O003 A 1 Offset(237, 134)
+		O003 A 1 Offset(259, 159)
+		O003 A 1 Offset(279, 176)
+		O003 A 1 Offset(292, 191) 
 		TNT1 A 0 A_Lower
 		Wait
 	Select:
@@ -587,15 +584,6 @@ Actor AEoDGaussRifle : Weapon
 		//Loop
 		O003 A 1
 		//TNT1 A 0 A_Refire("Type2")
-		Goto ReallyReady
-	Type2:
-		TNT1 A 0 A_FireBullets(5,5,1,20,"BulletPuff")
-		O003 A 1 Bright A_SetPitch(pitch-1)
-		TNT1 A 0 A_FireCustomMissile("PistolCasingSpawner",-50,0, 0,0)
-		O003 A 1 Bright A_SetPitch(pitch+1)
-		O003 A 1 
-		O003 A 1
-		TNT1 A 0 A_Refire("Fire")
 		Goto ReallyReady
 	AltFire:
 		TNT1 A 0 A_FireCustomMissile("MuzzleFlashOrange",0,0,4,7)
