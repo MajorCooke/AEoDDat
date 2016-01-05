@@ -3611,6 +3611,9 @@ Actor AEoDRiotgun : Weapon // 6004
 	Spawn:
 		SHOT A -1
 		Loop
+	ReadyWait:
+		REMG A 1
+		Goto Ready
 	Ready:
 		REMG A 1 A_WeaponReady(WRF_ALLOWRELOAD)
 		Loop
@@ -3649,6 +3652,7 @@ Actor AEoDRiotgun : Weapon // 6004
 		REMG A 2 
 		REMG A 0 A_JumpIfInventory("RiotgunClip",1,"Ready")
 	Reload:
+		TNT1 A 0 A_JumpIfInventory("RiotgunClip",4,"ReadyWait")
 		TNT1 A 0 A_JumpIfInventory("AEShell",1,1)
 		Goto ReadyNoAmmo
 	ReloadLoop:
