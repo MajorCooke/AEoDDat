@@ -861,7 +861,7 @@ Actor AEoDCrystalGun : Weapon // 6039
 	Weapon.AmmoType2 "AECell"
 	Weapon.AmmoGive1 45
 	Weapon.AmmoUse1 5
-	Weapon.AmmoUse2 15
+	Weapon.AmmoUse2 20
 	Weapon.SelectionOrder 9777
 	Inventory.PickupMessage "You got the Crystal Gun!"
 	Inventory.PickupSound "reilsss/weappickup/crystalgun"
@@ -894,9 +894,9 @@ Actor AEoDCrystalGun : Weapon // 6039
 		CRYG D 0 A_PlaySound("reilsss/weapons/crystalgunfire", CHAN_WEAPON, 1.0, 0)
 		CRYG D 3 A_FireCustomMissile("CrystalShot",0,1,2,3)
 		TNT1 A 0 //ACS_NamedExecute("s851",0,-25,random(-3,3),0)
-		CRYG E 4
-		CRYG F 5
-		CRYG A 2 A_ReFire
+		CRYG E 2
+		CRYG F 3
+		CRYG A 1 A_ReFire
 		Goto Ready
 	AltFire:
 		CRYG F 1
@@ -910,8 +910,7 @@ Actor AEoDCrystalGun : Weapon // 6039
 		CRYG E 4
 		CRYG F 5
 		CRYG A 15
-		CRYG F 5
-		CRYG F 2 A_ReFire
+		CRYG A 1 A_ReFire
 		Goto Ready
 	}
 }
@@ -1053,9 +1052,14 @@ Actor IceStaffShot2
 		SHRD A 1 Bright A_CustomMissile("IceStaffShot2Trail",0,0,0)
 		Loop
 	Death:
-		PLSE A 0 Bright A_CustomMissile("IceShot2Xtra1", 0, 0, 180)
-		PLSE A 0 Bright A_CustomMissile("IceShot2Xtra1", 0, 0, random(155,165))
-		PLSE A 0 Bright A_CustomMissile("IceShot2Xtra1", 0, 0, random(195,205))
+		PLSE A 0 Bright A_SpawnItemEx("IceShot2Xtra1",0,0,0,15,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
+		PLSE A 0 Bright A_SpawnItemEx("IceShot2Xtra1",0,0,0,15,0,0,45,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
+		PLSE A 0 Bright A_SpawnItemEx("IceShot2Xtra1",0,0,0,15,0,0,90,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
+		PLSE A 0 Bright A_SpawnItemEx("IceShot2Xtra1",0,0,0,15,0,0,135,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
+		PLSE A 0 Bright A_SpawnItemEx("IceShot2Xtra1",0,0,0,15,0,0,180,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
+		PLSE A 0 Bright A_SpawnItemEx("IceShot2Xtra1",0,0,0,15,0,0,225,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
+		PLSE A 0 Bright A_SpawnItemEx("IceShot2Xtra1",0,0,0,15,0,0,270,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
+		PLSE A 0 Bright A_SpawnItemEx("IceShot2Xtra1",0,0,0,15,0,0,315,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
 		SHEX ABCDE 4 BRIGHT
 		Stop
 	}
@@ -1100,7 +1104,7 @@ ACTOR	IceShot2Xtra1
 	Spawn:
 		TNT1 A 0
 		TNT1 A 0 A_PlaySound("mealstrom/boltcrackle",5,1,1)
-		TNT1 AAAAAAAAAAAAAAAAAAAAAAA 2 A_CustomMissile("IceShot2Xtra2", 0, 0, 0)
+		TNT1 AAAAAAAAAAAAAAAAAA 2 A_SpawnitemEx("IceShot2Xtra2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
 		Stop
 	Death: 
 		TNT1 A 0
@@ -1114,7 +1118,6 @@ ACTOR	IceShot2Xtra2
 	Radius 13
 	Height 8
 	Speed 0
-	Mass 5000
 	Damage 1
 	+NOGRAVITY
 	+FLOORCLIP
@@ -1123,6 +1126,7 @@ ACTOR	IceShot2Xtra2
 	+RIPPER	RipperLevel 1
 	+FLOORHUGGER
 	+DONTSPLASH
+	+FORCERADIUSDMG
 	RenderStyle Add
 	Translation "0:255=%[0,0,0]:[0.8,0.8,2.0]"
 	Alpha 0.0
@@ -1132,13 +1136,13 @@ ACTOR	IceShot2Xtra2
 	Spawn:
 		TNT1 A 0 
 		TNT1 AA 0 A_SpawnItemEx("IceShot2Xtra2Trail",random(15,-15),random(15,-15),random(3,20),0,0,frandom(0.3,0.8),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION)
-		TNT1 A 0 A_Explode(12,64,1)
+		TNT1 A 0 A_Explode(12,64,0)
 		X123 ABCD 2 A_FadeTo(1.0,0.25)
-		TNT1 A 0 A_Explode(12,64,1)
+		TNT1 A 0 A_Explode(12,64,0)
 		X123 EFGH 2
-		TNT1 A 0 A_Explode(12,64,1)
+		TNT1 A 0 A_Explode(12,64,0)
 		X123 IJKL 2
-		TNT1 A 0 A_Explode(12,64,1)
+		TNT1 A 0 A_Explode(12,64,0)
 		X123 MNOPQRSTUVWX 2 A_FadeOut
 		Stop
 	}
