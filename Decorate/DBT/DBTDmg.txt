@@ -2,10 +2,9 @@
 Actor DBTNoDamageOff : CustomInventory
 {
 	+INVENTORY.ALWAYSPICKUP
-	+INVENTORY.AUTOACTIVATE
 	States
 	{
-	Use:
+	Pickup:
 		TNT1 A 0 A_ChangeFlag("NODAMAGE",0)
 		Stop
 	}
@@ -14,10 +13,9 @@ Actor DBTNoDamageOff : CustomInventory
 Actor DBTNoDamageOn : CustomInventory
 {
 	+INVENTORY.ALWAYSPICKUP
-	+INVENTORY.AUTOACTIVATE
 	States
 	{
-	Use:
+	Pickup:
 		TNT1 A 0 A_ChangeFlag("NODAMAGE",1)
 		Stop
 	}
@@ -27,10 +25,13 @@ Actor DBTNoDamageOn : CustomInventory
 //************************************************
 actor DBTVulnerableThing
 {
+	const int DamageMultiplier = 1;
+	const int MaxTics = 70;
+	var int user_tics;
 	var int user_damage;
+	var int user_hp;
     Monster
     -COUNTKILL
-//    -Solid		//Removed to have it DBT stuck when attacking
     +NOGRAVITY
     +DONTFALL
 	+NOICEDEATH
@@ -38,46 +39,73 @@ actor DBTVulnerableThing
     +DONTTHRUST
 	+QUICKTORETALIATE
 	+GHOST
-	+NODAMAGE
-	+NOPAIN
-	+INVULNERABLE
-	const int HP = 1000; //Update with Health if this changes.
+	+NEVERTARGET
+	Species "DeathBringer"
+	const int HP = 1000; 
+	const int MaxDamage = 1000; //Keep it from bringing DBT to 0 on one hit.
     Health 1000
     Radius 30
     Height 56
     PainChance 255
-    RenderStyle Add
-    Scale 3.9
+	PainChance "DBTSetup", 0
+	PainChance "DBTDamage", 0
     DamageFactor "Normal", 1
+	DamageFactor "DBTSetup", 0
 	DamageFactor "DBTDamage", 0.0
 	RenderStyle None
     States
     {
     Spawn:
 		TNT1 A 0 NoDelay A_ClearTarget
-		TNT1 A 0 A_ChangeFlag("NODAMAGE",0)
+		TNT1 A 0 A_CheckFlag("FRIENDLY","EndNoChange",AAPTR_MASTER)
+		TNT1 A 0 A_ChangeFlag("NOBLOCKMAP",0)
 		TNT1 A 0 A_ChangeFlag("NOPAIN",0)
-		TNT1 A 0 A_UnsetInvulnerable
-		TNT1 A 70 A_ClearTarget
+		TNT1 A 0 A_SetShootable
+	Waiting:
+		TNT1 A 1 A_SetUserVar(user_tics,user_tics+1)
+		TNT1 A 0 A_JumpIf(user_tics <= MaxTics, "Waiting")
+		TNT1 A 0 A_JumpIf(health < HP,1)
 		Stop
-	Pain:
 		TNT1 A 0 A_ChangeFlag("NOPAIN",1)
-		TNT1 A 0 A_JumpIf(health == HP,"Spawn")
+		Goto Pain+2
+	Pain:
 		TNT1 A 0 A_UnsetShootable
+		TNT1 A 0 A_ChangeFlag("NOPAIN",1)
+		TNT1 A 1 A_ChangeFlag("NOBLOCKMAP",1)
+		//Make sure it's only a player damaging him.
 		TNT1 A 0 A_JumpIf(CheckClass("PlayerPawn",AAPTR_TARGET,1),1)
-		Goto End
-		TNT1 A 0 A_SetUserVar(user_damage,HP-health)
-		TNT1 A 0 A_GiveInventory("DBTDamageCounter",user_damage,AAPTR_MASTER)
-		TNT1 A 0 A_GiveInventory("DBTDamageCheck",1,AAPTR_MASTER)
+		Goto Spawn
+		TNT1 A 0 A_JumpIf(health >= HP,"EndNoChange")
+		TNT1 A 0 A_SetUserVar(user_damage,HP-Health)
+		TNT1 A 0 A_GiveInventory("DBTNoDamageOff",1,AAPTR_MASTER)
+		TNT1 A 0 A_DamageMaster(user_damage*DamageMultiplier,"DBTVulnerable",DMSS_NOFACTOR,"FDeathBringerThanatos")
+		TNT1 A 0 A_GiveInventory("DBTNoDamageOn",1,AAPTR_MASTER)
+		TNT1 A 0 A_JumpIf(IsPointerEqual(AAPTR_TARGET,AAPTR_NULL),3)
+		TNT1 A 0 A_JumpIfHealthLower(1,2,AAPTR_TARGET)
+		TNT1 A 0 A_TransferPointer(AAPTR_DEFAULT,AAPTR_MASTER,AAPTR_TARGET,AAPTR_TARGET,PTROP_NOSAFEGUARDS)
+		TNT1 A 0 A_JumpIf(DamageMultiplier > 1,1)
+		Stop
+		TNT1 A 0 A_QuakeEx(1,2,2,35,0,2048,"",QF_RELATIVE|QF_SCALEDOWN)
 		Stop
     Death:
 		TNT1 A 0 A_JumpIf(CheckClass("PlayerPawn",AAPTR_TARGET,1),1)
 		Goto End
-		TNT1 A 0 A_GiveInventory("DBTDamageCounter",1000,AAPTR_MASTER)
-		TNT1 A 0 A_GiveInventory("DBTDamageCheck",1,AAPTR_MASTER)
-		TNT1 A 70 //A_SetHealth(health-user_damage,AAPTR_MASTER)
+		TNT1 A 0 A_JumpIf(IsPointerEqual(AAPTR_TARGET,AAPTR_NULL),3)
+		TNT1 A 0 A_JumpIfHealthLower(1,2,AAPTR_TARGET)
+		TNT1 A 0 A_TransferPointer(AAPTR_DEFAULT,AAPTR_MASTER,AAPTR_TARGET,AAPTR_TARGET,PTROP_NOSAFEGUARDS)
+		TNT1 A 0 A_GiveInventory("DBTNoDamageOff",1,AAPTR_MASTER)
+		TNT1 A 0 A_DamageMaster(1000*DamageMultiplier,"DBTVulnerable",DMSS_NOFACTOR,"FDeathBringerThanatos")
+		TNT1 A 0 A_GiveInventory("DBTNoDamageOn",1,AAPTR_MASTER)
+		TNT1 A 0 A_JumpIf(DamageMultiplier > 1,1)
+		Stop
+		TNT1 A 0 A_QuakeEx(1,2,2,35,0,2048,"",QF_RELATIVE|QF_SCALEDOWN)
+		Stop
+	Death.Massacre:
+	EndNoChange:
+		TNT1 A 0
 		Stop
 	End:
+		TNT1 A 0 A_JumpIfHealthLower(1,"EndNoChange",AAPTR_TARGET)
 		TNT1 A 0 A_TransferPointer(AAPTR_DEFAULT,AAPTR_MASTER,AAPTR_TARGET,AAPTR_TARGET,PTROP_NOSAFEGUARDS)
 		Stop
     }
@@ -91,66 +119,10 @@ actor DBTVulnerableThing
 //=============================================================
 //=============================================================
 
-actor DBTVulnerableDouble
+actor DBTVulnerableDouble : DBTVulnerableThing
 {
-	var int user_damage;
-    Monster
-    -COUNTKILL
-//    -Solid		//Removed to have it DBT stuck when attacking
-    +NOGRAVITY
-    +DONTFALL
-	+NOICEDEATH
-	+DONTMORPH
-    +DONTTHRUST
-	+QUICKTORETALIATE
-	+GHOST
-	+NODAMAGE
-	+NOPAIN
-	+INVULNERABLE
-	const int HP = 1000; //Update this with health if changes are needed.
-    Health 1000
-    Radius 30
-    Height 56
-    PainChance 255
-    RenderStyle Add
-    Scale 3.9
-    DamageFactor "Normal", 1.0
-	DamageFactor "DBTDamage", 0.0
-	RenderStyle None
-    States
-    {
-    Spawn:
-		TNT1 A 0 NoDelay A_ClearTarget
-		TNT1 A 0 A_ChangeFlag("NODAMAGE",0)
-		TNT1 A 0 A_ChangeFlag("NOPAIN",0)
-		TNT1 A 0 A_UnsetInvulnerable
-		TNT1 A 35 A_ClearTarget
-		Stop
-    Pain:
-		TNT1 A 0 A_ChangeFlag("NOPAIN",1)
-		TNT1 A 0 A_JumpIf(health == HP,"Spawn")
-		TNT1 A 0 A_UnSetShootable
-		TNT1 A 0 A_JumpIf(CheckClass("PlayerPawn",AAPTR_TARGET,1),1)
-		Goto End
-		TNT1 A 0 A_SetUserVar(user_damage,(HP-health)*2)
-		TNT1 A 0 A_GiveInventory("DBTDamageCounter",user_damage,AAPTR_MASTER)
-		TNT1 A 0 A_GiveInventory("DBTDamageCheck",1,AAPTR_MASTER)
-		TNT1 A 70 A_QuakeEx(1,3,2,35,0,32767,"",QF_SCALEDOWN|QF_RELATIVE)
-		Stop
-    Death:
-		TNT1 A 0 A_JumpIf(CheckClass("PlayerPawn",AAPTR_TARGET,1),1)
-		Goto End
-		TNT1 A 0 A_GiveInventory("DBTDamageCounter",2000,AAPTR_MASTER)
-		TNT1 A 0 A_GiveInventory("DBTDamageCheck",1,AAPTR_MASTER)
-		TNT1 A 70 A_QuakeEx(1,3,2,35,0,32767,"",QF_SCALEDOWN|QF_RELATIVE)
-		Stop
-	End:
-		TNT1 A 0 A_TransferPointer(AAPTR_DEFAULT,AAPTR_MASTER,AAPTR_TARGET,AAPTR_TARGET,PTROP_NOSAFEGUARDS)
-		Stop
-	//Kill:
-		//TNT1 A 70 A_KillMaster("DBTKiller",DMSS_FOILINVUL)
-		//Stop
-    }
+	const int MaxTics = 35;
+	const int DamageMultiplier = 2;
 }
 
 //A_QuakeEx(1,3,2,35,0,32767,"",QF_SCALEDOWN|QF_RELATIVE)
@@ -171,14 +143,63 @@ actor DBTVulnerableThingSteel : DBTVulnerableThing
 	Health 1000
 }
 
+/*==============================================================================
+ Health Check
+
+ Disabling the NODAMAGE flag is extremely ill advised, so instead, use 
+ A_SetHealth and a loop. I don't trust the room for error in which DBT could
+ be unintentionally damaged with a NOFACTOR damaging attack and I don't want
+ to risk it. The NODAMAGE flag stays at all times and the following can safely
+ kill him off without needing to remove the flag.
+==============================================================================*/
+
+Actor DBTDamageCounter : Inventory
+{	Inventory.MaxAmount 1000 }
+
 Actor DBTDamageCheck : CustomInventory
 {
 	+INVENTORY.ALWAYSPICKUP
 	States
 	{
 	Pickup:
-		TNT1 A 0 A_JumpIfInventory("DBTDamageCounter",10000,"Kill")
+		TNT1 A 0 A_JumpIfInventory("DBTDamageCounter",health,"Kill") //Skip it all if it matches.
+	LoopCheck:
+		//Most efficiently done in increments of 10. Less time spent. instead of
+		//one at a time.
+		TNT1 A 0 A_JumpIfInventory("DBTDamageCounter",1000,"Dmg1000") 
+		TNT1 A 0 A_JumpIfInventory("DBTDamageCounter",100,"Dmg100")
+		TNT1 A 0 A_JumpIfInventory("DBTDamageCounter",10,"Dmg10")
+		TNT1 A 0 A_JumpIfInventory("DBTDamageCounter",5,"Dmg5")
+		TNT1 A 0 A_JumpIfInventory("DBTDamageCounter",1,"Dmg1")
 		Stop
+	Dmg1000:
+		TNT1 A 0 A_JumpIf(health <= 1000,"Kill")
+		TNT1 A 0 A_TakeInventory("DBTDamageCounter",1000,0)
+		TNT1 A 0 A_SetHealth(health-1000)
+		Goto LoopCheck
+	Dmg100:
+		TNT1 A 0 A_JumpIf(health <= 100,"Kill")
+		TNT1 A 0 A_TakeInventory("DBTDamageCounter",100,0)
+		TNT1 A 0 A_SetHealth(health-100)
+		Goto LoopCheck
+	Dmg10:
+		TNT1 A 0 A_JumpIf(health <= 10,"Kill")
+		TNT1 A 0 A_TakeInventory("DBTDamageCounter",10,0)
+		TNT1 A 0 A_SetHealth(health-10)
+		Goto LoopCheck
+	Dmg5:
+		TNT1 A 0 A_JumpIf(health <= 5,"Kill")
+		TNT1 A 0 A_TakeInventory("DBTDamageCounter",5)
+		TNT1 A 0 A_SetHealth(health-5)
+		Goto LoopCheck
+	Dmg1:
+		TNT1 A 0 A_JumpIf(health <= 1,"Kill")
+		TNT1 A 0 A_TakeInventory("DBTDamageCounter",1)
+		TNT1 A 0 A_SetHealth(health-1)
+		Goto LoopCheck
+	KillCheck:
+		TNT1 A 0 A_JumpIfInventory("DBTDamageCounter",health,"Kill")
+		Goto LoopCheck
 	Kill:
 		TNT1 A 0 A_Die("Normal")
 		Stop

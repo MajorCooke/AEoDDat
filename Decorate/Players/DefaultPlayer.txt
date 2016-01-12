@@ -7,6 +7,7 @@ ACTOR AEoDmarine : DoomPlayer
 	GibHealth -10000000
 	RipLevelMin 1
 	+AIMREFLECT	//Only works when the player is reflecting attacks.
+	+LAXTELEFRAGDMG
 	player.displayname "AEons of Death Marine"
 	player.startitem PlayerToken
 	player.startitem PFirstTimeToken
@@ -23,6 +24,8 @@ ACTOR AEoDmarine : DoomPlayer
 	DamageFactor "Wormwood", 0
 	DamageFactor "PlayerResistant", 0.05
 	DamageFactor "DemonMorph", 0
+	DamageFactor "Telefrag", 1.0
+	DamageFactor "HolyNoResist", 0.0 //It's for monsters only.
 	Player.ScoreIcon RPICON1
 	player.damagescreencolor red, 0.1
 	Player.Face STF
@@ -153,7 +156,7 @@ Actor PlayerReset : CustomInventory
 		TNT1 A 0 A_JumpIfInventory("HHHCheck",1,2)
 		TNT1 A 0 A_ChangeFlag("DONTTHRUST",0)
 		TNT1 A 0 A_ChangeFlag("NOPAIN",0)
-		TNT1 A 0
+		TNT1 A 0 A_TakeInventory("MorphOverrideable",1000)
 		Stop
 	}
 }
