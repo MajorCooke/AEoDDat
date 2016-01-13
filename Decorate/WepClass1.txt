@@ -2723,39 +2723,32 @@ Actor AEoDRemoteDetonator : Weapon // 6119
 		Loop
 	Ready:
 		TNT1 A 1 A_TakeInventory("TNTThrowForce",100000)
-		DYN2 A 0 A_JumpIfInventory("AEGrenade",1,1)
-		Goto Ready+7
-	ReadyUp:
-		DYN2 A 0 A_JumpIfInventory("TNTRemoteReady",1,5)
-		DYN2 ABCD 1
-		Goto R2
-	ReadyRemoteUp:
-		DYN2 MNOP 1
+		DYN2 A 0 A_JumpIfInventory("AEGrenade",1,"RaiseBoth")
 	ReadyNoAmmo:
-		DYN2 Q 0 A_JumpIfInventory("TNTAmmo",1,"R1")
-		DYN2 Q 0 A_JumpIfInventory("AEGrenade",1,"R3")
+		DYN2 Q 0 A_JumpIfInventory("TNTAmmo",1,"R2")
+		DYN2 Q 0 A_JumpIfInventory("AEGrenade",1,"RaiseTNTRemoteReady")
 		DYN2 Q 1 A_WeaponReady
-		DYN2 Q 0 A_JumpIfInventory("AEGrenade",1,"R3")
+		DYN2 Q 0 A_JumpIfInventory("AEGrenade",1,"RaiseTNTRemoteReady")
 		DYN2 Q 1 A_WeaponReady
-		DYN2 R 0 A_JumpIfInventory("AEGrenade",1,"R3")
+		DYN2 R 0 A_JumpIfInventory("AEGrenade",1,"RaiseTNTRemoteReady")
 		DYN2 R 1 A_WeaponReady
-		DYN2 R 0 A_JumpIfInventory("AEGrenade",1,"R3")
+		DYN2 R 0 A_JumpIfInventory("AEGrenade",1,"RaiseTNTRemoteReady")
 		DYN2 R 1 A_WeaponReady
-		DYN2 S 0 A_JumpIfInventory("AEGrenade",1,"R3")
+		DYN2 S 0 A_JumpIfInventory("AEGrenade",1,"RaiseTNTRemoteReady")
 		DYN2 S 1 A_WeaponReady
-		DYN2 S 0 A_JumpIfInventory("AEGrenade",1,"R3")
+		DYN2 S 0 A_JumpIfInventory("AEGrenade",1,"RaiseTNTRemoteReady")
 		DYN2 S 1 A_WeaponReady
-		DYN2 T 0 A_JumpIfInventory("AEGrenade",1,"R3")
+		DYN2 T 0 A_JumpIfInventory("AEGrenade",1,"RaiseTNTRemoteReady")
 		DYN2 T 1 A_WeaponReady
-		DYN2 T 0 A_JumpIfInventory("AEGrenade",1,"R3")
+		DYN2 T 0 A_JumpIfInventory("AEGrenade",1,"RaiseTNTRemoteReady")
 		DYN2 T 1 A_WeaponReady
-		DYN2 S 0 A_JumpIfInventory("AEGrenade",1,"R3")
+		DYN2 S 0 A_JumpIfInventory("AEGrenade",1,"RaiseTNTRemoteReady")
 		DYN2 S 1 A_WeaponReady
-		DYN2 S 0 A_JumpIfInventory("AEGrenade",1,"R3")
+		DYN2 S 0 A_JumpIfInventory("AEGrenade",1,"RaiseTNTRemoteReady")
 		DYN2 S 1 A_WeaponReady
-		DYN2 R 0 A_JumpIfInventory("AEGrenade",1,"R3")
+		DYN2 R 0 A_JumpIfInventory("AEGrenade",1,"RaiseTNTRemoteReady")
 		DYN2 R 1 A_WeaponReady
-		DYN2 R 0 A_JumpIfInventory("AEGrenade",1,"R3")
+		DYN2 R 0 A_JumpIfInventory("AEGrenade",1,"RaiseTNTRemoteReady")
 		DYN2 R 1 A_WeaponReady
 		Loop
 	R1: //No TNT
@@ -2764,40 +2757,48 @@ Actor AEoDRemoteDetonator : Weapon // 6119
 	R2: //With TNT
 		DYN2 EEFFGGHHGGFF 2 A_WeaponReady
 		Loop
-	R3: //Raise TNT
+	ReadyRemoteUp: //Keep both names because I am too lazy to go through.
+	RaiseRemoteOnly: //Raise Remote Only
+		DYN2 MNOP 1 
+		Goto R1
+	RaiseTNTRemoteReady: //Raise TNT
 		DY2T N 0 A_GiveInventory("TNTAmmo",1)
-		DY2T NOPQ 2
-		Goto R2
+		DY2T NOPQ 1
+		Goto R2	
+	ReadyUp:
+	RaiseBoth: //Raise both TNT and remote
+		DYN2 A 0 A_JumpIfInventory("TNTRemoteReady",1,"ReadyRemoteUp")
+		DYN2 ABCD 1
+		Goto R2		
 	Deselect:
 		DYN2 I 0 A_JumpIfInventory("AEGrenade",1,1)
-		Goto Deselect+10
+		Goto DesLoop
 		
-		DYN2 I 0 A_JumpIfInventory("TNTRemoteReady",1,8)
+		DYN2 I 0 A_JumpIfInventory("TNTRemoteReady",1,"DesRemote")
 		DYN2 I 0 A_TakeInventory("TNTThrowForce",999999)
 		DYN2 IJKL 1 A_Lower
-		TNT1 A 0 	
-		TNT1 A 1 A_Lower
-		TNT1 A 0 A_Lower
-		Goto Deselect+7
-		
+		Goto DesLoop
+	DesRemote:
 		DYN2 PONM 1 A_Lower
-		TNT1 A 0 	
+		TNT1 A 0
+	DesLoop:
 		TNT1 A 1 A_Lower
-		TNT1 A 0 A_Lower
-		Goto Deselect+14
+		TNT1 AA 0 A_Lower
+		Loop
 	Select:
 		DYN2 A 0 A_TakeInventory("TNTThrowForce",999999)
-		TNT1 A 0 A_GiveInventory("TNTAmmo",1)
-		TNT1 A 0 A_JumpIfInventory("AEGrenade",1,2)
-		TNT1 A 0 A_TakeInventory("TNTAmmo",1)
-		DYN2 M 1 	
-		TNT1 AA 0 A_Raise
-		Goto Select+4
+		DYN2 A 0 A_GiveInventory("TNTAmmo",1)
+		DYN2 A 0 A_JumpIfInventory("AEGrenade",1,2)
+		DYN2 A 0 A_TakeInventory("TNTAmmo",1000)
+	SelLoop:
+		DYN2 M 1 A_Raise
+		"----" AA 0 A_Raise
+		Goto SelLoop
 	Fire:
 		DYN2 E 0 A_GiveInventory("TNTRemoteToken",1)
 		DYN2 E 0 A_JumpIfInventory("TNTRemoteReady",1,"Detonate")
 		DYN2 E 0 A_JumpIfInventory("AEGrenade",1,1)
-		Goto ReadyRemoteUp
+		Goto Detonate
 		DYN2 E 0 A_GiveInventory("TNTThrowForce",1)
 		DYN2 E 2 A_GunFlash
 		DYN2 E 0 A_ReFire
@@ -2893,47 +2894,44 @@ Actor AEoDRemoteDetonator : Weapon // 6119
 		"----" A 0 A_Refire("Hold1")
 		Goto EndFire
 	EndFire2:
-		DY2D A 0 A_TakeInventory("TNTThrowForce",100000)
-		DY2T A 0 A_JumpIfInventory("TNTRemoteReady",1,8)
-		DY2T A 2 A_PlayWeaponSound("caleb/tnt")
-		DY2T B 0 A_GiveInventory("TNTRemoteReady",1)
-		DY2T B 4
-		DYN2 STSR 2
-		Goto R3
+		DY2T H 0 A_TakeInventory("TNTThrowForce",100000)
+		DY2T H 0 A_JumpIfInventory("TNTRemoteReady",1,8)
+		DY2T H 0 A_PlayWeaponSound("caleb/tnt")
+		DY2T H 0 A_GiveInventory("TNTRemoteReady",1)
+		DY2T HIJKL 2
+		Goto R1
 	Detonate:
 	//A_KillChildren won't work here if the player has friendly fire disabled.
 	//So instead, use A_GiveToChildren which targets the class PlayerTNTRemote
 	//and have it call A_Die instead. Simple as that.
 		DY2D A 0 A_TakeInventory("TNTThrowForce",100000)
-		DY2D A 0 A_TakeInventory("TNTRemoteReady",1)
+		DY2D A 0 A_TakeInventory("TNTRemoteReady",1000)
 		DY2D A 2 A_PlayWeaponSound("weapons/tnt/detonate")
 		DY2D B 2
 		DY2D C 1 A_GiveToChildren("RemoteExploder",1)
 		DY2D DE 2
-		DY2D E 0 A_JumpIfInventory("AEGrenade",1,7)
-		DY2D AAAAAA 0 A_CheckReload
-		Goto Deselect+7
-		
+		DY2D E 0 A_JumpIfInventory("AEGrenade",1,2)
+		DY2D E 0 A_CheckReload
+		Goto DesLoop
 		DY2D E 0
 		Goto Ready
 	AltFire:
 		DY2T A 0 A_JumpIfInventory("TNTRemoteToken",1,2)
 		DY2T A 0 A_GiveInventory("TNTRemoteToken",1)
 		DY2T A 0 A_JumpIfNoAmmo(1)
-		Goto AltReset 
-		DY2T A 0 A_TakeInventory("TNTAmmo",1)
-		Goto R2 
-	AltReset:
-		DY2T A 0 A_JumpIfInventory("TNTRemoteReady",1,"AltDrop")
+		Goto AltDrop 
+		DY2T A 0 A_TakeInventory("TNTAmmo",1000)
+		Goto R1 
+	AltDrop: //Raises up another bundle of dynamite if non are present.
+		DY2T A 0 A_JumpIfInventory("TNTRemoteReady",1,"AltReset")
 		DY2T A 2 A_PlayWeaponSound("caleb/tnt")
-		DY2T B 0 A_GiveInventory("TNTRemoteReady",1)
-		DY2T B 4 A_FireCustomMissile("PlayerTNTRemoteDrop",0,1,8,0)
-		DYN2 STSR 2
-		Goto R3
-	AltDrop:
-		DY2T N 0 A_TakeInventory("TNTRemoteReady",1)
-		DY2T NOPQ 2
+		DYN2 Q 0 A_GiveInventory("TNTRemoteReady",1)
+		DYN2 Q 8 A_FireCustomMissile("PlayerTNTRemoteDrop",0,1,8,0)
 		Goto R1
+	AltReset: //Otherwise, drops a stick o' dynamite.
+		DY2T N 0 A_TakeInventory("TNTRemoteReady",1000)
+		DY2T NOPQ 2
+		Goto R2
 	Flash:
 		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",16,32)
 		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",15,30)
@@ -2998,15 +2996,21 @@ Actor TNTRemoteReady : Inventory
 
 Actor TNTRemoteToken : Inventory { }
 
+Actor TNTExplodeToken : Inventory {	Inventory.InterhubAmount 0 }
+
 Actor RemoteExploder : CustomInventory
 {
 	+ALWAYSPICKUP
 	States
 	{
 	Pickup:
-		TNT1 A 0 A_JumpIf(CheckClass("PlayerTNTRemote",AAPTR_DEFAULT,1) ||
-						  CheckClass("PlayerTNTRemote1",AAPTR_DEFAULT,1),1)
+		TNT1 A 0 A_JumpIf(CheckClass("PlayerTNTRemote",AAPTR_DEFAULT,1), "E2")
+		TNT1 A 0 A_JumpIf(CheckClass("PlayerTNTRemote1",AAPTR_DEFAULT,1), "E1")
+		TNT1 A 0 A_RailWait
 		Stop
+	E1:
+		TNT1 A 0 A_SetUserVar(user_explode,1)
+	E2:
 		TNT1 A 0 A_Die
 		Stop
 	}
@@ -3021,7 +3025,6 @@ Actor PlayerTNTRemote
 	Damage 16
 	ReactionTime 70
 	Monster
-	-FRIENDLY
 	-SOLID
 	+NEVERTARGET
 	+EXTREMEDEATH
@@ -3030,14 +3033,17 @@ Actor PlayerTNTRemote
 	+NOBLOOD
 	-COUNTKILL
 	+DOHARMSPECIES
+	+DONTTHRUST
+	+THRUACTORS
+	+NOTARGETSWITCH
 	Species "PlayerTNT"
 	States
 	{
 	Spawn:
-		TNT4 A 0 NoDelay A_RearrangePointers(AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_DEFAULT,4)
-		TNT4 A 0 A_ChangeFlag("FRIENDLY",0)
-		TNT4 AA 2 Bright
-		TNT4 BBBBBBB 2
+		TNT4 A 0 NoDelay A_RearrangePointers(AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_TARGET,4)
+	Waiting:
+		TNT4 AA 2 Bright //A_RearrangePointers(AAPTR_TRACER,AAPTR_TRACER,AAPTR_DEFAULT,4)
+		TNT4 BBBBBBB 2 //A_RearrangePointers(AAPTR_TRACER,AAPTR_TRACER,AAPTR_DEFAULT,4)
 		Loop
 	Death:
 		TNT1 A 0 A_PlaySoundEx("caleb/tnt/explode","SoundSlot5")
@@ -3061,6 +3067,9 @@ Actor PlayerTNTRemote
 
 Actor PlayerTNTRemote1
 {
+	const int MinZ = 10;
+	const int MaxZ = 15;
+	var int user_explode;
 	Speed 6
 	Radius 8
 	Height 8
@@ -3075,23 +3084,48 @@ Actor PlayerTNTRemote1
 	-SOLID
 	+EXTREMEDEATH
 	+HEXENBOUNCE
+	+NOBOUNCESOUND
+	+ALLOWBOUNCEONACTORS
 	+BOUNCEONACTORS
 	+FORCERADIUSDMG
 	+CANBOUNCEWATER
 	+PAINLESS
-	+SHOOTABLE
 	+DONTREFLECT
+	+DONTTHRUST
+	+DOHARMSPECIES
 	BounceFactor 0.4
 	BounceCount 6
+	Species "PlayerTNT"
 	States
 	{
 	Spawn:
-		TNT5 A 0 NoDelay A_RearrangePointers(AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_DEFAULT,4)
-		TNT5 A 0 ThrustThingZ(0,random(10,15),0,1)
-		TNT5 ABCDEFGH 3 Bright 
+		TNT5 A 0 NoDelay A_RearrangePointers(AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_TARGET,4)
+		TNT5 A 0 ThrustThingZ(0,random(MinZ,MaxZ),0,1)
+		TNT5 AAABBBCCCDDDEEEFFFGGGHHH 1 Bright A_JumpIf(user_explode > 0,"Explode")
 		Goto Spawn+3
 	Death:
-		TNT1 A 0 A_SpawnItemEx("PlayerTNTRemote",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS,0)
+		TNT1 A 0 A_JumpIf(user_explode > 0,"Explode")
+		TNT1 A 0 A_SpawnItemEx("PlayerTNTRemote",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_SETMASTER,0)
+		Stop
+	Explode:
+		TNT1 A 0 A_ChangeFlag("NOINTERACTION",1)
+		TNT1 A 0 A_Stop		
+		TNT1 A 0 A_ChangeFlag("PAINLESS",0)
+		TNT1 A 0 A_PlaySoundEx("caleb/tnt/explode","SoundSlot5")
+		TNT1 A 0 A_Explode(300,140,1)
+		TNT1 A 0 A_SpawnItemEx("NewExplosionMedium",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_CustomMissile("SuperRocketBit2I",0,0,45)
+		TNT1 A 0 A_CustomMissile("SuperRocketBit2I",0,0,90)
+		TNT1 A 0 A_CustomMissile("SuperRocketBit2I",0,0,0)
+		TNT1 A 0 A_CustomMissile("SuperRocketBit2I",0,0,135)
+		TNT1 A 0 A_CustomMissile("SuperRocketBit2I",0,0,180)
+		TNT1 A 0 A_CustomMissile("SuperRocketBit2I",0,0,225)
+		TNT1 A 0 A_CustomMissile("SuperRocketBit2I",0,0,270)
+		TNT1 A 0 A_CustomMissile("SuperRocketBit2I",0,0,315)
+		TNT1 A 0 A_CustomMissile("SuperRocketBit2I",0,0,66)
+		TNT1 A 0 A_CustomMissile("SuperRocketBit2I",0,0,155)
+		TNT1 A 0 A_CustomMissile("SuperRocketBit2I",0,0,245)
+		TNT1 A 10 
 		Stop
 	}
 }
@@ -3103,72 +3137,48 @@ Actor PlayerTNTRemote3 : PlayerTNTRemote1 { Speed 9 }
 Actor PlayerTNTRemote4 : PlayerTNTRemote1
 {
 	Speed 10
-	States
-	{
-	Spawn:
-		TNT5 A 0 NoDelay A_RearrangePointers(AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_DEFAULT,4)
-		TNT5 A 0 ThrustThingZ(0,random(12,14),0,1)
-		TNT5 ABCDEFGH 3 Bright 
-		Goto Spawn+3
-	}
+	const int MinZ = 12;
+	const int MaxZ = 15;
 }
 
-Actor PlayerTNTRemote5 : PlayerTNTRemote4 { Speed 12 }
+Actor PlayerTNTRemote5 : PlayerTNTRemote1 { Speed 12 }
 
-Actor PlayerTNTRemote6 : PlayerTNTRemote4 { Speed 13 }
+Actor PlayerTNTRemote6 : PlayerTNTRemote1 { Speed 13 }
 
 Actor PlayerTNTRemote7 : PlayerTNTRemote1
 {
 	Speed 15
-	States
-	{
-	Spawn:
-		TNT5 A 0 NoDelay A_RearrangePointers(AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_DEFAULT,4)
-		TNT5 A 0 ThrustThingZ(0,random(14,16),0,1)
-		TNT5 ABCDEFGH 3 Bright 
-		Goto Spawn+3
-	}
+	const int MinZ = 14;
+	const int MaxZ = 16;
 }
 
-Actor PlayerTNTRemote8 : PlayerTNTRemote7 { Speed 16 }
+Actor PlayerTNTRemote8 : PlayerTNTRemote1 { Speed 16 }
 
-Actor PlayerTNTRemote9 : PlayerTNTRemote7 { Speed 18 }
+Actor PlayerTNTRemote9 : PlayerTNTRemote1 { Speed 18 }
 
 Actor PlayerTNTRemoteA : PlayerTNTRemote1
 {
 	Speed 19
-	States
-	{
-	Spawn:
-		TNT5 A 0 NoDelay A_RearrangePointers(AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_DEFAULT,4)
-		TNT5 A 0 ThrustThingZ(0,random(16,18),0,1)
-		TNT5 ABCDEFGH 3 Bright 
-		Goto Spawn+3
-	}
+	const int MinZ = 16;
+	const int MaxZ = 18;
 }
 
-Actor PlayerTNTRemoteB : PlayerTNTRemoteA { Speed 21 }
+Actor PlayerTNTRemoteB : PlayerTNTRemote1 { Speed 21 }
 
-Actor PlayerTNTRemoteC : PlayerTNTRemoteA { Speed 22 }
+Actor PlayerTNTRemoteC : PlayerTNTRemote1 { Speed 22 }
 
 Actor PlayerTNTRemoteD : PlayerTNTRemote1
 {
 	Speed 24
-	States
-	{
-	Spawn:
-		TNT5 A 0 NoDelay A_RearrangePointers(AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_DEFAULT,4)
-		TNT5 A 0 ThrustThingZ(0,random(18,20),0,1)
-		TNT5 ABCDEFGH 3 Bright
-		Goto Spawn+3
-	}
+	const int MinZ = 18;
+	const int MaxZ = 20;
 }
 
-Actor PlayerTNTRemoteE : PlayerTNTRemoteD { Speed 25 }
+Actor PlayerTNTRemoteE : PlayerTNTRemote1 { Speed 25 }
 
-Actor PlayerTNTRemoteF : PlayerTNTRemoteD { Speed 27 }
+Actor PlayerTNTRemoteF : PlayerTNTRemote1 { Speed 27 }
 
-Actor PlayerTNTRemoteG : PlayerTNTRemoteD { Speed 28 }
+Actor PlayerTNTRemoteG : PlayerTNTRemote1 { Speed 28 }
 
 Actor PlayerTNTRemoteDrop : PlayerTNTRemote1
 {
@@ -3178,9 +3188,9 @@ Actor PlayerTNTRemoteDrop : PlayerTNTRemote1
 	States
 	{
 	Spawn:
-		TNT5 A 0 NoDelay A_RearrangePointers(AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_DEFAULT,4)
-		TNT5 ABCDEFGH 3 Bright 
-		Goto Spawn+3
+		TNT5 A 0 NoDelay A_RearrangePointers(AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_TARGET,4)
+		TNT5 AAABBBCCCDDDEEEFFFGGGHHH 1 Bright A_JumpIf(user_explode > 0,"Explode")
+		Goto Spawn+1
 	}
 }
 
