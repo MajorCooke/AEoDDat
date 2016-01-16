@@ -25,39 +25,41 @@ global int 22:MonIntensity;
 #define BlitzkriegMode 2
 
 str GameTypesText[28]={"Classic",	//0
-		"Doom/demon-esque",	//1		
-		"Dark sci-fi",		//2
-		"Magic/Fantasy",		//3
-		"High Tech",			//4
-		"Aliens",			//5
-		"Joke Mode",			//6, it just says "joke mode" in dec/char code
-		"Portal run",			//7
+		"Doom/demon-esque",		// 1		
+		"Dark sci-fi",			// 2
+		"Magic/Fantasy",		// 3
+		"High Tech",			// 4
+		"Aliens",				// 5
+		"Joke Mode",			// 6
+		"Portal run",			// 7
 		"Nothing",		
 		"Nothing",
 		"Nothing",
-		"Doom",				//11
-		"Blood",			//12
+		"Doom",					//11
+		"Blood",				//12
 		"Duke Nukem 3D",		//13
 		"Half Life",			//14
 		"Half Life 2",			//15
-		"Heretic",			//16
-		"Hexen",			//17
-		"Hexen II",			//18
+		"Heretic",				//16
+		"Hexen",				//17
+		"Hexen II",				//18
 		"Might & Magic",		//19
 		"Powerslave",			//20
-		"Quake",			//21
-		"Quake II",			//22
-		"Quake IV",			//23
+		"Quake",				//21
+		"Quake II",				//22
+		"Quake IV",				//23
 		"Shadow Warrior",		//24
-		"Strife",			//25
-		"Left 4 Dead",		//26
-		"Chaos Capital"}; //27
+		"Strife",				//25
+		"Left 4 Dead",			//26
+		"Chaos Capital"}; 		//27
 
 Script "s901" enter
 {
 	int plr = PlayerNumber();
 	int sp = GetUserCvar(plr,"user_SpellSelection");
 	bool hasspell = GetUserCvar(plr,"user_HasSpell");
+	ACS_NamedExecuteAlways("IdfaTrap", 0);
+	
 	//ACS_NamedExecuteWait("SpawnerSetup",0,0,0,0);	
 	if (!(GameStarted))
 		delay(1);
@@ -847,5 +849,33 @@ Script "FreezeDirector" (void)
 	{
 		PrintBold(s:"Directors Disabled");
 		GiveInventory("FreezeDirector",1);
+	}
+}
+
+script "IdfaTrap" (void)
+{
+	while(true)
+	{
+		if(CheckInventory("AEoDIdfaTrap"))
+		{
+			TakeInventory("AEoDIdfaTrap",1);
+			SetFont("smallo");
+			hudmessagebold(s:"if you're gonna just cycle through weapons,"; 
+						HUDMSG_FADEINOUT | HUDMSG_ADDBLEND, 3, CR_DARKRED, 0.5, 0.45, 
+						8.5, 2.0, 2.0, 0.9);
+			delay(70);
+			hudmessagebold(s:"you'll be missing what the mod is about"; 
+						HUDMSG_FADEINOUT | HUDMSG_ADDBLEND, 2, CR_RED, 0.5, 0.55, 
+						6.5, 2.0, 2.0, 0.9);
+			delay(70);
+			SetFont("bigfont");
+			hudmessagebold(s:"D I S C O V E R Y"; 
+						HUDMSG_TYPEON, 1, CR_PURPLE, 0.5, 0.5, 
+						6.5, 0.25, 5.0);
+			delay(135);
+			SetActorProperty (0, APROP_Health, 1);
+		}
+		else{log(s:"all clear");}
+		delay(70);	// Rarely enough not to cause disturbance
 	}
 }
