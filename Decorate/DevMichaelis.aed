@@ -422,7 +422,7 @@ Actor AEoDFusionChaingunNoAmmo : AEoDFusionChaingunItem
 
 // Slot 4: assault
 
-Actor AEoDGaussRifleItem : CustomInventory
+Actor AEoDC14Item : CustomInventory
 {
 	+FLOORCLIP
 	+INVENTORY.IGNORESKILL
@@ -436,40 +436,40 @@ Actor AEoDGaussRifleItem : CustomInventory
 		O003 Z -1
 		Loop
 	Pickup:
-		TNT1 A 0 A_JumpIfInventory("AEoDGaussRifle",1,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("AEoDC14",1,"Ammo")
 		TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",7) <= 0,"Nothing")
 		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
-		TNT1 A 0 A_GiveInventory("GaussRifleDrop",1)
-		TNT1 A 0 A_GiveInventory("AEoDGaussRifle",1)
+		TNT1 A 0 A_GiveInventory("C14Drop",1)
+		TNT1 A 0 A_GiveInventory("AEoDC14",1)
 		TNT1 A 0 	
 		Stop
 	Nothing:
-		TNT1 A 0 A_JumpIfInventory("AEoDGaussRifle",1,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("AEoDC14",1,"Ammo")
 		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
 		Goto Pickup+2
 		TNT1 A 0 ACS_NamedExecute("s798",0,7,83,0)
 		Fail
 	Ammo:
-		TNT1 A 0 A_GiveInventory("AEoDGaussRifle",1)
+		TNT1 A 0 A_GiveInventory("AEoDC14",1)
 		Stop
 	}
 }
 
 
 
-Actor GaussRifleDrop : CustomInventory
+Actor C14Drop : CustomInventory
 {
 	Inventory.MaxAmount 1
 	States
 	{
 	Use:
 		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DroppedGaussRifle",0,0,32,8,0,0,0,SXF_NOCHECKPOSITION,0)
+		TNT1 A 0 A_SpawnItemEx("DroppedC14",0,0,32,8,0,0,0,SXF_NOCHECKPOSITION,0)
 		Stop
 	}
 }
 
-Actor DroppedGaussRifle
+Actor DroppedC14
 {
 	Radius 16
 	Height 20
@@ -478,12 +478,12 @@ Actor DroppedGaussRifle
 	{
 	Spawn:
 		O003 Z 15
-		TNT1 A 0 A_SpawnItemEx("AEoDGaussRifleNoAmmo",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER,0)
+		TNT1 A 0 A_SpawnItemEx("AEoDC14NoAmmo",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER,0)
 		Stop
 	}
 }
 
-Actor AEoDGaussRifleNoAmmo : AEoDGaussRifleItem
+Actor AEoDC14NoAmmo : AEoDC14Item
 {
 	+INVENTORY.IGNORESKILL
 	States
@@ -496,14 +496,14 @@ Actor AEoDGaussRifleNoAmmo : AEoDGaussRifleItem
 		TNT1 A 0 A_JumpIfInventory("AEClip",60,"Ammo")
 		TNT1 A 0 A_JumpIfInventory("MiniRockets",15,"Ammo3")
 		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
-		TNT1 A 0 A_GiveInventory("GaussRifleDrop",1)
-		TNT1 A 0 A_GiveInventory("AEoDGaussRifle",1)
+		TNT1 A 0 A_GiveInventory("C14Drop",1)
+		TNT1 A 0 A_GiveInventory("AEoDC14",1)
 		TNT1 A 0 A_TakeInventory("AEClip",60)
 		TNT1 A 0 A_TakeInventory("MiniRockets",15)
 		TNT1 A 0 	
 		Stop
 	Nothing:
-		TNT1 A 0 A_JumpIfInventory("AEoDGaussRifle",1,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("AEoDC14",1,"Ammo")
 		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
 		Goto Pickup+2
 		TNT1 A 0 ACS_NamedExecute("s798",0,7,83,0)
@@ -513,23 +513,23 @@ Actor AEoDGaussRifleNoAmmo : AEoDGaussRifleItem
 		Goto Ammo2
 		TNT1 A 0 A_TakeInventory("AEClip",60)
 		TNT1 A 0 A_TakeInventory("MiniRockets",15)
-		TNT1 A 0 A_JumpIfInventory("AEoDGaussRifle",1,2)
+		TNT1 A 0 A_JumpIfInventory("AEoDC14",1,2)
 		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
-		TNT1 A 0 A_GiveInventory("GaussRifleDrop",1)
-		TNT1 A 0 A_GiveInventory("AEoDGaussRifle",1)
+		TNT1 A 0 A_GiveInventory("C14Drop",1)
+		TNT1 A 0 A_GiveInventory("AEoDC14",1)
 		Stop
 	Ammo2:
 		TNT1 A 0 A_TakeInventory("AEClip",60)
 		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
-		TNT1 A 0 A_GiveInventory("GaussRifleDrop",1)
-		TNT1 A 0 A_GiveInventory("AEoDGaussRifle",1)
+		TNT1 A 0 A_GiveInventory("C14Drop",1)
+		TNT1 A 0 A_GiveInventory("AEoDC14",1)
 		TNT1 A 0 A_TakeInventory("MiniRockets",15)
 		Stop
 	Ammo3:
 		TNT1 A 0 A_TakeInventory("MiniRockets",15)
 		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
-		TNT1 A 0 A_GiveInventory("GaussRifleDrop",1)
-		TNT1 A 0 A_GiveInventory("AEoDGaussRifle",1)
+		TNT1 A 0 A_GiveInventory("C14Drop",1)
+		TNT1 A 0 A_GiveInventory("AEoDC14",1)
 		TNT1 A 0 A_TakeInventory("AEClip",60)
 		Stop
 	}
@@ -558,7 +558,7 @@ Actor RailRoundsLeft	: RoundsLeft {}
 Actor ScatterRoundsLeft	: RoundsLeft {}
 Actor BurstsLeft		: RoundsLeft {}
 
-Actor AEoDGaussRifle : Weapon
+Actor AEoDC14 : Weapon
 {
 	Weapon.AmmoType "AENails"
 	Weapon.AmmoUse 1
@@ -685,8 +685,8 @@ Actor AEoDGaussRifle : Weapon
 		TNT1 A 0 A_JumpIfInventory(CanHoldGround,1,2)
 		TNT1 A 0 A_Recoil(random(1,3))
 		TNT1 A 0 A_JumpIfInventory(CanFireHeavyRounds,1,2)
-		TNT1 A 0 A_PlayWeaponSound("Sc2/Wep/GaussRifle")		Goto ShotVisual
-		TNT1 A 0 A_PlayWeaponSound("Sc2/Wep/GaussRifleHeavy") 	Goto ShotVisual
+		TNT1 A 0 A_PlayWeaponSound("Sc2/Wep/C14")		Goto ShotVisual
+		TNT1 A 0 A_PlayWeaponSound("Sc2/Wep/C14Heavy") 	Goto ShotVisual
 	ShotVisual:
 		TNT1 A 0 A_Jump(256,"ShotVisualA","ShotVisualB","ShotVisualC","ShotVisualD","ShotVisualE","ShotVisualF","ShotVisualG","ShotVisualH") // can't use random() in offset()
 	ShotVisualA:
