@@ -6439,8 +6439,7 @@ Actor EnlightenEssence : Ammo
 	Inventory.MaxAmount 1000
 	Ammo.BackpackMaxAmount 1000
 	Ammo.BackpackAmount 0
-	Inventory.Icon "TNT1A0"
-	
+	Inventory.Icon "M666A0"
 }
 Actor AEoDEnlightenmentStaffItem : CustomInventory
 {
@@ -6808,15 +6807,15 @@ Actor ArcaneStreamer
 		R053 A 0 A_ChangeVelocity(cos(-pitch)*25,0,sin(pitch)*25,CVF_REPLACE|CVF_RELATIVE)
 		TNT1 A 0 A_SetUserVar(user_pitch,pitch)
 	Looping:
-		TNT1 A 0 A_JumpIf(user_mc < 35*2,"L2")
+		TNT1 A 0 A_JumpIf(user_mc < 35,"L2")
 		TNT1 A 0 A_SpawnItemEx("SunArcStrBlast02",0,0,0,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERPOINTERS|SXF_ABSOLUTEVELOCITY)
 		TNT1 AA 0 A_SpawnItemEx("SunArcStrBlast02",0,0,0,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERPOINTERS|SXF_ABSOLUTEVELOCITY,85)
 	L2:
-		TNT1 A 1 A_SpawnItemEx("SunArcStrBlast01",0,0,0,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERPOINTERS|SXF_ABSOLUTEVELOCITY,0,user_count) 
+		TNT1 A 2 A_SpawnItemEx("SunArcStrBlast01",0,0,0,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERPOINTERS|SXF_ABSOLUTEVELOCITY,0,user_count) 
 		TNT1 A 0 A_Warp(AAPTR_MASTER,0,0,0,0,WARPF_NOCHECKPOSITION)		
-		TNT1 A 0 A_JumpIf(user_mc >= 35*2,2)
-		TNT1 A 0 A_SetUserVar(user_mc,user_mc+1)
-		TNT1 A 0 A_SetUserVar(user_count,user_count+2)
+		TNT1 A 0 A_JumpIf(user_mc >= 352,2)
+		TNT1 A 0 A_SetUserVar(user_mc,user_mc+2)
+		TNT1 A 0 A_SetUserVar(user_count,user_count+4)
 		TNT1 A 0 A_JumpIf(user_count < 355,"Looping")
 		TNT1 A 0 A_SetUserVar(user_count,2)
 		Goto Looping
@@ -6839,8 +6838,8 @@ Actor ArcaneStreamBlast
 	+NOEXTREMEDEATH
 	+BRIGHT
 	Speed 25
-	Damage 5
-	DamageType "Fire"
+	Damage 10
+	DamageType "AEMagic"
 	DeathType "Normal"
 	RenderStyle Add
 	Alpha 1
@@ -6888,7 +6887,7 @@ Actor ArcaneStreamBlast
 	S1:		X149 A 0 A_SpawnItemEx("MonExplosionMediumNoSmokeSimple",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION,0,1)		Goto DCont
 	S2:		X149 A 0 A_SpawnItemEx("MonExplosionBigNoSmokeSimple",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION,0,1)		Goto DCont
 	DCont:
-		X149 A 0 A_Explode(random(10,20),128,0)
+		X149 AA 0 A_Explode(random(10,20),128,0)
 		TNT1 A 35 A_PlaySound("MLP/ExplosionMed",CHAN_AUTO,1,0)
 		Stop
 	}
@@ -6981,7 +6980,7 @@ Actor ArcStrOrb
 		"----" A 1 A_SetUserVar(user_d,user_d+3)
 		"----" A 0 A_JumpIf(user_d < (360*4),2)
 		"----" A 0 A_SetUserVar(user_d,user_d-1) //Decrease by 1 so it just gives 2 instead.
-		"----" A 0 A_Warp(AAPTR_MASTER,(sin(-pitch)*(user_d))*(sin(user_s+90)),(sin(user_s)*user_d),(cos(pitch)*user_d)*(cos(user_s)),0,WARPF_NOCHECKPOSITION,"Movement")
+		"----" A 0 A_Warp(AAPTR_MASTER,(sin(-pitch)*(user_d))*(sin(user_s+90)),(sin(user_s)*user_d),(cos(pitch)*user_d)*(cos(user_s)),0,WARPF_NOCHECKPOSITION|WARPF_COPYVELOCITY|WARPF_INTERPOLATE,"Movement")
 		//"----" A 0 A_Warp(AAPTR_MASTER,cos(-pitch*user_s)*user_d,(cos(-pitch*user_s)*user_d),(sin(-pitch*user_s)*user_d),0,WARPF_NOCHECKPOSITION,"Movement")
 	Death:
 		"----" A 0 A_ChangeVelocity(user_x,user_y,user_z,CVF_REPLACE)
