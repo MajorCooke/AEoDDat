@@ -232,7 +232,7 @@ Script "WipeHud" (void)
 }
 
 int recoilactive=1;
-	
+
 script "s848" Enter
 {
 	GiveInventory("PlayerReset",1);
@@ -254,15 +254,16 @@ script "AESetHud" (int x)
 {
 	if(CheckInventory(hudnames[x])) Terminate;	// Save unnecessary switching, props to Major Cooke
 	if(x < 1)					// If X corresponds to relative setting,
-		for(int i=1; i<=HUDS; i++)		// find which HUD is active now and 
+		for(int i=1; i<=HUDS; i++)		// find which HUD is active now and
 			if(CheckInventory(hudnames[i]))	// change X to absolute setting.
 				x = i + (2*x + 1);		// Step back or forward.
 	if(x < 1) 	x = HUDS;			// Cycle to max if negative,
 	if(x > HUDS)x = 1;				// cycle to min if overflow.
-	
+
 	// Set HUD according to absolute setting.
 	for(i=1; i<=HUDS; i++) TakeInventory(hudnames[i],1);	// Clear any previous.
 	GiveInventory(hudnames[x],1); // Give current.
+	SetCvar("user_hud",x);
 }
 
 Script "AEFadeToBlack" (void)
@@ -284,7 +285,7 @@ script "s850" (void)
 		takeinventory("RecoilCheckDummy",1);
 		hudmessage(s:"Recoil activated";HUDMSG_FADEOUT,100,6,0.5,0.0,2.0,0.5);
 	}
-	
+
 }
 
 
@@ -372,87 +373,31 @@ script "s952" enter
 		GiveInventory("InfiniteAmmo",1);
 	else if (GetCVar("sv_infiniteammo") == 0)
 		TakeInventory("InfiniteAmmo",1);
-	
+
 	//Check for tracer option.
 	if ((GetCvar("user_TracerFX") > 0) && (CheckInventory("TracerFXToken") < 1))
 		GiveInventory("TracerFXToken",1);
 	else if (GetCvar("user_TracerFX") == 0)
 		TakeInventory("TracerFXToken",1);
-		
+
 	if ((GetCvar("NeverSwitchOnPickup") > 0) && (CheckInventory("NoWeaponSwitch") < 1))
 		GiveInventory("NoWeaponSwitch",1);
 	else if (GetCvar("user_TracerFX") == 0)
 		TakeInventory("NoWeaponSwitch",1);
-		
+
 	if ((GetCvar("user_ShortGibLives") > 0) && (CheckInventory("ShortGibToken") < 1))
 		GiveInventory("ShortGibToken",1);
 	else if (GetCvar("user_ShortGibLives") == 0)
 		TakeInventory("ShortGibToken",1);
-		
+
+	ACS_NamedExecuteAlways ("AESetHud", 0, GetCvar("user_hud"));
+
 	delay(35);
 	restart;
 }
 
-/*
-#DEFINE ISPEED 20
-#DEFINE FSPEED 20.0
-int flyin = 0;
-
-script 960 (void)
-{
-	int a, olda;
-	int p, oldp, ud, spd, oldspd;
-	int x, y, z;
-	int origa = getactorangle(21000);
-	int origp = getactorPitch(21000);
-	GiveActorInventory(21000, "cammin", 1);
-	thing_changetid(0, 22001);
-	a = origa;
-	p = origp;
-	ChangeCamera(22001, 0, 0);
-	spd = 0;
-	flyin = 1;
-	while(flyin && ThingCount (T_NONE, 22001))
-	{
-		oldspd = ISPEED-spd;
-		p = getactorPitch(21000);
-		ud = 0;
-		if(p > 0) ud = 1;
-		spd = abs(fixedmul(fixedmul(p,4.0),FSPEED)>>16);
-		ThrustThingZ(22001, spd*4, ud, 0);
-		olda = a;
-		a = getactorangle(21000);
-		ThrustThing((olda>>8)+128, oldspd, 1, 22001);
-		ThrustThing(a>>8, ISPEED-spd, 1, 22001);
-		SetActorAngle(22001, a);
-		SetActorPitch(22001, p);
-		delay(1);
-	}
-	while(ThingCount (T_NONE, 22001))
-	{
-		delay(1);
-	}
-	TakeActorInventory(21000, "cammin", 1);
-	setActorAngle(21000, origa);
-	setActorPitch(21000, origP);
-}
 
 
-
-script 961 (void)
-{
-		flyin = 0;
-}
- function int abs (int x)
- {
-	if (x < 0)
-		return -x;
-	return x;
- }
- 
- */
- 
- 
 #DEFINE ISPEED 10
 #DEFINE FSPEED 10.0
 #DEFINE TURNSPEED 0.017
@@ -522,7 +467,7 @@ script "s961" (void)
 {
 	flyin = 0;
 }
-	
+
 function int abs (int x)
 {
     if (x < 0)
@@ -555,7 +500,7 @@ script "s963" (void)
 	GiveActorInventory(22001,"DieToken",1);
 }
 
-// this one cancels the weird FOV effect used in 960 without changing the camera, when the 
+// this one cancels the weird FOV effect used in 960 without changing the camera, when the
 // projectile explodes
 script "s964" (void)
 {
@@ -582,7 +527,7 @@ Script "AEPreviousWeapon" (int mode)
 	case 0:
 		if ((GetWeapon() == "AEoDDemonMorphHand") || (GetWeapon() == "HammerTimeHammer") || !(GetWeapon()))
 			Terminate;
-		truecurweap = GetWeapon();	
+		truecurweap = GetWeapon();
 		curweap = GetCvarString("user_currentWeapon");
 		prevweap = GetCvarString("user_previousWeapon");
 		SetWeapon(prevweap);
@@ -647,7 +592,7 @@ Script "DemonMorphMusic" (int swiitch)
 
 //------------------------------------------------------------------------
 /*
-So, at the end, this are all the scripts used in the mod. 
+So, at the end, this are all the scripts used in the mod.
 This list is not to know what they do, just to know which script
 numbers/names have been used:
 610,614,615,616,617,618	//for the footsteps
@@ -663,4 +608,3 @@ ForceUnmorph
 SoulReaperHealthCheck
 
 //------------------------------------------------------------------------
-
