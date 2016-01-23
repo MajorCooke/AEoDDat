@@ -57,7 +57,6 @@ Script "s901" enter
 {
 	int plr = PlayerNumber();
 	int sp = GetUserCvar(plr,"user_SpellSelection");
-	bool hasspell = GetUserCvar(plr,"user_HasSpell");
 	ACS_NamedExecuteAlways("IdfaTrap", 0);
 	
 	//ACS_NamedExecuteWait("SpawnerSetup",0,0,0,0);	
@@ -66,15 +65,13 @@ Script "s901" enter
 	if (CheckInventory("NotATrueMapToken") == 1) //Needed for the Title Map.
 		Terminate;
 	
-	if (hasspell)
-		ACS_NamedExecute("SpellScript",0,sp,0,0); //starts the spells script
-	
 	ACS_NamedExecute("AESoulCount",0,0,0,0);
 	ACS_NamedExecute("s903",0,0,0,0);		//level checker
+	ACS_NamedExecuteAlways("AESetHud",0,0,1,0); //Huds. Makes sure the number isn't changed and forces it up.
 	int NoWeapons = 0;
 	
 	//This section below checks if at the beginning of the map, player has no weapons in slot 3, 4, 5, etc, 
-	if(CheckInventory("Weapon3Count")==0
+	if((CheckInventory("Weapon3Count")==0
 	   &&CheckInventory("Weapon4Count")==0
 	   &&CheckInventory("Weapon5Count")==0
 	   &&CheckInventory("Weapon6Count")==0
@@ -82,10 +79,17 @@ Script "s901" enter
 	   &&CheckInventory("Weapon8Count")==0
 	   &&CheckInventory("Weapon9Count")==0
 	   &&CheckInventory("Weapon0Count")==0)
+	   || CheckInventory("PFirstTimeTokenACS"))
 	   {
-		NoWeapons=1;		//it sets this var saying player has no viable weapons. If that's the case, it will also give the starting weapons
+			TakeInventory("SpellSelection",10000);
+			TakeInventory("PFirstTimeTokenACS",10000);
+			NoWeapons=1;		//it sets this var saying player has no viable weapons. If that's the case, it will also give the starting weapons
 		//HudMessageBold(s:"You have no weapons";HUDMSG_PLAIN, 0, CR_RED, 0.5, 0.9, 5.0); //debugging
 	   }
+	   
+	if (CheckInventory("SpellSelection"))
+		ACS_NamedExecute("SpellScript",0,sp,0,0); //starts the spells script
+		
 	   /*else		// debugging
 		HudMessageBold(s:"You have weapons";HUDMSG_PLAIN, 0, CR_RED, 0.5, 0.9, 5.0);*/
 		
@@ -508,7 +512,7 @@ str CVarsToGames[number_of_games_and_cvars][3] = {
 		// 		1 -- activate magic theme
 		//		2 -- activate tech theme
 		//		3 -- non-theme mixed game monsters
-		//		4 -- Unused.
+		//		4 -- Activate all three.
 		//		5 -- same as above AND give JokeToken AND activate joke theme
 		{"user_Doom",		"Doom",			"0"},
 		{"user_Dm64",		"Dm64",			"3"},
@@ -537,99 +541,98 @@ str CVarsToGames[number_of_games_and_cvars][3] = {
 
 Script "SpawnerSetup" enter
 {
-	if (!(ScriptSetup))
+	if (ScriptSetup)	Terminate;
+	
+	MonIntensity = GetCvar("user_MonIntensity");
+	L4DIntensity = GetCvar("user_L4DIntensity");
+	MiniThemeEnabled = false;
+	// modes
+	AEoDGameMode = 0;		MonsterMayhem = false;
+	// directors
+	L4DDir = false;			NorDir = false;
+	// themes
+	NormalTheme = false;	TechTheme = false;
+	MagicTheme = false;		JokeTheme = false;
+	// counters
+	ActiveCount = 0;		ThemeMix = 0;
+	MiniCount = 0;
+	
+	if (GetCvar("user_MonsterMayhem"))
+		MonsterMayhem = true;
+	if (GetCvar("user_AEoDGameMode") == 1) //Left 4 Dead Mode
 	{
-		MonIntensity = GetCvar("user_MonIntensity");
-		L4DIntensity = GetCvar("user_L4DIntensity");
-		MiniThemeEnabled = false;
-		// modes
-		AEoDGameMode = 0;		MonsterMayhem = false;
-		// directors
-		L4DDir = false;			NorDir = false;
-		// themes
-		NormalTheme = false;	TechTheme = false;
-		MagicTheme = false;		JokeTheme = false;
-		// counters
-		ActiveCount = 0;		ThemeMix = 0;
-		MiniCount = 0;
-		
-		if (GetCvar("user_MonsterMayhem"))
-			MonsterMayhem = true;
-		if (GetCvar("user_AEoDGameMode") == 1) //Left 4 Dead Mode
-		{
-			if (GetCvar("user_JokeMode"))
-			{
-				GiveInventory("JokeToken",1);
-				JokeTheme = true;
-			}
-			AEoDGameMode = 1;
-			L4DDir = true;
-			NormalTheme = true;
-			TechTheme = true;
-			MagicTheme = true;
-			NorDir = false; //This must be disabled.
-			ScriptSetup = true;
-			Terminate; //Really, no point in bothering with the rest.
-		}
-		/*
-		if (GetCvar("user_AEoDGameMode") == 2) //Skirmish Mode
+		if (GetCvar("user_JokeMode"))
 		{
 			GiveInventory("JokeToken",1);
-			GiveInventory("SkirmishToken",1);
-			AEoDGameMode = 2;
+			JokeTheme = true;
 		}
-		*/
-		if (GetCvar("user_NorDir"))
-			NorDir = true;
-		if (GetCvar("user_L4DDir"))
-			L4DDir = true;
+		AEoDGameMode = 1;
+		L4DDir = true;
+		NormalTheme = true;
+		TechTheme = true;
+		MagicTheme = true;
+		NorDir = false; //This must be disabled.
+		ScriptSetup = true;
+		Terminate; //Really, no point in bothering with the rest.
+	}
+	/*
+	if (GetCvar("user_AEoDGameMode") == 2) //Skirmish Mode
+	{
+		GiveInventory("JokeToken",1);
+		GiveInventory("SkirmishToken",1);
+		AEoDGameMode = 2;
+	}
+	*/
+	if (GetCvar("user_NorDir"))
+		NorDir = true;
+	if (GetCvar("user_L4DDir"))
+		L4DDir = true;
 
-		
-		for(int i=0; i<number_of_games_and_cvars; i++)
-		{
-			if (GetCvar(CVarsToGames[i][0]))
-			{				
-				// Select Case
-				if(!(StrIcmp(CVarsToGames[i][2],"0")))
-				{
-					GameModeCh[ActiveCount] = CVarsToGames[i][1];
-					ActiveCount++;
-					ThemeMix++;
-					NormalTheme = true;
-				}
-				else if(!(StrIcmp(CVarsToGames[i][2],"1")))	
-				{
-					GameModeCh[ActiveCount] = CVarsToGames[i][1];
-					ActiveCount++;
-					ThemeMix++;
-					MagicTheme = true;
-				}
-				else if(!(StrIcmp(CVarsToGames[i][2],"2")))	
-				{
-					GameModeCh[ActiveCount] = CVarsToGames[i][1];
-					ActiveCount++;
-					ThemeMix++;
-					TechTheme = true;
-				}
-				else if(!(StrIcmp(CVarsToGames[i][2],"3")))	
-				{
-					MiniMode[MiniCount] = CVarsToGames[i][1];
-					MiniThemeEnabled = true;
-					MiniCount++;
-				}
-				//else if(!(StrCmp(CVarsToGames[i][2],"4")))	ThemeMix--;
-				else if(!(StrIcmp(CVarsToGames[i][2],"5")))
-				{	
-					JokeTheme = true;	
-					GiveInventory("JokeToken",1);
-					MiniMode[MiniCount] = CVarsToGames[i][1];
-					MiniThemeEnabled = true;
-					MiniCount++;
-				}
+	
+	for(int i=0; i<number_of_games_and_cvars; i++)
+	{
+		if (GetCvar(CVarsToGames[i][0]))
+		{				
+			// Select Case
+			if(!(StrIcmp(CVarsToGames[i][2],"0")))
+			{
+				GameModeCh[ActiveCount] = CVarsToGames[i][1];
+				ActiveCount++;
+				ThemeMix++;
+				NormalTheme = true;
+			}
+			else if(!(StrIcmp(CVarsToGames[i][2],"1")))	
+			{
+				GameModeCh[ActiveCount] = CVarsToGames[i][1];
+				ActiveCount++;
+				ThemeMix++;
+				MagicTheme = true;
+			}
+			else if(!(StrIcmp(CVarsToGames[i][2],"2")))	
+			{
+				GameModeCh[ActiveCount] = CVarsToGames[i][1];
+				ActiveCount++;
+				ThemeMix++;
+				TechTheme = true;
+			}
+			else if(!(StrIcmp(CVarsToGames[i][2],"3")))	
+			{
+				MiniMode[MiniCount] = CVarsToGames[i][1];
+				MiniThemeEnabled = true;
+				MiniCount++;
+			}
+			//else if(!(StrCmp(CVarsToGames[i][2],"4")))	ThemeMix--;
+			else if(!(StrIcmp(CVarsToGames[i][2],"5")))
+			{	
+				JokeTheme = true;	
+				GiveInventory("JokeToken",1);
+				MiniMode[MiniCount] = CVarsToGames[i][1];
+				MiniThemeEnabled = true;
+				MiniCount++;
 			}
 		}
-		ScriptSetup = true;
 	}
+	ScriptSetup = true;
 }
 
 #define timeout_max 50

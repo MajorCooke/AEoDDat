@@ -239,31 +239,9 @@ script "s848" Enter
 	TakeInventory("Portal1Token",100);
 	TakeInventory("Portal2Token",100);
 	TakeInventory("ThunderRingCount",100);
-	Thing_ChangeTID(0,21000+PlayerNumber());		//this is used by the Joke mode weapon
+	//Thing_ChangeTID(0,21000+PlayerNumber());		//this is used by the Joke mode weapon
 	FadeTo(0,0,0,1.0,0  );
 	FadeTo(0,0,0,0  ,0.3);
-}
-
-#define HUDS 6
-str hudnames[HUDS+1] = {"Nothing",	// Why the hell did I decide to index this array from 1? I must be fucking nuts.
-						"HUDArcanumToken",	"HUDCrawlToken",	"HUDCultToken",
-						"HUDEDFToken",		"HUDCabalToken",	"HUDUACToken"	};
-
-//	Toggle HUDs. Use 0 to switch forward, -1 to switch backward, 1 to HUDS to set
-script "AESetHud" (int x)
-{
-	if(CheckInventory(hudnames[x])) Terminate;	// Save unnecessary switching, props to Major Cooke
-	if(x < 1)					// If X corresponds to relative setting,
-		for(int i=1; i<=HUDS; i++)		// find which HUD is active now and
-			if(CheckInventory(hudnames[i]))	// change X to absolute setting.
-				x = i + (2*x + 1);		// Step back or forward.
-	if(x < 1) 	x = HUDS;			// Cycle to max if negative,
-	if(x > HUDS)x = 1;				// cycle to min if overflow.
-
-	// Set HUD according to absolute setting.
-	for(i=1; i<=HUDS; i++) TakeInventory(hudnames[i],1);	// Clear any previous.
-	GiveInventory(hudnames[x],1); // Give current.
-	SetCvar("user_hud",x);
 }
 
 Script "AEFadeToBlack" (void)
@@ -390,13 +368,54 @@ script "s952" enter
 	else if (GetCvar("user_ShortGibLives") == 0)
 		TakeInventory("ShortGibToken",1);
 
-	ACS_NamedExecuteAlways ("AESetHud", 0, GetCvar("user_hud"));
+	//There should be no reason to do this. If anything, call a function instead.
+	//That way it doesnt spam the console when developer CVAR is on.
+	//ACS_NamedExecuteAlways ("AESetHud", 0, GetCvar("user_hud"));
 
 	delay(35);
 	restart;
 }
 
+#define HUDS 6
+// Why the hell did I decide to index this array from 1? I must be fucking nuts.
+// [MC] I actually find it kinda genious. No need to modivide. :P
+str hudnames[HUDS+1] = {"Nothing",	
+						"HUDArcanumToken",	"HUDCrawlToken",	"HUDCultToken",
+						"HUDEDFToken",		"HUDCabalToken",	"HUDUACToken"	};
 
+//	Toggle HUDs. Use 0 to switch forward, -1 to switch backward, 1 to HUDS to set
+script "AESetHud" (int x, int override) net
+{
+	int plr = PlayerNumber();
+	int hud = GetUserCvar(plr,"user_hud");
+	if (!override)
+	{
+		if(hud == x) Terminate; 	// Save unnecessary switching, props to Major Cooke
+		if(x < 1)					// If X corresponds to relative setting,
+			for(int i=1; i<=HUDS; i++)		// find which HUD is active now and
+				if(CheckInventory(hudnames[i]))	// change X to absolute setting.
+					x = i + (2*x + 1);		// Step back or forward.
+		if(x < 1) 	x = HUDS;			// Cycle to max if negative,
+		if(x > HUDS)x = 1;				// cycle to min if overflow.
+	}
+	else if (x < 1 || x > HUDS)	x = hud;
+	
+	//Terminate if there is no valid HUD to select.
+	if (override && (x < 1 || x > HUDS))
+	{
+		log(s:"No HUD changes made.\n");
+		Terminate;
+	}
+	// Set HUD according to absolute setting.
+	// [MC] Make sure if we're not setting precision, to maximize taking.
+	// Othewise, players with sv_unlimited_pickup... yeah. Just make sure its clear.
+	for(i=1; i<=HUDS; i++) TakeInventory(hudnames[i],10000);	// Clear any previous.
+	GiveInventory(hudnames[x],1); // Give current.
+	
+	//Don't use SetCvar. Use SetUserCvar. Otherwise, user_hud is never recorded 
+	//for each individual player.
+	SetUserCvar(plr,"user_hud",x);
+}
 
 #DEFINE ISPEED 10
 #DEFINE FSPEED 10.0

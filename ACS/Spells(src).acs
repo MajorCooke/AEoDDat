@@ -24,6 +24,7 @@ Script "SpellScript" (int swiitch, int fire, int cycle) net
 {
 	bool debugStatement = false; //Just prints where shit goes wrong.
 	int plr = PlayerNumber();
+	int spellcount = CheckInventory("SpellSelection");
 	
 	//Activating a spell
 	if (fire)
@@ -41,6 +42,8 @@ Script "SpellScript" (int swiitch, int fire, int cycle) net
 		
 		if (fire > 7 || fire < 1) 
 			ff = GetUserCvar(plr,"user_SpellSelection");
+		if (ff > 7 || ff < 1)
+			ff = spellcount;
 			
 		if (debugStatement)
 			log(i:fire, s: " ", i: ff, s:"\n");
@@ -80,7 +83,7 @@ Script "SpellScript" (int swiitch, int fire, int cycle) net
 
 	while (t < 8)
 	{
-	//Make sure we have a valid spell collected.
+	//Make sure we have spells collected first.
 		if (CheckInventory(spellcall[t][3]))
 		{
 			//SetUserCvar(plr,spellcall[t][5],true);
@@ -105,15 +108,17 @@ Script "SpellScript" (int swiitch, int fire, int cycle) net
 	{
 		if (debugStatement)
 			log(s:"No spells found or no cycles/switches performed.\n");
+		SetUserCvar(plr,"user_HasSpell",0);
 		Terminate;
 	}
 	
 	
 	int permNum = GetUserCvar(plr,"user_SpellSelection");
+	if (!permNum)	permNum = spellcount;
 	int restoreNum = permNum;
 	bool hasspell = GetUserCvar(plr,"user_HasSpell");
-	//If we're set to switch or we don't have a permNum selected,
-	if (swiitch > 0 || !permNum)
+	//If we're set to switch or we don't have a spell selected, or have no spells,
+	if (swiitch > 0 || !permNum || !hasspell)
 	{
 		//If no spell found originally or
 		//if swiitch wants to change and our player wants it to change on pickup of
@@ -126,6 +131,13 @@ Script "SpellScript" (int swiitch, int fire, int cycle) net
 			{
 				permNum = swiitch;
 				SetUserCvar(plr,"user_SpellSelection",permNum);
+				TakeInventory("SpellSelection",10000);
+				GiveInventory("SpellSelection",permNum);
+			}
+			if (!hasspell)
+			{
+				SetUserCvar(plr,"user_HasSpell",1);
+				hasspell = true;
 			}
 		}
 	}
@@ -137,34 +149,39 @@ Script "SpellScript" (int swiitch, int fire, int cycle) net
 		Terminate; //Something done fucked up.
 	}
 	
-	if (cycle > 0 && cycle < 3)
+	
+	if (cycle == -1 || cycle == 1)
 	{
-		if (cycle == 2)
+		t = GetUserCvar(plr,"user_SpellSelection");
+		if (!t)	t = spellcount;
+		int prev = t;
+		if (cycle == 1)
 		{	//Move up
-			t = GetUserCvar(plr,"user_SpellSelection"); t++;
-			while(spellpresent[t] == 0)
-			{
-				if (t > 7)	t = 1;
-				else		t++;
-			}
+			t++;
+			while(spellpresent[t] == 0 && prev != t)
+			{	t++;	if (t > 7)	t = 1;	}
 			
-			permNum = t;
-			if (debugStatement)
-				log(i:permNum, s:"\n");
 		}
 		else
 		{	//Move down
-			t = GetUserCvar(plr,"user_SpellSelection"); t--;
-			while(spellpresent[t] == 0)
+			t--;
+			while(spellpresent[t] == 0 && prev != t)
+			{	t--;	if (t < 1)	t = 7;	}
+		}
+		
+		permNum = t;
+		if (debugStatement)
+		{
+			log(i:permNum, s:"\n");
+			if (prev == t)
 			{
-				if (t < 1)	t = 7;
-				else		t--;
+				log(s:"Either only one spell, or something went wrong.\n");
+				Terminate;
 			}
-			permNum = t;
-			if (debugStatement)
-				log(i:permNum, s:"\n");
 		}
 		SetUserCvar(plr,"user_SpellSelection",permNum);
+		TakeInventory("SpellSelection",10000);
+		GiveInventory("SpellSelection",permNum);
 	}
 		
 	SetHudSize(800,600,1);

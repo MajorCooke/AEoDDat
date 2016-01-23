@@ -31,12 +31,13 @@ OptionMenu "OptionsMenu"
 OptionMenu "AEoDConfigMenu"
 {
 	Title "AEons of Death Configuration"
-	Submenu "Weapon Slot Customization",	"AEWeaponConfig"
-	Submenu "Game Modes",					"AEGameModeConfig"
-	Submenu "Theme Selection",				"AEThemeConfig"
-	Submenu "Extra Monsters",				"AEExtraConfig"
 	Submenu "Directors",					"AEDirectorConfig"
+	Submenu "Extra Monsters",				"AEExtraConfig"
+	Submenu "Game Modes",					"AEGameModeConfig"
+	SubMenu "HUD Selection",				"AEHudConfig"
 	Submenu "Mod Specific Controls",		"AEControls"
+	Submenu "Theme Selection",				"AEThemeConfig"
+	Submenu "Weapon Slot Customization",	"AEWeaponConfig"
 	StaticText " "
 	Option "Tracer Effects",				"user_TracerFX",	"OnOff"
 	Option "Demon Morph Music",				"user_AllowDemonMorphMusic", "OnOff"
@@ -44,26 +45,42 @@ OptionMenu "AEoDConfigMenu"
 	Option "Spells Switch On Pickup",		"user_SpellSwitchOnPickup", "OnOff"
 }
 
+OptionValue "AEoDHud"
+{
+	1, "Arcanum"
+	2, "Crawl"
+	3, "Cult"
+	4, "EDF"
+	5, "Cabal"
+	6, "UAC"
+}
+
+OptionMenu "AEHudConfig"
+{
+	Title "Choose HUD Style"
+	StaticText      "Primary HUD", 1
+	Option 			"HUD Preference:",				"user_hud", "AEoDHud"
+	Command			"Apply HUD",					"pukename AESetHud 0 1 always; openmenu AEControls"
+	StaticText		""
+	StaticText		"HUD Shortcuts", 1
+	Control         "Set HUD: Arcanum (Hexen)",    	"pukename AESetHud 1 always"
+	Control         "Set HUD: Crawl",               "pukename AESetHud 2 always"
+	Control         "Set HUD: Cult (Heretic)",		"pukename AESetHud 3 always"
+	Control         "Set HUD: EDF (Strife)",		"pukename AESetHud 4 always"
+	Control         "Set HUD: Cabal (Blood)",		"pukename AESetHud 5 always"
+	Control         "Set HUD: UAC (Quake 3)",		"pukename AESetHud 6 always"
+}
+
 OptionMenu "AEControls"
 {
 	Title			"AEoD Controls"
 	StaticText 		"See Weapon Slot Customization", 0
-	StaticText 		"for weapon specific keys", 0
+	StaticText 		"& HUD Config for specific keys", 0
 	StaticText 		" "
-	StaticText      "Primary HUD", 1
-	Control         "Next HUD",						"pukename AESetHud 0"
-	Control         "Previous HUD",                	"pukename AESetHud -1"
-	Control         "Set HUD: Arcanum (Hexen)",    	"pukename AESetHud 1"
-	Control         "Set HUD: Crawl",               "pukename AESetHud 2"
-	Control         "Set HUD: Cult (Heretic)",		"pukename AESetHud 3"
-	Control         "Set HUD: EDF (Strife)",		"pukename AESetHud 4"
-	Control         "Set HUD: Cabal (Blood)",		"pukename AESetHud 5"
-	Control         "Set HUD: UAC (Quake 3)",		"pukename AESetHud 6"
-	StaticText      ""
-	StaticText      "Spells", 1
+	StaticText      "Spells", 1						//swiitch, fire, cycle. Swiitch must always be 0 here!
 	Control         "Use selected spell",			"pukename SpellScript always 0 8"
-	Control         "Next spell",                   "pukename SpellScript always 0 0 2"
-	Control         "Previous spell",               "pukename SpellScript always 0 0 1"
+	Control         "Next spell",                   "pukename SpellScript always 0 0 1" //was 2
+	Control         "Previous spell",               "pukename SpellScript always 0 0 -1"//was 1
 	Control			"Quick Chaos Spell",			"pukename SpellScript always 0 1"
 	Control			"Quick Charm Spell",			"pukename SpellScript always 0 2"
 	Control			"Quick Defile Spell",			"pukename SpellScript always 0 3"
@@ -213,7 +230,7 @@ OptionMenu "AEWeaponConfig"
 	Submenu "Customize Slot 10",			"AEWeaponLineup10" 
 	StaticText 		" "
 	StaticText 		"AEoD Weapon Keybinds", 1
-	Control         "AEOD Drop Weapon",             "pukename s800"
+	Control         "AEoD Drop Weapon",             "pukename s800"
 	Control         "Toggle Weapon Limits", 		"pukename WeaponSlotToggle"
 	Control			"Toggle Custom Switching[!]",		"UseLineupDefault"
 	StaticText " "
@@ -521,26 +538,25 @@ OptionMenu "AEWeaponLineup4"
 	Title "Customize Slot 4"
 	StaticText "Lowest numbers selected first", 0
 	StaticText "No two weapons can use the same number!", 1
-	NumberField "Serpent Staff",				"user_AEoDSerpentStaff",	1,	20,	1
-	NumberField "Riot Gun",						"user_AEoDRiotgun",			1,	20,	1
-	NumberField "Disruptor",					"user_AEoDDisruptor",		1,	20,	1
-	NumberField "Demon Orb",					"user_AEoDDemonOrb",		1,	20,	1
-	NumberField "Carbine",						"user_AEoDCarbine",			1,	20,	1
-	NumberField "Combat Shotgun",				"user_AEoDCombatShotgun",	1,	20,	1
-	NumberField "Crystal Gun",					"user_AEoDCrystalGun",		1,	20,	1
-	NumberField "Voodoo Doll",					"user_AEoDVoodooDoll",		1,	20,	1
-	NumberField "Blood Shotgun",				"user_AEoDBloodShotgun",	1,	20,	1
-	NumberField "Bio Rifle",					"user_AEoDBioRifle",		1,	20,	1
-	NumberField "C-14 \"Impaler\" Gauss Rifle",	"user_AEoDC14",				1,	20,	1
-	NumberField "Dragon Claw",					"user_AEoDDragonClaw",		1,	20,	1
-	NumberField "Bolt Gun",						"user_AEoDBoltGun",			1,	20,	1
-	NumberField "Shock Rifle",					"user_AEoDShockRifle",		1,	20,	1
-	NumberField "Freezer Shotgun",				"user_AEoDPKShotgun",		1,	20,	1
-	NumberField "C.M. Rifle",					"user_AEoDCMRifle",			1,	20,	1
-	NumberField "Gas Launcher",					"user_AEoDGasLauncher",		1,	20,	1
-	NumberField "Bison",						"user_AEoDBison",			1,	20,	1
-	NumberField "Head Hunter",					"user_AEoDHeadHunter",		1,	20,	1
-	NumberField "AWP",							"user_AEoDAWP",				1,	20,	1
+	NumberField "Serpent Staff",	"user_AEoDSerpentStaff",	1,	19,	1
+	NumberField "Riot Gun",			"user_AEoDRiotgun",			1,	19,	1
+	NumberField "Disruptor",		"user_AEoDDisruptor",		1,	19,	1
+	NumberField "Demon Orb",		"user_AEoDDemonOrb",		1,	19,	1
+	NumberField "Carbine",			"user_AEoDCarbine",			1,	19,	1
+	NumberField "Combat Shotgun",	"user_AEoDCombatShotgun",	1,	19,	1
+	NumberField "Crystal Gun",		"user_AEoDCrystalGun",		1,	19,	1
+	NumberField "Voodoo Doll",		"user_AEoDVoodooDoll",		1,	19,	1
+	NumberField "Blood Shotgun",	"user_AEoDBloodShotgun",	1,	19,	1
+	NumberField "Bio Rifle",		"user_AEoDBioRifle",		1,	19,	1
+	NumberField "Dragon Claw",		"user_AEoDDragonClaw",		1,	19,	1
+	NumberField "Bolt Gun",			"user_AEoDBoltGun",			1,	19,	1
+	NumberField "Shock Rifle",		"user_AEoDShockRifle",		1,	19,	1
+	NumberField "Freezer Shotgun",	"user_AEoDPKShotgun",		1,	19,	1
+	NumberField "C.M. Rifle",		"user_AEoDCMRifle",			1,	19,	1
+	NumberField "Gas Launcher",		"user_AEoDGasLauncher",		1,	19,	1
+	NumberField "Bison",			"user_AEoDBison",			1,	19,	1
+	NumberField "Head Hunter",		"user_AEoDHeadHunter",		1,	19,	1
+	NumberField "AWP",				"user_AEoDAWP",				1,	19,	1
 }
 
 OptionMenu "AEWeaponLineup5"
