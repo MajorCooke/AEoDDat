@@ -55,6 +55,55 @@ Actor SpellSelection	: Inventory { Inventory.MaxAmount 7		Inventory.InterHubAmou
 Actor Counter : inventory		//general purpose counter
 {	Inventory.MaxAmount 255 }
 
+Actor HudSwapper : CustomInventory
+{
+	+INVENTORY.ALWAYSPICKUP
+	States
+	{
+	Pickup:
+		TNT1 A 0 A_TakeInventory("WepHud01",1000,0)
+		TNT1 A 0 A_TakeInventory("WepHud02",1000,0)
+		TNT1 A 0 A_TakeInventory("WepHud03",1000,0)
+		TNT1 A 0 A_TakeInventory("WepHud04",1000,0)
+		TNT1 A 0 A_TakeInventory("WepHud05",1000,0)
+		TNT1 A 0 A_TakeInventory("WepHud06",1000,0)
+		TNT1 A 0 A_TakeInventory("WepHud07",1000,0)
+		TNT1 A 0 A_TakeInventory("WepHud08",1000,0)
+		TNT1 A 0 A_TakeInventory("WepHud09",1000,0)
+		TNT1 A 0 A_TakeInventory("WepHud10",1000,0)
+		TNT1 A 0 A_JumpIfInventory("WeaponModeToken",10,"S10")
+		TNT1 A 0 A_JumpIfInventory("WeaponModeToken",9,"S9")
+		TNT1 A 0 A_JumpIfInventory("WeaponModeToken",8,"S8")
+		TNT1 A 0 A_JumpIfInventory("WeaponModeToken",7,"S7")
+		TNT1 A 0 A_JumpIfInventory("WeaponModeToken",6,"S6")
+		TNT1 A 0 A_JumpIfInventory("WeaponModeToken",5,"S5")
+		TNT1 A 0 A_JumpIfInventory("WeaponModeToken",4,"S4")
+		TNT1 A 0 A_JumpIfInventory("WeaponModeToken",3,"S3")
+		TNT1 A 0 A_JumpIfInventory("WeaponModeToken",2,"S2")
+		TNT1 A 0 A_GiveInventory("WepHud01",1)	Stop
+	S2:	TNT1 A 0 A_GiveInventory("WepHud02",1)	Stop
+	S3:	TNT1 A 0 A_GiveInventory("WepHud03",1)	Stop
+	S4:	TNT1 A 0 A_GiveInventory("WepHud04",1)	Stop
+	S5:	TNT1 A 0 A_GiveInventory("WepHud05",1)	Stop
+	S6:	TNT1 A 0 A_GiveInventory("WepHud06",1)	Stop
+	S7:	TNT1 A 0 A_GiveInventory("WepHud07",1)	Stop
+	S8:	TNT1 A 0 A_GiveInventory("WepHud08",1)	Stop
+	S9:	TNT1 A 0 A_GiveInventory("WepHud09",1)	Stop
+	S10:	TNT1 A 0 A_GiveInventory("WepHud10",1)	Stop
+	}
+}
+
+Actor WepHud01 : Inventory	{ }
+Actor WepHud02 : Inventory	{ }
+Actor WepHud03 : Inventory	{ }
+Actor WepHud04 : Inventory	{ }
+Actor WepHud05 : Inventory	{ }
+Actor WepHud06 : Inventory	{ }
+Actor WepHud07 : Inventory	{ }
+Actor WepHud08 : Inventory	{ }
+Actor WepHud09 : Inventory	{ }
+Actor WepHud10 : Inventory	{ }
+
 //***************************************************************
 //	FX
 //***************************************************************
@@ -2436,7 +2485,15 @@ Actor GunSmallSmokeSpawner
 
 Actor GunSmallSmoke
 {
-	PROJECTILE
+	const int SizeMin = 10;
+	const int SizeMax = 15;
+	const float AlphaMin = 0.2;
+	const float AlphaMax = 0.8;
+	const float FadeOut = 0.03;
+	const float ZVelMin = 1.0;
+	const float ZVelMax = 3.0;
+	+NOINTERACTION
+	/*PROJECTILE
 	+NOGRAVITY
 	+FLOORCLIP
 	+NOBLOCKMAP
@@ -2445,22 +2502,29 @@ Actor GunSmallSmoke
 	Height 1
 	Alpha 0.33
 	Scale 0.16
-	Mass 0
-	RenderStyle Add
+	Mass 0 */
+	RenderStyle None //Add
 	States
 	{
 	Spawn:
-//	   TNT1 AA 0 ThrustThingZ(0,1,0,1)
-	   TNT1 A 0 NoDelay A_SetScale(ScaleX*randompick(-1,1),ScaleY*randompick(-1,1))
-	   TNT1 A 0 A_Jump(210,4,6,8,10,12)
-	   WPXS ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_FadeOut(0.01)
- 	   WPXZ ABC 1 A_FadeOut(0.01)
-	   Stop
+		TNT1 A 0 NoDelay A_Jump(256,"S1","S2","S3","S4","S5","S6")
+	S1:	TNT1 A 0 A_SpawnParticle(AAAAAA,0,35,random(SizeMin,SizeMax),0,frandom(-1.0,1.0),frandom(-1.0,1.0),frandom(0,2),0,0,frandom(ZVelMin,ZVelMax),0,0,-0.01,frandom(AlphaMin,AlphaMax),FadeOut)		Stop
+	S2:	TNT1 A 0 A_SpawnParticle(BBBBBB,0,35,random(SizeMin,SizeMax),0,frandom(-1.0,1.0),frandom(-1.0,1.0),frandom(0,2),0,0,frandom(ZVelMin,ZVelMax),0,0,-0.01,frandom(AlphaMin,AlphaMax),FadeOut)		Stop
+	S3:	TNT1 A 0 A_SpawnParticle(CCCCCC,0,35,random(SizeMin,SizeMax),0,frandom(-1.0,1.0),frandom(-1.0,1.0),frandom(0,2),0,0,frandom(ZVelMin,ZVelMax),0,0,-0.01,frandom(AlphaMin,AlphaMax),FadeOut)		Stop
+	S4:	TNT1 A 0 A_SpawnParticle(DDDDDD,0,35,random(SizeMin,SizeMax),0,frandom(-1.0,1.0),frandom(-1.0,1.0),frandom(0,2),0,0,frandom(ZVelMin,ZVelMax),0,0,-0.01,frandom(AlphaMin,AlphaMax),FadeOut)		Stop
+	S5:	TNT1 A 0 A_SpawnParticle(EEEEEE,0,35,random(SizeMin,SizeMax),0,frandom(-1.0,1.0),frandom(-1.0,1.0),frandom(0,2),0,0,frandom(ZVelMin,ZVelMax),0,0,-0.01,frandom(AlphaMin,AlphaMax),FadeOut)		Stop
+	S6:	TNT1 A 0 A_SpawnParticle(FFFFFF,0,35,random(SizeMin,SizeMax),0,frandom(-1.0,1.0),frandom(-1.0,1.0),frandom(0,2),0,0,frandom(ZVelMin,ZVelMax),0,0,-0.01,frandom(AlphaMin,AlphaMax),FadeOut)		Stop
+//		TNT1 AA 0 ThrustThingZ(0,1,0,1)
+		/*TNT1 A 0 NoDelay A_SetScale(ScaleX*randompick(-1,1),ScaleY*randompick(-1,1))
+		TNT1 A 0 A_Jump(210,4,6,8,10,12)
+		WPXS ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_FadeOut(0.01)
+		WPXZ ABC 1 A_FadeOut(0.01) */
+		Stop
 	}
 }
-Actor GunSmallSmoke2
+Actor GunSmallSmoke2 : GunSmallSmoke
 {
-	+NOGRAVITY
+	/*+NOGRAVITY
 	+NOBLOCKMAP
 	+FLOORCLIP
 	+FORCEXYBILLBOARD
@@ -2473,8 +2537,8 @@ Actor GunSmallSmoke2
 	{
 	Spawn:
 		SMOK ABCDEFGHIJKLMNOPQ 1 A_FadeOut(0.01)
-		Stop
-	}
+		Stop 
+	}*/
 }
 
 
@@ -2498,7 +2562,15 @@ Actor GunSmokeSpawner
 
 Actor GunSmoke
 {
-	PROJECTILE
+	const int SizeMin = 10;
+	const int SizeMax = 20;
+	const float AlphaMin = 0.2;
+	const float AlphaMax = 0.8;
+	const float FadeOut = 0.03;
+	const float ZVelMin = 1.0;
+	const float ZVelMax = 3.0;
+	+NOINTERACTION
+/*	PROJECTILE
 	+NOGRAVITY
 	+FLOORCLIP
 	+NOINTERACTION
@@ -2508,20 +2580,27 @@ Actor GunSmoke
 	Alpha 0.33
 	Scale 0.25
 	Mass 0
-	RenderStyle Add
+	RenderStyle Add */
 	States
 	{
 	Spawn:
-//	   TNT1 AA 0 ThrustThingZ(0,1,0,1)
-	   TNT1 A 0 NoDelay A_SetScale(ScaleX*randompick(-1,1),ScaleY*randompick(-1,1))
-	   TNT1 A 0 A_Jump(210,6,8,10,12,14)
-	   WPXS ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_FadeOut(0.01)
- 	   WPXZ ABC 1 A_FadeOut(0.01)
-	   Stop
+		TNT1 A 0 NoDelay A_Jump(256,"S1","S2","S3","S4","S5","S6")
+	S1:	TNT1 A 0 A_SpawnParticle(AAAAAA,0,35,random(SizeMin,SizeMax),0,frandom(-1.0,1.0),frandom(-1.0,1.0),frandom(0,2),0,0,frandom(ZVelMin,ZVelMax),0,0,-0.01,frandom(AlphaMin,AlphaMax),FadeOut)		Stop
+	S2:	TNT1 A 0 A_SpawnParticle(BBBBBB,0,35,random(SizeMin,SizeMax),0,frandom(-1.0,1.0),frandom(-1.0,1.0),frandom(0,2),0,0,frandom(ZVelMin,ZVelMax),0,0,-0.01,frandom(AlphaMin,AlphaMax),FadeOut)		Stop
+	S3:	TNT1 A 0 A_SpawnParticle(CCCCCC,0,35,random(SizeMin,SizeMax),0,frandom(-1.0,1.0),frandom(-1.0,1.0),frandom(0,2),0,0,frandom(ZVelMin,ZVelMax),0,0,-0.01,frandom(AlphaMin,AlphaMax),FadeOut)		Stop
+	S4:	TNT1 A 0 A_SpawnParticle(DDDDDD,0,35,random(SizeMin,SizeMax),0,frandom(-1.0,1.0),frandom(-1.0,1.0),frandom(0,2),0,0,frandom(ZVelMin,ZVelMax),0,0,-0.01,frandom(AlphaMin,AlphaMax),FadeOut)		Stop
+	S5:	TNT1 A 0 A_SpawnParticle(EEEEEE,0,35,random(SizeMin,SizeMax),0,frandom(-1.0,1.0),frandom(-1.0,1.0),frandom(0,2),0,0,frandom(ZVelMin,ZVelMax),0,0,-0.01,frandom(AlphaMin,AlphaMax),FadeOut)		Stop
+	S6:	TNT1 A 0 A_SpawnParticle(FFFFFF,0,35,random(SizeMin,SizeMax),0,frandom(-1.0,1.0),frandom(-1.0,1.0),frandom(0,2),0,0,frandom(ZVelMin,ZVelMax),0,0,-0.01,frandom(AlphaMin,AlphaMax),FadeOut)		Stop
+//	TNT1 AA 0 ThrustThingZ(0,1,0,1)
+	   /*TNT1 A 0 NoDelay A_SetScale(ScaleX*randompick(-1,1),ScaleY*randompick(-1,1))
+	TNT1 A 0 A_Jump(210,6,8,10,12,14)
+	WPXS ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_FadeOut(0.01)
+	WPXZ ABC 1 A_FadeOut(0.01)
+		Wait*/
 	}
 }
-Actor GunSmoke2
-{
+Actor GunSmoke2 : GunSmoke
+{ /*
 	+NOGRAVITY
 	+NOINTERACTION
 	+FLOORCLIP
@@ -2536,7 +2615,7 @@ Actor GunSmoke2
 	Spawn:
 		SMOK ABCDEFGHIJKLMNOPQ 1 A_FadeOut(0.01)
 		Stop
-	}
+	} */
 }
 
 //==========================================================

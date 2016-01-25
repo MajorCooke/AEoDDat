@@ -67,20 +67,35 @@ Actor BulletTrail
 
 Actor CasingSmoke
 {
+	const int SizeMin = 4;
+	const int SizeMax = 8;
+	const float AlphaMin = 0.2;
+	const float AlphaMax = 0.8;
+	const float FadeOut = 0.03;
+	const float ZVelMin = 1.0;
+	const float ZVelMax = 3.0;
 	+NOINTERACTION
-	Scale 0.07
-	RenderStyle Add
-	Alpha 0.3
+	//Scale 0.07
+	//RenderStyle Add
+	//Alpha 0.3
+	RenderStyle None
 	States
 	{
 	Spawn:
-		TNT1 A 0
-		TNT1 A 0 ThrustThingZ(0,random(1,2),0,1)
+		TNT1 A 0 NoDelay A_Jump(256,"S1","S2","S3","S4","S5","S6")
+	S1:	TNT1 A 0 A_SpawnParticle(AAAAAA,0,35,random(SizeMin,SizeMax),0,frandom(-1.0,1.0),frandom(-1.0,1.0),frandom(0,2),0,0,frandom(ZVelMin,ZVelMax),0,0,-0.01,frandom(AlphaMin,AlphaMax),FadeOut)		Stop
+	S2:	TNT1 A 0 A_SpawnParticle(BBBBBB,0,35,random(SizeMin,SizeMax),0,frandom(-1.0,1.0),frandom(-1.0,1.0),frandom(0,2),0,0,frandom(ZVelMin,ZVelMax),0,0,-0.01,frandom(AlphaMin,AlphaMax),FadeOut)		Stop
+	S3:	TNT1 A 0 A_SpawnParticle(CCCCCC,0,35,random(SizeMin,SizeMax),0,frandom(-1.0,1.0),frandom(-1.0,1.0),frandom(0,2),0,0,frandom(ZVelMin,ZVelMax),0,0,-0.01,frandom(AlphaMin,AlphaMax),FadeOut)		Stop
+	S4:	TNT1 A 0 A_SpawnParticle(DDDDDD,0,35,random(SizeMin,SizeMax),0,frandom(-1.0,1.0),frandom(-1.0,1.0),frandom(0,2),0,0,frandom(ZVelMin,ZVelMax),0,0,-0.01,frandom(AlphaMin,AlphaMax),FadeOut)		Stop
+	S5:	TNT1 A 0 A_SpawnParticle(EEEEEE,0,35,random(SizeMin,SizeMax),0,frandom(-1.0,1.0),frandom(-1.0,1.0),frandom(0,2),0,0,frandom(ZVelMin,ZVelMax),0,0,-0.01,frandom(AlphaMin,AlphaMax),FadeOut)		Stop
+	S6:	TNT1 A 0 A_SpawnParticle(FFFFFF,0,35,random(SizeMin,SizeMax),0,frandom(-1.0,1.0),frandom(-1.0,1.0),frandom(0,2),0,0,frandom(ZVelMin,ZVelMax),0,0,-0.01,frandom(AlphaMin,AlphaMax),FadeOut)		Stop
+		/*TNT1 A 0 ThrustThingZ(0,random(1,2),0,1)
 		WPXS JKLMN 1 A_FadeOut(0.02)
 		WPXS OQRSTUVWXYZ 2 A_FadeOut(0.02)
 		WPXZ ABC 2 A_FadeOut(0.02)
 		WPXZ C 1 A_FadeOut(0.02)
-		Wait
+		Wait*/
+		
 	}
 }
 
