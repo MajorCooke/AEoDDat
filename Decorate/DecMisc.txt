@@ -339,19 +339,20 @@ Actor NewPuff1 //: BulletPuff
 		TNT1 A 0 NoDelay A_CheckSight("Simple")
 		TNT1 A 0 A_CheckFloor("SpawnFloorSmoke")
 		TNT1 A 0 A_JumpIf(z - floorz <= 12,"SpawnFloorSmoke")
+		TNT1 A 0 A_JumpIf(ceilingz - z <= 12,"SpawnCeilingSmoke")
 	Crash:
 	Death:	//structure
 		TNT1 A 0 A_CheckSight("Simple")
-		TNT1 A 0 A_CheckFloor("SpawnFloorSmoke")
 		TNT1 A 0 A_JumpIf(z - floorz <= 12,"SpawnFloorSmoke")
+		TNT1 A 0 A_JumpIf(ceilingz - z <= 12,"SpawnCeilingSmoke")
 		//If we have a tracer, skip the smoke spawning.
 		TNT1 A 0 A_JumpIf(!IsPointerEqual(AAPTR_TRACER,AAPTR_NULL),2)
 		//TNT1 A 0 A_SpawnItemEx("PuffWallSmoke",0,0,0,0,0,0,0,32)
 		TNT1 A 0 A_Jump(128,2)
 		TNT1 A 0 A_PlaySound("postal2/weapons/bullet_hit_ricochet",6,0.5)
 		TNT1 A 1 A_SpawnParticle(FF9B34,SPF_FULLBRIGHT,random(1,4),25,0,0,0,0,0,0,0,0,0,0,1.0,0.125)
-		TNT1 AAAAAAAAAA 0 A_SpawnParticle(444444,SPF_RELATIVE,70,random(4,12),random(-45,45),frandom(0.0,2.0),0,frandom(-1.0,1.0),frandom(0.0,2.0),0,frandom(-1.0,1.0),-0.04,frandom(-0.02,0.02),-0.01,frandom(0.3,0.6),0.05)
-		TNT1 AAAAAAAAA 0 A_SpawnParticle(555555,SPF_RELATIVE,70,random(5,14),frandom(-2.0,2.0),frandom(1.0,2.0),frandom(-1.0,1.0),frandom(-0.5,0.5),frandom(1.0,3.0),-0.04,0,-0.01,0,frandom(0,0.02),frandom(0.8,1.0),-1)
+		TNT1 AAAAAAAAAA 0 A_SpawnParticle(444444,SPF_RELATIVE,70,random(4,12),random(-45,45),frandom(0.0,2.0),0,frandom(-1.0,1.0),frandom(0.1,1.0),0,frandom(-1.0,1.0),frandom(0.0,0.02),frandom(-0.04,0.04),-0.1,frandom(0.3,0.6),(1.0/60.0))
+		TNT1 AAAAAAAAA 0 A_SpawnParticle(555555,SPF_RELATIVE,70,random(5,14),0,0,frandom(-2.0,2.0),frandom(-2.0,2.0),frandom(1.0,2.0),frandom(-0.1,0.1),frandom(-0.1,0.1),-0.02,frandom(-0.008,0.008),frandom(-0.008,0.008),1,(1.0/60.0))
 		TNT1 A 0 A_Jump(256,1,2,3,"C1","C1","C1","C1","C1","C1")
 		TNT1 AAA 0 A_SpawnItemEx("PuffDebrisSpawner",0,0,0,0,0,0,random(-35,35),SXF_NOCHECKPOSITION)
 	C1:
@@ -367,6 +368,13 @@ Actor NewPuff1 //: BulletPuff
 		TNT1 A 1 A_SpawnParticle(FF9B34,SPF_FULLBRIGHT,random(1,4),25,0,0,0,0,0,0,0,0,0,0,1.0,0.125)
 		TNT1 AAA 0 A_SpawnItemEx("PuffDebrisSpawner",0,0,0,0,0,0,random(-35,35),SXF_NOCHECKPOSITION)
 		TNT1 AAAAAAAAAA 0 A_SpawnParticle(444444,SPF_RELATIVE,70,random(4,12),random(0,359),frandom(0.0,2.0),0,frandom(0.0,2.0),frandom(0.0,2.0),0,frandom(1.0,3.0),frandom(-0.02,0.02),frandom(-0.02,0.02),-0.01,frandom(0.3,0.6),0.05)
+		//TNT1 AAAAAAAAA 0 A_SpawnParticle(555555,SPF_RELATIVE,70,random(5,14),frandom(-2.0,2.0),frandom(1.0,2.0),frandom(-1.0,1.0),frandom(-0.5,0.5),frandom(1.0,3.0),-0.04,0,-0.01,0,,frandom(0.8,1.0),-1)
+		//TNT1 A 0 A_SpawnItemEx("PuffFloorSmoke",0,0,0,0,0,0,0,32)
+		Stop
+	SpawnCeilingSmoke:
+		TNT1 A 1 A_SpawnParticle(FF9B34,SPF_FULLBRIGHT,random(1,4),25,0,0,0,0,0,0,0,0,0,0,1.0,0.125)
+		TNT1 AAA 0 A_SpawnItemEx("PuffDebrisSpawner",0,0,0,0,0,0,random(-35,35),SXF_NOCHECKPOSITION)
+		TNT1 AAAAAAAAAA 0 A_SpawnParticle(444444,SPF_RELATIVE,70,random(4,12),random(0,359),frandom(0.0,2.0),0,frandom(0.0,-2.0),frandom(0.0,2.0),0,frandom(-1.0,-3.0),frandom(-0.02,0.02),frandom(-0.02,0.02),-0.01,frandom(0.3,0.6),0.05)
 		//TNT1 AAAAAAAAA 0 A_SpawnParticle(555555,SPF_RELATIVE,70,random(5,14),frandom(-2.0,2.0),frandom(1.0,2.0),frandom(-1.0,1.0),frandom(-0.5,0.5),frandom(1.0,3.0),-0.04,0,-0.01,0,,frandom(0.8,1.0),-1)
 		//TNT1 A 0 A_SpawnItemEx("PuffFloorSmoke",0,0,0,0,0,0,0,32)
 		Stop
@@ -2617,13 +2625,13 @@ Actor GunSmokeSpawner
 
 Actor GunSmoke
 {
-	const int SizeMin = 10;
-	const int SizeMax = 20;
-	const float AlphaMin = 0.2;
-	const float AlphaMax = 0.8;
-	const float FadeOut = 0.03;
-	const float ZVelMin = 1.0;
-	const float ZVelMax = 3.0;
+	const int SizeMin = 7;
+	const int SizeMax = 14;
+	const float AlphaMin = 0.15;
+	const float AlphaMax = 0.5;
+	const float FadeOut = 0.04;
+	const float ZVelMin = 0.5;
+	const float ZVelMax = 1.5;
 	+NOINTERACTION
 /*	PROJECTILE
 	+NOGRAVITY

@@ -11548,7 +11548,7 @@ Actor AEoDSoulReaper : weapon
 		M011 AA 0 A_Raise
 		Loop
 	Deselect:
-		M011 A 0 A_RadiusGive("SoulSeekOff",16383,RGF_MONSTERS|RGF_NOSIGHT,1) //A_GiveInventory("SoundStopper",1)
+		//M011 A 0 A_RadiusGive("SoulSeekOff",16383,RGF_MONSTERS|RGF_NOSIGHT,1) //A_GiveInventory("SoundStopper",1)
 	DesLoop:
 		M011 A 0 A_TakeInventory("SoulReaperToken",10000)
 		M011 A 0 A_TakeInventory("SoulReaperAltToken",10000)
@@ -11576,7 +11576,7 @@ Actor AEoDSoulReaper : weapon
 		"####" A 0 A_PlaySound("SoulReaper/soulbeamloop",CHAN_WEAPON,1,1)
 		"####" "#" 0 A_Refire("AltHold")
 	AltHold:
-		"####" A 0 A_RadiusGive("SoulSeekOn",2048,RGF_MONSTERS|RGF_NOSIGHT)
+		//"####" A 0 A_RadiusGive("SoulSeekOn",2048,RGF_MONSTERS|RGF_NOSIGHT)
 		"####" A 0 Offset(2,33) Bright A_FireCustomMissile("SoulReaperBeam",0,0,9,2)
 		"####" A 1 Offset(2,33) Bright A_WeaponReady(WRF_NOSECONDARY|WRF_DISABLESWITCH|WRF_NOBOB)
 		"####" A 0 Offset(1,32) Bright A_FireCustomMissile("SoulReaperBeam",0,0,9,2)
@@ -11584,7 +11584,7 @@ Actor AEoDSoulReaper : weapon
 		"####" A 0 A_Refire("AltHold")
 		
 		"####" A 0 A_TakeInventory("SoulReaperAltToken",1000,0)
-		"####" A 0 A_RadiusGive("SoulSeekOff",16383,RGF_MONSTERS|RGF_NOSIGHT)
+		//"####" A 0 A_RadiusGive("SoulSeekOff",16383,RGF_MONSTERS|RGF_NOSIGHT)
 		"####" A 0 A_PlaySound("SoulReaper/soulbeamend",CHAN_WEAPON,1,0)
 		Goto Ready
 	TCheck:
@@ -12028,6 +12028,7 @@ Actor SoulReaperBeam
 	var int user_c;
 	var int user_t;
 	var int user_soultype;
+	var int user_ang;
 	Projectile
 	+SEEKERMISSILE
 	+DONTREFLECT
@@ -12057,12 +12058,28 @@ Actor SoulReaperBeam
 		TNT1 A 0 A_SetUserVar(user_limit,15)
 		TNT1 A 0 A_SetUserVar(user_time,random(3,30))
 	Cont:
+		TNT1 A 0 A_CheckProximity("CheckSoul","DMSoulTarget",300,1,CPXF_SETTRACER|CPXF_CLOSEST|CPXF_CHECKSIGHT)
+		Goto Cont2
+	//Check to see if a soul is within the visual frame. If not, skip it.
+	CheckSoul:
+		TNT1 A 0 A_SetUserVar(user_ang,angle)
+		TNT1 A 0 A_FaceTracer(41)
+		TNT1 A 0 A_JumpIf(abs(user_ang - angle) > 40,"Restore")
+		TNT1 A 0 A_ChangeFlag("THRUACTORS",1)
+		TNT1 A 0 A_SetAngle(user_ang)
+		TNT1 A 0 A_GiveInventory("SoulSeekOn",1,AAPTR_TRACER)
+		Goto Cont2
+	Restore:
+		TNT1 A 0 A_SetAngle(user_ang)
+		TNT1 A 0 A_RearrangePointers(AAPTR_DEFAULT,AAPTR_DEFAULT,AAPTR_NULL,PTROP_NOSAFEGUARDS)
+	Cont2:
 		TNT1 A 0 A_SetUserVar(user_seekflags,SMF_PRECISE|SMF_LOOK)
 		TNT1 A 0 A_JumpIf(IsPointerEqual(AAPTR_TRACER,AAPTR_NULL),1)
 		Goto L1
 		
 		TNT1 A 0 A_RearrangePointers(AAPTR_DEFAULT,AAPTR_DEFAULT,AAPTR_PLAYER_GETTARGET,4)
 		Goto L1
+	
 	L1:
 		TNT1 A 0 A_JumpIf(user_chance != 1,"LCont")
 		TNT1 A 0 A_SetUserVar(user_time,user_time-1)
