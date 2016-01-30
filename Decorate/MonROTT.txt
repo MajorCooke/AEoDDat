@@ -2284,15 +2284,14 @@ ACTOR OscuroHelper
 		OSEE ABCD 4 //14 frames
 		OSEE D 0 A_SetFloat
 		OSEE D 0 A_NoGravity
+	Chasing:
 		OFLY A 0 A_JumpIfCloser(128,"Melee")
 		TNT1 A 0 A_ChangeFlag("SOLID",0)
 		TNT1 A 0 A_UnSetInvulnerable
-		OFLY A 2 A_Chase
-		TNT1 A 0 A_UnSetInvulnerable
-		OFLY A 2 A_Chase
-		OFLY A 0 A_JumpIfInventory("OscuroTimeLimit",1000,"Death")
-		OFLY A 0 A_GiveInventory("OscuroTimeLimit",1)
-		Goto See+16
+		OFLY AA 2 A_Chase
+		//OFLY A 0 A_JumpIfInventory("OscuroTimeLimit",1000,"Death")
+		//OFLY A 0 A_GiveInventory("OscuroTimeLimit",1)
+		Goto Chasing
 	Melee:
 		TNT1 A 0 A_Jump(128,"GoldFaceAttack")
 		TNT1 A 0 A_SetInvulnerable
@@ -2300,6 +2299,8 @@ ACTOR OscuroHelper
 		OSEE A 0 A_SetUserVar("user_chasecount",0)
 		OSEE DCBABCD 2 A_FaceTarget
 	HurtingChaseLooper:
+		"----" A 0 A_JumpIf(IsPointerEqual(AAPTR_TARGET,AAPTR_NULL),"Chasing")
+		"----" A 0 A_JumpIfHealthLower(1,"Chasing",AAPTR_TARGET)
 		OCHA A 0 A_FaceTarget
 		OCHA A 0 A_Recoil(-50)
 		OCHA A 2 A_CustomMissile("ChaseDamager",48,0,0)
@@ -2323,7 +2324,7 @@ ACTOR OscuroHelper
 		OATS E 4 bright A_CustomMissile("GoldFaceHoly",48,0)
 		OATS FGHI 4 //36 frames
 		//OATS I 0 A_JumpIfCloser(128,"GoldFaceAttack")
-		Goto See+19
+		Goto Chasing
 	Missile:
 		TNT1 A 0 A_Jump(129,"Missile2")
 		//TNT1 A 0 A_SetInvulnerable
@@ -2345,7 +2346,7 @@ ACTOR OscuroHelper
 		OATG G 0 bright A_PlaySound("oscuro/missile1fire")
 		OATG G 4 bright A_CustomMissile("SilverMissileHoly",56,14)
 		OATG HIJ 2 //61 frames
-		Goto See+16
+		Goto Chasing
 	Missile2:
 		TNT1 A 0 //A_Jump(32,"ZeroFire")
 		//TNT1 A 0 A_SetInvulnerable
@@ -2353,7 +2354,7 @@ ACTOR OscuroHelper
 		OAT2 D 0 bright A_PlaySound("oscuro/missile2fire")
 		OAT2 D 4 bright A_CustomMissile("GreenSphereHoly")
 		OAT2 EF 4
-		Goto See+16
+		Goto Chasing
 	MeteorFire:
 		OATS A 0 A_SetInvulnerable
 		OATS AAAAAAAA 4 bright A_FaceTarget
@@ -2363,7 +2364,7 @@ ACTOR OscuroHelper
 		OATS D 4 bright A_CustomMissile("MeteorWeakHoly",0,0)
 		OATS EFGHI 4 bright
 		OATS I 0 bright A_UnSetInvulnerable
-		Goto See+16
+		Goto Chasing
 	ApocalypseFire:
 		TNT1 A 0 A_SetInvulnerable
 		TNT1 A 0 A_PlaySound("castspell/fire")
@@ -2372,7 +2373,7 @@ ACTOR OscuroHelper
 		OAT1 G 0 bright A_PlaySound("oscuro/specialfire")
 		OAT1 G 2 bright A_CustomMissile("ApocalypseStarter2",48,0)
 		OAT1 HI 2
-		Goto See+16
+		Goto Chasing
 	Death:
 		TNT1 A 0 A_UnsetSolid
 		TNT1 A 0 A_SetFloorClip
