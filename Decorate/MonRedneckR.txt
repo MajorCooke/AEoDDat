@@ -2304,6 +2304,7 @@ Actor Leonard 7369
     +NOICEDEATH
     +DONTMORPH
     +NOFEAR
+	+DONTCORPSE
     PainChance "Drain", 40
     PainChance "Chaos", 255
     DamageFactor "ChaosExpl1", 0
@@ -2445,8 +2446,8 @@ Actor Leonard 7369
 		RR20 A 0 A_CustomMissile("MiscGib5",0+Random(30,60),0+Random(35,-35),0+Random(0,370))
 		RR20 A 0 A_CustomMissile("MiscGib5",0+Random(30,60),0+Random(35,-35),0+Random(0,370))
 		RR20 AAAAAAAAAAAAAAAAAAAAA 0 A_TossGib
-		TNT1 A 1 A_NoBlocking
-		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
+		TNT1 A 0 A_Fall
+		TNT1 A 35 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
 		stop
     Death.UnholyDisint:
     Death.PlasmaDisint:
@@ -3252,6 +3253,7 @@ ACTOR LeonardMotorCycle 7372	// cyberdemon
     +NOICEDEATH
     +DONTMORPH
     +NOBLOCKMONST
+	Activation THINGSPEC_NoDeathSpecial
     Obituary "%o was gunned down by a redneck on a motorcycle."
     DamageFactor "Motorcycle", 0
     PainChance "Motorcycle", 0
@@ -3481,6 +3483,8 @@ ACTOR LeonardMotorCycle 7372	// cyberdemon
 		LEOM A 4 A_Pain
 		Goto See+1
     Death:
+		TNT1 A 0 A_ChangeFlag("DONTTHRUST",1)
+		TNT1 A 0 A_ChangeFlag("THRUACTORS",1)
 		TNT1 A 0 A_PlaySound("monster/turd/gib")
 		TNT1 A 0 A_CustomMissile("MotorcycleDebris1",0+Random(30,60),0+Random(35,-35),0+Random(0,370))
 		TNT1 A 0 A_CustomMissile("MotorcycleDebris1",0+Random(30,60),0+Random(35,-35),0+Random(0,370))
@@ -3489,7 +3493,13 @@ ACTOR LeonardMotorCycle 7372	// cyberdemon
 		TNT1 A 0 A_CustomMissile("MotorcycleBitShooter",0,0,0)
 		TNT1 A 0 A_SpawnItemEx("MonExplosionMediumBig",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		TNT1 A 6
-		TNT1 A 0 A_SpawnItemEx("Leonard",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_SpawnItemEx("Leonard",0,0,0,0,0,0,0,SpawnPhaseFlags,0,tid)
+	Waiting:
+		TNT1 A 0 A_JumpIf(IsPointerEqual(AAPTR_TRACER,AAPTR_NULL),"End")
+		TNT1 A 35 A_JumpIfHealthLower(1,1,AAPTR_TRACER)
+		Loop
+	End:
+		TNT1 A 0 
 		Stop
     }
 }

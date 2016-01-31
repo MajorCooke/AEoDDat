@@ -673,6 +673,7 @@ actor FMakronPet //7384	// cyberdemon
     +DONTMORPH
     +NOFEAR
 	+NEVERRESPAWN
+	Activation THINGSPEC_NoDeathSpecial
     //DropItem FMakron
     SeeSound "q2makron2/voice"
     PainSound "q2makron1/pain"
@@ -785,7 +786,7 @@ actor FMakronPet //7384	// cyberdemon
 		BS4D M 20 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),SXF_NOCHECKPOSITION)
 		"----" AAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_TossGib
 		BS4D M 0 A_Fall
-		"----" A 0 A_SpawnItemEx("FMakron",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSPECIAL|SXF_CLEARCALLERSPECIAL|SXF_CLEARCALLERTID|SXF_TRANSFERPOINTERS|SXF_ISTRACER,0,tid)
+		"----" A 0 A_SpawnItemEx("FMakron",0,0,0,0,0,0,0,SpawnPhaseFlags,0,tid)
 		"----" A 0 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),SXF_NOCHECKPOSITION)
 		"----" A 0 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),SXF_NOCHECKPOSITION)
 		"----" A 0 A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,50),0,0,0,random(0,359),SXF_NOCHECKPOSITION)
@@ -811,7 +812,7 @@ actor FMakronPet //7384	// cyberdemon
 	Death.PlasmaDisint:
 	Disintegrate:
 		"----" A 0 A_ChangeFlag("NOBLOCKMAP",1) //Make sure no sudden changes can happen to it via inventory items...
-		"----" A 0 A_SpawnItemEx("FMakron",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSPECIAL|SXF_CLEARCALLERSPECIAL|SXF_CLEARCALLERTID|SXF_TRANSFERPOINTERS|SXF_ISTRACER,0,tid)
+		"----" A 0 A_SpawnItemEx("FMakron",0,0,0,0,0,0,0,SpawnPhaseFlags,0,tid)
 		"----" A 0 A_ChangeFlag("NOINTERACTION",1)
 		"----" A 0 A_Stop	
 		"----" A 0 A_Fall
