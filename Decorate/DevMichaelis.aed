@@ -80,13 +80,12 @@ Actor AEoDFusionChaingun : Weapon
 		Goto ActuallyFire
 	ActuallyFire:
 		TNT1 A 0 A_JumpIfInventory("PowerQuickFire",1,"ActuallyFireQuick")
-		TNT1 A 0 A_Recoil(2)
 		TNT1 A 0 A_GunFlash
-		O002 D 1 Offset(135, 114) Bright A_FireCustomMissile("FusionChaingunBall", 0, 1, 6, 3)
-		O002 E 1 Offset(135, 114) Bright A_FireCustomMissile("FusionChaingunBall", 0, 1, 6, 3)
-		O002 F 1 Offset(135, 114) Bright A_FireCustomMissile("FusionChaingunBall", 0, 1, 6, 3)
-		O002 G 1 Offset(135, 114) Bright A_FireCustomMissile("FusionChaingunBall", 0, 1, 6, 3)
-		O002 H 1 Offset(135, 114) Bright A_FireCustomMissile("FusionChaingunBall", 0, 1, 6, 3)
+		O002 D 0 Offset(135, 114) Bright A_FireCustomMissile("FusionChaingunBall", 0, 1, 6, 3)	"----" A 1 A_Recoil(0.2)
+		O002 E 0 Offset(135, 114) Bright A_FireCustomMissile("FusionChaingunBall", 0, 1, 6, 3)	"----" A 1 A_Recoil(0.2)
+		O002 F 0 Offset(135, 114) Bright A_FireCustomMissile("FusionChaingunBall", 0, 1, 6, 3)	"----" A 1 A_Recoil(0.2)
+		O002 G 0 Offset(135, 114) Bright A_FireCustomMissile("FusionChaingunBall", 0, 1, 6, 3)	"----" A 1 A_Recoil(0.2)
+		O002 H 0 Offset(135, 114) Bright A_FireCustomMissile("FusionChaingunBall", 0, 1, 6, 3)	"----" A 1 A_Recoil(0.2)
 		TNT1 A 0 A_Refire("ActuallyFire")
 		Goto WindDown
 	WindDown:
@@ -107,6 +106,8 @@ Actor AEoDFusionChaingun : Weapon
 		O002 A 4 Offset(122, 110) Bright
 		Goto ReallyReady
 		
+// [MC] You do know frame durations are cut in half regardless of what you do, 
+// right? Except for 1 and 0. So basically these 8 frames are reduced to 4.
 	ReallyReadyQuick:
 		TNT1 A 0 A_PlaySound("reilsss/weapons/plasmaidle1", CHAN_BODY, 1.0, 1)
 		O002 B 2 Offset(121, 109) A_WeaponReady(WRF_NOBOB)
@@ -130,16 +131,11 @@ Actor AEoDFusionChaingun : Weapon
 	ActuallyFireQuick:
 		TNT1 A 0 A_Recoil(2)
 		TNT1 A 0 A_GunFlash
-		O002 D 0 Offset(135, 114) Bright A_FireCustomMissile("FusionChaingunBall", 0, 1, 6, 3)
-		O002 D 1 Offset(135, 114) Bright A_FireCustomMissile("FusionChaingunBall", 0, 1, 6, 3)
-		O002 E 0 Offset(135, 114) Bright A_FireCustomMissile("FusionChaingunBall", 0, 1, 6, 3)
-		O002 E 1 Offset(135, 114) Bright A_FireCustomMissile("FusionChaingunBall", 0, 1, 6, 3)
-		O002 F 0 Offset(135, 114) Bright A_FireCustomMissile("FusionChaingunBall", 0, 1, 6, 3)
-		O002 F 1 Offset(135, 114) Bright A_FireCustomMissile("FusionChaingunBall", 0, 1, 6, 3)
-		O002 G 0 Offset(135, 114) Bright A_FireCustomMissile("FusionChaingunBall", 0, 1, 6, 3)
-		O002 G 1 Offset(135, 114) Bright A_FireCustomMissile("FusionChaingunBall", 0, 1, 6, 3)
-		O002 H 0 Offset(135, 114) Bright A_FireCustomMissile("FusionChaingunBall", 0, 1, 6, 3)
-		O002 H 1 Offset(135, 114) Bright A_FireCustomMissile("FusionChaingunBall", 0, 1, 6, 3)
+		O002 DD 0 Offset(135, 114) Bright A_FireCustomMissile("FusionChaingunBall", 0, 1, 6, 3)	"----" A 1 A_Recoil(0.2)
+		O002 EE 0 Offset(135, 114) Bright A_FireCustomMissile("FusionChaingunBall", 0, 1, 6, 3)	"----" A 1 A_Recoil(0.2)
+		O002 FF 0 Offset(135, 114) Bright A_FireCustomMissile("FusionChaingunBall", 0, 1, 6, 3)	"----" A 1 A_Recoil(0.2)
+		O002 GG 0 Offset(135, 114) Bright A_FireCustomMissile("FusionChaingunBall", 0, 1, 6, 3)	"----" A 1 A_Recoil(0.2)
+		O002 HH 0 Offset(135, 114) Bright A_FireCustomMissile("FusionChaingunBall", 0, 1, 6, 3)	"----" A 1 A_Recoil(0.2)
 		TNT1 A 0 A_Refire("ActuallyFireQuick")	// Lets player enjoy double-density volley even after powerup is over, because it won't last for long anyway.
 		Goto WindDown
 	WindDownQuick:
@@ -227,7 +223,9 @@ Actor FusionChaingunBall
 		TNT1 A 0 A_SpawnItemEx("FusionChaingunFlare", 0,0,0, 0,0,0, 0, SXF_SETMASTER|SXF_ORIGINATOR|SXF_CLIENTSIDE)
 		TNT1 A 0 A_SpawnItemEx("FusionChaingunTrail", 0,0,0, 0,0,0, 0, SXF_SETMASTER|SXF_ORIGINATOR|SXF_CLIENTSIDE)
 	aLooper:
-		R053 ABC 1 Bright A_ChangeVelocity(0,random(-random(0,2),random(0,2)),random(-random(0,1),random(0,1)), CVF_RELATIVE)
+// [MC] I don't know why you put randoms inside of randoms, but random(-2,2) is better.
+// An alternative is random(0,2)*randompick(-1,1) if needed though.
+		R053 ABC 1 Bright A_ChangeVelocity(0,random(-2,2),random(-1,1), CVF_RELATIVE)
 		TNT1 A 0 A_SetUserVar(user_deviation, user_deviation / 2)
 		TNT1 A 0 A_JumpIf(user_deviation == 0, "Blooper")
 		Loop
@@ -298,7 +296,11 @@ Actor FusionChaingunBoom : FusionChaingunFlare
 {
 	Alpha 1
 	Scale 0.22
-	DamageType "Fire"	// Yep it's plasma but plasma is hot so...
+	DamageType "Fire"	//Yep it's plasma but plasma is hot so...
+	//[MC] We have AEPlasma damagetype for that. But eh.
+	//Also lets avoid setting things on fire. I quickly grow tired of having
+	//beggars running back to me and incidentally killing me.
+	DeathType "Extreme" 
 	+EXTREMEDEATH
 	States
 	{
