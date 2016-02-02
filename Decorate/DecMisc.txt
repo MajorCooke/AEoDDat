@@ -1,5 +1,3 @@
-const int GibFlags = SXF_TRANSFERTRANSLATION|SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_ABSOLUTEVELOCITY;
-
 DamageType Portal1			{	Factor 0	}
 DamageType Portal2			{	Factor 0	}
 DamageType SoulReaperPull	{	Factor 0	}
@@ -51,6 +49,7 @@ Actor NoAEoDHUDToken	: Inventory { Inventory.InterHubAmount 0 }
 Actor WeaponModeToken 	: Inventory { Inventory.MaxAmount 10 	Inventory.InterHubAmount 10 }
 Actor NoFlight			: Inventory { Inventory.InterHubAmount 0 }
 Actor SpellSelection	: Inventory { Inventory.MaxAmount 7		Inventory.InterHubAmount 7 }
+Actor BloodSpriteToken	: Inventory {}
 
 Actor Counter : inventory		//general purpose counter
 {	Inventory.MaxAmount 255 }
@@ -351,8 +350,8 @@ Actor NewPuff1 //: BulletPuff
 		TNT1 A 0 A_Jump(128,2)
 		TNT1 A 0 A_PlaySound("postal2/weapons/bullet_hit_ricochet",6,0.5)
 		TNT1 A 1 A_SpawnParticle(FF9B34,SPF_FULLBRIGHT,random(1,4),25,0,0,0,0,0,0,0,0,0,0,1.0,0.125)
-		TNT1 AAAAAAAAAA 0 A_SpawnParticle(444444,SPF_RELATIVE,70,random(4,12),random(-45,45),frandom(0.0,2.0),0,frandom(-1.0,1.0),frandom(0.1,1.0),0,frandom(-1.0,1.0),frandom(0.0,0.02),frandom(-0.04,0.04),-0.1,frandom(0.3,0.6),(1.0/60.0))
-		TNT1 AAAAAAAAA 0 A_SpawnParticle(555555,SPF_RELATIVE,70,random(5,14),0,0,frandom(-2.0,2.0),frandom(-2.0,2.0),frandom(1.0,2.0),frandom(-0.1,0.1),frandom(-0.1,0.1),-0.02,frandom(-0.008,0.008),frandom(-0.008,0.008),1,(1.0/60.0))
+		TNT1 AAAAA 0 A_SpawnParticle(444444,SPF_RELATIVE,35,random(4,12),random(-45,45),frandom(0.0,2.0),0,frandom(-1.0,1.0),frandom(0.1,1.0),0,frandom(-1.0,1.0),frandom(0.0,0.02),frandom(-0.04,0.04),-0.1,frandom(0.3,0.6),0.04)
+		TNT1 AAAA 0 A_SpawnParticle(555555,SPF_RELATIVE,35,random(5,14),0,0,frandom(-2.0,2.0),frandom(-2.0,2.0),frandom(1.0,2.0),frandom(-0.1,0.1),frandom(-0.1,0.1),-0.02,frandom(-0.008,0.008),frandom(-0.008,0.008),1,0.04)
 		TNT1 A 0 A_Jump(256,1,2,3,"C1","C1","C1","C1","C1","C1")
 		TNT1 AAA 0 A_SpawnItemEx("PuffDebrisSpawner",0,0,0,0,0,0,random(-35,35),SXF_NOCHECKPOSITION)
 	C1:
@@ -385,6 +384,7 @@ Actor NewPuff1 //: BulletPuff
 		TNT1 A 0 A_PlaySound("postal2/weapons/bullet_hitflesh",5,0.5)
 		Stop
 	Simple:
+		TNT1 A 0 A_FaceTarget
 		TNT1 A 0 A_Jump(128,1)
 		Stop
 		TNT1 A 1 A_PlaySound("postal2/weapons/bullet_hit_ricochet",6,0.5)
@@ -586,164 +586,6 @@ Actor PuffSmoke //: TT1
 		PUF2 A 2 //ThrustThingZ(0,random(1,4),0,1)
 		PUF2 CEGIKMOQSUWYZ 2 A_FadeOut
 		Wait
-	}
-}
-
-//****************************************************************
-//****************************************************************
-//
-//	6.0 New Blood Effects
-//
-//****************************************************************
-//****************************************************************
-
-Actor MCBloodFXMain replaces Blood
-{
-	//+MISSILE
-	+NOBLOCKMAP
-	+THRUACTORS
-	+NOTIMEFREEZE
-	+DONTSPLASH
-	+NOTELESTOMP
-	+NOTONAUTOMAP
-	Radius 1
-	Height 1
-	States
-	{
-	Spawn:
-		TNT1 A 0
-		TNT1 A 2 A_SpawnItemEx("MCBloodParticle",frandom(0,2),0,random(1,4),frandom(0,1.5),0,frandom(0.1,2.0),random(0,359),33|SXF_USEBLOODCOLOR)
-		TNT1 AA 0 A_SpawnItemEx("MCBloodParticle",frandom(0,2),0,random(1,4),frandom(0,1.5),0,frandom(0.1,2.0),random(0,359),33|SXF_USEBLOODCOLOR,128)
-		Stop
-	}
-}
-
-Actor MCBloodParticle : Blood //replaces BloodSplatter
-{
-	Projectile
-	+THRUACTORS
-	+DONTSPLASH
-	+NOTIMEFREEZE
-	+DONTBLAST
-	+NOTELESTOMP
-	+NOBLOCKMAP
-	+NOTONAUTOMAP
-	//Translation "0:255=%[0,0,0]:[1,0,0]"
-	RenderStyle Translucent
-	Radius 1
-	Height 1
-	Gravity 0.20
-	Scale 0.3
-	States
-	{
-	Spawn:
-		TNT1 A 0
-		TNT1 A 0 A_Jump(256,"B11","B12","B13","B14","B21","B22","B23","B24","B31","B32","B33","B34")
-	B11:
-		X057 ABCDEF 2 A_FadeOut(0.05)
-		X057 GHIJK 1 A_FadeOut(0.05)
-		X057 LMNOPQRS 1 A_FadeOut(0.03)
-		Wait
-	B12:
-		XA57 ABCDEF 2 A_FadeOut(0.05)
-		XA57 GHIJK 1 A_FadeOut(0.05)
-		XA57 LMNOPQRS 1 A_FadeOut(0.03)
-		Wait
-	B13:
-		XB57 ABCDEF 2 A_FadeOut(0.05)
-		XB57 GHIJK 1 A_FadeOut(0.05)
-		XB57 LMNOPQRS 1 A_FadeOut(0.03)
-		Wait
-	B14:
-		XC57 ABCDEF 2 A_FadeOut(0.05)
-		XC57 GHIJK 1 A_FadeOut(0.05)
-		XC57 LMNOPQRS 1 A_FadeOut(0.03)
-		Wait
-	B21:
-		X058 ABCDEF 2 A_FadeOut(0.05)
-		X058 GHIJK 1 A_FadeOut(0.05)
-		X058 LMNOPQR 1 A_FadeOut(0.03)
-		Wait
-	B22:
-		XA58 ABCDEF 2 A_FadeOut(0.05)
-		XA58 GHIJK 1 A_FadeOut(0.05)
-		XA58 LMNOPQR 1 A_FadeOut(0.03)
-		Wait
-	B23:
-		XB58 ABCDEF 2 A_FadeOut(0.05)
-		XB58 GHIJK 1 A_FadeOut(0.05)
-		XB58 LMNOPQR 1 A_FadeOut(0.03)
-		Wait
-	B24:
-		XC58 ABCDEF 2 A_FadeOut(0.05)
-		XC58 GHIJK 1 A_FadeOut(0.05)
-		XC58 LMNOPQR 1 A_FadeOut(0.03)
-		Wait
-	B31:
-		X059 ABCD 2 A_FadeOut(0.03)
-		X059 EFGHIJ 1 A_FadeOut(0.04)
-		X059 KLM 1 A_FadeOut(0.05)
-		Wait
-	B32:
-		XA59 ABCD 2 A_FadeOut(0.03)
-		XA59 EFGHIJ 1 A_FadeOut(0.04)
-		XA59 KLM 1 A_FadeOut(0.05)
-		Wait
-	B33:
-		XB59 ABCD 2 A_FadeOut(0.03)
-		XB59 EFGHIJ 1 A_FadeOut(0.04)
-		XB59 KLM 1 A_FadeOut(0.05)
-		Wait
-	B34:
-		XC59 ABCD 2 A_FadeOut(0.03)
-		XC59 EFGHIJ 1 A_FadeOut(0.04)
-		XC59 KLM 1 A_FadeOut(0.05)
-		Wait
-	}
-}
-
-Actor MCBloodSplatter : MCBloodParticle replaces BloodSplatter
-{ }
-
-//****************************************************************
-//****************************************************************
-//
-//	v6 New Blood Effects
-//
-//****************************************************************
-//****************************************************************
-
-
-Actor NewBlood : Blood //replaces Blood  //Blood as in v5.03, kept for compatability
-{
-	+DONTSPLASH
-	+DONTBLAST
-	+NOTELESTOMP
-	+NOTONAUTOMAP
-	Scale 0.15
-	Gravity 0.44
-	States
-	{
-	Spawn:
-		BLD1 A 1
-//		TNT1 AAA 0 A_SpawnItemEx("ExtraBlood",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,1)
-		TNT1 AAA 0 A_SpawnItemEx("ExtraBlood",random(3,-3),random(3,-3),random(3,-3),1,0,0,random(1,359),GibFlags)
-		BLD1 ABCD 6
-		Stop
-	}
-}
-
-Actor ExtraBlood : NewBlood
-{
-	Scale 0.09
-	States
-	{
-	Spawn:
-		TNT1 A 0
-		BLD1 A 1 ThrustThingZ(0,random(5,12),0,1)
-		BLD1 A 5
-		BLD1 ABCD 6
-		Stop
 	}
 }
 
@@ -2132,11 +1974,6 @@ Actor HGib3Mirr : HGib1
 	}
 }
 
-Actor GibBloodSmall : MCBloodParticle  
-{ }
-
-
-
 //===============================================================================
 //===============================================================================
 //
@@ -2352,9 +2189,6 @@ Actor SmallGib2 : SmallGib1
 //
 //===============================================================================
 //===============================================================================
-Actor GibBloodTrailMediumSize : MCBloodParticle  
-{ }
-
 Actor BloodGibDropper
 {
 	const int RAdd = 5;
