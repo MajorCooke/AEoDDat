@@ -3014,13 +3014,13 @@ Actor AEoDBioForceGun : Weapon // 6058
 Actor FBFGBall : BFGBall
 {
 	Projectile
-	+RANDOMIZE
 	+EXTREMEDEATH
 	+FORCERADIUSDMG
+	+STRIFEDAMAGE
 	Radius 8
 	Height 8
 	Speed 25
-	Damage 100
+	Damage 200
 	DeathSound "q2weapon/bfgballexplo"
 	Renderstyle Add
 	Alpha 0.75
@@ -3056,7 +3056,8 @@ Actor FBFGBall : BFGBall
 		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BFG10Extra2",0,0,10,frandom(-5,5),frandom(-5,5),frandom(-5,5),random(1,360))
 		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BFG10Extra2",0,0,10,frandom(-5,5),frandom(-5,5),frandom(-5,5),random(1,360))
 		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BFG10Extra2",0,0,10,frandom(-5,5),frandom(-5,5),frandom(-5,5),random(1,360))
-		BFE1 BC 4 Bright
+		BFE1 B 4 A_Explode(random(100,400),128,0)
+		BFE1 C 4 Bright
 		BFE1 D 4 Bright A_BFGSpray
 		BFE1 EF 4 Bright
 		Stop
@@ -3203,19 +3204,18 @@ Actor BFGLaser1
 		TNT1 A 0 A_JumpIf(user_count>=5,"TrailSpawn")
 		Loop
 	TrailSpawn:
-		TNT1 A 0 A_SpawnItemEx("BFGRipperStarSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
+		TNT1 A 0 A_Jump(26,2) //~1/10 chance to cause bleeding. 256/10 = 25.6 rounded to 26.
+		TNT1 A 0 A_SpawnItemEx("BFGRipperStar1BloodLess",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
+		Goto Reset
+		TNT1 A 0 A_SpawnItemEx("BFGRipperStar1",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
+		Goto Reset
+	Reset:
 		TNT1 A 0 A_SetUserVar("user_count",0)
 		Goto Movement
 	Death:
 		TNT1 A 0
 		Stop
 	}
-}
-
-Actor BFGRipperStarSpawner : RandomSpawner
-{
-	DropItem "BFGRipperStar1" 255 1
-	DropItem "BFGRipperStar1BloodLess" 255 6
 }
 
 Actor BFGRipperStar1

@@ -50,6 +50,7 @@ Actor MCBloodFXMain replaces Blood
 	+NOTELESTOMP
 	+NOTONAUTOMAP
 	+PUFFGETSOWNER
+	-ALLOWPARTICLES
 	var int user_t;
 	Radius 1
 	Height 1
@@ -83,9 +84,11 @@ enum //TIDs ONLY. DO NOT USE IN THE TRANSLATIONS PROPERTY.
 	Color_Brown				= 8,
 	Color_DarkGreen			= 9,
 	Color_DimGray			= 10,
+	Color_DimGrey			= 10,
 	Color_Gold				= 11,
 	Color_Green				= 12,
 	Color_Grey				= 13,
+	Color_Gray				= 13,
 	Color_LightSlateGray	= 14,
 	Color_Orange			= 15,
 	Color_Purple			= 16,
@@ -149,6 +152,9 @@ Actor MCBloodParticle
 		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
 		TNT1 A 0 Thing_ChangeTID(0,0)
 		TNT1 A 0 A_CheckSight("Nope")
+		//Spawn both
+		TNT1 A 0 A_JumpIfInventory("BloodSpriteToken",2,"Particle",AAPTR_PLAYER1)
+		//Play the frames
 		TNT1 A 0 A_JumpIfInventory("BloodSpriteToken",1,"Sprite",AAPTR_PLAYER1)
 		Goto Particle
 	Nope:
@@ -185,70 +191,73 @@ Actor MCBloodParticle
 	//	Now, copy one of these and paste them, following how I did it.
 	//	Step 5 is further down. One more thing needs copying.
 		TNT1 A 0 A_Jump(256,1,2)	TNT1 AAAA 0 A_SpawnParticle("Red",						PFlag,Lifetime,random(Size1Min,Size1Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	
-		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle(800000,			PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Stop
+		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle(800000,			PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Goto Check2
 	Color_LimeGreen:
 		TNT1 A 0 A_Jump(256,1,2)	TNT1 AAAA 0 A_SpawnParticle("AELimeGreen",				PFlag,Lifetime,random(Size1Min,Size1Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	
-		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("AELimeGreenD2",	PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Stop
+		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("AELimeGreenD2",	PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Goto Check2
 	Color_DarkRed:
 		TNT1 A 0 A_Jump(256,1,2)	TNT1 AAAA 0 A_SpawnParticle("AEDarkRed",				PFlag,Lifetime,random(Size1Min,Size1Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	
-		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("AEDarkRedD2",		PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Stop
+		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("AEDarkRedD2",		PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Goto Check2
 	Color_GreenYellow:
 		TNT1 A 0 A_Jump(256,1,2)	TNT1 AAAA 0 A_SpawnParticle("AEGreenYellow",			PFlag,Lifetime,random(Size1Min,Size1Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	
-		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("AEGreenYellowD2",	PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Stop
+		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("AEGreenYellowD2",	PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Goto Check2
 	Color_Poo:
 		TNT1 A 0 A_Jump(256,1,2)	TNT1 AAAA 0 A_SpawnParticle("AEPoo",					PFlag,Lifetime,random(Size1Min,Size1Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	
-		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("AEPooD2",			PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Stop
+		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("AEPooD2",			PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Goto Check2
 	Color_PutridGreen:
 		TNT1 A 0 A_Jump(256,1,2)	TNT1 AAAA 0 A_SpawnParticle("AEPutridGreen",			PFlag,Lifetime,random(Size1Min,Size1Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	
-		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("AEPutridGreenD2",	PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Stop
+		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("AEPutridGreenD2",	PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Goto Check2
 	Color_Black:
 		TNT1 A 0 A_Jump(256,1,2)	TNT1 AAAA 0 A_SpawnParticle("Black",					PFlag,Lifetime,random(Size1Min,Size1Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	
-		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("Black",			PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Stop
+		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("Black",			PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Goto Check2
 	Color_Blue:
 		TNT1 A 0 A_Jump(256,1,2)	TNT1 AAAA 0 A_SpawnParticle("Blue",						PFlag,Lifetime,random(Size1Min,Size1Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	
-		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("DarkBlue",		PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Stop
+		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("DarkBlue",		PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Goto Check2
 	Color_Brown:
 		TNT1 A 0 A_Jump(256,1,2)	TNT1 AAAA 0 A_SpawnParticle("Brown",					PFlag,Lifetime,random(Size1Min,Size1Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	
-		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("AEPooD2",			PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Stop
+		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("AEPooD2",			PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Goto Check2
 	Color_DarkGreen:
 		TNT1 A 0 A_Jump(256,1,2)	TNT1 AAAA 0 A_SpawnParticle("DarkGreen ",				PFlag,Lifetime,random(Size1Min,Size1Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	
-		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("AEDarkGreenD2",	PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Stop
+		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("AEDarkGreenD2",	PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Goto Check2
 	Color_DimGray:
 		TNT1 A 0 A_Jump(256,1,2)	TNT1 AAAA 0 A_SpawnParticle("DimGray",					PFlag,Lifetime,random(Size1Min,Size1Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	
-		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("AEDimGrayD2",		PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Stop
+		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("AEDimGrayD2",		PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Goto Check2
 	Color_Gold:
 		TNT1 A 0 A_Jump(256,1,2)	TNT1 AAAA 0 A_SpawnParticle("Gold",						PFlag,Lifetime,random(Size1Min,Size1Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	
-		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("AEGoldD2",		PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Stop
+		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("AEGoldD2",		PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Goto Check2
 	Color_GreenYellow:
 		TNT1 A 0 A_Jump(256,1,2)	TNT1 AAAA 0 A_SpawnParticle("GreenYellow",				PFlag,Lifetime,random(Size1Min,Size1Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	
-		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("AEGreenYellowD2",	PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Stop
+		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("AEGreenYellowD2",	PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Goto Check2
 	Color_Green:
 		TNT1 A 0 A_Jump(256,1,2)	TNT1 AAAA 0 A_SpawnParticle("Green",					PFlag,Lifetime,random(Size1Min,Size1Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	
-		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("DarkGreen",		PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Stop
+		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("DarkGreen",		PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Goto Check2
 	Color_Grey:
 		TNT1 A 0 A_Jump(256,1,2)	TNT1 AAAA 0 A_SpawnParticle("Grey",						PFlag,Lifetime,random(Size1Min,Size1Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	
-		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("DarkGrey",		PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Stop
+		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("DarkGrey",		PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Goto Check2
 	Color_LightSlateGray:
 		TNT1 A 0 A_Jump(256,1,2)	TNT1 AAAA 0 A_SpawnParticle("LightSlateGray",			PFlag,Lifetime,random(Size1Min,Size1Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	
-		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("DarkSlateGray",	PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Stop
+		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("DarkSlateGray",	PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Goto Check2
 	Color_Orange:
 		TNT1 A 0 A_Jump(256,1,2)	TNT1 AAAA 0 A_SpawnParticle("Orange",					PFlag,Lifetime,random(Size1Min,Size1Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	
-		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("DarkOrange",		PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Stop
+		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("DarkOrange",		PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Goto Check2
 	Color_Purple:
 		TNT1 A 0 A_Jump(256,1,2)	TNT1 AAAA 0 A_SpawnParticle("Purple",					PFlag,Lifetime,random(Size1Min,Size1Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	
-		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("DarkViolet",		PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Stop
+		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("DarkViolet",		PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Goto Check2
 	Color_SeaShell2:
 		TNT1 A 0 A_Jump(256,1,2)	TNT1 AAAA 0 A_SpawnParticle("Seashell2",				PFlag,Lifetime,random(Size1Min,Size1Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	
-		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("AESeaShellD2",	PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Stop
+		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("AESeaShellD2",	PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Goto Check2
 	Color_Snow3:
 		TNT1 A 0 A_Jump(256,1,2)	TNT1 AAAA 0 A_SpawnParticle("Snow3",					PFlag,Lifetime,random(Size1Min,Size1Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	
-		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("Snow4",			PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Stop
+		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("Snow4",			PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Goto Check2
 	Color_White:
 		TNT1 A 0 A_Jump(256,1,2)	TNT1 AAAA 0 A_SpawnParticle("White",					PFlag,Lifetime,random(Size1Min,Size1Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	
-		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("Grey",			PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Stop
+		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("Grey",			PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Goto Check2
 	Color_Yellow:
 		TNT1 A 0 A_Jump(256,1,2)	TNT1 AAAA 0 A_SpawnParticle("Yellow",					PFlag,Lifetime,random(Size1Min,Size1Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	
-		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("AEDarkYellowD2",	PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Stop
+		TNT1 A 1 A_Jump(256,1,2,3,4,5)	TNT1 AAAAAAAAA 0 A_SpawnParticle("AEDarkYellowD2",	PFlag,Lifetime,random(Size2Min,Size2Max),random(-AOff,AOff),frandom(XOffMin,XOffMax),0,frandom(ZOffMin,ZOffMax),frandom(XVelMin,XVelMax),0,frandom(ZVelMin,ZVelMax),frandom(XAccMin,XAccMax),0,frandom(ZAccMin,ZAccMax),StartAlpha,frandom(FadeMin,FadeMax))	Goto Check2
+	Check2:
+		TNT1 A 0 A_JumpIfInventory("BloodSpriteToken",2,"Sprite",AAPTR_PLAYER1) 
+		Stop
 	WTF:
 		//To be determined...
 	Sprite:
@@ -441,5 +450,997 @@ Actor ExtraBlood : NewBlood
 		BLD1 A 5
 		BLD1 ABCD 6
 		Stop
+	}
+}
+
+//===============================================================================
+//===============================================================================
+//
+//	A_TossGib with blood trails
+//
+//===============================================================================
+//===============================================================================
+
+Actor NewMeat replaces Meat
+{
+	var int user_short;
+	var int user_time;
+	var int user_t;
+	var int user_w;
+	+THRUACTORS
+	-NOLIFTDROP
+	+DROPOFF
+	+NOTELEPORT
+	+NOTELESTOMP
+	+NOTONAUTOMAP
+	-NOGRAVITY
+	+BOUNCEONWALLS
+	+BOUNCEONFLOORS
+	Radius 6
+	Height 5
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
+		TNT1 A 0 Thing_ChangeTID(0,0)
+		TNT1 A 0 A_JumpIf(user_t < GibTID,"Preplay1")
+		TNT1 A 0 A_SetUserVar(user_w, user_t - GibTID)
+		Goto Preplay2
+	Preplay1:
+		TNT1 A 0 A_SetUserVar(user_w, user_t)
+		Goto Preplay2
+	Preplay2:
+		TNT1 A 0 A_Jump(256,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20)
+		MEAT ABCDEFGHIJLKMNOPQRST 0 A_Jump(256,"Play1")
+	Play1:
+		"####" "##" 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,GibFlags,0,user_w)
+		"####" "#" 0 A_CheckFloor("md1")
+		"####" "#" 0 A_SetUserVar(user_time,user_time+1)
+		"####" "#" 0 A_JumpIf(user_time < 87,"Play1")
+// when the gib crashes:
+	md1:
+	Death:
+		"####" "#" 0 A_JumpIfInventory("ShortGibToken",1,2,AAPTR_PLAYER1)
+		"####" "#" 350 A_JumpIf(user_t >= GibTID,1)
+		"####" "#" 1 A_FadeOut
+		Wait
+	}
+}
+
+//Actor NewMeatGreen	: NewMeat 	{ States { Preplay1:	TNT1 A 0 A_SetUserVar(user_w,Color_Green)		Goto Super::Preplay2 } }
+//Actor NewMeatOrange	: NewMeat 	{ States { Preplay1:	TNT1 A 0 A_SetUserVar(user_w,Color_Orange)		Goto Super::Preplay2 } }
+//Actor NewMeatGray 	: NewMeat 	{ States { Preplay1:	TNT1 A 0 A_SetUserVar(user_w,Color_Gray)		Goto Super::Preplay2 } }
+//Actor NewMeatBlue	: NewMeat 	{ States { Preplay1:	TNT1 A 0 A_SetUserVar(user_w,Color_Blue)		Goto Super::Preplay2 } }
+//Actor NewMeatPurple	: NewMeat 	{ States { Preplay1:	TNT1 A 0 A_SetUserVar(user_w,Color_Purple)		Goto Super::Preplay2 } }
+
+Actor NewJunk : Junk replaces Junk
+{
+	+NOTELESTOMP
+	+THRUACTORS
+	+NOTONAUTOMAP
+}
+
+
+//***********************************
+Actor GreenGib
+{
+	+NOCLIP
+	+NOTELESTOMP
+	+NOTONAUTOMAP
+	+NOINTERACTION
+	RenderStyle None
+	Radius 1
+	Height 1
+	Translation "32:47=123:127", "169:191=112:127"
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_CheckSight("Spawn2")
+		TNT1 AA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),1,0,tid)
+		Stop
+	Spawn2:
+		TNT1 A 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),1,0,tid)
+		Stop
+	}
+}
+
+Actor GreenGibSp : GreenGib
+{
+	Translation "32:47=123:127", "169:191=112:127"
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_CheckSight("Spawn2")
+		TNT1 AAAAAAAAAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),1,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
+		Stop
+	Spawn2:
+		TNT1 A 0
+		TNT1 AAAA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),1,0,tid)
+		TNT1 A 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
+		TNT1 A 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
+		Stop
+	}
+}
+
+//***********************************
+Actor BlueGib
+{
+	+NOCLIP
+	+NOTELESTOMP
+	+NOINTERACTION
+	+NOTONAUTOMAP
+	RenderStyle None
+	Radius 1
+	Height 1
+	Translation "32:47=204:207", "169:191=196:205"
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_CheckSight("Spawn2")
+		TNT1 AA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),1,0,tid)
+		Stop
+	Spawn2:
+		TNT1 A 0
+		Stop
+	}
+}
+
+Actor BlueGibSp : BlueGib
+{
+	Translation "32:47=204:207", "169:191=196:205"
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_CheckSight("Spawn2")
+		TNT1 AAAAAAAAAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),1,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
+		Stop
+	Spawn2:
+		TNT1 A 0
+		TNT1 AAAA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),1,0,tid)
+		TNT1 A 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
+		TNT1 A 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
+		Stop
+	}
+}
+
+
+//***********************************
+Actor OrangeGib
+{
+	+NOCLIP
+	+NOTELESTOMP
+	+NOINTERACTION
+	+NOTONAUTOMAP
+	RenderStyle None
+	Radius 1
+	Height 1
+	Translation "32:47=219:223", "169:191=213:223"
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_CheckSight("Spawn2")
+		TNT1 A 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),1,0,tid)
+		TNT1 A 0 A_TossGib
+		Stop
+	Spawn2:
+		TNT1 A 0 A_TossGib
+		Stop
+	}
+}
+
+Actor OrangeGibSp : GreenGib
+{
+	Translation "32:47=219:223", "169:191=213:223"
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_CheckSight("Spawn2")
+		TNT1 AAAAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),1,0,tid)
+		TNT1 AAAAA 0 A_TossGib
+		TNT1 AA 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
+		Stop
+	Spawn2:
+		TNT1 A 0
+		TNT1 AA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),1,0,tid)
+		TNT1 AA 0 A_TossGib
+		TNT1 A 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
+		TNT1 A 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
+		Stop
+	}
+}
+
+
+//***********************************
+Actor GrayGib
+{
+	+NOCLIP
+	+NOTELESTOMP
+	+NOINTERACTION
+	+NOTONAUTOMAP
+	RenderStyle None
+	Radius 1
+	Height 1
+	Translation "32:47=104:111", "169:191=80:106"
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_CheckSight("Spawn2")
+		TNT1 AA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),1,0,tid)
+		Stop
+	Spawn2:
+		TNT1 A 0 A_TossGib
+		Stop
+	}
+}
+
+Actor GrayGibSp : BlueGib
+{
+	Translation "32:47=104:111", "169:191=80:106"
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_CheckSight("Spawn2")
+		TNT1 AAAAAAAAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),1,0,tid)
+		TNT1 AAAA 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
+		Stop
+	Spawn2:
+		TNT1 A 0
+		TNT1 AA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),1,0,tid)
+		TNT1 AA 0 A_TossGib
+		TNT1 A 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
+		TNT1 A 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
+		Stop
+	}
+}
+
+//***********************************
+Actor PurpleGib
+{
+	+NOCLIP
+	+NOTELESTOMP
+	+NOINTERACTION
+	+NOTONAUTOMAP
+	RenderStyle None
+	Radius 1
+	Height 1
+	Translation "32:47=254:254", "169:191=253:253"
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_CheckSight("Spawn2")
+		TNT1 A 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),1,0,tid)
+		TNT1 A 0 A_TossGib
+		Stop
+	Spawn2:
+		TNT1 A 0 A_TossGib
+		Stop
+	}
+}
+
+Actor PurpleGibSp : GreenGib
+{
+	Translation "32:47=254:254", "169:191=253:253"
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_CheckSight("Spawn2")
+		TNT1 AAAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),1,0,tid)
+		TNT1 AAAAAAAA 0 A_TossGib
+		TNT1 A 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
+		TNT1 A 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
+		TNT1 A 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),32,0,tid)
+		TNT1 A 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),32,0,tid)
+		Stop
+	Spawn2:
+		TNT1 A 0
+		TNT1 AA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),1,0,tid)
+		TNT1 AA 0 A_TossGib
+		TNT1 A 0 A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
+		TNT1 A 0 A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),1,0,tid)
+		Stop
+	}
+}
+
+//===============================================================================
+//===============================================================================
+//
+//	Hexen2 style Gibs
+//
+//===============================================================================
+//===============================================================================
+
+Actor SmallGibDropper
+{
+	const int RAdd = 8;
+	var int user_t;
+	+NOTONAUTOMAP
+	+NOINTERACTION
+	RenderStyle None
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
+		TNT1 A 0 Thing_ChangeTID(0,0)
+		TNT1 A 0 A_CheckSight("Simple")
+		//TNT1 A 0 A_Jump(180,"Drop2","Drop3","Drop4")
+		TNT1 A 0 A_SpawnItemEx("HGib1Small",0,0,0,(velx*random(1,2))+random(-RAdd,RAdd),(vely*random(1,2))+random(-RAdd,RAdd),(velz*random(1,2))+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 A 0 A_SpawnItemEx("HGib2Small",0,0,0,(velx*random(1,2))+random(-RAdd,RAdd),(vely*random(1,2))+random(-RAdd,RAdd),(velz*random(1,2))+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 A 0 A_SpawnItemEx("HGib3Small",0,0,0,(velx*random(1,2))+random(-RAdd,RAdd),(vely*random(1,2))+random(-RAdd,RAdd),(velz*random(1,2))+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		Stop
+	/*
+	Drop2:
+		TNT1 A 0 A_SpawnItemEx("HGib1SmallMirr",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 A 0 A_SpawnItemEx("HGib2SmallMirr",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 A 0 A_SpawnItemEx("HGib3SmallMirr",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		Stop
+	Drop3:
+		TNT1 A 0 A_SpawnItemEx("HGib1Small",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 A 0 A_SpawnItemEx("HGib2SmallMirr",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 A 0 A_SpawnItemEx("HGib3Small",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		Stop
+	Drop4:
+		TNT1 A 0 A_SpawnItemEx("HGib1SmallMirr",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 A 0 A_SpawnItemEx("HGib2Small",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 A 0 A_SpawnItemEx("HGib3SmallMirr",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		Stop */
+	Simple:
+		TNT1 A 0 A_SpawnItemEx("HGib1Small",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		Stop
+	}
+}
+
+Actor HGib1Small
+{
+	var int user_t;
+	var int user_w;
+	Projectile
+	+DOOMBOUNCE
+	-NOGRAVITY
+	-NOBLOCKMAP
+	+THRUACTORS
+	BounceFactor 0.45
+	Speed 4
+	Scale 0.07
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
+		TNT1 A 0 Thing_ChangeTID(0,0)
+		TNT1 A 0 A_SetScale(ScaleX*randompick(-1,1),ScaleY)
+		TNT1 A 0 A_SetUserVar(user_w,user_t)
+		TNT1 A 0 A_JumpIf(user_w < GibTID,2)
+		TNT1 A 0 A_SetUserVar(user_w, user_t - GibTID)
+		TNT1 A 0 A_ChangeVelocity(0,0,random(3,15))
+		Goto Play
+	Play:
+		GIB7 AABBCCDDEEFFGGHHIIJJKKLLMM 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,user_w)
+		Goto Death
+	Death:
+		"####" "#" 0 A_JumpIfInventory("ShortGibToken",1,2,AAPTR_PLAYER1)
+		GIB7 M random(300,400) A_JumpIf(user_t >= GibTID,1) //Skip the duration.
+		GIB7 M 2 A_FadeOut
+		Wait
+	}
+}
+
+
+Actor HGib1SmallMirr : HGib1Small
+{
+	Speed 5
+	States
+	{
+	Play:
+		GIB7 NNOOPPQQRRSSTTUUVVWWXXYYZZ 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,user_w)
+		Goto Death
+	Death:
+		"####" "#" 0 A_JumpIfInventory("ShortGibToken",1,2,AAPTR_PLAYER1)
+		GIB7 Z random(300,400) A_JumpIf(user_t >= GibTID,1)
+		GIB7 Z 2 A_FadeOut
+		Wait
+	}
+}
+
+Actor HGib2Small : HGib1Small
+{
+	Speed 6
+	States
+	{
+	Play:
+		GIB8 AABBCCDDEEFFGGHHIIJJKKLLMM 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,user_w)
+		Goto Death
+	Death:
+		"####" "#" 0 A_JumpIfInventory("ShortGibToken",1,2,AAPTR_PLAYER1)
+		GIB8 M random(300,400) A_JumpIf(user_t >= GibTID,1)
+		GIB8 M 2 A_FadeOut
+		Wait
+	}
+}
+
+Actor HGib2SmallMirr : HGib1Small
+{
+	Speed 3
+	States
+	{
+	Play:
+		GIB8 NNOOPPQQRRSSTTUUVVWWXXYYZZ 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,user_w)
+		Goto Death
+	Death:
+		"####" "#" 0 A_JumpIfInventory("ShortGibToken",1,2,AAPTR_PLAYER1)
+		GIB8 Z random(300,400) A_JumpIf(user_t >= GibTID,1)
+		GIB8 Z 2 A_FadeOut
+		Wait
+	}
+}
+
+Actor HGib3Small : HGib1Small
+{
+	Speed 2
+	States
+	{
+	Play:
+		GIB9 AABBCCDDEEFFGGHHIIJJKKLL 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,user_w)
+		Goto Death
+	Death:
+		"####" "#" 0 A_JumpIfInventory("ShortGibToken",1,2,AAPTR_PLAYER1)
+		GIB9 L random(300,400) A_JumpIf(user_t >= GibTID,1)
+		GIB9 L 2 A_FadeOut
+		Wait
+	}
+}
+
+Actor HGib3SmallMirr : HGib1Small
+{
+	Speed 4
+	States
+	{
+	Play:
+		GIB8 NNOOPPQQRRSSTTUUVVWWXXYYZZ 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,user_w)
+		Goto Death
+	Death:
+		"####" "#" 0 A_JumpIfInventory("ShortGibToken",1,2,AAPTR_PLAYER1)
+		GIB9 Z random(300,400) A_JumpIf(user_t >= GibTID,1)
+		GIB9 Z 2 A_FadeOut
+		Wait
+	}
+}
+   
+
+//***************************************************
+//***************************************************
+Actor GibDropper
+{
+	const int RAdd = 8;
+	var int user_t;
+	+NOINTERACTION
+	+NOTONAUTOMAP
+	RenderStyle None
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
+		TNT1 A 0 Thing_ChangeTID(0,0)
+		TNT1 A 0 A_CheckSight("Simple")
+		TNT1 A 0 A_Jump(180,"Drop2","Drop3","Drop4")
+		TNT1 A 0 A_SpawnItemEx("HGib1",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 A 0 A_SpawnItemEx("HGib2",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 A 0 A_SpawnItemEx("HGib3",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 A 1
+		Stop
+	Drop2:
+		TNT1 A 0 A_SpawnItemEx("HGib1Mirr",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 A 0 A_SpawnItemEx("HGib2Mirr",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 A 0 A_SpawnItemEx("HGib3Mirr",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 A 1
+		Stop
+	Drop3:
+		TNT1 A 0 A_SpawnItemEx("HGib1",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 A 0 A_SpawnItemEx("HGib2Mirr",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 A 0 A_SpawnItemEx("HGib3",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 A 1
+		Stop
+	Drop4:
+		TNT1 A 0 A_SpawnItemEx("HGib1Mirr",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 A 0 A_SpawnItemEx("HGib2",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 A 0 A_SpawnItemEx("HGib3Mirr",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 A 1
+		Stop
+	Simple:
+		TNT1 A 0 A_SpawnItemEx("HGib1Small",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		Stop
+	}
+}
+
+Actor HGib1
+{
+	var int user_t;
+	var int user_w;
+	Projectile
+	-NOGRAVITY
+	-NOBLOCKMAP
+	+DOOMBOUNCE
+	+THRUACTORS
+	BounceFactor 0.4
+	Speed 4
+	Scale 0.1
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
+		TNT1 A 0 Thing_ChangeTID(0,0)
+		TNT1 A 0 A_SetScale((ScaleX-(ScaleX*frandom(-0.10,0.10)))*randompick(-1,1),ScaleY-(ScaleY*frandom(-0.10,0.10)))
+		TNT1 A 0 A_SetUserVar(user_w,user_t)
+		TNT1 A 0 A_JumpIf(user_w < GibTID,2)
+		TNT1 A 0 A_SetUserVar(user_w, user_t - GibTID)
+		TNT1 A 0 A_ChangeVelocity(0,0,random(5,18))
+	Play:
+		GIB7 AABBCCDDEEFFGGHHIIJJKKLLMM 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,user_w)
+		Goto Death
+	Death:
+		"####" "#" 0 A_JumpIfInventory("ShortGibToken",1,2,AAPTR_PLAYER1)
+		GIB7 M random(300,400) A_JumpIf(user_t >= GibTID,1)
+		GIB7 M 2 A_FadeOut
+		Wait
+	}
+}
+Actor HGib1Mirr : HGib1
+{
+	Speed 5
+	States
+	{
+	Play:
+		GIB7 NNOOPPQQRRSSTTUUVVWWXXYYZZ 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,user_w)
+		Goto Death
+	Death:
+		"####" "#" 0 A_JumpIfInventory("ShortGibToken",1,2,AAPTR_PLAYER1)
+		GIB7 Z random(300,400) A_JumpIf(user_t >= GibTID,1)
+		GIB7 Z 2 A_FadeOut
+		Wait
+	}
+}
+
+Actor HGib2 : HGib1
+{
+	Speed 6
+	States
+	{
+	Play:
+		GIB8 AABBCCDDEEFFGGHHIIJJKKLLMM 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,user_w)
+		Goto Death
+	Death:
+		"####" "#" 0 A_JumpIfInventory("ShortGibToken",1,2,AAPTR_PLAYER1)
+		GIB8 M random(300,400) A_JumpIf(user_t >= GibTID,1)
+		GIB8 M 2 A_FadeOut
+		Wait
+	}
+}
+
+
+Actor HGib2Mirr : HGib1
+{
+	Speed 5
+	States
+	{
+	Play:
+		GIB8 NNOOPPQQRRSSTTUUVVWWXXYYZZ 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,user_w)
+		Goto Death
+	Death:
+		"####" "#" 0 A_JumpIfInventory("ShortGibToken",1,2,AAPTR_PLAYER1)
+		GIB8 Z random(300,400) A_JumpIf(user_t >= GibTID,1)
+		GIB8 Z 2 A_FadeOut
+		Wait
+	}
+}
+
+Actor HGib3 : HGib1
+{
+	Speed 6
+	States
+	{
+	Play:
+		GIB9 AABBCCDDEEFFGGHHIIJJKKLL 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,user_w)
+		Goto Death
+	Death:
+		"####" "#" 0 A_JumpIfInventory("ShortGibToken",1,2,AAPTR_PLAYER1)
+		GIB9 L random(300,400) A_JumpIf(user_t >= GibTID,1)
+		GIB9 L 2 A_FadeOut
+		Wait
+	}
+}
+
+Actor HGib3Mirr : HGib1
+{
+	Speed 5
+	States
+	{
+	Play:
+		GIB9 MMNNOOPPQQRRSSTTUUVVWWXX 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,user_w)
+		Goto Death
+	Death:
+		"####" "#" 0 A_JumpIfInventory("ShortGibToken",1,2,AAPTR_PLAYER1)
+		GIB9 X random(300,400) A_JumpIf(user_t >= GibTID,1)
+		GIB9 X 2 A_FadeOut
+		Wait
+	}
+}
+
+//===============================================================================
+//===============================================================================
+//
+//	Quake gibs
+//
+//===============================================================================
+//===============================================================================
+
+Actor QuakeGibDropper
+{
+	const int RAdd = 8;
+	var int user_t;
+	var int user_w;
+	+NOINTERACTION
+	+NOTONAUTOMAP
+	RenderStyle None
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
+		TNT1 A 0 Thing_ChangeTID(0,0)
+		TNT1 A 0 A_CheckSight("Simple")
+		TNT1 AAA 0 A_Jump(180,"Drop2","Drop3","Drop4")
+		TNT1 AAA 0 A_SpawnItemEx("Gib1",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 A 0 A_SpawnItemEx("Gib2",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 A 0 A_SpawnItemEx("GibTorso",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		Stop
+	Drop2:
+		TNT1 AAA 0 A_SpawnItemEx("Gib1",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 AA 0 A_SpawnItemEx("Gib2",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 A 0 A_SpawnItemEx("GibTorso",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		Stop
+	Drop3:
+		TNT1 AA 0 A_SpawnItemEx("Gib1",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 AAA 0 A_SpawnItemEx("Gib2",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 A 0 A_SpawnItemEx("GibTorso",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		Stop
+	Drop4:
+		TNT1 AA 0 A_SpawnItemEx("Gib1",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 AA 0 A_SpawnItemEx("Gib2",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 A 0 A_SpawnItemEx("GibTorso",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		Stop
+	Simple:
+		TNT1 A 0 A_SpawnItemEx("Gib1",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		Stop
+	}
+}
+//***********************************
+Actor Gib1
+{
+	var int user_t;
+	var int user_w;
+	Projectile
+	-NOGRAVITY
+	-NOBLOCKMAP
+	-NOLIFTDROP
+	-SOLID
+	+DROPOFF
+	+THRUACTORS
+	+DOOMBOUNCE
+	BounceFactor 0.45
+	Speed 8
+	Scale 0.34
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
+		TNT1 A 0 Thing_ChangeTID(0,0)
+		TNT1 A 0 A_SetUserVar(user_w,user_t)
+		TNT1 A 0 A_JumpIf(user_w < GibTID,2)
+		TNT1 A 0 A_SetUserVar(user_w, user_t - GibTID)
+		TNT1 A 0 A_ChangeVelocity(0,0,random(5,18))
+		Goto Play
+	Play:
+		Q99B BBCCDDEEFFGGHHIIJJKKLLMMNN 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,user_w)
+		Goto Death
+	Death:
+		"####" "#" 0 A_JumpIfInventory("ShortGibToken",1,2,AAPTR_PLAYER1)
+		Q99B N random(300,400) A_JumpIf(user_t >= GibTID,1)
+		Q99B N 2 A_FadeOut
+		Wait
+	}
+}
+
+Actor GibTorso : Gib1
+{
+	Speed 2
+	Scale 0.31
+	States
+	{
+	Play:
+		Q99C AABBCCDDEEFF 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,user_w)
+		Goto Death
+	Death:
+		"####" "#" 0 A_JumpIfInventory("ShortGibToken",1,2,AAPTR_PLAYER1)
+		Q99C F random(300,400) A_JumpIf(user_t >= GibTID,1)
+		Q99C F 2 A_FadeOut
+		Wait
+	}
+}
+
+Actor Gib2 : Gib1
+{
+	Speed 5
+	Scale 0.26
+	States
+	{
+	Play:
+		Q99D AABBCCDDEE 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,user_w)
+		Goto Death
+	Death:
+		"####" "#" 0 A_JumpIfInventory("ShortGibToken",1,2,AAPTR_PLAYER1)
+		Q99D F random(300,400) A_JumpIf(user_t >= GibTID,1)
+		Q99D F 2 A_FadeOut
+		Wait
+	}
+}
+
+//==================================================================
+Actor QuakeSmallGibDropper
+{
+	const int RAdd = 8;
+	var int user_t;
+	+NOTONAUTOMAP
+	+NOINTERACTION
+	RenderStyle None
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
+		TNT1 A 0 Thing_ChangeTID(0,0)
+		TNT1 A 0 A_CheckSight("Simple")
+		TNT1 A 0 A_Jump(180,"Drop2","Drop3","Drop4")
+		TNT1 AAA 0 A_SpawnItemEx("SmallGib1",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 A 0 A_SpawnItemEx("SmallGib2",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 A 0 A_SpawnItemEx("SmallGibTorso",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		Stop
+	Drop2:
+		TNT1 AAA 0 A_SpawnItemEx("SmallGib1",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 AA 0 A_SpawnItemEx("SmallGib2",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 A 0 A_SpawnItemEx("SmallGibTorso",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		Stop
+	Drop3:
+		TNT1 AA 0 A_SpawnItemEx("SmallGib1",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 AAA 0 A_SpawnItemEx("SmallGib2",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 A 0 A_SpawnItemEx("SmallGibTorso",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		Stop
+	Drop4:
+		TNT1 AA 0 A_SpawnItemEx("SmallGib1",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 AA 0 A_SpawnItemEx("SmallGib2",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 A 0 A_SpawnItemEx("SmallGibTorso",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		Stop
+
+	Simple:
+		TNT1 A 0 A_SpawnItemEx("Gib1",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		Stop
+	}
+}
+
+//***********************************
+Actor SmallGib1 : Gib1
+{
+	Speed 8
+	Scale 0.27
+	States
+	{
+	Play:
+		Q99B BBCCDDEEFFGGHHIIJJKKLLMMNN 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,user_w)
+		Goto Death
+	Death:
+		"####" "#" 0 A_JumpIfInventory("ShortGibToken",1,2,AAPTR_PLAYER1)
+		Q99B N 350 A_JumpIf(user_t >= GibTID,1)
+		Q99B N 2 A_FadeOut
+		Wait
+	}
+}
+
+Actor SmallGibTorso : SmallGib1 
+{
+	Speed 2
+	Scale 0.23
+	States
+	{
+	Play:
+		Q99C AABBCCDDEEFF 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,user_w)
+		Goto Death
+	Death:
+		"####" "#" 0 A_JumpIfInventory("ShortGibToken",1,2,AAPTR_PLAYER1)
+		Q99C F 380 A_JumpIf(user_t >= GibTID,1)
+		Q99C F 2 A_FadeOut
+		Wait
+	}
+}
+
+
+Actor SmallGib2 : SmallGib1 
+{
+	Speed 5
+	Scale 0.19
+	States
+	{
+	Play: //ThrustThingZ(0,random(10,60),0,1)
+		Q99D AABBCCDDEE 2 A_SpawnItemEx("GibBloodSmall",0,0,0,0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,user_w)
+		Goto Death
+	Death:
+		"####" "#" 0 A_JumpIfInventory("ShortGibToken",1,2,AAPTR_PLAYER1)
+		Q99D F 366 A_JumpIf(user_t >= GibTID,1)
+		Q99D F 2 A_FadeOut
+		Wait
+	}
+}
+
+
+//===============================================================================
+//===============================================================================
+//
+//	Blood style gibs
+//
+//===============================================================================
+//===============================================================================
+Actor BloodGibDropper
+{
+	const int RAdd = 5;
+	var int user_t;
+	+NOINTERACTION
+	+NOTONAUTOMAP
+	RenderStyle None
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
+		TNT1 A 0 Thing_ChangeTID(0,0)
+		TNT1 A 0 A_CheckSight("Simple")
+		TNT1 A 0 A_Jump(180,"Drop2","Drop3","Drop4")
+		TNT1 AAAAAAAAAAAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,0,random(1,2)*velx+random(-7,7),random(1,2)*vely+random(-7,7),random(1,2)*velz+random(1,14),random(1,359),GibFlags,0,user_t)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib1",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib2",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 AAA 0 A_SpawnItemEx("BloodGib3",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 A 0 A_SpawnItemEx("BloodGib4",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		Stop
+	Drop2:
+		TNT1 AAAAAAAAAAAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,0,random(1,2)*velx+random(-7,7),random(1,2)*vely+random(-7,7),random(1,2)*velz+random(1,14),random(1,359),GibFlags,0,user_t)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib1",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib2",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib3",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib4",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		Stop
+	Drop3:
+		TNT1 AAAAAAAAAAAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,0,random(1,2)*velx+random(-7,7),random(1,2)*vely+random(-7,7),random(1,2)*velz+random(1,14),random(1,359),GibFlags,0,user_t)
+		TNT1 A 0 A_SpawnItemEx("BloodGib1",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib2",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 AAA 0 A_SpawnItemEx("BloodGib3",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib4",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		Stop
+	Drop4:
+		TNT1 AAAAAAAAAAAAAAAA 0 A_SpawnItemEx("NewMeat",0,0,0,random(1,2)*velx+random(-7,7),random(1,2)*vely+random(-7,7),random(1,2)*velz+random(1,14),random(1,359),GibFlags,0,user_t)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib1",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 A 0 A_SpawnItemEx("BloodGib2",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 AA 0 A_SpawnItemEx("BloodGib3",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 AAA 0 A_SpawnItemEx("BloodGib4",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		Stop
+	Simple:
+		TNT1 AAAA 0 A_SpawnItemEx("NewMeat",0,0,0,random(1,2)*velx+random(-7,7),random(1,2)*vely+random(-7,7),random(1,2)*velz+random(1,14),random(1,359),GibFlags,0,user_t)
+		TNT1 A 0 A_SpawnItemEx("BloodGib1",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 A 0 A_SpawnItemEx("BloodGib2",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 A 0 A_SpawnItemEx("BloodGib3",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		TNT1 A 0 A_SpawnItemEx("BloodGib4",0,0,0,velx*random(1,2)+random(-RAdd,RAdd),vely*random(1,2)+random(-RAdd,RAdd),velz*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t)
+		Stop
+	}
+}
+
+//***************************************
+Actor BloodGib1		
+{
+	var int user_t;
+	var int user_c;
+	var int user_w;
+	Projectile
+	+THRUACTORS
+	-NOGRAVITY
+	+BOUNCEONCEILINGS
+	+BOUNCEONWALLS
+	Scale 0.6
+	Radius 6
+	Height 5
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_SetUserVar(user_t,tid)
+		TNT1 A 0 Thing_ChangeTID(0,0)
+		TNT1 A 0 A_SetScale((ScaleX-(ScaleX*frandom(-0.10,0.10)))*randompick(-1,1),ScaleY-(ScaleY*frandom(-0.10,0.10)))
+		TNT1 A 0 A_SetUserVar(user_w,user_t)
+		TNT1 A 0 A_JumpIf(user_w < GibTID,2)
+		TNT1 A 0 A_SetUserVar(user_w, user_t - GibTID)
+		TNT1 A 0 ThrustThingZ(0,random(12,80),0,1)
+		Goto Looping
+	Looping:
+		ANYG AABBCCDD 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,user_w)
+		"####" "#" 0 A_SetUserVar(user_c,user_c+1)
+		"####" "#" 0 A_JumpIf(user_c > 5,"Death")
+		Loop
+	Death:
+		"####" "#" 0 A_JumpIfInventory("ShortGibToken",1,2,AAPTR_PLAYER1)
+		ANYG E random(300,600) A_JumpIf(user_t >= GibTID,1)
+		ANYG E 1 A_FadeOut
+		Wait
+	}
+}
+
+Actor BloodGib2 : BloodGib1		//eye
+{
+	Scale 0.4
+	Speed 7
+	States
+	{
+	Looping:
+		ANYG FFGGHHII 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,user_w)
+		"####" "#" 0 A_SetUserVar(user_c,user_c+1)
+		"####" "#" 0 A_JumpIf(user_c > 5,"Death")
+		Loop
+	Death:
+		"####" "#" 0 A_JumpIfInventory("ShortGibToken",1,2,AAPTR_PLAYER1)
+		ANYG J random(300,600) A_JumpIf(user_t >= GibTID,1)
+		ANYG J 1 A_FadeOut
+		Wait
+	}
+}
+
+Actor BloodGib3 : BloodGib1		//liver
+{
+	Scale 0.6
+	Speed 7
+	States
+	{
+	Looping:
+		ANYG KKLLMMNN 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,user_w)
+		"####" "#" 0 A_SetUserVar(user_c,user_c+1)
+		"####" "#" 0 A_JumpIf(user_c > 5,"Death")
+		Loop
+	Death:
+		"####" "#" 0 A_JumpIfInventory("ShortGibToken",1,2,AAPTR_PLAYER1)
+		ANYG O random(300,600) A_JumpIf(user_t >= GibTID,1)
+		ANYG O 1 A_FadeOut
+		Wait
+	}
+}
+
+Actor BloodGib4 : BloodGib1		//bloodthing
+{
+	Scale 0.6
+	Speed 7
+	States
+	{
+	Looping:
+		ANYG PPQQRRSS 2 A_SpawnItemEx("GibBloodTrailMediumSize",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,user_w)
+		"####" "#" 0 A_SetUserVar(user_c,user_c+1)
+		"####" "#" 0 A_JumpIf(user_c > 5,"Death")
+		Loop
+	Death:
+		"####" "#" 0 A_JumpIfInventory("ShortGibToken",1,2,AAPTR_PLAYER1)
+		ANYG T random(300,600) A_JumpIf(user_t >= GibTID,1)
+		ANYG T 1 A_FadeOut
+		Wait
 	}
 }
