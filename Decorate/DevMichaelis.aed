@@ -436,7 +436,7 @@ Actor AEoDC14NoAmmo : CustomInventory
 		Loop
 	Pickup:
 		TNT1 A 0 A_JumpIfInventory("AEoDC14",1,"Ammo")
-		TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",7) <= 0,"Nothing")
+		TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",4) <= 0,"Nothing")
 		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
 		TNT1 A 0 A_GiveInventory("C14Drop",1)
 		TNT1 A 0 A_GiveInventory("AEoDC14",1)
@@ -446,7 +446,7 @@ Actor AEoDC14NoAmmo : CustomInventory
 		TNT1 A 0 A_JumpIfInventory("AEoDC14",1,"Ammo")
 		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
 		Goto Pickup+2
-		TNT1 A 0 ACS_NamedExecute("s798",0,7,163,0)
+		TNT1 A 0 ACS_NamedExecute("s798",0,4,163,0)
 		Fail
 	Ammo:
 		TNT1 A 0 A_GiveInventory("AEoDC14",1)
@@ -482,6 +482,7 @@ Actor DroppedC14
 	}
 }
 
+// This weapon's pickup is unlike any other's due to upgrade system.
 Actor AEoDC14Item : AEoDC14NoAmmo
 {
 	+INVENTORY.IGNORESKILL
@@ -491,7 +492,7 @@ Actor AEoDC14Item : AEoDC14NoAmmo
 		O003 Z -1
 		Loop
 	Pickup:
-		TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",7) <= 0,"Nothing")
+		TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",4) <= 0,"Nothing")
 		TNT1 A 0 A_JumpIfInventory("AEClip",60,"Ammo")
 		TNT1 A 0 A_JumpIfInventory("MiniRockets",15,"Ammo3")
 		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
@@ -505,7 +506,7 @@ Actor AEoDC14Item : AEoDC14NoAmmo
 		TNT1 A 0 A_JumpIfInventory("AEoDC14",1,"Ammo")
 		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
 		Goto Pickup+2
-		TNT1 A 0 ACS_NamedExecute("s798",0,7,163,0)
+		TNT1 A 0 ACS_NamedExecute("s798",0,4,163,0)
 		Fail
 	Ammo:
 		TNT1 A 0 A_JumpIfInventory("MiniRockets",15,1)
@@ -534,6 +535,8 @@ Actor AEoDC14Item : AEoDC14NoAmmo
 	}
 }
 
+Actor HasUpgrades			: Inventory { Inventory.MaxAmount 16 }
+
 Actor CanHoldGround 		: Inventory {}	//
 Actor CanHoldAim 			: Inventory {}	//
 Actor CanFireExtraRound 	: Inventory {}	//
@@ -542,12 +545,15 @@ Actor CanFireElectricRound 	: Inventory {}	//
 Actor CanFireRailRound 		: Inventory {}	//
 Actor CanFireScatterRound 	: Inventory {}	//
 Actor CanFireExtraBurst 	: Inventory {}	//
-Actor CanFireNonStop 		: Inventory {}
+Actor CanFireNonStop 		: Inventory {}	//
 Actor CanRestoreAmmo 		: Inventory {}	//
 Actor CanFireHeavyRounds 	: Inventory {}	//
-Actor CanFireGrenade 		: Inventory {}
 Actor CanFireFaster 		: Inventory {}	//
 Actor CanFirePrecisely		: Inventory {}	//
+Actor CanBlastShrapnel 		: Inventory {}
+Actor CanBlastNotSelf 		: Inventory {}
+Actor CanBlastFire 			: Inventory {}
+Actor CanBlastFar 			: Inventory {}
 
 Actor RoundsLeft		: Inventory { Inventory.MaxAmount 255 }
 Actor ExtraRoundsLeft	: RoundsLeft {}
@@ -637,14 +643,14 @@ Actor AEoDC14 : Weapon
 	FireFire:
 		TNT1 A 0 A_TakeInventory("FireRoundsLeft",1)
 		TNT1 A 0 A_JumpIfInventory(CanFirePrecisely,1,2)
-		TNT1 A 0 A_FireBullets(3,3,1,18,"FireSpawningPuff")		Goto Shot
-		TNT1 A 0 A_FireBullets(1,1,1,24,"FireSpawningPuff")		Goto Shot
+		TNT1 A 0 A_FireBullets(3,3,1,0,"FireSpawningPuff")		Goto Shot
+		TNT1 A 0 A_FireBullets(1,1,1,0,"FireSpawningPuff")		Goto Shot
 		
 	FireElectric:
 		TNT1 A 0 A_TakeInventory("ElectricRoundsLeft",1)
 		TNT1 A 0 A_JumpIfInventory(CanFirePrecisely,1,2)
-		TNT1 A 0 A_FireBullets(3,3,1,18,"ElectricSpawningPuff")	Goto Shot
-		TNT1 A 0 A_FireBullets(1,1,1,24,"ElectricSpawningPuff")	Goto Shot
+		TNT1 A 0 A_FireBullets(3,3,1,0,"ElectricSpawningPuff")	Goto Shot
+		TNT1 A 0 A_FireBullets(1,1,1,0,"ElectricSpawningPuff")	Goto Shot
 		
 	FireRail:
 		TNT1 A 0 A_TakeInventory("RailRoundsLeft",1)
@@ -652,13 +658,15 @@ Actor AEoDC14 : Weapon
 	
 	FireScatter:
 		TNT1 A 0 A_TakeInventory("ScatterRoundsLeft",1)
-		TNT1 A 0 A_JumpIfInventory(CanFirePrecisely,1,7)
+		TNT1 A 0 A_JumpIfInventory(CanFirePrecisely,1,"ScatterPrecisely")
+	Scatter:
 		TNT1 A 0 A_FireBullets(7,7,1,3,"NewPuff1Silent",0)
 		TNT1 A 0 A_FireBullets(3,7,1,3,"NewPuff1Silent",0)
 		TNT1 A 0 A_FireBullets(7,3,1,3,"NewPuff1Silent",0)
 		TNT1 A 0 A_FireBullets(5,5,1,3,"NewPuff1Silent",0)
 		TNT1 A 0 A_FireBullets(4,4,1,3,"NewPuff1Silent",0)
-		TNT1 A 0 A_FireBullets(3,3,1,3,"NewPuff1Silent",0)				Goto Shot
+		TNT1 A 0 A_FireBullets(3,3,1,3,"NewPuff1Silent",0)			Goto Shot
+	ScatterPrecisely:
 		TNT1 A  0 A_FireBullets(3,3,1,3,"NewPuff1Silent",0)
 		TNT1 AA 0 A_FireBullets(1,3,1,3,"NewPuff1Silent",0)
 		TNT1 AA 0 A_FireBullets(3,1,1,3,"NewPuff1Silent",0)
@@ -669,23 +677,39 @@ Actor AEoDC14 : Weapon
 		Goto FireOrdinary+1
 	FireOrdinary:
 		TNT1 A 0 A_TakeInventory("RoundsLeft",1)
-		TNT1 A 0 A_JumpIfInventory(CanFireHeavyRounds,1,4)
+		TNT1 A 0 A_JumpIfInventory(CanFireHeavyRounds,1,"OrdinaryHeavy")
+	Ordinary:
 		TNT1 A 0 A_JumpIfInventory(CanFirePrecisely,1,2)
 		TNT1 A 0 A_FireBullets(3,3,1,18,"NewPuff1")				Goto Shot
 		TNT1 A 0 A_FireBullets(1,1,1,24,"NewPuff1")				Goto Shot
+	OrdinaryHeavy:
 		TNT1 A 0 A_JumpIfInventory(CanFirePrecisely,1,2)
 		TNT1 A 0 A_FireBullets(2,2,1,27,"NewPuff1")				Goto Shot
 		TNT1 A 0 A_FireBullets(0.2,0.2,1,35,"NewPuff1")			Goto Shot
 		
 	Shot:
 		TNT1 A 0 A_FireCustomMissile("RevolverCasingSpawner",random(-40,-60),0, 0,0)
-		TNT1 A 0 A_JumpIfInventory(CanHoldAim,1,2)
-		TNT1 A 0 A_Turn(frandom(-1,1))
-		TNT1 A 0 A_JumpIfInventory(CanHoldGround,1,2)
-		TNT1 A 0 A_Recoil(random(1,3))
+	AimDegradation:
+		TNT1 A 0 A_JumpIfInventory(CanHoldAim,1,"Recoil")
 		TNT1 A 0 A_JumpIfInventory(CanFireHeavyRounds,1,2)
-		TNT1 A 0 A_PlayWeaponSound("Sc2/Wep/C14")		Goto ShotVisual
-		TNT1 A 0 A_PlayWeaponSound("Sc2/Wep/C14Heavy") 	Goto ShotVisual
+		TNT1 A 0 A_Turn(frandom(-1,1))
+		Goto Recoil
+		TNT1 A 0 A_Turn(frandom(-2,2))
+		Goto Recoil
+	Recoil:
+		TNT1 A 0 A_JumpIfInventory(CanHoldGround,1,"Sound")
+		TNT1 A 0 A_JumpIfInventory(CanFireHeavyRounds,1,2)
+		TNT1 A 0 A_Recoil(random(1,random(1,2)))
+		Goto Sound
+		TNT1 A 0 A_Recoil(random(1,3))
+		Goto Sound
+	Sound:
+		TNT1 A 0 A_PlayWeaponSound("Sc2/Wep/C14")		
+		TNT1 A 0 A_JumpIfInventory(CanFireHeavyRounds,1,1)
+		Goto ShotVisual
+		TNT1 A 0 A_PlaySoundEx("Sc2/Wep/C14Heavy",Auto)
+		Goto ShotVisual
+		
 	ShotVisual:
 		TNT1 A 0 A_Jump(256,"ShotVisualA","ShotVisualB","ShotVisualC","ShotVisualD","ShotVisualE","ShotVisualF","ShotVisualG","ShotVisualH") // can't use random() in offset()
 	ShotVisualA:
@@ -722,16 +746,17 @@ Actor AEoDC14 : Weapon
 		O003 A 1 Offset(188, 123) A_SetPitch(pitch-.5)			Goto ShotVisualEnd
 	ShotVisualEnd:
 		O003 A 1 Offset(185, 121) A_JumpIfInventory(CanFireFaster,1,1)
-		TNT1 A 0 A_JumpIfInventory(CanFireNonStop,1,2)	// RoF penalty for non-stop without double burst
-		O003 A 0 A_Refire("FireLoop")
-		O003 A 2 Offset(185, 121) A_JumpIfInventory(CanFireExtraBurst,1,1)
 		O003 A 0 A_Refire("FireLoop")
 		Goto EndSequence
 		
 	EndSequence:
-		TNT1 A 0 A_JumpIfInventory("CanRestoreAmmo"		,1,1) 	Goto EndSequence+2
+		TNT1 A 0 A_JumpIfInventory("CanRestoreAmmo",1,"RestoreAmmo") 
+		Goto ReinitSequence
+	RestoreAmmo:
 		TNT1 A 0 A_GiveInventory("AENails",1)
-		TNT1 A 0 A_JumpIfInventory("BurstsLeft"			,1,"InitSequence")
+		Goto ReinitSequence
+	ReinitSequence:
+		TNT1 A 0 A_JumpIfInventory("BurstsLeft",1,"InitSequence")
 		Goto EndMetaSequence
 	
 	EndMetaSequence:
@@ -769,6 +794,6 @@ Actor AEoDC14 : Weapon
 	}
 }
 
-Actor ElectricSpawningPuff : Nothing { }
-Actor FireSpawningPuff : Nothing { }
+Actor ElectricSpawningPuff : TekbowArrow1 { }
+Actor FireSpawningPuff : FusionChaingunBoom { -EXTREMEDEATH }
 
