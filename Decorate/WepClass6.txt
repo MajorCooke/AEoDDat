@@ -6823,7 +6823,7 @@ Actor ArcaneStreamer
 	}
 }
 
-Actor EnlightenStreamToken : Inventory {}
+Actor EnlightenStreamToken : Inventory { Inventory.InterHubAmount 0 }
 
 Actor ArcaneStreamBlast
 {
@@ -6832,6 +6832,7 @@ Actor ArcaneStreamBlast
 	var int user_neg[2];
 	var int user_yz;
 	var int user_speed;
+	var int user_offset;
 	Projectile
 	+NODAMAGETHRUST
 	+INVULNERABLE
@@ -6848,25 +6849,20 @@ Actor ArcaneStreamBlast
 	States
 	{
 	Spawn:
-		X149 A 0 NoDelay A_SetUserVar(user_t,tid)
-		X149 A 0 Thing_ChangeTID(0,0)
-		"####" "#" 0 A_SetUserArray(user_neg,0,randompick(-1,1))
-		"####" "#" 0 A_SetUserArray(user_neg,1,randompick(-1,1))
-		"----" A 0 A_SetScale(ScaleX*user_neg[0],ScaleY*user_neg[1])
-		//X149 A 0 A_JumpIf(user_t == 7777,"Secondary")
-		//X149 A 0 A_SpawnItemEx("ArcStrOrbClr",0,0,0,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERPOINTERS|SXF_SETMASTER|SXF_ORIGINATOR|SXF_ABSOLUTEVELOCITY,0,0+user_t)
-		//X149 A 0 A_JumpIf(user_t <= 72,2)
-		//X149 A 0 A_SpawnItemEx("ArcaneStreamBlast",0,0,0,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERPOINTERS|SXF_TRANSFERTRANSLATION,0,7777)
-		//X149 A 0 A_JumpIf(user_t <= 48,2)
-		//X149 A 0 A_SpawnItemEx("ArcaneStreamBlast",0,0,0,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERPOINTERS|SXF_TRANSFERTRANSLATION,0,7777)
-		//X149 A 0 A_JumpIf(user_t <= 24,2)
-		//X149 A 0 A_SpawnItemEx("ArcaneStreamBlast",0,0,0,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERPOINTERS|SXF_TRANSFERTRANSLATION,0,7777)
-		X149 A 0 A_SpawnItemEx("ArcStrOrb",0,0,0,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERPOINTERS|SXF_SETMASTER|SXF_ORIGINATOR|SXF_ABSOLUTEVELOCITY,0,0+user_t)
-		X149 A 0 A_SpawnItemEx("ArcStrOrb",0,0,0,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERPOINTERS|SXF_SETMASTER|SXF_ORIGINATOR|SXF_ABSOLUTEVELOCITY,0,60+user_t)
-		X149 A 0 A_SpawnItemEx("ArcStrOrb",0,0,0,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERPOINTERS|SXF_SETMASTER|SXF_ORIGINATOR|SXF_ABSOLUTEVELOCITY,0,120+user_t)
-		X149 A 0 A_SpawnItemEx("ArcStrOrb",0,0,0,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERPOINTERS|SXF_SETMASTER|SXF_ORIGINATOR|SXF_ABSOLUTEVELOCITY,0,180+user_t)
-		X149 A 0 A_SpawnItemEx("ArcStrOrb",0,0,0,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERPOINTERS|SXF_SETMASTER|SXF_ORIGINATOR|SXF_ABSOLUTEVELOCITY,0,240+user_t)
-		X149 A 0 A_SpawnItemEx("ArcStrOrb",0,0,0,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERPOINTERS|SXF_SETMASTER|SXF_ORIGINATOR|SXF_ABSOLUTEVELOCITY,0,300+user_t)
+		X149 A 0 NoDelay
+		{
+			A_SetUserVar(user_t,tid);
+			Thing_ChangeTID(0,0);
+			A_SetUserArray(user_neg,0,randompick(-1,1));
+			A_SetUserArray(user_neg,1,randompick(-1,1));
+			A_SetScale(ScaleX*user_neg[0],ScaleY*user_neg[1]);
+			A_SpawnItemEx("ArcStrOrb",0,0,0,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERPOINTERS|SXF_SETMASTER|SXF_ORIGINATOR|SXF_ABSOLUTEVELOCITY,0,0+user_t);
+			A_SpawnItemEx("ArcStrOrb",0,0,0,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERPOINTERS|SXF_SETMASTER|SXF_ORIGINATOR|SXF_ABSOLUTEVELOCITY,0,60+user_t);
+			A_SpawnItemEx("ArcStrOrb",0,0,0,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERPOINTERS|SXF_SETMASTER|SXF_ORIGINATOR|SXF_ABSOLUTEVELOCITY,0,120+user_t);
+			A_SpawnItemEx("ArcStrOrb",0,0,0,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERPOINTERS|SXF_SETMASTER|SXF_ORIGINATOR|SXF_ABSOLUTEVELOCITY,0,180+user_t);
+			A_SpawnItemEx("ArcStrOrb",0,0,0,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERPOINTERS|SXF_SETMASTER|SXF_ORIGINATOR|SXF_ABSOLUTEVELOCITY,0,240+user_t);
+			A_SpawnItemEx("ArcStrOrb",0,0,0,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERPOINTERS|SXF_SETMASTER|SXF_ORIGINATOR|SXF_ABSOLUTEVELOCITY,0,300+user_t);
+		}
 		Goto Looping
 	Secondary:
 		X149 A 0 A_SetAngle(angle+frandom(-4.0,4.0))
@@ -6874,20 +6870,26 @@ Actor ArcaneStreamBlast
 		X149 A 0 A_ChangeVelocity(cos(-pitch)*25,0,sin(pitch)*25,CVF_RELATIVE|CVF_REPLACE)
 		Goto Looping
 	Looping:
-		Q27A ABCDEFGHIJKLMNOPQRSTUVWXYZ random(1,2) bright A_SetScale(ScaleX+(0.005*user_neg[0]),ScaleY+(0.005*user_neg[1]))
-		Q27A A 0 A_JumpIf((ScaleX >= 0.8) || (ScaleX <= -0.8),"Loop2")
-		Loop
+		Q27A ABCDEFGHIJKLMNOPQRSTUVWXYZ random(1,2) bright 
+		{
+			A_SetScale(ScaleX+(0.005*user_neg[0]),ScaleY+(0.005*user_neg[1]));
+			A_JumpIf(abs(ScaleX) >= 0.65,"Loop2");
+		}
+		
 	Loop2:
 		Q27A ABCDEFGHIJKLMNOPQRSTUVWXYZ random(1,2) bright
 		Loop
 	Death:
-		X149 A 0 A_SetUserVar(user_dmg,abs(ScaleX)*1000)
-		X149 A 0 A_KillChildren("None",KILS_KILLMISSILES|KILS_NOMONSTERS,"ArcStrOrb")
-		X149 A 0 A_JumpIf((ScaleX >= 0.65 || ScaleX <= -0.65),"S2")
+		X149 A 0 
+		{
+			A_SetUserVar(user_dmg,abs(ScaleX)*100);
+			A_KillChildren("None",KILS_KILLMISSILES|KILS_NOMONSTERS,"ArcStrOrb");
+			A_JumpIf(abs(ScaleX) >= 0.65,"S2");
+		}
 	S1:		X149 A 0 A_SpawnItemEx("MonExplosionMediumNoSmokeSimple",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION,0,1)		Goto DCont
 	S2:		X149 A 0 A_SpawnItemEx("MonExplosionBigNoSmokeSimple",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION,0,1)		Goto DCont
 	DCont:
-		X149 AA 0 A_Explode(random(10,20),128,0)
+		TNT1 AA 0 A_Explode(random(10,20)+user_dmg,128,0)
 		TNT1 A 35 A_PlaySound("MLP/ExplosionMed",CHAN_AUTO,1,0)
 		Stop
 	}

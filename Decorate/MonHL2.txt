@@ -4660,6 +4660,7 @@ Actor DogHitboxSensor
 	Alpha 0.75
 	+DONTREFLECT
 	+FORCERADIUSDMG
+	+NOTONAUTOMAP
 	Radius 30
 	Height 30
 	Speed 10
@@ -4674,8 +4675,9 @@ Actor DogHitboxSensor
 		TNT1 A 1 A_JumpIfInventory("DogHitSomething",1,"End",AAPTR_TARGET)
 		TNT1 A 0 A_Explode(5,128,0)
 		TNT1 A 0 A_SetAngle(angle+random(5,25))
-		TNT1 A 0 A_Warp(AAPTR_TARGET,20,0,10,0,"Waiting")
 		TNT1 A 0 A_JumpIfHealthLower(1,"End",AAPTR_TARGET)
+		TNT1 A 0 A_Warp(AAPTR_TARGET,20,0,10,0,0,"Waiting")
+		Goto End
 	Death:
 		TNT1 A 0 A_JumpIfHealthLower(1,"End",AAPTR_TARGET)
 		TNT1 A 0 A_GiveInventory("DogHitSomething",1,AAPTR_TARGET)
