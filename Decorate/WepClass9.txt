@@ -132,7 +132,7 @@ Actor FireStormBigBall
 	+FORCERADIUSDMG
 	+SEEKERMISSILE
 	+EXTREMEDEATH
-	+NODAMAGETHRUST
+	+NODAMAGETHRUST +CANNOTPUSH
 	DamageType "Unholy"
 	DeathType "Extreme"
 	Translation "0:255=%[0,0,0]:[1,0,0]"
@@ -674,7 +674,7 @@ Actor SkullgunAltShotAttackShot
 	Projectile
 	+SEEKERMISSILE
 	+HITTRACER
-	+NODAMAGETHRUST
+	+NODAMAGETHRUST +CANNOTPUSH
 	+DONTREFLECT
 	SeeSound "weapons/skullgunskull"
 	RenderStyle Add
@@ -711,7 +711,7 @@ Actor SkullGunMiniBolt
 	+DONTSPLASH
 	+EXPLODEONWATER
 	+SKYEXPLODE
-	+NODAMAGETHRUST
+	+NODAMAGETHRUST +CANNOTPUSH
 	//+ALLOWBOUNCEONACTORS
 	RipperLevel 4
 	+BRIGHT
@@ -750,7 +750,7 @@ Actor SkullgunShot
 	+LOOKALLAROUND
 	+BOUNCEONFLOORS
 	+DONTREFLECT
-	+NODAMAGETHRUST
+	+NODAMAGETHRUST +CANNOTPUSH
 	RenderStyle Translucent
 	Alpha 0.8
 	Translation "0:255=%[0,0,0]:[2,0,0]"
@@ -1338,7 +1338,7 @@ Actor GluonPrimaryBurst
 	+DONTREFLECT
 	+EXTREMEDEATH
 	+FORCERADIUSDMG
-	+NODAMAGETHRUST
+	+NODAMAGETHRUST +CANNOTPUSH
 	+SEEKERMISSILE
 	+SKYEXPLODE
 	+EXPLODEONWATER
@@ -1405,7 +1405,7 @@ Actor GluonFakeBurst //: FastProjectile
 	+DONTREFLECT
 	+EXTREMEDEATH
 	+FORCERADIUSDMG
-	+NODAMAGETHRUST
+	+NODAMAGETHRUST +CANNOTPUSH
 	+SEEKERMISSILE
 	+SKYEXPLODE
 	+EXPLODEONWATER
@@ -1943,13 +1943,13 @@ Actor ShockwaveStarter
 	+EXTREMEDEATH
 	+DONTSPLASH 
 	+FORCERADIUSDMG
-	//+NODAMAGETHRUST
+	//+NODAMAGETHRUST +CANNOTPUSH
 	DeathSound "weapons/shockwaveboom"
 	RenderStyle Add
 	ReactionTime 20
 	DamageType "PlasmaDisint"
 	Alpha .5
-	+NODAMAGETHRUST
+	+NODAMAGETHRUST +CANNOTPUSH
 	+PAINLESS
 	States
 	{
@@ -2027,7 +2027,7 @@ Actor ShockwaveFX
 	+NOINTERACTION
 	+EXTREMEDEATH
 	+FORCERADIUSDMG
-	+NODAMAGETHRUST 
+	+NODAMAGETHRUST +CANNOTPUSH 
 	States
 	{
 	Spawn:
@@ -2150,7 +2150,7 @@ Actor AEoDGluonGunNoAmmo : AEoDGluonGunItem
 //==================================================================================
 //==================================================================================
 
-Actor AEoDTempestStaffItem : CustomInventory 6162
+Actor AEoDTempestStaffItem : CustomInventory //6162
 {
 	+FLOORCLIP
 	+INVENTORY.IGNORESKILL
@@ -2356,26 +2356,30 @@ Actor TempestLightning
 	PROJECTILE
 	+RANDOMIZE
 	+DONTSPLASH
-	Damage 3
+	+RIPPER
+	+BLOODLESSIMPACT
+	+STRIFEDAMAGE
+	+NODAMAGETHRUST	+CANNOTPUSH
+	RipperLevel 10
+	Damage 1
 	DamageType "Electric"
 	//DamageType "Tempest"
 	Scale 0.3
 	Speed 28
 	RenderStyle Add
-	DeathSound "heresiarch/lightning/hit"
 	Alpha 0.7
 	States
 	{
 	Spawn:
 		HSPL A 0
-		HSPL A 0 A_Jump(64,"WithLight")
+		//HSPL A 0 A_Jump(16,"WithLight")
 		Goto NoLight
 	WithLight:
-		HSPL ABCDEFGHIJABCDEFGHIJ 3 Light("TempestLightningFlicker") Bright
+		HSPL ABCDEFGHIJABCDEFGHIJABCDEFGHIJ 3 Light("TempestLightningFlicker") Bright
 		HSPL ABCDEFGHIJ 3 Light("TempestLightningFlicker") Bright A_FadeOut
 		Stop
 	NoLight:
-		HSPL ABCDEFGHIJABCDEFGHIJ 3 Bright
+		HSPL ABCDEFGHIJABCDEFGHIJABCDEFGHIJ 3 Bright
 		HSPL ABCDEFGHIJ 3 Bright A_FadeOut
 		Stop	
 	Death:
@@ -2383,7 +2387,7 @@ Actor TempestLightning
 		Stop
 	Crash:
 	XDeath:
-		TNT1 A 20 A_Scream
+		TNT1 A 20 A_PlaySound("heresiarch/lightning/hit")
 		Stop
 	}
 }
@@ -2720,6 +2724,7 @@ Actor MageStaffFXPlayer
 	+EXTREMEDEATH
 	+FORCERADIUSDMG
 	+NODAMAGETHRUST
+	+CANNOTPUSH
 	DeathSound "MageStaffExplode"
 	States
 	{
@@ -3294,7 +3299,7 @@ Actor HellShotW
 {
 	PROJECTILE
 	+FORCERADIUSDMG
-	+NODAMAGETHRUST
+	+NODAMAGETHRUST +CANNOTPUSH
 	+EXTREMEDEATH
 	+STEPMISSILE
 	Radius 8
@@ -5407,7 +5412,7 @@ Actor LeechBall1 : HealthBonus
 	+RIPPER
 	RipperLevel 667
 	+BLOODLESSIMPACT
-	+NODAMAGETHRUST
+	+NODAMAGETHRUST +CANNOTPUSH
 	-COUNTITEM
 	Radius 8
 	Height 12
@@ -8303,7 +8308,7 @@ Actor DrakKESSmall
 {
 	PROJECTILE
 	+EXTREMEDEATH
-	+NODAMAGETHRUST
+	+NODAMAGETHRUST +CANNOTPUSH
 	+DONTSPLASH
 	+RIPPER
 	RipperLevel 2
@@ -8514,7 +8519,7 @@ Actor DrakenFire8 //: MageStaffFX2
 	Projectile
 	+SEEKERMISSILE
 	+FORCERADIUSDMG
-	+NODAMAGETHRUST
+	+NODAMAGETHRUST +CANNOTPUSH
 	DamageType "AEMagic"
 	Damage 7
 	Radius 4
@@ -9991,7 +9996,7 @@ Actor Popcorn1
 	Projectile
 	+EXTREMEDEATH
 	+FORCERADIUSDMG
-	+NODAMAGETHRUST
+	+NODAMAGETHRUST +CANNOTPUSH
 	+DONTREFLECT
 	+RANDOMIZE
 	+FOILINVUL
@@ -10261,7 +10266,7 @@ Actor PopcornNade
 	-NOGRAVITY
 	+EXTREMEDEATH
 	+FORCERADIUSDMG
-	+NODAMAGETHRUST
+	+NODAMAGETHRUST +CANNOTPUSH
 	+DONTREFLECT
 	+FOILINVUL
 	+INVULNERABLE
