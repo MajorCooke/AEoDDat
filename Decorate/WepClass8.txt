@@ -6980,11 +6980,21 @@ Actor AEoDBoneDuster : Weapon
 		"####" "##" 0 A_Lower
 		Goto Deselect+1
 	Ready:
-		QDBS A 0 A_JumpIfInventory("BoneDusterClip",21,"AllocateAmmo")
-		QDBS A 0 A_JumpIfInventory("BoneDusterClip",5,1)
-		Goto ReadyNotLoaded
+		//QDBS A 0 A_JumpIfInventory("BoneDusterClip",21,"AllocateAmmo")
+		QDBS A 1 
+		{
+			if (CountInv("BoneDusterClip") < 5)
+			{	return state("ReadyNotLoaded");	}
+			else
+			{	A_WeaponReady(WRF_ALLOWRELOAD);	}
+			return state(0);
+		}
+		//A_JumpIfInventory("BoneDusterClip",5,1)
+		//Goto ReadyNotLoaded
 		
-		QDBS A 1 A_WeaponReady(WRF_ALLOWRELOAD)
+		
+		
+		//QDBS A 1 A_WeaponReady(WRF_ALLOWRELOAD)
 		Loop
 	ReadyNotLoaded:
 		QDBS A 0 A_JumpIfInventory("AEShell",5,"Reload")
@@ -7001,7 +7011,7 @@ Actor AEoDBoneDuster : Weapon
 		QDBS A 0 A_SpawnItemEx("DroppedShellSpawner",12,0,32,12,0,5,random(-10,10),SXF_NOCHECKPOSITION)
 		Goto Ready
 	AllocateBP:
-		QDBS A 0 A_JumpIfInventory("AEShell",150,"AllocateOverflow")
+		//QDBS A 0 A_JumpIfInventory("AEShell",150,"AllocateOverflow")
 		QDBS A 0 A_TakeInventory("BoneDusterClip",1)
 		QDBS A 0 A_GiveInventory("AEShell",1)
 		Goto Ready
@@ -7079,7 +7089,7 @@ For the firing frames, we'll want it to perform a reload after the shells are sp
 		QDBS AAAAAAAAAA 0 A_RailAttack(random(20,60),0,0,none,none,RGF_SILENT,0,"BDPuffPainless",7,3)
 		QDBS AAAAAAAAAA 0 A_RailAttack(random(20,60),0,0,none,none,RGF_SILENT,0,"BDPuffPainless",7,3)
 		QDBS A 0 A_RailAttack(1,0,0,none,none,RGF_SILENT,0,"BDPuffPainful")
-		QDBS A 0 A_TakeInventory("BoneDusterClip",20)
+		QDBS A 0 A_TakeInventory("BoneDusterClip",20,0)
 		QDBS A 0 A_Recoil((cos(pitch)*20))
 		QDBS A 0 A_JumpIf(pitch>=180,2)
 		QDBS A 0 A_ChangeVelocity(0,0,(sin(pitch)*20),1)
@@ -7097,7 +7107,7 @@ For the firing frames, we'll want it to perform a reload after the shells are sp
 		QDBS A 1 Offset(6,34)
 		QDBS A 1 Offset(4,33)
 		QDBS A 1 Offset(2,32)
-		Goto "Reload"
+		Goto "Ready"
 	Alt3:
 		QDBS A 0 A_FireCustomMissile("MassChanger",0,0,0,0)
 		QDBS A 0 A_PlaySound("BoneDuster/Fire1",CHAN_WEAPON,1)
@@ -7128,7 +7138,7 @@ For the firing frames, we'll want it to perform a reload after the shells are sp
 		QDBS A 1 Offset(6,34)
 		QDBS A 1 Offset(4,33)
 		QDBS A 1 Offset(2,32)
-		Goto "Reload"
+		Goto "Ready"
 	Alt2:
 		QDBS A 0 A_FireCustomMissile("MassChanger",0,0,0,0)
 		QDBS A 0 A_PlaySound("BoneDuster/Fire1",CHAN_WEAPON,1)
@@ -7156,7 +7166,7 @@ For the firing frames, we'll want it to perform a reload after the shells are sp
 		QDBS A 1 Offset(6,34)
 		QDBS A 1 Offset(4,33)
 		QDBS A 1 Offset(2,32)
-		Goto "Reload"
+		Goto "Ready"
 	Alt1:
 		QDBS A 0 A_FireCustomMissile("MassChanger",0,0,0,0)
 		QDBS A 0 A_PlaySound("BoneDuster/Fire",CHAN_WEAPON,1)
