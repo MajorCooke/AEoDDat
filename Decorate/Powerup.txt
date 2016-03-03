@@ -4134,7 +4134,7 @@ Actor PowerFake : PowerProtection
 Actor DLPowerEffect : PowerupGiver
 {
 	Powerup.Type "DLProtector"
-	Powerup.Duration -120
+	Powerup.Duration -666
 	Inventory.MaxAmount 0
 	Inventory.InterHubAmount 0
 	+INVENTORY.ALWAYSPICKUP
@@ -4154,7 +4154,9 @@ Actor DLFlasher1 : PowerupGiver
 Actor DLMonitor
 {
 	Projectile
+	+NODAMAGE
 	+NOINTERACTION
+	+NOTRIGGER
 	+SEEKERMISSILE
 	RenderStyle None
 	States
@@ -4168,32 +4170,7 @@ Actor DLMonitor
 		Stop
 	Wipe:
 		TNT1 A 0 A_GiveInventory("DLInvulEffect",1,AAPTR_MASTER)
-		TNT1 A 0 A_GiveInventory("DLFlasher1",1,AAPTR_MASTER)
-		TNT1 A 5
-		//TNT1 A 0 A_TakeInventory("PowerFake",1000,0,AAPTR_PLAYER1)
-		//TNT1 A 0 A_GiveInventory("DLFlasher2",1,AAPTR_PLAYER1)
-		TNT1 A 5
-		//TNT1 A 0 A_TakeInventory("PowerFake",1000,0,AAPTR_PLAYER1)
-		//TNT1 A 0 A_GiveInventory("DLFlasher3",1,AAPTR_PLAYER1)
-		TNT1 A 5
-		//TNT1 A 0 A_TakeInventory("PowerFake",1000,0,AAPTR_PLAYER1)
-		//TNT1 A 0 A_GiveInventory("DLFlasher4",1,AAPTR_PLAYER1)
-		TNT1 A 5
-		//TNT1 A 0 A_TakeInventory("PowerFake",1000,0,AAPTR_PLAYER1)
-		//TNT1 A 0 A_GiveInventory("DLFlasher5",1,AAPTR_PLAYER1)
-		TNT1 A 5
-		//TNT1 A 0 A_TakeInventory("PowerFake",1000,0,AAPTR_PLAYER1)
-		//TNT1 A 0 A_GiveInventory("DLFlasher6",1,AAPTR_PLAYER1)
-		TNT1 A 5
-		//TNT1 A 0 A_TakeInventory("PowerFake",1000,0,AAPTR_PLAYER1)
-		//TNT1 A 0 A_GiveInventory("DLFlasher7",1,AAPTR_PLAYER1)
-		TNT1 A 5
-		//TNT1 A 0 A_TakeInventory("PowerFake",1000,0,AAPTR_PLAYER1)
-		//TNT1 A 0 A_GiveInventory("DLFlasher8",1,AAPTR_PLAYER1)
-		TNT1 A 5
-		//TNT1 A 0 A_TakeInventory("PowerFake",1000,0,AAPTR_PLAYER1)
-		//TNT1 A 0 A_GiveInventory("DLFlasher9",1,AAPTR_PLAYER1)
-		TNT1 A 5
+		TNT1 A 45 A_GiveInventory("DLFlasher1",1,AAPTR_MASTER)
 		TNT1 A 0 A_TakeInventory("PowerFake",10000,0,AAPTR_MASTER)
 		TNT1 A 0 A_JumpIfInventory("PowerDemonMorph",1,"End",AAPTR_MASTER)
 		TNT1 A 0 A_GiveInventory("DLDeInvul",1,AAPTR_MASTER)
@@ -4565,11 +4542,11 @@ Actor SoulSeekOn : CustomInventory
 	States
 	{
 	Pickup:
-		TNT1 A 0 A_JumpIf(CheckClass("DMSoulTarget",AAPTR_DEFAULT,0),"Trigger")
-		Stop
-	Trigger:
-		TNT1 A 0 A_SetShootable
-		TNT1 A 0 A_ChangeFlag("CANTSEEK",0)
+		TNT1 A 0
+		{
+			A_SetShootable;
+			A_ChangeFlag("CANTSEEK",0);
+		}
 		Stop
 	}
 }
@@ -5224,8 +5201,14 @@ Actor DemonMorphFullBright : PowerupGiver
     +INVENTORY.QUIET
 	+INVENTORY.ADDITIVETIME
     Powerup.Type "LightAmp"
+	//Powerup.ColorMap 1.0, 1.0, 1.0, 0.0, 0.0, 0.0
     Powerup.Duration 1225
 	Inventory.MaxAmount 0
+}
+
+Actor PowerDMScreen : PowerProtection
+{
+	DamageFactor 0.0
 }
 
 Actor DemonMorphScreams
