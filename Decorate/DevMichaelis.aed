@@ -486,6 +486,7 @@ Actor DroppedC14
 Actor AEoDC14Item : AEoDC14NoAmmo
 {
 	+INVENTORY.IGNORESKILL
+	Inventory.PickupMessage "You found the C-14 \"Impaler\" Gauss Rifle!"
 	States
 	{
 	Spawn:
@@ -493,121 +494,9 @@ Actor AEoDC14Item : AEoDC14NoAmmo
 		Loop
 	Pickup:
 		TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",4) <= 0,"Nothing")
-		Goto AdvanceUpgrades
-	
-	AdvanceUpgrades:
-		TNT1 A 0 A_JumpIfInventory("HasUpgrades",16,"UpgradesDone") // prevents infinite loop
-		
-	GiveUpgrade:
-		TNT1 A 0 A_Jump(256, 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16)
-	Loopback:
-	GiveBlastShrapnel:  	TNT1 A 0 
-							{ 	
-								if(CountInv("CanBlastShrapnel")) 	
-								{ return state(1); }
-								A_GiveInventory("CanBlastShrapnel",1);
-								A_Print("Added upgrade: shrapnel underbarrel launcher");
-								return state("UpgradesDone");
-							}
-	GiveHoldAim: 			TNT1 A 0 
-							{ 	
-								if(CountInv("CanHoldAim")) 			{ return state(1); } 
-								A_GiveInventory("CanHoldAim",1);
-								A_Print("Added upgrade: aim stabilizer");
-								return state("UpgradesDone");
-							}
-	GiveFireExtraBurst: 	TNT1 A 0 
-							{ 	
-								if(CountInv("CanFireExtraBurst"))	{ return state(1); } 
-								A_GiveInventory("CanFireExtraBurst",1);
-								A_Print("Added upgrade: double burst");
-								return state("UpgradesDone");	
-							}
-	GiveFireNonStop: 		TNT1 A 0 
-							{ 	if(CountInv("CanFireNonStop")) 		{ return state(1); } 
-								A_GiveInventory("CanFireNonStop",1);
-								A_Print("Added upgrade: fully automatic mode");
-								return state("UpgradesDone");	
-							}
-	GiveFireExtraRound: 	TNT1 A 0 
-							{ 	if(CountInv("CanFireExtraRound")) 	{ return state(1); } 
-								A_GiveInventory("CanFireExtraRound",1);
-								A_Print("Added upgrade: prolonged burst");
-								return state("UpgradesDone");	
-							}
-	GiveRestoreAmmo: 		TNT1 A 0 
-							{ 	if(CountInv("CanRestoreAmmo")) 		{ return state(1); } 
-								A_GiveInventory("CanRestoreAmmo",1);
-								A_Print("Added upgrade: economizer");
-								return state("UpgradesDone");	
-							}
-	GiveBlastFire: 			TNT1 A 0 
-							{ 	if(CountInv("CanBlastFire")) 		{ return state(1); } 
-								A_GiveInventory("CanBlastFire",1);
-								A_Print("Added upgrade: incendiary underbarrel launcher");
-								return state("UpgradesDone");	
-							}
-	GiveFireRailRound: 		TNT1 A 0 
-							{ 	if(CountInv("CanFireRailRound"))	{ return state(1); } 
-								A_GiveInventory("CanFireRailRound",1);
-								A_Print("Added upgrade: special penetration round");
-								return state("UpgradesDone");	
-							}
-	GiveFirePrecisely: 		TNT1 A 0 
-							{ 	if(CountInv("CanFirePrecisely")) 	{ return state(1); } 
-								A_GiveInventory("CanFirePrecisely",1);
-								A_Print("Added upgrade: accurization");
-								return state("UpgradesDone");	
-							}
-	GiveFireFireRound: 		TNT1 A 0 
-							{ 	if(CountInv("CanFireFireRound")) 	{ return state(1); } 
-								A_GiveInventory("CanFireFireRound",1);
-								A_Print("Added upgrade: special incendiary round");
-								return state("UpgradesDone");	
-							}
-	GiveFireFaster: 		TNT1 A 0 
-							{ 	if(CountInv("CanFireFaster")) 		{ return state(1); } 
-								A_GiveInventory("CanFireFaster",1);
-								A_Print("Added upgrade: rate of fire improvement");
-								return state("UpgradesDone");	
-							}
-	GiveBlastFar: 			TNT1 A 0 
-							{ 	if(CountInv("CanBlastFar")) 		{ return state(1); } 
-								A_GiveInventory("CanBlastFar",1);
-								A_Print("Added upgrade: long-distance underbarrel launcher");
-								return state("UpgradesDone");	
-							}
-	GiveFireScatterRound: 	TNT1 A 0 
-							{ 	if(CountInv("CanFireScatterRound")) { return state(1); } 
-								A_GiveInventory("CanFireScatterRound",1);
-								A_Print("Added upgrade: special scatter round");
-								return state("UpgradesDone");	
-							}
-	GiveFireHeavyRounds: 	TNT1 A 0 
-							{ 	if(CountInv("CanFireHeavyRounds")) 	{ return state(1); } 
-								A_GiveInventory("CanFireHeavyRounds",1);
-								A_Print("Added upgrade: depleted uranium rounds");
-								return state("UpgradesDone");	
-							}
-	GiveHoldGround: 		TNT1 A 0 
-							{ 	if(CountInv("CanHoldGround")) 		{ return state(1); } 
-								A_GiveInventory("CanHoldGround",1);
-								A_Print("Added upgrade: recoil stabilizer");
-								return state("UpgradesDone");	
-							}
-	GiveFireElectricRound: 	TNT1 A 0 
-							{ 	if(CountInv("CanFireElectricRound")){ return state(1); } 
-								A_GiveInventory("CanFireElectricRound",1);
-								A_Print("Added upgrade: special EMP round");
-								return state("UpgradesDone");	
-							}
-		TNT1 A 0 A_Jump(256,"Loopback") // loopback
-	
-	
-	UpgradesDone:
-		TNT1 A 0 A_GiveInventory("HasUpgrades",1)
 		TNT1 A 0 A_JumpIfInventory("AEClip",60,"Ammo")
 		TNT1 A 0 A_JumpIfInventory("MiniRockets",15,"Ammo3")
+	ForceGive:
 		TNT1 A 0 A_GiveInventory("Weapon4Count",1)
 		TNT1 A 0 A_GiveInventory("C14Drop",1)
 		TNT1 A 0 A_GiveInventory("AEoDC14",1)
@@ -616,11 +505,132 @@ Actor AEoDC14Item : AEoDC14NoAmmo
 		TNT1 A 0 	
 		Stop
 	Nothing:
-		TNT1 A 0 A_JumpIfInventory("AEoDC14",1,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("AEoDC14",1,"AdvanceUpgrades")
 		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
-		Goto Pickup+2
+		Goto ForceGive
 		TNT1 A 0 ACS_NamedExecute("s798",0,4,163,0)
 		Fail
+		
+	AdvanceUpgrades:
+		TNT1 A 0 A_JumpIfInventory("HasUpgrades",16,"JustAmmo") // prevents infinite loop
+		
+	GiveUpgrade:
+		TNT1 A 0 A_Jump(256, 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16)
+	Loopback:
+	GiveBlastShrapnel:  	TNT1 A 0 
+							{ 	
+								if(CountInv("CanBlastShrapnel")>0) 	
+								{   return state(0); }
+								  A_GiveInventory("CanBlastShrapnel",1);
+								A_Print("Added upgrade: shrapnel underbarrel launcher");
+								return state("IncrementUpgrades");
+							}
+	GiveHoldAim: 			TNT1 A 0 
+							{ 	
+								if(CountInv("CanHoldAim")>0) 			{  return state(0); } 
+								  A_GiveInventory("CanHoldAim",1);
+								A_Print("Added upgrade: aim stabilizer");
+								return state("IncrementUpgrades");
+							}
+	GiveFireExtraBurst: 	TNT1 A 0 
+							{ 	
+								if(CountInv("CanFireExtraBurst")>0)	{  return state(0); } 
+								 A_GiveInventory("CanFireExtraBurst",1);
+								A_Print("Added upgrade: double burst");
+								return state("IncrementUpgrades");	
+							}
+	GiveFireNonStop: 		TNT1 A 0 
+							{ 	if(CountInv("CanFireNonStop")>0) 		{  return state(0); } 
+								A_GiveInventory("CanFireNonStop",1);
+								A_Print("Added upgrade: fully automatic mode");
+								return state("IncrementUpgrades");	
+							}
+	GiveFireExtraRound: 	TNT1 A 0 
+							{ 	if(CountInv("CanFireExtraRound")>0) 	{  return state(0); } 
+								  A_GiveInventory("CanFireExtraRound",1);
+								A_Print("Added upgrade: prolonged burst");
+								return state("IncrementUpgrades");	
+							}
+	GiveRestoreAmmo: 		TNT1 A 0 
+							{ 	if(CountInv("CanRestoreAmmo")>0) 		{  return state(0); } 
+								  A_GiveInventory("CanRestoreAmmo",1);
+								A_Print("Added upgrade: economizer");
+								return state("IncrementUpgrades");	
+							}
+	GiveBlastFire: 			TNT1 A 0 
+							{ 	if(CountInv("CanBlastFire")>0) 		{  return state(0); } 
+								 A_GiveInventory("CanBlastFire",1);
+								A_Print("Added upgrade: incendiary underbarrel launcher");
+								return state("IncrementUpgrades");	
+							}
+	GiveFireRailRound: 		TNT1 A 0 
+							{ 	if(CountInv("CanFireRailRound")>0)	{  return state(0); } 
+								 A_GiveInventory("CanFireRailRound",1);
+								A_Print("Added upgrade: special penetration round");
+								return state("IncrementUpgrades");	
+							}
+	GiveFirePrecisely: 		TNT1 A 0 
+							{ 	if(CountInv("CanFirePrecisely")>0) 	{  return state(0); } 
+								 A_GiveInventory("CanFirePrecisely",1);
+								A_Print("Added upgrade: accurization");
+								return state("IncrementUpgrades");	
+							}
+	GiveFireFireRound: 		TNT1 A 0 
+							{ 	if(CountInv("CanFireFireRound")>0) 	{  return state(0); } 
+								 A_GiveInventory("CanFireFireRound",1);
+								A_Print("Added upgrade: special incendiary round");
+								return state("IncrementUpgrades");	
+							}
+	GiveFireFaster: 		TNT1 A 0 
+							{ 	if(CountInv("CanFireFaster")>0) 		{  return state(0); } 
+								  A_GiveInventory("CanFireFaster",1);
+								A_Print("Added upgrade: rate of fire improvement");
+								return state("IncrementUpgrades");	
+							}
+	GiveBlastFar: 			TNT1 A 0 
+							{ 	if(CountInv("CanBlastFar")>0) 		{  return state(0); } 
+								 A_GiveInventory("CanBlastFar",1);
+								A_Print("Added upgrade: long-distance underbarrel launcher");
+								return state("IncrementUpgrades");	
+							}
+	GiveFireScatterRound: 	TNT1 A 0 
+							{ 	if(CountInv("CanFireScatterRound")>0) {  return state(0); } 
+								 A_GiveInventory("CanFireScatterRound",1);
+								A_Print("Added upgrade: special scatter round");
+								return state("IncrementUpgrades");	
+							}
+	GiveFireHeavyRounds: 	TNT1 A 0 
+							{ 	if(CountInv("CanFireHeavyRounds")>0) 	{  return state(0); } 
+								 A_GiveInventory("CanFireHeavyRounds",1);
+								A_Print("Added upgrade: depleted uranium rounds");
+								return state("IncrementUpgrades");	
+							}
+	GiveHoldGround: 		TNT1 A 0 
+							{ 	if(CountInv("CanHoldGround")>0) 		{  return state(0); } 
+								 A_GiveInventory("CanHoldGround",1);
+								A_Print("Added upgrade: recoil stabilizer");
+								return state("IncrementUpgrades");	
+							}
+	GiveFireElectricRound: 	TNT1 A 0 
+							{ 	if(CountInv("CanFireElectricRound")>0){  return state(0); } 
+								 A_GiveInventory("CanFireElectricRound",1);
+								A_Print("Added upgrade: special EMP round");
+								return state("IncrementUpgrades");	
+							}
+		TNT1 A 0 A_Jump(256,"Loopback") // loopback
+	IncrementUpgrades:
+		TNT1 A 0 A_GiveInventory("HasUpgrades",1)
+		Goto UpgradesDone
+	
+	JustAmmo:
+		TNT1 A 0 
+		{ 	
+			A_GiveInventory("AEClip",200);
+			A_TakeInventory("MiniRockets",50);
+			A_Print("Upgrades maxed out! You found a few extra clips.");
+			return state("UpgradesDone");	
+		}
+	UpgradesDone:
 	Ammo:
 		TNT1 A 0 A_JumpIfInventory("MiniRockets",15,1)
 		Goto Ammo2
@@ -703,7 +713,7 @@ Actor AEoDC14 : Weapon
 		O003 A 1 Offset(218, 126)
 		O003 A 1 Offset(193, 120)
 	ReallyReady:
-		O003 A 1 Offset(184, 120) A_WeaponReady (WRF_NOBOB)	// Bobbing cancels custom offsets
+		O003 A 1 Offset(84, 120) A_WeaponReady (WRF_NOBOB)	// Bobbing cancels custom offsets
 		Loop
 	Deselect:
 		TNT1 A 0 A_StopSound(CHAN_BODY)
@@ -882,9 +892,11 @@ Actor AEoDC14 : Weapon
 		Goto Hold
 		
 	Hold:
-		TNT1 A 0 A_JumpIfInventory(CanFireNonStop,1,"ReallyReady")
-		O003 A 1 Offset(184, 120)
+		TNT1 A 0 A_JumpIfInventory(CanFireNonStop,1,"Unhold")
+		O003 A 1 Offset(185, 121)
 		O003 A 0 A_Refire
+	Unhold:
+		O003 A 0
 		Goto ReallyReady
 		
 	AltFire:
@@ -907,15 +919,30 @@ Actor AEoDC14 : Weapon
 	}
 }
 
-Actor ElectricSpawningPuff : TekbowArrow1 
+Actor ElectricSpawningPuff : BulletPuff 
 {
 	+NOINTERACTION
+	+PUFFGETSOWNER
+	-ALLOWPARTICLES
+	+PUFFONACTORS
+	DamageType "Electric"
 	States
 	{
 	Spawn:
-		TNT1 A 0
-		Goto Death
+		TNT1 AAA 0 A_SpawnItemEx("PsychLightningSpark",0,0,0,frandom(0.3,2.0),0,frandom(1.5,-1.5),0,SXF_NOCHECKPOSITION)
+		TNT1 AA 15 A_Explode(10,48)
+		Stop
 	}
 }
-Actor FireSpawningPuff : FusionChaingunBoom { -EXTREMEDEATH }
+Actor FireSpawningPuff : ElectricSpawningPuff 
+{
+	DamageType "Fire"
+	States
+	{
+	Spawn:
+		TNT1 AAA 0 A_SpawnItemEx("FTFlameTrail2",random(-7,7),random(-4,4),random(-4,2),0,0,frandom(0,1.25),0,SXF_NOCHECKPOSITION)
+		TNT1 AA 10 A_Explode(8,32)
+		Stop
+	}
+}
 
