@@ -2845,12 +2845,24 @@ ACTOR Oscuro : OscuroHelper
 		TNT1 A 0 A_Jump(128,"GoldFaceAttack")
 		TNT1 A 0 A_GiveInventory("OscuroInvul",1)
 		TNT1 A 0 A_ChangeFlag("SOLID",1)
-		OSEE A 0 A_SetUserVar("user_chasecount",0)
+		OSEE A 1 
+		{
+			A_SetUserVar("user_chasecount",0);
+			if (A_JumpIfHealthLower(1,"Null",AAPTR_TARGET))
+			{
+				A_Stop;
+				return state("Chasing");
+			}
+			return state(1);
+		}
 		OSEE DCBABCD 2 A_FaceTarget
 	HurtingChaseLooper:
 		OCHA A 0 A_FaceTarget
 		OCHA A 0 A_Recoil(-50)
-		OCHA A 2 A_CustomMissile("ChaseDamager",48,0,0)
+		OCHA A 2 
+		{
+			A_CustomMissile("ChaseDamager",48,0,0);
+		}
 		OCHA A 0 A_SetUserVar("user_chasecount",user_chasecount+1)
 		OCHA A 0 A_JumpIf(user_chasecount>=50,1)
 		Loop

@@ -9987,10 +9987,22 @@ Actor AEoDPopcornGun : Weapon
 // Primary fire
 Actor Popcorn1
 {
+	enum
+	{
+		DmgFire,
+		DmgIce,
+		DmgPlasma,
+		DmgElectric,
+		DmgHoly,
+		DmgUnholy,
+		DmgMagic,
+		DmgNormal,
+	};
 	var int user_dmgtype;
+	var int user_rng;
 	Radius 8
 	Height 6
-	Speed 25
+	Speed 50
 	Damage 2
 	Scale 0.25
 	Projectile
@@ -10011,49 +10023,32 @@ Actor Popcorn1
 	{
 	Spawn:
 		//TNT1 A 0 NoDelay Thing_SetTranslation(0,random(47,98)) //Maybe this will help...
-		TNT1 A 0 NoDelay A_Jump(192,2)
-		TNT1 A 0 A_ChangeFlag("PAINLESS",1)
-	DmgSetter:
-		TNT1 A 0 A_Jump(256,"DmgFire","DmgIce","DmgPlasma","DmgElectric","DmgHoly",
-			"DmgUnholy","DmgMagic","DmgNormal")
-	DmgFire:
-		TNT1 A 0 A_SetDamageType("Fire")
-		TNT1 A 0 A_SetUserVar("user_dmgtype",1)
-		TNT1 A 0 Thing_SetTranslation(0,randompick(random(58,62),random(73,74)))
-		Goto AnimChoice
-	DmgIce:
-		TNT1 A 0 A_SetDamageType("Ice")
-		TNT1 A 0 A_SetUserVar("user_dmgtype",2)
-		TNT1 A 0 Thing_SetTranslation(0,randompick(random(68,72),random(92,93)))
-		Goto AnimChoice
-	DmgPlasma:
-		TNT1 A 0 A_SetDamageType("Plasma")
-		TNT1 A 0 A_SetUserVar("user_dmgtype",3)
-		TNT1 A 0 A_Jump(128,2)
-		TNT1 A 0 Thing_SetTranslation(0,randompick(random(63,67),random(81,82)))
-		Goto AnimChoice
-	DmgElectric:
-		TNT1 A 0 A_SetDamageType("Electric")
-		TNT1 A 0 A_SetUserVar("user_dmgtype",4)
-		TNT1 A 0 Thing_SetTranslation(0,randompick(random(75,76),random(83,84)))
-		Goto AnimChoice
-	DmgHoly:
-		TNT1 A 0 A_SetDamageType("Holy")
-		TNT1 A 0 A_SetUserVar("user_dmgtype",5)
-		TNT1 A 0 Thing_SetTranslation(0,random(95,98))
-		Goto AnimChoice
-	DmgUnholy:
-		TNT1 A 0 A_SetDamageType("Unholy")
-		TNT1 A 0 A_SetUserVar("user_dmgtype",6)
-		TNT1 A 0 Thing_SetTranslation(0,random(47,50))
-		Goto AnimChoice
-	DmgMagic:
-		TNT1 A 0 A_SetDamageType("AEMagic")
-		TNT1 A 0 A_SetUserVar("user_dmgtype",7)
-		TNT1 A 0 Thing_SetTranslation(0,random(77,94))
-		Goto AnimChoice
-	DmgNormal:
-		TNT1 A 0 Thing_SetTranslation(0,random(47,98))
+		TNT1 A 0 NoDelay 
+		{
+			if (random(1,4) <= 1)
+			{	A_ChangeFlag("PAINLESS",1);	}
+			
+			A_SetUserVar(user_rng,random(1,8));
+			A_SetUserVar(user_dmgtype,1);
+			
+			if (user_rng == DmgFire)
+			{	A_SetDamageType("Fire");	Thing_SetTranslation(0,randompick(random(58,62),random(73,74)));	}
+			else if (user_rng == DmgIce)
+			{	A_SetDamageType("Ice");		Thing_SetTranslation(0,randompick(random(68,72),random(92,93)));	}
+			else if (user_rng == DmgPlasma)
+			{	A_SetDamageType("Plasma");	Thing_SetTranslation(0,randompick(random(63,67),random(81,82)));	}
+			else if (user_rng == DmgElectric)
+			{	A_SetDamageType("Electric");	Thing_SetTranslation(0,randompick(random(75,76),random(83,84)));	}
+			else if (user_rng == DmgHoly)
+			{	A_SetDamageType("Holy");		Thing_SetTranslation(0,random(95,98));	}
+			else if (user_rng == DmgUnholy)
+			{	A_SetDamageType("Unholy");		Thing_SetTranslation(0,random(47,50));	}
+			else if (user_rng == DmgMagic)
+			{	A_SetDamageType("Magic");		Thing_SetTranslation(0,random(77,94));	}
+			else
+			{	A_SetUserVar(user_dmgtype,0);	Thing_SetTranslation(0,random(47,98));	}
+			return state("AnimChoice");
+		}
 	AnimChoice:
 		TNT1 A 0 A_Jump(256,"Type1","Type2","Type3","Type4")
 	Type1:
@@ -10075,26 +10070,26 @@ Actor Popcorn1
 		X140 A 0 
 		{
 			if(	CheckClass("HTC2Fluffy",AAPTR_TRACER,1) ||
-							CheckClass("HTC2MiniFluffy",AAPTR_TRACER,1) ||
-							CheckClass("HTC2JumpingSkull",AAPTR_TRACER,1) ||
-							CheckClass("HTC2GhostSkull",AAPTR_TRACER,1) ||
-							CheckClass("HTC2Bingo",AAPTR_TRACER,1) ||
-							CheckClass("HTC2TinyBingo",AAPTR_TRACER,1) ||
-							CheckClass("HTC2DraedicClownGhost",AAPTR_TRACER,1) ||
-							CheckClass("HTC2VileClownGhost",AAPTR_TRACER,1) ||
-							CheckClass("HTC2Bulby",AAPTR_TRACER,1) ||
-							CheckClass("HTC2MegaBulby",AAPTR_TRACER,1) ||
-							CheckClass("HTC2Beefy",AAPTR_TRACER,1) ||
-							CheckClass("HTC2BlackBear",AAPTR_TRACER,1) ||
-							CheckClass("BerthaBear",AAPTR_TRACER,1) ||
-							CheckClass("HTC2BigBertha",AAPTR_TRACER,1) ||
-							CheckClass("HTC2PossessedBalloon",AAPTR_TRACER,1) ||
-							CheckClass("HTC2EvilDeadHand",AAPTR_TRACER,1) ||
-							CheckClass("HTC2PennywiseHead",AAPTR_TRACER,1) ||
-							CheckClass("HTC2PennywiseTDC",AAPTR_TRACER,1) ||
-							CheckClass("HTC2SuperBertha",AAPTR_TRACER,1) ||
-							CheckClass("HTC2BouncingClown",AAPTR_TRACER,1) ||
-							CheckClass("HTC2BabyClown",AAPTR_TRACER,1))
+				CheckClass("HTC2MiniFluffy",AAPTR_TRACER,1) ||
+				CheckClass("HTC2JumpingSkull",AAPTR_TRACER,1) ||
+				CheckClass("HTC2GhostSkull",AAPTR_TRACER,1) ||
+				CheckClass("HTC2Bingo",AAPTR_TRACER,1) ||
+				CheckClass("HTC2TinyBingo",AAPTR_TRACER,1) ||
+				CheckClass("HTC2DraedicClownGhost",AAPTR_TRACER,1) ||
+				CheckClass("HTC2VileClownGhost",AAPTR_TRACER,1) ||
+				CheckClass("HTC2Bulby",AAPTR_TRACER,1) ||
+				CheckClass("HTC2MegaBulby",AAPTR_TRACER,1) ||
+				CheckClass("HTC2Beefy",AAPTR_TRACER,1) ||
+				CheckClass("HTC2BlackBear",AAPTR_TRACER,1) ||
+				CheckClass("BerthaBear",AAPTR_TRACER,1) ||
+				CheckClass("HTC2BigBertha",AAPTR_TRACER,1) ||
+				CheckClass("HTC2PossessedBalloon",AAPTR_TRACER,1) ||
+				CheckClass("HTC2EvilDeadHand",AAPTR_TRACER,1) ||
+				CheckClass("HTC2PennywiseHead",AAPTR_TRACER,1) ||
+				CheckClass("HTC2PennywiseTDC",AAPTR_TRACER,1) ||
+				CheckClass("HTC2SuperBertha",AAPTR_TRACER,1) ||
+				CheckClass("HTC2BouncingClown",AAPTR_TRACER,1) ||
+				CheckClass("HTC2BabyClown",AAPTR_TRACER,1))
 			{
 				A_DamageTracer(666,None,DMSS_FOILINVUL);
 			}
@@ -10135,8 +10130,20 @@ Actor CorruptPopcorn
 		N026 Q 0 A_SpawnItemEx("HostileBabyClown",0,0,0,0,0,0,0,SXF_NOPOINTERS|SXF_SETTARGET)	//See MonHTC2.AED
 		Stop
 	S2:
-		N026 Q 0 A_SpawnItemEx("HostileBlackBear",random(-5,5),random(-5,5),0,0,0,0,random(0,359),SXF_NOCHECKPOSITION|SXF_NOPOINTERS|SXF_SETTARGET)	//See MonHTC2.AED
-		N026 Q 0 A_SpawnItemEx("HostileBlackBear",random(-5,5),random(-5,5),0,0,0,0,random(0,359),SXF_NOCHECKPOSITION|SXF_NOPOINTERS|SXF_SETTARGET,164)
+		N026 Q 0 
+		{
+			if (random(1,10) == 1)
+			{
+				A_SpawnItemEx("HTC2SuperBear",0,0,0,random(10,25),0,random(-20,20),random(0,359),SXF_NOCHECKPOSITION,0);
+				A_SpawnItemEx("HTC2SuperBear",0,0,0,random(10,25),0,random(-20,20),random(0,359),SXF_NOCHECKPOSITION,192);
+				A_SpawnItemEx("HTC2SuperBear",0,0,0,random(10,25),0,random(-20,20),random(0,359),SXF_NOCHECKPOSITION,220);
+			}
+			else
+			{
+				A_SpawnItemEx("HostileBlackBear",random(-5,5),random(-5,5),0,0,0,0,random(0,359),SXF_NOCHECKPOSITION|SXF_NOPOINTERS|SXF_SETTARGET);	//See MonHTC2.AED
+				A_SpawnItemEx("HostileBlackBear",random(-5,5),random(-5,5),0,0,0,0,random(0,359),SXF_NOCHECKPOSITION|SXF_NOPOINTERS|SXF_SETTARGET,164);
+			}
+		}
 		Stop
 	}
 }
