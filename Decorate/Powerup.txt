@@ -1376,15 +1376,21 @@ ACTOR PentagramOfProtection : CustomInventory
 		QPEI ABCDEFGHIJKLMNOP 3 Bright
 		Loop
     Use:
-		TNT1 A 0 A_JumpIfInventory("PowerDemonMorph",1,"Nope")
-		TNT1 A 0 A_JumpIfInventory("PowerInvulBase",1,"Nope")
-		TNT1 A 0 A_GiveInventory("UnMorpher",1)
-		TNT1 A 0 A_GiveInventory("Invulnerability",1)
-		TNT1 A 0 A_PlaySound("powerups/pentagramuse",CHAN_BODY,1,0,ATTN_NONE)
-		TNT1 A 0 A_TakeInventory("PentagramCountdown",9999,0)
-		TNT1 A 0 A_GiveInventory("PentagramCountdown",700) //THIS is the timer!
-		//Change this to change how long it lasts!
-		TNT1 A 0 A_SpawnItemEx("PentagramChecker",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTARGET)
+		TNT1 A 0 
+		{
+			if (CountInv("PowerDemonMorph") || CountInv("PowerInvulBase"))
+			{	return bool(false);	}
+			if (CheckClass("AEoDMarine",DefPtr,0))
+			{	A_ChangeFlag(ALLOWPAIN,0);	}
+			A_GiveInventory("UnMorpher",1);
+			A_GiveInventory("Invulnerability",1);
+			A_PlaySound("powerups/pentagramuse",CHAN_BODY,1,0,ATTN_NONE);
+			A_TakeInventory("PentagramCountdown",9999,0);
+			A_GiveInventory("PentagramCountdown",700); //THIS is the timer!
+			//Change this to change how long it lasts!
+			A_SpawnItemEx("PentagramChecker",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTARGET);
+			return bool(true);
+		}
 		Stop
 	Nope:
 		TNT1 A 0
@@ -1471,51 +1477,76 @@ Actor PentagramChecker
 	States
 	{
 	Spawn:
-		TNT1 A 0
-		TNT1 A 0 A_JumpIfInventory("PentagramIsOn",1,"AbsoluteEnd",AAPTR_TARGET) //Stops hijacking.
-		TNT1 A 0 A_GiveInventory("PentagramIsOn",1,AAPTR_TARGET)
+		TNT1 A 0 NoDelay
+		{
+			if (CountInv("PentagramIsOn",Target) || IsPointerEqual(Target,NullPtr))	
+			{	return state("Null");	}
+			A_GiveInventory("PentagramIsOn",1,Target); //Stops Hijacking
+			return state("WaitingTimer");
+		}
 	WaitingTimer:
-		TNT1 A 1 A_TakeInventory("PentagramCountdown",1,0,AAPTR_TARGET)
-		TNT1 A 0 A_JumpIfInventory("PentagramDispelled",1,"EndForced",AAPTR_TARGET)
-		TNT1 A 0 A_JumpIfInventory("PentagramCountdown",106,"WaitingTimer",AAPTR_TARGET)
+		TNT1 A 1 A_TakeInventory("PentagramCountdown",1,0,Target)
+		TNT1 A 0 A_JumpIfInventory("PentagramDispelled",1,"EndForced",Target)
+		TNT1 A 0 A_JumpIfInventory("PentagramCountdown",106,"WaitingTimer",Target)
 	Final:
-		TNT1 A 0 A_JumpIfInventory("PentagramCountdown",200,"Return",AAPTR_TARGET)
+		TNT1 A 0 A_JumpIfInventory("PentagramCountdown",200,"Return",Target)
 		TNT1 A 0 A_PlaySound("powerups/pentagrampickup",CHAN_VOICE,1,0,ATTN_NONE)
-		TNT1 A 0 A_GiveInventory("PentagramFade",1,AAPTR_TARGET)
-		TNT1 A 0 A_TakeInventory("PentagramCountdown",38,0,AAPTR_TARGET)
-		TNT1 AAAAAAAAAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",AAPTR_TARGET)
-		TNT1 AAAAAAAAAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",AAPTR_TARGET)
-		TNT1 AAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",AAPTR_TARGET)
-		TNT1 A 0 A_JumpIfInventory("PentagramCountdown",200,"Return",AAPTR_TARGET)
-		TNT1 A 0 A_GiveInventory("PentagramFade",1,AAPTR_TARGET)
-		TNT1 A 0 A_TakeInventory("PentagramCountdown",38,0,AAPTR_TARGET)
-		TNT1 AAAAAAAAAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",AAPTR_TARGET)
-		TNT1 AAAAAAAAAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",AAPTR_TARGET)
-		TNT1 AAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",AAPTR_TARGET)
-		TNT1 A 0 A_JumpIfInventory("PentagramCountdown",200,"Return",AAPTR_TARGET)
-		TNT1 A 0 A_GiveInventory("PentagramFade",1,AAPTR_TARGET)
-		TNT1 A 0 A_TakeInventory("PentagramCountdown",38,0,AAPTR_TARGET)
-		TNT1 AAAAAAAAAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",AAPTR_TARGET)
-		TNT1 AAAAAAAAAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",AAPTR_TARGET)
-		TNT1 AAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",AAPTR_TARGET)
+		TNT1 A 0 A_GiveInventory("PentagramFade",1,Target)
+		TNT1 A 0 A_TakeInventory("PentagramCountdown",38,0,Target)
+		TNT1 AAAAAAAAAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",Target)
+		TNT1 AAAAAAAAAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",Target)
+		TNT1 AAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",Target)
+		TNT1 A 0 A_JumpIfInventory("PentagramCountdown",200,"Return",Target)
+		TNT1 A 0 A_GiveInventory("PentagramFade",1,Target)
+		TNT1 A 0 A_TakeInventory("PentagramCountdown",38,0,Target)
+		TNT1 AAAAAAAAAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",Target)
+		TNT1 AAAAAAAAAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",Target)
+		TNT1 AAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",Target)
+		TNT1 A 0 A_JumpIfInventory("PentagramCountdown",200,"Return",Target)
+		TNT1 A 0 A_GiveInventory("PentagramFade",1,Target)
+		TNT1 A 0 A_TakeInventory("PentagramCountdown",38,0,Target)
+		TNT1 AAAAAAAAAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",Target)
+		TNT1 AAAAAAAAAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",Target)
+		TNT1 AAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",Target)
 	End:
-		TNT1 A 0 A_JumpIfInventory("PentagramCountdown",1,"WaitingTimer2",AAPTR_TARGET)
+		TNT1 A 0 A_JumpIfInventory("PentagramCountdown",1,"WaitingTimer2",Target)
 	EndForced:
-		TNT1 A 0 A_TakeInventory("PentagramIsOn",32767,0,AAPTR_TARGET)
-		TNT1 A 0 A_TakeInventory("PentagramCountdown",32767,0,AAPTR_TARGET)
-		TNT1 A 0 A_TakeInventory("PentagramDispelled",32767,0,AAPTR_TARGET)
-		TNT1 A 0 A_TakeInventory("PowerInvulBase",10000,0,AAPTR_TARGET)
+		TNT1 A 0 
+		{
+			A_TakeInventory("PentagramIsOn",32767,0,Target);
+			A_TakeInventory("PentagramCountdown",32767,0,Target);
+			A_TakeInventory("PentagramDispelled",32767,0,Target);
+			A_TakeInventory("PowerInvulBase",10000,0,Target);
+			A_GiveInventory("AllowPainSwitchOn",1,Target);
+			return state("Null");
+		}
 	AbsoluteEnd:
 		TNT1 A 0
 		Stop
 	WaitingTimer2:
-		TNT1 A 1 A_TakeInventory("PentagramCountdown",1,0,AAPTR_TARGET)
-		TNT1 A 0 A_JumpIfInventory("PentagramCountdown",200,"Return",AAPTR_TARGET)
-		TNT1 A 0 A_JumpIfInventory("PentagramCountdown",1,"WaitingTimer2",AAPTR_TARGET)
+		TNT1 A 1 A_TakeInventory("PentagramCountdown",1,0,Target)
+		TNT1 A 0 A_JumpIfInventory("PentagramCountdown",200,"Return",Target)
+		TNT1 A 0 A_JumpIfInventory("PentagramCountdown",1,"WaitingTimer2",Target)
 		Goto End
 	Return:
 		TNT1 A 0 A_StopSound(CHAN_VOICE)
 		Goto WaitingTimer
+	}
+}
+
+Actor AllowPainSwitchOn : CustomInventory
+{
+	+ALWAYSPICKUP
+	States
+	{
+	Pickup:
+		TNT1 A 0
+		{
+			if (CheckClass("AEoDMarine"))
+			{	A_ChangeFlag(ALLOWPAIN,true);	}
+			return bool(true);	//Always want this to pass. Destroy the item.
+		}
+		Stop
 	}
 }
 
@@ -4069,7 +4100,18 @@ Actor RandomWeaponPowerAmmoGive : CustomInventory
 	attention. Brilliant questions and answers. Retreating to his lair under
 	the sewers, he forged them with several traits of the stars in mind,
 	forming eight deadly orbiting projectiles that damage and slice through
-	anything they touch. 
+	anything they touch.
+	
+	The deadlights are made from an unknown material that has different
+	reactions based on whom the owner is. For Pennywise, they render him
+	completely invulnerable to any and all attacks from outsiders as he
+	he uses very little energy when moving. Humans on the other hand do
+	use up a bunch of energy, and thus the deadlights can only afford to
+	render them temporarily invulnerable upon being stricken, and reflecting
+	the attack back at the offender. This invulnerability is so strong, it
+	can even deflect the particle phase-injections of the teleporters, which
+	makes enemies explode from the inside out when something is teleporting
+	onto the spot that happens to be in the way.
 	
 ================================================================================
 ==============================================================================*/
@@ -4087,7 +4129,7 @@ Actor DeadLightPowerup : CustomInventory
 	+DONTGIB
 	Inventory.Icon "X091A0"
 	//+FLOATBOB
-	Tag "Invulnerable when hit, floating deadlights hurt nearby enemies, reflecting attacks"
+	Tag "Invulnerable when hit, floating deadlights hurt nearby enemies, reflecting projectiles"
 	States
 	{
 	Spawn:
@@ -4184,13 +4226,12 @@ Actor DLMonitor
 Actor DLInvulEffect : CustomInventory
 {
 	+INVENTORY.ALWAYSPICKUP
-	+INVENTORY.AUTOACTIVATE
 	States
 	{
-	Use:
+	Pickup:
 		TNT1 A 0 A_ChangeFlag("JUSTHIT",0)
 		TNT1 A 0 A_SetInvulnerable
-		//TNT1 A 0 A_ChangeFlag("NOPAIN",1)
+		TNT1 A 0 A_ChangeFlag("NOPAIN",1)
 		TNT1 A 0 A_ChangeFlag("NODAMAGE",1)
 		Stop
 	}
@@ -4199,17 +4240,16 @@ Actor DLInvulEffect : CustomInventory
 Actor DLDeInvul : CustomInventory
 {
 	+INVENTORY.ALWAYSPICKUP
-	+INVENTORY.AUTOACTIVATE
 	States
 	{
-	Use:
+	Pickup:
 		TNT1 A 0 A_ChangeFlag("JUSTHIT",0)
 		TNT1 A 0 A_JumpIfInventory("PowerDemonMorph",1,"End")
 		TNT1 A 0 A_JumpIfInventory("Invulnerability",1,3)
 		TNT1 A 0 A_JumpIfInventory("PowerInvulBase",1,2)
 		TNT1 A 0 A_UnSetInvulnerable
 		TNT1 A 0 A_ChangeFlag("NODAMAGE",0)
-		//TNT1 A 0 A_ChangeFlag("NOPAIN",0)
+		TNT1 A 0 A_ChangeFlag("NOPAIN",0)
 		Stop
 	End:
 		TNT1 A 0
@@ -4223,6 +4263,7 @@ Actor DLController
 	Projectile
 	+NOINTERACTION
 	+SEEKERMISSILE
+	+NODAMAGE
 	RenderStyle None
 	States
 	{
@@ -4773,9 +4814,7 @@ Actor DemonMorphPowerup : CustomInventory
 				return bool(true);
 			}
 			if (health > 200)
-			{	A_GiveInventory("TempHealthToken",health);	}
-			else
-			{	A_GiveInventory("TempHealthToken",GetSpawnHealth());	}
+			{	A_GiveInventory("TempHealthToken",health+stamina);	}
 			A_StopSound(CHAN_AUTO);
 			A_StopSound(CHAN_WEAPON);
 			A_StopSound(CHAN_VOICE);
@@ -4793,9 +4832,6 @@ Actor DemonMorphPowerup : CustomInventory
 		Fail
 	}
 }
-
-Actor TempHealthToken : Inventory	
-{	Inventory.MaxAmount 666	Inventory.InterHubAmount 666	}
 
 Actor DemonMorphGiver : PowerupGiver
 {
@@ -5129,8 +5165,8 @@ Actor DemonMorphRemoval : CustomInventory
 			A_PlaySound("DemonMorph/Stop",5,1,0,ATTN_NONE);
 			A_RadiusGive("DMEndingExploder",2048,RGF_MONSTERS,1);
 			A_GiveInventory("DemonMorphScreen",1);
-			A_SetHealth(Clamp(CountInv("TempHealthToken"),200,666));
-			A_TakeInventory("TempHealthToken",1000,0);
+			A_SetHealth(Clamp(CountInv("TempHealthToken"),200+stamina,666));
+			A_TakeInventory("TempHealthToken",32767,0);
 		}
 		Stop
 	}
@@ -5170,6 +5206,8 @@ Actor GeneralMorphRemoval : CustomInventory
 			A_SetBlend("White",1.0,10);
 			A_PlaySound("DemonMorph/Stop",5,1,0,ATTN_NONE);
 			A_GiveInventory("DemonMorphScreen",1);
+			A_SetHealth(Clamp(CountInv("TempHealthToken"),200+stamina,666));
+			A_TakeInventory("TempHealthToken",32767,0);
 		}
 		Stop
 	}

@@ -9280,7 +9280,7 @@ Actor AEoDHellHeavenHand : Weapon // 6066
 		Goto Ready
 		
 		UNK2 B 0 A_FireCustomMissile("ProtectionShover", 0, 0, 0, 0)
-		UNK2 B 0 A_SetRipMin(666)
+		UNK2 B 0 A_ChangeFlag(DONTRIP,1)
 		UNK2 B 13 Bright A_GiveInventory("HHHProtectionOn",1)
 		UNK2 B 0 A_ReFire("ProtectionHold")
 		UNK2 B 0 A_TakeInventory("HHHAudioToken",1000)
@@ -9404,16 +9404,14 @@ Actor HHHAmmoTaker
 Actor HHHProtectionOn : CustomInventory
 {
 	+INVENTORY.ALWAYSPICKUP
-	+INVENTORY.AUTOACTIVATE
-	Inventory.MaxAmount 0
 	States
 	{
-	Use:
+	Pickup:
 		TNT1 A 0 A_SetReflectiveInvulnerable
 		TNT1 A 0 A_ChangeFlag("NOPAIN",1)
 		TNT1 A 0 A_ChangeFlag("NODAMAGE",1)
 		TNT1 A 0 A_ChangeFlag("DONTTHRUST",1)
-		TNT1 A 0 A_SetRipMin(666)
+		TNT1 A 0 A_ChangeFlag(DONTRIP,1)
 		TNT1 A 0 A_JumpIfInventory("Unrideable",1,2)
 		TNT1 A 0 A_GiveInventory("Unrideable",1)
 		TNT1 A 0 A_JumpIfInventory("HHHCheck",1,2)
@@ -12022,8 +12020,6 @@ Actor SoulReaperBeam
 		TNT1 A 0 A_JumpIf(abs(user_ang - angle) > 40,"Restore")
 		TNT1 A 0 A_ChangeFlag("THRUACTORS",1)
 		TNT1 A 0 A_SetAngle(user_ang)
-		//TNT1 A 0 A_Log("Soul Found")
-		TNT1 A 0 
 		TNT1 A 0 A_GiveInventory("SoulSeekOn",1,AAPTR_TRACER)
 		Goto Cont2
 	Restore:
