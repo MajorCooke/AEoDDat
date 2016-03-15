@@ -681,15 +681,29 @@ ACTOR ChaosSpell
 	Loop
     Crash:
 	XDeath:
-		TNT1 A 0 A_ChangeFlag("CAUSEPAIN",1)
-		TNT1 A 0 A_Warp(AAPTR_TARGET,0,0,32,0,WARPF_NOCHECKPOSITION)
-		TNT1 A 0 A_Explode(1,10280,0,1,10280)
+		TNT1 A 0 
+		{
+			A_RadiusGive("InfightResetter",10240,RGF_MONSTERS|RGF_NOTARGET,1);
+			A_ChangeFlag("CAUSEPAIN",1);
+			A_Warp(AAPTR_TARGET,0,0,32,0,WARPF_NOCHECKPOSITION);
+			A_Explode(1,10280,0,1,10280);
+		}
 		//TNT1 A 0 A_GiveInventory("ChaosBlastCauser",1,AAPTR_TRACER)
 	Death:
 		TNT1 A 0 A_Scream
 		TNT1 A 1 A_SpawnItemEx("ChaosSpellExplosion",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		Stop
     }
+}
+Actor InfightResetter : CustomInventory
+{
+	+ALWAYSPICKUP
+	States
+	{
+	Pickup:
+		TNT1 A 0 A_SetChaseThreshold(0,0)
+		Stop
+	}
 }
 
 ACTOR ChaosSpellTrail
