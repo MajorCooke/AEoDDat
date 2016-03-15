@@ -3230,15 +3230,18 @@ Actor SetHead
     states
     {
     Spawn:
-		SETH A 0 A_SpawnItem("Blood",random(-3,3))
+		SETH A 0 NoDelay A_SpawnItem("Blood",random(-3,3))
 		SETH A 0 A_SpawnItem("SetGutBlood",random(-3,3))  
-		SETH AAAA 1 A_Gravity
-		loop
+		SETH AAAAAAAAAA 35 A_Gravity
     Death:
-		"####" "#" 0 A_QueueCorpse
-		"####" "#" 0 A_Stop
-		"####" "#" 0 A_ChangeFlag("NOBLOCKMAP",0)
-		SETH B -1 A_ChangeFlag("CORPSE",1)
+		SETH B -1 
+		{
+			A_QueueCorpse;
+			A_Stop;
+			A_ChangeFlag("MISSILE",0);
+			A_ChangeFlag("NOBLOCKMAP",0);
+			A_ChangeFlag("CORPSE",1);
+		}
 		stop
     }
 }

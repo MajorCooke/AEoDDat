@@ -4722,7 +4722,6 @@ actor PrototypeContainer		7404   //arachno
 actor PContTorso
 {
 	Projectile
-	Damage 0
 	+DOOMBOUNCE
 	BounceFactor 0.3
 	-NOLIFTDROP
@@ -4730,6 +4729,7 @@ actor PContTorso
 	+DROPOFF
 	-NOGRAVITY
 	-NOBLOCKMAP
+	+THRUACTORS
 	Scale 0.45
 	Translation "0:255=%[0.0,0.0,0.0]:[0.8,0.8,0.8]", "176:191=112:127", "32:47=112:127", "208:223=112:127", "232:235=112:127"
 	States
@@ -4737,10 +4737,13 @@ actor PContTorso
 	Spawn:
 		BS5D AAAAA 5
 	Death:
-		"####" "#" 0 A_QueueCorpse
-		"####" "#" 0 A_ChangeFlag("CORPSE",1)
 		BS5D A -1
-		Loop
+		{
+			A_QueueCorpse;
+			A_ChangeFlag("MISSILE",0);
+			A_ChangeFlag("CORPSE",1);
+		}
+		Stop
 	}
 }
 
