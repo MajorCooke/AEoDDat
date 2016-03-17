@@ -8,8 +8,6 @@
 //================================================================================================================
 //================================================================================================================
 
-
-
 //================================================================================== 
 //==================================================================================
 //Lightning and Thunderstorm Spell
@@ -5069,16 +5067,16 @@ Actor AEoDShredderStaff : Weapon // 6106
 		S04I CDEF 5
 		Goto Ready
 	AltFire:
-		S04I A 0 A_StopSound(CHAN_BODY)
-		S04I G 1 
-		S04I H 0 A_PlaySound("shredderstaff/altfire", CHAN_WEAPON, 1.0, 0)
-		S04I A 0 
-		S04I A 0 A_SetBlend("Green",0.5,3)
-		S04I I 0 A_FireCustomMissile("ShredderAltFXSpawner",0,0)
-		//The damage from here has been removed and put into the puff itself.
-		//LEAVE IT ALONE. DO NOT CHANGE.
-		S04I H 0 A_RailAttack(0,0,1,none,none,RGF_SILENT,0,"ShredderPuff",0,0,20000)
-		S04I H 2 A_FireBullets(0,0,1,0,"ShredderPuff",FBF_NORANDOMPUFFZ)
+		S04I G 1 //A_StopSound(CHAN_BODY)
+		S04I H 2
+		{
+			A_PlaySound("shredderstaff/altfire", CHAN_WEAPON, 1.0, 0);
+			A_SetBlend("Green",0.5,3);
+			A_FireCustomMissile("ShredderAltFXSpawner",0,0);
+			//The damage from here has been removed and put into the puff itself.
+			//LEAVE IT ALONE. DO NOT CHANGE.
+			A_RailAttack(0,0,1,none,none,RGF_SILENT,0,"ShredderPuff",0,0,20000);
+		}
 		S04I I 5 
 		S04I J 4
 		S04I BCDE 5
@@ -5150,6 +5148,7 @@ Actor ShredderPuff
 	+FOILINVUL 
 	+PAINLESS
 	+BLOODLESSIMPACT
+	+HITTRACER
 	//Note it won't actually foil invulnerability. This is just to make it go through
 	//actors now.
 	Radius 4
@@ -5160,29 +5159,37 @@ Actor ShredderPuff
 	Translation "0:255=%[0.0,0.0,0.0]:[0.44,0.47,0.28]"
 	States
 	{
-	Crash:
-	Death:
-		TNT1 A 0 
-		TNT1 A 0 A_PlaySound("weapons/explode1")
-		TNT1 A 0 A_ChangeFlag("PAINLESS",0)
-		TNT1 A 0 A_ChangeFlag("FOILINVUL",0)
-		TNT1 A 0 A_Explode(650,256,0,0,128)
+	Spawn:
+		TNT1 A 0 NoDelay
+		{
+			if (!IsPointerEqual(AAPTR_TRACER,AAPTR_NULL))
+			{	return state("Hit");	}
+			A_PlaySound("weapons/explode1");
+			A_ChangeFlag("PAINLESS",0);
+			A_ChangeFlag("FOILINVUL",0);
+			A_Explode(650,256,0,0,128);
+			return state(1);
+		}
 		SRBA FFFFGGGGHHHHIIII 1 Bright A_FadeOut(0.02)
 		SRBA J 1 Bright A_FadeOut(0.1)
 		Wait
-	Spawn:
-	Melee:
+	Hit:
 		TNT1 A 0 
-		TNT1 A 0 A_PlaySound("shredderstaff/blasthit")
-		TNT1 A 0 A_ChangeFlag("PAINLESS",0)
-		TNT1 A 0 A_ChangeFlag("FOILINVUL",0)
-		//Note: The damage from the function itself has been incorporated into here.
-		TNT1 A 0 A_Explode(random(650,1050),392,0,0,128)
+		{
+			A_PlaySound("shredderstaff/blasthit");
+			A_ChangeFlag("PAINLESS",0);
+			A_ChangeFlag("FOILINVUL",0);
+			//Note: The damage from the function itself has been incorporated into here.
+			A_Explode(random(850,1250),392,0,0,128);
+		}
 		//TNT1 A 0 A_SetUserVar("user_scale",scaleX*100)
 		SRBA FFFFGGGGHHHHIIII 1 Bright A_SetScale((scaleX+0.1))
 	Fading:
-		SRBA J 0 Bright A_SetScale((scaleX+0.2))
-		SRBA J 1 Bright A_FadeOut(0.1)
+		SRBA J 1 Bright 
+		{
+			A_SetScale((scaleX+0.2));
+			A_FadeOut(0.1);
+		}
 		Loop
 	}
 }
@@ -5226,12 +5233,15 @@ Actor ShredderAltTrailMini
 		TNT1 A 0
 		TNT1 A 0 A_SetUserVar("user_scale",scaleX*100)
 	Scaling:
-		LPUF A 1 A_SetScale((user_scale*0.01))
-		LPUF A 0 A_SetUserVar("user_scale",user_scale-2)
-		LPUF A 0 A_JumpIf(user_scale<=0,1)
+		LPUF A 1 
+		{
+			A_SetScale((user_scale*0.01));
+			A_SetUserVar("user_scale",user_scale-2);
+			if (user_scale <= 0)
+			{	return state("Null");	}
+			return state(0);			
+		}
 		Loop
-		TNT1 A 0
-		Stop
 	}
 }
 
