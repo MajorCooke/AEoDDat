@@ -7927,11 +7927,13 @@ Actor StakeGunStake : FastProjectile
 	+EXTREMEDEATH
 	+RIPPER
 	+NOTIMEFREEZE
+	+FORCERADIUSDMG
+	//+CANNOTPUSH
 	RipperLevel 0
 	States
 	{
 	Spawn:
-		D008 P 0 NoDelay A_ChangeFlag("FORCEPAIN",randompick(0,0,1))
+		D008 P 0 NoDelay A_ChangeFlag(FORCEPAIN,randompick(0,0,1))
 	Normal:
 		D008 P 1 A_Explode(30,24,0,0,24)
 	Looping:
@@ -7939,19 +7941,23 @@ Actor StakeGunStake : FastProjectile
 		{ 
 			if (user_count < 11)
 			{
+				A_ChangeFlag(NODAMAGETHRUST,1);
 				A_Explode(30,24,0,0,24);
+				A_ChangeFlag(NODAMAGETHRUST,0);
 				A_SetUserVar(user_count,user_count + 1);
-				//Add another chance to force pain. This only happens once.
-				if (user_count >= 10 && !A_CheckFlag(FORCEPAIN,"Null"))
+				if (user_count >= 10)
 				{
-					A_ChangeFlag(FORCEPAIN,random(0,1));
-					A_SetUserVar(user_count,11);	
+					if (!A_CheckFlag(FORCEPAIN,"Null"))
+					{	A_ChangeFlag(FORCEPAIN,randompick(0,1));	}
+					A_SetUserVar(user_count,11);
 				}
 			}
 			else
 			{
 				A_SpawnItemEx("StakeFireTrail",-2,0,0,0,0,0,0,SXF_NOCHECKPOSITION);
+				A_ChangeFlag(NODAMAGETHRUST,1);
 				A_Explode(90,48,0,0,48);
+				A_ChangeFlag(NODAMAGETHRUST,0);
 			}
 			
 			A_ChangeVelocity(0,0,ZVel);	
@@ -7961,9 +7967,15 @@ Actor StakeGunStake : FastProjectile
 		TNT1 A 0 A_SetUserVar(user_crash,1)
 	XDeath:
 		D008 P 0
-		{
-			if (user_count >= 11)	{	A_Explode(random(300,600),24,0,0,24);	}
-			A_JumpIf(user_crash == 0,"S2");
+		{				
+			if (user_count >= 11)	
+			{	
+				A_ChangeFlag(NODAMAGETHRUST,0);
+				A_Explode(random(300,600),48,0,0,48);	
+			}
+			if (user_crash == 1)
+			{	return state("S2");	}
+			return state("S1");
 		}
 	S1:
 		TNT1 A 0 A_PlaySound("painkiller/weapon/StakeGun/StakeCrash")
