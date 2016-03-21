@@ -370,33 +370,31 @@ Actor FCultist4 : FCultist 7204		// imp
 	States 
 	{ 
 	Missile:
-		TNT1 A 0 A_JumpIfCloser(450,9)	//check if close enough to throw TNT
+		TNT1 A 0 A_JumpIfCloser(450,"TNT")	//check if close enough to throw TNT
 		E21A A 0 A_Jump(100,4)
 		E21A B 8 A_FaceTarget(0,0)
 		"----" A 0 A_CustomMissile("BulletTracerFX",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(3),3))
 		E21A A 6 Bright A_CustomBulletAttack(4,3,3,5,"BulletDamagePuff")
 		E21A B 8 A_FaceTarget
 		Goto See
+	Flare:
 		E21A B 4 A_FaceTarget
 		E21A A 0 A_Playsound("caleb/flare")
 		E21A A 4 Bright A_CustomMissile("CultistFlareGunShot",32,0,0)
 		E21A B 4 A_FaceTarget
 		Goto See
-		TNT1 A 0 A_Jump(128,7)			//only 50% fo times if less than 450MU, will throw TNT
+	TNT:
+		TNT1 A 0 A_Jump(128,"Shotgun")			//only 50% fo times if less than 450MU, will throw TNT
 		E21A CDEF 4 A_FaceTarget
 		E21A G 4 A_CustomMissile("TNTSmall",30,0,0)
 		E21A H 4
 		Goto See
-		E21A A 0 A_Jump(100,4)
+	Shotgun:
+		E21A A 0 A_Jump(100,"Flare")
 		E21A B 8 A_FaceTarget(0,0)
 		"----" A 0 A_CustomMissile("BulletTracerFX",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(3),3))
 		E21A A 6 Bright A_CustomBulletAttack(4,3,3,5,"BulletDamagePuff")
 		E21A B 8 A_FaceTarget
-		Goto See
-		E21A B 4 A_FaceTarget
-		E21A A 0 A_Playsound("caleb/flare")
-		E21A A 4 Bright A_CustomMissile("CultistFlareGunShot",32,0,0)
-		E21A B 4 A_FaceTarget
 		Goto See
 	}
 }
