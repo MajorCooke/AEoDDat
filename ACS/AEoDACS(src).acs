@@ -626,9 +626,18 @@ Script "DemonMorphMusic" (int swiitch)
 {
 	int plrnum = PlayerNumber();
 	//If the player allows demon morph music, or if the demon morph is wearing off
-	if (swiitch && GetUserCvar(plrnum,"user_AllowDemonMorphMusic") == 1)
+	if (swiitch && GetUserCvar(plrnum,"user_AllowDemonMorphMusic") == 1 && !GetUserCvar(plrnum,"user_dmmusic"))
 	{
-		LocalSetMusic("Music/Synthetic666.ogg");
+		switch(random(1,2))
+		{
+		case 1:
+			LocalSetMusic("Music/Synthetic666.ogg");
+			break;
+		case 2:
+			LocalSetMusic("Music/GetInside.ogg");
+			break;
+		}
+		
 		SetUserCvar(plrnum,"user_dmmusic",1);
 	}
 	else if (!swiitch && GetUserCvar(plrnum,"user_dmmusic") == 1)
