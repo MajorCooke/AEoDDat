@@ -140,24 +140,23 @@ Actor LightningMissileRedux
 	Projectile
 	+FORCERADIUSDMG
 	+EXTREMEDEATH
+	+NOTIMEFREEZE //Prevents crashing.
 	Speed 6
 	Damage 1
 	Radius 6
 	Height 4
 	DamageType "Electric"
-	DeathSound "weapons/lightningend"
 	States
 	{
 	Spawn:
-		TNT1 A 0
-		TNT1 A 0 A_SetUserArray("user_count",0,0)
+		TNT1 A 0 NoDelay A_SetUserArray("user_count",0,0)
 	Direction:
 		TNT1 A 0 A_SetPitch(pitch+frandom(-2,2))
 		TNT1 A 0 A_SetAngle(angle+frandom(-2,2))
 		TNT1 A 0 A_SetUserArray("user_count",1,0)
 	Moving:
 		TNT1 A 0 A_SpawnItemEx("LightningMissileArk",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS,253)
-		TNT1 A 0 A_SpawnItemEx("LightningTrail",(sin(-pitch)*random(-2,2)),frandom(-2,2),frandom(-2,2),0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("LightningTrailDistortion",(sin(-pitch)*random(-2,2)),frandom(-2,2),frandom(-2,2),0,0,0,0,SXF_NOCHECKPOSITION)
 		//TNT1 A 0 A_Warp(AAPTR_DEFAULT,user_xyz[0],user_xyz[1],user_xyz[2],0,WARPF_USECALLERANGLE,"MoveSuccess") //A_Warp(AAPTR_DEFAULT,cos(-pitch)*6,0,sin(-pitch)*6,0,0,"Moving")
 		TNT1 A 0 A_Warp(AAPTR_DEFAULT,cos(-pitch)*6,0,sin(-pitch)*6,0,WARPF_USECALLERANGLE,"MoveSuccess")
 		Goto End
@@ -172,9 +171,9 @@ Actor LightningMissileRedux
 		Stop
 	Death:
 		TNT1 AAAAAAA 0 A_SpawnItemEx("TeslaFX",0,0,0,random(6,-6),random(6,-6),random(6,-6),0,0)
-		TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("LightningTrailDistortion",0,frandom(-5,5),frandom(-5,5),0,0,0,0,SXF_NOCHECKPOSITION)
 		TNT1 A 0 A_Explode(10,32,0)
-		TNT1 A 1 A_Scream
+		TNT1 A 1 A_PlaySound("weapons/lightningend")
 		Stop
 	}
 }
@@ -186,6 +185,7 @@ Actor LightningMissileArk
 	Projectile
 	+PAINLESS
 	+DONTREFLECT
+	+NOTIMEFREEZE
 	Speed 6
 	Damage 0
 	Radius 6
@@ -193,8 +193,7 @@ Actor LightningMissileArk
 	States
 	{
 	Spawn:
-		TNT1 A 0
-		TNT1 A 0 A_SetUserArray("user_count",0,0)
+		TNT1 A 0 NoDelay A_SetUserArray("user_count",0,0)
 	Direction:
 		TNT1 A 0 A_SetUserArray("user_xyz",0,frandom(-3,3))
 		TNT1 A 0 A_SetUserArray("user_xyz",0,frandom(-3,3))
@@ -203,7 +202,7 @@ Actor LightningMissileArk
 		//TNT1 A 0 A_SetAngle(angle+frandom(-4,4))
 		TNT1 A 0 A_SetUserArray("user_count",1,0)
 	Moving:
-		TNT1 A 0 A_SpawnItemEx("LightningTrailMini",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("LightningTrailDistortionMini",0,frandom(-5,5),frandom(-5,5),0,0,0,0,SXF_NOCHECKPOSITION)
 		TNT1 A 0 A_Warp(AAPTR_DEFAULT,user_xyz[0],user_xyz[1],user_xyz[2],0,WARPF_ABSOLUTEOFFSET,"MoveSuccess") //A_Warp(AAPTR_DEFAULT,cos(-pitch)*6,0,sin(-pitch)*6,0,0,"Moving")
 		//TNT1 A 0 A_Warp(AAPTR_DEFAULT,cos(-pitch)*6,0,sin(-pitch)*6,0,WARPF_USECALLERANGLE,"MoveSuccess")
 		Goto Death
@@ -218,34 +217,11 @@ Actor LightningMissileArk
 		Stop
 	}
 }
-
-Actor LightningTrail
-{
-	+NOINTERACTION
-	States
-	{
-	Spawn:
-			TNT1 A 0
-			TNT1 A 0 A_SpawnItemEx("LightningTrailDistortion",0,frandom(-5,5),frandom(-5,5),0,0,0,0,SXF_NOCHECKPOSITION)
-			Stop
-	}
-}
-
-Actor LightningTrailMini
-{
-	+NOINTERACTION
-	States
-	{
-	Spawn:
-			TNT1 A 0
-			TNT1 A 0 A_SpawnItemEx("LightningTrailDistortionMini",0,frandom(-5,5),frandom(-5,5),0,0,0,0,SXF_NOCHECKPOSITION)
-			Stop
-	}
-}
  
 Actor LightningTrailDistortion
 {
 	+NOINTERACTION
+	+NOTIMEFREEZE
 	RenderStyle Add
 	Scale 0.4
 	//Scale 0.75
@@ -253,14 +229,12 @@ Actor LightningTrailDistortion
 	States
 	{
 	Spawn:
-		PLSE A 0
-		PLSE A 0 A_SetScale(frandom(0.3,0.5))
+		PLSE A 0 NoDelay A_SetScale(frandom(0.3,0.5))
+	Pick:
 		PLSE A 0 A_Jump(256,1,2,3)
-		PLSE B 2 bright
-		Stop
-		PLSE C 2 bright
-		Stop
-		PLSE D 2 bright
+		PLSE BCD 0 A_Jump(256,"Play")
+	Play:
+		"----" A 2
 		Stop
 	}
 }
@@ -271,37 +245,8 @@ Actor LightningTrailDistortionMini : LightningTrailDistortion
 	States
 	{
 	Spawn:
-		PLSE A 0
-		PLSE A 0 A_SetScale(frandom(0.1,0.3))
-		PLSE A 0 A_Jump(256,1,2,3)
-		PLSE B 2 bright
-		Stop
-		PLSE C 2 bright
-		Stop
-		PLSE D 2 bright
-		Stop
-	}
-}
- 
-Actor LightningTagger : FastProjectile  //This thing is the main damager in the attack. While the random "zaps" can
-{													   //cause damage, this "tagger" are the ones in charge of dealing the main dmg.
-	Damage 15
-	Speed 60
-	Radius 3
-	Height 3
-	Projectile
-	+EXTREMEDEATH
-	DamageType "Electric"
-	RenderStyle None
-	States
-	{
-	Spawn:
-			TNT1 AAAAAAAAAAAAAAAAAA 1
-			Stop
-	Death:
-			//TNT1 AAAAAAAAAAAA 0 A_SpawnItemEx("TeslaFX",0,0,0,random(6,-6),random(6,-6),random(6,-6),0,0)
-			TNT1 A 0 A_CustomMissile("LightningTrail",0,0)
-			Stop
+		PLSE A 0 NoDelay A_SetScale(frandom(0.1,0.3))
+		Goto Super::Pick
 	}
 }
  
@@ -488,7 +433,7 @@ Actor LightningShotRandom
 		TNT1 A 0 A_SetUserArray("user_count",1,0)
 	Moving:
 		TNT1 A 0 A_SpawnItemEx("LightningMissileArk",0,0,0,6,0,0,random(-10,10),SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERPOINTERS,240)
-		TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("LightningTrailDistortion",0,frandom(-5,5),frandom(-5,5),0,0,0,0,SXF_NOCHECKPOSITION)
 		//TNT1 A 0 A_Warp(AAPTR_DEFAULT,user_xyz[0],user_xyz[1],user_xyz[2],0,WARPF_USECALLERANGLE,"MoveSuccess") //A_Warp(AAPTR_DEFAULT,cos(-pitch)*6,0,sin(-pitch)*6,0,0,"Moving")
 		TNT1 A 0 A_Warp(AAPTR_DEFAULT,user_xyz[0],user_xyz[1],user_xyz[2],0,WARPF_ABSOLUTEOFFSET,1)
 		Goto End
@@ -505,7 +450,7 @@ Actor LightningShotRandom
 		TNT1 A 0
 	Death:
 		TNT1 AAAAAAA 0 A_SpawnItemEx("TeslaFX",0,0,0,random(6,-6),random(6,-6),random(6,-6),0,0)
-		TNT1 A 0 A_SpawnItemEx("LightningTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("LightningTrailDistortion",0,frandom(-5,5),frandom(-5,5),0,0,0,0,SXF_NOCHECKPOSITION)
 		TNT1 A 0 A_Explode(15,300,0)
 		TNT1 A 1 A_Scream
 		Stop
