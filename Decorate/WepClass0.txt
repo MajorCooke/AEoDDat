@@ -37,7 +37,7 @@ Actor AEoDHandOfGodItem: CustomInventory //6124
 	+IGNORESKILL	+DONTGIB
 	Inventory.Amount 1
 	Inventory.PickupMessage "You have the Hand of God. Banish the demons back to hell!"
-	Inventory.PickupSound "weapons/handofgod"
+	Inventory.PickupSound "HandOfGod/Pickup"
 	Scale 0.5
 	States
 	{
@@ -50,6 +50,7 @@ Actor AEoDHandOfGodItem: CustomInventory //6124
 		TNT1 A 0 A_GiveInventory("Weapon0Count",1)
 		TNT1 A 0 A_GiveInventory("HandOfGodDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDHandOfGod",1)
+		TNT1 A 0 A_SpawnItemEx("HandOfGodPickupFX",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		TNT1 A 0 A_PrintBold("\cgSlot 10: Hand of God")
 		Stop
 	Nothing:
@@ -70,7 +71,7 @@ Actor AEoDHandOfGod : Weapon // 6124
 	+IGNORESKILL	+DONTGIB
 	+WEAPON.CHEATNOTWEAPON
 	Inventory.PickupMessage "You have the Hand of God. Banish the demons back to hell!"
-	Inventory.PickupSound "weapons/handofgod"
+	Inventory.PickupSound "HandOfGod/Pickup"
 	Weapon.AmmoType BlueMana
 	Weapon.AmmoType2 BlueMana
 	Weapon.AmmoGive1 250
@@ -85,6 +86,9 @@ Actor AEoDHandOfGod : Weapon // 6124
 	Spawn:
 		GDPU ABCDEFGH 3 bright
 		Loop
+	Pickup:
+		TNT1 A 0 A_SpawnItemEx("HandOfGodPickupFX",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		Stop
 	Select:
 		TNT1 A 0 	
 		GDWP A 1 A_Raise
@@ -312,10 +316,22 @@ Actor PortalFX1
 	States
 	{
 	Spawn:
-		TNT1 A 0
-		CB02 A 0 A_PlaySound("weapons/gvaporize")
+		CB02 A 0 NoDelay A_PlaySound("weapons/gvaporize")
 		CB02 ABCDEFGHIJKL 3 bright
 		CB02 MNOPQRS 2 bright
+		Stop
+	}
+}
+
+Actor HandOfGodPickupFX
+{
+	+NOINTERACTION
+	+NOTONAUTOMAP
+	Renderstyle None
+	States
+	{
+	Spawn:
+		TNT1 A 175 NoDelay A_PlaySound("HandOfGod/Pickup",CHAN_AUTO,1,0,ATTN_NONE)
 		Stop
 	}
 }
@@ -698,7 +714,7 @@ Actor AEoDHandOfGodNoAmmo : AEoDHandOfGodItem
 		TNT1 A 0 A_GiveInventory("HandOfGodDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDHandOfGod",1)
 		TNT1 A 0 A_TakeInventory("BlueMana",5)
-		TNT1 A 0 	
+		TNT1 A 0 A_SpawnItemEx("HandOfGodPickupFX",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		Stop
 	Nothing:
 		TNT1 A 0 A_JumpIfInventory("AEoDHandOfGod",1,"Ammo")
@@ -713,18 +729,21 @@ Actor AEoDHandOfGodNoAmmo : AEoDHandOfGodItem
 		TNT1 A 0 A_GiveInventory("Weapon0Count",1)
 		TNT1 A 0 A_GiveInventory("HandOfGodDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDHandOfGod",1)
+		TNT1 A 0 A_SpawnItemEx("HandOfGodPickupFX",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		Stop
 	Ammo2:
 		TNT1 A 0 A_TakeInventory("BlueMana",100)
 		TNT1 A 0 A_GiveInventory("Weapon0Count",1)
 		TNT1 A 0 A_GiveInventory("HandOfGodDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDHandOfGod",1)
+		TNT1 A 0 A_SpawnItemEx("HandOfGodPickupFX",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		Stop
 	Ammo3:
 		TNT1 A 0 A_GiveInventory("Weapon0Count",1)
 		TNT1 A 0 A_GiveInventory("HandOfGodDrop",1)
 		TNT1 A 0 A_GiveInventory("AEoDHandOfGod",1)
 		TNT1 A 0 A_TakeInventory("BlueMana",100)
+		TNT1 A 0 A_SpawnItemEx("HandOfGodPickupFX",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		Stop
 	}
 }
