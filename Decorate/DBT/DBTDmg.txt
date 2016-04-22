@@ -62,10 +62,11 @@ actor DBTVulnerableThing
     Spawn:
 		TNT1 A 0 NoDelay 
 		{
-			//if (tid <= 0 || tid > 70)
-			//{	A_SetUserVar(user_t,70);	}
-			//else
-			//{	A_SetUserVar(user_t,tid);	}
+			if (tid > 0)
+			{	
+				A_SetUserVar(user_t,tid);
+				Thing_ChangeTID(0,0);
+			}
 			A_ResetHealth;
 			A_ChangeFlag(CORPSE,0);
 			A_ClearTarget;
@@ -75,52 +76,80 @@ actor DBTVulnerableThing
 			A_SetShootable;
 		}
 	Waiting:
-		TNT1 A 0 A_Stop
-		TNT1 A 1 A_SetUserVar(user_tics,user_tics+1)
-		TNT1 A 0 A_JumpIf(user_tics >= MaxTics, "Waiting")
-		TNT1 A 0 A_JumpIf(health < HP,1)
-		Stop
-		TNT1 A 0 A_ChangeFlag("NOPAIN",1)
-		Goto Pain+2
+		TNT1 A 1
+		{
+			A_SetUserVar(user_tics,user_tics+1);
+			if (user_tics <= MaxTics)
+			{	return state(0);	}
+			if(health < HP)
+			{	
+				A_ChangeFlag("NOPAIN",1);
+				return state("Pain");	
+			}
+			return state(0);
+		}
+		Loop
 	Pain:
-		TNT1 A 0 A_UnsetShootable
-		TNT1 A 0 A_ChangeFlag("NOPAIN",1)
-		TNT1 A 1 A_ChangeFlag("NOBLOCKMAP",1)
-		//Make sure it's only a player damaging him.
-		TNT1 A 0 A_JumpIf(CheckClass("PlayerPawn",AAPTR_TARGET,1),1)
-		Goto Spawn
-		TNT1 A 0 A_JumpIf(health >= HP,"EndNoChange")
-		TNT1 A 0 A_SetUserVar(user_damage,HP-Health)
-		TNT1 A 0 A_GiveInventory("DBTNoDamageOff",1,AAPTR_MASTER)
-		TNT1 A 0 A_DamageMaster(user_damage*DamageMultiplier,"DBTVulnerable",DMSS_NOFACTOR,"FDeathBringerThanatos")
-		TNT1 A 0 A_GiveInventory("DBTNoDamageOn",1,AAPTR_MASTER)
-		TNT1 A 0 A_JumpIf(IsPointerEqual(AAPTR_TARGET,AAPTR_NULL),3)
-		TNT1 A 0 A_JumpIfHealthLower(1,2,AAPTR_TARGET)
-		TNT1 A 0 A_TransferPointer(AAPTR_DEFAULT,AAPTR_MASTER,AAPTR_TARGET,AAPTR_TARGET,PTROP_NOSAFEGUARDS)
-		TNT1 A 0 A_JumpIf(DamageMultiplier > 1,1)
-		Stop
-		TNT1 A 0 A_QuakeEx(1,2,2,35,0,2048,"",QF_RELATIVE|QF_SCALEDOWN)
-		Stop
+		TNT1 A 35 
+		{
+			A_UnsetShootable;
+			A_ChangeFlag("NOPAIN",1);
+			A_ChangeFlag("NOBLOCKMAP",1);
+			
+			if (!IsPointerEqual(Target,NullPtr) && !A_JumpIfHealthLower(1,"Null",Target))
+			{	A_TransferPointer(DefPtr,Master,Target,Target,PTROP_NOSAFEGUARDS);	}
+			
+			//Make sure it's only a player damaging him.
+			if (CheckClass("PlayerPawn",Target,1) && Health < HP)
+			{
+				A_SetUserVar(user_damage,HP-Health);
+				A_GiveInventory("DBTDamageCounter",user_damage,Master);
+				A_GiveInventory("DBTDamager",1,Master);
+				//A_GiveInventory("DBTNoDamageOff",1,AAPTR_MASTER);
+				//A_DamageMaster(user_damage*DamageMultiplier,"DBTVulnerable",DMSS_NOFACTOR,"FDeathBringerThanatos");
+				//A_GiveInventory("DBTNoDamageOn",1,AAPTR_MASTER);
+				
+				if (user_t > 0)
+				{	
+					A_QuakeEx(1,2,2,35,0,2048,"",QF_RELATIVE|QF_SCALEDOWN); 
+					return state(0);	
+				}
+			}
+			else
+			{
+				return state("Spawn");
+			}
+			return state("Null");
+		}
     Death:
-		TNT1 A 0 A_JumpIf(CheckClass("PlayerPawn",AAPTR_TARGET,1),1)
-		Goto End
-		TNT1 A 0 A_JumpIf(IsPointerEqual(AAPTR_TARGET,AAPTR_NULL),3)
-		TNT1 A 0 A_JumpIfHealthLower(1,2,AAPTR_TARGET)
-		TNT1 A 0 A_TransferPointer(AAPTR_DEFAULT,AAPTR_MASTER,AAPTR_TARGET,AAPTR_TARGET,PTROP_NOSAFEGUARDS)
-		TNT1 A 0 A_GiveInventory("DBTNoDamageOff",1,AAPTR_MASTER)
-		TNT1 A 0 A_DamageMaster(1000*DamageMultiplier,"DBTVulnerable",DMSS_NOFACTOR,"FDeathBringerThanatos")
-		TNT1 A 0 A_GiveInventory("DBTNoDamageOn",1,AAPTR_MASTER)
-		TNT1 A 0 A_JumpIf(DamageMultiplier > 1,1)
-		Stop
-		TNT1 A 35 A_QuakeEx(1,2,2,35,0,2048,"",QF_RELATIVE|QF_SCALEDOWN)
+		TNT1 A 35
+		{
+			if (!IsPointerEqual(Target,NullPtr) && !A_JumpIfHealthLower(1,"Null",Target))
+			{	A_TransferPointer(DefPtr,Master,Target,Target,PTROP_NOSAFEGUARDS);	}
+			
+			if(CheckClass("PlayerPawn",Target,true))
+			{	
+				A_GiveInventory("DBTDamageCounter",1000,Master);
+				A_GiveInventory("DBTDamager",1,Master);
+				if (user_t > 0)
+				{	
+					A_QuakeEx(1,2,2,35,0,2048,"",QF_RELATIVE|QF_SCALEDOWN); 
+					return state(0);	
+				}
+			}
+			return state("Null");
+		}
 		Stop
 	Death.Massacre:
 	EndNoChange:
 		TNT1 A 0
 		Stop
 	End:
-		TNT1 A 0 A_JumpIfHealthLower(1,"EndNoChange",AAPTR_TARGET)
-		TNT1 A 0 A_TransferPointer(AAPTR_DEFAULT,AAPTR_MASTER,AAPTR_TARGET,AAPTR_TARGET,PTROP_NOSAFEGUARDS)
+		TNT1 A 0 
+		{
+			if (!A_JumpIfHealthLower(1,"EndNoChange",Target))
+			{	A_TransferPointer(DefPtr,Master,Target,Target,PTROP_NOSAFEGUARDS);	}
+		}
 		Stop
     }
 }
@@ -168,60 +197,30 @@ actor DBTVulnerableThingSteel : DBTVulnerableThing
 ==============================================================================*/
 
 Actor DBTDamageCounter : Inventory
-{	Inventory.MaxAmount 1000 }
+{	Inventory.MaxAmount 10000 }
 
-Actor DBTDamageCheck : CustomInventory
+Actor DBTDamager : CustomInventory
 {
 	+INVENTORY.ALWAYSPICKUP
 	States
 	{
 	Pickup:
-		TNT1 A 0 A_JumpIfInventory("DBTDamageCounter",health,"Kill") //Skip it all if it matches.
-	LoopCheck:
-		//Most efficiently done in increments of 10. Less time spent. instead of
-		//one at a time.
-		TNT1 A 0 A_JumpIfInventory("DBTDamageCounter",1000,"Dmg1000") 
-		TNT1 A 0 A_JumpIfInventory("DBTDamageCounter",100,"Dmg100")
-		TNT1 A 0 A_JumpIfInventory("DBTDamageCounter",10,"Dmg10")
-		TNT1 A 0 A_JumpIfInventory("DBTDamageCounter",5,"Dmg5")
-		TNT1 A 0 A_JumpIfInventory("DBTDamageCounter",1,"Dmg1")
-		Stop
-	Dmg1000:
-		TNT1 A 0 A_JumpIf(health <= 1000,"Kill")
-		TNT1 A 0 A_TakeInventory("DBTDamageCounter",1000,0)
-		TNT1 A 0 A_SetHealth(health-1000)
-		Goto LoopCheck
-	Dmg100:
-		TNT1 A 0 A_JumpIf(health <= 100,"Kill")
-		TNT1 A 0 A_TakeInventory("DBTDamageCounter",100,0)
-		TNT1 A 0 A_SetHealth(health-100)
-		Goto LoopCheck
-	Dmg10:
-		TNT1 A 0 A_JumpIf(health <= 10,"Kill")
-		TNT1 A 0 A_TakeInventory("DBTDamageCounter",10,0)
-		TNT1 A 0 A_SetHealth(health-10)
-		Goto LoopCheck
-	Dmg5:
-		TNT1 A 0 A_JumpIf(health <= 5,"Kill")
-		TNT1 A 0 A_TakeInventory("DBTDamageCounter",5)
-		TNT1 A 0 A_SetHealth(health-5)
-		Goto LoopCheck
-	Dmg1:
-		TNT1 A 0 A_JumpIf(health <= 1,"Kill")
-		TNT1 A 0 A_TakeInventory("DBTDamageCounter",1)
-		TNT1 A 0 A_SetHealth(health-1)
-		Goto LoopCheck
-	KillCheck:
-		TNT1 A 0 A_JumpIfInventory("DBTDamageCounter",health,"Kill")
-		Goto LoopCheck
-	Kill:
-		TNT1 A 0 A_Die("Normal")
+		TNT1 A 0
+		{
+			if (CountInv("DBTDamageCounter") >= health)
+			{
+				A_Die("Normal");
+			}
+			else if (CountInv("DBTDamageCounter") > 0)
+			{
+				A_SetHealth(health - CountInv("DBTDamageCounter"));
+				A_TakeInventory("DBTDamageCounter",32767,0);
+			}
+			return bool(true);
+		}
 		Stop
 	}
 }
-
-
-
 
 /*actor DBTVulnerableThingSteel
 {
