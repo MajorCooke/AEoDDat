@@ -713,7 +713,7 @@ Actor AEoDC14 : Weapon
 		O003 A 1 Offset(218, 126)
 		O003 A 1 Offset(193, 120)
 	ReallyReady:
-		O003 A 1 Offset(84, 120) A_WeaponReady (WRF_NOBOB)	// Bobbing cancels custom offsets
+		O003 A 1 Offset(184, 120) A_WeaponReady (WRF_NOBOB)	// Bobbing cancels custom offsets
 		Loop
 	Deselect:
 		TNT1 A 0 A_StopSound(CHAN_BODY)
@@ -777,7 +777,7 @@ Actor AEoDC14 : Weapon
 		
 	FireRail:
 		TNT1 A 0 A_TakeInventory("RailRoundsLeft",1)
-		TNT1 A 0 A_RailAttack(30,0,1,"none","none",RGF_SILENT)	Goto Shot
+		TNT1 A 0 A_RailAttack(30,10,1,"white","none",RGF_SILENT,0,"NewPuff1",0,0,20000,7,4,0)	Goto Shot
 	
 	FireScatter:
 		TNT1 A 0 A_TakeInventory("ScatterRoundsLeft",1)
@@ -889,14 +889,13 @@ Actor AEoDC14 : Weapon
 		TNT1 A 0 A_TakeInventory("RailRoundsLeft",		999)
 		TNT1 A 0 A_TakeInventory("ScatterRoundsLeft",	999)
 		TNT1 A 0 A_TakeInventory("RoundsLeft",			999)
-		Goto Hold
+		Goto Enhold
 		
-	Hold:
-		TNT1 A 0 A_JumpIfInventory(CanFireNonStop,1,"Unhold")
-		O003 A 1 Offset(185, 121)
-		O003 A 0 A_Refire
+	Enhold:
+		O003 A 1 Offset(185, 121) A_JumpIfInventory(CanFireNonStop,1,"Unhold")
+		O003 A 0 A_Refire("Enhold")
 	Unhold:
-		O003 A 0
+		O003 A 0 Offset(185, 121) A_Refire("ReallyReady")
 		Goto ReallyReady
 		
 	AltFire:
@@ -936,12 +935,53 @@ Actor ElectricSpawningPuff : BulletPuff
 }
 Actor FireSpawningPuff : ElectricSpawningPuff 
 {
+	+NOINTERACTION
+	+THRUACTORS
+	+BOUNCEONWALLS
+	+BOUNCEONCEILINGS
+	+BOUNCEONFLOORS
 	DamageType "Fire"
+	Scale 0.25
+	RenderStyle Add
 	States
 	{
 	Spawn:
-		TNT1 AAA 0 A_SpawnItemEx("FTFlameTrail2",random(-7,7),random(-4,4),random(-4,2),0,0,frandom(0,1.25),0,SXF_NOCHECKPOSITION)
-		TNT1 AA 10 A_Explode(8,32)
+		TNT1 A 0 A_Explode(8,32,0,0,24)
+		TNT1 A 0 A_Jump(255,"F1","F2","F3","F4","F5")
+	F1:
+		X052 AB 1 bright
+		X052 CDEFGH 1 Bright A_ScaleVelocity(0.92)
+		TNT1 A 0 A_Explode(8,32,0,0,24)
+		X052 IJKLMNO 1 Bright A_ScaleVelocity(0.9)
+		X052 PQRS 1 Bright A_ScaleVelocity(0.87)
+		Stop
+	F2:
+		X053 AB 1 bright
+		X053 CDEFGHIJ 1 Bright A_ScaleVelocity(0.92)
+		TNT1 A 0 A_Explode(8,32,0,0,24)
+		X053 KLMN 1 Bright A_ScaleVelocity(0.9)
+		X053 OPQRS 1 Bright A_ScaleVelocity(0.87)
+		Stop
+	F3:
+		X054 ABCD 1 bright
+		X054 EFGHIJK 1 Bright A_ScaleVelocity(0.92)
+		TNT1 A 0 A_Explode(8,32,0,0,24)
+		X054 LMNO 1 Bright A_ScaleVelocity(0.9)
+		X054 PQRS 1 Bright A_ScaleVelocity(0.87)
+		Stop
+	F4:
+		X055 ABC 1 bright
+		X055 DEFGHIJKLMN 1 Bright A_ScaleVelocity(0.92)
+		TNT1 A 0 A_Explode(8,32,0,0,24)
+		X055 OP 1 Bright A_ScaleVelocity(0.9)
+		X055 QRS 1 Bright A_ScaleVelocity(0.87)
+		Stop
+	F5:
+		X056 ABCDE 1 Bright 
+		X056 FGHIJ 1 Bright A_ScaleVelocity(0.92)
+		TNT1 A 0 A_Explode(8,32,0,0,24)
+		X056 KLMN 1 Bright A_ScaleVelocity(0.9)
+		X056 OPQR 1 Bright A_ScaleVelocity(0.87)
 		Stop
 	}
 }
