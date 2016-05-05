@@ -3373,36 +3373,22 @@ Actor DisintegrationShadow
 	States
 	{
 	Spawn:
-		"####" "#" 0 NoDelay A_SetUserVar(user_t,tid)
-		"####" "#" 0 Thing_ChangeTID(0,0)
-		"####" "#" 1 A_FadeOut(0.015,FTF_CLAMP)
-		"####" "#" 0 A_JumpIf(user_t == Big,"Big")
-		"####" "#" 0 A_JumpIf(user_t == MediumBig,"MediumBig")
-		"####" "#" 0 A_JumpIf(user_t == Medium,"Medium")
-		"####" "#" 0 A_JumpIf(user_t == SmallMedium,"SmallMedium")
-		"####" "#" 0 A_JumpIf(user_t == Small,"Small")
-		"####" "#" 0 A_JumpIf(user_t == VerySmall,"VerySmall")
-		Goto Medium
-	Big:
-		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowBig",0,0,BigS,0,0,0,0,SXF_NOCHECKPOSITION)
-		Goto Out
-	MediumBig:
-		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,MediumBigS,0,0,0,0,SXF_NOCHECKPOSITION)
-		Goto Out
-	Medium:
-		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowMedium",0,0,MediumS,0,0,0,0,SXF_NOCHECKPOSITION)
-		Goto Out
-	SmallMedium:
-		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowSmallMedium",0,0,SmallMediumS,0,0,0,0,SXF_NOCHECKPOSITION)
-		Goto Out
-	Small:
-		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowSmall",0,0,SmallS,0,0,0,0,SXF_NOCHECKPOSITION)
-		Goto Out
-	VerySmall:
-		"####" "#" 0 A_SpawnItemEx("DisintegrateShadowVerySmall",0,0,VerySmallS,0,0,0,0,SXF_NOCHECKPOSITION)
-		Goto Out
-	//DisLoopMB:
-		//"####" "#" 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,40,0,0,0,0,SXF_NOCHECKPOSITION)
+		"####" "#" 1 NoDelay 
+		{
+			A_SetUserVar(user_t,tid);
+			Thing_ChangeTID(0,0);
+			A_FadeOut(0.015,FTF_CLAMP);
+		}
+		"####" "#" 0 
+		{
+				 if (user_t == Big)			{	A_SpawnItemEx("DisintegrateShadowBig",0,0,BigS,0,0,0,0,SXF_NOCHECKPOSITION);			}
+			else if (user_t == MediumBig)	{	A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,MediumBigS,0,0,0,0,SXF_NOCHECKPOSITION);		}
+			else if (user_t == SmallMedium)	{	A_SpawnItemEx("DisintegrateShadowSmallMedium",0,0,SmallMediumS,0,0,0,0,SXF_NOCHECKPOSITION);	}
+			else if (user_t == Small)		{	A_SpawnItemEx("DisintegrateShadowSmall",0,0,SmallS,0,0,0,0,SXF_NOCHECKPOSITION);			}
+			else if (user_t == VerySmall)	{	A_SpawnItemEx("DisintegrateShadowVerySmall",0,0,VerySmallS,0,0,0,0,SXF_NOCHECKPOSITION);		}
+			else /*medium*/					{	A_SpawnItemEx("DisintegrateShadowMedium",0,0,MediumS,0,0,0,0,SXF_NOCHECKPOSITION);	}
+			return state("Out");
+		}
 	Out:
 		"####" "##" 2 A_FadeOut(0.03)
 		Loop
@@ -3418,20 +3404,16 @@ Actor DisintegrateSpark
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay A_SetScale(ScaleX*RandomPick(-1,1),ScaleY*RandomPick(-1,1))
-		TNT1 A 0 A_Jump(256,"S1","S2","S3","S4","S5","S6","S7","S8")
-	S1:	X079 A 0 A_Jump(256,"Perform")
-	S2:	X079 B 0 A_Jump(256,"Perform")	
-	S3:	X079 C 0 A_Jump(256,"Perform")
-	S4:	X079 D 0 A_Jump(256,"Perform")
-	S5:	X079 E 0 A_Jump(256,"Perform")
-	S6:	X079 F 0 A_Jump(256,"Perform")
-	S7:	X079 G 0 A_Jump(256,"Perform")
-	S8: X079 H 0 A_Jump(256,"Perform")
+		TNT1 A 0 NoDelay 
+		{
+			A_SetScale(ScaleX*RandomPick(-1,1),ScaleY*RandomPick(-1,1));
+			return A_Jump(256,1,2,3,4,5,6,7,8);
+		}
+		X079 ABCDEFGH 0 A_Jump(256,"Perform")
 	Perform:
 		"####" "#" 2 Bright
-		"####" "#" 0 A_FadeOut(0.06)
-		Loop
+		"####" "#" 2 Bright A_FadeOut(0.06)
+		Wait
 	}
 
 }
@@ -3455,13 +3437,16 @@ Actor DisintegrateSparksVerySmall
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay A_CheckSight("End")
-		TNT1 A 0 A_Stop
-		TNT1 A 0 A_SetUserVar(user_p,random(-900,900))
-		TNT1 A 0 A_SetUserVar(user_vel,random(10,150))
-		TNT1 A 2 A_SpawnItemEx("DisintegrateSpark",random(0,2),0,random(-2,2),
-			(cos(-(user_p*0.1))*(user_vel*0.01)),0,
-			(sin(-(user_p*0.1))*(user_vel*0.01)),random(0,359),32|SXF_TRANSFERSCALE)
+		TNT1 A 2 NoDelay 
+		{
+			if (A_CheckSight("Null"))	{ 	A_Remove(DefPtr,RMVF_EVERYTHING);	}
+			A_Stop;
+			A_SetUserVar(user_p,random(-900,900));
+			A_SetUserVar(user_vel,random(10,150));
+			A_SpawnItemEx("DisintegrateSpark",random(0,2),0,random(-2,2),
+				(cos(-(user_p*0.1))*(user_vel*0.01)),0,
+				(sin(-(user_p*0.1))*(user_vel*0.01)),random(0,359),32|SXF_TRANSFERSCALE);
+		}
 		Stop
 	End:
 		TNT1 A 0
@@ -3474,26 +3459,36 @@ Actor DisintegrateSparksSmall
 	var int user_count;
 	var int user_vel;
 	var int user_p;
+	var int user_dist;
 	+NOINTERACTION +NOTELESTOMP
 	RenderStyle None
 	Scale 0.05
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay A_CheckSight("End")
-		TNT1 A 0 A_Stop
-		TNT1 A 0 A_SetUserVar("user_count",tid)
-		TNT1 A 0 Thing_ChangeTID(0,0)
+		TNT1 A 0 NoDelay 
+		{
+			if (A_CheckSight("Null"))	{	A_Remove(DefPtr,RMVF_EVERYTHING);	}
+			A_Stop;
+			if (tid > 0)
+			{
+				A_SetUserVar(user_count,tid);
+				Thing_ChangeTID(0,0);
+			}
+		}
 	Act:
-		TNT1 A 0 A_SetUserVar(user_p,random(-900,900))
-		TNT1 A 0 A_SetUserVar(user_vel,random(10,200))
-		TNT1 A 2 A_SpawnItemEx("DisintegrateSpark",random(0,7),0,random(-7,7),
-			(cos(-(user_p*0.1))*(user_vel*0.01)),0,
-			(sin(-(user_p*0.1))*(user_vel*0.01)),random(0,359),32|SXF_TRANSFERSCALE)
-		TNT1 A 0 A_SetUserVar("user_count",user_count+1)
-		TNT1 A 0 A_JumpIf(user_count <= 2,"Act")
-		//TNT1 AA 2 A_SpawnItemEx("DisintegrateSparkSmall",random(0,7),0,random(-7,7),frandom(2.0,-2.0),frandom(2.0,-2.0),frandom(0.7,-0.7),random(15,-15),32)
-		Stop
+		TNT1 A 2 
+		{
+			A_SetUserVar(user_p,random(-900,900));
+			A_SetUserVar(user_vel,random(10,200));
+			A_SetUserVar(user_dist,random(0,7));
+			A_SpawnItemEx("DisintegrateSpark",user_dist,0,user_dist*randompick(-1,1),
+				(cos(-(user_p*0.1))*(user_vel*0.01)),0,
+				(sin(-(user_p*0.1))*(user_vel*0.01)),random(0,359),32|SXF_TRANSFERSCALE);
+			A_SetUserVar("user_count",user_count+1);
+			return A_JumpIf(user_count > 2,"Null");
+		}
+		Loop
 	End:
 		TNT1 A 0
 		Stop
@@ -3506,26 +3501,36 @@ Actor DisintegrateSparksSmallMedium
 	var int user_count;
 	var int user_vel;
 	var int user_p;
+	var int user_dist;
 	+NOINTERACTION +NOTELESTOMP
 	RenderStyle None
 	Scale 0.1
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay A_CheckSight("End")
-		TNT1 A 0 A_Stop
-		TNT1 A 0 A_SetUserVar("user_count",tid)
-		TNT1 A 0 Thing_ChangeTID(0,0)
+		TNT1 A 0 NoDelay 
+		{
+			if (A_CheckSight("Null"))	{	A_Remove(DefPtr,RMVF_EVERYTHING);	}
+			A_Stop;
+			if (tid > 0)
+			{
+				A_SetUserVar(user_count,tid);
+				Thing_ChangeTID(0,0);
+			}
+		}
 	Act:
-		TNT1 A 0 A_SetUserVar(user_p,random(-900,900))
-		TNT1 A 0 A_SetUserVar(user_vel,random(10,200))
-		TNT1 A 2 A_SpawnItemEx("DisintegrateSpark",random(0,10),0,random(-10,10),
-			(cos(-(user_p*0.1))*(user_vel*0.01)),0,
-			(sin(-(user_p*0.1))*(user_vel*0.01)),random(0,359),32|SXF_TRANSFERSCALE)
-		TNT1 A 0 A_SetUserVar("user_count",user_count+1)
-		TNT1 A 0 A_JumpIf(user_count <= 2,"Act")
-		//TNT1 AA 2 A_SpawnItemEx("DisintegrateSpark",random(10,-10),random(10,-10),random(10,-10),frandom(2.5,-2.5),frandom(2.5,-2.5),frandom(0.7,-0.7),random(15,-15),32)
-		Stop
+		TNT1 A 2 
+		{
+			A_SetUserVar(user_p,random(-900,900));
+			A_SetUserVar(user_vel,random(10,200));
+			A_SetUserVar(user_dist,random(0,10));
+			A_SpawnItemEx("DisintegrateSpark",user_dist,0,user_dist*randompick(-1,1),
+				(cos(-(user_p*0.1))*(user_vel*0.01)),0,
+				(sin(-(user_p*0.1))*(user_vel*0.01)),random(0,359),32|SXF_TRANSFERSCALE);
+			A_SetUserVar("user_count",user_count+1);
+			return A_JumpIf(user_count > 2,"Null");
+		}
+		Loop
 	End:
 		TNT1 A 0
 		Stop
@@ -3537,26 +3542,36 @@ Actor DisintegrateSparksMedium
 	var int user_count;
 	var int user_vel;
 	var int user_p;
+	var int user_dist;
 	+NOINTERACTION +NOTELESTOMP
 	RenderStyle None
 	Scale 0.1
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay A_CheckSight("End")
-		TNT1 A 0 A_Stop
-		TNT1 A 0 A_SetUserVar("user_count",tid)
-		TNT1 A 0 Thing_ChangeTID(0,0)
+		TNT1 A 0 NoDelay 
+		{
+			if (A_CheckSight("Null"))	{	A_Remove(DefPtr,RMVF_EVERYTHING);	}
+			A_Stop;
+			if (tid > 0)
+			{
+				A_SetUserVar(user_count,tid);
+				Thing_ChangeTID(0,0);
+			}
+		}
 	Act:
-		TNT1 A 0 A_SetUserVar(user_p,random(-900,900))
-		TNT1 A 0 A_SetUserVar(user_vel,random(10,300))
-		TNT1 A 2 A_SpawnItemEx("DisintegrateSpark",random(0,12),0,random(-12,12),
-			(cos(-(user_p*0.1))*(user_vel*0.01)),0,
-			(sin(-(user_p*0.1))*(user_vel*0.01)),random(0,359),32|SXF_TRANSFERSCALE)
-		TNT1 A 0 A_SetUserVar("user_count",user_count+1)
-		TNT1 A 0 A_JumpIf(user_count <= 3,"Act")
-		//TNT1 AAA 2 A_SpawnItemEx("DisintegrateSpark",random(12,-12),random(12,-12),random(12,-12),frandom(3.0,-3.0),frandom(3.0,-3.0),frandom(0.7,-0.7),random(15,-15),32)
-		Stop
+		TNT1 A 2 
+		{
+			A_SetUserVar(user_p,random(-900,900));
+			A_SetUserVar(user_vel,random(10,200));
+			A_SetUserVar(user_dist,random(0,12));
+			A_SpawnItemEx("DisintegrateSpark",user_dist,0,user_dist*randompick(-1,1),
+				(cos(-(user_p*0.1))*(user_vel*0.01)),0,
+				(sin(-(user_p*0.1))*(user_vel*0.01)),random(0,359),32|SXF_TRANSFERSCALE);
+			A_SetUserVar("user_count",user_count+1);
+			return A_JumpIf(user_count > 2,"Null");
+		}
+		Loop
 	End:
 		TNT1 A 0
 		Stop
@@ -3568,26 +3583,36 @@ Actor DisintegrateSparksMediumBig
 	var int user_count;
 	var int user_vel;
 	var int user_p;
+	var int user_dist;
 	+NOINTERACTION +NOTELESTOMP
 	RenderStyle None
 	Scale 0.1
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay A_CheckSight("End")
-		TNT1 A 0 A_Stop
-		TNT1 A 0 A_SetUserVar("user_count",tid)
-		TNT1 A 0 Thing_ChangeTID(0,0)
+		TNT1 A 0 NoDelay 
+		{
+			if (A_CheckSight("Null"))	{	A_Remove(DefPtr,RMVF_EVERYTHING);	}
+			A_Stop;
+			if (tid > 0)
+			{
+				A_SetUserVar(user_count,tid);
+				Thing_ChangeTID(0,0);
+			}
+		}
 	Act:
-		TNT1 A 0 A_SetUserVar(user_p,random(-900,900))
-		TNT1 A 0 A_SetUserVar(user_vel,random(10,450))
-		TNT1 A 2 A_SpawnItemEx("DisintegrateSpark",random(0,22),0,random(-22,22),
-			(cos(-(user_p*0.1))*(user_vel*0.01)),0,
-			(sin(-(user_p*0.1))*(user_vel*0.01)),random(0,359),32|SXF_TRANSFERSCALE)
-		TNT1 A 0 A_SetUserVar("user_count",user_count+1)
-		TNT1 A 0 A_JumpIf(user_count <= 3,"Act")
-		//TNT1 AAA 2 A_SpawnItemEx("DisintegrateSpark",random(22,-22),random(22,-22),random(22,-22),frandom(4.5,-4.5),frandom(4.5,-4.5),frandom(0.99,-0.99),random(15,-15),32)
-		Stop
+		TNT1 A 2 
+		{
+			A_SetUserVar(user_p,random(-900,900));
+			A_SetUserVar(user_vel,random(10,200));
+			A_SetUserVar(user_dist,random(0,22));
+			A_SpawnItemEx("DisintegrateSpark",user_dist,0,user_dist*randompick(-1,1),
+				(cos(-(user_p*0.1))*(user_vel*0.01)),0,
+				(sin(-(user_p*0.1))*(user_vel*0.01)),random(0,359),32|SXF_TRANSFERSCALE);
+			A_SetUserVar("user_count",user_count+1);
+			return A_JumpIf(user_count > 3,"Null");
+		}
+		Loop
 	End:
 		TNT1 A 0
 		Stop
@@ -3600,26 +3625,36 @@ Actor DisintegrateSparksBig
 	var int user_count;
 	var int user_vel;
 	var int user_p;
+	var int user_dist;
 	+NOINTERACTION +NOTELESTOMP
 	RenderStyle None
 	Scale 0.25
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay A_CheckSight("End")
-		TNT1 A 0 A_Stop
-		TNT1 A 0 A_SetUserVar("user_count",tid)
-		TNT1 A 0 Thing_ChangeTID(0,0)
+		TNT1 A 0 NoDelay 
+		{
+			if (A_CheckSight("Null"))	{	A_Remove(DefPtr,RMVF_EVERYTHING);	}
+			A_Stop;
+			if (tid > 0)
+			{
+				A_SetUserVar(user_count,tid);
+				Thing_ChangeTID(0,0);
+			}
+		}
 	Act:
-		TNT1 A 0 A_SetUserVar(user_p,random(-900,900))
-		TNT1 A 0 A_SetUserVar(user_vel,random(10,650))
-		TNT1 A 2 A_SpawnItemEx("DisintegrateSpark",random(0,40),0,random(-40,40),
-			(cos(-(user_p*0.1))*(user_vel*0.01)),0,
-			(sin(-(user_p*0.1))*(user_vel*0.01)),random(0,359),32|SXF_TRANSFERSCALE)
-		TNT1 A 0 A_SetUserVar("user_count",user_count+1)
-		TNT1 A 0 A_JumpIf(user_count <= 4,"Act")
-		//TNT1 AAAA 2 A_SpawnItemEx("DisintegrateSparkBig",random(40,-40),random(40,-40),random(40,-40),frandom(6.5,-6.5),frandom(6.5,-6.5),frandom(1.5,-1.5),random(15,-15),32)
-		Stop
+		TNT1 A 2 
+		{
+			A_SetUserVar(user_p,random(-900,900));
+			A_SetUserVar(user_vel,random(10,200));
+			A_SetUserVar(user_dist,random(0,40));
+			A_SpawnItemEx("DisintegrateSpark",user_dist,0,user_dist*randompick(-1,1),
+				(cos(-(user_p*0.1))*(user_vel*0.01)),0,
+				(sin(-(user_p*0.1))*(user_vel*0.01)),random(0,359),32|SXF_TRANSFERSCALE);
+			A_SetUserVar("user_count",user_count+1);
+			return A_JumpIf(user_count > 4,"Null");
+		}
+		Loop
 	End:
 		TNT1 A 0
 		Stop

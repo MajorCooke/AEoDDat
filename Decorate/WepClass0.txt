@@ -11656,8 +11656,11 @@ Actor SoulReaperBladeConverter
 							CheckClass("LILCaleb",AAPTR_TRACER,1), "Destroy") 
 		Goto DGood
 	Inf:
-		"####" "#" 0 A_SetUserVar(user_inf,1)
-		Goto Max
+		"####" "#" 0 
+		{
+			A_SetUserVar(user_inf,1);
+			A_SetUserVar(user_strength,400);
+		}
 	DGood:
 		"####" "#" 0
 		{
@@ -11669,14 +11672,12 @@ Actor SoulReaperBladeConverter
 			{
 				A_SetUserVar(user_strength,CountInv("GreenMana",AAPTR_TARGET));
 			}
+			A_TakeInventory("GreenMana",400,TIF_NOTAKEINFINITE,Target);
 		}
 		Goto CheckMonster
 	//==========================================================================
 	//End Loop.
 	//==========================================================================
-	Max: //Maximum power here (400 green mana).
-		"####" "#" 0 A_SetUserVar(user_strength,400)
-		"####" "#" 0 A_TakeInventory("GreenMana",400,1,AAPTR_TARGET)
 		CheckMonster:
 			"####" "#" 0 A_CheckFlag("ISMONSTER","CheckAEoD",AAPTR_TRACER)
 			Goto Destroy
