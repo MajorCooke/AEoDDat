@@ -8060,18 +8060,13 @@ Actor AEoDElectroDriver : Weapon
 	AltFire:
 		D005 D 0 A_PlayWeaponSound("painkiller/weapon/electrodriver/ElectricShoot")
 		D005 D 0 A_GiveInventory("ElectroDriverToken")
-		D005 D 0 A_WeaponReady(WRF_NOSECONDARY|WRF_DISABLESWITCH|WRF_NOBOB)	
-		D005 D 1 A_FireCustomMissile("ElectroDriverLightning",0,1,6)
-		D005 D 0 A_WeaponReady(WRF_NOSECONDARY|WRF_DISABLESWITCH|WRF_NOBOB)	
-		D005 D 1 A_FireCustomMissile("ElectroDriverLightning",0,0,6)
-		D005 D 0 A_WeaponReady(WRF_NOSECONDARY|WRF_DISABLESWITCH|WRF_NOBOB)	D005 D 0 A_SetPitch(pitch+frandom(0.4,-0.4))	TNT1 A 0 A_SetAngle(angle+frandom(0.4,-0.4))
-		D005 D 1 A_FireCustomMissile("ElectroDriverLightning",0,0,6)
-		D005 M 0 A_WeaponReady(WRF_NOSECONDARY|WRF_DISABLESWITCH|WRF_NOBOB)	
-		D005 M 1 A_FireCustomMissile("ElectroDriverLightning",0,0,6)
-		D005 M 0 A_WeaponReady(WRF_NOSECONDARY|WRF_DISABLESWITCH|WRF_NOBOB)	
-		D005 M 1 A_FireCustomMissile("ElectroDriverLightning",0,0,6)
-		D005 M 0 A_WeaponReady(WRF_NOSECONDARY|WRF_DISABLESWITCH|WRF_NOBOB)	D005 M 0 A_SetPitch(pitch+frandom(0.4,-0.4))	TNT1 A 0 A_SetAngle(angle+frandom(0.4,-0.4))
-		D005 M 1 A_FireCustomMissile("ElectroDriverLightning",0,0,6)
+		D005 DDDMMM 1 
+		{
+			A_WeaponReady(WRF_NOSECONDARY|WRF_DISABLESWITCH|WRF_NOBOB);
+			//A_FireCustomMissile("ElectroDriverLightning",0,1,6);
+			A_RailAttack(random(4,8),5,1,None,None,RGF_SILENT|RGF_NOPIERCING,0,"ElectroDriverPuff",0,0,768,0,3,0,"ElecDrvrLightTrailBeam");
+			
+		}
 		D005 M 0 A_ReFire("AltHold")
 		D005 D 0 A_TakeInventory("ElectroDriverToken",32767)
 		Goto Ready
@@ -8085,18 +8080,12 @@ Actor AEoDElectroDriver : Weapon
 			}
 			A_PlaySound("painkiller/weapon/electrodriver/ElectricLoop",5,1,1);
 		}
-		D005 D 0 A_WeaponReady(WRF_NOSECONDARY|WRF_DISABLESWITCH|WRF_NOBOB)	
-		D005 D 1 A_FireCustomMissile("ElectroDriverLightning",0,1,6)
-		D005 D 0 A_WeaponReady(WRF_NOSECONDARY|WRF_DISABLESWITCH|WRF_NOBOB)	
-		D005 D 1 A_FireCustomMissile("ElectroDriverLightning",0,0,6)
-		D005 D 0 A_WeaponReady(WRF_NOSECONDARY|WRF_DISABLESWITCH|WRF_NOBOB)	D005 D 0 A_SetPitch(pitch+frandom(0.4,-0.4))	TNT1 A 0 A_SetAngle(angle+frandom(0.4,-0.4))
-		D005 D 1 A_FireCustomMissile("ElectroDriverLightning",0,0,6)
-		D005 M 0 A_WeaponReady(WRF_NOSECONDARY|WRF_DISABLESWITCH|WRF_NOBOB)	
-		D005 M 1 A_FireCustomMissile("ElectroDriverLightning",0,0,6)
-		D005 M 0 A_WeaponReady(WRF_NOSECONDARY|WRF_DISABLESWITCH|WRF_NOBOB)	
-		D005 M 1 A_FireCustomMissile("ElectroDriverLightning",0,0,6)
-		D005 M 0 A_WeaponReady(WRF_NOSECONDARY|WRF_DISABLESWITCH|WRF_NOBOB)	D005 M 0 A_SetPitch(pitch+frandom(0.4,-0.4))	TNT1 A 0 A_SetAngle(angle+frandom(0.4,-0.4))
-		D005 M 1 A_FireCustomMissile("ElectroDriverLightning",0,0,6)
+		D005 DDDMMM 1 
+		{
+			A_WeaponReady(WRF_NOSECONDARY|WRF_DISABLESWITCH|WRF_NOBOB);
+			A_RailAttack(random(4,8),5,1,None,None,RGF_SILENT|RGF_NOPIERCING,0,"ElectroDriverPuff",0,0,768,0,3,0,"ElecDrvrLightTrailBeam");
+			
+		}
 		D005 M 0 A_ReFire("AltHold")
 		D005 M 0 A_TakeInventory("ElectroDriverToken",32767)
 		Goto Ready
@@ -8172,6 +8161,25 @@ Actor EDShurikenTrail
 
 //***************************************************************
 
+Actor ElectroDriverPuff
+{
+	+BLOODLESSIMPACT
+	+ALWAYSPUFF
+	+PUFFONACTORS
+	+NOINTERACTION
+	Scale 0.2
+	DamageType "Electric"
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_Jump(256,1,2,3,4,5)
+		ZAP9 ABCDE 0 A_Jump(256,"Play")
+	Play:
+		"----" A 1 A_FadeOut(0.3)
+		Wait
+	}
+}
+
 Actor ElectroDriverLightning
 {
 	var int user_life;
@@ -8240,7 +8248,7 @@ Actor ElecDrvrLightTrail
 		HSPL C 1 Bright A_FadeOut(0.4)
 		Loop
 	Type4:
-		HSPL d 1 Bright A_FadeOut(0.4)
+		HSPL D 1 Bright A_FadeOut(0.4)
 		Loop
 	Type5:
 		TNT1 A 0 A_SpawnItemEx("ElectDrSpark",0,0,0,frandom(2.0,-2.0),frandom(2.0,-2.0),frandom(2.0,-2.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION,254)
@@ -8258,10 +8266,46 @@ Actor ElecDrvrLightTrail
 	}
 }
 
+Actor ElecDrvrLightTrailBeam
+{
+	var float user_dist;
+	
+	+NOINTERACTION
+	+NOTIMEFREEZE
+	Scale 0.1
+	RenderStyle Add
+	Translation "0:255=%[0,0,0]:[0.8,0.8,1.1]"
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			//Get the pitch. Only need to do this once.
+			A_Warp(AAPTR_TARGET,x,y,z,0,WARPF_NOCHECKPOSITION|WARPF_COPYPITCH|WARPF_USECALLERANGLE|WARPF_ABSOLUTEPOSITION);
+			A_SetUserVarFloat(user_dist,GetDistance(true,AAPTR_TARGET));
+			if (random(1,4) == 1)
+			{	A_SpawnItemEx("ElectDrSpark",0,0,0,frandom(2.0,-2.0),frandom(2.0,-2.0),frandom(2.0,-2.0),0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION,254);	}
+			
+			return A_Jump(256,1,2,3,4,5,6,7,8);
+		}
+		HSPL ABCDEFGH 0 A_Jump(256,"Play")
+	Play:
+		"----" A 1
+		{
+			A_FadeOut(0.4);
+			//This gathers the new pitch every other time.
+			A_Warp(AAPTR_TARGET,cos(-pitch)*user_dist,5+frandom(-1,1),frandom(-1,1)+32+sin(-pitch)*user_dist,0,WARPF_NOCHECKPOSITION|WARPF_COPYPITCH|WARPF_COPYVELOCITY|WARPF_INTERPOLATE);
+			//A_
+		}
+		Loop
+	}
+}
+
 Actor ElectDrSpark
 {
 	Translation "0:255=%[0,0,0]:[0.75,0.75,2.0]"
 	+NOINTERACTION
+	+NOTIMEFREEZE
 	Scale 0.08
 	RenderStyle Add
 	Alpha 1.0
