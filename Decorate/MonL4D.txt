@@ -1,19 +1,16 @@
 //================================================================================================================
 //================================================================================================================
 //
-//================================================================================================================
-//================================================================================================================
-//
 //
 //							Left 4 Dead: L4D gametype
 //
 //
 //================================================================================================================
 //================================================================================================================
-// This is the set of monsters used espeficially for the L4D game mode in aeod. 
+// This is the set of monsters used especificially[1] for the L4D game mode in aeod. 
 // For classic AEoD versions, there is another section below
 //================================================================================================================
- 
+// [1] - What a mouthful.
 //======================================================================================
 //======================================================================================
 
@@ -2409,6 +2406,8 @@ Actor L4DHunter
 	DropItem "DMSoulFragment" 64
 	var int user_skill;
 	var int user_type;
+	var int user_timer;
+	var int user_count;
 	Monster	RipLevelMin 1
 	Health 450
 	Radius 20
@@ -2469,10 +2468,26 @@ Actor L4DHunter
 		N039 A 10 A_Look
 		Loop
 	See:
-		N039 BBCCDDEE 2 A_Chase
+		N039 BBCCDDEE 2 
+		{
+			A_RearrangePointers(DefPtr, DefPtr, NullPtr, 4);
+			// Don't leap at enemies that are blocked by solid non-damageable entities.
+			if (A_CheckLOF("Null",CLOFF_SETTRACER|CLOFF_SKIPOBSTACLES|CLOFF_SKIPTARGET|CLOFF_JUMPOBJECT|CLOFF_MUSTBESOLID))
+			{	A_Chase("Melee","");	}
+			else
+			{	A_Chase;	}
+			
+			A_SetUserVar(user_timer,0);
+			A_SetUserVar(user_count,0);
+		}
 		Loop
 	SeeNoMissile:
-		TNT1 A 0 A_ChangeFlag("FRIGHTENED",1)
+		N039 B 0 
+		{
+			A_ChangeFlag("FRIGHTENED",1);
+			A_SetUserVar(user_timer,0);
+			A_SetUserVar(user_count,0);
+		}
 		N039 BBCCDDEE 2 A_Chase("Melee","")
 		N039 BBCCDDEE 2 A_Chase("Melee","")
 		N039 BBCCDDEE 2 A_Chase("Melee","")
@@ -2487,27 +2502,95 @@ Actor L4DHunter
 		Goto See
 		
 	Missile:
-		TNT1 A 0 A_ChangeFlag("NOPAIN",1)
-		TNT1 A 0 A_PlaySound("L4D/Hunter/Lunge",6)
-		N039 K 3 A_FaceTarget
-		N039 L 0 A_Recoil(-38)
-		N039 L 1 ThrustThingZ(0,35,0,0)
+		N039 K 3
+		{
+			A_SetUserVar(user_timer,0);
+			A_ChangeFlag("NOPAIN",1);
+			A_PlaySound("L4D/Hunter/Lunge",6);
+			A_FaceTarget;
+			A_RearrangePointers(DefPtr, DefPtr, NullPtr, 4);
+		}
+		N039 L 1 
+		{
+			if (A_JumpIfHigherOrLower("Null","")) //Target is below
+			{
+				A_FaceTarget(0,0,0,0,FAF_TOP,-4);
+			}
+			else if (A_JumpIfHigherOrLower("","Null")) //Target is above
+			{
+				A_FaceTarget(0,0,0,0,FAF_TOP,10 + GetDistance(true)/5.0);
+			}
+			else //Target's on (near) equal z
+			{
+				A_FaceTarget(0,0,0,0,FAF_TOP,GetDistance(true)/5.0);
+			}
+			A_ChangeVelocity(cos(-pitch)*40,0,sin(pitch)*40,CVF_RELATIVE|CVF_REPLACE);
+			//A_Recoil(-38);
+			//ThrustThingZ(0,35,0,0);
+		}
 		N039 LL 1
 	LeapLoop:
-		N039 M 0 A_CheckFloor("LeapEnd")
-		N039 M 1 A_JumpIfCloser(64,"QuickMelee")
+		N039 M 1
+		{
+			A_RearrangePointers(DefPtr, DefPtr, NullPtr, 4);
+			A_SpawnItemEx("L4DHunterTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSPRITEFRAME|SXF_TRANSFERSCALE);
+			if (A_CheckFloor("Null"))
+			{	return state("LeapEnd");	}
+			if (velz == 0)
+			{
+				A_SetUserVar(user_timer, user_timer + 1);
+				if (user_timer >= 35)
+				{	return state("LeapEnd");	}
+			}
+			if (A_CheckLOF("Null",CLOFF_SETTRACER|CLOFF_JUMPENEMY|CLOFF_JUMPNONHOSTILE|CLOFF_JUMPFRIEND|CLOFF_JUMPOBJECT|CLOFF_FROMBASE|CLOFF_MUSTBESHOOTABLE,64+radius,0,0,0,height/2.0) ||
+				A_CheckLOF("Null",CLOFF_SETTRACER|CLOFF_JUMPENEMY|CLOFF_JUMPNONHOSTILE|CLOFF_JUMPFRIEND|CLOFF_JUMPOBJECT|CLOFF_FROMBASE|CLOFF_MUSTBESHOOTABLE|CLOFF_ALLOWNULL|CLOFF_JUMP_ON_MISS,64+radius,0,0,-pitch,height/2.0,0,NullPtr))
+			{	
+				if (IsPointerEqual(Tracer,NullPtr) || !A_CheckFlag(SHOOTABLE,"Null",Tracer))
+				{	return state("LeapEnd");	}
+				return state("QuickMelee");	
+			}
+			return state(0);
+		}
 		Loop
 	LeapEnd:
-		TNT1 A 0 A_PlaySound("fiend/land")
-		TNT1 A 0 A_ChangeFlag("NOPAIN",0)
+		N039 N 4 
+		{
+			A_PlaySound("fiend/land");
+			A_ChangeFlag("NOPAIN",0);
+			A_Stop;
+		}
+		N039 O 4
+	LeapLander:
+		"####" "#" 1 A_JumpIf(velz >= 0 || z <= GetZAt(0,0) || z <= floorz,"LeepEndCont")
+		Loop
+	LeepEndCont:
+		"----" A 0 //Don't bother leaping again if something else is in the way such as a static actor.
+		{
+			if (A_CheckLOF("Null",CLOFF_SKIPENEMY|CLOFF_SKIPFRIEND|CLOFF_SKIPNONHOSTILE|CLOFF_SKIPTARGET|CLOFF_JUMPOBJECT|CLOFF_SETTRACER|CLOFF_MUSTBESOLID))
+			{	return state("SeeNoMissile");	}
+			if (user_count < 6)
+			{
+				A_SetUserVar(user_count, user_count + randompick(1,1,2,2,2,3,3));
+			}
+			else
+			{
+				A_SetUserVar(user_count, 0);
+				return state("SeeNoMissile");
+			}
+			return state("Missile");
+		}
+	QuickMelee:
+		"####" "#" 1 
+		{
+			A_DamageTracer(random(75,150),"Melee",DMSS_AFFECTARMOR);
+			A_PlaySound("quake4/Misc/MeleeHit",5);
+			//A_CustomMeleeAttack(random(75,150),"quake4/Misc/MeleeHit","quake4/Misc/Swing","Normal",1);
+			A_PlaySound("fiend/land");
+			A_ChangeFlag("NOPAIN",0);	
+		}
 		N039 N 4 A_Stop
 		N039 O 4
 		Goto SeeNoMissile
-	QuickMelee:
-		"####" "#" 0 A_GiveToTarget("HunterObscureVision",1)
-		"####" "#" 1 A_CustomMeleeAttack(random(75,150),"quake4/Misc/MeleeHit","quake4/Misc/Swing","Normal",1)
-		"####" "#" 0 HealThing(random(30,100))
-		Goto LeapEnd
 	Pain:
 		N039 A 8 A_Pain
 		Goto See
@@ -2543,6 +2626,20 @@ Actor L4DHunter
 		"####" "#" 5 A_GenericFreezeDeath
 		"####" "#" 0 A_GiveInventory("L4DCommonScore",1,AAPTR_PLAYER1)
 		"####" "#" 1 A_FreezeDeathChunks
+		Wait
+	}
+}
+
+Actor L4DHunterTrail
+{
+	+NOINTERACTION
+	+BRIGHT
+	RenderStyle Add
+	States
+	{
+	Spawn:
+		"----" A 1
+		"----" A 1 A_FadeOut(0.15)
 		Wait
 	}
 }
