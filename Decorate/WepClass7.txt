@@ -4924,7 +4924,7 @@ Actor AEoDRaptorItem : CustomInventory 6070
 	+INVENTORY.IGNORESKILL	+DONTGIB
 	Scale 0.4
 	Inventory.Amount 1
-	Inventory.PickupMessage "You got a Raptor." 
+	Inventory.PickupMessage "You riled up a Raptor!" 
 	Inventory.PickupSound "reilsss/weappickup/perforator"
 	States
 	{
@@ -4981,8 +4981,8 @@ Actor AEoDRaptor : Weapon // 6070
 	Weapon.AmmoUse1 2
 	Weapon.AmmoUse2 5
 	Weapon.SelectionOrder 11300
-	Obituary "%o was ripped and torn apart by %k's Raptor!"
-	Inventory.PickupMessage "You got a Raptor." 
+	Obituary "%o didn't realize %k's Raptor(s) had very sharp teeth."
+	Inventory.PickupMessage "You riled up a Raptor!" 
 	Inventory.PickupSound "reilsss/weappickup/perforator"
 	weapon.upsound "weapons/draw"
 	Tag "Raptor"
@@ -4993,234 +4993,262 @@ Actor AEoDRaptor : Weapon // 6070
 		TNT1 A 0 A_SpawnItemEx("AEoDRaptorPickup",0,0,0,0,0,0,0,0)
 		Stop
 	Ready:
-		TNT1 A 0 A_StopSound(6)
-		TNT1 A 0 A_TakeInventory("RaptorDropCheck",1)
-		TNT1 A 0 A_JumpIfInventory("AEoDRaptorCount",2,"Ready2")
-		R028 A 1 A_WeaponReady
-		Goto Ready+1
+		R028 A 0 A_JumpIf(CountInv("AEoDRaptorCount") > 1,1)
+		Goto ReadyLoop
 	Ready2:
-		TNT1 A 0 A_StopSound(6)
-		TNT1 A 0 A_JumpIfInventory("RaptorDropCheck",1,"Ready")
-		R029 A 1 A_WeaponReady
-		Goto Ready2+1
+		R029 A 0
+		Goto ReadyLoop
+	ReadyLoop:
+		"####" "#" 1 
+		{
+			A_StopSound(6);
+			A_TakeInventory("RaptorDropCheck",1);
+			A_JumpIfInventory("AEoDRaptorCount",2,"Ready2");
+			A_WeaponReady;
+		}
+		Loop
 	Deselect:
-		TNT1 A 0 A_StopSound(6)
-		TNT1 A 0 A_JumpIfInventory("AEoDRaptorCount",2,"Deselect2")
-		TNT1 A 0 	
-		R028 A 1 A_Lower
-		TNT1 AA 0 A_Lower
-		Goto Deselect+2
-	Deselect2:
-		TNT1 A 0 A_StopSound(6)
-		TNT1 A 0 	
-		R029 A 1 A_Lower
-		TNT1 AA 0 A_Lower
-		Goto Deselect2+1
+		"####" "#" 1 { A_StopSound(6); A_Lower; A_Lower; A_Lower; }
+		Loop
 	Select:
-		TNT1 A 0 A_JumpIfInventory("AEoDRaptorCount",2,"Select2")
-		TNT1 A 0 	
-		R028 A 1 A_Raise
-		TNT1 AA 0 A_Raise
-		Goto Select+1
-	Select2:
-		R029 A 1 A_Raise
-		TNT1 A 0 	
-		TNT1 AA 0 A_Raise
+		R028 A 0 A_JumpIf(CountInv("AEoDRaptorCount") > 1,1)
+		Goto SelLoop
+		R029 A 0
+		Goto SelLoop
+	SelLoop:
+		"####" "#" 1 { A_Raise; A_Raise; A_Raise; }
 		Loop
 	Fire:
-		TNT1 A 0 A_JumpIfInventory("AEoDRaptorCount",2,"Fire2")
-		R028 A 4 A_PlaySound("reilsss/weapons/chaingunspinon", 7, 1.0, 0)
+		R028 A 4 
+		{
+			A_PlaySound("reilsss/weapons/chaingunspinon", 7, 1.0, 0);
+			return A_JumpIfInventory("AEoDRaptorCount",2,"Fire2");
+		}
 		R028 B 4
 		R028 CD 3
 		R028 EF 2
 		R028 HG 1
-		TNT1 A 0 A_PlaySound("reilsss/weapons/chaingunspin", 6, 1.0, 1)
-		TNT1 A 0 A_ReFire
+		R028 G 0 
+		{	
+			A_PlaySound("reilsss/weapons/chaingunspin", 6, 1.0, 1);
+			A_ReFire;
+		}
 		Goto Ready
 	Fire2:
-		R029 A 4 A_PlaySound("reilsss/weapons/chaingunspinon", 7, 1.0, 0)
+		R029 A 4
 		R029 B 4
 		R029 CD 3
 		R029 EF 2
 		R029 HG 1
-		TNT1 A 0 A_PlaySound("reilsss/weapons/chaingunspin", 6, 1.0, 1)
-		TNT1 A 0 A_ReFire
-		Goto "Ready2"
+		R029 G 0
+		{	
+			A_PlaySound("reilsss/weapons/chaingunspin", 6, 1.0, 1);
+			A_ReFire;
+		}
+		Goto Ready2
 	Hold:
-		TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,"HoldQuick")
-		TNT1 A 0 A_JumpIfInventory("AEoDRaptorCount",2,"Hold2")
-		TNT1 A 0 A_Recoil(0.3)
-		TNT1 A 0 A_GunFlash
-		TNT1 A 0 A_FireCustomMissile("PistolCasingSpawner",-50,0, 0,0)
-		TNT1 A 0 A_PlaySound("reilsss/weapons/supernailgunfire", CHAN_WEAPON, 1.0, 0)
-		R028 II 0 Bright A_FireCustomMissile("RNail",0,1,5,3)
-		TNT1 A 0 A_FireCustomMissile("GunSmokeSpawner",0,0,7,8)
-		R028 I 1 Bright A_SetPitch(pitch-0.75)
+		R028 I 1 bright
+		{
+			if (A_JumpIfInventory("AEoDRaptorCount",2,"Hold2"))
+			{	return state("Hold2");	}
+			A_Recoil(0.3);
+			A_GunFlash;
+			A_FireCustomMissile("PistolCasingSpawner",-50,0, 0,0);
+			A_PlaySound("reilsss/weapons/supernailgunfire", CHAN_WEAPON, 1.0, 0);
+			A_FireCustomMissile("RNail",0,1,5,3);
+			A_FireCustomMissile("RNail",0,1,5,3);
+			A_FireCustomMissile("GunSmokeSpawner",0,0,7,8);
+			A_SetPitch(pitch-0.75);
+			return state(0);
+		}
 		R028 JK 1 Bright A_SetPitch(pitch+0.375)
-		R028 L 1 Bright
-		TNT1 A 0 A_JumpIfNoAmmo("HoldEnd")
-		TNT1 A 0 A_Recoil(0.3)
-		TNT1 A 0 A_GunFlash
-		TNT1 A 0 A_FireCustomMissile("PistolCasingSpawner",-50,0, 0,0)
-		TNT1 A 0 A_PlaySound("reilsss/weapons/supernailgunfire", CHAN_WEAPON, 1.0, 0)
-		R028 MM 0 Bright A_FireCustomMissile("RNail",0,1,5,3)
-		TNT1 A 0 A_FireCustomMissile("GunSmokeSpawner",0,0,7,8)
-		R028 M 1 Bright A_SetPitch(pitch-0.75)
+		R028 L 1 Bright A_JumpIfNoAmmo("HoldEnd")
+		R028 M 1 bright
+		{
+			A_Recoil(0.3);
+			A_GunFlash;
+			A_FireCustomMissile("PistolCasingSpawner",-50,0, 0,0);
+			A_PlaySound("reilsss/weapons/supernailgunfire", CHAN_WEAPON, 1.0, 0);
+			if (CountInv("PowerQuickFire"))
+			{
+				A_FireCustomMissile("RNail",0,1,5,3);
+				A_FireCustomMissile("RNail",0,1,5,3);
+			}
+			A_FireCustomMissile("RNail",0,1,5,3);
+			A_FireCustomMissile("RNail",0,1,5,3);
+			A_FireCustomMissile("GunSmokeSpawner",0,0,7,8);
+			A_SetPitch(pitch-0.75);
+		}
 		R028 NO 1 Bright A_SetPitch(pitch+0.375)
 		R028 P 1 bright
-		TNT1 A 0 A_JumpIfNoAmmo("HoldEnd")
-		TNT1 A 0 A_ReFire
+		R028 P 0 
+		{	
+			if (!A_JumpIfNoAmmo("HoldEnd"))
+			{	A_ReFire("Hold");	}
+		}
 		Goto HoldEnd
 	Hold2:
-		TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,"Hold2Quick")
-		TNT1 A 0 A_Recoil(0.3)
-		TNT1 A 0 A_GunFlash
-		TNT1 A 0 A_PlaySound("reilsss/weapons/supernailgunfire", CHAN_WEAPON, 1.0, 0)
-		R029 II 0 Bright A_FireCustomMissile("RNail",0,1,5,3)
-		R029 II 0 Bright A_FireCustomMissile("RNail",0,1,-5,3)
-		R029 I 1 Bright A_SetPitch(pitch-0.75)
-		TNT1 A 0 
-		TNT1 A 0 A_FireCustomMissile("GunSmokeSpawner",0,0,7,8)
-		TNT1 A 0  A_FireCustomMissile("PistolCasingSpawner",-50,0, 0,0)
-		TNT1 A 0 A_PlaySound("reilsss/weapons/supernailgunfire", CHAN_WEAPON, 1.0, 0)
-		R029 JK 1 Bright A_SetPitch(pitch+0.375)
-		R029 L 1 bright
-		TNT1 A 0 A_FireCustomMissile("GunSmokeSpawner",0,0,-7,8)
-		TNT1 A 0 A_FireCustomMissile("PistolCasingSpawner",50,0, 0,0)
-		TNT1 A 0 A_JumpIfNoAmmo("HoldEnd2")
-		TNT1 A 0 A_Recoil(0.3)
-		TNT1 A 0 A_GunFlash
-		TNT1 A 0 A_PlaySound("reilsss/weapons/supernailgunfire", CHAN_WEAPON, 1.0, 0)
-		R029 MM 0 Bright A_FireCustomMissile("RNail",0,1,5,3)
-		TNT1 A 0 
-		TNT1 A 0 A_FireCustomMissile("GunSmokeSpawner",0,0,7,8)
-		TNT1 A 0 A_FireCustomMissile("PistolCasingSpawner",-50,0, 0,0)
-		TNT1 A 0 A_PlaySound("reilsss/weapons/supernailgunfire", CHAN_WEAPON, 1.0, 0)
-		R029 MNOP 1 Bright 
-		TNT1 A 0 A_FireCustomMissile("GunSmokeSpawner",0,0,-7,8)
-		TNT1 A 0 A_FireCustomMissile("PistolCasingSpawner",50,0, 0,0)
-		TNT1 A 0 A_JumpIfNoAmmo("HoldEnd2")
-		TNT1 A 0 A_ReFire
-		Goto HoldEnd2
-	HoldQuick:
-		TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,1)
-		Goto Hold
-		TNT1 A 0 A_JumpIfInventory("AEoDRaptorCount",2,"Hold2")
-		TNT1 A 0 A_Recoil(0.3)
-		TNT1 A 0 A_GunFlash
-		TNT1 A 0 A_FireCustomMissile("PistolCasingSpawner",-50,0, 0,0)
-		TNT1 A 0 A_PlaySound("reilsss/weapons/supernailgunfire", CHAN_WEAPON, 1.0, 0)
-		R028 I 1 Bright A_FireCustomMissile("RNail",0,1,5,3)
-		TNT1 A 0 A_FireCustomMissile("GunSmokeSpawner",0,0,7,8)
-		R028 JL 1 Bright
-		TNT1 A 0 A_JumpIfNoAmmo("HoldEnd")
-		TNT1 A 0 A_Recoil(0.3)
-		TNT1 A 0 A_GunFlash
-		TNT1 A 0 A_FireCustomMissile("PistolCasingSpawner",-50,0, 0,0)
-		TNT1 A 0 A_PlaySound("reilsss/weapons/supernailgunfire", CHAN_WEAPON, 1.0, 0)
-		R028 M 1 Bright A_FireCustomMissile("RNail",0,1,5,3)
-		TNT1 A 0 A_FireCustomMissile("GunSmokeSpawner",0,0,7,8)
-		R028 NP 1 Bright
-		TNT1 A 0 A_JumpIfNoAmmo("HoldEnd")
-		TNT1 A 0 A_ReFire
-		Goto HoldEnd
-	Hold2Quick:
-		TNT1 B 0 A_JumpIfInventory("PowerQuickFire",1,1)
-		Goto Hold2
-		TNT1 A 0 A_Recoil(0.3)
-		TNT1 A 0 A_GunFlash
-		TNT1 A 0 A_PlaySound("reilsss/weapons/supernailgunfire", CHAN_WEAPON, 1.0, 0)
-		R029 I 1 Bright A_FireCustomMissile("RNail",0,1,5,3)
-		TNT1 A 0 
-		TNT1 A 0 A_FireCustomMissile("GunSmokeSpawner",0,0,7,8)
-		TNT1 A 0 A_FireCustomMissile("PistolCasingSpawner",-50,0, 0,0)
-		TNT1 A 0 A_PlaySound("reilsss/weapons/supernailgunfire", CHAN_WEAPON, 1.0, 0)
-		R029 JL 1 Bright A_FireCustomMissile("RNail",0,1,-5,3)
-		TNT1 A 0 A_FireCustomMissile("GunSmokeSpawner",0,0,-7,8)
-		TNT1 A 0 A_FireCustomMissile("PistolCasingSpawner",50,0, 0,0)
-		TNT1 A 0 A_JumpIfNoAmmo("HoldEnd2")
-		TNT1 A 0 A_Recoil(0.3)
-		TNT1 A 0 A_GunFlash
-		TNT1 A 0 A_PlaySound("reilsss/weapons/supernailgunfire", CHAN_WEAPON, 1.0, 0)
-		R029 M 1 Bright A_FireCustomMissile("RNail",0,1,5,3)
-		TNT1 A 0 
-		TNT1 A 0 A_FireCustomMissile("GunSmokeSpawner",0,0,7,8)
-		TNT1 A 0 A_FireCustomMissile("PistolCasingSpawner",-50,0, 0,0)
-		TNT1 A 0 A_PlaySound("reilsss/weapons/supernailgunfire", CHAN_WEAPON, 1.0, 0)
-		R029 NP 1 Bright A_FireCustomMissile("RNail",0,1,-5,3)
-		TNT1 A 0 A_FireCustomMissile("GunSmokeSpawner",0,0,-7,8)
-		TNT1 A 0 A_FireCustomMissile("PistolCasingSpawner",50,0, 0,0)
-		TNT1 A 0 A_JumpIfNoAmmo("HoldEnd2")
-		TNT1 A 0 A_ReFire
+		R029 I 1 bright
+		{
+			A_Recoil(0.3);
+			A_GunFlash;
+			A_PlaySound("reilsss/weapons/supernailgunfire", CHAN_WEAPON, 1.0, 0);
+			if (CountInv("PowerQuickFire"))
+			{
+				A_FireCustomMissile("RNail",0,1,5,3);
+				A_FireCustomMissile("RNail",0,1,5,3);
+				A_FireCustomMissile("RNail",0,1,-5,3);
+				A_FireCustomMissile("RNail",0,1,-5,3);
+			}
+			A_FireCustomMissile("RNail",0,1,5,3);
+			A_FireCustomMissile("RNail",0,1,5,3);
+			A_FireCustomMissile("RNail",0,1,-5,3);
+			A_FireCustomMissile("RNail",0,1,-5,3);
+			A_SetPitch(pitch-0.75);
+			return state(0);
+		}
+		R029 J 1 
+		{
+			A_FireCustomMissile("GunSmokeSpawner",0,0,7,8);
+			A_FireCustomMissile("PistolCasingSpawner",-50,0, 0,0);
+			A_PlaySound("reilsss/weapons/supernailgunfire", CHAN_WEAPON, 1.0, 0);
+			A_SetPitch(pitch+0.375);
+		}
+		
+		R029 K 1 Bright A_SetPitch(pitch+0.375)
+		R029 L 1 bright A_JumpIfNoAmmo("HoldEnd2")
+		R029 M 1 bright
+		{
+			A_FireCustomMissile("GunSmokeSpawner",0,0,-7,8);
+			A_FireCustomMissile("PistolCasingSpawner",50,0, 0,0);
+			A_Recoil(0.3);
+			A_GunFlash;
+			A_PlaySound("reilsss/weapons/supernailgunfire", CHAN_WEAPON, 1.0, 0);
+			if (CountInv("PowerQuickFire"))
+			{
+				A_FireCustomMissile("RNail",0,1,5,3);
+				A_FireCustomMissile("RNail",0,1,5,3);
+				A_FireCustomMissile("RNail",0,1,-5,3);
+				A_FireCustomMissile("RNail",0,1,-5,3);
+			}
+			A_FireCustomMissile("RNail",0,1,5,3);
+			A_FireCustomMissile("RNail",0,1,5,3);
+			A_FireCustomMissile("RNail",0,1,-5,3);
+			A_FireCustomMissile("RNail",0,1,-5,3);
+			A_FireCustomMissile("GunSmokeSpawner",0,0,7,8);
+			A_FireCustomMissile("PistolCasingSpawner",-50,0, 0,0);
+			A_PlaySound("reilsss/weapons/supernailgunfire", CHAN_WEAPON, 1.0, 0);
+			return state(0);
+		}
+		R029 NOP 1 Bright 
+		R029 P 0 
+		{	
+			A_FireCustomMissile("GunSmokeSpawner",0,0,-7,8);
+			A_FireCustomMissile("PistolCasingSpawner",50,0, 0,0);
+			if (!A_JumpIfNoAmmo("HoldEnd2"))
+			{	A_ReFire("Hold2");	}
+		}
 		Goto HoldEnd2
 	HoldEnd:
-		TNT1 A 0 A_StopSound(6)
-		TNT1 A 0 A_PlaySound("reilsss/weapons/chaingunspin", 7, 1.0, 0)
-		R028 ABCD 2 A_WeaponReady
-		TNT1 A 0 A_PlaySound("reilsss/weapons/chaingunspinoff", 8, 1.0, 0)
-		R028 EFGH 3 A_WeaponReady
-		R028 ABCD 4 A_WeaponReady
-		R028 EF 5 A_WeaponReady
-		R028 GH 6 A_WeaponReady
+		R028 A 1
+		{
+			A_WeaponReady;
+			A_StopSound(6);
+			A_PlaySound("reilsss/weapons/chaingunspin", 7, 1.0, 0);
+		}
+		R028 ABBCCDD 1 A_WeaponReady
+		R028 E 1 
+		{
+			A_PlaySound("reilsss/weapons/chaingunspinoff", 8, 1.0, 0);
+			A_WeaponReady;
+		}
+		R028 EEFFFGGGHHH 1 A_WeaponReady
+		R028 AAAABBBBCCCCDDDD 1 A_WeaponReady
+		R028 EEEEEFFFFF 1 A_WeaponReady
+		R028 GGGGGGHHHHHH 1 A_WeaponReady
 		Goto Ready
 	HoldEnd2:
-		TNT1 A 0 A_StopSound(6)
-		TNT1 A 0 A_PlaySound("reilsss/weapons/chaingunspin", 7, 1.0, 0)
-		R029 ABCD 2 A_WeaponReady
-		TNT1 A 0 A_PlaySound("reilsss/weapons/chaingunspinoff", 8, 1.0, 0)
-		R029 EFGH 3 A_WeaponReady
-		R029 ABCD 4 A_WeaponReady
-		R029 EF 5 A_WeaponReady
-		R029 GH 6 A_WeaponReady
+		R029 A 1 
+		{
+			A_StopSound(6);
+			A_PlaySound("reilsss/weapons/chaingunspin", 7, 1.0, 0);
+			A_WeaponReady;
+		}
+		R029 ABBCCDD 1 A_WeaponReady
+		R029 E 1 
+		{
+			A_PlaySound("reilsss/weapons/chaingunspinoff", 8, 1.0, 0);
+			A_WeaponReady;
+		}
+		R029 EEFFFGGGHHH 1 A_WeaponReady
+		R029 AAABBBCCCDDD 1 A_WeaponReady
+		R029 EEEEEFFFFF 1 A_WeaponReady
+		R029 GGGGGGHHHHHH 1 A_WeaponReady
 		Goto Ready2
 	AltFire:
-		TNT1 A 0 A_JumpIfInventory("AEoDRaptorCount",2,"AltFire2")
-		TNT1 A 0 A_StopSoundEx("SoundSlot6")
-		R028 A 4 A_PlaySound("reilsss/weapons/chaingunspinon", 7, 1.0, 0)
+		R028 A 4 
+		{
+			if (CountInv("AEoDRaptorCount") > 1)
+			{	return state("AltFire2");	}
+			A_StopSound(6);
+			A_PlaySound("reilsss/weapons/chaingunspinon", 7, 1.0, 0);
+			return state(0);
+		}
 		R028 B 4
 		R028 CD 3
 		R028 EF 2
 		R028 HG 1
-		TNT1 A 0 A_PlaySound("reilsss/weapons/chaingunspin", 6, 1.0, 1)
-		TNT1 A 0 A_PlaySound("reilsss/weapons/howitzerfire", CHAN_WEAPON, 1.0, 0)
-		TNT1 A 0 A_GunFlash
-		TNT1 A 0 A_FireCustomMissile("GunSmokeSpawner",0,0,7,8)
-		R028 I 0 Bright A_FireCustomMissile("NailGrenade",0,1,6,6)
-		R028 I 2 Bright A_SetPitch(pitch-8)
-		R028 JJKK 1 
+		R028 I 2 bright
+		{	
+			A_PlaySound("reilsss/weapons/chaingunspin", 6, 1.0, 1);
+			A_PlaySound("reilsss/weapons/howitzerfire", CHAN_WEAPON, 1.0, 0);
+			A_GunFlash;
+			A_FireCustomMissile("GunSmokeSpawner",0,0,7,8);
+			A_FireCustomMissile("NailGrenade",0,1,6,6);
+			A_SetPitch(pitch-8);
+		}
+		R028 JK 2 
 		R028 LLEEFFGG 1 A_SetPitch(pitch+1)
 		R028 H 2
-		TNT1 A 0 A_StopSound(6)
-		TNT1 A 0 A_PlaySound("reilsss/weapons/chaingunspin", 7, 1.0, 0)
-		R028 ABCD 2
-		TNT1 A 0 A_PlaySound("reilsss/weapons/chaingunspinoff", 8, 1.0, 0)
-		R028 EFGH 3
+		R028 A 2
+		{
+			A_StopSound(6);
+			A_PlaySound("reilsss/weapons/chaingunspin", 7, 1.0, 0);
+		}
+		R028 BCD 2
+		R028 E 3 A_PlaySound("reilsss/weapons/chaingunspinoff", 8, 1.0, 0)
+		R028 FGH 3
 		R028 ABCD 4
 		R028 EF 5 A_WeaponReady
 		R028 GH 6 A_WeaponReady
 		Goto Ready
 	AltFire2:
-		TNT1 A 0 A_StopSoundEx("SoundSlot6")
-		R029 A 4 A_PlaySound("reilsss/weapons/chaingunspinon", 7, 1.0, 0)
+		R029 A 4 
+		{
+			A_StopSound(6);
+			A_PlaySound("reilsss/weapons/chaingunspinon", 7, 1.0, 0);
+		}
 		R029 B 4
 		R029 CD 3
 		R029 EF 2
 		R029 HG 1
-		TNT1 A 0 A_PlaySound("reilsss/weapons/chaingunspin", 6, 1.0, 1)
-		TNT1 A 0 A_PlaySound("reilsss/weapons/howitzerfire", CHAN_WEAPON, 1.0, 0)
-		TNT1 A 0 A_GunFlash
-		TNT1 A 0 A_FireCustomMissile("GunSmokeSpawner",0,0,7,8)
-		TNT1 A 0 A_FireCustomMissile("NailGrenade",0,1,-6,6)
-		TNT1 A 0 A_FireCustomMissile("NailGrenade2",0,1,6,6)
-		R029 I 3 Bright A_SetPitch(pitch-8)
-		R029 JJKK 1
-		R029 LLEEFFGG 1 A_SetPitch(pitch+1)
+		R029 I 2 bright
+		{
+			A_PlaySound("reilsss/weapons/chaingunspin", 6, 1.0, 1);
+			A_PlaySound("reilsss/weapons/howitzerfire", CHAN_WEAPON, 1.0, 0);
+			A_GunFlash;
+			A_FireCustomMissile("GunSmokeSpawner",0,0,7,8);
+			A_FireCustomMissile("NailGrenade",0,1,-6,6);
+			A_FireCustomMissile("NailGrenade2",0,1,6,6);
+			A_SetPitch(pitch-8);
+		}
+		R029 JK 2
+		R029 LEFG 2 A_SetPitch(pitch+2)
 		R029 H 2
-		TNT1 A 0 A_StopSound(6)
-		TNT1 A 0 A_PlaySound("reilsss/weapons/chaingunspin", 7, 1.0, 0)
-		R029 ABCD 2
-		TNT1 A 0 A_PlaySound("reilsss/weapons/chaingunspinoff", 8, 1.0, 0)
-		R029 EFGH 3
+		R029 A 2 { A_StopSound(6); A_PlaySound("reilsss/weapons/chaingunspin", 7, 1.0, 0); }
+		R029 BCD 2
+		R029 E 3 A_PlaySound("reilsss/weapons/chaingunspinoff", 8, 1.0, 0)
+		R029 FGH 3
 		R029 ABCD 4
 		R029 EF 5 A_WeaponReady
 		R029 GH 6 A_WeaponReady
@@ -5235,7 +5263,7 @@ Actor AEoDRaptor : Weapon // 6070
 Actor AEoDRaptorPickup : CustomInventory //6042
 {
 	Inventory.PickupSound "reilsss/weappickup/perforator"
-	Inventory.PickupMessage "You got the Raptor!"
+	Inventory.PickupMessage "You riled up a Raptor!"
 	Scale 0.40
 	States
 	{
@@ -5313,6 +5341,7 @@ Actor RNail2 : RNail
 
 Actor NailGrenade
 {
+	var int user_ang;
 	PROJECTILE
 	-SHOOTABLE
 	+HERETICBOUNCE
@@ -5332,51 +5361,27 @@ Actor NailGrenade
 	States
 	{
 	Spawn:
-		TNT1 A 0
-		TNT1 A 0 A_StopSound
-		NAGR ABCDEFGHIJKLMNOPQRSTUVWX 1 A_SpawnItemEx("QuakeGrenSmokeTrail",random(0,-3),random(2,-2),random(2,-2),0,0,0.8,0,SXF_NOCHECKPOSITION, 100)
-		TNT1 A 0 A_CountDown
+		TNT1 A 0 NoDelay A_StopSound
+		NAGR ABCDEFGHIJKLMNOPQRSTUVW 1 A_SpawnItemEx("QuakeGrenSmokeTrail",random(0,-3),random(2,-2),random(2,-2),0,0,0.8,0,SXF_NOCHECKPOSITION, 100)
+		NAGR X 1 { A_CountDown; A_SpawnItemEx("QuakeGrenSmokeTrail",random(0,-3),random(2,-2),random(2,-2),0,0,0.8,0,SXF_NOCHECKPOSITION, 100); }
 		Goto Spawn+1
 	Death:
-		NAGR A 1 A_Explode(35,70,1)
-		TNT1 A 0 A_CustomMissile("ExploSmokeGeneralSmall",0,0,0)
-		TNT1 A 0 A_SpawnItemEx("NewExplosionMediumConcentrated",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,0,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,10,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,20,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,30,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,40,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,50,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,60,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,70,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,80,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,90,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,100,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,110,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,120,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,130,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,140,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,150,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,160,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,170,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,180,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,190,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,200,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,210,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,220,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,230,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,240,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,250,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,260,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,270,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,280,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,290,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,300,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,310,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,320,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,330,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,340,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,350,6,0)
+		NAGR A 0
+		{
+			A_Explode(35,70,1);
+			A_CustomMissile("ExploSmokeGeneralSmall",0,0,0);
+			A_SpawnItemEx("NewExplosionMediumConcentrated",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0);
+		}
+		Goto DLoop
+	DLoop:
+		TNT1 A 0
+		{
+			A_SpawnItemEx("SNail",0,0,0,34,0,0,user_ang,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS);
+			A_SetUserVar(user_ang, user_ang + 10);
+			if (user_ang >= 360)
+			{	return state("Null");	}
+			return state("DLoop");
+		}
 		Stop
 	}
 }
@@ -5385,46 +5390,15 @@ Actor NailGrenade2 : NailGrenade
 {
 	States
 	{
-	Death:
-		NAGR A 1 A_Explode(35,70,1)
-		TNT1 A 0 A_CustomMissile("ExploSmokeGeneralSmall",0,0,0)
-		TNT1 A 0 A_SpawnItemEx("NewExplosionMediumConcentrated",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,5,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,15,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,25,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,35,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,45,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,55,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,65,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,75,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,85,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,95,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,105,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,115,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,125,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,135,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,145,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,155,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,165,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,175,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,185,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,195,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,205,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,215,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,225,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,235,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,245,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,255,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,265,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,275,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,285,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,295,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,305,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,315,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,325,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,335,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,345,6,0)
-		TNT1 A 0 A_CustomMissile("SNail",5,0,355,6,0)
+	DLoop:
+		TNT1 A 0
+		{
+			A_SpawnItemEx("SNail",0,0,0,34,0,0,user_ang+5,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS);
+			A_SetUserVar(user_ang, user_ang + 10);
+			if (user_ang >= 360)
+			{	return state("Null");	}
+			return state("DLoop");
+		}
 		Stop
 	}
 }
@@ -5443,9 +5417,12 @@ Actor RaptorDrop : CustomInventory
 	{
 	Use:
 		TNT1 A 0
-		TNT1 A 0 A_StopSound(6)
-		TNT1 A 0 A_SpawnItemEx("DroppedRaptor",0,0,32,8,0,0,0,SXF_NOCHECKPOSITION,0)
-		TNT1 A 0 A_TakeInventory("AEoDRaptorCount",1)
+		{
+			A_StopSound(6);
+			A_SpawnItemEx("DroppedRaptor",0,0,32,8,0,0,0,SXF_NOCHECKPOSITION,0);
+			A_TakeInventory("AEoDRaptorCount",1);
+			return bool(true); //Make sure it spawns.
+		}
 		Stop
 	}
 }
@@ -5459,7 +5436,7 @@ Actor DroppedRaptor
 	{
 	Spawn:
 		R028 Q 15
-		TNT1 A 0 A_SpawnItemEx("AEoDRaptorNoAmmo",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER,0)
+		R028 Q 0 A_SpawnItemEx("AEoDRaptorNoAmmo",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER,0)
 		Stop
 	}
 }
@@ -5470,7 +5447,7 @@ Actor AEoDRaptorNoAmmo : AEoDRaptorItem
 	+INVENTORY.IGNORESKILL	+DONTGIB
 	Scale 0.4
 	Inventory.Amount 1
-	Inventory.PickupMessage "You got a Raptor." 
+	Inventory.PickupMessage "You riled up a Raptor!" 
 	Inventory.PickupSound "reilsss/weappickup/perforator"
 	States
 	{
@@ -8295,7 +8272,6 @@ Actor ElecDrvrLightTrailBeam
 			A_FadeOut(0.4);
 			//This gathers the new pitch every other time.
 			A_Warp(AAPTR_TARGET,cos(-pitch)*user_dist,5+frandom(-1,1),frandom(-1,1)+32+sin(-pitch)*user_dist,0,WARPF_NOCHECKPOSITION|WARPF_COPYPITCH|WARPF_COPYVELOCITY|WARPF_INTERPOLATE);
-			//A_
 		}
 		Loop
 	}
