@@ -540,6 +540,7 @@ str CVarsToGames[number_of_games_and_cvars][3] = {
 
 Script "SpawnerSetup" enter
 {
+	//Don't run this again if it's already been done once.
 	if (ScriptSetup)	Terminate;
 	
 	MonIntensity = GetCvar("user_MonIntensity");
@@ -644,7 +645,7 @@ Script "SpawnDeployMonster" (int nomini)
 	int tm = 0;
 	int mc = 0;
 	
-	if (!ScriptSetup)
+	if (!ScriptSetup) //Give it a tic to establish just in case.
 		Delay(1);
 	
 	if (AEoDGameMode == 1) //Overrides everything else. L4D mode calls priority.
@@ -652,8 +653,10 @@ Script "SpawnDeployMonster" (int nomini)
 		SetActorState(0,"L4D",1);
 		Terminate;
 	}
+	//All enabled.
 	else if (((ThemeMix + MiniCount) >= 19) || !(ThemeMix))
 	{
+		//If it doesn't have a joke mode, make it go classic instead.
 		if (JokeTheme)
 		{
 			if (!(SetActorState(0,"Joke",1)))
@@ -665,14 +668,20 @@ Script "SpawnDeployMonster" (int nomini)
 	}
 	else
 	{
+		//n-1 here because of arrays.
 		tm = ThemeMix-1;
 		if (MiniThemeEnabled && !(nomini))
 		{
 			mc = MiniCount;
 			roll = random(0,(tm+mc));
 		}
-		else
+		// These are guaranteed to roll onto those positions because each one 
+		// has game-related spawns.
+		else 
 			roll = random(0,tm);
+			
+		// We have a mixed bag here. Should roll be in the ranges of the extra 
+		// monsters, try to find one.
 		if (roll > tm)
 		{
 			while (timeout < timeout_max)

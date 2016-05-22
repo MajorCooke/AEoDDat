@@ -11,13 +11,16 @@ Actor SpiderMastermindReplacer : AEoDMonsterSpawner replaces SpiderMastermind
 	Height 100
 	States
 	{
-	Spawn:
-		TNT1 A 0 NoDelay A_GiveInventory("NoDormantToken",1)
-		
+	Spawn:		
 	//-------------------------------------------------------------------------------------------------------
 	//	Type Check
 	//-------------------------------------------------------------------------------------------------------
-		TNT1 A 35 ACS_NamedExecuteAlways("SpawnDeployMonster",0,0,0,0)
+		TNT1 A 35 NoDelay 
+		{
+			A_GiveInventory("NoDormantToken",1);
+			A_SetUserVar(user_rng,random(1,256));
+			ACS_NamedExecuteAlways("SpawnDeployMonster",0,0,0,0);
+		}
 		Goto ClassicAEoD
 
 	//-------------------------------------------------------------------------------------------------------
@@ -98,13 +101,25 @@ Actor SpiderMastermindReplacer : AEoDMonsterSpawner replaces SpiderMastermind
 	//-------------------------------------------------------------------------------------------------------
 	//	Classic Aeod
 	//-------------------------------------------------------------------------------------------------------
+	Joke:
+		TNT1 A 0
+		{
+			A_SetUserVar(user_joke,1);
+			A_SpawnItemEx("JokeModeSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,250);
+			return state("ClassicAEoD");
+		}
 	ClassicAEoD:
-	TNT1 a 0 A_Jump(2,"CAEUR01","CAEUR02","CAEUR03","CAEUR04")	//ultra rare monsters
-	TNT1 a 0 A_Jump(8,"CAER01","CAER02")			//rare monsters
-	TNT1 a 0 A_Jump(256,"CAE01","CAE02","CAE03","CAE04","CAE05","CAE06","CAE07","CAE08","CAE09",
-			"CAE10","CAE11","CAE12","CAE13","CAE14","CAE15","CAE16","CAE17","CAE18","CAE19",
-			"CAE20","CAE21","CAE22","CAE23","CAE24","CAE25","CAE26","CAE27","CAE28","CAE29",
-			"CAE30","CAE31","CAE32","CAE33","CAE34","CAE35","CAE36","CAE37","CAE38")
+		TNT1 A 0
+		{			
+				 if	(user_rng <= 4)					{	return A_Jump(256,"CAEUR01","CAEUR02","CAEUR03","CAEUR04");	}	//ultra rare monsters
+			else if	(user_rng <= 8)					{	return A_Jump(256,"CAER01","CAER02");	}			//rare monsters
+			else if	(user_rng <= 16 && user_joke)	{	return A_Jump(256,"JKR01");	}	//rare joke boss
+			else if (user_rng <= 40 && user_joke)	{	return A_Jump(256,"JK01","JK02","JK03","JK04");	}
+			return A_Jump(256,"CAE01","CAE02","CAE03","CAE04","CAE05","CAE06","CAE07","CAE08","CAE09",
+					"CAE10","CAE11","CAE12","CAE13","CAE14","CAE15","CAE16","CAE17","CAE18","CAE19",
+					"CAE20","CAE21","CAE22","CAE23","CAE24","CAE25","CAE26","CAE27","CAE28","CAE29",
+					"CAE30","CAE31","CAE32","CAE33","CAE34","CAE35","CAE36","CAE37","CAE38");
+		}
 	CAE01:	TNT1 A 0 A_SpawnItemEx("FSpiderMastermind",0,0,0,0,0,0,0,MonsterSpawnFlags,0,tid)	Goto Teleport
 	CAE02:	TNT1 A 0 A_SpawnItemEx("FCerberus",0,0,0,0,0,0,0,MonsterSpawnFlags,0,tid)	Goto Teleport
 	CAE03:	TNT1 A 0 A_SpawnItemEx("StoneLycanthrope",0,0,0,0,0,0,0,MonsterSpawnFlags,0,tid)	Goto Teleport
@@ -157,24 +172,17 @@ Actor SpiderMastermindReplacer : AEoDMonsterSpawner replaces SpiderMastermind
 	//	Joke mode
 	//-------------------------------------------------------------------------------------------------------
 	JokeMode:
-		TNT1 A 0 A_SpawnItemEx("JokeModeSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,250)
-		TNT1 A 0 A_Jump(24,"JKR01")
-		TNT1 A 0 A_Jump(256,"JK01","JK02","JK03","JK04")
-	Joke:
-	TNT1 A 0 A_SpawnItemEx("JokeModeSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,250)
-	TNT1 a 0 A_Jump(4,"CAEUR01","CAEUR02","CAEUR03","CAEUR04")	//ultra rare monsters
-	TNT1 a 0 A_Jump(8,"CAER01","CAER02")			//rare monsters
-	TNT1 A 0 A_Jump(24,"JKR01")	//rare joke boss
-	TNT1 A 0 A_Jump(85,"JK01","JK02","JK03","JK04")
-	TNT1 a 0 A_Jump(256,"CAE01","CAE02","CAE03","CAE04","CAE05","CAE06","CAE07","CAE08","CAE09",
-			"CAE10","CAE11","CAE12","CAE13","CAE14","CAE15","CAE16","CAE17","CAE18","CAE19",
-			"CAE20","CAE21","CAE22","CAE23","CAE24","CAE25","CAE26","CAE27","CAE28","CAE29",
-			"CAE30","CAE31","CAE32","CAE33","CAE34","CAE35","CAE36","CAE37","CAE38")
+		TNT1 A 0 
+		{
+			A_SpawnItemEx("JokeModeSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,250);
+			if (user_rng <= 16) 		{	return state("JKR01");	}
+			return A_Jump(256,"JK01","JK02","JK03","JK04");
+		}
 	JK01:		TNT1 A 0 A_SpawnItemEx("NightmareAlienHulk",0,0,0,0,0,0,0,MonsterSpawnFlags,0,tid)	Goto Teleport
 	JK02:		TNT1 A 0 A_SpawnItemEx("WheatOS",0,0,0,0,0,0,0,MonsterSpawnFlags,0,tid)	Goto Teleport
 	JK03:		TNT1 A 0 A_SpawnItemEx("HTC2Fluffy",0,0,0,0,0,0,0,MonsterSpawnFlags,0,tid)	Goto Teleport
 	JK04:		TNT1 A 0 A_SpawnItemEx("TF2Heavy",0,0,0,0,0,0,0,MonsterSpawnFlags,0,tid)	Goto Teleport
-	JKR01:	TNT1 A 0 A_SpawnItemEx("HTC2PennywiseTDC",0,0,0,0,0,0,0,MonsterSpawnFlags,0,tid)	Goto Teleport
+	JKR01:		TNT1 A 0 A_SpawnItemEx("HTC2PennywiseTDC",0,0,0,0,0,0,0,MonsterSpawnFlags,0,tid)	Goto Teleport
 
 
 	//-------------------------------------------------------------------------------------------------------
@@ -283,13 +291,24 @@ Actor SpiderMastermindReplacer : AEoDMonsterSpawner replaces SpiderMastermind
 	Teleport:
 		//TNT1 A 0 A_RadiusGive("DormantChecker",4,RGF_MONSTERS,1)
 		//TNT1 A 0 A_Warp(AAPTR_DEFAULT,16000,0,0,random(0,359),WARPF_NOCHECKPOSITION)
-		TNT1 A 0 A_GiveToChildren("AEoDToken",1)
-		TNT1 A 0 A_ChangeFlag("THRUACTORS",1)
-		TNT1 A 0 A_ChangeFlag("NOBLOCKMAP",1)
+		TNT1 A 0 
+		{
+			A_GiveToChildren("AEoDToken",1);
+			A_ChangeFlag(THRUACTORS,1);
+			A_ChangeFlag(NOBLOCKMAP,1);
+		}
 	Waiting:
-		//TNT1 A 0 A_PrintBold("Im waiting")
-		TNT1 A 70 A_JumpIf(IsPointerEqual(AAPTR_TRACER,AAPTR_NULL),"Death")
-		Loop
+		TNT1 A 70
+		TNT1 A 0
+		{
+			//Give it 60 seconds before calling A_BossDeath.
+			if (IsPointerEqual(Tracer,NullPtr) || A_JumpIfHealthLower(1,"Null",Tracer))
+			{	
+				A_SetTics(35*60);
+				return state(0);	
+			}
+			return state("Waiting");
+		}
 	Death:
 		TNT1 A 140 //A_PrintBold("I died")
 		TNT1 A 3 A_BossDeath

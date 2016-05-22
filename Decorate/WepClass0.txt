@@ -12,23 +12,30 @@
 //Remake by Major Cooke
 
 /*
+Every culture, religion, or group has a trump card. It could be a cult, a faith, 
+a race, or something else. Everyone or everything will have something of power
+they may or may not use in any given circumstance. 
 
-El Oscuro's triads had managed to harness the power of the heavens for themselves
-with the help of demonspawn, namely the fallen angels who had knowledge about
-the holy powers. Yet, despite their ability to replicate this power, they did not
-find themselves capable of using it. It was the perfect weapon they could use to
-annihilate the world, if it would only work for them. Thankfully, it would appear
-God denies the evil ones the right to use it.
+In the case of the Triads, it was the Hand of God. Fortunately, the Hand of God
+refuses to bind itself to entities that seek to use it for the wrong reasons.
+Now they know it was a mistake investing time into such a powerful artifact's
+creation with the help of the fallen angels. To ensure none could stumble upon
+or steal the Hand's powers, El Oscuro stored it in a pocket dimension that requires
+constant attention towards, for the void desperately wants to spit it out. It 
+goes without saying: killing him is the only way to get it.
 
-Despite his fall to the H.U.N.T, Oscuro continues to plot his dominion amongst
-humanity and will stop at nothing to convert the world... or see it burn. Rumor
-has it amongst the monks that a great foe of Oscuro, in particularly an angel
-in God's army by the name of Gabriel, will bless the one who defeats Oscuro
-with heavenly powers and allow its use to the fullest of its potential...
+The Hand of God is a powerful weapon, capable of blazing through enemies en masse
+and dissolving them entirely, leaving nothing left. Their entire physical, 
+elemental, and spiritual existence is erased from the mortal universe, thrusting
+them back into the afterlife. The might of the holy power expressed by Heaven is
+so vast, no enemy can resist its prowess, save for Lucifer himself along with a
+few questionable entities.
 
-Such power could annihilate entire swarms of hellspawn with radical ease, and allow
-summoning of the Triad leader's image to fight along at his side for a short time.
-
+The other powerful ability it offers is the ability to call forth a repentive
+El Oscuro in the form of many -- more than one of him can be summoned at any
+given time to fight the legions. His images possess all his power, along with
+an ethereal invulnerability. As long as he has retribution to mete out, he will
+remain and fight.
 */
 
 Actor AEoDHandOfGodItem: CustomInventory //6124
@@ -375,6 +382,8 @@ Actor OscuroPlayer
 	+NODAMAGE
 	+NOTELESTOMP
 	+ALLOWPAIN
+	+DONTGIB
+	+NOPAIN
 	Species "OscuroAlly"
 	//+AVOIDMELEE
 	SeeSound "oscuro/alert"
@@ -397,10 +406,14 @@ Actor OscuroPlayer
 	States
 	{
 	Spawn:
-		OIDL A 0 NoDelay A_CopyFriendliness(AAPTR_PLAYER1)
-		OIDL A 0 A_RearrangePointers(AAPTR_DEFAULT,AAPTR_PLAYER1,AAPTR_DEFAULT,4)
-		OIDL A 0 A_SetUserVar("user_life",1000)
-		OIDL A 0 A_SetInvulnerable
+		OIDL A 0 NoDelay 
+		{
+			A_SetUserVar("user_life",1000);
+			A_SetInvulnerable;
+			A_CopyFriendliness(AAPTR_PLAYER1);
+			A_RearrangePointers(AAPTR_DEFAULT,AAPTR_PLAYER1,AAPTR_DEFAULT,4);
+			A_ChangeFlag(NOPAIN,false);
+		}
 		OIDL AAAAAAAAAA 1 A_FadeIn(0.05,FTF_CLAMP)
 		OIDL A 0 A_Gravity
 		OIDL AAAAAAAAA 7 A_Look
@@ -410,42 +423,79 @@ Actor OscuroPlayer
 		"####" "#" 0 A_ChangeFlag("FRIENDLY",1)
 		OIDL AAAAAAAAA 7 A_FaceTarget //10 frames
 		OSEE ABCD 4 //14 frames
-		OSEE D 0 A_SetFloat
-		OSEE D 0 A_NoGravity
+		OSEE D 0 { A_SetFloat; A_NoGravity; }
 		//OSEE D 0 A_CopyFriendliness(AAPTR_MASTER)
 	ResetAndChase:
-		OFLY A 0 A_SetUserVar(user_target,0)
+		OFLY A 0 
+		{
+			A_SetUserVar(user_target,0);
+			A_Stop;
+		}
 	Chasing:
-		OFLY A 0 A_ChangeFlag("NOPAIN",0)
-		OFLY A 0 A_JumpIfCloser(128,"Melee")
-		OFLY A 0 A_ChangeFlag("SOLID",0)
-		OFLY A 0 A_JumpIf(!(IsPointerEqual(AAPTR_TARGET,AAPTR_NULL)),"ChaseCont")
-		OFLY A 0 A_JumpIfHealthLower(1,"ChaseCont",AAPTR_TARGET)
-		
+		OFLY A 0 
+		{
+			A_ChangeFlag("NOPAIN",0);
+			A_UnsetInvulnerable;
+			A_ChangeFlag("SOLID",0);
+		}
 	ChaseCont:
 		//OFLY A 0 A_CopyFriendliness(AAPTR_PLAYER1)
-		"####" "#" 0 A_ChangeFlag("FRIENDLY",1)
-		OFLY AAAAAAAA 2 A_Chase
-		OFLY A 0 A_JumpIf(user_life > 0,2)
-		OFLY A 1 A_Die
-		Goto Death
-		
-		OFLY A 0 A_SetUserVar("user_life", user_life-2)
-		OFLY A 0 A_JumpIf(IsPointerEqual(AAPTR_TARGET,AAPTR_NULL),"ResetAndChase")
-		OFLY A 0 A_JumpIfTargetInLOS("ResetAndChase",360)
-		OFLY A 0 A_SetUserVar(user_target,user_target+1)
-		OFLY A 0 A_JumpIf(user_target < 5, "Chasing")
-		OFLY A 0 A_ClearTarget
+		"####" "#" 0 
+		{
+			A_ChangeFlag("FRIENDLY",1);
+			if (A_JumpIfHealthLower(1,"Null",Target) || (IsPointerEqual(AAPTR_TARGET,AAPTR_NULL)))
+			{
+				A_SetUserVar(user_target,0);
+				A_Stop;
+				A_ClearTarget;
+			}
+		}
+		OFLY AAAAAAAA 2 A_Chase("","Missile")
+		OFLY A 0 
+		{
+			// No time left. Bye bye.
+			if (user_life <= 0)
+			{	
+				A_ChangeFlag(NODAMAGE,false);
+				A_Die;
+				return state("Death");	
+			}
+			//
+			if (!A_JumpIfTargetInLOS("Null",360))
+			{
+				A_SetUserVar(user_target,user_target+1);
+				if (user_target > 4)
+				{	
+					A_ClearTarget;
+					A_SetUserVar(user_target,0);
+				}
+				return state("Chasing");
+			}
+			
+			if (GetDistance(true) <= 128)
+			{	return state("Melee");	}
+			A_SetUserVar("user_life", user_life-2);
+			return state("Chasing");
+		}
 		Goto ResetAndChase
 	Melee:
 		OSEE A 1
-		"----" A 0 A_JumpIf(IsPointerEqual(AAPTR_TARGET,AAPTR_NULL),"Chasing")
-		"----" A 0 A_JumpIfHealthLower(1,"Chasing",AAPTR_TARGET)
-		OSEE A 0 A_Jump(128,"GoldFaceAttack")
-		OSEE A 0 A_ChangeFlag("NOPAIN",1)
-		OSEE A 0 A_SetInvulnerable
-		OSEE A 0 A_ChangeFlag("SOLID",1)
-		OSEE A 0 A_SetUserVar("user_chasecount",0)
+		OSEE A 0 
+		{
+			if (A_JumpIfHealthLower(1,"Null",Target) || (IsPointerEqual(AAPTR_TARGET,AAPTR_NULL)))
+			{
+				A_SetUserVar(user_target,0);
+				A_Stop;
+				A_ClearTarget;
+				return state("Chasing");
+			}
+			
+			if (random(1,2) == 1)
+			{	return state("GoldFaceAttack");	}
+			
+			A_ChangeFlag("NOPAIN",1); A_SetInvulnerable; A_ChangeFlag("SOLID",1); A_SetUserVar("user_chasecount",0); 
+			return state(1);
+		}
 		OSEE DCBABCD 2 A_FaceTarget
 	HurtingChaseLooper:
 		OCHA A 0 A_JumpIfTargetInLOS(2,360,JLOSF_DEADNOJUMP)
@@ -2156,18 +2206,18 @@ Actor AEoDApocalypseNoAmmo : AEoDApocalypseItem
 //==================================================================================
 //==================================================================================
 
-Actor AEoDBFG9000Item : CustomInventory 6073
+Actor AEoDBFG9000Item : CustomInventory //6073
 {
 	+FLOORCLIP
 	+IGNORESKILL	+DONTGIB
-	Scale 0.95
+	Scale 1
 	Inventory.Amount 1
-	Inventory.PickupMessage "You got the BFG9000! Don't overcharge!"
-	Inventory.PickupSound "reilsss/weappickup/bfgs"
+	Inventory.PickupMessage "You got the BFG9000! Hell yes!"
+	Inventory.PickupSound "reilsss/weappickup/qsg"
 	States
 	{
 	Spawn:
-		BFU4 A -1
+		M016 Z -1
 		Loop
 	Pickup:
 		TNT1 A 0 A_JumpIfInventory("AEoDBFG9000",1,"Ammo")
@@ -2195,232 +2245,51 @@ Actor AEoDBFG9000 : Weapon // 6073
 	+WEAPON.CHEATNOTWEAPON
 	+IGNORESKILL	+DONTGIB
 	+WEAPON.AMMO_OPTIONAL
-	Weapon.AmmoType1 "BFGHolder"
+	Weapon.AmmoType1 "PlasmaRod"
 	Weapon.AmmoType2 "PlasmaRod"
 	Weapon.AmmoGive1 40
 	Weapon.AmmoGive2 40
-	Weapon.AmmoUse1 0
+	Weapon.AmmoUse1 40
 	Weapon.SelectionOrder 20202
-	Inventory.PickupMessage "You got the BFG9000! Don't overcharge!"
-	Inventory.PickupSound "reilsss/weappickup/bfgs"
+	Inventory.PickupMessage "You got the BFG9000! Hell yes!"
+	Inventory.PickupSound "reilsss/weappickup/qsg" //"reilsss/weappickup/bfgs"
 	Weapon.upsound "weapons/bfg/draw"
-	Scale 0.95
+	Scale 1
 	Tag "BFG 9000"
 	States
 	{
 	Spawn:
-		BFU4 A -1
+		//BFU4 A -1
+		M016 Z -1
+		Stop
+	Select:
+		M016 A 1 A_Raise
+		M016 AA 0 A_Raise
+		Loop
+	Deselect:
+		"----" A 1 A_Lower
+		"----" AA 0 A_Lower
 		Loop
 	Ready:
-		BFG3 A 0 A_PlaySound("reilsss/weapons/bfgidle2", 6, 1.0, 1)
-		BFG3 A 0 A_TakeInventory("BFGReloadCheck",1)
-		BFG3 A 1 A_WeaponReady
-		Goto Ready+2
-	Deselect:
-		BFG3 A 0 A_StopSound(6)
-		"####" "#" 0 A_RemoveChildren(1,RMVF_EVERYTHING,"D3BFGBallMuzzle")
-	DesLoop:
-		BFG3 A 1 A_Lower
-		BFG3 AA 0 A_Lower
-		Goto Deselect+1
-	Select:	
-		BFG3 A 1 A_Raise
-		BFG3 AA 0 A_Raise
+		M016 A 0 A_PlaySound("reilsss/weapons/bfgidle2", 6, 1.0, 1)
+		M016 AAAABBBBCCCCDDDDCCCCBBBB 1 bright A_WeaponReady
 		Loop
 	Fire:
-		BFG3 B 0 A_JumpIfInventory("InfiniteAmmo",1,6)
-		BFG3 B 0 A_JumpIfInventory("PowerEconomizer",1,5)
-		BFG3 B 0 A_JumpIfInventory("BFGHolder", 10, 4)
-		BFG3 B 0 A_JumpIfInventory("PlasmaRod", 1, 2)
-		BFG3 B 1
+		M016 E 4 bright A_PlaySound("reilsss/weapons/bfg9kcharge", 5, 1.0, 0)
+		M016 FGHIJKL 4 bright
+		M016 M 4 bright
+		{
+			A_StopSound(5);
+			A_PlaySound("reilsss/weapons/bfg9kfire",CHAN_WEAPON,1,0);
+			A_SetBlend("Green",0.5,17);
+			A_FireCustomMissile("AEoDBFG10KShot",0,1,4,0);
+			A_SetPitch(pitch-8);
+		}
+		M016 NNNNOOOO 1 bright A_SetPitch(pitch+1)
+		M016 PQ 4 bright
 		Goto Ready
-		
-		BFG3 B 0
-		Goto AltFire
-		
-		BFG3 B 0 A_PlaySound("reilsss/weapons/bfg9kcharge", 5, 1.0, 0)
-		BFG3 B 0 A_SpawnItemEx("D3BFGBallMuzzle",8,0,32,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
-		BFG3 B 1 A_SetBlend("00 99 00",0.15,4)
-		BFG3 B 0 A_ReFire
-		Goto Hold
-	Hold:
-	CheckCharge:
-		"####" "#" 0 A_JumpIfInventory("BFGToken", 7, 2)
-		"####" "#" 0 A_JumpIfInventory("BFGCharge", 45, "Warning3")
-		"####" "#" 0 A_JumpIfInventory("BFGToken", 6, 2)
-		"####" "#" 0 A_JumpIfInventory("BFGCharge", 40, "Warning2")
-		"####" "#" 0 A_JumpIfInventory("BFGToken", 5, 2)
-		"####" "#" 0 A_JumpIfInventory("BFGCharge", 35, "Warning1")
-		"####" "#" 0 A_JumpIfInventory("BFGToken", 4, 2)
-		"####" "#" 0 A_JumpIfInventory("BFGCharge", 30, "Phase4")
-		"####" "#" 0 A_JumpIfInventory("BFGToken", 3, 2)
-		"####" "#" 0 A_JumpIfInventory("BFGCharge", 20, "Phase3")
-		"####" "#" 0 A_JumpIfInventory("BFGToken", 2, 2)
-		"####" "#" 0 A_JumpIfInventory("BFGCharge", 10, "Phase2")
-	ChargeLoop:
-		"####" "#" 0 A_JumpIfInventory("BFGCharge", 48, "Explode")
-		"####" "#" 2 A_GiveInventory("BFGCharge",1)
-		"####" "#" 0 A_ReFire("CheckCharge")
-		Goto "FireGeneral"
-	Phase2:
-		BFG3 C 0 A_GiveInventory("BFGToken",1)
-		BFG3 C 0 A_SetBlend("50 99 00",0.2,6)
-		Goto ChargeLoop
-	Phase3:
-		BFG3 D 0 A_GiveInventory("BFGToken",1)
-		BFG3 D 0 A_SetBlend("99 80 00",0.25,6)
-		Goto ChargeLoop
-	Phase4:
-		BFG3 E 0 A_GiveInventory("BFGToken",1)
-		BFG3 E 0 A_SetBlend("99 50 00",0.25,6)
-		Goto ChargeLoop
-	Warning1:
-		BFG3 E 0 A_GiveInventory("BFGToken",1)
-		BFG3 E 0 A_SetBlend("99 50 00",0.25,6)
-		BFG3 E 0 A_PlaySound("weapons/doom3bfg/warning", 8, 1.0, 0)
-		Goto ChargeLoop
-	Warning2:
-		BFG3 E 0 A_GiveInventory("BFGToken",1)
-		BFG3 E 0 A_SetBlend("99 25 00",0.25,6)
-		Goto ChargeLoop
-	Warning3:
-		BFG3 E 0 A_GiveInventory("BFGToken",1)
-		BFG3 E 0 A_SetBlend("99 00 00",0.25,6)
-		Goto ChargeLoop		
-
-	FireGeneral:	//checks the "charges" to decide which "fire" will do
-		BFGI D 0 A_JumpIfInventory("BFGCharge", 30, "Fire4")
-		BFGI D 0 A_JumpIfInventory("BFGCharge", 20, "Fire3")
-		BFGI D 0 A_JumpIfInventory("BFGCharge", 10, "Fire2")
-	Fire1:
-		BFGI D 0 A_StopSound(5)
-		BFGI D 0 A_JumpIfInventory("InfiniteAmmo",1,3)
-		BFGI D 0 A_JumpIfInventory("PowerEconomizer",1,2)
-		BFGI D 0 A_TakeInventory("BFGHolder", 10)
-		BFGI D 0 A_GunFlash
-		BFGI D 0 A_TakeInventory("BFGCharge", 100)
-		BFGI D 0 A_TakeInventory("BFGToken", 10)
-		BFGI D 1 A_SetBlend("Green",0.6,7)
-		"####" "#" 0 A_RemoveChildren(1,RMVF_EVERYTHING,"D3BFGBallMuzzle")
-		BFGI E 3 A_FireCustomMissile("D3BFGBall1", 0, 1, 1, 0)
-		BFGI F 2 A_SetPitch(pitch-4)
-		BFG3 A 1 A_SetPitch(pitch+2)
-		BFG3 AA 1 A_SetPitch(pitch+1)
-		BFG3 A 1
-		Goto Ready
-	Fire2:
-		BFGI G 0 A_JumpIfInventory("InfiniteAmmo",1,3)
-		BFGI G 0 A_JumpIfInventory("PowerEconomizer",1,2)
-		BFGI G 0 A_JumpIfInventory("BFGHolder",20,1)
-		Goto "Fire1"
-		
-		BFGI G 0 A_StopSound(5)
-		BFGI G 0 A_JumpIfInventory("InfiniteAmmo",1,3)
-		BFGI G 0 A_JumpIfInventory("PowerEconomizer",1,2)
-		BFGI G 0 A_TakeInventory("BFGHolder", 20)
-		BFGI G 0 A_GunFlash
-		BFGI D 0 A_TakeInventory("BFGCharge", 100)
-		BFGI D 0 A_TakeInventory("BFGToken", 10)
-		BFGI G 1 A_SetBlend("Green",0.7,9)
-		"####" "#" 0 A_RemoveChildren(1,RMVF_EVERYTHING,"D3BFGBallMuzzle")
-		BFGI H 3 A_FireCustomMissile("D3BFGBall2", 0, 1, 1, 0)	
-		BFGI I 2 A_SetPitch(pitch-4)
-		BFG3 A 2 A_SetPitch(pitch-2)
-		BFG3 AAAAA 2 A_SetPitch(pitch+1.2)
-		Goto Ready
-	Fire3:
-		BFGI J 0 A_JumpIfInventory("InfiniteAmmo",1,3)
-		BFGI J 0 A_JumpIfInventory("PowerEconomizer",1,2)
-		BFGI J 0 A_JumpIfInventory("BFGHolder",30,1)
-		Goto "Fire2"
-		BFGI J 0 A_StopSound(5)
-		BFGI J 0 A_JumpIfInventory("InfiniteAmmo",1,3)
-		BFGI J 0 A_JumpIfInventory("PowerEconomizer",1,2)
-		BFGI J 0 A_TakeInventory("BFGHolder", 30)
-		BFGI J 0 A_GunFlash
-		BFGI D 0 A_TakeInventory("BFGCharge", 100)
-		BFGI D 0 A_TakeInventory("BFGToken", 10)
-		BFGI J 0 A_SetBlend("Green",0.75,12)
-		BFGI J 2
-		"####" "#" 0 A_RemoveChildren(1,RMVF_EVERYTHING,"D3BFGBallMuzzle")
-		BFGI K 1 A_FireCustomMissile("D3BFGBall3", 0, 1, 1, 0)	
-		BFGI L 3 A_SetPitch(pitch-5)
-		BFG3 A 1 A_SetPitch(pitch-3)
-		BFG3 A 2 A_SetPitch(pitch+2)
-		BFG3 AAAAAA 1 A_SetPitch(pitch+1)
-		BFG3 A 2
-		Goto Ready
-	Fire4:
-		BFGI M 0 A_JumpIfInventory("InfiniteAmmo",1,3)
-		BFGI M 0 A_JumpIfInventory("PowerEconomizer",1,2)
-		BFGI M 0 A_JumpIfInventory("BFGHolder",40,1)
-		Goto "Fire3"
-		BFGI M 0 A_StopSound(5)
-		BFGI M 0 A_JumpIfInventory("InfiniteAmmo",1,3)
-		BFGI M 0 A_JumpIfInventory("PowerEconomizer",1,2)
-		BFGI M 0 A_TakeInventory("BFGHolder", 40)
-		BFGI M 0 A_GunFlash
-		BFGI D 0 A_TakeInventory("BFGCharge", 100)
-		BFGI D 0 A_TakeInventory("BFGToken", 10)
-		BFGI M 0 A_SetBlend("Green",0.8,14)
-		BFGI M 1
-		"####" "#" 0 A_RemoveChildren(1,RMVF_EVERYTHING,"D3BFGBallMuzzle")
-		BFGI N 3 A_FireCustomMissile("D3BFGBall4", 0, 1, 1, 0)	
-		BFGI O 2 A_SetPitch(pitch-5)
-		BFG3 A 2 A_SetPitch(pitch-3)
-		BFG3 A 2 A_SetPitch(pitch+2)
-		BFG3 AAAAAA 1 A_SetPitch(pitch+1)
-		BFG3 A 4
-		Goto Ready
-	Explode:
-		BFG3 A 0 A_TakeInventory("BFGHolder", 40)
-		BFG3 A 0 A_TakeInventory("BFGToken", 10)
-		BFG3 A 0 A_TakeInventory("BFGCharge", 100)
-		BFG3 A 0 A_PlaySound("reilsss/weapons/bfg9kexplosion",7)
-		"####" "#" 0 A_RemoveChildren(1,RMVF_EVERYTHING,"D3BFGBallMuzzle")
-		BFG3 A 0 A_Explode(random(400,1000),256,0)		//this one is to hurt other stuff around
-		BFG3 A 1 A_Explode(190,32)
-		TNT1 A 0 A_ClearRefire
-		BFG3 A 35 A_StopSound(5) //For case you die sounds stops
-		Goto Ready
-	AltFire:
-		BFG3 F 0 A_JumpIfInventory("BFGReloadCheck",1,3)
-		BFG3 F 0 A_JumpIfInventory("PlasmaRod",1,1)
-		Goto Ready
-		
-		BFG3 F 0 A_GiveInventory("BFGReloadCheck",1)
-		BFG3 F 0 A_JumpIfInventory("BFGHolder", 40, "Ready")
-		BFG3 F 0 A_JumpIfInventory("PlasmaRod", 1, 2)
-		BFG3 F 0
-		Goto AltFire+10
-		
-		BFG3 F 0 A_JumpIfInventory("InfiniteAmmo",1,2)
-		BFG3 F 0 A_TakeInventory("PlasmaRod", 10)
-		BFG3 F 0 A_GiveInventory("BFGHolder", 10)
-		BFG3 F 0 A_JumpIfInventory("BFGHolder", 40, 1)
-		Goto AltFire
-		
-		BFG3 F 0 A_JumpIfInventory("BFGHolder", 1, 1)
-		Goto Ready
-		
-		BFG3 FGHI 2
-		BFG3 J 15 A_PlaySound("weapons/d3bfgr", CHAN_WEAPON, 1.0, 0)
-		BFG3 I 20
-		BFG3 J 30
-		BFG3 IHGF 2
-		Goto Ready
-		
-		BFG3 F 0
-		Goto Ready
-	Flash:
-		TNT1 AAA 1 Bright
-		Stop
 	}
 }
-
-Actor BFGCharge : Inventory { Inventory.MaxAmount 100 }
-Actor BFGToken : Inventory { Inventory.MaxAmount 7 }
-Actor BFGReloadCheck : Inventory { Inventory.MaxAmount 1 }
 
 Actor BFGExtraDMG : BFGExtra replaces BFGExtra { DamageType "Plasma" }
 
@@ -2848,7 +2717,7 @@ Actor DroppedBFG9000
 {
 	Radius 16
 	Height 20
-	Scale 0.95
+	Scale 1
 	States
 	{
 	Spawn:
@@ -2862,14 +2731,15 @@ Actor AEoDBFG9000NoAmmo : AEoDBFG9000Item
 {
 	+FLOORCLIP
 	+IGNORESKILL	+DONTGIB
-	Scale 0.95
+	Scale 1
 	Inventory.Amount 1
-	Inventory.PickupMessage "You got the BFG9000! Don't overcharge!"
-	Inventory.PickupSound "reilsss/weappickup/bfgs"
+	Inventory.PickupMessage "You got the BFG9000! Hell yes!"
+	Inventory.PickupSound "reilsss/weappickup/qsg"
 	States
 	{
 	Spawn:
-		BFU4 A -1
+		//BFU4 A -1
+		M016 Z -1
 		Loop
 	Pickup:
 		TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",0) <= 0,"Nothing")

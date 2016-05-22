@@ -4138,22 +4138,26 @@ Actor DeadLightPowerup : CustomInventory
         X091 D 2 Light("DeadBlue")
 		Loop
 	Use:
-		TNT1 A 0 A_JumpIfInventory("PowerDemonMorph",1,"Deny")
-		TNT1 A 0 A_JumpIfInventory("PowerDLProtector",1,"Deny")
-		TNT1 A 0 A_GiveInventory("DLPowerEffect",1)
-		TNT1 A 0 A_SetReflective
-		TNT1 A 0 A_SpawnItemEx("DLController",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
-		TNT1 A 0 A_SpawnItemEx("DLMonitor",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
-		TNT1 A 0 A_PlaySound("powerups/pentagramuse",5,1,0,ATTN_NONE)
-		TNT1 A 0 A_PlaySound("powerups/pentagramuse",6,1,0,ATTN_NONE)
-		TNT1 A 0 A_SpawnItemEx("PlayerDeadLightWarp",0,0,30,12,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
-		TNT1 A 0 A_SpawnItemEx("PlayerDeadLightWarp",0,0,30,12,0,0,90,SXF_NOCHECKPOSITION|SXF_SETMASTER)
-		TNT1 A 0 A_SpawnItemEx("PlayerDeadLightWarp",0,0,30,12,0,0,180,SXF_NOCHECKPOSITION|SXF_SETMASTER)
-		TNT1 A 0 A_SpawnItemEx("PlayerDeadLightWarp",0,0,30,12,0,0,270,SXF_NOCHECKPOSITION|SXF_SETMASTER)
-		TNT1 A 0 A_SpawnItemEx("PlayerDeadLightWarp2",0,0,30,12,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
-		TNT1 A 0 A_SpawnItemEx("PlayerDeadLightWarp2",0,0,30,12,0,0,90,SXF_NOCHECKPOSITION|SXF_SETMASTER)
-		TNT1 A 0 A_SpawnItemEx("PlayerDeadLightWarp2",0,0,30,12,0,0,180,SXF_NOCHECKPOSITION|SXF_SETMASTER)
-		TNT1 A 0 A_SpawnItemEx("PlayerDeadLightWarp2",0,0,30,12,0,0,270,SXF_NOCHECKPOSITION|SXF_SETMASTER)
+		TNT1 A 0 
+		{
+			if (CountInv("PowerDemonMorph") || CountInv("PowerDLProtector"))
+			{	return bool(false);	}
+			A_GiveInventory("DLPowerEffect",1);
+			A_SetReflective;
+			A_SpawnItemEx("DLController",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER);
+			A_SpawnItemEx("DLMonitor",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER);
+			A_PlaySound("powerups/pentagramuse",5,1,0,ATTN_NONE);
+			A_PlaySound("powerups/pentagramuse",6,1,0,ATTN_NONE);
+			A_SpawnItemEx("PlayerDeadLightWarp",0,0,30,12,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER);
+			A_SpawnItemEx("PlayerDeadLightWarp",0,0,30,12,0,0,90,SXF_NOCHECKPOSITION|SXF_SETMASTER);
+			A_SpawnItemEx("PlayerDeadLightWarp",0,0,30,12,0,0,180,SXF_NOCHECKPOSITION|SXF_SETMASTER);
+			A_SpawnItemEx("PlayerDeadLightWarp",0,0,30,12,0,0,270,SXF_NOCHECKPOSITION|SXF_SETMASTER);
+			A_SpawnItemEx("PlayerDeadLightWarp2",0,0,30,12,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER);
+			A_SpawnItemEx("PlayerDeadLightWarp2",0,0,30,12,0,0,90,SXF_NOCHECKPOSITION|SXF_SETMASTER);
+			A_SpawnItemEx("PlayerDeadLightWarp2",0,0,30,12,0,0,180,SXF_NOCHECKPOSITION|SXF_SETMASTER);
+			A_SpawnItemEx("PlayerDeadLightWarp2",0,0,30,12,0,0,270,SXF_NOCHECKPOSITION|SXF_SETMASTER);
+			return bool(true);
+		}
 		Stop
 	Deny:
 		TNT1 A 0
@@ -4206,15 +4210,19 @@ Actor DLMonitor
 		TNT1 A 0
 	Looping:
 		TNT1 A 1
-		TNT1 A 0 A_CheckFlag("JUSTHIT","Wipe",AAPTR_MASTER)
-		TNT1 A 0 A_JumpIfInventory("PowerDLProtector",1,"Looping",AAPTR_MASTER)
-		Stop
+		{
+			if (CountInv("PowerDLProtector",Master) <= 0)
+			{	return state("Null");	}
+			return A_CheckFlag("JUSTHIT","Wipe",Master);
+		}
+		Loop
 	Wipe:
-		TNT1 A 0 A_GiveInventory("DLInvulEffect",1,AAPTR_MASTER)
-		TNT1 A 45 A_GiveInventory("DLFlasher1",1,AAPTR_MASTER)
-		TNT1 A 0 A_TakeInventory("PowerFake",10000,0,AAPTR_MASTER)
-		TNT1 A 0 A_JumpIfInventory("PowerDemonMorph",1,"End",AAPTR_MASTER)
-		TNT1 A 0 A_GiveInventory("DLDeInvul",1,AAPTR_MASTER)
+		TNT1 A 45 
+		{
+			A_GiveInventory("DLFlasher1",1,Master);
+			A_GiveInventory("DLInvulEffect",1,Master);
+		}
+		TNT1 A 0 A_GiveInventory("DLDeInvul",1,Master)
 		Goto Looping
 	End:
 		TNT1 A 0
@@ -5173,6 +5181,7 @@ Actor DemonMorphRemoval : CustomInventory
 			A_TakeInventory("PowerDemonMorph",1000,0);
 			A_TakeInventory("NoAEoDHUDToken",1000,0);
 			A_ChangeFlag("NODAMAGE",0);
+			A_ChangeFlag(NOPAIN,0);
 			A_TakeInventory("MorphToken",1000,0);
 			A_StopSound(5);
 			A_StopSound(6);
@@ -5217,6 +5226,7 @@ Actor GeneralMorphRemoval : CustomInventory
 			A_TakeInventory("PowerDemonMorph",1000,0);
 			A_TakeInventory("NoAEoDHUDToken",1000,0);
 			A_ChangeFlag("NODAMAGE",0);
+			A_ChangeFlag(NOPAIN,0);
 			A_StopSound(5);
 			A_StopSound(6);
 			A_StopSound(7);
