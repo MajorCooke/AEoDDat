@@ -2272,22 +2272,449 @@ Actor AEoDBFG9000 : Weapon // 6073
 		Loop
 	Ready:
 		M016 A 0 A_PlaySound("reilsss/weapons/bfgidle2", 6, 1.0, 1)
-		M016 AAAABBBBCCCCDDDDCCCCBBBB 1 bright A_WeaponReady
+		M016 BBBBCCCCDDDDCCCCBBBBAAAA 1 bright A_WeaponReady
 		Loop
 	Fire:
-		M016 E 4 bright A_PlaySound("reilsss/weapons/bfg9kcharge", 5, 1.0, 0)
-		M016 FGHIJKL 4 bright
-		M016 M 4 bright
+		M016 E 3 bright A_PlaySound("D4/BFGFire", 5, 1.0, 0)
+		M016 FGHIJKL 3 bright
+		M016 M 3 bright
 		{
-			A_StopSound(5);
-			A_PlaySound("reilsss/weapons/bfg9kfire",CHAN_WEAPON,1,0);
+			//A_StopSound(5);
+			//A_PlaySound("reilsss/weapons/bfg9kfire",CHAN_WEAPON,1,0);
 			A_SetBlend("Green",0.5,17);
 			A_FireCustomMissile("AEoDBFG10KShot",0,1,4,0);
 			A_SetPitch(pitch-8);
 		}
 		M016 NNNNOOOO 1 bright A_SetPitch(pitch+1)
 		M016 PQ 4 bright
+		M016 AAA 4 bright
 		Goto Ready
+	}
+}
+
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+Actor AEoDBFG10KShot
+{
+	var int user_flags;
+	var int user_count;
+	PROJECTILE
+	+FORCERADIUSDMG
+	+EXTREMEDEATH
+	Translation "0:255=%[0,0,0]:[0,1.0,0]"
+	Radius 8
+	Height 12
+	Speed 20
+	Damage 300
+	DeathSound "D4/BFGimpact"
+	RenderStyle Add
+	Scale 0.35
+	DamageType "Plasma"
+	States
+	{
+	Spawn:
+		X016 AABBCCDDEEFFGGHHIIJJKKLLMMNNOOPPQQRRSSTTUUVVWWXXYY 1 Bright NoDelay 
+		{
+			A_SpawnItemEx("BFGTrailSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS);
+			A_SetUserVar(user_count, (user_count + 1) % 8);
+			if (user_count == 0)
+			{
+				if (CheckClass("PlayerPawn",Target,1))
+				{	A_SetUserVar(user_flags,RGF_MONSTERS|RGF_NOTARGET);	}
+				else
+				{	A_SetUserVar(user_flags,RGF_MONSTERS|RGF_NOTARGET|RGF_PLAYERS);	}
+				A_RadiusGive("BFGBeamSpawner",1024,user_flags,1,None,None,0,5);
+			}
+		}
+		Loop
+	Death:
+		TNT1 AAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),SXF_NOCHECKPOSITION)
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BFGBallSmoke",0,0,0,frandom(2.0,-2.0),frandom(2.0,-2.0),frandom(2.0,-2.0),0,SXF_NOCHECKPOSITION)
+		TNT1 A 6 
+		{
+			A_SpawnItemEx("BFGBlastExploBiggerFast",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION);
+			A_Explode(random(220,660),256,0);
+		}
+		TNT1 A 3 A_SpawnItemEx("BFGBlastExplo1",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 3 A_BFGSpray
+		TNT1 A 9 A_SpawnItemEx("BFGBlastExploBiggerFast",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 6 A_SpawnItemEx("BFGBlastExploBigFast",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 1 A_SpawnItemEx("BFGBlastExplo2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		Stop
+	}
+}
+
+Actor BFGBeamSpawner : CustomInventory
+{
+	+ALWAYSPICKUP
+	States
+	{
+	Pickup:
+		TNT1 A 0
+		{
+			if ((health <= 0) || !A_CheckProximity("Null","AEoDBFG10KShot",1024,1,CPXF_CHECKSIGHT) || 
+				!A_CheckFlag(SHOOTABLE,"Null") || A_CheckFlag(NONSHOOTABLE,"Null") || A_CheckFlag(FRIENDLY,"Null"))
+			{	return state("Failure");	}
+			
+			A_SpawnItemEx("BFGBeam",0,0,height/2,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTARGET);
+			return state(0);
+		}
+		Stop
+	Failure:
+		TNT1 A 0 {	return bool(false);	}
+		Fail
+	}
+}
+
+Actor BFGBeam
+{
+	const float Limit = 8.0;
+	const float FMin = 0.75;
+	const float FMax = 3.0;
+	var float user_x;
+	var float user_y;
+	var float user_z;
+	var float user_pos[3];
+	var float user_dist;
+	var int user_life;
+	var int user_count;
+	var int user_minicount;
+	+NOINTERACTION
+	+NOBLOCKMAP
+	+NOTONAUTOMAP
+	RenderStyle None
+	Speed 3
+	States
+	{
+	Spawn:
+		TNT1 A 1 NoDelay
+		{
+			if (A_JumpIfHealthLower(1,"Null",Target) || IsPointerEqual(Target,NullPtr))
+			{	return state("Null");	}
+			
+			A_Warp(Target,0,0,0,0,WARPF_USECALLERANGLE|WARPF_NOCHECKPOSITION,"Null",0.5);
+			A_SetUserVar(user_life, user_life + 1);
+			
+			if (user_life > 9)
+			{	return state("Null");	}
+			
+			if (A_CheckProximity("Null","AEoDBFG10KShot",1024,1,CPXF_CLOSEST|CPXF_SETTRACER))
+			{
+				A_SetUserVar(user_count,0);
+				A_SetUserVarFloat(user_dist, GetDistance(true,Tracer));
+				A_Warp(Tracer,0,0,0,0,WARPF_USECALLERANGLE|WARPF_NOCHECKPOSITION,"Null");
+				A_FaceTarget(0,0,0,0,FAF_MIDDLE);
+				return state("Beam");
+			}
+			return state(0);
+		}
+		Loop
+	Beam:
+		TNT1 A 1
+		{
+			if (user_count >= user_dist) //|| abs(GetAngle(true,Target)) > 90.0 || (GetDistance(true,Target) <= 16))
+			{
+				A_SetUserVar(user_count,0);
+				A_RearrangePointers(DefPtr,DefPtr,NullPtr);
+				return state(0);
+			}			
+			
+			A_SetUserVarFloat(user_x,user_x + frandom(FMin,FMax) * randompick(-1,1));
+			A_SetUserVarFloat(user_y,user_y + frandom(FMin,FMax) * randompick(-1,1));
+			A_SetUserVarFloat(user_z,user_z + frandom(FMin,FMax) * randompick(-1,1));
+			if (user_y > Limit)		{	A_SetUserVarFloat(user_y, user_y - ((abs(user_y) % Limit) * 2));	}
+			if (user_z > Limit)		{	A_SetUserVarFloat(user_z, user_z - ((abs(user_z) % Limit) * 2));	}
+			if (user_y < -Limit)	{	A_SetUserVarFloat(user_y, user_y + ((abs(user_y) % Limit) * 2));	}
+			if (user_z < -Limit)	{	A_SetUserVarFloat(user_z, user_z + ((abs(user_z) % Limit) * 2));	}
+			
+			A_SpawnParticle("Green",SPF_FULLBRIGHT|SPF_RELATIVE,2,10,0,
+				(cos(-pitch)*user_count)+(sin(pitch)*user_x),
+				user_y,
+				(sin(pitch)*user_count)+(cos(-pitch)*user_z),
+				0,0,0,0,0,0,1.0,0.5);
+			A_SetUserVar(user_count, user_count + speed);
+			return state("Beam");
+		}
+		Goto Spawn
+	}
+}
+
+// -----------------------------------------------------------------------------
+// This spawns the trails and deals the mass damage to all enemies via A_Explode
+// so it can replicate lasering everything around it.
+
+Actor BFGTrailSpawner
+{
+	Projectile
+	+FORCERADIUSDMG
+	+EXTREMEDEATH
+	+NOINTERACTION
+	+NODAMAGETHRUST
+	+NOTONAUTOMAP
+	RenderStyle None
+	DamageType "Plasma"
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay
+		{
+			A_Explode(random(1,8),1024,0,0,1024);
+			A_SpawnItemEx("BFG10KMainTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION);
+			A_CustomMissile("BFG10KTrailA",random(10,-10),0+random(10,-10),0+random(22,-22),0);
+			A_SpawnItemEx("BFG10KTrailB",0,0,0,random(-3,3),random(-3,3),random(-3,3),random(0,359));
+			A_SpawnItemEx("BFG10KTrailB",0,0,0,random(-3,3),random(-3,3),random(-3,3),random(0,359));
+			A_SpawnItemEx("BFG10KSpark",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),SXF_NOCHECKPOSITION);
+		}
+		Stop
+	}
+}
+
+//-------------------------------------------------------
+// The main trail behind the energy ball (shadow trail)
+Actor BFG10KMainTrail
+{
+	Translation "0:255=%[0,0,0]:[0.2,1.0,0.2]"
+	+NOINTERACTION
+	RenderStyle Add
+	Scale 0.3
+	Alpha 0.5
+	States
+	{
+	Spawn:
+		X016 ABCDEFGHIJKLMOPQRSTUVWXY 2 A_FadeOut(0.07)
+		Wait
+	}
+}
+
+//-------------------------------------------------------
+// The electricity sparks
+Actor BFG10KSpark
+{
+	Translation "0:255=%[0,0,0]:[0.2,1.2,0.2]"
+	+NOINTERACTION
+	Scale 0.1
+	RenderStyle Add
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_Jump(256,"S1","S2","S3","S4","S5","S6","S7","S8")
+	S1:	X079 A 0	
+	Goto Perform
+	S2:	X079 B 0	
+	Goto Perform
+	S3:	X079 C 0	
+	Goto Perform
+	S4:	X079 D 0	
+	Goto Perform
+	S5:	X079 E 0	
+	Goto Perform
+	S6:	X079 F 0	
+	Goto Perform
+	S7:	X079 G 0	
+	Goto Perform
+	S8: X079 H 0	
+	Goto Perform
+	Perform:
+		"####" "#" 1  Bright A_SetScale(ScaleX+0.01)
+		"####" "#" 0 A_FadeOut(0.05)
+		Loop
+	}
+}
+
+//-----------------------------------------------------------
+// The small energy trail particles of the projectile in air
+Actor BFG10KTrailA
+{ 
+	+NOINTERACTION
+	RenderStyle Add
+	Alpha 0.7
+	Scale 0.2
+	Translation "0:255=%[0,0,0]:[0.2,1.2,0.2]"
+	States
+	{
+	Spawn:
+		X026 ABCDEFGHIJKLMNOPQRST 1 A_FadeOut(0.02)
+		Wait
+	}
+}
+
+Actor BFG10KTrailB
+{ 
+	+NOINTERACTION
+	RenderStyle Add
+	Alpha 0.7
+	Scale 0.1
+	Translation "0:255=%[0,0,0]:[0,1.2,0]"
+	States
+	{
+	Spawn:
+		X026 ABCDEFGHIJKLMNOPQRST 1 A_FadeOut(0.03)
+		Wait
+	}
+}
+
+//-----------------------------------------------------
+// Straight from SuperDoom3 Take II, by DBT
+// Idea of code optimization by Major Cooke
+// These are the circles when the projectile explodes
+
+//explosion slow
+Actor BFGBlastExplo1
+{
+	var int user_count;
+	+FORCEXYBILLBOARD
+	+NOINTERACTION
+	RenderStyle Add
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SetUserVar("user_count",20)
+	SizeLoop:
+		TNT1 A 0 A_SetScale((user_count*0.01))
+		TNT1 A 0 A_JumpIf(user_count>=95,"LoopEnd") 
+		X060 A 2 Bright A_FadeOut(0.06)
+		TNT1 A 0 A_SetUserVar("user_count",user_count+5)
+		Loop	  
+	LoopEnd:
+		X060 A 2 Bright A_FadeOut(0.1)
+		Wait
+  }
+}
+
+//explosion2 slow
+Actor BFGBlastExplo2
+{
+	var int user_count;
+	+FORCEXYBILLBOARD
+	+NOINTERACTION
+	RenderStyle Add
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SetUserVar("user_count",20)
+	SizeLoop:
+		TNT1 A 0 A_SetScale((user_count*0.01))
+		TNT1 A 0 A_JumpIf(user_count>=95,"LoopEnd") 
+		X060 B 2 Bright A_FadeOut(0.06)
+		TNT1 A 0 A_SetUserVar("user_count",user_count+5)
+		Loop	  
+	LoopEnd:
+		X060 B 2 Bright A_FadeOut(0.1)
+		Wait
+	}
+}
+
+//explosion fast bigger
+Actor BFGBlastExploBigFast
+{
+	var int user_count;
+	+FORCEXYBILLBOARD
+	+NOINTERACTION
+	RenderStyle Add
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SetUserVar("user_count",25)
+	SizeLoop:
+		TNT1 A 0 A_SetScale((user_count*0.01))
+		TNT1 A 0 A_JumpIf(user_count>=150,"LoopEnd") 
+		X060 A 1 Bright A_FadeOut(0.033)
+		TNT1 A 0 A_SetUserVar("user_count",user_count+5)
+		Loop	  
+	LoopEnd:
+		X060 A 1 Bright A_FadeOut(0.1)
+		Wait
+	}
+}
+
+//explosion fast biggest
+Actor BFGBlastExploBiggerFast
+{
+	var int user_count;
+	+FORCEXYBILLBOARD
+	+NOINTERACTION
+	RenderStyle Add
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SetUserVar("user_count",3)
+	SizeLoop:
+		TNT1 A 0 A_SetScale((user_count*0.01))
+		TNT1 A 0 A_JumpIf(user_count>=240,"LoopEnd") 
+		X060 A 1 Bright A_FadeOut(0.028)
+		TNT1 A 0 A_SetUserVar("user_count",user_count+7)
+		Loop	  
+	LoopEnd:
+		X060 A 1 Bright A_FadeOut(0.1)
+		Wait
+	}
+}
+
+
+
+
+
+Actor BFG10KBoltTrail
+{
+	+NOINTERACTION
+	Scale 0.4
+	RenderStyle Add
+	States
+	{
+	Spawn:
+		EBLT ABCDEF 3 Bright
+		Stop
+	}
+}
+
+Actor BFG10Extra1
+{
+	+NOINTERACTION
+	Radius 1
+	Height 1
+	RenderStyle Add
+	Translation "80:111=112:127"
+	Scale 0.2
+	States
+	{
+	Spawn:
+		PUF2 AA 1 Bright
+		TNT1 A 0 A_Jump(165,1)
+		Loop
+		PUF2 AA 1 Bright
+		PUF2 A 1 Bright A_FadeOut
+		Wait
+	Death:
+		TNT1 A 1
+		Stop
+	}
+}
+
+Actor BFG10Extra2
+{
+	+NOINTERACTION
+	Radius 1
+	Height 1
+	Scale 0.32
+	RenderStyle Add
+	Translation "80:111=112:127"
+	States
+	{
+	Spawn:
+		PUF2 AAAAA 1 Bright
+		TNT1 A 0 A_Jump(160,1)
+		Loop
+		PUF2 AAAA 1 Bright
+		PUF2 A 1 Bright A_FadeOut
+		Wait
+	Death:
+		TNT1 A 1
+		Stop
 	}
 }
 
@@ -2346,359 +2773,7 @@ Actor D3BFGBallMuzzle
 	}
 }
 
-Actor D3BFGBall1
-{
-	PROJECTILE
-	+ForceRadiusDMG
-	Speed 9
-	Height 16
-	Radius 8
-	Damage 50
-	SeeSound "reilsss/weapons/bfg9kfire"
-	DeathSound "q2weapon/bfgballexplo"
-	RenderStyle Add
-	Alpha 0.9
-	Scale 0.5
-	DamageType "Plasma"
-	States
-	{
-	Spawn:
-		X018 ABCDEFGHIJKLMNOPQRSTUVWXY 2 Bright A_SpawnItemEx("BFGCHIP1",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
-		Loop
-	Death:
-		TNT1 AAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BFGBallSmoke",0,0,0,frandom(2.0,-2.0),frandom(2.0,-2.0),frandom(2.0,-2.0),0,SXF_NOCHECKPOSITION)
-		TNT1 A 0 A_SetTranslucent(0.99,1)
-		BPLO A 1 Bright A_SpawnItemEx("D3ShockWave1", 0, 0, 8, 0, 0, 0, 0, 128)
-		TNT1 A 0 A_BFGSpray("BFGExtra",10,0,0,0,32)
-		TNT1 A 0 Bright A_Explode(128, 100, 0)
-		BPLO BCDEFGHIJKLM 2 BRIGHT
-		Stop
-	}
-}
-
-Actor D3BFGBall2
-{
-	PROJECTILE
-	+ForceRadiusDMG
-	Speed 9
-	Height 16
-	Radius 8
-	Damage 100
-	SeeSound "reilsss/weapons/bfg9kfire"
-	DeathSound "q2weapon/bfgballexplo"
-	RenderStyle Add
-	Alpha 0.9
-	Scale 0.63
-	DamageType "Plasma"
-	States
-	{
-	Spawn:
-		X018 AB 2 bright
-		X018 CDEFGHIJKLMNOPQRSTUVWXYAB 2 Bright A_SpawnItemEx("BFGCHIP2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
-		Goto Spawn+2
-	Death:
-		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BFGBallSmoke",0,0,0,frandom(2.8,-2.8),frandom(2.8,-2.8),frandom(2.8,-2.8),0,SXF_NOCHECKPOSITION)
-		TNT1 A 0 A_SetTranslucent(0.99,1)
-		BPLO A 1 Bright A_SpawnItemEx("D3ShockWave2", 0, 0, 8, 0, 0, 0, 0, 128)
-		TNT1 A 0 A_BFGSpray("BFGExtra",20,0,0,0,32)
-		TNT1 A 0 Bright A_Explode(192, 125, 0)
-		BPLO BCDEFGHIJKLM 2 BRIGHT
-		Stop
-	}
-}
-
-Actor D3BFGBall3
-{
-	PROJECTILE
-	+ForceRadiusDMG
-	Speed 9
-	Height 16
-	Radius 8
-	Damage 150
-	SeeSound "reilsss/weapons/bfg9kfire"
-	DeathSound "q2weapon/bfgballexplo"
-	RenderStyle Add
-	Alpha 0.9
-	Scale 0.7
-	DamageType "Plasma"
-	States
-	{
-	Spawn:
-		X018 AB 2 bright
-		X018 CDEFGHIJKLMNOPQRSTUVWXYAB 2 Bright A_SpawnItemEx("BFGCHIP3",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
-		Goto Spawn+2
-	Death:
-		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BFGBallSmoke",0,0,0,frandom(3.6,-3.6),frandom(3.6,-3.6),frandom(3.6,-3.6),0,SXF_NOCHECKPOSITION)
-		TNT1 A 0 A_SetTranslucent(0.99,1)
-		BPLO A 1 Bright A_SpawnItemEx("D3ShockWave3", 0, 0, 8, 0, 0, 0, 0, 128)
-		TNT1 A 0 A_BFGSpray("BFGExtra",30)
-		TNT1 A 0 Bright A_Explode(224, 150, 0)
-		BPLO BCDEFGHIJKLM 2 BRIGHT
-		Stop
-	}
-}
-
-Actor D3BFGBall4
-{
-	PROJECTILE
-	+ForceRadiusDMG
-	Speed 9
-	Height 16
-	Radius 8
-	Damage 200
-	SeeSound "reilsss/weapons/bfg9kfire"
-	DeathSound "reilsss/weapons/bfg9kexplosion"
-	RenderStyle Add
-	//Alpha 0.9
-	Scale 1.0
-	DamageType "Plasma"
-	States
-	{
-	Spawn:
-		TNT1 A 0
-		X018 A 1 Bright //A_SpawnItemEx("BFGCHIP4",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
-		X018 B 1 Bright A_SpawnItemEx("BFGShot4Trail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
-		X018 C 1 Bright //A_SpawnItemEx("BFGCHIP4",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
-		X018 D 1 Bright A_SpawnItemEx("BFGShot4Trail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
-	TrueState:
-		X018 E 1 Bright A_SpawnItemEx("BFGCHIP4",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
-		X018 F 1 Bright A_SpawnItemEx("BFGShot4Trail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
-		X018 G 1 Bright A_SpawnItemEx("BFGCHIP4",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
-		X018 H 1 Bright A_SpawnItemEx("BFGShot4Trail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
-		X018 I 1 Bright A_SpawnItemEx("BFGCHIP4",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
-		X018 J 1 Bright A_SpawnItemEx("BFGShot4Trail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
-		X018 K 1 Bright A_SpawnItemEx("BFGCHIP4",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
-		X018 L 1 Bright A_SpawnItemEx("BFGShot4Trail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
-		X018 M 1 Bright A_SpawnItemEx("BFGCHIP4",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
-		X018 N 1 Bright A_SpawnItemEx("BFGShot4Trail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
-		X018 O 1 Bright A_SpawnItemEx("BFGCHIP4",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
-		X018 P 1 Bright A_SpawnItemEx("BFGShot4Trail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
-		X018 Q 1 Bright A_SpawnItemEx("BFGCHIP4",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
-		X018 R 1 Bright A_SpawnItemEx("BFGShot4Trail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
-		X018 S 1 Bright A_SpawnItemEx("BFGCHIP4",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
-		X018 T 1 Bright A_SpawnItemEx("BFGShot4Trail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
-		X018 U 1 Bright A_SpawnItemEx("BFGCHIP4",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
-		X018 V 1 Bright A_SpawnItemEx("BFGShot4Trail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
-		X018 W 1 Bright A_SpawnItemEx("BFGCHIP4",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
-		X018 X 1 Bright A_SpawnItemEx("BFGShot4Trail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
-		X018 Y 1 Bright A_SpawnItemEx("BFGCHIP4",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
-		X018 A 1 Bright A_SpawnItemEx("BFGCHIP4",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
-		X018 B 1 Bright A_SpawnItemEx("BFGShot4Trail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
-		X018 C 1 Bright A_SpawnItemEx("BFGCHIP4",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
-		X018 D 1 Bright A_SpawnItemEx("BFGShot4Trail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
-		Loop
-	Death:
-		TNT1 AAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BFGBallSmoke",0,0,0,frandom(4.5,-4.5),frandom(4.5,-4.5),frandom(4.5,-4.5),0,SXF_NOCHECKPOSITION)
-		TNT1 AAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BFGBallSmoke",0,0,0,frandom(4.5,-4.5),frandom(4.5,-4.5),frandom(4.5,-4.5),0,SXF_NOCHECKPOSITION)
-		TNT1 A 0 A_SetTranslucent(0.99,1)
-		BPLO A 1 Bright A_SpawnItemEx("D3ShockWave4", 0, 0, 8, 0, 0, 0, 0, 128)
-		TNT1 A 0 A_BFGSpray("BFGExtra",40)
-		TNT1 A 0 Bright A_Explode(random(200,500), 200, 0)
-		BPLO BCDEFGHIJKLM 2 BRIGHT
-		Stop
-	}
-}
-
-Actor BFGCHIP1
-{
-	Projectile
-	+SEEKERMISSILE
-	+THRUACTORS
-	Radius 1
-	Height 1
-	Speed 0
-	States
-	{
-	Spawn:
-		TNT1 A 0
-		TNT1 A 0 A_SeekerMissile(90,90,1,256)
-		TNT1 A 0 A_JumpIfTargetInLOS("Railer",0,JLOSF_PROJECTILE)
-		Stop
-	Railer:
-		TNT1 A 0 A_FaceTracer
-		TNT1 A 0 A_JumpIfTargetInLOS("ShooterInWay",5,0)
-		TNT1 A 1 A_CustomRailgun(random(2,4),0,none,"Green",1|RGF_FULLBRIGHT,0,0,"BFGPuff", 0,0,0, 3,1.1,1.0)
-		Stop
-	ShooterInWay:
-		TNT1 A 0
-		Stop
-	}
-}
-
-Actor BFGCHIP2 : BFGCHIP1
-{
-	Projectile
-	+SEEKERMISSILE
-	+THRUACTORS
-	Radius 1
-	Height 1
-	Scale 0.5
-	Speed 0
-	RenderStyle Add
-	Alpha 0.6
-	States
-	{
-	Spawn:
-		TNT1 A 0
-		TNT1 A 0 A_SeekerMissile(90,90,1,256)
-		TNT1 A 0 A_JumpIfTargetInLOS("Railer",0,JLOSF_PROJECTILE)
-		Goto Ending
-	Railer:
-		TNT1 A 0 A_FaceTracer
-		TNT1 A 0 A_JumpIfTargetInLOS("ShooterInWay",5,0)
-		TNT1 A 1 A_CustomRailgun(random(4,8),0,none,"Green",1,0,0,"BFGPuff", 0,0,0, 4,1.1,1.0)
-		Goto Ending
-	ShooterInWay:
-		TNT1 A 0
-	Ending:
-		TNT1 A 0 A_Jump(255,2,4,6,8,10,12,14,16,18,20,22,24)
-		X018 ABCDEFGHIJKLMNOPQRSTUVWXY 2 Bright A_FadeOut(0.08)
-		Goto "Ending"+1
-	}
-}
-
-Actor BFGCHIP3 : BFGCHIP1
-{
-	Projectile
-	+SEEKERMISSILE
-	+THRUACTORS
-	Radius 1
-	Height 1
-	Scale 0.7
-	Speed 0
-	RenderStyle Add
-	Alpha 0.6
-	States
-	{
-	Spawn:
-		TNT1 A 0
-		TNT1 A 0 A_SeekerMissile(90,90,1,256)
-		TNT1 A 0 A_JumpIfTargetInLOS("Railer",0,JLOSF_PROJECTILE)
-		Goto Ending
-	Railer:
-		TNT1 A 0 A_FaceTracer
-		TNT1 A 0 A_JumpIfTargetInLOS("ShooterInWay",5,0)
-		TNT1 A 1 A_CustomRailgun(random(4,8),0,none,"Green",1,0,0,"BFGPuff", 0,0,0, 5,1.0,1.0)
-		Goto Ending
-	ShooterInWay:
-		TNT1 A 0
-	Ending:
-		TNT1 A 0 A_Jump(255,2,4,6,8,10,12,14,16,18,20,22,24)
-		X018 ABCDEFGHIJKLMNOPQRSTUVWXY 2 Bright A_FadeOut(0.06)
-		Goto "Ending"+1
-	}
-}
-   
-Actor BFGCHIP4 : BFGCHIP1
-{
-	Projectile
-	+SEEKERMISSILE
-	+THRUACTORS
-	Radius 1
-	Height 1
-	Scale 1
-	RenderStyle Add
-	Alpha 0.7
-	States
-	{
-	Spawn:
-		TNT1 A 0
-		TNT1 A 0 A_SeekerMissile(90,90,1,256)
-		TNT1 A 0 A_JumpIfTargetInLOS("Railer",0,JLOSF_PROJECTILE)
-		Stop
-	Railer:
-		TNT1 A 0 A_FaceTracer
-		TNT1 A 0 A_JumpIfTargetInLOS("ShooterInWay",5,0)
-		TNT1 A 1 A_CustomRailgun(random(4,8),0,none,"Green",1,0,0,"BFGPuff", 0,0,0, 7,0.9,2.0)
-		Goto Ending
-	ShooterInWay:
-		TNT1 A 0
-	Ending:
-		//X018 ABCDEFGHIJKLMNOPQRSTUVWXY 2 Bright A_FadeOut(0.08)
-		TNT1 A 1
-		Stop
-	}
-}
-
-Actor BFGShot4Trail
-{
-	+NOINTERACTION
-	Scale 1.0
-	Alpha 0.7
-	RenderStyle Add
-	States
-	{
-		Spawn:
-		TNT1 A 0 A_Jump(255,2,4,6,8,10,12,14,16,18,20,22,24)
-		X018 ABCDEFGHIJKLMNOPQRSTUVWXY 2 Bright A_FadeOut(0.04)
-		Goto Spawn+1
-	}
-}
-
-Actor D3ShockWave1
-{ 
-	+NOINTERACTION
-	RenderStyle Add
-	Alpha 0.9
-	Scale 0.5
-	States 
-	{ 
-	Spawn: 
-		SHOK ABCDEFGHIJKLMNOPQR 1 Bright A_FadeOut(0.02)
-		Goto Death 
-	Death: 
-		TNT1 A 0 
-		Stop 
-	}
-} 
-
-Actor D3ShockWave2 : D3ShockWave1 {	Scale 0.65	}
-Actor D3ShockWave3 : D3ShockWave1 {	Scale 0.80	}
-Actor D3ShockWave4 : D3ShockWave1 {	Scale 0.95	}
-
-Actor D3ShockWave : D3ShockWave1	//kept for compat
-{	Scale 1.25	}
-
-
-Actor BFGHolder : Ammo
-{
-	+IGNORESKILL	+DONTGIB
-	Inventory.Amount 0
-	Inventory.MaxAmount 40
-	Ammo.BackpackAmount 0
-	Ammo.BackpackMaxAmount 40
-	Inventory.Icon ABFGA0
-}
-
-// for compatibility in inheritances
-Actor D3BFGBall 
-{
-	PROJECTILE
-	+DROPOFF
-	+NOBLOCKMAP
-	+NOGRAVITY
-	+DONTSPLASH
-	Speed 9
-	Height 16
-	Radius 8
-	Damage 200
-	SeeSound "weapons/d3bfgf"
-	DeathSound "weapons/d3bfgx"
-	Scale 0.7
-	DamageType "Plasma"
-	States
-	{
-	Spawn:
-		D3BF ABCDEFGHIJKLMNOPQRSTU 2 BRIGHT
-		Loop
-	Death:
-		BPLO A 1 Bright A_BFGSpray
-		BPLO A 1 Bright A_CustomMissile("D3ShockWave", 0, 0, 0)
-		TNT1 A 0 Bright A_Explode(64,99,1)
-		BPLO BCDEFGHIJKLM 2 Bright 
-		Stop
-	}
-}
+Actor D3Shockwave : BFGBlastExploBigFast { }
 
 Actor BFG9000Drop : CustomInventory
 {
@@ -2982,427 +3057,6 @@ Actor BFG10KTrailBsimple
 		Wait
 	}
 }
-
-
-//-----------------------------------------------------------------
-//-----------------------------------------------------------------
-Actor AEoDBFG10KShot
-{
-	PROJECTILE
-	+FORCERADIUSDMG
-	+EXTREMEDEATH
-	+SEEKERMISSILE //Testing...
-	Translation "0:255=%[0,0,0]:[0,1.0,0]"
-	Radius 8
-	Height 12
-	Speed 10
-	Damage 150
-	DeathSound "q2weapon/bfgballexplo"
-	RenderStyle Add
-	Scale 0.7
-	DamageType "Plasma"
-	States
-	{
-	Spawn:
-		TNT1 A 0
-		X016 AABBCCDD 1 Bright A_SpawnItemEx("BFGTrailSpawnerNoAtt",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS) //the 1st 8 tics wont attack
-		Goto Looper+8
-	Looper:
-		X016 AABBCCDDEEFFGGHHIIJJKKLLM 1 Bright A_SpawnItemEx("BFGTrailSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS) 
-		X016 MNNOOPPQQRRSSTTUUVVWWXXYY 1 Bright A_SpawnItemEx("BFGTrailSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS) 
-		Loop
-	Death:
-		TNT1 A 0 A_SpawnItemEx("BFGBlastExploBiggerFast",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		TNT1 A 0 Bright A_Explode(220,128,0) 
-		TNT1 AAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),SXF_NOCHECKPOSITION)
-		TNT1 AAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BFGBallSmoke",0,0,0,frandom(2.0,-2.0),frandom(2.0,-2.0),frandom(2.0,-2.0),0,SXF_NOCHECKPOSITION)
-		TNT1 A 3 Bright
-		TNT1 A 0 A_SpawnItemEx("BFGBlastExplo1",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		TNT1 A 3 Bright
-		TNT1 A 3 Bright A_BFGSpray
-		TNT1 A 0 A_SpawnItemEx("BFGBlastExploBiggerFast",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		TNT1 A 3 Bright
-		TNT1 A 3 Bright
-		TNT1 A 3
-		TNT1 A 6 A_SpawnItemEx("BFGBlastExploBigFast",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		TNT1 A 1 A_SpawnItemEx("BFGBlastExplo2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		Stop
-	}
-}
-
-//-------------------------------------------------------
-// This spawns the trails and is the rail shooter too
-
-Actor BFGTrailSpawner
-{
-	Projectile
-	+SEEKERMISSILE
-	+THRUACTORS
-	Radius 1
-	Height 1
-	Speed 0
-	States
-	{
-	Spawn:
-		TNT1 A 0
-		TNT1 A 0 Bright A_SpawnItemEx("BFG10KMainTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		TNT1 A 0 Bright A_CustomMissile("BFG10KTrailA",random(10,-10),0+random(10,-10),0+random(22,-22),0)
-		TNT1 AA 0 A_SpawnItemEx("BFG10KTrailB",0,0,0,random(-3,3),random(-3,3),random(-3,3),random(1,360))
-		TNT1 A 0 A_SpawnItemEx("BFG10KSpark",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),SXF_NOCHECKPOSITION)
-		TNT1 A 0 A_SeekerMissile(90,90,1,256)
-		TNT1 A 0 A_JumpIfTargetInLOS("Railer",0,JLOSF_PROJECTILE)
-		Stop
-	Railer:
-		TNT1 A 0 A_RearrangePointers(AAPTR_DEFAULT,AAPTR_DEFAULT,AAPTR_PLAYER_GETTARGET|AAPTR_TRACER,4)
-		TNT1 A 0 A_FaceTracer
-		//TNT1 A 1 A_CustomRailgun(random(2,20),0,none,"Green",1,0,0,"BFGPuff")
-		TNT1 A 0 A_SpawnItemEx("BFGLaser1",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)//A_CustomMissile("BFGLaser1",0,0,0,CMF_TRACKOWNER|CMF_AIMDIRECTION)
-		Stop
-	ShooterInWay:
-		TNT1 A 0
-		Stop
-	}
-}
-
-Actor BFGLaser1
-{
-	var int user_count;
-	var int user_failsafe;
-	Projectile
-	+EXTREMEDEATH
-	+SEEKERMISSILE
-	+THRUACTORS
-	+FORCERADIUSDMG
-	+STEPMISSILE
-	Radius 2
-	Height 2
-	Speed 2
-	States
-	{
-	Spawn:
-		TNT1 A 0
-		TNT1 A 0 A_SeekerMissile(90,90,3,256)
-		TNT1 A 0 A_FaceTracer
-	Movement:
-		TNT1 A 0 A_Warp(AAPTR_DEFAULT,velx,vely,velz,0,WARPF_ABSOLUTEOFFSET,1)
-		Goto Death
-		
-		TNT1 A 0 A_SetUserVar("user_count",user_count+1)
-		TNT1 A 0 A_SetUserVar("user_failsafe",user_failsafe+1)
-		TNT1 A 0 A_JumpIf(user_failsafe>=2000,"Death")
-		TNT1 A 0 A_JumpIf(user_count>=5,"TrailSpawn")
-		Loop
-	TrailSpawn:
-		TNT1 A 0 A_Jump(26,2) //~1/10 chance to cause bleeding. 256/10 = 25.6 rounded to 26.
-		TNT1 A 0 A_SpawnItemEx("BFGRipperStar1BloodLess",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
-		Goto Reset
-		TNT1 A 0 A_SpawnItemEx("BFGRipperStar1",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
-		Goto Reset
-	Reset:
-		TNT1 A 0 A_SetUserVar("user_count",0)
-		Goto Movement
-	Death:
-		TNT1 A 0
-		Stop
-	}
-}
-
-Actor BFGRipperStar1
-{
-	Projectile
-	+RIPPER	RipperLevel 1
-	+DONTREFLECT
-	+BOUNCEONFLOORS
-	+BOUNCEONWALLS
-	+BOUNCEONCEILINGS
-	+CANBOUNCEWATER
-	+SKYEXPLODE
-	+STRIFEDAMAGE
-	+EXTREMEDEATH
-	Damage (random(0,2))
-	Height 3
-	Radius 3
-	RenderStyle Add
-	Alpha 0.25
-	Scale 0.55
-	DamageType "Plasma"
-	Translation "0:255=%[0,0,0]:[0,1.4,0]"
-	States
-	{
-	Spawn:
-		LPUF A 0
-		LPUF A 1
-		Stop
-	}
-}
-Actor BFGRipperStar1BloodLess : BFGRipperStar1 { +BLOODLESSIMPACT }
-		
-
-Actor BFGTrailSpawnerNoAtt
-{
-	+NOINTERACTION
-	States
-	{
-	Spawn:
-		TNT1 A 0
-		TNT1 A 0 Bright A_SpawnItemEx("BFG10KMainTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		TNT1 A 0 Bright A_CustomMissile("BFG10KTrailA",random(10,-10),0+random(10,-10),0+random(22,-22),0)
-		TNT1 AA 0 A_SpawnItemEx("BFG10KTrailB",0,0,0,random(-3,3),random(-3,3),random(-3,3),random(1,360))
-		TNT1 A 1 A_SpawnItemEx("BFG10KSpark",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),SXF_NOCHECKPOSITION)
-		Stop
-	}
-}
-
-//-------------------------------------------------------
-// The main trail behind the energy ball (shadow trail)
-Actor BFG10KMainTrail
-{
-	Translation "0:255=%[0,0,0]:[0.2,1.0,0.2]"
-	+NOINTERACTION
-	RenderStyle Add
-	Scale 0.6
-	Alpha 0.5
-	States
-	{
-	Spawn:
-		X016 ABCDEFGHIJKLMOPQRSTUVWXY 2 A_FadeOut(0.07)
-		Wait
-	}
-}
-
-//-------------------------------------------------------
-// The electricity sparks
-Actor BFG10KSpark
-{
-	Translation "0:255=%[0,0,0]:[0.2,1.2,0.2]"
-	+NOINTERACTION
-	Scale 0.1
-	RenderStyle Add
-	States
-	{
-	Spawn:
-		TNT1 A 0
-		TNT1 A 0 A_Jump(256,"S1","S2","S3","S4","S5","S6","S7","S8")
-	S1:	X079 A 0	
-	Goto Perform
-	S2:	X079 B 0	
-	Goto Perform
-	S3:	X079 C 0	
-	Goto Perform
-	S4:	X079 D 0	
-	Goto Perform
-	S5:	X079 E 0	
-	Goto Perform
-	S6:	X079 F 0	
-	Goto Perform
-	S7:	X079 G 0	
-	Goto Perform
-	S8: X079 H 0	
-	Goto Perform
-	Perform:
-		"####" "#" 1  Bright A_SetScale(ScaleX+0.01)
-		"####" "#" 0 A_FadeOut(0.05)
-		Loop
-	}
-}
-
-//-----------------------------------------------------------
-// The small energy trail particles of the projectile in air
-Actor BFG10KTrailA
-{ 
-	+NOINTERACTION
-	RenderStyle Add
-	Alpha 0.7
-	Scale 0.4
-	Translation "0:255=%[0,0,0]:[0.2,1.2,0.2]"
-	States
-	{
-	Spawn:
-		X026 ABCDEFGHIJKLMNOPQRST 1 A_FadeOut(0.02)
-		Wait
-	}
-}
-
-Actor BFG10KTrailB
-{ 
-	+NOINTERACTION
-	RenderStyle Add
-	Alpha 0.7
-	Scale 0.2
-	Translation "0:255=%[0,0,0]:[0,1.2,0]"
-	States
-	{
-	Spawn:
-		X026 ABCDEFGHIJKLMNOPQRST 1 A_FadeOut(0.03)
-		Wait
-	}
-}
-
-//-----------------------------------------------------
-// Straight from SuperDoom3 Take II, by DBT
-// Idea of code optimization by Major Cooke
-// These are the circles when the projectile explodes
-
-//explosion slow
-Actor BFGBlastExplo1
-{
-	var int user_count;
-	+FORCEXYBILLBOARD
-	+NOINTERACTION
-	RenderStyle Add
-	States
-	{
-	Spawn:
-		TNT1 A 0
-		TNT1 A 0 A_SetUserVar("user_count",20)
-	SizeLoop:
-		TNT1 A 0 A_SetScale((user_count*0.01))
-		TNT1 A 0 A_JumpIf(user_count>=95,"LoopEnd") 
-		X060 A 2 Bright A_FadeOut(0.06)
-		TNT1 A 0 A_SetUserVar("user_count",user_count+5)
-		Loop	  
-	LoopEnd:
-		X060 A 2 Bright A_FadeOut(0.1)
-		Wait
-  }
-}
-
-//explosion2 slow
-Actor BFGBlastExplo2
-{
-	var int user_count;
-	+FORCEXYBILLBOARD
-	+NOINTERACTION
-	RenderStyle Add
-	States
-	{
-	Spawn:
-		TNT1 A 0
-		TNT1 A 0 A_SetUserVar("user_count",20)
-	SizeLoop:
-		TNT1 A 0 A_SetScale((user_count*0.01))
-		TNT1 A 0 A_JumpIf(user_count>=95,"LoopEnd") 
-		X060 B 2 Bright A_FadeOut(0.06)
-		TNT1 A 0 A_SetUserVar("user_count",user_count+5)
-		Loop	  
-	LoopEnd:
-		X060 B 2 Bright A_FadeOut(0.1)
-		Wait
-	}
-}
-
-//explosion fast bigger
-Actor BFGBlastExploBigFast
-{
-	var int user_count;
-	+FORCEXYBILLBOARD
-	+NOINTERACTION
-	RenderStyle Add
-	States
-	{
-	Spawn:
-		TNT1 A 0
-		TNT1 A 0 A_SetUserVar("user_count",25)
-	SizeLoop:
-		TNT1 A 0 A_SetScale((user_count*0.01))
-		TNT1 A 0 A_JumpIf(user_count>=150,"LoopEnd") 
-		X060 A 1 Bright A_FadeOut(0.033)
-		TNT1 A 0 A_SetUserVar("user_count",user_count+5)
-		Loop	  
-	LoopEnd:
-		X060 A 1 Bright A_FadeOut(0.1)
-		Wait
-	}
-}
-
-//explosion fast biggest
-Actor BFGBlastExploBiggerFast
-{
-	var int user_count;
-	+FORCEXYBILLBOARD
-	+NOINTERACTION
-	RenderStyle Add
-	States
-	{
-	Spawn:
-		TNT1 A 0
-		TNT1 A 0 A_SetUserVar("user_count",3)
-	SizeLoop:
-		TNT1 A 0 A_SetScale((user_count*0.01))
-		TNT1 A 0 A_JumpIf(user_count>=240,"LoopEnd") 
-		X060 A 1 Bright A_FadeOut(0.028)
-		TNT1 A 0 A_SetUserVar("user_count",user_count+7)
-		Loop	  
-	LoopEnd:
-		X060 A 1 Bright A_FadeOut(0.1)
-		Wait
-	}
-}
-
-
-
-
-
-Actor BFG10KBoltTrail
-{
-	+NOINTERACTION
-	Scale 0.4
-	RenderStyle Add
-	States
-	{
-	Spawn:
-		EBLT ABCDEF 3 Bright
-		Stop
-	}
-}
-
-Actor BFG10Extra1
-{
-	+NOINTERACTION
-	Radius 1
-	Height 1
-	RenderStyle Add
-	Translation "80:111=112:127"
-	Scale 0.2
-	States
-	{
-	Spawn:
-		PUF2 AA 1 Bright
-		TNT1 A 0 A_Jump(165,1)
-		Loop
-		PUF2 AA 1 Bright
-		PUF2 A 1 Bright A_FadeOut
-		Wait
-	Death:
-		TNT1 A 1
-		Stop
-	}
-}
-
-Actor BFG10Extra2
-{
-	+NOINTERACTION
-	Radius 1
-	Height 1
-	Scale 0.32
-	RenderStyle Add
-	Translation "80:111=112:127"
-	States
-	{
-	Spawn:
-		PUF2 AAAAA 1 Bright
-		TNT1 A 0 A_Jump(160,1)
-		Loop
-		PUF2 AAAA 1 Bright
-		PUF2 A 1 Bright A_FadeOut
-		Wait
-	Death:
-		TNT1 A 1
-		Stop
-	}
-}
-
-
 
 Actor BioForceGunDrop : CustomInventory
 {
