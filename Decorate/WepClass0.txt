@@ -2267,20 +2267,33 @@ Actor AEoDBFG9000 : Weapon // 6073
 		M016 AA 0 A_Raise
 		Loop
 	Deselect:
+		"----" A 0 A_TakeInventory("SineZoom",1000,0)
 		"----" A 1 A_Lower
 		"----" AA 0 A_Lower
 		Loop
 	Ready:
-		M016 A 0 A_PlaySound("reilsss/weapons/bfgidle2", 6, 1.0, 1)
+		M016 A 0 
+		{
+			A_PlaySound("reilsss/weapons/bfgidle2", 6, 1.0, 1);
+			A_TakeInventory("SineZoom",1000,0);
+		}
 		M016 BBBBCCCCDDDDCCCCBBBBAAAA 1 bright A_WeaponReady
 		Loop
 	Fire:
-		M016 E 3 bright A_PlaySound("D4/BFGFire", 5, 1.0, 0)
-		M016 FGHIJKL 3 bright
+		M016 E 0 bright 
+		{
+			A_TakeInventory("SineZoom",1000,0);
+			A_PlaySound("D4/BFGFire", 5, 1.0, 0);
+		}
+		M016 EEEFFFGGGHHHIIIJJJKKKLLL 1 bright
+		{
+			A_GiveInventory("SineZoom",18);
+			A_ZoomFactor(sin(90-(CountInv("SineZoom")*0.1)),ZOOM_NOSCALETURNING);
+		}
 		M016 M 3 bright
 		{
-			//A_StopSound(5);
-			//A_PlaySound("reilsss/weapons/bfg9kfire",CHAN_WEAPON,1,0);
+			A_TakeInventory("SineZoom",1000,0);
+			A_ZoomFactor(1,ZOOM_NOSCALETURNING);
 			A_SetBlend("Green",0.5,17);
 			A_FireCustomMissile("AEoDBFG10KShot",0,1,4,0);
 			A_SetPitch(pitch-8);
@@ -2292,55 +2305,165 @@ Actor AEoDBFG9000 : Weapon // 6073
 	}
 }
 
+Actor SineZoom : Inventory { Inventory.MaxAmount 450 }
+
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 Actor AEoDBFG10KShot
 {
 	var int user_flags;
 	var int user_count;
+	var int user_c2;
 	PROJECTILE
 	+FORCERADIUSDMG
 	+EXTREMEDEATH
-	Translation "0:255=%[0,0,0]:[0,1.0,0]"
 	Radius 8
 	Height 12
 	Speed 20
 	Damage 300
 	DeathSound "D4/BFGimpact"
 	RenderStyle Add
-	Scale 0.35
+	Scale 0.45
 	DamageType "Plasma"
 	States
 	{
 	Spawn:
-		X016 AABBCCDDEEFFGGHHIIJJKKLLMMNNOOPPQQRRSSTTUUVVWWXXYY 1 Bright NoDelay 
+		//X016 AABBCCDDEEFFGGHHIIJJKKLLMMNNOOPPQQRRSSTTUUVVWWXXYY 1 Bright NoDelay 
+		BFE1 B 1 Bright NoDelay
 		{
-			A_SpawnItemEx("BFGTrailSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS);
-			A_SetUserVar(user_count, (user_count + 1) % 8);
+			A_SetScale((sin(user_c2)*0.075)+0.45);
+			A_SetUserVar(user_c2, (user_c2 + random(20,35)) % 360);
+			A_FaceMovementDirection(0,0,0);
+			
+			A_SetUserVar(user_count, (user_count + 1) % 4);
 			if (user_count == 0)
 			{
 				if (CheckClass("PlayerPawn",Target,1))
 				{	A_SetUserVar(user_flags,RGF_MONSTERS|RGF_NOTARGET);	}
 				else
 				{	A_SetUserVar(user_flags,RGF_MONSTERS|RGF_NOTARGET|RGF_PLAYERS);	}
-				A_RadiusGive("BFGBeamSpawner",1024,user_flags,1,None,None,0,5);
+				A_RadiusGive("BFGBeamSpawner",1024,user_flags|RGF_CUBE,1,None,None,0,5);
 			}
+			A_SpawnItemEx("BFGTrailSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE|SXF_TRANSFERSPRITEFRAME|SXF_TRANSFERPITCH);
+			A_SpawnItemEx("BFGLightningGenerator",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,192);
 		}
 		Loop
 	Death:
-		TNT1 AAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BFG10KBoltTrail",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),SXF_NOCHECKPOSITION)
-		TNT1 AAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BFGBallSmoke",0,0,0,frandom(2.0,-2.0),frandom(2.0,-2.0),frandom(2.0,-2.0),0,SXF_NOCHECKPOSITION)
-		TNT1 A 6 
+		BFE1 C 0
 		{
-			A_SpawnItemEx("BFGBlastExploBiggerFast",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION);
+			A_SetScale(0.0,0.0);
+			A_SetUserVar(user_count,0);
+			A_SetUserVar(user_c2,0);
 			A_Explode(random(220,660),256,0);
+			A_BFGSpray("BFGExtraDMG");
 		}
-		TNT1 A 3 A_SpawnItemEx("BFGBlastExplo1",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		TNT1 A 3 A_BFGSpray
-		TNT1 A 9 A_SpawnItemEx("BFGBlastExploBiggerFast",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		TNT1 A 6 A_SpawnItemEx("BFGBlastExploBigFast",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		TNT1 A 1 A_SpawnItemEx("BFGBlastExplo2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		Stop
+	DLoop:
+		BFE1 C 1
+		{
+			A_SpawnItemEx("BFGLightningGenerator",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION);
+			A_SpawnItemEx("BFGLightningGenerator",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION);
+			A_SpawnItemEx("BFGLightningGenerator",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION);
+			A_SetUserVar(user_count,user_count+8);
+			A_SetUserVar(user_c2,user_c2+5);
+			A_SetScale(sin(user_c2)*1.5,Max((sin(user_count)*1.4),0.0));
+			if (ScaleY <= 0 || user_count >= 180)	
+			{	return state("Null");	}
+			return state(0);
+		}
+		Loop
+	}
+}
+
+Actor BFGLightningGenerator
+{
+	const float AngMin = 5.0;
+	const float AngMax = 30.0;
+	var int user_c;
+	var int user_count;
+	var int user_d;
+	var int user_limit;
+	var int user_branch;
+	var int user_size;
+	var int user_t;
+	var int user_new;
+	var float user_amin;
+	var float user_amax;
+	var float user_pitch;
+	+NOINTERACTION
+	+NOTONAUTOMAP
+	RenderStyle None
+	Speed 2.5
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay
+		{
+			if (tid > 0)
+			{
+				
+				A_SetUserVar(user_t, tid);
+				Thing_ChangeTID(0,0);
+				A_SetUserVarFloat(user_amin,AngMin/2.0);
+				A_SetUserVarFloat(user_amax,AngMax/2.0);
+				A_SetUserVar(user_size, 4);
+				A_SetUserVar(user_limit,random(15,45));
+				A_SetAngle(angle+(random(user_amin*2,user_amax)*randompick(-1,1))/2.0);
+				A_SetUserVarFloat(user_pitch,pitch+(random(user_amin*2,user_amax)*randompick(-1,1))/2.0);
+			}
+			else
+			{	
+				A_SetUserVarFloat(user_amin,AngMin);
+				A_SetUserVarFloat(user_amax,AngMax);
+				A_SetUserVar(user_size, 7);	
+				A_SetUserVar(user_limit,random(30,90));
+				A_SetAngle(random(0,359));
+				A_SetUserVarFloat(user_pitch,random(-90,90));
+			}
+			A_SetUserVar(user_c, random(2,6));
+			A_SetUserVar(user_d, user_c);
+		}
+	Looping:
+		TNT1 A 0
+		{
+			A_Stop;
+			if (user_limit <= 0)
+			{	return state("Null");	}
+			A_SetUserVar(user_limit, user_limit - 1);
+			
+			if (user_c <= 0)
+			{
+				if (user_branch > 0)
+				{	A_SetUserVar(user_branch,user_branch-1);	}
+				if (!user_t && !user_branch)
+				{
+					A_SpawnItemEx("BFGLightningGenerator",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH,64,1);
+					A_SpawnItemEx("BFGLightningGenerator",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH,128,1);
+					A_SpawnItemEx("BFGLightningGenerator",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH,192,1);
+					A_SetUserVar(user_branch,user_branch+random(1,5));
+				}
+				
+				A_Warp(DefPtr,cos(-user_pitch)*Speed*user_count,0,sin(user_pitch)*Speed*user_count,0,WARPF_NOCHECKPOSITION);
+				A_SetUserVarFloat(user_pitch, pitch+(frandom(user_amin,user_amax)*frandompick(-1,1)));
+				//if (user_pitch > 90.0)	{ A_SetUserVarFloat(user_pitch, user_pitch-(abs(user_pitch)%90.0)); A_SetAngle(angle+180); }
+				//if (user_pitch < -90.0)	{ A_SetUserVarFloat(user_pitch, user_pitch+(abs(user_pitch)%90.0)); A_SetAngle(angle+180); }
+				A_SetAngle(angle+(frandom(user_amin,user_amax)*frandompick(-1,1)));
+				A_SetPitch(user_pitch);
+				A_SetUserVar(user_count,0);
+				A_SetUserVar(user_c, random(2,6));
+				A_SetUserVar(user_d, user_c);
+			}
+			A_SetUserVar(user_c, user_c-1);
+			A_SetUserVar(user_count,user_count+1);
+			A_SpawnParticle(A7FF47,SPF_FULLBRIGHT|SPF_RELATIVE,2,user_size,0,
+				((cos(-user_pitch)*Speed)*user_count),
+				0,
+				((sin(user_pitch)*Speed)*user_count),
+				0,0,0,0,0,0,1.0,0.5);
+					
+			
+			return state("Looping");
+		}
+		Loop
 	}
 }
 
@@ -2368,22 +2491,24 @@ Actor BFGBeamSpawner : CustomInventory
 
 Actor BFGBeam
 {
-	const float Limit = 8.0;
-	const float FMin = 0.75;
-	const float FMax = 3.0;
-	var float user_x;
-	var float user_y;
-	var float user_z;
+	const float Limit = 12.0;
+	const float FMin = 0.5;
+	const float FMax = 1.0;
+	var float user_x[2];
+	var float user_y[2];
+	var float user_z[2];
 	var float user_pos[3];
 	var float user_dist;
+	var float user_scalar;
 	var int user_life;
 	var int user_count;
 	var int user_minicount;
+	var int user_sign;
 	+NOINTERACTION
 	+NOBLOCKMAP
 	+NOTONAUTOMAP
 	RenderStyle None
-	Speed 3
+	Speed 2.5
 	States
 	{
 	Spawn:
@@ -2395,10 +2520,10 @@ Actor BFGBeam
 			A_Warp(Target,0,0,0,0,WARPF_USECALLERANGLE|WARPF_NOCHECKPOSITION,"Null",0.5);
 			A_SetUserVar(user_life, user_life + 1);
 			
-			if (user_life > 9)
+			if (user_life > 4)
 			{	return state("Null");	}
 			
-			if (A_CheckProximity("Null","AEoDBFG10KShot",1024,1,CPXF_CLOSEST|CPXF_SETTRACER))
+			if (A_CheckProximity("Null","AEoDBFG10KShot",1024,1,CPXF_CHECKSIGHT|CPXF_CLOSEST|CPXF_SETTRACER))
 			{
 				A_SetUserVar(user_count,0);
 				A_SetUserVarFloat(user_dist, GetDistance(true,Tracer));
@@ -2418,19 +2543,29 @@ Actor BFGBeam
 				A_RearrangePointers(DefPtr,DefPtr,NullPtr);
 				return state(0);
 			}			
+			if (user_minicount <= 0)
+			{
+				A_SetUserArrayFloat(user_x,1,frandom(FMin,FMax) * randompick(-1,1));
+				A_SetUserArrayFloat(user_y,1,frandom(FMin,FMax) * randompick(-1,1));
+				A_SetUserArrayFloat(user_z,1,frandom(FMin,FMax) * randompick(-1,1));
+				A_SetUserVar(user_minicount,random(2,4));
+			}
+			else
+			{
+				A_SetUserArrayFloat(user_x,0,user_x[0] + user_x[1]);
+				A_SetUserArrayFloat(user_y,0,user_y[0] + user_y[1]);
+				A_SetUserArrayFloat(user_z,0,user_z[0] + user_z[1]);
+				A_SetUserVar(user_minicount,user_minicount-1);
+			}
+			if (user_y[0] > Limit)		{	A_SetUserArrayFloat(user_y,0, user_y[0] - ((abs(user_y[0]) % Limit) * 2));	}
+			if (user_z[0] > Limit)		{	A_SetUserArrayFloat(user_z,0, user_z[0] - ((abs(user_z[0]) % Limit) * 2));	}
+			if (user_y[0] < -Limit)		{	A_SetUserArrayFloat(user_y,0, user_y[0] + ((abs(user_y[0]) % Limit) * 2));	}
+			if (user_z[0] < -Limit)		{	A_SetUserArrayFloat(user_z,0, user_z[0] + ((abs(user_z[0]) % Limit) * 2));	}
 			
-			A_SetUserVarFloat(user_x,user_x + frandom(FMin,FMax) * randompick(-1,1));
-			A_SetUserVarFloat(user_y,user_y + frandom(FMin,FMax) * randompick(-1,1));
-			A_SetUserVarFloat(user_z,user_z + frandom(FMin,FMax) * randompick(-1,1));
-			if (user_y > Limit)		{	A_SetUserVarFloat(user_y, user_y - ((abs(user_y) % Limit) * 2));	}
-			if (user_z > Limit)		{	A_SetUserVarFloat(user_z, user_z - ((abs(user_z) % Limit) * 2));	}
-			if (user_y < -Limit)	{	A_SetUserVarFloat(user_y, user_y + ((abs(user_y) % Limit) * 2));	}
-			if (user_z < -Limit)	{	A_SetUserVarFloat(user_z, user_z + ((abs(user_z) % Limit) * 2));	}
-			
-			A_SpawnParticle("Green",SPF_FULLBRIGHT|SPF_RELATIVE,2,10,0,
-				(cos(-pitch)*user_count)+(sin(pitch)*user_x),
-				user_y,
-				(sin(pitch)*user_count)+(cos(-pitch)*user_z),
+			A_SpawnParticle(A7FF47,SPF_FULLBRIGHT|SPF_RELATIVE,2,random(7,10),0,
+				(cos(-pitch)*user_count)+(sin(pitch)*user_x[0]),
+				user_y[0],
+				(sin(pitch)*user_count)+(cos(-pitch)*user_z[0]),
 				0,0,0,0,0,0,1.0,0.5);
 			A_SetUserVar(user_count, user_count + speed);
 			return state("Beam");
@@ -2456,14 +2591,17 @@ Actor BFGTrailSpawner
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay
+		BFE1 B 0 NoDelay
 		{
-			A_Explode(random(1,8),1024,0,0,1024);
-			A_SpawnItemEx("BFG10KMainTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION);
-			A_CustomMissile("BFG10KTrailA",random(10,-10),0+random(10,-10),0+random(22,-22),0);
-			A_SpawnItemEx("BFG10KTrailB",0,0,0,random(-3,3),random(-3,3),random(-3,3),random(0,359));
-			A_SpawnItemEx("BFG10KTrailB",0,0,0,random(-3,3),random(-3,3),random(-3,3),random(0,359));
-			A_SpawnItemEx("BFG10KSpark",0,random(7,-7),random(5,-5),random(1,2),random(1,2),random(-2,2),random(1,360),SXF_NOCHECKPOSITION);
+			if (CheckClass("PlayerPawn",Target,1))
+			{	A_Explode(random(3,12),1024,0,0,1024);	}
+			else
+			{	A_Explode(1,1024,0,0,1024);	}
+			A_SpawnItemEx("BFG10KMainTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSCALE);
+			A_CustomMissile("BFG10KTrailA",random(10,-10),0+random(10,-10),0+random(22,-22),CMF_AIMDIRECTION);
+			A_SpawnItemEx("BFG10KTrailB",0,0,0,random(-2,2),random(-2,2),random(-2,2),random(0,359));
+			A_SpawnItemEx("BFG10KTrailB",0,0,0,random(-2,2),random(-2,2),random(-2,2),random(0,359));
+			A_SpawnItemEx("BFG10KSpark",0,random(4,-4),random(3,-3),random(1,2),random(1,2),random(-2,2),random(1,360),SXF_NOCHECKPOSITION);
 		}
 		Stop
 	}
@@ -2473,16 +2611,24 @@ Actor BFGTrailSpawner
 // The main trail behind the energy ball (shadow trail)
 Actor BFG10KMainTrail
 {
-	Translation "0:255=%[0,0,0]:[0.2,1.0,0.2]"
+	//Translation "0:255=%[0,0,0]:[0.2,1.0,0.2]"
+	var float user_scalar;
 	+NOINTERACTION
 	RenderStyle Add
-	Scale 0.3
 	Alpha 0.5
 	States
 	{
 	Spawn:
-		X016 ABCDEFGHIJKLMOPQRSTUVWXY 2 A_FadeOut(0.07)
-		Wait
+		BFE1 B 1
+		{
+			A_SetUserVarFloat(user_scalar, user_scalar + frandom(0.005,0.01));
+			A_SetScale(ScaleX,ScaleY-user_scalar);
+			if (ScaleY <= 0.0)
+			{	return state("Null");	}
+			return state(0);
+		}
+		//X016 ABCDEFGHIJKLMOPQRSTUVWXY 2 A_FadeOut(0.07)
+		Loop
 	}
 }
 
@@ -2497,27 +2643,14 @@ Actor BFG10KSpark
 	States
 	{
 	Spawn:
-		TNT1 A 0
-		TNT1 A 0 A_Jump(256,"S1","S2","S3","S4","S5","S6","S7","S8")
-	S1:	X079 A 0	
-	Goto Perform
-	S2:	X079 B 0	
-	Goto Perform
-	S3:	X079 C 0	
-	Goto Perform
-	S4:	X079 D 0	
-	Goto Perform
-	S5:	X079 E 0	
-	Goto Perform
-	S6:	X079 F 0	
-	Goto Perform
-	S7:	X079 G 0	
-	Goto Perform
-	S8: X079 H 0	
-	Goto Perform
+		TNT1 A 0 NoDelay A_Jump(256,1,2,3,4,5,6,7,8)
+		X079 ABCDEFGH 0	A_Jump(256,"Perform")
 	Perform:
-		"####" "#" 1  Bright A_SetScale(ScaleX+0.01)
-		"####" "#" 0 A_FadeOut(0.05)
+		"####" "#" 1 Bright 
+		{
+			A_SetScale(ScaleX+0.01);
+			A_FadeOut(0.05);
+		}
 		Loop
 	}
 }
@@ -2743,7 +2876,7 @@ Actor BFGBallSmoke
 		Stop
 	}
 }
-
+/*
 Actor D3BFGBallMuzzle
 {
 	const int Flags = WARPF_NOCHECKPOSITION|WARPF_COPYPITCH|WARPF_COPYVELOCITY|WARPF_INTERPOLATE;
@@ -2772,7 +2905,7 @@ Actor D3BFGBallMuzzle
 		Stop
 	}
 }
-
+*/
 Actor D3Shockwave : BFGBlastExploBigFast { }
 
 Actor BFG9000Drop : CustomInventory
