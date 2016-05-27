@@ -2295,7 +2295,7 @@ Actor AEoDBFG9000 : Weapon // 6073
 			A_TakeInventory("SineZoom",1000,0);
 			A_ZoomFactor(1,ZOOM_NOSCALETURNING);
 			A_SetBlend("Green",0.5,17);
-			A_FireCustomMissile("AEoDBFG10KShot",0,1,4,0);
+			A_FireCustomMissile("BFG9000Shot",0,1,4,0);
 			A_SetPitch(pitch-8);
 		}
 		M016 NNNNOOOO 1 bright A_SetPitch(pitch+1)
@@ -2309,14 +2309,24 @@ Actor SineZoom : Inventory { Inventory.MaxAmount 450 }
 
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
-Actor AEoDBFG10KShot
+
+const int BFG_LaserRadius = 1024;
+Actor BFG9000Shot
 {
 	var int user_flags;
 	var int user_count;
 	var int user_c2;
+	var int user_a;
+	var float user_pitch;
+	var int user_c;
+	var int user_mini;
+	var int user_sin;
+	var int user_cos;
+	var int user_pos;
 	PROJECTILE
 	+FORCERADIUSDMG
 	+EXTREMEDEATH
+	+BRIGHT
 	Radius 8
 	Height 12
 	Speed 20
@@ -2342,7 +2352,7 @@ Actor AEoDBFG10KShot
 				{	A_SetUserVar(user_flags,RGF_MONSTERS|RGF_NOTARGET);	}
 				else
 				{	A_SetUserVar(user_flags,RGF_MONSTERS|RGF_NOTARGET|RGF_PLAYERS);	}
-				A_RadiusGive("BFGBeamSpawner",1024,user_flags|RGF_CUBE,1,None,None,0,5);
+				A_RadiusGive("BFGBeamSpawner",BFG_LaserRadius,user_flags|RGF_CUBE,1,None,None,0,5);
 			}
 			A_SpawnItemEx("BFGTrailSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE|SXF_TRANSFERSPRITEFRAME|SXF_TRANSFERPITCH);
 			A_SpawnItemEx("BFGLightningGenerator",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,192);
@@ -2351,6 +2361,9 @@ Actor AEoDBFG10KShot
 	Death:
 		BFE1 C 0
 		{
+			A_QuakeEx(0,0,0,16,0,512,"",QF_SCALEDOWN|QF_SCALEUP,0,0,0,1,4,1,0);
+			A_QuakeEx(0,0,0,20,0,512,"",QF_SCALEDOWN|QF_WAVE|QF_SCALEUP,0,0,0,1,4,1.5*randompick(-1,1),frandom(5.5,8.5));
+			A_SetUserVarFloat(user_pitch,0);
 			A_SetScale(0.0,0.0);
 			A_SetUserVar(user_count,0);
 			A_SetUserVar(user_c2,0);
@@ -2358,19 +2371,50 @@ Actor AEoDBFG10KShot
 			A_BFGSpray("BFGExtraDMG");
 		}
 	DLoop:
-		BFE1 C 1
+		BFE1 C 1 bright
 		{
+			if (user_a < 360)
+			{
+				// Weird infinity thingy. Must preserve.
+				//(cos(-user_pitch)*10)*sin(user_a),0,(sin(user_pitch)*10)*cos(-user_a),
+				//(cos(-user_pitch)*10)*sin(user_a),0,(sin(user_pitch)*10)*cos(-user_a),
+				A_SpawnParticle("White",SPF_FULLBRIGHT|SPF_RELATIVE,35,10,user_a,
+				(cos(-user_pitch)*10),0,(sin(user_pitch)*10),(cos(-user_pitch)*10),0,(sin(user_pitch)*10),0,0,0);
+				A_SpawnParticle("Green",SPF_FULLBRIGHT|SPF_RELATIVE,70,10,user_a,
+				(cos(-user_pitch)*10),0,(sin(user_pitch)*10),(cos(-user_pitch)*10),0,(sin(user_pitch)*10),0,0,0);
+				A_SpawnParticle("White",SPF_FULLBRIGHT|SPF_RELATIVE,35,10,user_a+180,
+				(cos(-user_pitch)*10),0,(sin(user_pitch)*10),(cos(-user_pitch)*10),0,(sin(user_pitch)*10),0,0,0);
+				A_SpawnParticle("Green",SPF_FULLBRIGHT|SPF_RELATIVE,70,10,user_a+180,
+				(cos(-user_pitch)*10),0,(sin(user_pitch)*10),(cos(-user_pitch)*10),0,(sin(user_pitch)*10),0,0,0);
+				A_SpawnParticle("Green",SPF_FULLBRIGHT|SPF_RELATIVE,70,10,user_a,
+				10,0,0,10,0,0,0,0,0);
+				A_SpawnParticle("White",SPF_FULLBRIGHT|SPF_RELATIVE,35,10,user_a,
+				10,0,0,10,0,0,0,0,0);
+				A_SpawnParticle("Green",SPF_FULLBRIGHT|SPF_RELATIVE,70,10,90,
+				(cos(user_a)*10),0,(sin(user_a)*10),(cos(-user_a)*10),0,(sin(user_a)*10),0,0,0);
+				A_SpawnParticle("White",SPF_FULLBRIGHT|SPF_RELATIVE,35,10,90,
+				(cos(user_a)*10),0,(sin(user_a)*10),(cos(-user_a)*10),0,(sin(user_a)*10),0,0,0);
+				A_SpawnParticle("Green",SPF_FULLBRIGHT|SPF_RELATIVE,70,10,0,
+				(cos(user_a)*10),0,(sin(user_a)*10),(cos(-user_a)*10),0,(sin(user_a)*10),0,0,0);
+				A_SpawnParticle("White",SPF_FULLBRIGHT|SPF_RELATIVE,35,10,0,
+				(cos(user_a)*10),0,(sin(user_a)*10),(cos(-user_a)*10),0,(sin(user_a)*10),0,0,0);
+				A_SetUserVarFloat(user_pitch,sin(user_a)*35);
+				A_SetUserVar(user_a,user_a + 3);
+				return state("DLoop");
+			}
 			A_SpawnItemEx("BFGLightningGenerator",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION);
-			A_SpawnItemEx("BFGLightningGenerator",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION);
-			A_SpawnItemEx("BFGLightningGenerator",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION);
+			//A_SpawnItemEx("BFGLightningGenerator",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION);
+			//A_SpawnItemEx("BFGLightningGenerator",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION);
 			A_SetUserVar(user_count,user_count+8);
 			A_SetUserVar(user_c2,user_c2+5);
 			A_SetScale(sin(user_c2)*1.5,Max((sin(user_count)*1.4),0.0));
 			if (ScaleY <= 0 || user_count >= 180)	
-			{	return state("Null");	}
+			{	return state(1);	}
 			return state(0);
 		}
 		Loop
+		TNT1 A 35 //Let the quake last.
+		Stop
 	}
 }
 
@@ -2392,20 +2436,21 @@ Actor BFGLightningGenerator
 	+NOINTERACTION
 	+NOTONAUTOMAP
 	RenderStyle None
-	Speed 2.5
+	Speed 2
 	States
 	{
 	Spawn:
 		TNT1 A 0 NoDelay
 		{
+		// Branch version. Doesn't spawn further instances of itself and halves
+		// everything -- turning, spawn count, you name it.
 			if (tid > 0)
 			{
-				
 				A_SetUserVar(user_t, tid);
 				Thing_ChangeTID(0,0);
 				A_SetUserVarFloat(user_amin,AngMin/2.0);
 				A_SetUserVarFloat(user_amax,AngMax/2.0);
-				A_SetUserVar(user_size, 4);
+				A_SetUserVar(user_size, 5);
 				A_SetUserVar(user_limit,random(15,45));
 				A_SetAngle(angle+(random(user_amin*2,user_amax)*randompick(-1,1))/2.0);
 				A_SetUserVarFloat(user_pitch,pitch+(random(user_amin*2,user_amax)*randompick(-1,1))/2.0);
@@ -2432,6 +2477,15 @@ Actor BFGLightningGenerator
 			
 			if (user_c <= 0)
 			{
+				
+				
+				A_Warp(DefPtr,cos(-user_pitch)*Speed*user_count,0,sin(user_pitch)*Speed*user_count,0,WARPF_NOCHECKPOSITION);
+				A_SetUserVarFloat(user_pitch, user_pitch+(frandom(user_amin,user_amax)*frandompick(-1,1)));
+				//if (user_pitch > 90.0)	{ A_SetUserVarFloat(user_pitch, user_pitch-(abs(user_pitch)%90.0)); A_SetAngle(angle+180); }
+				//if (user_pitch < -90.0)	{ A_SetUserVarFloat(user_pitch, user_pitch+(abs(user_pitch)%90.0)); A_SetAngle(angle+180); }
+				A_SetAngle(angle+(frandom(user_amin,user_amax)*frandompick(-1,1)));
+				A_SetPitch(user_pitch);
+				
 				if (user_branch > 0)
 				{	A_SetUserVar(user_branch,user_branch-1);	}
 				if (!user_t && !user_branch)
@@ -2442,12 +2496,6 @@ Actor BFGLightningGenerator
 					A_SetUserVar(user_branch,user_branch+random(1,5));
 				}
 				
-				A_Warp(DefPtr,cos(-user_pitch)*Speed*user_count,0,sin(user_pitch)*Speed*user_count,0,WARPF_NOCHECKPOSITION);
-				A_SetUserVarFloat(user_pitch, user_pitch+(frandom(user_amin,user_amax)*frandompick(-1,1)));
-				//if (user_pitch > 90.0)	{ A_SetUserVarFloat(user_pitch, user_pitch-(abs(user_pitch)%90.0)); A_SetAngle(angle+180); }
-				//if (user_pitch < -90.0)	{ A_SetUserVarFloat(user_pitch, user_pitch+(abs(user_pitch)%90.0)); A_SetAngle(angle+180); }
-				A_SetAngle(angle+(frandom(user_amin,user_amax)*frandompick(-1,1)));
-				A_SetPitch(user_pitch);
 				A_SetUserVar(user_count,0);
 				A_SetUserVar(user_c, random(1,4));
 				A_SetUserVar(user_d, user_c);
@@ -2475,7 +2523,7 @@ Actor BFGBeamSpawner : CustomInventory
 	Pickup:
 		TNT1 A 0
 		{
-			if ((health <= 0) || !A_CheckProximity("Null","AEoDBFG10KShot",1024,1,CPXF_CHECKSIGHT) || 
+			if ((health <= 0) || !A_CheckProximity("Null","BFG9000Shot",BFG_LaserRadius,1,CPXF_CHECKSIGHT) || 
 				!A_CheckFlag(SHOOTABLE,"Null") || A_CheckFlag(NONSHOOTABLE,"Null") || A_CheckFlag(FRIENDLY,"Null"))
 			{	return state("Failure");	}
 			
@@ -2523,7 +2571,7 @@ Actor BFGBeam
 			if (user_life > 4)
 			{	return state("Null");	}
 			
-			if (A_CheckProximity("Null","AEoDBFG10KShot",1024,1,CPXF_CHECKSIGHT|CPXF_CLOSEST|CPXF_SETTRACER))
+			if (A_CheckProximity("Null","BFG9000Shot",BFG_LaserRadius,1,CPXF_CLOSEST|CPXF_SETTRACER))
 			{
 				A_SetUserVar(user_count,0);
 				A_SetUserVarFloat(user_dist, GetDistance(true,Tracer));
@@ -2562,7 +2610,7 @@ Actor BFGBeam
 			if (user_y[0] < -Limit)		{	A_SetUserArrayFloat(user_y,0, user_y[0] + ((abs(user_y[0]) % Limit) * 2));	}
 			if (user_z[0] < -Limit)		{	A_SetUserArrayFloat(user_z,0, user_z[0] + ((abs(user_z[0]) % Limit) * 2));	}
 			
-			A_SpawnParticle(A7FF47,SPF_FULLBRIGHT|SPF_RELATIVE,2,random(7,10),0,
+			A_SpawnParticle(A7FF47,SPF_FULLBRIGHT|SPF_RELATIVE,2,8,0,
 				(cos(-pitch)*user_count)+(sin(pitch)*user_x[0]),
 				user_y[0],
 				(sin(pitch)*user_count)+(cos(-pitch)*user_z[0]),
@@ -2594,7 +2642,7 @@ Actor BFGTrailSpawner
 		BFE1 B 0 NoDelay
 		{
 			if (CheckClass("PlayerPawn",Target,1))
-			{	A_Explode(random(3,12),1024,0,0,1024);	}
+			{	A_Explode(random(1,4),BFG_LaserRadius,0,0,BFG_LaserRadius);	}
 			else
 			{	A_Explode(1,1024,0,0,1024);	}
 			A_SpawnItemEx("BFG10KMainTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSCALE);
@@ -3084,7 +3132,7 @@ Actor AEoDBioForceGun : Weapon // 6058
 		QBFG AE 2
 		QBFG E 0 A_GunFlash
 		QBFG E 0 A_SetBlend("Green",0.75,10)
-		QBFG E 0 A_FireCustomMissile("AEoDBFG10KShot",0,1,4,0)
+		QBFG E 0 A_FireCustomMissile("BFG9000Shot",0,1,4,0)
 		QBFG E 0 A_SetPitch(pitch-4)
 		QBFG FFFG 1 A_SetPitch(pitch+1)
 		QBFG GGHHH 1
