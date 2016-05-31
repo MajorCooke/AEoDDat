@@ -2593,18 +2593,74 @@ Actor TracerFXToken : Inventory {}
 
 Actor BulletTracerFX
 {
+	var int user_count;
+	var int user_rng;
+	var float user_dist;
+	const float Distance = 3.5;
 	const int SpawnSpeed = 300;
 	+NOINTERACTION
+	+NOTONAUTOMAP
 	RenderStyle None
 	Speed 1
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay A_CheckSight("End")
-		TNT1 A 0 A_JumpIfInventory("TracerFXToken",1,1,AAPTR_PLAYER1)
-		Stop
-		TNT1 A 0 A_SpawnItemEx("BulletTracerEffect",0,0,0,velx*SpawnSpeed,vely*SpawnSpeed,velz*SpawnSpeed,0,SXF_NOCHECKPOSITION|SXF_ABSOLUTEVELOCITY)
-		Stop
+		TNT1 A 0 NoDelay 
+		{
+			if (A_CheckSight("Null") || !CountInv("TracerFXToken",Player1))
+			{	return state("Null");	}
+
+			//A_SpawnItemEx("BulletTracerEffect",0,0,0,velx*SpawnSpeed,vely*SpawnSpeed,velz*SpawnSpeed,0,SXF_NOCHECKPOSITION|SXF_ABSOLUTEVELOCITY)
+			A_FaceMovementDirection;
+			A_SpawnParticle(FF8800,SPF_FULLBRIGHT|SPF_RELATIVE,10,8 ,0,cos(-pitch)*(Distance*1 ),0,sin(-pitch)*(Distance*1 ),cos(-pitch)*SpawnSpeed,0,sin(-pitch)*SpawnSpeed,0,0,0,1,0);
+			A_SpawnParticle(FF8F11,SPF_FULLBRIGHT|SPF_RELATIVE,10,9 ,0,cos(-pitch)*(Distance*2 ),0,sin(-pitch)*(Distance*2 ),cos(-pitch)*SpawnSpeed,0,sin(-pitch)*SpawnSpeed,0,0,0,1,0);
+			A_SpawnParticle(FF9822,SPF_FULLBRIGHT|SPF_RELATIVE,10,11,0,cos(-pitch)*(Distance*3 ),0,sin(-pitch)*(Distance*3 ),cos(-pitch)*SpawnSpeed,0,sin(-pitch)*SpawnSpeed,0,0,0,1,0);
+			A_SpawnParticle(FF9F33,SPF_FULLBRIGHT|SPF_RELATIVE,10,12,0,cos(-pitch)*(Distance*4 ),0,sin(-pitch)*(Distance*4 ),cos(-pitch)*SpawnSpeed,0,sin(-pitch)*SpawnSpeed,0,0,0,1,0);
+			A_SpawnParticle(FFA844,SPF_FULLBRIGHT|SPF_RELATIVE,10,13,0,cos(-pitch)*(Distance*5 ),0,sin(-pitch)*(Distance*5 ),cos(-pitch)*SpawnSpeed,0,sin(-pitch)*SpawnSpeed,0,0,0,1,0);
+			A_SpawnParticle(FFAF55,SPF_FULLBRIGHT|SPF_RELATIVE,10,14,0,cos(-pitch)*(Distance*6 ),0,sin(-pitch)*(Distance*6 ),cos(-pitch)*SpawnSpeed,0,sin(-pitch)*SpawnSpeed,0,0,0,1,0);
+			A_SpawnParticle(FFB866,SPF_FULLBRIGHT|SPF_RELATIVE,10,15,0,cos(-pitch)*(Distance*7 ),0,sin(-pitch)*(Distance*7 ),cos(-pitch)*SpawnSpeed,0,sin(-pitch)*SpawnSpeed,0,0,0,1,0);
+			A_SpawnParticle(FFBF77,SPF_FULLBRIGHT|SPF_RELATIVE,10,16,0,cos(-pitch)*(Distance*8 ),0,sin(-pitch)*(Distance*8 ),cos(-pitch)*SpawnSpeed,0,sin(-pitch)*SpawnSpeed,0,0,0,1,0);
+			A_SpawnParticle(FFC888,SPF_FULLBRIGHT|SPF_RELATIVE,10,17,0,cos(-pitch)*(Distance*9 ),0,sin(-pitch)*(Distance*9 ),cos(-pitch)*SpawnSpeed,0,sin(-pitch)*SpawnSpeed,0,0,0,1,0);
+			A_SpawnParticle(FFCF99,SPF_FULLBRIGHT|SPF_RELATIVE,10,18,0,cos(-pitch)*(Distance*10),0,sin(-pitch)*(Distance*10),cos(-pitch)*SpawnSpeed,0,sin(-pitch)*SpawnSpeed,0,0,0,1,0);
+			A_SpawnParticle(FFD8AA,SPF_FULLBRIGHT|SPF_RELATIVE,10,19,0,cos(-pitch)*(Distance*11),0,sin(-pitch)*(Distance*11),cos(-pitch)*SpawnSpeed,0,sin(-pitch)*SpawnSpeed,0,0,0,1,0);
+			A_SpawnParticle(FFDFBB,SPF_FULLBRIGHT|SPF_RELATIVE,10,20,0,cos(-pitch)*(Distance*12),0,sin(-pitch)*(Distance*12),cos(-pitch)*SpawnSpeed,0,sin(-pitch)*SpawnSpeed,0,0,0,1,0);
+			A_SpawnParticle(FFE8CC,SPF_FULLBRIGHT|SPF_RELATIVE,10,20,0,cos(-pitch)*(Distance*13),0,sin(-pitch)*(Distance*13),cos(-pitch)*SpawnSpeed,0,sin(-pitch)*SpawnSpeed,0,0,0,1,0);
+			A_SpawnParticle(FFEFDD,SPF_FULLBRIGHT|SPF_RELATIVE,10,21,0,cos(-pitch)*(Distance*14),0,sin(-pitch)*(Distance*14),cos(-pitch)*SpawnSpeed,0,sin(-pitch)*SpawnSpeed,0,0,0,1,0);
+			A_SpawnParticle(FFF8EE,SPF_FULLBRIGHT|SPF_RELATIVE,10,21,0,cos(-pitch)*(Distance*15),0,sin(-pitch)*(Distance*15),cos(-pitch)*SpawnSpeed,0,sin(-pitch)*SpawnSpeed,0,0,0,1,0);
+			A_SpawnParticle(FFFFFF,SPF_FULLBRIGHT|SPF_RELATIVE,10,22,0,cos(-pitch)*(Distance*16),0,sin(-pitch)*(Distance*16),cos(-pitch)*SpawnSpeed,0,sin(-pitch)*SpawnSpeed,0,0,0,1,0);
+			A_Stop;
+			A_SetUserVar(user_count, 1);
+			return state("Break");
+		}
+	Break:
+		TNT1 A 1 
+		{
+			if (user_count > 10 || A_CheckSight("Null"))
+			{	return state("Null");	}
+			A_SetUserVarFloat(user_dist,0);
+			return state(0); //Play out the tic.
+		}
+	Looping:
+		TNT1 A 0
+		{
+			//A_SetUserVar(user_rng,random(1,8));
+			A_SpawnParticle(FFE99E,SPF_FULLBRIGHT|SPF_RELATIVE,100,random(4,8),0,
+				cos(-pitch)*user_dist,0,sin(-pitch)*user_dist,
+				frandom(1.0,2.0),0,0,
+				-0.005,0,0.005,
+				frandom(0.5,1.0),frandom(0.03,0.06));
+			
+			A_SetUserVarFloat(user_dist,user_dist + frandom(2.0,4.0));
+			
+			if (user_dist >= 300.0)
+			{
+				A_SetUserVar(user_count, user_count+1);
+				A_Warp(DefPtr,cos(-pitch)*300,0,sin(-pitch)*300,0,WARPF_NOCHECKPOSITION);
+				return state("Break");
+			}
+			return state("Looping");
+		}
+		Loop
 	End:
 		TNT1 A 0
 		Stop
