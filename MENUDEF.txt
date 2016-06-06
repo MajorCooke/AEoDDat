@@ -30,46 +30,46 @@ OptionMenu "OptionsMenu"
 
 OptionMenu "VideoOptions"
 {
-	Title "DISPLAY OPTIONS"
+	Title "$DSPLYMNU_TITLE"
 	
-	Submenu "OpenGL Options", 			"OpenGLOptions"
-	Submenu "Scoreboard Options", 		"ScoreboardOptions"
+	Submenu "$DSPLYMNU_GLOPT", 			"OpenGLOptions"
+	Submenu "$DSPLYMNU_SCOREBOARD", 			"ScoreboardOptions"
 	StaticText " "
-	Slider "Screen size",				"screenblocks", 3.0, 12.0, 1.0, 0
+	Slider "$DSPLYMNU_SCREENSIZE",				"screenblocks", 3.0, 12.0, 1.0, 0
 
-	Slider "Gamma correction",			"Gamma",						0.75, 3.0, 0.05, 2
-	Slider "Brightness",				"vid_brightness",				-0.8,0.8, 0.05
-	Slider "Contrast",					"vid_contrast",	   				0.1, 3.0, 0.1
+	Slider "$DSPLYMNU_GAMMA",			"Gamma",						0.75, 3.0, 0.05, 2
+	Slider "$DSPLYMNU_BRIGHTNESS",				"vid_brightness",				-0.8,0.8, 0.05
+	Slider "$DSPLYMNU_CONTRAST",					"vid_contrast",	   				0.1, 3.0, 0.1
 
-	Option "Vertical Sync",				"vid_vsync", "OnOff"
-	Option "Rendering Interpolation",	"cl_capfps", "OffOn"
+	Option "$DSPLYMNU_VSYNC",					"vid_vsync", "OnOff"
+	Option "$DSPLYMNU_CAPFPS",					"cl_capfps", "OffOn"
 
 	StaticText " "
-	Option "Screen wipe style",			"wipetype", "Wipes"
+	Option "$DSPLYMNU_WIPETYPE",				"wipetype", "Wipes"
 
 	IfOption(Windows)
 	{
-		Option	"Show ENDOOM screen",	"showendoom", "Endoom"
-		//Option "DirectDraw palette hack", "vid_palettehack", "OnOff"
-		//Option "Use attached surfaces", "vid_attachedsurfaces", "OnOff"
+		Option	"$DSPLYMNU_SHOWENDOOM",			"showendoom", "Endoom"
+		//Option "$DSPLYMNU_PALLETEHACK", 		"vid_palettehack", "OnOff"
+		//Option "$DSPLYMNU_ATTACHEDSURFACES", 	"vid_attachedsurfaces", "OnOff"
 	}
 	
-	Option "Stretch short skies",		"r_stretchsky", "OnOff"
-	Option "Use fuzz effect",			"r_drawfuzz", "Fuzziness"
-	Slider "Lost Soul translucency",	"transsouls", 0.25, 1.0, 0.05, 2
-	Option "Use fake contrast",			"r_fakecontrast", "Contrast"
-	Option "Rocket Trails",				"cl_rockettrails", "RocketTrailTypes"
-	Option "Set To Sprites-See AEOD menu",				"cl_bloodtype", "BloodTypesLocked"
-	Option "Set To Sprites-See AEOD menu",				"cl_pufftype", "PuffTypesLocked"
-	Slider "Number of particles",		"r_maxparticles", 100, 20000, 100, 0
-	Slider "Number of decals",			"cl_maxdecals", 0, 10000, 100, 0
-	Option "Show player sprites",		"r_drawplayersprites", "OnOff"
-	Option "Death camera",				"r_deathcamera", "OnOff"
-	Option "Teleporter zoom",			"telezoom", "OnOff"
-	Slider "Earthquake shake intensity",	"r_quakeintensity", 0.0, 1.0, 0.05, 2
-	Option "Interpolate monster movement",	"nomonsterinterpolation", "NoYes"
-	Slider "Menu dim",					"dimamount", 0, 1.0, 0.05, 2
-	ColorPicker "Dim color",			"dimcolor"
+	Option "$DSPLYMNU_STRETCHSKY",				"r_stretchsky", "OnOff"
+	Option "$DSPLYMNU_DRAWFUZZ",				"r_drawfuzz", "Fuzziness"
+	Slider "$DSPLYMNU_TRANSSOUL",				"transsouls", 0.25, 1.0, 0.05, 2
+	Option "$DSPLYMNU_FAKECONTRAST",			"r_fakecontrast", "Contrast"
+	Option "$DSPLYMNU_ROCKETTRAILS",			"cl_rockettrails", "RocketTrailTypes"
+	Option "Set To Sprites-See AEOD menu",		"cl_bloodtype", "BloodTypesLocked"
+	Option "Set To Sprites-See AEOD menu",		"cl_pufftype", "PuffTypesLocked"
+	Slider "$DSPLYMNU_MAXPARTICLES",			"r_maxparticles", 100, 10000, 100, 0
+	Slider "$DSPLYMNU_MAXDECALS",				"cl_maxdecals", 0, 10000, 100, 0
+	Option "$DSPLYMNU_PLAYERSPRITES",			"r_drawplayersprites", "OnOff"
+	Option "$DSPLYMNU_DEATHCAM",				"r_deathcamera", "OnOff"
+	Option "$DSPLYMNU_TELEZOOM",				"telezoom", "OnOff"
+	Slider "$DSPLYMNU_QUAKEINTENSITY",			"r_quakeintensity", 0.0, 1.0, 0.05, 2
+	Option "$DSPLYMNU_NOMONSTERINTERPOLATION",	"nomonsterinterpolation", "NoYes"
+	Slider "$DSPLYMNU_MENUDIM",					"dimamount", 0, 1.0, 0.05, 2
+	ColorPicker "$DSPLYMNU_DIMCOLOR",			"dimcolor"
 }
 
 OptionValue BloodTypesLocked
@@ -96,13 +96,21 @@ OptionMenu "AEoDConfigMenu"
 	StaticText "Customizable Options", 1
 	NumberField "Max FX Render Distance", 	"user_MaxDrawDistance", 0, 20480, 8
 	NumberField "Max FX Dist (Faster)",		"user_MaxDrawDistance", 0, 20480, 64
-	Option "Tracer Effects",				"user_TracerFX",	"OnOff"
+	Option "Tracer Effects",				"user_TracerFX",	"TracerMode"
 	Option "Blood Effects",					"user_BloodSprites", "SprPar"
 	Option "Demon Morph Music",				"user_AllowDemonMorphMusic", "OnOff"
 	Option "Short Gib Life",				"user_ShortGibLives", "OnOff"
 	Option "Spells Switch On Pickup",		"user_SpellSwitchOnPickup", "OnOff"
 	//Doesn't do anything yet.
 	Option "Chicken Mode",					"user_WHEREISTHECHICKEN", "ManPanzy"
+}
+
+OptionValue TracerMode
+{
+	0.0, "None"
+	2.0, "Particle"
+	3.0, "Particle Trail"
+	4.0, "Trail"
 }
 
 OptionValue "ManPanzy"

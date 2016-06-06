@@ -88,6 +88,7 @@ Actor MCBloodFXMain replaces Blood
 	var float user_xv;
 	var float user_yv;
 	var float user_zv;
+	var int user_inv;
 	//+MISSILE
 	+NOBLOCKMAP
 	+THRUACTORS
@@ -96,6 +97,7 @@ Actor MCBloodFXMain replaces Blood
 	+NOTELESTOMP
 	+NOTONAUTOMAP
 	+PUFFGETSOWNER
+	+ALWAYSPUFF
 	-ALLOWPARTICLES
 	+NOINTERACTION
 	+NOTELESTOMP
@@ -105,45 +107,34 @@ Actor MCBloodFXMain replaces Blood
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay 
+		// DO NOT REMOVE THESE. According to Graf, two tics are required in order
+		// for some internal crap to process as P_SpawnBlood has a special priority.
+		// So... LEAVE THESE IN AND DON'T TOUCH THEM.
+		TNT1 AA 0 
+		TNT1 A 0
 		{
 			if (A_CheckSightOrRange(BloodDistanceLimit,"Null"))
 			{	
 				Thing_ChangeTID(0,0);
-				//A_Remove(DefPtr,RMVF_EVERYTHING);	
 				return state("Null");
 			}
+			A_SetUserVar(user_inv, CountInv("BloodSpriteToken",Player1));
 			A_SetUserVar(user_t,tid);
 			Thing_ChangeTID(0,0);
 			A_SetUserVarFloat(user_xv,velx);
 			A_SetUserVarFloat(user_yv,vely);
 			A_SetUserVarFloat(user_zv,velz);
-			//A_FaceMovementDirection;
 			return state("SpawnBlood");
 		}
 		Goto SpawnBlood
 	SpawnBlood:
-		TNT1 A 2 
+		TNT1 AAA 1 
 		{
-			//A_FaceTarget;
-			if (CountInv("BloodSpriteToken",Player1) == 2 || CountInv("BloodSpriteToken",Player1) <= 0)
-			{	A_SpawnItemEx("MCBloodParticle",frandom(0,2),0,random(1,4),user_xv,user_yv,user_zv,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_ABSOLUTEVELOCITY|SXF_SETTRACER,0,user_t);	}
-			if (CountInv("BloodSpriteToken",Player1) > 1)
+			if (user_inv >= 1)
 			{	A_SpawnItemEx("MCBloodSprite",frandom(0,2),0,random(1,4),frandom(0,1.5),0,frandom(0.1,2.0),random(0,359),33|SXF_USEBLOODCOLOR,0);	}
-			
-		}
-		TNT1 AA 0
-		{
-			if (CountInv("BloodSpriteToken",Player1) == 2 || CountInv("BloodSpriteToken",Player1) <= 0)
-			{	
-				A_SpawnItemEx("MCBloodParticle",frandom(0,2),0,random(1,4),user_xv,user_yv,user_zv,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_ABSOLUTEVELOCITY|SXF_SETTRACER,128,user_t);
-			}
-			if (CountInv("BloodSpriteToken",Player1) > 1)
-			{	
-				A_SpawnItemEx("MCBloodSprite",frandom(0,2),0,random(1,4),frandom(0,1.5),0,frandom(0.1,2.0),random(0,359),33|SXF_USEBLOODCOLOR,128);
-			}
-		}
-		//TNT1 AA 0 A_SpawnItemEx("MCBloodParticle",frandom(0,2),0,random(1,4),frandom(0,1.5),0,frandom(0.1,2.0),random(0,359),33|SXF_USEBLOODCOLOR,128,user_t)
+			if (user_inv <= 0 || user_inv >= 2)
+			{	A_SpawnItemEx("MCBloodParticle",frandom(0,2),0,random(1,4),user_xv,user_yv,user_zv,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_ABSOLUTEVELOCITY|SXF_SETTRACER,0,user_t); }
+		}	
 		Stop
 	}
 }
@@ -155,12 +146,10 @@ Actor MCBloodFXTrail : MCBloodFXMain
 	SpawnBlood:
 		TNT1 A 0
 		{
-			//A_FaceTarget;
-			if (CountInv("BloodSpriteToken",Player1) == 2 || CountInv("BloodSpriteToken",Player1) <= 0)
-			{	A_SpawnItemEx("MCBloodParticle",frandom(0,2),0,random(1,4),VelX,VelY,VelZ,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_ABSOLUTEVELOCITY|SXF_SETTRACER,128,user_t);	}
-			if (CountInv("BloodSpriteToken",Player1) > 1)
-			{	A_SpawnItemEx("MCBloodSprite",frandom(0,2),0,random(1,4),frandom(0,1.5),0,frandom(0.1,2.0),random(0,359),33|SXF_USEBLOODCOLOR,128);	}
-			
+			if (user_inv >= 1)
+			{	A_SpawnItemEx("MCBloodSprite",frandom(0,2),0,random(1,4),frandom(0,1.5),0,frandom(0.1,2.0),random(0,359),33|SXF_USEBLOODCOLOR,0);	}
+			if (user_inv <= 0 || user_inv >= 2)
+			{	A_SpawnItemEx("MCBloodParticle",frandom(0,2),0,random(1,4),user_xv,user_yv,user_zv,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_ABSOLUTEVELOCITY|SXF_SETTRACER,0,user_t); }
 		}
 		Stop
 	}
