@@ -7064,7 +7064,7 @@ For the firing frames, we'll want it to perform a reload after the shells are sp
 		QDBS A 1 Offset(2,32)
 		Goto "Ready"
 	Alt3:
-		QDBS A 0 A_FireCustomMissile("MassChanger",0,0,0,0)
+		//QDBS A 0 A_FireCustomMissile("MassChanger",0,0,0,0)
 		QDBS A 0 A_PlaySound("BoneDuster/Fire1",CHAN_WEAPON,1)
 		QDBS A 0 A_PlaySound("BoneDuster/Fire2",CHAN_BODY,1)
 		
@@ -7095,7 +7095,7 @@ For the firing frames, we'll want it to perform a reload after the shells are sp
 		QDBS A 1 Offset(2,32)
 		Goto "Ready"
 	Alt2:
-		QDBS A 0 A_FireCustomMissile("MassChanger",0,0,0,0)
+		//QDBS A 0 A_FireCustomMissile("MassChanger",0,0,0,0)
 		QDBS A 0 A_PlaySound("BoneDuster/Fire1",CHAN_WEAPON,1)
 		QDBS A 0 A_PlaySound("BoneDuster/Fire2",CHAN_BODY,1)
 		
@@ -7123,7 +7123,7 @@ For the firing frames, we'll want it to perform a reload after the shells are sp
 		QDBS A 1 Offset(2,32)
 		Goto "Ready"
 	Alt1:
-		QDBS A 0 A_FireCustomMissile("MassChanger",0,0,0,0)
+		//QDBS A 0 A_FireCustomMissile("MassChanger",0,0,0,0)
 		QDBS A 0 A_PlaySound("BoneDuster/Fire",CHAN_WEAPON,1)
 		
 		QDBS AAA 0 A_FireCustomMissile("BDFire",frandom(-6,6),0,frandom(3,6),6)
@@ -7307,6 +7307,9 @@ Actor BDPuffPainless : ExtremeBulletPuffBloodless
 	DeathType "Extreme"
 }
 
+Actor BDPuffPainlessAlways : BDPuffPainless
+{	+ALWAYSPUFF		}
+
 //******************************************************
 Actor BDFire
 {
@@ -7413,129 +7416,6 @@ Actor DroppedShellSpawner
 		TNT1 A 0 A_SpawnItemEx("BDShells",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		Stop
 	}
-}
-
-Actor MassChanger
-{
-	Projectile
-	+NOCLIP
-	+NOINTERACTION
-	+SEEKERMISSILE
-	+SCREENSEEKER
-	States
-	{
-	Spawn:
-		TNT1 A 0
-		TNT1 A 0 A_SeekerMissile(1,1,1,256)
-		TNT1 A 0 A_JumpIfTargetInLOS("Modding",160,JLOSF_PROJECTILE|JLOSF_DEADNOJUMP)
-		Stop
-	Modding:
-		TNT1 A 0 A_JumpIfInventory("MassImmune",1,"End",AAPTR_TRACER)
-		TNT1 A 1 A_GiveInventory("MassSwapper",1,AAPTR_TRACER)
-		TNT1 A 1
-		TNT1 A 1 A_GiveInventory("MassRestorer",1,AAPTR_TRACER)
-		Stop
-	End:
-		TNT1 A 0
-		Stop
-	}
-}
-
-/*
-Explanation: What I'm trying to do here is get the monster in the player's sights
-to have his mass set low, then back up to it's original. This ignores targets that
-have 200 or less already.
-
-1. Give the swapper which will in turn give a checker that floods the inventory
-of the target per each count of mass.
-2. Set the mass of the monster to 200, and allow him to be blown about.
-3. Give another swapper which then retransfers the original mass back via sheep
-counting.
-*/
-
-Actor MassSwapper : CustomInventory
-{
-	+INVENTORY.ALWAYSPICKUP
-	+INVENTORY.AUTOACTIVATE
-	States
-	{
-	Use:
-		TNT1 A 0 A_CheckFlag("NOCLIP","End")
-		TNT1 A 0 A_JumpIf(mass<=199,"End")
-		TNT1 A 0 A_JumpIf(mass>=99999999,"Overboard")
-		TNT1 A 0 A_GiveInventory("MassCount",mass)
-		TNT1 A 0 A_SetMass(200)
-		Stop
-	Overboard:
-		TNT1 A 0 A_GiveInventory("MassCount",99999999)
-		TNT1 A 0 A_SetMass(200)
-		Stop
-	End:
-		TNT1 A 0
-		Stop
-	}
-}
-
-Actor MassCheck1 : CustomInventory
-{
-	+INVENTORY.ALWAYSPICKUP
-	States
-	{
-	Pickup:
-		TNT1 A 0 A_JumpIf(mass>=99999999,"Overboard")
-		//TNT1 A 0 A_SpawnItemEx("DebugMessage1",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		//TNT1 A 0 A_PrintBold("Non-infinite")
-		TNT1 A 0 A_GiveInventory("MassCount",mass)
-		TNT1 A 0 A_SetMass(200)
-		Stop
-	Overboard:
-		//TNT1 A 0 A_SpawnItemEx("DebugMessage2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		//TNT1 A 0 A_PrintBold("Infinite number - Switching...")
-		TNT1 A 0 A_GiveInventory("MassCount",99999999)
-		TNT1 A 0 A_SetMass(200)
-		Stop
-	}
-}
-
-Actor MassRestorer : CustomInventory
-{
-	States
-	{
-	Pickup:
-		TNT1 A 0 A_JumpIfInventory("MassCount",9999999,"InstaRestore") //Save the trouble.
-	Specialty:
-		TNT1 A 0 A_JumpIfInventory("MassCount",1000,"Mass1000")
-		TNT1 A 0 A_JumpIfInventory("MassCount",100,"Mass100")
-		TNT1 A 0 A_JumpIfInventory("MassCount",10,"Mass10")
-		TNT1 A 0 A_JumpIfInventory("MassCount",1,"Mass1")
-		Stop
-	Mass1000:
-		TNT1 A 0 A_TakeInventory("MassCount",1000)
-		TNT1 A 0 A_SetMass(mass+1000)
-		Loop
-	Mass100:
-		TNT1 A 0 A_TakeInventory("MassCount",100)
-		TNT1 A 0 A_SetMass(mass+100)
-		Loop
-	Mass10:
-		TNT1 A 0 A_TakeInventory("MassCount",10)
-		TNT1 A 0 A_SetMass(mass+10)
-		Loop
-	Mass1:
-		TNT1 A 0 A_TakeInventory("MassCount",1)
-		TNT1 A 0 A_SetMass(mass+1)
-		Loop
-	InstaRestore:
-		TNT1 A 0 A_TakeInventory("MassCount",9999999)
-		TNT1 A 0 A_SetMass(9999999)
-		Stop
-	}
-}
-
-Actor MassCount : Inventory
-{
-	Inventory.Amount 1
-	Inventory.MaxAmount 9999999
 }
 
 Actor BDHeatwaveFull : FastProjectile
