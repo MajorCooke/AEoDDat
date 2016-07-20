@@ -2714,7 +2714,7 @@ ACTOR BerserkerFlag
 //	Modified by DBT for AEoD
 //===========================================================================
 //===========================================================================
-ACTOR HSHammerHound	7913	//spider master
+ACTOR HSHammerHound	//7913	//spider master
 {
 	DropItem "CellBigAmmo"
 	DropItem "CellBigAmmo"
@@ -3236,7 +3236,6 @@ ACTOR HHHead
     +MISSILE
     +NOTELEPORT
     +DOOMBOUNCE
-    +NoTarget
     Damage 0
     Scale 0.50
     States
@@ -3250,7 +3249,11 @@ ACTOR HHHead
 	HHED E 3 A_CustomMissile("HHBlood", 4, 0, 180)  
 	Loop
     Death:
-	HHED E 1
+	HHED E 1 
+	{
+		A_ChangeFlag(CORPSE,true);
+		A_ChangeFlag(MISSILE,false);
+	}
 	
 	HHED E -1
 	Stop
