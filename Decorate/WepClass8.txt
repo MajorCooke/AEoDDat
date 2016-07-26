@@ -4967,6 +4967,7 @@ Actor AEoDShredderStaffItem : CustomInventory //6106
 
 Actor AEoDShredderStaff : Weapon // 6106
 {
+	const float Sparsity = 41.66 / 2.0;
 	+FLOORCLIP
 	+INVENTORY.IGNORESKILL	+DONTGIB
 	+WEAPON.CHEATNOTWEAPON
@@ -5020,13 +5021,58 @@ Actor AEoDShredderStaff : Weapon // 6106
 			A_FireCustomMissile("ShredderAltFXSpawner",0,0);
 			//The damage from here has been removed and put into the puff itself.
 			//LEAVE IT ALONE. DO NOT CHANGE.
-			A_RailAttack(0,0,1,none,none,RGF_SILENT,0,"ShredderPuff",0,0,20000);
+			A_RailAttack(0,0,1,None,None,RGF_SILENT,0,"ShredderPuff",0,0,20000,0,Sparsity,0,"ShredderBeam");
 		}
 		S04I I 5 
 		S04I J 4
 		S04I BCDE 5
 		S04I F 3
 		Goto Ready
+	}
+}
+
+Actor ShredderBeam
+{
+	var int user_t;
+	+NOINTERACTION
+	+FORCEXYBILLBOARD
+	+ROLLSPRITE
+	+FLATSPRITE
+	+DONTFLIP
+	+BRIGHT
+	//YScale 1.0
+	YScale 0.5
+	//YScale 0.25	//Don't touch this! Otherwise the trail will become broken up!
+	XScale 0.25 //This modified the width of the beam. It is safe to play around with.
+	Alpha 1
+	RenderStyle Add
+	// DO NOT add a translation. If you need to change the colors, make a sprite
+	// entry in TEXTURES lump and use BLEND. NEVER TRANSLATE!
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay
+		{
+			if (tid == 0)
+			{	
+				A_SpawnItemEx("ShredderBeam",0,0,0,0,0,0,90,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERSCALE,0,1);
+				A_SetPitch((pitch-90));
+			}
+			else
+			{
+				Thing_ChangeTID(0,0);
+				A_SetRoll(-(pitch-90));
+				A_SetPitch(0);
+			}
+		}
+		X163 C 1
+		"####" "#" 1 
+		{
+			A_SetScale(ScaleX - (0.05 / 4.0), ScaleY);
+			if (ScaleX <= 0)	{ return state("Null"); }
+			return state(0);
+		}
+		Wait
 	}
 }
 
@@ -5054,7 +5100,7 @@ Actor ShredderAltFXSpawner
 		TNT1 A 0 A_SetUserArray(user_s,2,random(4,16))
 		TNT1 A 0 A_SetUserArray(user_s,3,random(4,16))
 	Movement:
-		TNT1 A 0 A_SpawnItemEx("ShredderBeamParticle2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		//TNT1 A 0 A_SpawnItemEx("ShredderBeamParticle2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		TNT1 A 0 A_JumpIf(user_s[0] < 360,2)
 		TNT1 A 0 A_SetUserArray(user_s,0,user_s[0]-360)
 		TNT1 A 0 A_SetUserArray(user_s,0,user_s[0]+user_s[2])

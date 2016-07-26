@@ -140,6 +140,7 @@ Actor AEoDHandOfGod : Weapon // 6124
 
 Actor GodBall
 {
+	var int user_c;
 	Radius 6
 	Height 5
 	Speed 20
@@ -173,54 +174,33 @@ Actor GodBall
 	States
 	{
 	Spawn:
-		GDBA A 1 A_SeekerMissile(90,90)
-		GDBA A 0 A_FaceTracer	TNT1 A 0 A_SpawnItemEx("GodsBallTrailSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		GDBA A 0 A_Explode(256,24,0)
-		GDBA B 1 A_SeekerMissile(90,90)
-		GDBA A 0 A_FaceTracer	TNT1 A 0 A_SpawnItemEx("GodsBallTrailSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		GDBA A 0 A_Explode(256,24,0)
-		GDBA C 1 A_SeekerMissile(90,90)
-		GDBA A 0 A_FaceTracer	TNT1 A 0 A_SpawnItemEx("GodsBallTrailSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		GDBA A 0 A_Explode(256,24,0)
-		GDBA D 1 A_SeekerMissile(90,90)
-		GDBA A 0 A_FaceTracer	TNT1 A 0 A_SpawnItemEx("GodsBallTrailSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		GDBA A 0 A_Explode(256,24,0)
-		GDBA A 1 A_SeekerMissile(90,90)
-		GDBA A 0 A_FaceTracer	TNT1 A 0 A_SpawnItemEx("GodsBallTrailSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		GDBA A 0 A_Explode(256,24,0)
-		GDBA B 1 A_SeekerMissile(90,90)
-		GDBA A 0 A_FaceTracer	TNT1 A 0 A_SpawnItemEx("GodsBallTrailSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		GDBA A 0 A_Explode(256,24,0)
-		GDBA C 1 A_SeekerMissile(90,90)
-		GDBA A 0 A_FaceTracer	TNT1 A 0 A_SpawnItemEx("GodsBallTrailSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		GDBA A 0 A_Explode(256,24,0)
-		GDBA D 1 A_SeekerMissile(90,90)
-		GDBA A 0 A_FaceTracer	TNT1 A 0 A_SpawnItemEx("GodsBallTrailSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		GDBA A 0 A_Explode(256,24,0)
+		GDBA ABCDABCD 1 bright
+		{
+			A_SeekerMissile(90,90);
+			A_FaceTracer;	
+			A_SpawnItemEx("GodsBallTrailSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION);
+			A_Explode(256,24,0);
+		}
 		Goto SeekerTime
 	SeekerTime:
-		GDBA A 0 A_FaceTracer	TNT1 A 0 A_SpawnItemEx("GodsBallTrailSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		GDBA A 0 A_JumpIfTargetInLOS(2,360,JLOSF_CHECKTRACER,512)		GDBA A 0 A_RearrangePointers(AAPTR_DEFAULT,AAPTR_DEFAULT,AAPTR_NULL,PTROP_NOSAFEGUARDS)
-		GDBA AA 1 Bright A_SeekerMissile(90,90,SMF_LOOK|SMF_PRECISE,256)
-		GDBA A 0 Bright A_CustomMissile("GodBallVaporizer",0,0,0,6)
-		GDBA A 0 A_FaceTracer	TNT1 A 0 A_SpawnItemEx("GodsBallTrailSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		GDBA A 0 A_JumpIfTargetInLOS(2,360,JLOSF_CHECKTRACER,512)		GDBA A 0 A_RearrangePointers(AAPTR_DEFAULT,AAPTR_DEFAULT,AAPTR_NULL,PTROP_NOSAFEGUARDS)
-		GDBA BB 1 Bright A_SeekerMissile(90,90,SMF_LOOK|SMF_PRECISE,256)
-		GDBA B 0 Bright A_CustomMissile("GodBallVaporizer",0,0,0,6)
-		GDBA A 0 A_FaceTracer	TNT1 A 0 A_SpawnItemEx("GodsBallTrailSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		GDBA A 0 A_JumpIfTargetInLOS(2,360,JLOSF_CHECKTRACER,512)		GDBA A 0 A_RearrangePointers(AAPTR_DEFAULT,AAPTR_DEFAULT,AAPTR_NULL,PTROP_NOSAFEGUARDS)
-		GDBA CC 1 Bright A_SeekerMissile(90,90,SMF_LOOK|SMF_PRECISE,256)
-		GDBA C 0 Bright A_CustomMissile("GodBallVaporizer",0,0,0,6)
-		GDBA A 0 A_FaceTracer	TNT1 A 0 A_SpawnItemEx("GodsBallTrailSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		GDBA A 0 A_JumpIfTargetInLOS(2,360,JLOSF_CHECKTRACER,512)		GDBA A 0 A_RearrangePointers(AAPTR_DEFAULT,AAPTR_DEFAULT,AAPTR_NULL,PTROP_NOSAFEGUARDS)
-		GDBA DD 1 Bright A_SeekerMissile(90,90,SMF_LOOK|SMF_PRECISE,256)
-		GDBA D 0 Bright A_CustomMissile("GodBallVaporizer",0,0,0,6)
+		GDBA AABBCCDD 1 bright
+		{
+			A_FaceTracer;
+			A_SpawnItemEx("GodsBallTrailSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION);
+			if (!A_JumpIfTargetInLOS("Null",360,JLOSF_CHECKTRACER,512))
+			{	A_RearrangePointers(AAPTR_DEFAULT,AAPTR_DEFAULT,AAPTR_NULL,PTROP_NOSAFEGUARDS);	}
+			A_SetUserVar(user_c, (user_c + 1) % 2);
+			if (user_c)	{ A_SpawnItemEx("GodBallVaporizer",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS);	}
+		}
 		Loop
 	Death:
-		GDBA A 0 A_Scream
-		GDBA A 0 A_Explode(1000000,128,0)
-		TNT1 A 0 A_PlaySound("weapons/gvaporize",5,1)
-		TNT1 A 1 A_SpawnItemEx("MonExplosionMediumNoSmokeSimple",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
+		TNT1 A 1
+		{	
+			A_Explode(1000000,128,0);
+			A_PlaySound("weapons/gexplode",5,1);
+			A_PlaySound("weapons/gvaporize",6,1);
+			A_SpawnItemEx("MonExplosionMediumNoSmokeSimple",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER);
+		} 
 		TNT1 AAAAA 5 A_SpawnItemEx("HRWhiteFX",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		Stop
 	}
@@ -2367,8 +2347,8 @@ Actor BFG9000Shot
 			A_SetScale(0.0,0.0);
 			A_SetUserVar(user_count,0);
 			A_SetUserVar(user_c2,0);
-			A_Explode(random(1220,2660),256,0);
-			A_BFGSpray("BFGExtraDMG");
+			A_Explode(random(1220,2660),512,0);
+			//A_BFGSpray("BFGExtraDMG");
 		}
 	DLoop:
 		BFE1 C 1 bright
@@ -2378,25 +2358,15 @@ Actor BFG9000Shot
 				// Weird infinity thingy. Must preserve.
 				//(cos(-user_pitch)*10)*sin(user_a),0,(sin(user_pitch)*10)*cos(-user_a),
 				//(cos(-user_pitch)*10)*sin(user_a),0,(sin(user_pitch)*10)*cos(-user_a),
-				A_SpawnParticle("White",SPF_FULLBRIGHT|SPF_RELATIVE,35,10,user_a,
-				(cos(-user_pitch)*10),0,(sin(user_pitch)*10),(cos(-user_pitch)*10),0,(sin(user_pitch)*10),0,0,0);
 				A_SpawnParticle("Green",SPF_FULLBRIGHT|SPF_RELATIVE,70,10,user_a,
-				(cos(-user_pitch)*10),0,(sin(user_pitch)*10),(cos(-user_pitch)*10),0,(sin(user_pitch)*10),0,0,0);
-				A_SpawnParticle("White",SPF_FULLBRIGHT|SPF_RELATIVE,35,10,user_a+180,
 				(cos(-user_pitch)*10),0,(sin(user_pitch)*10),(cos(-user_pitch)*10),0,(sin(user_pitch)*10),0,0,0);
 				A_SpawnParticle("Green",SPF_FULLBRIGHT|SPF_RELATIVE,70,10,user_a+180,
 				(cos(-user_pitch)*10),0,(sin(user_pitch)*10),(cos(-user_pitch)*10),0,(sin(user_pitch)*10),0,0,0);
 				A_SpawnParticle("Green",SPF_FULLBRIGHT|SPF_RELATIVE,70,10,user_a,
 				10,0,0,10,0,0,0,0,0);
-				A_SpawnParticle("White",SPF_FULLBRIGHT|SPF_RELATIVE,35,10,user_a,
-				10,0,0,10,0,0,0,0,0);
 				A_SpawnParticle("Green",SPF_FULLBRIGHT|SPF_RELATIVE,70,10,90,
 				(cos(user_a)*10),0,(sin(user_a)*10),(cos(-user_a)*10),0,(sin(user_a)*10),0,0,0);
-				A_SpawnParticle("White",SPF_FULLBRIGHT|SPF_RELATIVE,35,10,90,
-				(cos(user_a)*10),0,(sin(user_a)*10),(cos(-user_a)*10),0,(sin(user_a)*10),0,0,0);
 				A_SpawnParticle("Green",SPF_FULLBRIGHT|SPF_RELATIVE,70,10,0,
-				(cos(user_a)*10),0,(sin(user_a)*10),(cos(-user_a)*10),0,(sin(user_a)*10),0,0,0);
-				A_SpawnParticle("White",SPF_FULLBRIGHT|SPF_RELATIVE,35,10,0,
 				(cos(user_a)*10),0,(sin(user_a)*10),(cos(-user_a)*10),0,(sin(user_a)*10),0,0,0);
 				A_SetUserVarFloat(user_pitch,sin(user_a)*35);
 				A_SetUserVar(user_a,user_a + 3);
@@ -2424,27 +2394,63 @@ Actor BFG9000Shot
 
 Actor BFGTrailSpawner
 {
+	var int user_t;
+	var float user_scalar;
 	Projectile
 	+FORCERADIUSDMG
 	+EXTREMEDEATH
 	+NOINTERACTION
 	+NODAMAGETHRUST
 	+NOTONAUTOMAP
-	RenderStyle None
+	+ROLLSPRITE
+	+FORCEXYBILLBOARD
+	RenderStyle Add
 	DamageType "Plasma"
 	States
 	{
 	Spawn:
 		BFE1 B 0 NoDelay
 		{
-			if (CheckClass("PlayerPawn",Target,1))
-			{	A_Explode(random(6,16),BFG_LaserRadius,0,0,BFG_LaserRadius);	}
-			else
-			{	A_Explode(1,BFG_LaserRadius,0,0,BFG_LaserRadius);	}
-			A_SpawnItemEx("BFG9000MainTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSCALE);
-			A_SpawnItemEx("BFG9000MainTrail",cos(-pitch)*20,0,sin(pitch)*20,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSCALE|SXF_TRANSFERPITCH);
+			A_FaceMovementDirection;
+			A_Explode(random(8,16),BFG_LaserRadius,0,0,BFG_LaserRadius);
+			A_SpawnItemEx("BFGTrail2",-cos(-pitch)*10,0,-sin(pitch)*10,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERSCALE|SXF_TRANSFERROLL);
+			return state("Enact");
 		}
-		Stop
+	Enact:
+		BFE1 B 1
+		{
+			A_SetUserVarFloat(user_scalar, user_scalar + frandom(0.005,0.01));
+			A_SetScale(ScaleX,ScaleY-user_scalar);
+			if (ScaleY <= 0.0)
+			{	return state("Null");	}
+			return state(0);
+		}
+		Loop
+	}
+}
+
+Actor BFGTrail2
+{
+	var float user_scalar;
+	+NOINTERACTION
+	+NOTONAUTOMAP
+	+ROLLSPRITE
+	+FORCEXYBILLBOARD
+	RenderStyle Add
+	States
+	{
+	Spawn:
+		BFE1 B 1
+	Enact:
+		BFE1 B 1
+		{
+			A_SetUserVarFloat(user_scalar, user_scalar + frandom(0.005,0.01));
+			A_SetScale(ScaleX,ScaleY-user_scalar);
+			if (ScaleY <= 0.0)
+			{	return state("Null");	}
+			return state(0);
+		}
+		Loop
 	}
 }
 
@@ -2569,7 +2575,7 @@ Actor BFGBeamSpawner : CustomInventory
 
 Actor BFGBeam
 {
-	const float Limit = 12.0;
+	const float Limit = 18.0;
 	const float FMin = 0.5;
 	const float FMax = 1.0;
 	var float user_x[2];
@@ -2579,45 +2585,46 @@ Actor BFGBeam
 	var int user_life;
 	var int user_count;
 	var int user_minicount;
+	var float user_scalar;
 	+NOINTERACTION
 	+NOBLOCKMAP
 	+NOTONAUTOMAP
 	RenderStyle None
-	Speed 2.5
+	Speed 5
 	States
 	{
 	Spawn:
 		TNT1 A 1 NoDelay
 		{
-			if (A_JumpIfHealthLower(1,"Null",Target) || IsPointerEqual(Target,NullPtr))
+			if (user_life >= 2 || A_JumpIfHealthLower(1,"Null",Target) || IsPointerEqual(Target,NullPtr))
 			{	return state("Null");	}
 			
-			A_Warp(Target,0,0,0,0,WARPF_USECALLERANGLE|WARPF_NOCHECKPOSITION,"Null",0.5);
-			A_SetUserVar(user_life, user_life + 1);
-			
-			if (user_life > 4)
-			{	return state("Null");	}
-			
-			if (A_CheckProximity("Null","BFG9000Shot",BFG_LaserRadius,1,CPXF_CLOSEST|CPXF_SETTRACER))
+			if (A_CheckProximity("Null","BFG9000Shot",BFG_LaserRadius,1,CPXF_SETTRACER|CPXF_CHECKSIGHT))
 			{
-				A_SetUserVar(user_count,0);
+				A_SetUserVar(user_life, user_life + 1);
+				A_SetUserVar(user_count, 0);
+				A_SetUserVar(user_minicount, 0);
+				A_SetUserVarFloat(user_scalar,0.0);
+				A_FaceTracer(0,0,0,0,FAF_MIDDLE);
+				A_Warp(Target,0,0,0,0,WARPF_USECALLERANGLE|WARPF_NOCHECKPOSITION,"Null",0.5);
 				A_SetUserVarFloat(user_dist, GetDistance(true,Tracer));
-				A_Warp(Tracer,0,0,0,0,WARPF_USECALLERANGLE|WARPF_NOCHECKPOSITION,"Null");
-				A_FaceTarget(0,0,0,0,FAF_MIDDLE);
+				//A_Warp(Tracer,0,0,0,0,WARPF_USECALLERANGLE|WARPF_NOCHECKPOSITION,"Null");
 				return state("Beam");
 			}
-			return state(0);
+			return state("Null");
 		}
-		Loop
+		Stop
 	Beam:
-		TNT1 A 1
+		TNT1 A 2
 		{
-			if (user_count >= user_dist) //|| abs(GetAngle(true,Target)) > 90.0 || (GetDistance(true,Target) <= 16))
-			{
-				A_SetUserVar(user_count,0);
-				A_RearrangePointers(DefPtr,DefPtr,NullPtr);
-				return state(0);
-			}			
+			if (user_count >= user_dist)
+			{	return state(0);	}
+			
+			if (user_count < (speed * 20))
+			{	A_SetUserVarFloat(user_scalar, Clamp(user_scalar + (1.0/20.0), 0.0, 1.0));	}
+			if (user_count >= (user_dist - (speed * 20)))
+			{	A_SetUserVarFloat(user_scalar, Clamp(user_scalar - (1.0/20.0), 0.0, 1.0));	}
+			
 			if (user_minicount <= 0)
 			{
 				A_SetUserArrayFloat(user_x,1,frandom(FMin,FMax) * randompick(-1,1));
@@ -2633,15 +2640,16 @@ Actor BFGBeam
 				A_SetUserVar(user_minicount,user_minicount-1);
 			}
 			if (user_y[0] > Limit)		{	A_SetUserArrayFloat(user_y,0, user_y[0] - ((abs(user_y[0]) % Limit) * 2));	}
-			if (user_z[0] > Limit)		{	A_SetUserArrayFloat(user_z,0, user_z[0] - ((abs(user_z[0]) % Limit) * 2));	}
 			if (user_y[0] < -Limit)		{	A_SetUserArrayFloat(user_y,0, user_y[0] + ((abs(user_y[0]) % Limit) * 2));	}
+			
+			if (user_z[0] > Limit)		{	A_SetUserArrayFloat(user_z,0, user_z[0] - ((abs(user_z[0]) % Limit) * 2));	}
 			if (user_z[0] < -Limit)		{	A_SetUserArrayFloat(user_z,0, user_z[0] + ((abs(user_z[0]) % Limit) * 2));	}
 			
-			A_SpawnParticle(A7FF47,SPF_FULLBRIGHT|SPF_RELATIVE,2,8,0,
-				(cos(-pitch)*user_count)+(sin(pitch)*user_x[0]),
-				user_y[0],
-				(sin(pitch)*user_count)+(cos(-pitch)*user_z[0]),
-				0,0,0,0,0,0,1.0,0.5);
+			A_SpawnParticle(A7FF47,SPF_FULLBRIGHT|SPF_RELATIVE,3,16,0,
+				(cos(-pitch)*user_count)+(sin(pitch)*user_x[0]*user_scalar),
+				user_y[0]*user_scalar,
+				((sin(pitch)*user_count)+(cos(-pitch)*user_z[0]*user_scalar)),
+				0,0,0,0,0,0,1.0,0.3);
 			A_SetUserVar(user_count, user_count + speed);
 			return state("Beam");
 		}
@@ -11839,12 +11847,12 @@ Actor SoulReaperBeam
 		TNT1 A 0 A_CheckFlag("NODAMAGE","SkipSoul",AAPTR_TRACER)
 		TNT1 A 0 A_JumpIfHealthLower(1,"SkipSoul",AAPTR_TRACER)
 		TNT1 A 0 A_SpawnItemEx("DMSoulMissile",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
-		TNT1 A 0 A_DamageTracer(2,"Extreme",DMSS_FOILINVUL)
+		TNT1 A 0 A_DamageTracer(2,"Extreme",DMSS_FOILINVUL,None,None,Target)
 		TNT1 A 0 A_ChangeFlag("NODAMAGETHRUST",1)
 		//TNT1 A 0 A_Explode(1,128,0,0,128)
 		Stop
 	SkipSoul:
-		TNT1 A 0 A_DamageTracer(random(1,2),"Extreme",DMSS_FOILINVUL)
+		TNT1 A 0 A_DamageTracer(random(1,2),"Extreme",DMSS_FOILINVUL,None,None,Target)
 		Stop
 	DCont:
 		TNT1 A 0 
