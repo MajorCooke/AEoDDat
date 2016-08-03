@@ -122,16 +122,20 @@ Actor MCBloodFXMain replaces Blood
 		}
 		Goto SpawnBlood
 	SpawnBlood:
+		TNT1 A 0
+		{
+			if (user_inv != 1)
+			{	
+				A_SpawnItemEx("MCBloodParticle",frandom(0,2),0,random(1,4),velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_ABSOLUTEVELOCITY|SXF_SETTRACER,0,user_t); 
+			}
+		}
 		TNT1 AAA 1 
 		{
 			if (user_inv >= 1)
 			{	A_SpawnItemEx("MCBloodSprite",frandom(0,2),0,random(1,4),frandom(0,1.5),0,frandom(0.1,2.0),random(0,359),33|SXF_USEBLOODCOLOR,0);	}
-			if (user_inv != 1)
-			{	
-				A_SpawnItemEx("MCBloodParticle",frandom(0,2),0,random(1,4),velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_ABSOLUTEVELOCITY|SXF_SETTRACER,0,user_t); 
-				//return state("Null");
-			}
-			//return state(0);
+			else
+			{	return state("Null");	}
+			return state(0);
 		}	
 		Stop
 	}
