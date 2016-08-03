@@ -2559,12 +2559,16 @@ Actor BFGBeamSpawner : CustomInventory
 	Pickup:
 		TNT1 A 0
 		{
-			if ((health <= 0) || !A_CheckProximity("Null","BFG9000Shot",BFG_LaserRadius,1,CPXF_CHECKSIGHT) || 
-				!A_CheckFlag(SHOOTABLE,"Null") || A_CheckFlag(NONSHOOTABLE,"Null") || A_CheckFlag(FRIENDLY,"Null"))
-			{	return state("Failure");	}
-			
-			A_SpawnItemEx("BFGBeam",0,0,height/2,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTARGET);
-			return state(0);
+			if ((health <= 0) || !A_CheckProximity("Null","BFG9000Shot",BFG_LaserRadius,1,CPXF_CHECKSIGHT) ||
+				!A_CheckFlag(SHOOTABLE,"Null") || A_CheckFlag(FRIENDLY,"Null"))
+			{	return bool(false);	}
+
+			if (GetCvar(vid_renderer))
+			{	A_SpawnItemEx("BFGBeamGZ",0,0,height/2,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTRACER|SXF_ORIGINATOR);	}
+			else
+			{	A_SpawnItemEx("BFGBeam",0,0,height/2,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTARGET);	}
+				
+			return bool(true);
 		}
 		Stop
 	Failure:
@@ -2573,6 +2577,130 @@ Actor BFGBeamSpawner : CustomInventory
 	}
 }
 
+//==============================================================================
+// GZDoom BFG Beam
+Actor BFGBeamGZ
+{
+	enum
+	{
+		MaxDistance = 2048,
+		AngleRandom = 7,
+		PitchRandom = 7,
+		ChokeMin = 2,
+		ChokeMax = 6,
+		MaxLife = 4,
+	};
+	const float StepDistance = 62;
+	var float user_pitch;
+	var float user_angle;
+	var float user_dist[2];
+	//[0] = Current distance travelled
+	//[1] = How much further to go
+	var int user_choke;
+	var int user_count;
+	+NOINTERACTION
+	RenderStyle None
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay
+		{
+			
+			if (!A_CheckProximity("Null","BFG9000Shot",BFG_LaserRadius*2,1,CPXF_SETTARGET|CPXF_CHECKSIGHT))
+			{	return state("Null");	}
+			if (!IsPointerEqual(Tracer,NullPtr))
+			{
+				A_FaceTracer(0,0,0,0,FAF_MIDDLE);
+				A_SetUserVarFloat(user_pitch, pitch);
+				A_SetUserVarFloat(user_angle, angle);
+				A_SetUserArrayFloat(user_dist,0,0);
+				A_SetUserArrayFloat(user_dist, 1, Min(MaxDistance,GetDistance(true,Tracer)));
+				A_SetUserVar(user_choke, random(ChokeMin,ChokeMax));
+				return state(1);
+			}
+			return state("Null");
+		}
+		TNT1 A 1
+		{
+			while ((user_dist[0] < user_dist[1]) && !IsPointerEqual(Tracer,NullPtr) && !A_JumpIfHealthLower(1,"Null",Tracer))
+			{
+				if (user_dist[0] > 0)
+				{	A_FaceTracer(0,0,0,0,FAF_MIDDLE);	}
+				if (user_dist[0] < (user_dist[1] - StepDistance))
+				{
+					if (user_choke > 0)
+					{
+						A_SetPitch(pitch + frandom(-PitchRandom, PitchRandom));
+						A_SetAngle(angle + frandom(-AngleRandom, AngleRandom));
+						A_SetUserVar(user_choke, user_choke - 1);
+					}
+					else 
+					{	A_SetUserVar(user_choke, random(ChokeMin,ChokeMax));	}
+				}
+				if (!A_CheckSight("Null") && (user_dist[0] > user_dist[1] - (StepDistance / 2.0)) )
+				{	A_SpawnItemEx("BFGBeamLaser",cos(-pitch) * (StepDistance / 2.0),0,sin(pitch) * (StepDistance / 2.0),0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH);	}
+				A_Warp(DefPtr,cos(-pitch) * StepDistance,0,sin(pitch) * StepDistance,0,WARPF_NOCHECKPOSITION);
+				A_SetUserArray(user_dist, 0, user_dist[0] + StepDistance);
+			}
+			if (user_count < MaxLife)	
+			{
+				A_SetUserVar(user_count, user_count + 1);
+				A_Warp(Target,0,0,0,0,SXF_NOCHECKPOSITION);
+				return state(0);
+			}
+			else
+			{	return state("Null");	}
+			
+		}
+		Loop
+	}
+}
+
+Actor BFGBeamLaser
+{
+	var int user_t;
+	+NOINTERACTION
+	+FORCEXYBILLBOARD
+	+ROLLSPRITE
+	+FLATSPRITE
+	+BRIGHT
+	YScale 0.5 //Don't touch this! Otherwise the trail will become broken up!
+	XScale 0.075 //This modified the width of the beam. It is safe to play around with.
+	Alpha 1
+	RenderStyle Add
+	// DO NOT add a translation. If you need to change the colors, make a sprite
+	// entry in TEXTURES lump and use BLEND. NEVER TRANSLATE!
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay
+		{
+			if (tid == 0)
+			{	
+				A_SpawnItemEx("BFGBeamLaser",0,0,0,0,0,0,90,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERSCALE,0,1);
+				A_SetPitch(pitch-90);
+			}
+			else
+			{
+				Thing_ChangeTID(0,0);
+				A_SetRoll(-(pitch-90));
+				A_SetPitch(0);
+			}
+		}
+		X163 E 1
+		Stop
+		"####" "#" 1 
+		{
+			A_SetScale(ScaleX - (0.075 / 2.0), ScaleY);
+			if (ScaleX <= 0)	{ return state("Null"); }
+			return state(0);
+		}
+		Wait
+	}
+}
+
+//==============================================================================
+// ZDoom BFG Beam
 Actor BFGBeam
 {
 	const float Limit = 18.0;
