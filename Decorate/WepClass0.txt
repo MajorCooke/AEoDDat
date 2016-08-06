@@ -2327,22 +2327,22 @@ Actor BFG9000Shot
 			A_SetUserVar(user_c2, (user_c2 + random(20,35)) % 360);
 			A_SetRoll(roll + 5, SPF_INTERPOLATE);
 			A_FaceMovementDirection;
-			
 			A_SetUserVar(user_count, (user_count + 1) % 4);
+			
+			if (CheckClass("PlayerPawn",Target,1))
+			{	
+				A_SetUserVar(user_flags,RGF_MONSTERS|RGF_NOTARGET);
+				A_Explode(random(16,32),BFG_LaserRadius,0,0,BFG_LaserRadius);
+			}
+			else
+			{	
+				A_SetUserVar(user_flags,RGF_MONSTERS|RGF_NOTARGET|RGF_PLAYERS);
+				A_Explode(1,BFG_LaserRadius,0,0,BFG_LaserRadius);
+			}
+			
 			if (user_count == 0)
 			{
-				if (CheckClass("PlayerPawn",Target,1))
-				{	
-					A_SetUserVar(user_flags,RGF_MONSTERS|RGF_NOTARGET);	
-					A_Explode(random(16,32),BFG_LaserRadius,0,0,BFG_LaserRadius);
-				}
-				else
-				{	
-					A_SetUserVar(user_flags,RGF_MONSTERS|RGF_NOTARGET|RGF_PLAYERS);
-					A_Explode(1,BFG_LaserRadius,0,0,BFG_LaserRadius);
-				}
-				A_RadiusGive("BFGBeamSpawner",BFG_LaserRadius,user_flags|RGF_CUBE,1,None,None,0,5);
-				
+				A_RadiusGive("BFGBeamSpawner",BFG_LaserRadius,user_flags|RGF_CUBE,1,None,None,0,5);	
 			}
 			A_SpawnItemEx("BFGTrailSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSCALE|SXF_TRANSFERSPRITEFRAME|SXF_TRANSFERPITCH|SXF_TRANSFERROLL);
 			A_SpawnItemEx("BFGLightningGenerator",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,192);
