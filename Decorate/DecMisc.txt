@@ -53,6 +53,38 @@ Actor BloodSpriteToken	: Inventory { Inventory.MaxAmount 2		Inventory.InterHubAm
 Actor TempHealthToken	: Inventory	{ Inventory.MaxAmount 30000	Inventory.InterHubAmount 30000	}
 Actor MorphToken		: Inventory {}
 
+Actor PointerRestorer : CustomInventory
+{
+	+ALWAYSPICKUP
+	States
+	{
+	Pickup:
+		TNT1 A 0
+		{
+			if (CheckClass("PointerSaver"))
+			{
+				A_TransferPointer(DefPtr,Master,Tracer,Tracer,4);
+				return bool(true);
+			}
+			return bool(false);
+		}
+		Stop
+	}
+}
+
+Actor PointerSaver
+{
+	+NOINTERACTION
+	+NOBLOCKMAP
+	+NOSECTOR
+	RenderStyle None
+	States
+	{
+	Spawn:
+		TNT1 A 2
+		Stop
+	}
+}
 Actor Counter : inventory		//general purpose counter
 {	Inventory.MaxAmount 255 }
 
