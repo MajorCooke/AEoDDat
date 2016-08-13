@@ -1925,7 +1925,7 @@ Actor AEoDApocalypse : Weapon // 6075
 		W02I QRST 3 
 		W02I U 15
 		{
-			A_GunFlash;;
+			A_GunFlash;
 			A_SetBlend("DarkRed",0.4,50);
 			A_FireCustomMissile("ApocalypseStarter",0,1,0,0);
 		}
@@ -2055,6 +2055,7 @@ Actor ApocGhost
 Actor ApocalypseStarter
 {
 	Projectile
+	+NOINTERACTION
 	+FULLVOLDEATH
 	+FOILINVUL
 	+THRUACTORS
@@ -2067,7 +2068,7 @@ Actor ApocalypseStarter
 	{
 	Spawn:
 		TNT1 A 0 A_Scream
-		TNT1 A 2 A_RadiusGive("ApocalypseSprayerStart",4096,RGF_MONSTERS|RGF_OBJECTS,1,None,None,0,500)
+		TNT1 A 2 A_RadiusGive("ApocalypseSprayerStart",4096,RGF_MONSTERS|RGF_OBJECTS,1)
 		//TNT1 A 1 A_BFGSpray("ApocSpray",240,15,90,4096,32)
 		Stop
 	}
@@ -2134,6 +2135,7 @@ Actor ApocSprayPlayer
 	var int user_damage;
 	var int user_s1;
 	Projectile
+	+NOINTERACTION
 	+THRUACTORS
 	+FOILINVUL
 	+BRIGHT
@@ -2422,11 +2424,12 @@ Actor BFG9000Shot
 			
 			if (CheckClass("PlayerPawn",Target,1))
 			{	
-				A_SetUserVar(user_flags,RGF_MONSTERS|RGF_NOTARGET);
+				user_flags = RGF_MONSTERS|RGF_NOTARGET;
 				A_Explode(random(16,32),BFG_LaserRadius,0,0,BFG_LaserRadius);
 			}
 			else
 			{	
+				user_flags = RGF_MONSTERS|RGF_NOTARGET|RGF_PLAYERS;
 				A_SetUserVar(user_flags,RGF_MONSTERS|RGF_NOTARGET|RGF_PLAYERS);
 				A_Explode(1,BFG_LaserRadius,0,0,BFG_LaserRadius);
 			}
@@ -2442,12 +2445,15 @@ Actor BFG9000Shot
 	Death:
 		BFE1 C 0
 		{
+			
 			A_QuakeEx(0,0,0,16,0,512,"",QF_SCALEDOWN|QF_SCALEUP,0,0,0,1,4,1,0);
 			A_QuakeEx(0,0,0,20,0,512,"",QF_SCALEDOWN|QF_WAVE|QF_SCALEUP,0,0,0,1,4,1.5*randompick(-1,1),frandom(5.5,8.5));
-			A_SetUserVarFloat(user_pitch,0);
-			A_SetScale(0.0,0.0);
-			A_SetUserVar(user_count,0);
-			A_SetUserVar(user_c2,0);
+			roll = 0;
+			user_pitch = 0;
+			user_count = 0;
+			user_c2 = 0;
+			ScaleX = 0;
+			ScaleY = 0;
 			A_Explode(random(1220,2660),512,0);
 			//A_BFGSpray("BFGExtraDMG");
 		}
