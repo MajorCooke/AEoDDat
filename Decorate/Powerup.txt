@@ -2818,6 +2818,7 @@ Actor BigWeaponPower
 	var int user_Type;
 	+NOINTERACTION
 	VisibleToPlayerClass AEoDmarine
+	Species Absorbable
 	States
 	{
 	Spawn:
@@ -2856,6 +2857,7 @@ Actor BigWeaponPowerMagic : CustomInventory
     Inventory.PickupMessage "Ammo Power"
     Inventory.PickupSound "misc/powerslaveweaponpower"
 	VisibleToPlayerClass AEoDmarine
+	Species Absorbable
     States
     {
     Spawn:
@@ -2917,6 +2919,7 @@ Actor BigWeaponPowerNormal : CustomInventory
     Inventory.PickupMessage "Ammo Power"
     Inventory.PickupSound "misc/powerslaveweaponpower"
 	VisibleToPlayerClass AEoDmarine
+	Species Absorbable
     States
     {
     Spawn:
@@ -2983,6 +2986,7 @@ Actor BigWeaponPowerTech : CustomInventory
     Inventory.PickupMessage "Ammo Power"
     Inventory.PickupSound "misc/powerslaveweaponpower"
 	VisibleToPlayerClass AEoDmarine
+	Species Absorbable
     States
     {
     Spawn:
@@ -3047,6 +3051,7 @@ Actor BigWeaponPowerClassic : CustomInventory
     Inventory.PickupMessage "Ammo Power"
     Inventory.PickupSound "misc/powerslaveweaponpower"
 	VisibleToPlayerClass AEoDmarine
+	Species Absorbable
     States
     {
     Spawn:
@@ -3220,6 +3225,7 @@ Actor ShotgunOrbPowerMagic : CustomInventory
     Inventory.PickupMessage "Weapon Power"
     Inventory.PickupSound "misc/powerslaveweaponpower"
 	VisibleToPlayerClass AEoDmarine
+	Species Absorbable
     States
     {
     Spawn:
@@ -3245,6 +3251,7 @@ Actor ShotgunOrbPowerNormal : CustomInventory
     Inventory.PickupMessage "Weapon Power"
     Inventory.PickupSound "misc/powerslaveweaponpower"
 	VisibleToPlayerClass AEoDmarine
+	Species Absorbable
     States
     {
     Spawn:
@@ -3270,6 +3277,7 @@ Actor ShotgunOrbPowerTech : CustomInventory
     Inventory.PickupMessage "Weapon Power"
     Inventory.PickupSound "misc/powerslaveweaponpower"
 	VisibleToPlayerClass AEoDmarine
+	Species Absorbable
     States
     {
     Spawn:
@@ -3295,6 +3303,7 @@ Actor ShotgunOrbPowerClassic : CustomInventory
     Inventory.PickupMessage "Weapon Power"
     Inventory.PickupSound "misc/powerslaveweaponpower"
 	VisibleToPlayerClass AEoDmarine
+	Species Absorbable
     States
     {
     Spawn:
@@ -3405,6 +3414,7 @@ Actor MonsterPowerMagic : CustomInventory
     Inventory.PickupMessage "Small Ammo Power"
     Inventory.PickupSound "misc/powerslaveweaponpower"
 	VisibleToPlayerClass AEoDmarine
+	Species Absorbable
     States
     {
     Spawn:
@@ -3473,6 +3483,7 @@ Actor MonsterPowerNormal : CustomInventory
     Inventory.PickupMessage "Small Ammo Power"
     Inventory.PickupSound "misc/powerslaveweaponpower"
 	VisibleToPlayerClass AEoDmarine
+	Species Absorbable
     States
     {
     Spawn:
@@ -3545,6 +3556,7 @@ Actor MonsterPowerTech : CustomInventory
     Inventory.PickupMessage "Small Ammo Power"
     Inventory.PickupSound "misc/powerslaveweaponpower"
 	VisibleToPlayerClass AEoDmarine
+	Species Absorbable
     States
     {
     Spawn:
@@ -3615,6 +3627,7 @@ Actor MonsterPowerClassic : CustomInventory
     Inventory.PickupMessage "Small Ammo Power"
     Inventory.PickupSound "misc/powerslaveweaponpower"
 	VisibleToPlayerClass AEoDmarine
+	Species Absorbable
     States
     {
     Spawn:
@@ -3712,6 +3725,7 @@ Actor BigHealthPower : Health
     +FLOATBOB
     +INVENTORY.FANCYPICKUPSOUND
 	VisibleToPlayerClass AEoDmarine
+	Species Absorbable
     Scale 0.7
     Inventory.Amount 15
     Inventory.PickupMessage "Health Increasing Orb."
@@ -3735,6 +3749,7 @@ Actor SmallHealthPower : Health
     +FLOATBOB
     +INVENTORY.FANCYPICKUPSOUND
 	VisibleToPlayerClass AEoDmarine
+	Species Absorbable
     Scale 0.5
     Inventory.Amount 5
     Inventory.PickupMessage "Health Increasing Orb."
@@ -3770,8 +3785,9 @@ Actor BigShieldPower : CustomInventory
     +INVENTORY.FANCYPICKUPSOUND
     Translation "84:109=20:45","195:196=184:185","152:154=233:235","3:3=40:40"
     Scale 0.7
-    Inventory.PickupMessage "Armor Increasing Orb."
+    Inventory.PickupMessage "Armor Orb"
     Inventory.PickupSound "powerslave/armororb"
+	Species Absorbable
     States
     {
     Spawn:
@@ -3802,6 +3818,7 @@ Actor SmallShieldPower : CustomInventory
     Scale 0.5
     Inventory.PickupMessage "Armor Increasing Orb."
     Inventory.PickupSound "powerslave/armororb"	
+	Species Absorbable
     States
     {
     Spawn:
@@ -4776,7 +4793,7 @@ Actor DemonMorphPowerup : CustomInventory
 	var int user_tick;
 	var int user_limit;
 	//+INVENTORY.ALWAYSPICKUP
-	+INVENTORY.AUTOACTIVATE
+	//+INVENTORY.AUTOACTIVATE
 	+INVENTORY.BIGPOWERUP
 	+FLOATBOB
 	+INVENTORY.QUIET
@@ -4811,9 +4828,16 @@ Actor DemonMorphPowerup : CustomInventory
 	Simple:
 		QPEI A 4 A_SetUserVar("user_tick",user_tick+2)
 		Goto S2
-	Use:
+	Pickup:
 		TNT1 A 0 
 		{
+			if (CountInv("MorphOverrideable") > 0)
+			{
+				A_ClearOverlays;
+				A_TakeInventory("MorphOverrideable",32767);
+				ACS_NamedExecuteAlways("ForceUnmorph",0,1,0,0);
+				return bool(true);
+			}
 			A_TakeInventory("SSRSecondShotToken",32767);
 			A_TakeInventory("SSLSecondShotToken",32767);
 			A_TakeInventory("ElectroDriverToken",32767);
@@ -4829,12 +4853,7 @@ Actor DemonMorphPowerup : CustomInventory
 				A_SetInvulnerable;
 				return bool(true);
 			}
-			if (CountInv("MorphOverrideable") > 0)
-			{
-				A_TakeInventory("MorphOverrideable",32767);
-				ACS_NamedExecuteAlways("ForceUnmorph",0,1,0,0);
-				return bool(true);
-			}
+			
 			if (health > 200)
 			{	A_GiveInventory("TempHealthToken",health+stamina);	}
 			
