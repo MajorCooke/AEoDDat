@@ -115,6 +115,7 @@ Actor MCBloodFXMain replaces Blood
 				Thing_ChangeTID(0,0);
 				return state("Null");
 			}
+			A_FaceMovementDirection;
 			A_SetUserVar(user_inv, CountInv("BloodSpriteToken",Player1));
 			A_SetUserVar(user_t,tid);
 			Thing_ChangeTID(0,0);
@@ -126,6 +127,7 @@ Actor MCBloodFXMain replaces Blood
 		{
 			if (user_inv != 1)
 			{	
+				A_FaceMovementDirection;
 				A_SpawnItemEx("MCBloodParticle",frandom(0,2),0,random(1,4),velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_ABSOLUTEVELOCITY|SXF_SETTRACER,0,user_t); 
 			}
 		}
@@ -148,6 +150,7 @@ Actor MCBloodFXTrail : MCBloodFXMain
 	SpawnBlood:
 		TNT1 A 0
 		{
+			A_FaceMovementDirection;
 			if (user_inv >= 1)
 			{	A_SpawnItemEx("MCBloodSprite",frandom(0,2),0,random(1,4),frandom(0,1.5),0,frandom(0.1,2.0),random(0,359),33|SXF_USEBLOODCOLOR,0);	}
 			if (user_inv <= 0 || user_inv >= 2)
@@ -223,7 +226,7 @@ Actor MCBloodParticle
 	// http://zdoom.org/wiki/Constants#DECORATE_usage
 	enum
 	{
-		PFlag = SPF_Relative,
+		PFlag = SPF_RELATIVE,
 		Lifetime = 		35,		//Self explanatory.
 		Size1Min = 		10,		//Size of bigger particle
 		Size1Max = 		20,
