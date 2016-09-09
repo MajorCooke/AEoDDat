@@ -38,10 +38,8 @@ an ethereal invulnerability. As long as he has retribution to mete out, he will
 remain and fight.
 */
 
-Actor AEoDHandOfGodItem: CustomInventory //6124
+Actor AEoDHandOfGodItem : AEoDWeaponPickup //6124
 {
-	+FLOORCLIP
-	+IGNORESKILL	+DONTGIB
 	Inventory.Amount 1
 	Inventory.PickupMessage "You have the Hand of God. Banish the demons back to hell!"
 	Inventory.PickupSound "HandOfGod/Pickup"
@@ -73,9 +71,10 @@ Actor AEoDHandOfGodItem: CustomInventory //6124
 	}
 }
 
-Actor AEoDHandOfGod : Weapon // 6124
+Actor AEoDHandOfGod : AEoDWeaponBase // 6124
 {
-	+IGNORESKILL	+DONTGIB
+	+IGNORESKILL	
+	+DONTGIB
 	+WEAPON.CHEATNOTWEAPON
 	Inventory.PickupMessage "You have the Hand of God. Banish the demons back to hell!"
 	Inventory.PickupSound "HandOfGod/Pickup"
@@ -185,12 +184,12 @@ Actor GodBall
 	SeekerTime:
 		GDBA AABBCCDD 1 bright
 		{
+			A_SeekerMissile(90,90,SMF_LOOK|SMF_PRECISE);
 			A_FaceTracer;
 			A_SpawnItemEx("GodsBallTrailSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION);
 			if (!A_JumpIfTargetInLOS("Null",360,JLOSF_CHECKTRACER,512))
 			{	A_RearrangePointers(AAPTR_DEFAULT,AAPTR_DEFAULT,AAPTR_NULL,PTROP_NOSAFEGUARDS);	}
 			A_SetUserVar(user_c, (user_c + 1) % 2);
-			A_SeekerMissile(90,90,SMF_LOOK|SMF_PRECISE);
 			if (user_c)	{ A_SpawnItemEx("GodBallVaporizer",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS);	}
 		}
 		Loop
@@ -788,7 +787,7 @@ Actor AEoDHandOfGodNoAmmo : AEoDHandOfGodItem
 //==================================================================================
 //==================================================================================
 
-Actor AEoDVolcanoCannonItem : CustomInventory 6128
+Actor AEoDVolcanoCannonItem : AEoDWeaponPickup 6128
 {
 	+FLOORCLIP
 	+IGNORESKILL	+DONTGIB
@@ -822,7 +821,7 @@ Actor AEoDVolcanoCannonItem : CustomInventory 6128
 	}
 }
 
-Actor AEoDVolcanoCannon : Weapon // 6128
+Actor AEoDVolcanoCannon : AEoDWeaponBase // 6128
 {
 	+IGNORESKILL	+DONTGIB
 	+WEAPON.CHEATNOTWEAPON
@@ -1823,7 +1822,7 @@ Actor AEoDVolcanoCannonNoAmmo : AEoDVolcanoCannonItem
 //==================================================================================
 //==================================================================================
 
-Actor AEoDApocalypseItem : CustomInventory 6075
+Actor AEoDApocalypseItem : AEoDWeaponPickup 6075
 {
 	+FLOORCLIP
 	+IGNORESKILL	+DONTGIB
@@ -1858,7 +1857,7 @@ Actor AEoDApocalypseItem : CustomInventory 6075
 	}
 }
 
-Actor AEoDApocalypse : Weapon // 6075
+Actor AEoDApocalypse : AEoDWeaponBase // 6075
 { 
 	+WEAPON.CHEATNOTWEAPON
 	+IGNORESKILL	+DONTGIB
@@ -2128,11 +2127,11 @@ Actor ApocSprayPlayer
 	enum
 	{
 		MaxDistance = 4096,
-		DistDamage = 4196,
+		DistDamage = 6144,
 	};
 	// Range damage reduction. The higher, the closer you have to be to the targets
 	// to deal increased damage.
-	const float Negate = 6.0; 
+	const float Negate = 5.5; 
 	var int user_damage;
 	var int user_s1;
 	Projectile
@@ -2280,7 +2279,7 @@ Actor AEoDApocalypseNoAmmo : AEoDApocalypseItem
 //==================================================================================
 //==================================================================================
 
-Actor AEoDBFG9000Item : CustomInventory //6073
+Actor AEoDBFG9000Item : AEoDWeaponPickup //6073
 {
 	+FLOORCLIP
 	+IGNORESKILL	+DONTGIB
@@ -2314,7 +2313,7 @@ Actor AEoDBFG9000Item : CustomInventory //6073
 	}
 }
 
-Actor AEoDBFG9000 : Weapon // 6073
+Actor AEoDBFG9000 : AEoDWeaponBase // 6073
 {
 	+WEAPON.CHEATNOTWEAPON
 	+IGNORESKILL	+DONTGIB
@@ -3266,7 +3265,7 @@ Actor AEoDBFG9000NoAmmo : AEoDBFG9000Item
 //==================================================================================
 //==================================================================================
 
-Actor AEoDBioForceGunItem : CustomInventory 6058
+Actor AEoDBioForceGunItem : AEoDWeaponPickup 6058
 {
 	+FLOORCLIP
 	+IGNORESKILL	+DONTGIB
@@ -3300,7 +3299,7 @@ Actor AEoDBioForceGunItem : CustomInventory 6058
 	}
 }
 
-Actor AEoDBioForceGun : Weapon // 6058
+Actor AEoDBioForceGun : AEoDWeaponBase // 6058
 {
 	+WEAPON.CHEATNOTWEAPON
 	+IGNORESKILL	+DONTGIB
@@ -3575,7 +3574,7 @@ Actor AEoDBioForceGunNoAmmo : AEoDBioForceGunItem
 //========================================================================
 
 
-Actor AEoDDarkFlameStaffItem : CustomInventory 6087
+Actor AEoDDarkFlameStaffItem : AEoDWeaponPickup 6087
 {
 	+FLOORCLIP
 	+IGNORESKILL	+DONTGIB
@@ -3609,7 +3608,7 @@ Actor AEoDDarkFlameStaffItem : CustomInventory 6087
 	}
 }
 
-Actor AEoDDarkFlameStaff : Weapon // 6087
+Actor AEoDDarkFlameStaff : AEoDWeaponBase // 6087
 { 
 	+FLOORCLIP
 	+IGNORESKILL	+DONTGIB
@@ -4640,7 +4639,7 @@ Actor AEoDDarkFlameStaffNoAmmo : AEoDDarkFlameStaffItem
 //==================================================================================
 //==================================================================================
 
-Actor AEoDNovaItem : CustomInventory 6074
+Actor AEoDNovaItem : AEoDWeaponPickup 6074
 {
 	+FLOORCLIP
 	+FLOATBOB
@@ -4675,7 +4674,7 @@ Actor AEoDNovaItem : CustomInventory 6074
 	}
 }
 
-Actor AEoDNova : Weapon // 6074
+Actor AEoDNova : AEoDWeaponBase // 6074
 {
 	+IGNORESKILL	+DONTGIB
 	+WEAPON.CHEATNOTWEAPON
@@ -5116,7 +5115,7 @@ Actor AEoDNovaNoAmmo : AEoDNovaItem
 //==================================================================================
 //==================================================================================
 
-Actor AEoDQSGItem : CustomInventory 6002
+Actor AEoDQSGItem : AEoDWeaponPickup 6002
 {
 	+FLOORCLIP
 	+IGNORESKILL	+DONTGIB
@@ -5150,7 +5149,7 @@ Actor AEoDQSGItem : CustomInventory 6002
 	}
 }
 
-Actor AEoDQSG : Weapon // 6002
+Actor AEoDQSG : AEoDWeaponBase // 6002
 {
 	+WEAPON.CHEATNOTWEAPON
 	+IGNORESKILL	+DONTGIB
@@ -6037,7 +6036,7 @@ Actor AEoDQSGNoAmmo : AEoDQSGItem
 //==================================================================================
 //==================================================================================
 
-Actor AEoDDarkMatterGunItem : CustomInventory 6088
+Actor AEoDDarkMatterGunItem : AEoDWeaponPickup 6088
 {
 	+FLOORCLIP
 	+IGNORESKILL	+DONTGIB
@@ -6071,7 +6070,7 @@ Actor AEoDDarkMatterGunItem : CustomInventory 6088
 	}
 }
 
-Actor AEoDDarkMatterGun : Weapon // 6088
+Actor AEoDDarkMatterGun : AEoDWeaponBase // 6088
 {
 	+FLOORCLIP
 	+IGNORESKILL	+DONTGIB
@@ -6742,7 +6741,7 @@ Actor AEoDDarkMatterGunNoAmmo : AEoDDarkMatterGunItem
 //==================================================================================
 //==================================================================================
 
-Actor AEoDFusionCannonItem : CustomInventory 6112
+Actor AEoDFusionCannonItem : AEoDWeaponPickup 6112
 {
 	+FLOORCLIP
 	+IGNORESKILL	+DONTGIB
@@ -6776,7 +6775,7 @@ Actor AEoDFusionCannonItem : CustomInventory 6112
 	}
 }
 
-Actor AEoDFusionCannon : Weapon // 6112
+Actor AEoDFusionCannon : AEoDWeaponBase // 6112
 {
 	+FLOORCLIP
 	+IGNORESKILL	+DONTGIB
@@ -7393,7 +7392,7 @@ it, the one of strength, protection, and knowledge of the Three.
 //==================================================================================
 //==================================================================================
 
-Actor AEoDInfernoItem : CustomInventory 6111
+Actor AEoDInfernoItem : AEoDWeaponPickup 6111
 {
 	+FLOORCLIP
 	+IGNORESKILL	+DONTGIB
@@ -7427,7 +7426,7 @@ Actor AEoDInfernoItem : CustomInventory 6111
 	}
 }
 
-Actor AEoDInferno : Weapon // 6111
+Actor AEoDInferno : AEoDWeaponBase // 6111
 { 
 	+FLOORCLIP
 	+IGNORESKILL	+DONTGIB
@@ -8226,7 +8225,7 @@ Actor AEoDInfernoNoAmmo : AEoDInfernoItem
 //==================================================================================
 //==================================================================================
 
-Actor AEoDRedeemerItem : CustomInventory 6071
+Actor AEoDRedeemerItem : AEoDWeaponPickup 6071
 {
 	+FLOORCLIP
 	+IGNORESKILL	+DONTGIB
@@ -8260,7 +8259,7 @@ Actor AEoDRedeemerItem : CustomInventory 6071
 	}
 }
 
-Actor AEoDRedeemer : Weapon // 6071
+Actor AEoDRedeemer : AEoDWeaponBase // 6071
 {
 	+FLOORCLIP
 	+IGNORESKILL	+DONTGIB
@@ -8997,7 +8996,7 @@ Actor AEoDRedeemerNoAmmo : AEoDRedeemerItem
 //==============================================================================
 //==============================================================================
 
-Actor AEoDHellHeavenHandItem : CustomInventory 6066
+Actor AEoDHellHeavenHandItem : AEoDWeaponPickup 6066
 {
 	+FLOORCLIP
 	+IGNORESKILL	+DONTGIB
@@ -9033,7 +9032,7 @@ Actor AEoDHellHeavenHandItem : CustomInventory 6066
 
 
 
-Actor AEoDHellHeavenHand : Weapon // 6066
+Actor AEoDHellHeavenHand : AEoDWeaponBase // 6066
 { 
 	+FLOORCLIP
 	+WEAPON.CHEATNOTWEAPON
@@ -10092,7 +10091,7 @@ Actor AEoDHellHeavenHandNoAmmo : AEoDHellHeavenHandItem
 //	...and Hell followed with him."
 //==================================================================================
 //==================================================================================
-Actor AEoDDeathsHandItem : CustomInventory //6055
+Actor AEoDDeathsHandItem : AEoDWeaponPickup //6055
 {
 	+FLOORCLIP
 	+IGNORESKILL	+DONTGIB
@@ -10125,7 +10124,7 @@ Actor AEoDDeathsHandItem : CustomInventory //6055
 	}
 }
  
-Actor AEoDDeathsHand : Weapon // 6055
+Actor AEoDDeathsHand : AEoDWeaponBase // 6055
 {
 	+FLOORCLIP
 	+IGNORESKILL	+DONTGIB
@@ -10734,7 +10733,7 @@ Actor AEoDDeathsHandNoAmmo : AEoDDeathsHandItem
 
 //======================================================================================
 //======================================================================================
-Actor AEoDPenetratorItem : CustomInventory
+Actor AEoDPenetratorItem : AEoDWeaponPickup
 {
 	+FLOORCLIP
 	+IGNORESKILL	+DONTGIB
@@ -10853,7 +10852,7 @@ Actor AEoDPenetratorNoAmmo : AEoDPenetratorItem
 }
 
 
-Actor AEoDPenetrator : weapon
+Actor AEoDPenetrator : AEoDWeaponBase
 {
 	+WEAPON.AMMO_OPTIONAL
 	+WEAPON.ALT_AMMO_OPTIONAL
@@ -11407,7 +11406,7 @@ Actor DrillRipperTrail
 	because of how fucking awesome that was, at least.
 */
 
-Actor AEoDSoulReaperItem : CustomInventory
+Actor AEoDSoulReaperItem : AEoDWeaponPickup
 {
 	+FLOORCLIP
 	+IGNORESKILL	+DONTGIB
@@ -11441,7 +11440,7 @@ Actor AEoDSoulReaperItem : CustomInventory
 	}
 }
 
-Actor AEoDSoulReaper : weapon
+Actor AEoDSoulReaper : AEoDWeaponBase
 {
 	+WEAPON.ALT_AMMO_OPTIONAL
 	+WEAPON.NOAUTOAIM
