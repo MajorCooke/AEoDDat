@@ -1111,7 +1111,7 @@ Actor SkullgunAltShotTrail3 : SkullgunAltShotTrail
 	}
 }
 
-Actor SoulReaverDrop : CustomInventory
+Actor SoulReaverDrop : AEoDWeaponDrop
 {
 	Inventory.MaxAmount 1
 	States
@@ -1449,74 +1449,21 @@ Actor GluonBeam
 	}
 }
 
-Actor GluonTrailBeam
+Actor GluonTrailBeam : TrailBeam
 {
-	const int PFlags = WARPF_INTERPOLATE|WARPF_NOCHECKPOSITION|WARPF_COPYVELOCITY|WARPF_ABSOLUTEOFFSET;
-	var float user_dist;
-	var int user_t;
-	var float user_angle;
-	var float user_pitch;
-	var float user_x[3];
-	var float user_y[3];
-	var float user_z[3];
-	+NOINTERACTION
-	+FORCEXYBILLBOARD
-	+ROLLSPRITE
-	+FLATSPRITE
-	+BRIGHT
-	+ROLLCENTER
-	YScale 0.5 //Don't touch this! Otherwise the trail will become broken up!
-	XScale 0.1 //This modified the width of the beam. It is safe to play around with.
-	Alpha 1
-	RenderStyle Add
-	// DO NOT add a translation. If you need to change the colors, make a sprite
-	// entry in TEXTURES lump and use BLEND. NEVER TRANSLATE!
+	
+	YScale 0.5 //Don't touch.
+	XScale 0.1
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay
+		X163 D 0 NoDelay
 		{
-			if (tid == 0)
-			{	
-				A_SpawnItemEx("GluonTrailBeam",0,0,0,0,0,0,90,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERSCALE|SXF_TRANSFERPOINTERS,0,1);
-				A_SetPitch(pitch-90);
-			}
-			else
-			{
-				Thing_ChangeTID(0,0);
-				roll = -(pitch-90);
-				pitch = 0;
-			}
-			user_angle = angle;
-			user_pitch = pitch;
-			user_dist = GetDistance(false, Target);
-			user_x[0] = x;
-			user_y[0] = y;
-			user_z[0] = z;
-			A_Warp(Target,0,0,0,0,WARPF_NOCHECKPOSITION);
-			user_x[1] = user_x[0] - x;
-			user_y[1] = user_y[0] - y;
-			user_z[1] = user_z[0] - z;			
-			A_Warp(Target,user_x[1],user_y[1],user_z[1],0,WARPF_NOCHECKPOSITION|WARPF_COPYVELOCITY|WARPF_ABSOLUTEOFFSET);
-			angle = user_angle;
-			pitch = user_pitch;
+			// user_time = time to shrink to nothing
+			user_time = 2.0;
+			A_SpawnItemEx("GluonTrailBeam",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERSCALE|SXF_TRANSFERPOINTERS,tid * 256,1);
 		}
-		X163 D 1 
-		{
-			A_Warp(Target,user_x[1]+velx,user_y[1]+vely,user_z[1]+velz,0,PFlags);
-			angle = user_angle;
-			pitch = user_pitch;
-		}
-		"####" "#" 1 
-		{
-			A_SetScale(ScaleX - (0.1 / 2.0), ScaleY);
-			if (ScaleX <= 0)	{ return state("Null"); }
-			A_Warp(Target,user_x[1]+velx,user_y[1]+vely,user_z[1]+velz,0,PFlags);
-			angle = user_angle;
-			pitch = user_pitch;
-			return state(0);
-		}
-		Wait
+		Goto Process
 	}
 }
 
@@ -2288,7 +2235,7 @@ Actor SparkUp
 
 
 
-Actor GluonGunDrop : CustomInventory
+Actor GluonGunDrop : AEoDWeaponDrop
 {
 	Inventory.MaxAmount 1
 	States
@@ -2704,7 +2651,7 @@ Actor FireWindExp
 	}
 }
 
-Actor TempestStaffDrop : CustomInventory
+Actor TempestStaffDrop : AEoDWeaponDrop
 {
 	Inventory.MaxAmount 1
 	States
@@ -3665,7 +3612,7 @@ Actor RedPuffW
 	}
 }
 
-Actor HellCoreDrop : CustomInventory
+Actor HellCoreDrop : AEoDWeaponDrop
 {
 	Inventory.MaxAmount 1
 	States
@@ -4132,7 +4079,7 @@ Actor RPGFirebombExp3 : RPGFirebombExp2
 	}
 }
 
-Actor HERocketLauncherDrop : CustomInventory
+Actor HERocketLauncherDrop : AEoDWeaponDrop
 {
 	Inventory.MaxAmount 1
 	States
@@ -4964,7 +4911,7 @@ Actor BFGPuff
 	}
 }
 
-Actor PrototypeDrop : CustomInventory
+Actor PrototypeDrop : AEoDWeaponDrop
 {
 	Inventory.MaxAmount 1
 	States
@@ -5282,7 +5229,7 @@ Actor RedBlasterBall3 : RedBlasterBall
 	Scale 0.24
 }
 
-Actor RailGunPrototypeDrop : CustomInventory
+Actor RailGunPrototypeDrop : AEoDWeaponDrop
 {
 	Inventory.MaxAmount 1
 	States
@@ -5682,7 +5629,7 @@ Actor LeechFX2 : LeechFX1
 	}
 }
 
-Actor SoulleechDrop : CustomInventory
+Actor SoulleechDrop : AEoDWeaponDrop
 {
 	Inventory.MaxAmount 1
 	States
@@ -6531,7 +6478,7 @@ Actor MaulerPuffExtra2 : MaulerPuffExtra
 	Translation "112:127=80:95"
 }
 
-Actor CrawlerDrop : CustomInventory
+Actor CrawlerDrop : AEoDWeaponDrop
 {
 	Inventory.MaxAmount 1
 	States
@@ -7070,7 +7017,7 @@ Actor PhotonReactorCannonAltShotTrail
 	}
 }
 
-Actor PhotonCannonDrop : CustomInventory
+Actor PhotonCannonDrop : AEoDWeaponDrop
 {
 	Inventory.MaxAmount 1
 	States
@@ -7439,7 +7386,7 @@ Actor TBRailShooter
 	}
 }
 
-Actor ProteusDynamoDrop : CustomInventory
+Actor ProteusDynamoDrop : AEoDWeaponDrop
 {
 	Inventory.MaxAmount 1
 	States
@@ -8006,7 +7953,7 @@ Actor HellRootNoAmmoShot : HellRootShot2ExtraMissiles
 	}
 }
 
-Actor HellRootDrop : CustomInventory
+Actor HellRootDrop : AEoDWeaponDrop
 {
 	Inventory.MaxAmount 1
 	States
@@ -8978,7 +8925,7 @@ Actor WHExplosion2 : WHExplosion
 	}
 }
 
-Actor DrakanDrop : CustomInventory
+Actor DrakanDrop : AEoDWeaponDrop
 {
 	Inventory.MaxAmount 1
 	States
@@ -9564,7 +9511,7 @@ Actor CBExplosion
 	}
 }
  
-Actor HandCannonDrop : CustomInventory
+Actor HandCannonDrop : AEoDWeaponDrop
 {
 	Inventory.MaxAmount 1
 	States
@@ -9682,7 +9629,7 @@ Actor AEoDNecrossbowItem : AEoDWeaponPickup //
 }
 
 
-Actor NecrossbowDrop : CustomInventory
+Actor NecrossbowDrop : AEoDWeaponDrop
 {
 	Inventory.MaxAmount 1
 	States
@@ -10069,7 +10016,7 @@ Actor AEoDPopcornGunItem : AEoDWeaponPickup //
 	}
 }
 
-Actor PopcornGunDrop : CustomInventory
+Actor PopcornGunDrop : AEoDWeaponDrop
 {
 	Inventory.MaxAmount 1
 	States
@@ -10823,7 +10770,7 @@ Actor AEoDBouncerItem : AEoDWeaponPickup //
 }
 
 
-Actor BouncerDrop : CustomInventory
+Actor BouncerDrop : AEoDWeaponDrop
 {
 	Inventory.MaxAmount 1
 	States

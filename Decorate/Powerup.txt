@@ -12,6 +12,7 @@ ACTOR Yashichi : CustomInventory
 	-INVENTORY.INVBAR
 	+INVENTORY.IGNORESKILL
 	+DONTGIB
+	Species "Permanent"
 	Inventory.PickupMessage "YASHICHI!!"
 	inventory.pickupsound "reilsss/powerup/teleportrune"
 	Scale 0.6
@@ -448,7 +449,7 @@ ACTOR RightCube
 	Targeting:
 		FCB2 A 0 A_SetUserVar("user_angle",angle)
 		FCB2 A 0 A_FaceTracer(0,0,0,0,FAF_MIDDLE)
-		FCB2 A 0 A_CustomMissile("ForceCubeShot",8,0,0,CMF_TRACKOWNER|CMF_AIMDIRECTION)
+		FCB2 A 0 A_CustomMissile("ForceCubeShot",8,0,0,CMF_TRACKOWNER|CMF_AIMDIRECTION,pitch)
 		FCB2 A 0 A_CustomRailgun(4,0,none,none,RGF_SILENT,0,0,"CubePuff",0,0,0,0,0,0,"ForceCubeTrailSpawner")
 		FCB2 A 0 A_Warp(AAPTR_PLAYER1,20,12,36,0,WARPF_INTERPOLATE|WARPF_NOCHECKPOSITION)
 		FCB2 A 1 A_Weave(0,1,0,3)
@@ -485,7 +486,7 @@ ACTOR LeftCube : RightCube
 	Targeting:
 		FCB2 A 0 A_SetUserVar("user_angle",angle)
 		FCB2 A 0 A_FaceTracer(0,0,0,0,FAF_MIDDLE)
-		FCB2 A 0 A_CustomMissile("ForceCubeShot",8,0,0,CMF_TRACKOWNER|CMF_AIMDIRECTION)
+		FCB2 A 0 A_CustomMissile("ForceCubeShot",8,0,0,CMF_TRACKOWNER|CMF_AIMDIRECTION,pitch)
 		FCB2 A 0 A_CustomRailgun(4,0,none,none,RGF_SILENT,0,0,"CubePuff",0,0,0,0,0,0,"ForceCubeTrailSpawner")
 		FCB2 A 0 A_Warp(AAPTR_PLAYER1,20,-12,36,0,WARPF_INTERPOLATE|WARPF_NOCHECKPOSITION)
 		FCB2 A 1 A_Weave(0,1,0,3)
@@ -526,7 +527,7 @@ Actor ForceCubeShot : FastProjectile
 	Movement:
 		TNT1 A 0 A_SpawnItemEx("ForceCubeTrail",cos(-pitch)*frandom(-2,2),frandom(-2,2),frandom(-2,2)+(sin(-pitch)*frandom(-2,2)),0,0,0,0,SXF_NOCHECKPOSITION)
 		TNT1 A 0 A_SetUserVar("user_failsafe",user_failsafe+1)
-		TNT1 A 0 A_JumpIf(user_failsafe>=5000,"Death")
+		TNT1 A 0 A_JumpIf(user_failsafe >= 500,"Death")
 		//TNT1 A 1 A_Warp(AAPTR_DEFAULT,velx,vely,velz,0,WARPF_ABSOLUTEOFFSET,1)
 		TNT1 A 1 A_Warp(AAPTR_DEFAULT,velx,vely,velz,0,WARPF_ABSOLUTEOFFSET,"Movement")
 	Death:
@@ -1363,6 +1364,7 @@ ACTOR PentagramOfProtection : CustomInventory
     +INVENTORY.INVBAR
     +INVENTORY.FANCYPICKUPSOUND
 	+DONTGIB
+	Species "Permanent"
     Inventory.Icon "HARTPENT"
     Tag "Invulnerable (timed)"
     States
@@ -4143,6 +4145,7 @@ Actor DeadLightPowerup : CustomInventory
 	+VISIBILITYPULSE
 	+DONTGIB
 	Inventory.Icon "X091A0"
+	Species "Permanent"
 	//+FLOATBOB
 	Tag "Invulnerable when hit, floating deadlights hurt nearby enemies, reflecting projectiles"
 	States
@@ -4508,6 +4511,7 @@ Actor DMSoulFragment : CustomInventory
 	-TELESTOMP
 	-COUNTITEM
 	+DONTGIB
+	Species "Permanent"
 	Scale 0.0
 	RenderStyle Add
 	Inventory.PickupSound "reilsss/health/soul"
@@ -4801,6 +4805,7 @@ Actor DemonMorphPowerup : CustomInventory
 	+NOTIMEFREEZE
 	+DONTGIB
 	+NOTELESTOMP
+	Species "Permanent"
 	RenderStyle Stencil
 	StencilColor Black
 	Scale 0.25
@@ -4898,6 +4903,8 @@ Actor DemonPlayerMorph : DoomPlayer
 	//POWER OVERWHELMING MOTHERFUCKERS!!!
 	RipLevelMin 666
 	DamageFactor 0.0
+	DamageFactor "DemonMorph", 0
+	DamageFactor "HolyNoResist", 0
 	+NORADIUSDMG
 	+NODAMAGE
 	+NOPAIN
@@ -4957,17 +4964,21 @@ Actor AEoDDemonMorphHand : Weapon
 	Sel2:
 		TNT1 A 0 A_GiveInventory("PentagramDispelled",1)
 	Sel3:
-		M666 A 0 A_SpawnItemEx("DemonMorphScreams",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTARGET)
-		M666 A 0 A_PlaySound("DemonMorph/Loop",7|CHAN_NOPAUSE,1,1,ATTN_NONE)
-		M666 A 1 A_SetBlend("White",0.125,10)
+		M666 A 1 
+		{
+			A_SpawnItemEx("DemonMorphScreams",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTARGET);
+			A_PlaySound("DemonMorph/Loop",7|CHAN_NOPAUSE,1,1,ATTN_NONE);
+			A_SetBlend("White",0.125,10);
+		}
 		M666 A 1 A_SetBlend("White",0.25,10)
 		M666 A 1 A_SetBlend("White",0.375,10)
 		M666 A 1 A_SetBlend("White",0.5,10)
 		M666 A 1 A_SetBlend("White",0.625,10)
 		M666 A 1 A_SetBlend("White",0.75,10)
 		M666 A 1 A_SetBlend("White",0.875,10)
-		M666 A 0 
+		M666 A 0
 		{
+		
 			A_SetBlend("White",1.0,10);
 			A_SetInvulnerable;
 			A_GiveInventory("DemonMorphFullBright",1);
@@ -4979,83 +4990,83 @@ Actor AEoDDemonMorphHand : Weapon
 			}
 		}
 	Ready2:
-		M666 A 0 A_SetInvulnerable
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(5)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(10)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(15)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(20)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(25)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(30)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(35)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(40)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(45)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(50)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(55)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(60)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(65)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(70)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(75)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(80)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(85)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(90)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(95)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(100)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(105)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(110)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(115)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(120)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(125)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(130)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(135)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(140)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(145)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(150)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(155)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(160)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(165)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(170)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(175)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(180)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(185)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(190)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(195)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(200)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(205)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(210)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(215)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(220)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(225)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(230)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(235)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(240)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(245)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(250)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(255)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(260)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(265)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(270)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(275)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(280)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(285)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(290)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(295)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(300)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(305)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(310)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(315)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(320)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(325)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(330)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(335)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(340)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(345)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(350)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1+(sin(355)*0.095),ZOOM_NOSCALETURNING)
-		M666 A 1 A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB)	M666 A 0 A_ZoomFactor(1.00,ZOOM_NOSCALETURNING)
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(5)*0.095),ZOOM_NOSCALETURNING); A_SetInvulnerable; A_ChangeFlag(NODAMAGE,true); A_SetHealth(666); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(10)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(15)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(20)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(25)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(30)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(35)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(40)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(45)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(50)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(55)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(60)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(65)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(70)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(75)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(80)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(85)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(90)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(95)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(100)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(105)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(110)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(115)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(120)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(125)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(130)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(135)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(140)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(145)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(150)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(155)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(160)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(165)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(170)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(175)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(180)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(185)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(190)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(195)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(200)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(205)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(210)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(215)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(220)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(225)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(230)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(235)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(240)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(245)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(250)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(255)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(260)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(265)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(270)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(275)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(280)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(285)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(290)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(295)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(300)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(305)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(310)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(315)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(320)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(325)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(330)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(335)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(340)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(345)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(350)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1+(sin(355)*0.095),ZOOM_NOSCALETURNING); }
+		M666 A 1 { A_WeaponReady(WRF_NOSWITCH|WRF_NOBOB); A_ZoomFactor(1.00,ZOOM_NOSCALETURNING); }
 		Loop
 	AltFire:
 	Fire:
 		//Note: The damage has been moved directly to the puff itself so it can ignore damagefactors.
+		M666 A 0 { A_SetInvulnerable; A_ChangeFlag(NODAMAGE,true); A_SetHealth(666); }
 		M666 A 0 A_JumpIf(!CheckClass("DemonPlayerMorph",AAPTR_DEFAULT,0),"Remove")
 		M666 A 0 A_RailAttack(20000,0,0,none,none,RGF_SILENT,0,"DeathTouchPuff",0,0,32766,0,16,0,"DemonMorphExploder")
 		M666 A 0 A_SpawnItemEx("DemonMorphShootingSound",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)//A_PlaySound("DemonMorph/Shoot",CHAN_WEAPON|CHAN_NOPAUSE,1,0)
@@ -5165,9 +5176,9 @@ Actor DemonMorphExploder
 	+NOTIMEFREEZE
 	+PUFFGETSOWNER
 	+NOTONAUTOMAP
-	DamageType "TempestLightning"
-	PainType "Telefrag"
-	DeathType "Telefrag"
+	DamageType "DemonMorph"
+	//PainType "Telefrag"
+	//DeathType "Telefrag"
 	Renderstyle None
 	States
 	{
@@ -5191,8 +5202,8 @@ Actor DeathTouchPuff
 	//+HITTRACER
 	+EXTREMEDEATH
 	DamageType "DemonMorph"
-	PainType "Telefrag"
-	DeathType "Telefrag"
+	//PainType "Telefrag"
+	//DeathType "Telefrag"
 	Renderstyle None
 	States
 	{
