@@ -1417,15 +1417,15 @@ Actor GluonBeam
 	Spawn:
 		TNT1 A 0 NoDelay
 		{
-			A_Warp(Target,x,y,z,0,WARPF_NOCHECKPOSITION|WARPF_ABSOLUTEPOSITION|WARPF_USECALLERANGLE|WARPF_COPYVELOCITY);
+			A_Warp(TargetPtr,x,y,z,0,WARPF_NOCHECKPOSITION|WARPF_ABSOLUTEPOSITION|WARPF_USECALLERANGLE|WARPF_COPYVELOCITY);
 			A_SetUserVarFloat(user_pitch, pitch);
 			A_SetUserVarFloat(user_angle, angle);
-			A_SetUserArrayFloat(user_dist, 1, Min(MaxDistance,GetDistance(true,Tracer)));
+			A_SetUserArrayFloat(user_dist, 1, Min(MaxDistance,GetDistance(true,TracerPtr)));
 			A_SetUserVar(user_choke, random(ChokeMin,ChokeMax));
 		}
 		TNT1 A 0
 		{
-			while ((user_dist[0] < user_dist[1]) && !IsPointerEqual(Tracer,NullPtr))
+			while ((user_dist[0] < user_dist[1]) && !IsPointerEqual(TracerPtr,NullPtr))
 			{
 				if (user_dist[0] > 0)
 				{	A_FaceTracer(0,0,0,0,FAF_MIDDLE);	}

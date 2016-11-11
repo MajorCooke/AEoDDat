@@ -1479,54 +1479,54 @@ Actor PentagramChecker
 	Spawn:
 		TNT1 A 0 NoDelay
 		{
-			if (CountInv("PentagramIsOn",Target) || IsPointerEqual(Target,NullPtr))	
+			if (CountInv("PentagramIsOn",TargetPtr) || IsPointerEqual(TargetPtr,NullPtr))	
 			{	return state("Null");	}
-			A_GiveInventory("PentagramIsOn",1,Target); //Stops Hijacking
+			A_GiveInventory("PentagramIsOn",1,TargetPtr); //Stops Hijacking
 			return state("WaitingTimer");
 		}
 	WaitingTimer:
-		TNT1 A 1 A_TakeInventory("PentagramCountdown",1,0,Target)
-		TNT1 A 0 A_JumpIfInventory("PentagramDispelled",1,"EndForced",Target)
-		TNT1 A 0 A_JumpIfInventory("PentagramCountdown",106,"WaitingTimer",Target)
+		TNT1 A 1 A_TakeInventory("PentagramCountdown",1,0,TargetPtr)
+		TNT1 A 0 A_JumpIfInventory("PentagramDispelled",1,"EndForced",TargetPtr)
+		TNT1 A 0 A_JumpIfInventory("PentagramCountdown",106,"WaitingTimer",TargetPtr)
 	Final:
-		TNT1 A 0 A_JumpIfInventory("PentagramCountdown",200,"Return",Target)
+		TNT1 A 0 A_JumpIfInventory("PentagramCountdown",200,"Return",TargetPtr)
 		TNT1 A 0 A_PlaySound("powerups/pentagrampickup",CHAN_VOICE,1,0,ATTN_NONE)
-		TNT1 A 0 A_GiveInventory("PentagramFade",1,Target)
-		TNT1 A 0 A_TakeInventory("PentagramCountdown",38,0,Target)
-		TNT1 AAAAAAAAAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",Target)
-		TNT1 AAAAAAAAAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",Target)
-		TNT1 AAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",Target)
-		TNT1 A 0 A_JumpIfInventory("PentagramCountdown",200,"Return",Target)
-		TNT1 A 0 A_GiveInventory("PentagramFade",1,Target)
-		TNT1 A 0 A_TakeInventory("PentagramCountdown",38,0,Target)
-		TNT1 AAAAAAAAAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",Target)
-		TNT1 AAAAAAAAAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",Target)
-		TNT1 AAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",Target)
-		TNT1 A 0 A_JumpIfInventory("PentagramCountdown",200,"Return",Target)
-		TNT1 A 0 A_GiveInventory("PentagramFade",1,Target)
-		TNT1 A 0 A_TakeInventory("PentagramCountdown",38,0,Target)
-		TNT1 AAAAAAAAAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",Target)
-		TNT1 AAAAAAAAAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",Target)
-		TNT1 AAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",Target)
+		TNT1 A 0 A_GiveInventory("PentagramFade",1,TargetPtr)
+		TNT1 A 0 A_TakeInventory("PentagramCountdown",38,0,TargetPtr)
+		TNT1 AAAAAAAAAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",TargetPtr)
+		TNT1 AAAAAAAAAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",TargetPtr)
+		TNT1 AAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",TargetPtr)
+		TNT1 A 0 A_JumpIfInventory("PentagramCountdown",200,"Return",TargetPtr)
+		TNT1 A 0 A_GiveInventory("PentagramFade",1,TargetPtr)
+		TNT1 A 0 A_TakeInventory("PentagramCountdown",38,0,TargetPtr)
+		TNT1 AAAAAAAAAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",TargetPtr)
+		TNT1 AAAAAAAAAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",TargetPtr)
+		TNT1 AAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",TargetPtr)
+		TNT1 A 0 A_JumpIfInventory("PentagramCountdown",200,"Return",TargetPtr)
+		TNT1 A 0 A_GiveInventory("PentagramFade",1,TargetPtr)
+		TNT1 A 0 A_TakeInventory("PentagramCountdown",38,0,TargetPtr)
+		TNT1 AAAAAAAAAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",TargetPtr)
+		TNT1 AAAAAAAAAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",TargetPtr)
+		TNT1 AAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",TargetPtr)
 	End:
-		TNT1 A 0 A_JumpIfInventory("PentagramCountdown",1,"WaitingTimer2",Target)
+		TNT1 A 0 A_JumpIfInventory("PentagramCountdown",1,"WaitingTimer2",TargetPtr)
 	EndForced:
 		TNT1 A 0 
 		{
-			A_TakeInventory("PentagramIsOn",32767,0,Target);
-			A_TakeInventory("PentagramCountdown",32767,0,Target);
-			A_TakeInventory("PentagramDispelled",32767,0,Target);
-			A_TakeInventory("PowerInvulBase",10000,0,Target);
-			A_GiveInventory("AllowPainSwitchOn",1,Target);
+			A_TakeInventory("PentagramIsOn",32767,0,TargetPtr);
+			A_TakeInventory("PentagramCountdown",32767,0,TargetPtr);
+			A_TakeInventory("PentagramDispelled",32767,0,TargetPtr);
+			A_TakeInventory("PowerInvulBase",10000,0,TargetPtr);
+			A_GiveInventory("AllowPainSwitchOn",1,TargetPtr);
 			return state("Null");
 		}
 	AbsoluteEnd:
 		TNT1 A 0
 		Stop
 	WaitingTimer2:
-		TNT1 A 1 A_TakeInventory("PentagramCountdown",1,0,Target)
-		TNT1 A 0 A_JumpIfInventory("PentagramCountdown",200,"Return",Target)
-		TNT1 A 0 A_JumpIfInventory("PentagramCountdown",1,"WaitingTimer2",Target)
+		TNT1 A 1 A_TakeInventory("PentagramCountdown",1,0,TargetPtr)
+		TNT1 A 0 A_JumpIfInventory("PentagramCountdown",200,"Return",TargetPtr)
+		TNT1 A 0 A_JumpIfInventory("PentagramCountdown",1,"WaitingTimer2",TargetPtr)
 		Goto End
 	Return:
 		TNT1 A 0 A_StopSound(CHAN_VOICE)
@@ -4230,18 +4230,18 @@ Actor DLMonitor
 	Looping:
 		TNT1 A 1
 		{
-			if (CountInv("PowerDLProtector",Master) <= 0)
+			if (CountInv("PowerDLProtector",MasterPtr) <= 0)
 			{	return state("Null");	}
-			return A_CheckFlag("JUSTHIT","Wipe",Master);
+			return A_CheckFlag("JUSTHIT","Wipe",MasterPtr);
 		}
 		Loop
 	Wipe:
 		TNT1 A 45 
 		{
-			A_GiveInventory("DLFlasher1",1,Master);
-			A_GiveInventory("DLInvulEffect",1,Master);
+			A_GiveInventory("DLFlasher1",1,MasterPtr);
+			A_GiveInventory("DLInvulEffect",1,MasterPtr);
 		}
-		TNT1 A 0 A_GiveInventory("DLDeInvul",1,Master)
+		TNT1 A 0 A_GiveInventory("DLDeInvul",1,MasterPtr)
 		Goto Looping
 	End:
 		TNT1 A 0
@@ -5134,7 +5134,7 @@ Actor DemonMorphMusic
 	Waiting:
 		TNT1 A 5
 		{
-			if (CountInv("PowerDemonMorph",Master))
+			if (CountInv("PowerDemonMorph",MasterPtr))
 			{	return state(0);	}
 			A_StopSound(5);
 			return state("Null");

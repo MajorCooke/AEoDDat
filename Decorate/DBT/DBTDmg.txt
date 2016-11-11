@@ -96,15 +96,15 @@ actor DBTVulnerableThing
 			A_ChangeFlag("NOPAIN",1);
 			A_ChangeFlag("NOBLOCKMAP",1);
 			
-			if (!IsPointerEqual(Target,NullPtr) && !A_JumpIfHealthLower(1,"Null",Target))
-			{	A_TransferPointer(DefPtr,Master,Target,Target,PTROP_NOSAFEGUARDS);	}
+			if (!IsPointerEqual(TargetPtr,NullPtr) && !A_JumpIfHealthLower(1,"Null",TargetPtr))
+			{	A_TransferPointer(DefPtr,MasterPtr,TargetPtr,TargetPtr,PTROP_NOSAFEGUARDS);	}
 			
 			//Make sure it's only a player damaging him.
-			if (CheckClass("PlayerPawn",Target,1) && Health < HP)
+			if (CheckClass("PlayerPawn",TargetPtr,1) && Health < HP)
 			{
 				A_SetUserVar(user_damage,HP-Health);
-				A_GiveInventory("DBTDamageCounter",user_damage,Master);
-				A_GiveInventory("DBTDamager",1,Master);
+				A_GiveInventory("DBTDamageCounter",user_damage,MasterPtr);
+				A_GiveInventory("DBTDamager",1,MasterPtr);
 				//A_GiveInventory("DBTNoDamageOff",1,AAPTR_MASTER);
 				//A_DamageMaster(user_damage*DamageMultiplier,"DBTVulnerable",DMSS_NOFACTOR,"FDeathBringerThanatos");
 				//A_GiveInventory("DBTNoDamageOn",1,AAPTR_MASTER);
@@ -124,13 +124,13 @@ actor DBTVulnerableThing
     Death:
 		TNT1 A 35
 		{
-			if (!IsPointerEqual(Target,NullPtr) && !A_JumpIfHealthLower(1,"Null",Target))
-			{	A_TransferPointer(DefPtr,Master,Target,Target,PTROP_NOSAFEGUARDS);	}
+			if (!IsPointerEqual(TargetPtr,NullPtr) && !A_JumpIfHealthLower(1,"Null",TargetPtr))
+			{	A_TransferPointer(DefPtr,MasterPtr,TargetPtr,TargetPtr,PTROP_NOSAFEGUARDS);	}
 			
-			if(CheckClass("PlayerPawn",Target,true))
+			if(CheckClass("PlayerPawn",TargetPtr,true))
 			{	
-				A_GiveInventory("DBTDamageCounter",1000,Master);
-				A_GiveInventory("DBTDamager",1,Master);
+				A_GiveInventory("DBTDamageCounter",1000,MasterPtr);
+				A_GiveInventory("DBTDamager",1,MasterPtr);
 				if (user_t > 0)
 				{	
 					A_QuakeEx(1,2,2,35,0,2048,"",QF_RELATIVE|QF_SCALEDOWN); 
@@ -147,8 +147,8 @@ actor DBTVulnerableThing
 	End:
 		TNT1 A 0 
 		{
-			if (!A_JumpIfHealthLower(1,"EndNoChange",Target))
-			{	A_TransferPointer(DefPtr,Master,Target,Target,PTROP_NOSAFEGUARDS);	}
+			if (!A_JumpIfHealthLower(1,"EndNoChange",TargetPtr))
+			{	A_TransferPointer(DefPtr,MasterPtr,TargetPtr,TargetPtr,PTROP_NOSAFEGUARDS);	}
 		}
 		Stop
     }

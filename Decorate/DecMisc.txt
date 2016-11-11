@@ -65,7 +65,7 @@ Actor PointerRestorer : CustomInventory
 		{
 			if (CheckClass("PointerSaver"))
 			{
-				A_TransferPointer(DefPtr,Master,Tracer,Tracer,4);
+				A_TransferPointer(DefPtr,MasterPtr,TracerPtr,TracerPtr,4);
 				return bool(true);
 			}
 			return bool(false);
@@ -419,9 +419,9 @@ Actor NewPuff1 //: BulletPuff
 	XDeath:
 		TNT1 A 1
 		{
-			if (A_CheckFlag(INVULNERABLE,"Null",Tracer) ||
-				A_CheckFlag(NOBLOOD,"Null",Tracer) ||
-				A_CheckFlag(DORMANT,"Null",Tracer))
+			if (A_CheckFlag(INVULNERABLE,"Null",TracerPtr) ||
+				A_CheckFlag(NOBLOOD,"Null",TracerPtr) ||
+				A_CheckFlag(DORMANT,"Null",TracerPtr))
 			{	return state("Death");	}
 			if (random(1,2) == 1)	{	A_PlaySound("Doom4/Other/BulletHitFlesh",CHAN_AUTO,1.0);	}
 			return state(0);
@@ -2716,8 +2716,8 @@ Actor BulletTracerFX
 			if (user_inv == ParticleOnly)
 			{	return state("Null");	}
 			
-			if (!IsPointerEqual(Tracer,NullPtr))
-			{	A_SetUserArrayFloat(user_dist,1,Clamp(GetDistance(true,Tracer),0.0,3000.0));	}
+			if (!IsPointerEqual(TracerPtr,NullPtr))
+			{	A_SetUserArrayFloat(user_dist,1,Clamp(GetDistance(true,TracerPtr),0.0,3000.0));	}
 			else
 			{	A_SetUserArrayFloat(user_dist,1,0.0);	}
 			

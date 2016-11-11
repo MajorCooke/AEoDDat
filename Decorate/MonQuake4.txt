@@ -2632,7 +2632,11 @@ Actor Q4Makron		//Makron (stage1)
 		"####" "#" 0 A_KillChildren("Telefrag",KILS_FOILINVUL)
 		"####" "#" 0 A_QueueCorpse
 	DLoop:
-		"####" "#" 35 A_JumpIfHealthLower(1,1,AAPTR_TRACER)
+		"####" "#" 35 
+		{
+			if (A_JumpIfHealthLower(1,1,AAPTR_TRACER) || IsPointerEqual(AAPTR_TRACER,NullPtr))
+			{	A_ChangeFlag(CORPSE,true); A_SetTics(-1);	}
+		}
 		Loop
 		"####" "#" -1 A_ChangeFlag("CORPSE",1)
 		Stop

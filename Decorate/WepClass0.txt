@@ -423,7 +423,7 @@ Actor OscuroPlayer
 		"####" "#" 0 
 		{
 			A_ChangeFlag("FRIENDLY",1);
-			if (A_JumpIfHealthLower(1,"Null",Target) || (IsPointerEqual(AAPTR_TARGET,AAPTR_NULL)))
+			if (A_JumpIfHealthLower(1,"Null",TargetPtr) || (IsPointerEqual(AAPTR_TARGET,AAPTR_NULL)))
 			{
 				A_SetUserVar(user_target,0);
 				A_Stop;
@@ -462,7 +462,7 @@ Actor OscuroPlayer
 		OSEE A 1
 		OSEE A 0 
 		{
-			if (A_JumpIfHealthLower(1,"Null",Target) || (IsPointerEqual(AAPTR_TARGET,AAPTR_NULL)))
+			if (A_JumpIfHealthLower(1,"Null",TargetPtr) || (IsPointerEqual(AAPTR_TARGET,AAPTR_NULL)))
 			{
 				A_SetUserVar(user_target,0);
 				A_Stop;
@@ -2089,12 +2089,12 @@ Actor ApocalypseSprayerStart : CustomInventory
 			{	return bool(false);	}
 			
 			// It's unoccupied so go ahead and use it without fear.
-			if (IsPointerEqual(Tracer,NullPtr))
+			if (IsPointerEqual(TracerPtr,NullPtr))
 			{
 				if (A_CheckProximity("Null","ApocalypseStarter",MaxDistance,1,CPXF_NOZ|CPXF_SETTRACER))
 				{
-					A_TransferPointer(Tracer,DefPtr,Target,Tracer,4);
-					if (abs(GetAngle(GAF_RELATIVE|GAF_SWITCH,Tracer)) > MaxAngle)
+					A_TransferPointer(TracerPtr,DefPtr,TargetPtr,TracerPtr,4);
+					if (abs(GetAngle(GAF_RELATIVE|GAF_SWITCH,TracerPtr)) > MaxAngle)
 					{	return bool(false);	}
 					A_SpawnItemEx("ApocSprayPlayer",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTARGET|SXF_ORIGINATOR|SXF_TRANSFERPOINTERS);
 				}
@@ -2108,8 +2108,8 @@ Actor ApocalypseSprayerStart : CustomInventory
 				A_SpawnItemEx("PointerSaver",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_SETMASTER|SXF_ORIGINATOR);
 				if (A_CheckProximity("Null","ApocalypseStarter",MaxDistance,1,CPXF_NOZ|CPXF_SETTRACER))
 				{
-					A_TransferPointer(Tracer,DefPtr,Target,Tracer,4);
-					if (abs(GetAngle(GAF_RELATIVE|GAF_SWITCH,Tracer)) > MaxAngle)
+					A_TransferPointer(TracerPtr,DefPtr,TargetPtr,TracerPtr,4);
+					if (abs(GetAngle(GAF_RELATIVE|GAF_SWITCH,TracerPtr)) > MaxAngle)
 					{	return bool(false);	}
 					A_SpawnItemEx("ApocSprayPlayer",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTARGET|SXF_ORIGINATOR|SXF_TRANSFERPOINTERS);
 				}
@@ -2150,15 +2150,15 @@ Actor ApocSprayPlayer
 		APOC A 0 NoDelay
 		{
 			// Switch the target and tracer around.
-			if (CheckClass("PlayerPawn",Tracer,true))
-			{	A_RearrangePointers(Tracer,DefPtr,Target,4);	}
-			if (CheckClass("PlayerPawn",Target,true) || A_CheckProximity("Null","PlayerPawn",MaxDistance,1,CPXF_ANCESTOR|CPXF_NOZ|CPXF_SETTARGET))
+			if (CheckClass("PlayerPawn",TracerPtr,true))
+			{	A_RearrangePointers(TracerPtr,DefPtr,TargetPtr,4);	}
+			if (CheckClass("PlayerPawn",TargetPtr,true) || A_CheckProximity("Null","PlayerPawn",MaxDistance,1,CPXF_ANCESTOR|CPXF_NOZ|CPXF_SETTARGET))
 			{				
 				user_damage = (200 + 
-					(abs(DistDamage - Clamp((GetDistance(false,Target) - 128) * Negate,0,DistDamage))*1));
+					(abs(DistDamage - Clamp((GetDistance(false,TargetPtr) - 128) * Negate,0,DistDamage))*1));
 				A_FaceTarget;
-				A_Warp(Tracer,0,0,0,0,WARPF_NOCHECKPOSITION|WARPF_USECALLERANGLE,"Null",0.1,0.2);
-				A_DamageTracer(user_damage,"Holy",DMSS_FOILINVUL|DMSS_AFFECTARMOR,None,None,Target);
+				A_Warp(TracerPtr,0,0,0,0,WARPF_NOCHECKPOSITION|WARPF_USECALLERANGLE,"Null",0.1,0.2);
+				A_DamageTracer(user_damage,"Holy",DMSS_FOILINVUL|DMSS_AFFECTARMOR,None,None,TargetPtr);
 				return state(0);
 			}
 			return state("Null");
@@ -2422,7 +2422,7 @@ Actor BFG9000Shot
 			A_FaceMovementDirection;
 			A_SetUserVar(user_count, (user_count + 1) % 4);
 			
-			if (CheckClass("PlayerPawn",Target,1))
+			if (CheckClass("PlayerPawn",TargetPtr,1))
 			{	
 				user_flags = RGF_MONSTERS|RGF_NOTARGET;
 				A_Explode(random(16,32),BFG_LaserRadius,0,0,BFG_LaserRadius);
@@ -2714,14 +2714,14 @@ Actor BFGBeamGZ
 			
 			if (!A_CheckProximity("Null","BFG9000Shot",BFG_LaserRadius*2,1,CPXF_SETTARGET|CPXF_CHECKSIGHT))
 			{	return state("Null");	}
-			if (!IsPointerEqual(Tracer,NullPtr))
+			if (!IsPointerEqual(TracerPtr,NullPtr))
 			{
-				A_Warp(Target,0,0,0,0,SXF_NOCHECKPOSITION);
+				A_Warp(TargetPtr,0,0,0,0,SXF_NOCHECKPOSITION);
 				A_FaceTracer(0,0,0,0,FAF_MIDDLE);
 				A_SetUserVarFloat(user_pitch, pitch);
 				A_SetUserVarFloat(user_angle, angle);
 				A_SetUserArrayFloat(user_dist,0,0);
-				A_SetUserArrayFloat(user_dist, 1, Min(MaxDistance,GetDistance(true,Tracer)));
+				A_SetUserArrayFloat(user_dist, 1, Min(MaxDistance,GetDistance(true,TracerPtr)));
 				A_SetUserVar(user_choke, random(ChokeMin,ChokeMax));
 				return state(1);
 			}
@@ -2729,7 +2729,7 @@ Actor BFGBeamGZ
 		}
 		TNT1 A 1
 		{
-			while ((user_dist[0] < user_dist[1]) && !IsPointerEqual(Tracer,NullPtr) && !A_JumpIfHealthLower(1,"Null",Tracer))
+			while ((user_dist[0] < user_dist[1]) && !IsPointerEqual(TracerPtr,NullPtr) && !A_JumpIfHealthLower(1,"Null",TracerPtr))
 			{
 				if (user_dist[0] > 0)
 				{	A_FaceTracer(0,0,0,0,FAF_MIDDLE);	}
@@ -2804,7 +2804,7 @@ Actor BFGBeam
 	Spawn:
 		TNT1 A 1 NoDelay
 		{
-			if (user_life >= 2 || A_JumpIfHealthLower(1,"Null",Target) || IsPointerEqual(Target,NullPtr))
+			if (user_life >= 2 || A_JumpIfHealthLower(1,"Null",TargetPtr) || IsPointerEqual(TargetPtr,NullPtr))
 			{	return state("Null");	}
 			
 			if (A_CheckProximity("Null","BFG9000Shot",BFG_LaserRadius,1,CPXF_SETTRACER|CPXF_CHECKSIGHT))
@@ -2814,9 +2814,9 @@ Actor BFGBeam
 				A_SetUserVar(user_minicount, 0);
 				A_SetUserVarFloat(user_scalar,0.0);
 				A_FaceTracer(0,0,0,0,FAF_MIDDLE);
-				A_Warp(Target,0,0,0,0,WARPF_USECALLERANGLE|WARPF_NOCHECKPOSITION,"Null",0.5);
-				A_SetUserVarFloat(user_dist, GetDistance(true,Tracer));
-				//A_Warp(Tracer,0,0,0,0,WARPF_USECALLERANGLE|WARPF_NOCHECKPOSITION,"Null");
+				A_Warp(TargetPtr,0,0,0,0,WARPF_USECALLERANGLE|WARPF_NOCHECKPOSITION,"Null",0.5);
+				A_SetUserVarFloat(user_dist, GetDistance(true,TracerPtr));
+				//A_Warp(TracerPtr,0,0,0,0,WARPF_USECALLERANGLE|WARPF_NOCHECKPOSITION,"Null");
 				return state("Beam");
 			}
 			return state("Null");
@@ -11587,7 +11587,7 @@ Actor SoulReaperBladeConverter
 			{
 				A_SetUserVar(user_strength,CountInv("GreenMana",AAPTR_TARGET));
 			}
-			A_TakeInventory("GreenMana",400,TIF_NOTAKEINFINITE,Target);
+			A_TakeInventory("GreenMana",400,TIF_NOTAKEINFINITE,TargetPtr);
 		}
 		Goto CheckMonster
 	//==========================================================================
@@ -12023,7 +12023,7 @@ Actor SoulReaperBeam
 			//A_Explode(1,128,0,0,128);
 			if (A_Warp(AAPTR_DEFAULT,velx,vely,velz,0,WARPF_ABSOLUTEOFFSET,"Null"))
 			{
-				if ((GetDistance(true,Tracer) <= 64) && !IsPointerEqual(Tracer,NullPtr))
+				if ((GetDistance(true,TracerPtr) <= 64) && !IsPointerEqual(TracerPtr,NullPtr))
 				{	return state("XDeath");	}
 				
 				A_SetUserVar(user_t,user_t+1);
@@ -12055,12 +12055,12 @@ Actor SoulReaperBeam
 		TNT1 A 0 A_CheckFlag("NODAMAGE","SkipSoul",AAPTR_TRACER)
 		TNT1 A 0 A_JumpIfHealthLower(1,"SkipSoul",AAPTR_TRACER)
 		TNT1 A 0 A_SpawnItemEx("DMSoulMissile",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS)
-		TNT1 A 0 A_DamageTracer(2,"Extreme",DMSS_FOILINVUL,None,None,Target)
+		TNT1 A 0 A_DamageTracer(2,"Extreme",DMSS_FOILINVUL,None,None,TargetPtr)
 		TNT1 A 0 A_ChangeFlag("NODAMAGETHRUST",1)
 		//TNT1 A 0 A_Explode(1,128,0,0,128)
 		Stop
 	SkipSoul:
-		TNT1 A 0 A_DamageTracer(random(1,2),"Extreme",DMSS_FOILINVUL,None,None,Target)
+		TNT1 A 0 A_DamageTracer(random(1,2),"Extreme",DMSS_FOILINVUL,None,None,TargetPtr)
 		Stop
 	DCont:
 		TNT1 A 0 
