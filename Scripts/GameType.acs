@@ -100,7 +100,9 @@ Script "s901" enter
 	{
 		if(GameStarted==0||NoWeapons==1)
 		{
+			SetCvar("DirectorDelay",120);
 			Delay(1);
+			
 			GameStarted=1;	//this is for the first time player enters the game, after a second, the game will save this var
 			AEoDThemeType = GetCVar("AEGtValues");	
 			giveinventory("AEoDKnifeItem",1);
@@ -166,6 +168,10 @@ Script "s901" enter
 			}*/
 			//SetFont("BIGFONT");
 			//HUDMessage(s:"AEoD: ",l:GameTypesText[AEoDThemeType],s:"."; HUDMSG_TYPEON| HUDMSG_LOG,0,CR_GREEN,0.5,0.1,6.0,0.1,1.0);
+		}
+		else
+		{
+			SetCvar("DirectorDelay",30);
 		}
 		if(AEoDGameMode == 1 || L4DDir)				//if L4D or chaos capital when entering a level
 		{
@@ -847,6 +853,7 @@ Script "FreezeDirector" (void)
 	if (AEoDGameMode > 0 && DirDebug == 0)
 	{
 		PrintBold(s:"Directors cannot be disabled in this game mode");
+		SetCvar("DirectorsEnabled",true);
 		TakeInventory("FreezeDirector",32767); //You panzies.
 		//PLAY IT RIGHT OR GTFO.
 		Terminate;
@@ -854,12 +861,12 @@ Script "FreezeDirector" (void)
 	if (CheckInventory("FreezeDirector"))
 	{
 		PrintBold(s:"Directors Enabled");
-		TakeInventory("FreezeDirector",32767);
+		SetCvar("DirectorsEnabled",true);
 	}
 	else
 	{
 		PrintBold(s:"Directors Disabled");
-		GiveInventory("FreezeDirector",1);
+		SetCvar("DirectorsEnabled",false);
 	}
 }
 

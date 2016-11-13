@@ -22,7 +22,27 @@ Actor DirLargeChildCount : Inventory
 {	Inventory.MaxAmount 100	}
 
 Actor FreezeDirector : Inventory {}
-Actor RemoveDirector : Inventory {}
+Actor RemoveDirector : CustomInventory 
+{
+	+INVENTORY.ALWAYSPICKUP
+	States
+	{
+	Pickup:
+		TNT1 A 0 A_RadiusGive("DirectorRemover",32767,RGF_MONSTERS|RGF_NOSIGHT,1,None,"Director")
+		Stop
+	}
+}
+
+Actor DirectorRemover : CustomInventory
+{
+	+INVENTORY.ALWAYSPICKUP
+	States
+	{
+	Pickup:
+		TNT1 A 0 A_Remove(DefPtr,RMVF_EVERYTHING,None,"Director")
+		Stop
+	}
+}
 
 Actor LargeCooldown : CustomInventory
 {
@@ -177,6 +197,7 @@ Actor TheDirector : DirectorBase
 			A_SetUserArray(user_cd,3,4500); //Medium cooldown max
 			A_SetUserArray(user_cd,4,3000); //Large cooldown min
 			A_SetUserArray(user_cd,5,6000); //Large cooldown max
+			A_TransferPointer(Player1,DefPtr,DefPtr,TargetPtr,4);
 		}
 		TNT1 A 1 
 		{	
@@ -192,26 +213,25 @@ Actor TheDirector : DirectorBase
 		Goto SCont
 	SCont:
 		TNT1 A 0 A_ChangeFlag("FRIENDLY",0)
-		TNT1 A 0 A_RearrangePointers(AAPTR_PLAYER1,AAPTR_NULL,AAPTR_NULL,3)
+		TNT1 A 0 A_TransferPointer(Player1,DefPtr,DefPtr,TargetPtr,4)
 		Goto Idle
 	TwoMinutes:
-		TNT1 A 0 A_TakeInventory("PFirstTimeToken",1,0,AAPTR_PLAYER1)
-		TNT1 A 0 A_GiveInventory("SmallSpawnToken",20,AAPTR_PLAYER1)
-		TNT1 AAAAAAAAAAAA 350
-		TNT1 AA 35
-		TNT1 A 0 A_Warp(AAPTR_PLAYER1,0,0,0,0,WARPF_NOCHECKPOSITION)
+		TNT1 A 0 A_TakeInventory("PFirstTimeToken",1,0,TargetPtr)
+		TNT1 A 0 A_GiveInventory("SmallSpawnToken",20,TargetPtr)
+		TNT1 A 1 A_SetTics(GetCvar("DirectorDelay") * 35)
+		TNT1 A 0 A_Warp(TargetPtr,0,0,0,0,WARPF_NOCHECKPOSITION)
 		Goto Chasing
 	Idle:
 		TNT1 A 1 A_Look
 		Loop
 	See:
-		TNT1 AAAAAA 350 A_JumpIfInventory("RemoveDirector",1,"Death",AAPTR_PLAYER1) //~10 seconds per frame
-		TNT1 A 0 A_JumpIfInventory("PFirstTimeToken",1,"TwoMinutes",AAPTR_PLAYER1)
-		TNT1 A 0 A_Warp(AAPTR_PLAYER1,0,0,0,0,WARPF_NOCHECKPOSITION)
+		TNT1 AAAAAA 350 A_JumpIfInventory("RemoveDirector",1,"Death",TargetPtr) //~10 seconds per frame
+		TNT1 A 0 A_JumpIfInventory("PFirstTimeToken",1,"TwoMinutes",TargetPtr)
+		TNT1 A 0 A_Warp(TargetPtr,0,0,0,0,WARPF_NOCHECKPOSITION)
 	Chasing:
 		TNT1 AAA 2 A_Chase
 		TNT1 A 0 A_JumpIfInventory("RemoveDirector",1,"Death",AAPTR_TARGET)
-		TNT1 A 0 A_JumpIfInventory("FreezeDirector",1,"Frozen",AAPTR_TARGET)
+		TNT1 A 0 A_JumpIf(!GetCvar("DirectorsEnabled"),"Frozen")
 		TNT1 A 0 
 		{
 			A_UnsetShootable;
@@ -223,10 +243,15 @@ Actor TheDirector : DirectorBase
 		}
 		Loop
 	Missile:
-		TNT1 A 0 A_JumpIf(IsPointerEqual(AAPTR_TARGET,AAPTR_PLAYER1),2)
-		TNT1 A 0 A_RearrangePointers(AAPTR_PLAYER1,AAPTR_DEFAULT,AAPTR_DEFAULT,4) //Always ensure the player is the target.
-		TNT1 A 0 A_Warp(AAPTR_TARGET,0,0,0,0,WARPF_NOCHECKPOSITION)
-		TNT1 A 0 A_JumpIfInventory("SmallSpawnToken",1,"SmallMobShoot",AAPTR_PLAYER1)
+		TNT1 A 0 
+		{
+			if (!CheckClass("PlayerPawn",TargetPtr,true))
+			{
+				A_TransferPointer(Player1,DefPtr,DefPtr,TargetPtr,4);
+			}
+			A_Warp(TargetPtr,0,0,0,0,WARPF_NOCHECKPOSITION);
+		}
+		TNT1 A 0 A_JumpIfInventory("SmallSpawnToken",1,"SmallMobShoot",TargetPtr)
 		TNT1 A 3 A_FaceTarget
 		TNT1 A 0 A_JumpIf(user_mul < 666,"Missile2")
 		TNT1 A 0 A_Jump(256,"SmallMobShoot","MediumMobShoot","LargeMobShoot")
@@ -259,7 +284,7 @@ Actor TheDirector : DirectorBase
 		Goto ChanceCD
 	SmallMobShoot:
 		TNT1 A 0 A_JumpIf(user_cooldown[1] > 0,"Chasing")
-		TNT1 A 0 A_TakeInventory("SmallSpawnToken",1,0,AAPTR_PLAYER1)
+		TNT1 A 0 A_TakeInventory("SmallSpawnToken",1,0,TargetPtr)
 		TNT1 A 0 A_JumpIfInventory("DirSmallChildCount",user_cc[0]+user_mul,"Chasing")
 		TNT1 A 0 A_JumpIfInventory("DirSmallChildCount",user_cc[3],"Chasing")
 		TNT1 A 0 Thing_ChangeTID(0,32766)
@@ -276,12 +301,12 @@ Actor TheDirector : DirectorBase
 		Goto Chasing
 	Frozen:
 		TNT1 A 35 A_Stop
-		TNT1 A 0 A_JumpIfInventory("FreezeDirector",1,"Frozen",AAPTR_PLAYER1)
+		TNT1 A 0 A_JumpIf(!GetCvar("DirectorsEnabled"),"Frozen")
 		Goto Chasing
 	Death:
 		TNT1 A 35 A_RemoveChildren(1,RMVF_EVERYTHING,None,"Director")
-		TNT1 A 0 A_TakeInventory("FreezeDirector",32767,0,AAPTR_PLAYER1)
-		TNT1 A 0 A_TakeInventory("RemoveDirector",32767,0,AAPTR_PLAYER1)
+		TNT1 A 0 A_TakeInventory("FreezeDirector",32767,0,TargetPtr)
+		TNT1 A 0 A_TakeInventory("RemoveDirector",32767,0,TargetPtr)
 		Stop
 	}
 }
@@ -345,7 +370,7 @@ Actor MCLargeMobRunner : DirectorBase
 	Wanderbout:
 		TNT1 A 0 A_JumpIfInventory("DirectorIsLeaving",1,"Death",AAPTR_MASTER)
 		TNT1 A 0 A_JumpIfInventory("RemoveDirector",1,"Death",AAPTR_TARGET)
-		TNT1 A 0 A_JumpIfInventory("FreezeDirector",1,"Frozen",AAPTR_TARGET)
+		TNT1 A 0 A_JumpIf(!GetCvar("DirectorsEnabled"),"Frozen")
 		TNT1 A 1 A_Chase("","")
 		TNT1 AAAAAAAAA 1 A_Wander
 		TNT1 A 0 A_JumpIf(user_t >= 140,4)
@@ -439,7 +464,7 @@ Actor MCLargeMobRunner : DirectorBase
 		TNT1 A 35 A_Stop
 		TNT1 A 0 A_JumpIfInventory("RemoveDirector",1,"Death",AAPTR_TARGET)
 		TNT1 A 0 A_JumpIfInventory("DirectorIsLeaving",1,"Death",AAPTR_MASTER)
-		TNT1 A 0 A_JumpIfInventory("FreezeDirector",1,"Frozen",AAPTR_TARGET)
+		TNT1 A 0 A_JumpIf(!GetCvar("DirectorsEnabled"),"Frozen")
 		Goto See
 	Death:
 		TNT1 A 0
@@ -517,7 +542,7 @@ Actor MCMediumMobRunner : DirectorBase
 		TNT1 A 0 Thing_ChangeTID(0,0)
 		TNT1 A 0 A_JumpIfInventory("RemoveDirector",1,"Death",AAPTR_TARGET)
 		TNT1 A 0 A_JumpIfInventory("DirectorIsLeaving",1,"Death",AAPTR_MASTER)
-		TNT1 A 0 A_JumpIfInventory("FreezeDirector",1,"Frozen",AAPTR_TARGET)
+		TNT1 A 0 A_JumpIf(!GetCvar("DirectorsEnabled"),"Frozen")
 		TNT1 A 1 A_Chase("","")
 		TNT1 AAAAAAAAA 1 A_Wander
 		TNT1 A 0 A_JumpIf(user_t >= 140,4)
@@ -592,7 +617,7 @@ Actor MCMediumMobRunner : DirectorBase
 		TNT1 A 35 A_Stop
 		TNT1 A 0 A_JumpIfInventory("RemoveDirector",1,"Death",AAPTR_TARGET)
 		TNT1 A 0 A_JumpIfInventory("DirectorIsLeaving",1,"Death",AAPTR_MASTER)
-		TNT1 A 0 A_JumpIfInventory("FreezeDirector",1,"Frozen",AAPTR_TARGET)
+		TNT1 A 0 A_JumpIf(!GetCvar("DirectorsEnabled"),"Frozen")
 		Goto See
 	Stuck:
 		TNT1 A 0 A_GiveInventory("CooldownDisable1",1,AAPTR_MASTER)
@@ -688,7 +713,7 @@ Actor MCSmallMobRunner : DirectorBase
 		TNT1 A 0 Thing_ChangeTID(0,0)
 		TNT1 A 0 A_JumpIfInventory("RemoveDirector",1,"Death",AAPTR_TARGET)
 		TNT1 A 0 A_JumpIfInventory("DirectorIsLeaving",1,"Death",AAPTR_MASTER)
-		TNT1 A 0 A_JumpIfInventory("FreezeDirector",1,"Frozen",AAPTR_TARGET)
+		TNT1 A 0 A_JumpIf(!GetCvar("DirectorsEnabled"),"Frozen")
 		TNT1 A 1 A_Chase("","")
 		TNT1 AAAAAAAAA 1 A_Wander
 		TNT1 A 0 A_JumpIf(user_t >= 140,4)
@@ -750,7 +775,7 @@ Actor MCSmallMobRunner : DirectorBase
 		TNT1 A 35 A_Stop
 		TNT1 A 0 A_JumpIfInventory("RemoveDirector",1,"Death",AAPTR_TARGET)
 		TNT1 A 0 A_JumpIfInventory("DirectorIsLeaving",1,"Death",AAPTR_MASTER)
-		TNT1 A 0 A_JumpIfInventory("FreezeDirector",1,"Frozen",AAPTR_TARGET)		
+		TNT1 A 0 A_JumpIf(!GetCvar("DirectorsEnabled"),"Frozen")		
 		Goto Wanderbout
 	Stuck:
 		TNT1 A 0 A_JumpIf(user_dlimit > 0, "Vanish")

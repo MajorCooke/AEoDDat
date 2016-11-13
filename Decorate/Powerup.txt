@@ -1381,14 +1381,13 @@ ACTOR PentagramOfProtection : CustomInventory
 		{
 			if (CountInv("PowerDemonMorph") || CountInv("PowerInvulBase"))
 			{	return bool(false);	}
-			A_ChangeFlag(NOPAIN,1);
+			A_ChangeFlag("NOPAIN",true);
 			A_GiveInventory("UnMorpher",1);
 			A_GiveInventory("Invulnerability",1);
 			A_PlaySound("powerups/pentagramuse",CHAN_BODY,1,0,ATTN_NONE);
-			A_TakeInventory("PentagramCountdown",9999,0);
-			A_GiveInventory("PentagramCountdown",700); //THIS is the timer!
+			A_SetInventory("PentagramCountdown",700); //THIS is the timer!
 			//Change this to change how long it lasts!
-			A_SpawnItemEx("PentagramChecker",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTARGET);
+			A_SpawnItemEx("PentagramChecker",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTARGET|SXF_SETMASTER);
 			return bool(true);
 		}
 		Stop
@@ -1471,11 +1470,50 @@ Actor PentagramDispelled : Inventory
 Actor PentagramChecker
 {
 	var int user_tick;
+	var int user_time;
 	Projectile
 	+NOINTERACTION
 	+NODAMAGE
 	States
 	{
+	Spawn:
+		TNT1 A 1 
+		{
+			if (CountInv("PentagramCountdown",MasterPtr))
+			{
+				user_time += CountInv("PentagramCountdown",MasterPtr);
+				A_TakeInventory("PentagramCountdown",32767,0,MasterPtr);
+				A_StopSound(5);
+			}
+			else
+			{
+				user_time--;
+			}
+			
+			if (user_time == 105 || user_time == 70 || user_time == 35)
+			{
+				if (user_time == 105)
+				{
+					A_PlaySound("powerups/pentagrampickup",5,1,0,ATTN_NONE);
+				}
+				A_GiveInventory("PentagramFade",1,MasterPtr);
+			}
+			
+			if (user_time <= 0 || CountInv("PentagramDispelled",MasterPtr))
+			{
+				A_SetInventory("PowerInvulBase",0,MasterPtr);
+				A_SetInventory("PentagramCountdown",0,MasterPtr);
+				A_SetInventory("PentagramDispelled",0,MasterPtr);
+				A_SetInventory("PentagramIsOn",0,MasterPtr);
+				A_GiveInventory("AllowPainSwitchOn",1,TargetPtr);
+				return state("Null");
+			}
+			return state(0);
+		}
+		Wait
+	}
+}
+	/*
 	Spawn:
 		TNT1 A 0 NoDelay
 		{
@@ -1531,8 +1569,9 @@ Actor PentagramChecker
 	Return:
 		TNT1 A 0 A_StopSound(CHAN_VOICE)
 		Goto WaitingTimer
+	
 	}
-}
+}*/
 
 Actor AllowPainSwitchOn : CustomInventory
 {
@@ -4519,18 +4558,25 @@ Actor DMSoulFragment : CustomInventory
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay A_SetUserVar(user_tid,tid)
-		TNT1 A 0 Thing_ChangeTID(0,0)
-		TNT1 A 10 A_Stop
-		X099 A 0 A_SpawnItemEx("DMSoulTarget",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER|SXF_ORIGINATOR|SXF_TRANSFERTRANSLATION,0,tid)
-		"####" "#" 0 A_JumpIf(z-floorz <= 10.0,"MoveUp")
-		"####" "#" 0 A_CheckFloor("MoveUp")
+		TNT1 A 10 NoDelay 
+		{
+			user_tid = tid;
+			Thing_ChangeTID(0,0);
+			A_Stop;
+		}
+		X099 A 0 
+		{
+			A_SpawnItemEx("DMSoulTarget",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER|SXF_ORIGINATOR|SXF_TRANSFERTRANSLATION,0,tid);
+			if (z - floorz <= 10.0)
+			{	return state("MoveUp");	}
+			return state("ScalingUp");
+		}
 		Goto ScalingUp
 	MoveUp:
 		"####" "#" 0 A_Warp(AAPTR_DEFAULT,0,0,10,0,WARPF_NOCHECKPOSITION|WARPF_TOFLOOR)
 	ScalingUp:
 		"####" "#" 1 A_SetScale((cos(user_scale-90)+1)*0.05)
-		"####" "#" 0 A_SetUserVar("user_scale",user_scale+5)
+		"####" "#" 0 { user_scale += 5; }
 		"####" "#" 0 A_JumpIf(user_scale >= 180, "Scale2")
 		"####" "#" 0 A_JumpIf((user_count >= 35*15) && (ScaleX <= 0.0),"End")
 		"####" "#" 0 A_JumpIf((user_count >= 35*15),2)
