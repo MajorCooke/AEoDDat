@@ -98,6 +98,7 @@ Script "s901" enter
 		
 	If(getlevelinfo(LEVELINFO_LEVELNUM)!=0)		//if ==0, is an special map (i.e. titlemap)
 	{
+		SetCvar("DirectorDelay",30);
 		if(GameStarted==0||NoWeapons==1)
 		{
 			SetCvar("DirectorDelay",120);
@@ -168,10 +169,6 @@ Script "s901" enter
 			}*/
 			//SetFont("BIGFONT");
 			//HUDMessage(s:"AEoD: ",l:GameTypesText[AEoDThemeType],s:"."; HUDMSG_TYPEON| HUDMSG_LOG,0,CR_GREEN,0.5,0.1,6.0,0.1,1.0);
-		}
-		else
-		{
-			SetCvar("DirectorDelay",30);
 		}
 		if(AEoDGameMode == 1 || L4DDir)				//if L4D or chaos capital when entering a level
 		{
@@ -858,7 +855,7 @@ Script "FreezeDirector" (void)
 		//PLAY IT RIGHT OR GTFO.
 		Terminate;
 	}
-	if (GetCvar("DirectorsEnabled"))
+	if (!GetCvar("DirectorsEnabled"))
 	{
 		PrintBold(s:"Directors Enabled");
 		SetCvar("DirectorsEnabled",true);

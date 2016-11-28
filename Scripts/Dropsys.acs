@@ -487,3 +487,27 @@ Script "SelectAEoDWeapon" (int class) net
 	
 	//log(s:"Looks like something went over a loop.\n");
 }
+
+Script "RecordWeapon" (void)
+{
+	int plr = PlayerNumber();
+	str weap = GetWeapon();
+	
+	if (!stricmp(weap,"") || !stricmp(weap,"AEoDDemonMorphHand"))
+	{
+		SetUserCvar(plr, "AEoD_PreMorphWeapon", "");
+	}
+	SetUserCvar(plr, "AEoD_PreMorphWeapon", GetWeapon());
+}
+
+Script "PostMorphWeapon" ENTER
+{
+	int plr = PlayerNumber();
+	str weap = GetUserCvar(plr,"AEoD_PreMorphWeapon");
+	
+	if (!stricmp(weap,"") || !stricmp(weap,"AEoDDemonMorphHand"))
+	{
+		SetWeapon(weap);
+	}
+}
+
