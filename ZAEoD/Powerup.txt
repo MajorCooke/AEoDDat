@@ -436,27 +436,19 @@ Class DemonMorphPowerup : CustomInventory
 	}
 }
 
-Class DemonMorphGiver : PowerupGiver
+Class DemonMorphGiver : Inventory
 {
 	Default
 	{
-		+INVENTORY.AUTOACTIVATE
-		+INVENTORY.QUIET
-		+INVENTORY.ADDITIVETIME
-		Powerup.Type "PowerDemonMorph";
-		Powerup.Duration 1225;
+		Inventory.InterhubAmount 0;
 	}
 }
 
-Class PowerDemonMorph : PowerMorph
+Class PowerDemonMorph : Inventory
 {
 	Default
 	{
-		PowerMorph.PlayerClass "DemonPlayerMorph";
-		//2 | 16 | 32 | 64 | 128 | 256 | 512 | 2048
-		PowerMorph.MorphStyle MRF_UNDOALWAYS|MRF_WHENINVULNERABLE|MRF_UNDOBYDEATH|MRF_UNDOBYDEATHSAVES|MRF_LOSEACTUALWEAPON|MRF_NEWTIDBEHAVIOUR;
-		PowerMorph.MorphFlash "OldFog";
-		PowerMorph.UnmorphFlash "DemonMorphFogOff";
+		Inventory.InterhubAmount 0;
 	}
 }
 
@@ -497,6 +489,7 @@ Class DemonMorphManager : Actor
 	Default
 	{
 		+NOINTERACTION
+		+NOTIMEFREEZE
 	}
 	
 	override void Tick()
@@ -531,7 +524,6 @@ Class DemonMorphManager : Actor
 					{
 						lite1.EffectTics = mng.timer;
 					}
-					//A_LogInt(1);
 					A_Remove(DefPtr,RMVF_EVERYTHING);
 					return;
 				}
@@ -557,11 +549,14 @@ Class DemonMorphManager : Actor
 			if (waittics > 0)
 			{	
 				waittics--;
+				master.ACS_NamedExecuteAlways("ForceUnmorph",0,0,0,0);
 				return ResolveState(null);
 			}
 			
 			if (!first)
 			{
+				A_GiveInventory("PowerDemonMorph",1,MasterPtr);
+				A_GiveInventory("WeaponRecorder",1,MasterPtr);
 				master.A_StopSound(5);
 				master.A_StopSound(6);
 				master.A_StopSound(7);
@@ -569,10 +564,8 @@ Class DemonMorphManager : Actor
 				master.A_StopSound(CHAN_WEAPON);
 				master.A_StopSound(CHAN_VOICE);
 				master.A_StopSound(CHAN_ITEM);
-				master.A_GiveInventory("WeaponRecorder");
-				master.bDONTMORPH = true;
 				holding = master.player.ReadyWeapon;
-				master.player.PreMorphWeapon = (Class<Weapon>)(master.player.ReadyWeapon.GetClass());
+				master.bDONTMORPH = true;
 				master.player.ReadyWeapon = null;
 				
 				A_GiveInventory("AEoDDemonMorphHand",1,MasterPtr);
@@ -582,14 +575,29 @@ Class DemonMorphManager : Actor
 			timer--;
 			if (timer < 1)
 			{
+				
+				A_SetInventory("DemonMorphGiver",0,MasterPtr);
+				A_SetInventory("PowerDemonMorph",0,MasterPtr);
 				A_SetInventory("DemonMorphToken",0,MasterPtr);
 				A_SetInventory("AEoDDemonMorphHand",0,MasterPtr);
 				A_GiveInventory("DemonMorphRemoval",1,MasterPtr);
-				master.player.ReadyWeapon = holding;
-				//master.A_SelectWeapon(master.player.PreMorphWeapon);
-				master.player.PreMorphWeapon = null;
 				master.bDONTMORPH = master.bDONTTHRUST = master.bNODAMAGE = master.bNOPAIN = false;
-				A_SetHealth(CountInv("TempHealthToken",MasterPtr),MasterPtr);
+				master.RipLevelMin = 1;
+				A_SetHealth(200 + CountInv("TempHealthToken",MasterPtr),MasterPtr);
+				
+				
+				if (holding)
+				{
+					if (GetCvar("aeodweapondebug"))	A_LogInt(1);
+					Class<Weapon> hd = (Class<Weapon>)(holding.GetClass());
+					master.A_SelectWeapon(hd);
+				}
+				else
+				{
+					if (GetCvar("aeodweapondebug"))	A_LogInt(2);
+					ACS_NamedExecuteWithResult("AEoDWeaponRestorer",0,0,0,0);
+				}
+				
 				return ResolveState("Null");
 			}
 			return ResolveState(null);
@@ -607,6 +615,20 @@ Class WeaponRecorder : CustomInventory
 		TNT1 A 0
 		{
 			ACS_NamedExecuteWithResult("RecordWeapon",0,0,0,0);
+		}
+		Stop;
+	}
+}
+
+Class AEoDWeaponRestorer : CustomInventory
+{
+	Default { +INVENTORY.ALWAYSPICKUP }
+	States
+	{
+	Pickup:
+		TNT1 A 0
+		{
+			ACS_NamedExecuteWithResult("PostMorphWeapon",0,0,0,0);
 		}
 		Stop;
 	}
@@ -670,6 +692,7 @@ Class AEoDDemonMorphHand : Weapon
 		M666 A 1
 		{
 			bDONTMORPH = bDONTTHRUST = bNODAMAGE = bNOPAIN = bINVULNERABLE = true;
+			RipLevelMin = 666;
 			A_SetHealth(666);
 		}
 		Wait;
