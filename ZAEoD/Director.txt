@@ -219,37 +219,71 @@ Class TheDirector : DirectorBase
 		TNT1 A 0 A_JumpIf(random(1,2560) <= ((bias0+(mul*60))-60),"MediumMobShoot");
 		Goto SmallMobShoot;
 	LargeMobShoot:
-		TNT1 A 0 A_JumpIf(cooldown0 > 0,"Chasing");
-		TNT1 A 0 A_JumpIfInventory("DirLargeChildCount",cc2+mul,"Chasing");
-		TNT1 A 0 A_JumpIfInventory("DirLargeChildCount",cc3,"Chasing");
-		TNT1 A 0 Thing_ChangeTID(0,32766);
-		TNT1 A 1 A_SpawnItemEx("MCLargeMobRunner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID,0,mul);
-		TNT1 A 0 A_JumpIf(tid != 0,"Chasing");
-		TNT1 A 0 A_GiveInventory("DirLargeChildCount",1);
-		TNT1 A 0 { cooldown0 = random(cd4, cd5) + random(0, cd6); }
-		Goto ChanceCD;
+		TNT1 A 0 
+		{
+			if (cooldown0 > 0)	{	return ResolveState("Chasing");	}
+			int count = 0;
+			ThinkerIterator telefragger = ThinkerIterator.Create("MCLargeMobRunner");
+			Actor mo;
+			while (mo = MCLargeMobRunner(telefragger.Next()))
+			{
+				count++;
+				if (count >= cc2 + mul || count >= cc3)
+				{	return ResolveState("Chasing");	}
+			}
+			
+			if (A_SpawnItemEx("MCLargeMobRunner",flags: SXF_SETMASTER|SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID, tid: mul))
+			{
+				cooldown0 = random(cd4, cd5) + random(0, cd6);
+				return ResolveState("ChanceCD");
+			}
+			
+			return ResolveState("Chasing");
+		}
 	MediumMobShoot:
-		TNT1 A 0 A_JumpIf(cooldown0 > 0,"Chasing");
-		TNT1 A 0 A_JumpIfInventory("DirMediumChildCount",cc1+mul,"Chasing");
-		TNT1 A 0 A_JumpIfInventory("DirMediumChildCount",cc3,"Chasing");
-		TNT1 A 0 Thing_ChangeTID(0,32766);
-		TNT1 A 1 A_SpawnItemEx("MCMediumMobRunner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID,0,mul);
-		TNT1 A 0 A_JumpIf(tid != 0,"Chasing");
-		TNT1 A 0 A_GiveInventory("DirMediumChildCount",1);
-		TNT1 A 0 { cooldown0 = random(cd2, cd3) + random(0, cd6); }
-		Goto ChanceCD;
+		TNT1 A 0 
+		{
+			if (cooldown0 > 0)	{	return ResolveState("Chasing");	}
+			int count = 0;
+			ThinkerIterator telefragger = ThinkerIterator.Create("MCMediumMobRunner");
+			Actor mo;
+			while (mo = MCMediumMobRunner(telefragger.Next()))
+			{
+				count++;
+				if (count >= cc1 + mul || count >= cc3)
+				{	return ResolveState("Chasing");	}
+			}
+			
+			if (A_SpawnItemEx("MCMediumMobRunner",flags: SXF_SETMASTER|SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID, tid: mul))
+			{
+				cooldown0 = random(cd2, cd3) + random(0, cd6);
+				return ResolveState("ChanceCD");
+			}
+			
+			return ResolveState("Chasing");
+		}
 	SmallMobShoot:
-		TNT1 A 0 A_JumpIf(cooldown1 > 0,"Chasing");
-		TNT1 A 0 A_TakeInventory("SmallSpawnToken",1,0,TargetPtr);
-		TNT1 A 0 A_JumpIfInventory("DirSmallChildCount",cc0+mul,"Chasing");
-		TNT1 A 0 A_JumpIfInventory("DirSmallChildCount",cc3,"Chasing");
-		TNT1 A 0 Thing_ChangeTID(0,32766);
-		TNT1 A 1 A_SpawnItemEx("MCSmallMobRunner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID,0,mul);
-		TNT1 A 0 A_JumpIf(tid != 0,"Chasing");
-		TNT1 A 0 A_GiveInventory("DirSmallChildCount",1);
-		//Note that this cooldown is exclusive and runs individually unlike the other.
-		TNT1 A 0 { cooldown1 = random(cd1, cd2) + random(0, cd6); }
-		Goto ChanceCD;
+		TNT1 A 0 
+		{
+			if (cooldown1 > 0)	{	return ResolveState("Chasing");	}
+			int count = 0;
+			ThinkerIterator telefragger = ThinkerIterator.Create("MCSmallMobRunner");
+			Actor mo;
+			while (mo = MCSmallMobRunner(telefragger.Next()))
+			{
+				count++;
+				if (count >= cc0 + mul || count >= cc3)
+				{	return ResolveState("Chasing");	}
+			}
+			
+			if (A_SpawnItemEx("MCSmallMobRunner",flags: SXF_SETMASTER|SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID, tid: mul))
+			{
+				cooldown1 = random(cd1, cd2) + random(0, cd6);
+				return ResolveState("ChanceCD");
+			}
+			
+			return ResolveState("Chasing");
+		}
 	ChanceCD:
 		TNT1 A 0 A_Jump(240,"Chasing");
 		TNT1 A 0 A_Jump(256,1,1,2,2,3,3,4);
