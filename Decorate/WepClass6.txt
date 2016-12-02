@@ -1455,7 +1455,7 @@ Actor QuakeGrenade
 		QGRP KJIHGFEDCBA 3 Bright A_SpawnItemEx("QuakeGrenSmokeTrail",random(0,-3),random(2,-2),random(2,-2),0,0,0.8,0,SXF_NOCHECKPOSITION)
 		Goto Spawn+3
 	Death:
-		TNT1 A 0 A_PlaySound("weapons/rockexplo",0.6)
+		TNT1 A 0 A_PlaySound("weapons/rockexplo",CHAN_BODY,0.6)
 		TNT1 A 0 A_QuakeEx(3,3,0, 15,0,5,"", QF_SCALEDOWN)
 		TNT1 A 0 A_Explode(random(90,166),128,1)
 		TNT1 A 0 A_SpawnItemEx("NewExplosionMedium",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
@@ -5405,7 +5405,6 @@ Actor WarAxeExplosionRed
 
 Actor WarAxeRedExploSprite
 {
-	var int user_scaleup;
 	+NOINTERACTION
 	RenderStyle Add
 	Scale 0.5
@@ -5415,10 +5414,8 @@ Actor WarAxeRedExploSprite
 	{
 	Spawn:
 		TNT1 A 0
-		X126 A 0 A_SetUserVar("user_scaleup",(0.75))
 	Perform:
 		X126 A 0 A_SetScale(ScaleX+(0.02))
-		//X126 A 0 A_SetUserVar("user_scaleup",user_scaleup*(0.85))
 		X126 A 1 A_FadeOut(0.04)
 		Loop
 	}
