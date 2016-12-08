@@ -6,6 +6,65 @@ Class PowerInvulBase : PowerInvulnerable
 	}
 }
 
+//This here is the "controller" that causes the screen fades to happen when the powerup
+//runs out. It's easy. To set this up, simply change the amount of PentagramCountdown
+//given to the player with the PentagramOfProtection actor, and this will do the rest.
+//I've added failsafes in case if, for instance, the pentagram is dispelled by the
+//diabolical dice. That is to prevent the powerdown effect from occuring, and just gets
+//rid of it entirely.
+
+Class PentagramChecker : Actor
+{
+	int user_tick;
+	int user_time;
+	Default
+	{
+		+NOINTERACTION
+		+NODAMAGE
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 1 
+		{
+			if (CountInv("PentagramCountdown",MasterPtr))
+			{
+				user_time += CountInv("PentagramCountdown",MasterPtr);
+				A_TakeInventory("PentagramCountdown",32767,0,MasterPtr);
+				A_StopSound(5);
+			}
+			else
+			{
+				user_time--;
+			}
+			
+			if (master)
+			{	master.bINVULNERABLE = true;	}
+			
+			if (user_time == 105 || user_time == 70 || user_time == 35)
+			{
+				if (user_time == 105)
+				{
+					A_PlaySound("powerups/pentagrampickup",5,1,0,ATTN_NONE);
+				}
+				A_GiveInventory("PentagramFade",1,MasterPtr);
+			}
+			
+			if (user_time <= 0 || CountInv("PentagramDispelled",MasterPtr))
+			{
+				A_SetInventory("PowerInvulBase",0,MasterPtr);
+				A_SetInventory("PentagramCountdown",0,MasterPtr);
+				A_SetInventory("PentagramDispelled",0,MasterPtr);
+				A_SetInventory("PentagramIsOn",0,MasterPtr);
+				A_GiveInventory("AllowPainSwitchOn",1,TargetPtr);
+				return ResolveState("Null");
+			}
+			return ResolveState(null);
+		}
+		Wait;
+	}
+}
+
 //==============================================================================
 //==============================================================================
 //								The Demon Morph

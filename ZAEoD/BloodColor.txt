@@ -1,0 +1,1877 @@
+//================================================================
+//================================================================
+//
+//	6.X New Blood Effects
+//
+//================================================================
+//================================================================
+
+/*	Currently available blood colors based on what's been used:
+
+	Primary Color		Darker Color
+	----------------------------------
+	AEPutridGreen		AEPutridGreenD2
+	AELimeGreen			AELimeGreenD2
+	AEDarkRed			AEDarkRedD2
+	AEGreenYellow		AEGreenYellowD2
+	AEPoo				AEPooD2
+	Black				Black
+	Blue 				darkblue
+	Brown 				AEPooD2
+	DarkGreen 			AEDarkGreenD2
+	DarkRed				AEDarkRedD2
+	DimGray				AEDimGreyD2
+	Gold				AEGoldD2
+	GreenYellow			AEGreenYellowD2
+	Green				DarkGreen
+	Grey				DarkGrey
+	LightSlateGray		DarkSlateGrey
+	Orange				DarkOrange
+	Purple				DarkViolet
+	SeaShell2			AESeaShell2D2
+	Snow3				Snow4
+	White				Grey
+	Yellow				AEDarkYellowD2
+	AEBatshitRainbow	AEBatshitRainbowD2
+
+================================================================================
+						How to add new blood colors
+================================================================================
+1.	Add the new colors if they're not already defined in AEoDdat.pk3 -> 
+	X11R6RGB.txt. Name it "AE<Color>".
+	
+2.	Make a duplicate entry called "AE<Color>D2" and assign half the RGB values.
+	D2 stands for 'divide by 2', or half the color.
+	
+3.	Add "Color_<NameOfBloodColor>" to the enum below.
+	This is only needed for the name itself -- do not define one for the D2
+	since it's just there for adding extra tidbits and variance.
+	
+	Find Step 4+ down below.
+	
+	if ((bloodcolor & 0xffffff) == color("Red"))
+*/
+
+enum bloodcolors//TIDs ONLY. DO NOT USE IN THE TRANSLATIONS PROPERTY.
+{
+	Color_NULL				= 0, //
+	Color_Red				= Color_NULL,
+	Color_LimeGreen			= 1,
+	Color_DarkRed			= 2,
+	Color_GreenYellow		= 3,
+	Color_Poo				= 4,
+	Color_PutridGreen		= 5,
+	Color_Black				= 6,
+	Color_Blue				= 7,
+	Color_Brown				= 8,
+	Color_DarkGreen			= 9,
+	Color_DimGray			= 10,
+	Color_DimGrey			= Color_DimGray, //because it can be spelled either way.
+	Color_Gold				= 11,
+	Color_Green				= 12,
+	Color_Grey				= 13,
+	Color_Gray				= Color_Grey,
+	Color_LightSlateGray	= 14,
+	Color_LightSlateGrey	= Color_LightSlateGray,
+	Color_Orange			= 15,
+	Color_Purple			= 16,
+	Color_SeaShell2			= 17,
+	Color_Snow3				= 18,
+	Color_White				= 19,
+	Color_Yellow			= 20,
+	Color_BatShitRainbow	= 21,
+	//STEP 3 RIGHT HERE.
+};
+
+Class MCBloodFXMain : Blood replaces Blood
+{
+	const VelMul = 1.0;
+	int user_t;
+	int user_count;
+	int user_inv;
+	Default
+	{
+		//+MISSILE
+		+NOBLOCKMAP
+		+THRUACTORS
+		+NOTIMEFREEZE
+		+DONTSPLASH
+		+NOTELESTOMP
+		+NOTONAUTOMAP
+		+PUFFGETSOWNER
+		+ALWAYSPUFF
+		-ALLOWPARTICLES
+		+NOINTERACTION
+		+NOTELESTOMP
+		RenderStyle "None";
+		Radius 1;
+		Height 1;
+	}
+	
+	override void PostBeginPlay()
+	{
+		if (A_CheckSightOrRange(BloodDistanceLimit,"Null"))
+		{	
+			Destroy();
+			return;
+		}
+		if (target)
+		{
+			translation = target.translation;
+		}
+		else if (tracer)
+		{
+			translation = tracer.translation;
+		}
+		user_t = tid;
+		Thing_ChangeTID(0,0);
+		A_FaceMovementDirection();
+		user_inv = CountInv("BloodSpriteToken",Player1);
+		
+		Super.PostBeginPlay();
+		return;
+	}
+	
+	States
+	{
+	Spawn:
+		// DO NOT REMOVE THESE. According to Graf, two tics are required in order
+		// for some internal crap to process as P_SpawnBlood has a special priority.
+		// So... LEAVE THESE IN AND DON'T TOUCH THEM.
+		TNT1 AAA 0 ;
+		Goto SpawnBlood;
+	SpawnBlood:
+		TNT1 A 0
+		{
+			/*
+			let b1 = MCBloodParticle(Spawn("MCBloodParticle",pos));
+			if (b1)
+			{
+				b1.target = target;
+				b1.P1 = bloodcolor;
+				b1.vel = vel;
+			}
+			*/
+			A_SpawnItemEx("MCBloodParticle",frandom(0,2),0,random(1,4),Vel.X,Vel.Y,Vel.Z,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_TRANSFERPITCH|SXF_ABSOLUTEVELOCITY|SXF_TRANSFERPOINTERS,0,user_t); 
+			
+		}
+		TNT1 AAA 1 
+		{
+			if (user_inv >= 1)
+			{	A_SpawnItemEx("MCBloodSprite",frandom(0,2),0,random(1,4),frandom(0,1.5),0,frandom(0.1,2.0),random(0,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0);	}
+			else
+			{	return ResolveState("Null");	}
+			return ResolveState(null);
+		}	
+		Stop;
+	}
+}
+
+Class MCBloodFXTrail : MCBloodFXMain
+{
+	States
+	{
+	SpawnBlood:
+		TNT1 A 0
+		{
+			A_FaceMovementDirection();
+			if (user_inv >= 1)
+			{	A_SpawnItemEx("MCBloodSprite",frandom(0,2),0,random(1,4),frandom(0,1.5),0,frandom(0.1,2.0),random(0,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0);	}
+			if (user_inv <= 0 || user_inv >= 2)
+			{	A_SpawnItemEx("MCBloodParticle",frandom(0,2),0,random(1,4),Vel.X,Vel.Y,Vel.Z,0,SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR|SXF_TRANSFERPITCH|SXF_ABSOLUTEVELOCITY|SXF_TRANSFERPOINTERS,0,user_t);	}
+		}
+		Stop;
+	}
+}
+
+Class MCBloodSprite : Actor
+{
+	int user_t;
+	Default
+	{
+		Projectile;
+		+THRUACTORS
+		+DONTSPLASH
+		+NOTIMEFREEZE
+		+NOTELESTOMP
+		+NOTONAUTOMAP
+		+PUFFGETSOWNER
+		RenderStyle "Translucent";
+		Radius 1;
+		Height 1;
+		Gravity 0.20;
+		Scale 0.3;
+		DistanceCheck "user_MaxDrawDistance";
+	}
+	States
+	{
+	Buffer:
+		X057 ABCDEFGHIJKLMNOPQRS 0;
+		XA57 ABCDEFGHIJKLMNOPQRS 0;
+		XB57 ABCDEFGHIJKLMNOPQRS 0;
+		XC57 ABCDEFGHIJKLMNOPQRS 0;
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			user_t = tid;
+			Thing_ChangeTID(0,0);
+			A_SetScale(Scale.X*randompick(-1,1),Scale.Y*randompick(-1,1));
+			return A_Jump(256,"B1","B2","B3");
+		}
+	B11:
+		"####" A 0
+		{
+			static const Name Spr[] =
+			{
+				"X057",
+				"XA57",
+				"XB57",
+				"XC57"
+			};
+			sprite = GetSpriteIndex(Spr[random(0,3)]);
+		}
+		"####" ABCDEF 2 A_FadeOut(0.05);
+		"####" GHIJK 1 A_FadeOut(0.05);
+		"####" LMNOPQRS 1 A_FadeOut(0.03);
+		Wait;
+	B2:
+		"####" A 0
+		{
+			static const Name Spr[] =
+			{
+				"X058",
+				"XA58",
+				"XB58",
+				"XC58"
+			};
+			sprite = GetSpriteIndex(Spr[random(0,3)]);
+		}
+		"####" ABCDEF 2 A_FadeOut(0.05);
+		"####" GHIJK 1 A_FadeOut(0.05);
+		"####" LMNOPQR 1 A_FadeOut(0.03);
+		Wait;
+	
+	B3:
+		"####" A 0
+		{
+			static const Name Spr[] =
+			{
+				"X059",
+				"XA59",
+				"XB59",
+				"XC59"
+			};
+			sprite = GetSpriteIndex(Spr[random(0,3)]);
+		}
+		"####" ABCD 2 A_FadeOut(0.03);
+		"####" EFGHIJ 1 A_FadeOut(0.04);
+		"####" KLM 1 A_FadeOut(0.05);
+		Wait;
+	}
+}
+
+Class MCBloodParticle : Actor
+{
+	// Take note, enums are for integers only. Thus, flags and regular numbers
+	// can fit inside them, but floats cannot.
+	// Do not add color_ definitions here. The scope is inside the Class for a 
+	// reason. To find out more on how enums work, see
+	// http://zdoom.org/wiki/Constants#DECORATE_usage
+	enum parameters
+	{
+		PFlag = SPF_RELATIVE,
+		Lifetime = 		35,		//Self explanatory.
+		Size1Min = 		10,		//Size of bigger particle
+		Size1Max = 		20,
+		Size2Min = 		5,		//Size of smaller particle
+		Size2Max = 		10,
+		AOff = 			15,		//Angle
+		MaxCount1 =		5,		//Max number of big particles
+		MaxCount2 =		15,		//Max number of smaller particles
+		MaxCount3 =		MaxCount1 + MaxCount2,
+	};
+	//Ones without the '2' at the end are for the big particles.
+	//Those with the '2' are for the small particles. The default is
+	//just to copy them.
+	const XOffMin1 = 		1.0;	const XOffMin2 = 		XOffMin1;
+	const XOffMax1 = 		-1.0;	const XOffMax2 = 		XOffMax1;
+	const XVelMin1 = 		0.5;	const XVelMin2 = 		XVelMin1;
+	const XVelMax1 = 		3.0;	const XVelMax2 = 		XVelMax1;
+	const XAccMin1 = 		-0.01;	const XAccMin2 = 		XAccMin1;
+	const XAccMax1 = 		-0.01;	const XAccMax2 = 		XAccMax1;
+	const ZOffMin1 = 		-1.0;	const ZOffMin2 = 		ZOffMin1;
+	const ZOffMax1 = 		1.0;	const ZOffMax2 = 		ZOffMax1;
+	const ZVelMin1 = 		-0.5;	const ZVelMin2 = 		ZVelMin1;
+	const ZVelMax1 = 		2.5;	const ZVelMax2 = 		ZVelMax1;
+	const ZAccMin1 = 		-0.36;	const ZAccMin2 = 		ZAccMin1;
+	const ZAccMax1 = 		-0.48;	const ZAccMax2 = 		ZAccMax1;
+	const StartAlpha1 =		1.0;	const StartAlpha2 =		StartAlpha1;
+	const FadeMin1 =		0.04;	const FadeMin2 =		FadeMin1;
+	const FadeMax1 =		0.06;	const FadeMax2 =		FadeMax1;
+	const PitchOff =		5.0;
+	// Multiplies the velocity of the gib-spawned blood by this much. 
+	// Has no effect on bullet spawned blood, etc.
+	const VelMul = 0.75;
+	const YVelMul = VelMul;
+	const VelAccel = -0.15;
+	int user_t;
+	int user_count;
+	double user_vel;
+	double user_angle;
+	double user_pitch;
+	Color P1;
+	Color P2;
+	Default
+	{
+		Projectile;
+		+NOINTERACTION
+		+THRUACTORS
+		+DONTSPLASH
+		+NOTIMEFREEZE
+		+NOTELESTOMP
+		+NOTONAUTOMAP
+		+PUFFGETSOWNER
+		//Translation "0:255=%[0,0,0]:[1,0,0]"
+		//BloodColor "ABCDEF";
+		RenderStyle "None";
+		Radius 1;
+		Height 1;
+	}
+	
+	const arraySize = 19;
+	override void PostBeginPlay()
+	{
+		user_vel = sqrt((Vel.X * Vel.X) + (Vel.Y * Vel.Y)) * VelMul;
+		user_pitch = pitch;
+		user_angle = angle;
+		
+		user_t = tid;
+		Thing_ChangeTID(0,0);
+		static const Color SecondaryColor[] =
+		{
+			"DarkRed",
+			"AELimeGreenD2",
+			"AEDarkRedD2",
+			"AEGreenYellowD2",
+			"AEPooD2",
+			"AEPutridGreenD2",
+			"Black",
+			"DarkBlue",
+			"AEPooD2",
+			"AEDarkGreenD2",
+			"AEDimGrayD2",
+			"AEGoldD2",
+			"DarkGreen",
+			"DarkGrey",
+			"DarkSlateGray",
+			"DarkViolet",
+			"AESeaShellD2",
+			"Snow4",
+			"Grey",
+			"AEDarkYellowD2"
+		};
+		
+		static const Color PrimaryColor[] =
+		{
+			"Red",
+			"AELimeGreen",
+			"AEDarkRed",
+			"AEGreenYellow",
+			"AEPoo",
+			"AEPutridGreen",
+			"Black",
+			"Blue",
+			"Brown",
+			"DarkGreen",
+			"DimGray",
+			"Gold",	//11
+			"Green",
+			"Grey",
+			"LightSlateGray",
+			"Purple",
+			"Seashell2",
+			"Snow3",
+			"White",
+			"Yellow" // 19
+		};
+		
+		bool found = false;
+		
+		//if ((bloodcolor & 0xffffff) != color("Red"))
+		if (target)			P1 = target.bloodcolor;
+		else if (tracer)	P1 = tracer.bloodcolor;
+		else				P1 = bloodcolor;
+		for (int index = 0; index < arraySize; index++)
+		{
+			if ((P1 & 0xffffff) == Color(PrimaryColor[index]))
+			{
+				P2 = SecondaryColor[index];
+				break;
+			}
+		}
+		
+		while (user_count < MaxCount3)
+		{
+			if (random(0,1))				{ A_SpawnParticle(P1,	PFlag, Lifetime, random(Size1Min,Size1Max), frandom(-AOff, AOff), frandom(XOffMin1,XOffMax1), 0, frandom(ZOffMin1,ZOffMax1), (cos(-pitch) * user_vel) + (frandom(XVelMin1,XVelMax1)), frandom(XVelMin1,XVelMax1) * randompick(-1,1), (((sin(-pitch) * Vel.Z) * VelMul) + (frandom(-ZVelMax1,ZVelMax1)))/2, frandom(XAccMin1,XAccMax1), 0, frandom(ZAccMin1,ZAccMax1), StartAlpha1, frandom(FadeMin1,FadeMax1)); }
+			else							{ A_SpawnParticle(P2,	PFlag, Lifetime, random(Size2Min,Size2Max), frandom(-AOff, AOff), frandom(XOffMin2,XOffMax2), 0, frandom(ZOffMin2,ZOffMax2), (cos(-pitch) * user_vel) + (frandom(XVelMin2,XVelMax2)), frandom(XVelMin2,XVelMax2) * randompick(-1,1), (((sin(-pitch) * Vel.Z) * VelMul) + (frandom(-ZVelMax2,ZVelMax2)))/2, frandom(XAccMin2,XAccMax2), 0, frandom(ZAccMin2,ZAccMax2), StartAlpha2, frandom(FadeMin2,FadeMax2)); }
+			user_count += randompick(1,1,1,2,3);
+		}
+		Destroy();
+	}
+	
+	States
+	{
+	Spawn:
+		TNT1 A 1;
+		Stop;
+	}
+}
+
+//Step 5
+//	Copy/paste one of these and rename the AEBlood<THIS SECTION> to your color name.
+//	Also rename Color_<Name> too.
+//
+//	Once that's finished, give your monster both BloodColor and BloodType of the name
+// 	and Class to spawn. Then you should be finished unless you change the gib colors.
+
+//	More on that later.
+
+Class AEBloodLimeGreen 		: MCBloodFXMain	{}
+Class AEBloodGreenYellow	: MCBloodFXMain	{}
+Class AEBloodPoo			: MCBloodFXMain	{}
+Class AEBloodPutridGreen 	: MCBloodFXMain	{}
+Class AEBloodBlack			: MCBloodFXMain	{}
+Class AEBloodBrown			: MCBloodFXMain	{}
+Class AEBloodBlue			: MCBloodFXMain	{}
+Class AEBloodDarkGreen 		: MCBloodFXMain	{}
+Class AEBloodDimGray		: MCBloodFXMain	{}
+Class AEBloodGold			: MCBloodFXMain	{}
+Class AEBloodGreen 			: MCBloodFXMain	{}
+Class AEBloodGrey 			: MCBloodFXMain	{}
+Class AEBloodLightSlateGray : MCBloodFXMain	{}
+Class AEBloodOrange 		: MCBloodFXMain	{}
+Class AEBloodPurple			: MCBloodFXMain	{}
+Class AEBloodSeaShell2		: MCBloodFXMain	{}
+Class AEBloodSnow3 			: MCBloodFXMain	{}
+Class AEBloodWhite 			: MCBloodFXMain	{}
+Class AEBloodYellow 		: MCBloodFXMain	{}
+Class AEBloodBatShitRainbow : MCBloodFXMain	{}
+
+/*
+Class AEBloodLimeGreen 		: MCBloodFXMain	{ States { Spawn:
+TNT1 A 0 NoDelay { user_t = Color_LimeGreen;}		Goto Super::SpawnBlood; } }
+
+Class AEBloodGreenYellow	: MCBloodFXMain	{ States { Spawn:
+TNT1 A 0 NoDelay { user_t = Color_GreenYellow;}		Goto Super::SpawnBlood; } }
+
+Class AEBloodPoo			: MCBloodFXMain	{ States { Spawn:
+TNT1 A 0 NoDelay { user_t = Color_Poo;}				Goto Super::SpawnBlood; } }
+
+Class AEBloodPutridGreen 	: MCBloodFXMain	{ States { Spawn:
+TNT1 A 0 NoDelay { user_t = Color_PutridGreen;}		Goto Super::SpawnBlood; } }
+
+Class AEBloodBlack			: MCBloodFXMain	{ States { Spawn:
+TNT1 A 0 NoDelay { user_t = Color_Black;}			Goto Super::SpawnBlood; } }
+
+Class AEBloodBrown			: MCBloodFXMain	{ States { Spawn:
+TNT1 A 0 NoDelay { user_t = Color_Brown;}			Goto Super::SpawnBlood; } }
+
+Class AEBloodBlue			: MCBloodFXMain	{ States { Spawn:
+TNT1 A 0 NoDelay { user_t = Color_Blue;}			Goto Super::SpawnBlood; } }
+
+Class AEBloodDarkGreen 		: MCBloodFXMain	{ States { Spawn:
+TNT1 A 0 NoDelay { user_t = Color_DarkGreen;}		Goto Super::SpawnBlood; } }
+
+Class AEBloodDimGray		: MCBloodFXMain	{ States { Spawn:
+TNT1 A 0 NoDelay { user_t = Color_DimGray;}			Goto Super::SpawnBlood; } }
+
+Class AEBloodGold			: MCBloodFXMain	{ States { Spawn:
+TNT1 A 0 NoDelay { user_t = Color_Gold;}			Goto Super::SpawnBlood; } }
+
+Class AEBloodGreen 			: MCBloodFXMain	{ States { Spawn:
+TNT1 A 0 NoDelay { user_t = Color_Green;}			Goto Super::SpawnBlood; } }
+
+Class AEBloodGrey 			: MCBloodFXMain	{ States { Spawn:
+TNT1 A 0 NoDelay { user_t = Color_Grey;}			Goto Super::SpawnBlood; } }
+
+Class AEBloodLightSlateGray : MCBloodFXMain	{ States { Spawn:
+TNT1 A 0 NoDelay { user_t = Color_LightSlateGray;}	Goto Super::SpawnBlood; } }
+
+Class AEBloodOrange 		: MCBloodFXMain	{ States { Spawn:
+TNT1 A 0 NoDelay { user_t = Color_Orange;}			Goto Super::SpawnBlood; } }
+
+Class AEBloodPurple			: MCBloodFXMain	{ States { Spawn:
+TNT1 A 0 NoDelay { user_t = Color_Purple;}			Goto Super::SpawnBlood; } }
+
+Class AEBloodSeaShell2		: MCBloodFXMain	{ States { Spawn:
+TNT1 A 0 NoDelay { user_t = Color_SeaShell2;}		Goto Super::SpawnBlood; } }
+
+Class AEBloodSnow3 			: MCBloodFXMain	{ States { Spawn:
+TNT1 A 0 NoDelay { user_t = Color_Snow3;}			Goto Super::SpawnBlood; } }
+
+Class AEBloodWhite 			: MCBloodFXMain	{ States { Spawn:
+TNT1 A 0 NoDelay { user_t = Color_White;}			Goto Super::SpawnBlood; } }
+
+Class AEBloodYellow 		: MCBloodFXMain	{ States { Spawn:
+TNT1 A 0 NoDelay { user_t = Color_Yellow; }			Goto Super::SpawnBlood; } }
+
+Class AEBloodBatShitRainbow : MCBloodFXMain	{ States { Spawn:
+TNT1 A 0 NoDelay { user_t = Color_BatShitRainbow; }	Goto Super::SpawnBlood; } }
+*/
+
+
+//It's going to be impossible to translate blood splatters via particles directly
+//so just have it spawn the ordinary Class instead.
+Class MCBloodSplatter : MCBloodSprite replaces BloodSplatter
+{ }
+
+Class GibBloodSmall : MCBloodFXTrail 	{}
+Class GibBloodTrailMediumSize	: MCBloodFXTrail	{}
+
+//****************************************************************
+//****************************************************************
+//
+//	v5 Old Blood Effects
+//
+//****************************************************************
+//****************************************************************
+
+
+
+Class NewBlood : Blood //replaces Blood  //Blood as in v5.03, kept for compatability
+{
+	Default
+	{
+		+DONTSPLASH
+		+DONTBLAST
+		+NOTELESTOMP
+		+NOTONAUTOMAP
+		Scale 0.15;
+		Gravity 0.44;
+		DistanceCheck "user_MaxDrawDistance";
+	}
+	States
+	{
+	Spawn:
+		BLD1 A 1;
+//		TNT1 AAA 0 A_SpawnItemEx("ExtraBlood",random(3,-3),random(3,-3),random(3,-3),0,0,0,0,1)
+		TNT1 AAA 0 A_SpawnItemEx("ExtraBlood",random(3,-3),random(3,-3),random(3,-3),1,0,0,random(1,359),GibFlags);
+		BLD1 ABCD 6;
+		Stop;
+	}
+}
+
+Class ExtraBlood : NewBlood
+{
+	Default
+	{
+		Scale 0.09;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0;
+		BLD1 A 1 ThrustThingZ(0,random(5,12),0,1);
+		BLD1 A 5;
+		BLD1 ABCD 6;
+		Stop;
+	}
+}
+
+//===============================================================================
+//===============================================================================
+// Giblet Bases for inheritance purposes.
+//===============================================================================
+//===============================================================================
+
+Class GibletBase : Actor 
+{ 
+	int user_short;
+	int user_time;
+	int user_t;
+	int user_w;
+	int user_spawntrail;
+	Default 
+	{
+		Projectile;
+		+THRUACTORS
+		-NOLIFTDROP
+		+NOTELEPORT
+		+NOTELESTOMP
+		+NOTONAUTOMAP
+		+NOTRIGGER
+		-NOGRAVITY
+		+BOUNCEONWALLS
+		+BOUNCEONFLOORS
+		+DOOMBOUNCE
+		Radius 6;
+		Height 5;
+		BounceFactor 0.45;
+		BloodColor "Red";
+		DistanceCheck "user_MaxDrawDistance";
+	}
+	
+	override void BeginPlay()
+	{
+		if (GetClass() == "GibletBase")
+		{	
+			Destroy();
+			return;
+		}
+		
+		Super.BeginPlay();
+	}
+	
+	override void PostBeginPlay()
+	{
+		user_t = tid;
+		Thing_ChangeTID(0,0);
+		user_spawntrail = GetCvar("SpawnBloodTrails");
+		if (user_t < GibTID)	{	user_w = user_t;	}
+		else					{	user_w = user_t - GibTID;	}
+		
+		Super.PostBeginPlay();
+	}
+	
+	void SpawnGibBloodTrail()
+	{
+		if (user_spawntrail && !A_CheckSightOrRange(BloodDistanceLimit,"Null"))
+		{	
+			A_FaceMovementDirection(); 
+			A_SpawnItemEx("GibBloodSmall",0,0,0,Vel.X,Vel.Y,Vel.Z,0,SXF_ABSOLUTEVELOCITY|SXF_TRANSFERPITCH|SXF_USEBLOODCOLOR|SXF_SETTRACER|SXF_ORIGINATOR,0,user_w);	
+		}
+	}
+}
+
+Class GibletBaseSpawner : Actor 
+{
+	Default 
+	{
+		+NOTELESTOMP
+		+NOTONAUTOMAP
+		+NOINTERACTION
+		+NOBLOCKMAP
+		RenderStyle "None";
+		Radius 1;
+		Height 1;
+		DistanceCheck "user_MaxDrawDistance";
+	}
+}
+
+//===============================================================================
+//===============================================================================
+//
+//	A_TossGib with blood trails
+//
+//===============================================================================
+//===============================================================================
+
+Class NewMeat : GibletBase replaces Meat
+{
+	Default
+	{
+		Radius 6;
+		Height 5;	
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			
+			return A_Jump(256,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20);
+		}
+		MEAT ABCDEFGHIJLKMNOPQRST 0 { return ResolveState("Play1"); }
+	Play1:
+		"####" "##" 2 
+		{
+			SpawnGibBloodTrail();
+			
+			StateLabel dest = null;
+			if (pos.z <= floorz || user_time >= 87)		dest = "Death";
+			return ResolveState(dest);
+		}
+// when the gib crashes:
+	md1:
+	Death:
+		"####" "#" 0 A_JumpIf(GetCvar("user_ShortGibLives"),2);
+		"####" "#" 350 A_JumpIf(user_t >= GibTID,1);
+		"####" "#" 1 A_FadeOut();
+		Wait;
+	}
+}
+
+Class NewJunk : Junk replaces Junk
+{
+	Default
+	{
+		+NOTELESTOMP
+		+THRUACTORS
+		+NOTONAUTOMAP
+		DistanceCheck "user_MaxDrawDistance";
+	}
+}
+
+
+//***********************************
+Class GreenGib : GibletBaseSpawner
+{
+	Default
+	{
+		Translation "32:47=123:127", "169:191=112:127";
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0;
+		TNT1 A 0 A_CheckSight(2);
+		TNT1 AA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),1,0,tid);
+		Stop;
+	Spawn2:
+		TNT1 A 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),1,0,tid);
+		Stop;
+	}
+}
+
+Class GreenGibSp : GreenGib
+{
+	Default
+	{
+		Translation "32:47=123:127", "169:191=112:127";
+		BloodColor "Green";
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_CheckSight("Spawn2");
+		TNT1 AAAAAAAA 0 
+		{
+			A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+			A_TossGib();
+		}
+		TNT1 A 0 
+		{
+			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+		}
+		Stop;
+	Spawn2:
+		TNT1 AA 0
+		{
+			A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+			A_TossGib();
+		}
+		TNT1 A 0 
+		{
+			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+		}
+		Stop;
+	}
+}
+
+//***********************************
+Class BlueGib : GibletBaseSpawner
+{
+	Default
+	{
+		Translation "32:47=204:207", "169:191=196:205";
+		BloodColor "Blue";
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 ;
+		TNT1 A 0 A_CheckSight("Spawn2");
+		TNT1 AA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+		Stop;
+	Spawn2:
+		TNT1 A 0;
+		Stop;
+	}
+}
+
+Class BlueGibSp : BlueGib
+{
+	Default
+	{
+		Translation "32:47=204:207", "169:191=196:205";
+		BloodColor "Blue";
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_CheckSight("Spawn2");
+		TNT1 AAAAAAAA 0 
+		{
+			A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+			A_TossGib();
+		}
+		TNT1 A 0 
+		{
+			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+		}
+		Stop;
+	Spawn2:
+		TNT1 AA 0
+		{
+			A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+			A_TossGib();
+		}
+		TNT1 A 0 
+		{
+			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+		}
+		Stop;
+	}
+}
+
+
+//***********************************
+Class OrangeGib : GibletBaseSpawner
+{
+	Default
+	{
+		Translation "32:47=219:223", "169:191=213:223";
+		BloodColor "Orange";
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0;
+		TNT1 A 0 A_CheckSight("Spawn2");
+		TNT1 A 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+		TNT1 A 0 A_TossGib();
+		Stop;
+	Spawn2:
+		TNT1 A 0 A_TossGib();
+		Stop;
+	}
+}
+
+Class OrangeGibSp : GreenGib
+{
+	Default
+	{
+		Translation "32:47=219:223", "169:191=213:223";
+		BloodColor "Orange";
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_CheckSight("Spawn2");
+		TNT1 AAAAAAAA 0 
+		{
+			A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+			A_TossGib();
+		}
+		TNT1 A 0 
+		{
+			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+		}
+		Stop;
+	Spawn2:
+		TNT1 AA 0
+		{
+			A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+			A_TossGib();
+		}
+		TNT1 A 0 
+		{
+			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+		}
+		Stop;
+	}
+}
+
+
+//***********************************
+Class GrayGib : GibletBaseSpawner
+{
+	Default
+	{
+		Translation "32:47=104:111", "169:191=80:106";
+		BloodColor "Gray";
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0;
+		TNT1 A 0 A_CheckSight("Spawn2");
+		TNT1 AA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+		Stop;
+	Spawn2:
+		TNT1 A 0 A_TossGib();
+		Stop;
+	}
+}
+
+Class GrayGibSp : BlueGib
+{
+	Default
+	{
+		Translation "32:47=104:111", "169:191=80:106";
+		BloodColor "Gray";
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_CheckSight("Spawn2");
+		TNT1 AAAAAAAA 0 
+		{
+			A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+			A_TossGib();
+		}
+		TNT1 A 0 
+		{
+			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+		}
+		Stop;
+	Spawn2:
+		TNT1 AA 0
+		{
+			A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+			A_TossGib();
+		}
+		TNT1 A 0 
+		{
+			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+		}
+		Stop;
+	}
+}
+
+//***********************************
+Class PurpleGib : GibletBaseSpawner
+{
+	Default
+	{
+		Translation "32:47=254:254", "169:191=253:253";
+		BloodColor "Purple";
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0;
+		TNT1 A 0 A_CheckSight(2);
+		TNT1 A 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+		TNT1 A 0 A_TossGib();
+		Stop;
+	Spawn2:
+		TNT1 A 0 A_TossGib();
+		Stop;
+	}
+}
+
+Class PurpleGibSp : GreenGib
+{
+	Default
+	{
+		Translation "32:47=254:254", "169:191=253:253";
+		BloodColor "Purple";
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_CheckSight("Spawn2");
+		TNT1 AAAAAAAA 0 
+		{
+			A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+			A_TossGib();
+		}
+		TNT1 A 0 
+		{
+			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+		}
+		Stop;
+	Spawn2:
+		TNT1 A 0
+		{
+			if (A_CheckProximity("Null","GibletBase",2048,GetCVar("MaxGibCount"),CPXF_ANCESTOR|CPXF_NOZ,Player1))
+			{	return ResolveState("Null");	}
+			return ResolveState(1);
+		}
+		TNT1 AA 0
+		{
+			
+			A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+			A_TossGib();
+		}
+		TNT1 A 0 
+		{
+			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),SXF_NOCHECKPOSITION|SXF_USEBLOODCOLOR,0,tid);
+		}
+		Stop;
+	}
+}
+
+//===============================================================================
+//===============================================================================
+//
+//	Hexen2 style Gibs
+//
+//===============================================================================
+//===============================================================================
+
+Struct GibSpawnerList
+{
+	const MaxSize = 10;
+	Class<Actor> Gibs[MaxSize]; 		// Name of the gibs to store.
+	int SpawnAmount[MaxSize];		// Amount of these to spawn based on Index.
+	int Index;
+	int Cap;
+	int SpawnChance;
+	int user_t;					// Just for the sake of making things simple...
+	Color Trans;
+	Vector3 Vel;
+	double MulBy[2];
+	double RAdd;
+	
+	//--------------------------------------------------------------------------
+	// Reset
+	//--------------------------------------------------------------------------
+	void Reset()
+	{
+		for (Index = 0; Index < 10; Index++)
+		{
+			Gibs[Index] = null;
+			SpawnAmount[Index] = 0;
+		}
+		Index = user_t = SpawnChance = 0;
+		Vel = ( 0, 0, 0 );
+		RAdd = MulBy[0] = MulBy[1] = 0.0;
+		
+	}
+	//--------------------------------------------------------------------------
+	// AddGib (classname, amount, index)
+	//--------------------------------------------------------------------------
+	
+	void AddGib(Class<Actor> gib, int amt, int i)
+	{
+		if (i < 0)		
+			i = abs(i);	
+		
+		i % MaxSize;
+		
+		Gibs[i] = gib;
+		SpawnAmount[i] = amt;
+		
+		if (Cap < i) 
+			Cap = i;
+	}
+	
+	//--------------------------------------------------------------------------
+	// SpawnGibs (caller)
+	//--------------------------------------------------------------------------
+	void SpawnGibs(Actor caller)
+	{
+		if (!caller) return;
+		
+		if (Cap < 0 || Cap >= MaxSize) Cap = 9;
+		
+		for (Index = 0; Index <= Cap; Index++)
+		{
+			if (Gibs[Index] == null || SpawnAmount[Index] < 1)	
+			{	continue;	}
+			
+			for ( ; SpawnAmount[Index] > 0; SpawnAmount[Index]--)
+			{
+				caller.target = null;
+				caller.A_SpawnItemEx(Gibs[Index],0,0,0,
+					Vel.X * frandom(MulBy[0],MulBy[1]) + frandom(-RAdd,RAdd),
+					Vel.Y * frandom(MulBy[0],MulBy[1]) + frandom(-RAdd,RAdd),
+					Vel.Z * frandom(MulBy[0],MulBy[1]) + frandom(-RAdd,RAdd),
+					0,GibFlags|SXF_ISTARGET,0,user_t);
+				if (caller.target)	{	caller.target.translation = Trans;	}
+			}
+		}
+	}
+}
+
+Class GibSpawnerBase : Actor
+{
+	int RAdd;
+	int user_t;
+	Default
+	{
+		+NOTELESTOMP
+		+NOTONAUTOMAP
+		+NOINTERACTION
+		RenderStyle "None";
+	}
+	
+	bool CheckReqs()
+	{
+		user_t = tid;
+		Thing_ChangeTID(0,0);
+		bool simple = false;
+		if (A_CheckSightOrRange(BloodDistanceLimit,"Null") || //abs(GetAngle(GAF_RELATIVE|GAF_SWITCH,Player1) > 90) ||
+			A_CheckProximity("Null","GibletBase",2048,GetCVar("MaxSoftGibCount"),CPXF_ANCESTOR|CPXF_NOZ))
+		{
+			simple = true;
+			if (A_CheckProximity("Null","GibletBase",2048,GetCVar("MaxGibCount"),CPXF_ANCESTOR|CPXF_NOZ|CPXF_LESSOREQUAL,Player1))
+			{	 return false;	}
+		}
+		return true;
+	}
+}
+
+Class SmallGibDropper : GibSpawnerBase
+{	
+	override void PostBeginPlay()
+	{
+		if (!CheckReqs())
+		{	Destroy(); return;	}
+		
+		// Copy the velocities.
+		if (tracer)		{	Vel = tracer.Vel;	}
+		
+		GibSpawnerList sp; sp.Reset();
+		sp.AddGib("HGib1Small", 1, 0);
+		sp.AddGib("HGib2Small", 1, 1);
+		sp.AddGib("HGib3Small", 1, 2);
+		sp.Cap = 2;
+		sp.Vel = Vel;
+		sp.RAdd = 8;
+		sp.MulBy[0] = 1;
+		sp.MulBy[1] = 2;
+		sp.user_t = user_t;
+		sp.Trans = translation;
+		sp.SpawnGibs(self);
+		
+		Destroy();
+		return;
+	}
+	
+	States
+	{
+	Spawn:
+		TNT1 A 1;
+		Stop;
+	}
+}
+
+Class HGib1Small : GibletBase
+{
+	Default
+	{
+		BounceFactor 0.4;
+		Speed 4;
+		Scale 0.07;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			A_ChangeVelocity(0,0,random(3,15));
+		}
+		Goto Play;
+	Play:
+		GIB7 AABBCCDDEEFFGGHHIIJJKKLLMM 2 SpawnGibBloodTrail();
+		Goto Death;
+	Death:
+		"####" "#" 0 A_JumpIf(GetCvar("user_ShortGibLives"),2);
+		GIB7 M random(300,400) A_JumpIf(user_t >= GibTID,1); //Skip the duration.
+		GIB7 M 2 A_FadeOut();
+		Wait;
+	}
+}
+
+
+Class HGib1SmallMirr : HGib1Small
+{
+	Default
+	{
+		Speed 5;
+	}
+	States
+	{
+	Play:
+		GIB7 NNOOPPQQRRSSTTUUVVWWXXYYZZ 2 SpawnGibBloodTrail();
+		Goto Death;
+	Death:
+		"####" "#" 0 A_JumpIf(GetCvar("user_ShortGibLives"),2);
+		GIB7 Z random(300,400) A_JumpIf(user_t >= GibTID,1);
+		GIB7 Z 2 A_FadeOut();
+		Wait;
+	}
+}
+
+Class HGib2Small : HGib1Small
+{
+	Default
+	{
+		Speed 6;
+	}
+	States
+	{
+	Play:
+		GIB8 AABBCCDDEEFFGGHHIIJJKKLLMM 2 SpawnGibBloodTrail();
+		Goto Death;
+	Death:
+		"####" "#" 0 A_JumpIf(GetCvar("user_ShortGibLives"),2);
+		GIB8 M random(300,400) A_JumpIf(user_t >= GibTID,1);
+		GIB8 M 2 A_FadeOut();
+		Wait;
+	}
+}
+
+Class HGib2SmallMirr : HGib1Small
+{
+	Default
+	{
+		Speed 3;
+	}
+	States
+	{
+	Play:
+		GIB8 NNOOPPQQRRSSTTUUVVWWXXYYZZ 2 SpawnGibBloodTrail();
+	Death:
+		"####" "#" 0 A_JumpIf(GetCvar("user_ShortGibLives"),2);
+		GIB8 Z random(300,400) A_JumpIf(user_t >= GibTID,1);
+		GIB8 Z 2 A_FadeOut();
+		Wait;
+	}
+}
+
+Class HGib3Small : HGib1Small
+{
+	Default
+	{
+		Speed 2;
+	}
+	States
+	{
+	Play:
+		GIB9 AABBCCDDEEFFGGHHIIJJKKLL 2 SpawnGibBloodTrail();
+	Death:
+		"####" "#" 0 A_JumpIf(GetCvar("user_ShortGibLives"),2);
+		GIB9 L random(300,400) A_JumpIf(user_t >= GibTID,1);
+		GIB9 L 2 A_FadeOut();
+		Wait;
+	}
+}
+
+Class HGib3SmallMirr : HGib1Small
+{
+	Default
+	{
+		Speed 4;
+	}
+	States
+	{
+	Play:
+		GIB8 NNOOPPQQRRSSTTUUVVWWXXYYZZ 2 
+		{
+			
+		}
+	Death:
+		"####" "#" 0 A_JumpIf(GetCvar("user_ShortGibLives"),2);
+		GIB9 Z random(300,400) A_JumpIf(user_t >= GibTID,1);
+		GIB9 Z 2 A_FadeOut();
+		Wait;
+	}
+}
+   
+
+//***************************************************
+//***************************************************
+Class GibDropper : Actor
+{
+	const RAdd = 8;
+	int user_t;
+	Default
+	{
+		+NOINTERACTION
+		+NOTONAUTOMAP
+		+NOTELESTOMP
+		RenderStyle "None";
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			user_t = tid;
+			Thing_ChangeTID(0,0);
+			
+			if (A_CheckSightOrRange(BloodDistanceLimit,"Null") || //abs(GetAngle(GAF_RELATIVE|GAF_SWITCH,Player1) > 90) ||
+				A_CheckProximity("Null","GibletBase",2048,GetCVar("MaxSoftGibCount"),CPXF_ANCESTOR|CPXF_NOZ))
+			{	return ResolveState("Simple");	}
+		
+			A_SpawnItemEx("HGib1",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+			A_SpawnItemEx("HGib2",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+			A_SpawnItemEx("HGib3",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+			return ResolveState(null);
+		}
+		Stop;
+	Simple:
+		TNT1 A 0 
+		{
+			if (!A_CheckProximity("Null","GibletBase",2048,GetCVar("MaxGibCount"),CPXF_ANCESTOR|CPXF_NOZ|CPXF_LESSOREQUAL,Player1))
+			{	A_SpawnItemEx("HGib1",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);	}			
+		}
+		Stop;
+	}
+}
+
+Class HGib1 : GibletBase
+{
+	Default
+	{
+		BounceFactor 0.4;
+		Speed 4;
+		Scale 0.1;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			A_ChangeVelocity(0,0,random(5,18));
+		}
+	Play:
+		GIB7 AABBCCDDEEFFGGHHIIJJKKLLMM 2 SpawnGibBloodTrail();
+	Death:
+		"####" "#" 0 A_JumpIf(GetCvar("user_ShortGibLives"),2);
+		GIB7 M random(300,400) A_JumpIf(user_t >= GibTID,1);
+		GIB7 M 2 A_FadeOut();
+		Wait;
+	}
+}
+Class HGib1Mirr : HGib1
+{
+	Default
+	{
+		Speed 5;
+	}
+	States
+	{
+	Play:
+		GIB7 NNOOPPQQRRSSTTUUVVWWXXYYZZ 2 SpawnGibBloodTrail();
+	Death:
+		"####" "#" 0 A_JumpIf(GetCvar("user_ShortGibLives"),2);
+		GIB7 Z random(300,400) A_JumpIf(user_t >= GibTID,1);
+		GIB7 Z 2 A_FadeOut();
+		Wait;
+	}
+}
+
+Class HGib2 : HGib1
+{
+	Default
+	{
+		Speed 6;
+	}
+	States
+	{
+	Play:
+		GIB8 AABBCCDDEEFFGGHHIIJJKKLLMM 2 SpawnGibBloodTrail();
+	Death:
+		"####" "#" 0 A_JumpIf(GetCvar("user_ShortGibLives"),2);
+		GIB8 M random(300,400) A_JumpIf(user_t >= GibTID,1);
+		GIB8 M 2 A_FadeOut();
+		Wait;
+	}
+}
+
+
+Class HGib2Mirr : HGib1
+{
+	Default
+	{
+		Speed 5;
+	}
+	States
+	{
+	Play:
+		GIB8 NNOOPPQQRRSSTTUUVVWWXXYYZZ 2 SpawnGibBloodTrail();
+	Death:
+		"####" "#" 0 A_JumpIf(GetCvar("user_ShortGibLives"),2);
+		GIB8 Z random(300,400) A_JumpIf(user_t >= GibTID,1);
+		GIB8 Z 2 A_FadeOut();
+		Wait;
+	}
+}
+
+Class HGib3 : HGib1
+{
+	Default
+	{
+		Speed 6;
+	}
+	States
+	{
+	Play:
+		GIB9 AABBCCDDEEFFGGHHIIJJKKLL 2 SpawnGibBloodTrail();
+	Death:
+		"####" "#" 0 A_JumpIf(GetCvar("user_ShortGibLives"),2);
+		GIB9 L random(300,400) A_JumpIf(user_t >= GibTID,1);
+		GIB9 L 2 A_FadeOut();
+		Wait;
+	}
+}
+
+Class HGib3Mirr : HGib1
+{
+	Default
+	{
+		Speed 5;
+	}
+	States
+	{
+	Play:
+		GIB9 MMNNOOPPQQRRSSTTUUVVWWXX 2 SpawnGibBloodTrail();
+	Death:
+		"####" "#" 0 A_JumpIf(GetCvar("user_ShortGibLives"),2);
+		GIB9 X random(300,400) A_JumpIf(user_t >= GibTID,1);
+		GIB9 X 2 A_FadeOut();
+		Wait;
+	}
+}
+
+//===============================================================================
+//===============================================================================
+//
+//	Quake gibs
+//
+//===============================================================================
+//===============================================================================
+
+Class QuakeGibDropper : Actor
+{
+	const RAdd = 8;
+	int user_t;
+	Default
+	{
+		+NOINTERACTION
+		+NOTONAUTOMAP
+		+NOTELESTOMP
+		RenderStyle "None";
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			user_t = tid;
+			Thing_ChangeTID(0,0);
+			if (A_CheckSightOrRange(BloodDistanceLimit,"Null") || //abs(GetAngle(GAF_RELATIVE|GAF_SWITCH,Player1) > 90) ||
+				A_CheckProximity("Null","GibletBase",2048,GetCVar("MaxSoftGibCount"),CPXF_ANCESTOR|CPXF_NOZ))
+			{	return ResolveState("Simple");	}
+			return A_Jump(180,"Drop2","Drop3","Drop4");
+		}
+		TNT1 AAA 0 A_SpawnItemEx("Gib1",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		TNT1 A 0 A_SpawnItemEx("Gib2",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		TNT1 A 0 A_SpawnItemEx("GibTorso",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		Stop;
+	Drop2:
+		TNT1 AAA 0 A_SpawnItemEx("Gib1",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		TNT1 AA 0 A_SpawnItemEx("Gib2",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		TNT1 A 0 A_SpawnItemEx("GibTorso",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		Stop;
+	Drop3:
+		TNT1 AA 0 A_SpawnItemEx("Gib1",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		TNT1 AAA 0 A_SpawnItemEx("Gib2",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		TNT1 A 0 A_SpawnItemEx("GibTorso",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		Stop;
+	Drop4:
+		TNT1 AA 0 A_SpawnItemEx("Gib1",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		TNT1 AA 0 A_SpawnItemEx("Gib2",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		TNT1 A 0 A_SpawnItemEx("GibTorso",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		Stop;
+	Simple:
+		TNT1 A 0 
+		{
+			if (A_CheckProximity("Null","GibletBase",2048,GetCVar("MaxGibCount"),CPXF_ANCESTOR|CPXF_NOZ|CPXF_LESSOREQUAL,Player1))
+			{	A_SpawnItemEx("Gib1",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);	}
+		}
+		Stop;
+	}
+}
+//***********************************
+Class Gib1 : GibletBase
+{
+	Default
+	{
+		BounceFactor 0.45;
+		Speed 8;
+		Scale 0.34;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			A_ChangeVelocity(0,0,random(5,18));
+		}
+		Goto Play;
+	Play:
+		Q99B BBCCDDEEFFGGHHIIJJKKLLMMNN 2 SpawnGibBloodTrail();
+	Death:
+		"####" "#" 0 A_JumpIf(GetCvar("user_ShortGibLives"),2);
+		Q99B N random(300,400) A_JumpIf(user_t >= GibTID,1);
+		Q99B N 2 A_FadeOut();
+		Wait;
+	}
+}
+
+Class GibTorso : Gib1
+{
+	Default
+	{
+		Speed 2;
+		Scale 0.31;
+	}
+	States
+	{
+	Play:
+		Q99C AABBCCDDEEFF 2 SpawnGibBloodTrail();
+	Death:
+		"####" "#" 0 A_JumpIf(GetCvar("user_ShortGibLives"),2);
+		Q99C F random(300,400) A_JumpIf(user_t >= GibTID,1);
+		Q99C F 2 A_FadeOut();
+		Wait;
+	}
+}
+
+Class Gib2 : Gib1
+{
+	Default
+	{
+		Speed 5;
+		Scale 0.26;
+	}
+	States
+	{
+	Play:
+		Q99D AABBCCDDEE 2 SpawnGibBloodTrail();
+	Death:
+		"####" "#" 0 A_JumpIf(GetCvar("user_ShortGibLives"),2);
+		Q99D F random(300,400) A_JumpIf(user_t >= GibTID,1);
+		Q99D F 2 A_FadeOut();
+		Wait;
+	}
+}
+
+//==================================================================
+Class QuakeSmallGibDropper : Actor
+{
+	const RAdd = 8;
+	int user_t;
+	Default
+	{
+		+NOTONAUTOMAP
+		+NOINTERACTION
+		+NOTELESTOMP
+		RenderStyle "None";
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			user_t = tid;
+			Thing_ChangeTID(0,0);
+			if (//A_CheckSightOrRange(BloodDistanceLimit,"Null") || //abs(GetAngle(GAF_RELATIVE|GAF_SWITCH,Player1) > 90) ||
+				A_CheckProximity("Null","GibletBase",2048,GetCVar("MaxSoftGibCount"),CPXF_ANCESTOR|CPXF_COUNTDEAD|CPXF_NOZ))
+			{	return ResolveState("Simple");	}
+			return A_Jump(180,"Drop2","Drop3","Drop4");
+		}
+		TNT1 AAA 0 A_SpawnItemEx("SmallGib1",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		TNT1 A 0 A_SpawnItemEx("SmallGib2",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		TNT1 A 0 A_SpawnItemEx("SmallGibTorso",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		Stop;
+	Drop2:
+		TNT1 AAA 0 A_SpawnItemEx("SmallGib1",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		TNT1 AA 0 A_SpawnItemEx("SmallGib2",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		TNT1 A 0 A_SpawnItemEx("SmallGibTorso",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		Stop;
+	Drop3:
+		TNT1 AA 0 A_SpawnItemEx("SmallGib1",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		TNT1 AAA 0 A_SpawnItemEx("SmallGib2",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		TNT1 A 0 A_SpawnItemEx("SmallGibTorso",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		Stop;
+	Drop4:
+		TNT1 AA 0 A_SpawnItemEx("SmallGib1",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		TNT1 AA 0 A_SpawnItemEx("SmallGib2",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		TNT1 A 0 A_SpawnItemEx("SmallGibTorso",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		Stop;
+
+	Simple:
+		TNT1 A 0 
+		{
+			if (A_CheckProximity("Null","GibletBase",2048,GetCVar("MaxGibCount"),CPXF_ANCESTOR|CPXF_NOZ|CPXF_LESSOREQUAL,Player1))
+			{	A_SpawnItemEx("Gib1",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);	}
+		}
+		Stop;
+	}
+}
+
+//***********************************
+Class SmallGib1 : Gib1
+{
+	Default
+	{
+		Speed 8;
+		Scale 0.27;
+	}
+	States
+	{
+	Play:
+		Q99B BBCCDDEEFFGGHHIIJJKKLLMMNN 2 SpawnGibBloodTrail();
+		/*
+		{
+			if (user_spawntrail && !A_CheckSightOrRange(BloodDistanceLimit,"Null"))
+			{	//A_FaceMovementDirection(); 
+			A_SpawnItemEx("GibBloodSmall",0,0,0,Vel.X,Vel.Y,Vel.Z,0,SXF_ABSOLUTEVELOCITY|SXF_TRANSFERPITCH|SXF_TRANSFERTRANSLATION|SXF_USEBLOODCOLOR,0,user_w);	}
+		} 
+		*/
+	Death:
+		"####" "#" 0 A_JumpIf(GetCvar("user_ShortGibLives"),2);
+		Q99B N 350 A_JumpIf(user_t >= GibTID,1);
+		Q99B N 2 A_FadeOut();
+		Wait;
+	}
+}
+
+Class SmallGibTorso : SmallGib1 
+{
+	Default
+	{
+		Speed 2;
+		Scale 0.23;
+	}
+	States
+	{
+	Play:
+		Q99C AABBCCDDEEFF 2 SpawnGibBloodTrail();
+	Death:
+		"####" "#" 0 A_JumpIf(GetCvar("user_ShortGibLives"),2);
+		Q99C F 380 A_JumpIf(user_t >= GibTID,1);
+		Q99C F 2 A_FadeOut();
+		Wait;
+	}
+}
+
+
+Class SmallGib2 : SmallGib1 
+{
+	Default
+	{
+		Speed 5;
+		Scale 0.19;
+	}
+	States
+	{
+	Play: //ThrustThingZ(0,random(10,60),0,1)
+		Q99D AABBCCDDEE 2 SpawnGibBloodTrail();
+	Death:
+		"####" "#" 0 A_JumpIf(GetCvar("user_ShortGibLives"),2);
+		Q99D F 366 A_JumpIf(user_t >= GibTID,1);
+		Q99D F 2 A_FadeOut();
+		Wait;
+	}
+}
+
+
+//===============================================================================
+//===============================================================================
+//
+//	Blood style gibs
+//
+//===============================================================================
+//===============================================================================
+Class BloodGibDropper : Actor
+{
+	const RAdd = 5;
+	int user_t;
+	Default
+	{
+		+NOINTERACTION
+		+NOTONAUTOMAP
+		+NOTELESTOMP
+		RenderStyle "None";
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			user_t = tid;
+			Thing_ChangeTID(0,0);
+			if (A_CheckSightOrRange(BloodDistanceLimit,"Null") || //abs(GetAngle(GAF_RELATIVE|GAF_SWITCH,Player1) > 90) ||
+				A_CheckProximity("Null","GibletBase",2048,GetCVar("MaxSoftGibCount"),CPXF_ANCESTOR|CPXF_NOZ))
+			{	return ResolveState("Simple");	}
+			return A_Jump(180,"Drop2","Drop3","Drop4");
+		}
+		TNT1 AAAAAA 0 A_SpawnItemEx("NewMeat",0,0,0,random(1,2)*Vel.X+random(-7,7),random(1,2)*Vel.Y+random(-7,7),random(1,2)*Vel.Z+random(1,14),random(1,359),GibFlags,0,user_t);
+		TNT1 AA 0 A_SpawnItemEx("BloodGib1",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		TNT1 AA 0 A_SpawnItemEx("BloodGib2",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		TNT1 AAA 0 A_SpawnItemEx("BloodGib3",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		TNT1 A 0 A_SpawnItemEx("BloodGib4",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		Stop;
+	Drop2:
+		TNT1 AAAAAA 0 A_SpawnItemEx("NewMeat",0,0,0,random(1,2)*Vel.X+random(-7,7),random(1,2)*Vel.Y+random(-7,7),random(1,2)*Vel.Z+random(1,14),random(1,359),GibFlags,0,user_t);
+		TNT1 AA 0 A_SpawnItemEx("BloodGib1",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		TNT1 AA 0 A_SpawnItemEx("BloodGib2",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		TNT1 AA 0 A_SpawnItemEx("BloodGib3",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		TNT1 AA 0 A_SpawnItemEx("BloodGib4",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		Stop;
+	Drop3:
+		TNT1 AAAAAA 0 A_SpawnItemEx("NewMeat",0,0,0,random(1,2)*Vel.X+random(-7,7),random(1,2)*Vel.Y+random(-7,7),random(1,2)*Vel.Z+random(1,14),random(1,359),GibFlags,0,user_t);
+		TNT1 A 0 A_SpawnItemEx("BloodGib1",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		TNT1 AA 0 A_SpawnItemEx("BloodGib2",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		TNT1 AAA 0 A_SpawnItemEx("BloodGib3",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		TNT1 AA 0 A_SpawnItemEx("BloodGib4",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		Stop;
+	Drop4:
+		TNT1 AAAAAA 0 A_SpawnItemEx("NewMeat",0,0,0,random(1,2)*Vel.X+random(-7,7),random(1,2)*Vel.Y+random(-7,7),random(1,2)*Vel.Z+random(1,14),random(1,359),GibFlags,0,user_t);
+		TNT1 AA 0 A_SpawnItemEx("BloodGib1",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		TNT1 A 0 A_SpawnItemEx("BloodGib2",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		TNT1 AA 0 A_SpawnItemEx("BloodGib3",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		TNT1 AAA 0 A_SpawnItemEx("BloodGib4",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+		Stop;
+	Simple:
+		TNT1 A 0
+		{
+			if (A_CheckProximity("Null","GibletBase",2048,GetCVar("MaxGibCount"),CPXF_ANCESTOR|CPXF_NOZ|CPXF_LESSOREQUAL,Player1))
+			{	
+				A_SpawnItemEx("NewMeat",0,0,0,random(1,2)*Vel.X+random(-7,7),random(1,2)*Vel.Y+random(-7,7),random(1,2)*Vel.Z+random(1,14),random(1,359),GibFlags,0,user_t);
+				A_SpawnItemEx("NewMeat",0,0,0,random(1,2)*Vel.X+random(-7,7),random(1,2)*Vel.Y+random(-7,7),random(1,2)*Vel.Z+random(1,14),random(1,359),GibFlags,0,user_t);
+				A_SpawnItemEx("BloodGib1",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+				A_SpawnItemEx("BloodGib2",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+				A_SpawnItemEx("BloodGib3",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+				A_SpawnItemEx("BloodGib4",0,0,0,Vel.X*random(1,2)+random(-RAdd,RAdd),Vel.Y*random(1,2)+random(-RAdd,RAdd),Vel.Z*random(1,2)+random(-RAdd,RAdd),0,GibFlags,0,user_t);
+			}
+		}		
+		Stop;
+	}
+}
+
+//***************************************
+Class BloodGib1 : GibletBase
+{
+	int user_c;
+	Default
+	{
+		Scale 0.6;
+		Radius 6;
+		Height 5;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			ThrustThingZ(0,random(12,80),0,1);
+		}
+		Goto Looping;
+	Looping:
+		ANYG AABBCCDD 2 SpawnGibBloodTrail();
+		"####" "#" 0 
+		{
+			user_c++;
+			return A_JumpIf(user_c > 5,"Death");
+		}
+		Loop;
+	Death:
+		"####" "#" 0 A_JumpIf(GetCvar("user_ShortGibLives"),2);
+		ANYG E random(300,600) A_JumpIf(user_t >= GibTID,1);
+		ANYG E 1 A_FadeOut();
+		Wait;
+	}
+}
+
+Class BloodGib2 : BloodGib1		//eye
+{
+	Default
+	{
+		Scale 0.4;
+		Speed 7;
+	}
+	States
+	{
+	Looping:
+		ANYG FFGGHHII 2 SpawnGibBloodTrail();
+		"####" "#" 0 
+		{
+			user_c++;
+			return A_JumpIf(user_c > 5,"Death");
+		}
+		Loop;
+	Death:
+		"####" "#" 0 A_JumpIf(GetCvar("user_ShortGibLives"),2);
+		ANYG J random(300,600) A_JumpIf(user_t >= GibTID,1);
+		ANYG J 1 A_FadeOut();
+		Wait;
+	}
+}
+
+Class BloodGib3 : BloodGib1		//liver
+{
+	Default
+	{
+		Scale 0.6;
+		Speed 7;
+	}
+	States
+	{
+	Looping:
+		ANYG KKLLMMNN 2 SpawnGibBloodTrail();
+		"####" "#" 0 
+		{
+			user_c++;
+			return A_JumpIf(user_c > 5,"Death");
+		}
+		Loop;
+	Death:
+		"####" "#" 0 A_JumpIf(GetCvar("user_ShortGibLives"),2);
+		ANYG O random(300,600) A_JumpIf(user_t >= GibTID,1);
+		ANYG O 1 A_FadeOut();
+		Wait;
+	}
+}
+
+Class BloodGib4 : BloodGib1		//bloodthing
+{
+	Default
+	{
+		Scale 0.6;
+		Speed 7;
+	}
+	States
+	{
+	Looping:
+		ANYG PPQQRRSS 2 SpawnGibBloodTrail();
+		"####" "#" 0 
+		{
+			user_c++;
+			return A_JumpIf(user_c > 5,"Death");
+		}
+	Death:
+		"####" "#" 0 A_JumpIf(GetCvar("user_ShortGibLives"),2);
+		ANYG T random(300,600) A_JumpIf(user_t >= GibTID,1);
+		ANYG T 1 A_FadeOut();
+		Wait;
+	}
+}

@@ -1376,7 +1376,7 @@ ACTOR PentagramOfProtection : CustomInventory
 		{
 			if (CountInv("PowerDemonMorph") || CountInv("PowerInvulBase"))
 			{	return bool(false);	}
-			A_ChangeFlag("NOPAIN",true);
+			A_ChangeFlag(NOPAIN,true);
 			A_GiveInventory("UnMorpher",1);
 			A_GiveInventory("Invulnerability",1);
 			A_PlaySound("powerups/pentagramuse",CHAN_BODY,1,0,ATTN_NONE);
@@ -1455,118 +1455,6 @@ Actor PentagramDispelled : Inventory
 	Inventory.InterhubAmount 0
 }
 
-//This here is the "controller" that causes the screen fades to happen when the powerup
-//runs out. It's easy. To set this up, simply change the amount of PentagramCountdown
-//given to the player with the PentagramOfProtection actor, and this will do the rest.
-//I've added failsafes in case if, for instance, the pentagram is dispelled by the
-//diabolical dice. That is to prevent the powerdown effect from occuring, and just gets
-//rid of it entirely.
-
-Actor PentagramChecker
-{
-	var int user_tick;
-	var int user_time;
-	Projectile
-	+NOINTERACTION
-	+NODAMAGE
-	States
-	{
-	Spawn:
-		TNT1 A 1 
-		{
-			if (CountInv("PentagramCountdown",MasterPtr))
-			{
-				user_time += CountInv("PentagramCountdown",MasterPtr);
-				A_TakeInventory("PentagramCountdown",32767,0,MasterPtr);
-				A_StopSound(5);
-			}
-			else
-			{
-				user_time--;
-			}
-			
-			if (user_time == 105 || user_time == 70 || user_time == 35)
-			{
-				if (user_time == 105)
-				{
-					A_PlaySound("powerups/pentagrampickup",5,1,0,ATTN_NONE);
-				}
-				A_GiveInventory("PentagramFade",1,MasterPtr);
-			}
-			
-			if (user_time <= 0 || CountInv("PentagramDispelled",MasterPtr))
-			{
-				A_SetInventory("PowerInvulBase",0,MasterPtr);
-				A_SetInventory("PentagramCountdown",0,MasterPtr);
-				A_SetInventory("PentagramDispelled",0,MasterPtr);
-				A_SetInventory("PentagramIsOn",0,MasterPtr);
-				A_GiveInventory("AllowPainSwitchOn",1,TargetPtr);
-				return state("Null");
-			}
-			return state(0);
-		}
-		Wait
-	}
-}
-	/*
-	Spawn:
-		TNT1 A 0 NoDelay
-		{
-			if (CountInv("PentagramIsOn",TargetPtr) || IsPointerEqual(TargetPtr,NullPtr))	
-			{	return state("Null");	}
-			A_GiveInventory("PentagramIsOn",1,TargetPtr); //Stops Hijacking
-			return state("WaitingTimer");
-		}
-	WaitingTimer:
-		TNT1 A 1 A_TakeInventory("PentagramCountdown",1,0,TargetPtr)
-		TNT1 A 0 A_JumpIfInventory("PentagramDispelled",1,"EndForced",TargetPtr)
-		TNT1 A 0 A_JumpIfInventory("PentagramCountdown",106,"WaitingTimer",TargetPtr)
-	Final:
-		TNT1 A 0 A_JumpIfInventory("PentagramCountdown",200,"Return",TargetPtr)
-		TNT1 A 0 A_PlaySound("powerups/pentagrampickup",CHAN_VOICE,1,0,ATTN_NONE)
-		TNT1 A 0 A_GiveInventory("PentagramFade",1,TargetPtr)
-		TNT1 A 0 A_TakeInventory("PentagramCountdown",38,0,TargetPtr)
-		TNT1 AAAAAAAAAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",TargetPtr)
-		TNT1 AAAAAAAAAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",TargetPtr)
-		TNT1 AAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",TargetPtr)
-		TNT1 A 0 A_JumpIfInventory("PentagramCountdown",200,"Return",TargetPtr)
-		TNT1 A 0 A_GiveInventory("PentagramFade",1,TargetPtr)
-		TNT1 A 0 A_TakeInventory("PentagramCountdown",38,0,TargetPtr)
-		TNT1 AAAAAAAAAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",TargetPtr)
-		TNT1 AAAAAAAAAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",TargetPtr)
-		TNT1 AAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",TargetPtr)
-		TNT1 A 0 A_JumpIfInventory("PentagramCountdown",200,"Return",TargetPtr)
-		TNT1 A 0 A_GiveInventory("PentagramFade",1,TargetPtr)
-		TNT1 A 0 A_TakeInventory("PentagramCountdown",38,0,TargetPtr)
-		TNT1 AAAAAAAAAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",TargetPtr)
-		TNT1 AAAAAAAAAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",TargetPtr)
-		TNT1 AAAAAAAA 1 A_JumpIfInventory("PentagramDispelled",1,"EndForced",TargetPtr)
-	End:
-		TNT1 A 0 A_JumpIfInventory("PentagramCountdown",1,"WaitingTimer2",TargetPtr)
-	EndForced:
-		TNT1 A 0 
-		{
-			A_TakeInventory("PentagramIsOn",32767,0,TargetPtr);
-			A_TakeInventory("PentagramCountdown",32767,0,TargetPtr);
-			A_TakeInventory("PentagramDispelled",32767,0,TargetPtr);
-			A_TakeInventory("PowerInvulBase",10000,0,TargetPtr);
-			A_GiveInventory("AllowPainSwitchOn",1,TargetPtr);
-			return state("Null");
-		}
-	AbsoluteEnd:
-		TNT1 A 0
-		Stop
-	WaitingTimer2:
-		TNT1 A 1 A_TakeInventory("PentagramCountdown",1,0,TargetPtr)
-		TNT1 A 0 A_JumpIfInventory("PentagramCountdown",200,"Return",TargetPtr)
-		TNT1 A 0 A_JumpIfInventory("PentagramCountdown",1,"WaitingTimer2",TargetPtr)
-		Goto End
-	Return:
-		TNT1 A 0 A_StopSound(CHAN_VOICE)
-		Goto WaitingTimer
-	
-	}
-}*/
 
 Actor AllowPainSwitchOn : CustomInventory
 {

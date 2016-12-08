@@ -4968,7 +4968,7 @@ Actor AEoDShredderStaffItem : AEoDWeaponPickup // //6106
 
 Actor AEoDShredderStaff : AEoDWeaponBase // 6106
 {
-	const float Sparsity = 41.66 / 2.0;
+	const float TSparsity = 41.66 / 2.0;
 	+FLOORCLIP
 	+INVENTORY.IGNORESKILL	+DONTGIB
 	+WEAPON.CHEATNOTWEAPON
@@ -5022,7 +5022,7 @@ Actor AEoDShredderStaff : AEoDWeaponBase // 6106
 			A_FireCustomMissile("ShredderAltFXSpawner",0,0);
 			//The damage from here has been removed and put into the puff itself.
 			//LEAVE IT ALONE. DO NOT CHANGE.
-			A_RailAttack(0,0,1,None,None,RGF_SILENT,0,"ShredderPuff",0,0,20000,0,Sparsity,0,"ShredderBeam");
+			A_RailAttack(0,0,1,None,None,RGF_SILENT,0,"ShredderPuff",0,0,20000,0,TSparsity,0,"ShredderBeam");
 		}
 		S04I I 5 
 		S04I J 4
@@ -5034,7 +5034,6 @@ Actor AEoDShredderStaff : AEoDWeaponBase // 6106
 
 Actor ShredderBeam : TrailBeam
 {
-	
 	YScale 0.5 //Don't touch.
 	XScale 0.25
 	States
@@ -5045,14 +5044,15 @@ Actor ShredderBeam : TrailBeam
 			// user_time = time to shrink to nothing
 			user_time = 20.0;
 			A_SpawnItemEx("ShredderBeam",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERSCALE|SXF_TRANSFERPOINTERS,tid * 256,1);
+			return state("Process");
 		}
-		Goto Process
+		//Goto Super::Process
 	}
 }
 
 Actor ShredderAltFXSpawner
 {
-	var int user_s[4];
+	var int user_s[3];
 	var int user_failsafe;
 	var int user_count;
 	Projectile
@@ -5069,27 +5069,33 @@ Actor ShredderAltFXSpawner
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay A_SetUserArray(user_s,0,random(0,359))
-		TNT1 A 0 A_SetUserArray(user_s,1,random(0,359))
-		TNT1 A 0 A_SetUserArray(user_s,2,random(4,16))
-		TNT1 A 0 A_SetUserArray(user_s,3,random(4,16))
+		TNT1 A 0 NoDelay 
+		{
+			user_s[0] = random(0,359);
+			user_s[1] = random(0,359);
+			user_s[2] = random(4,16);
+		}
 	Movement:
 		//TNT1 A 0 A_SpawnItemEx("ShredderBeamParticle2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		TNT1 A 0 A_JumpIf(user_s[0] < 360,2)
-		TNT1 A 0 A_SetUserArray(user_s,0,user_s[0]-360)
-		TNT1 A 0 A_SetUserArray(user_s,0,user_s[0]+user_s[2])
-		TNT1 A 0 A_JumpIf(user_s[1] < 360,2)
-		TNT1 A 0 A_SetUserArray(user_s,1,user_s[1]-360)
-		TNT1 A 0 A_SetUserArray(user_s,1,user_s[1]+user_s[3])
-		//(sin(-pitch)*(user_d))*(sin(user_s+90)),(sin(user_s)*user_d),(cos(pitch)*user_d)*(cos(user_s))
-		TNT1 A 0 A_SpawnItemEx("ShredderBeamParticle",(sin(-pitch)*10)*sin(user_s[0]+90),(sin(user_s[0])*10),((cos(pitch)*10)*cos(user_s[0])),0,0,0,0,SXF_NOCHECKPOSITION)
-		TNT1 A 0 A_SpawnItemEx("ShredderBeamMiniParticle",(sin(-pitch)*10)*sin(user_s[0]+90),(sin(user_s[0])*10),((cos(pitch)*10)*cos(user_s[0])),0,0,0,0,SXF_NOCHECKPOSITION)
-		TNT1 A 0 A_SpawnItemEx("ShredderBeamMiniParticle2",(sin(-pitch)*10)*sin(user_s[1]+90),(sin(user_s[1])*10),((cos(pitch)*10)*cos(user_s[1])),0,0,0,0,SXF_NOCHECKPOSITION)
-		TNT1 A 0 A_Warp(AAPTR_DEFAULT,velx,vely,velz,0,WARPF_ABSOLUTEOFFSET,1)
+		TNT1 A 0
+		{
+			for (user_failsafe = 0; user_failsafe <= 200; user_failsafe++)
+			{
+				user_s[0] = (user_s[0] + 2) % 360;
+				user_s[1] = (user_s[1] + user_s[2]) % 360;
+			
+				A_SpawnItemEx("ShredderBeamParticle",(sin(-pitch)*10)*sin(user_s[0]+90),(sin(user_s[0])*10),((cos(pitch)*10)*cos(user_s[0])),0,0,0,0,SXF_NOCHECKPOSITION);
+				A_SpawnItemEx("ShredderBeamMiniParticle",(sin(-pitch)*10)*sin(user_s[0]+90),(sin(user_s[0])*10),((cos(pitch)*10)*cos(user_s[0])),0,0,0,0,SXF_NOCHECKPOSITION);
+				A_SpawnItemEx("ShredderBeamMiniParticle2",(sin(-pitch)*10)*sin(user_s[1]+90),(sin(user_s[1])*10),((cos(pitch)*10)*cos(user_s[1])),0,0,0,0,SXF_NOCHECKPOSITION);
+				
+				if (A_CheckSight("Null") || !A_Warp(AAPTR_DEFAULT,velx,vely,velz,0,WARPF_ABSOLUTEOFFSET,"Null"))
+				{	return state("Null");	}
+				
+				user_failsafe++;
+			}
+			return state("Null");
+		}
 		Stop
-		TNT1 A 0 A_SetUserVar("user_failsafe",user_failsafe+1)
-		TNT1 A 0 A_JumpIf(user_failsafe>=5000,"Death")
-		Loop
 	Death:
 		TNT1 A 0 
 		Stop
@@ -5128,17 +5134,17 @@ Actor ShredderPuff
 		TNT1 A 0 NoDelay
 		{
 			if (!IsPointerEqual(AAPTR_TRACER,AAPTR_NULL))
-			{	return state("Hit");	}
+			{	return state("HitEnemy");	}
 			A_PlaySound("weapons/explode1");
 			A_ChangeFlag("PAINLESS",0);
 			A_ChangeFlag("FOILINVUL",0);
 			A_Explode(650,256,0,0,128);
-			return state(1);
+			return state(0);
 		}
 		SRBA FFFFGGGGHHHHIIII 1 Bright A_FadeOut(0.02)
 		SRBA J 1 Bright A_FadeOut(0.1)
 		Wait
-	Hit:
+	HitEnemy:
 		TNT1 A 0 
 		{
 			A_PlaySound("shredderstaff/blasthit");
@@ -5155,7 +5161,7 @@ Actor ShredderPuff
 			A_SetScale((scaleX+0.2));
 			A_FadeOut(0.1);
 		}
-		Loop
+		Wait
 	}
 }
 
