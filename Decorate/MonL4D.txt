@@ -76,6 +76,7 @@ Actor L4DTank //cyberdemon
 	PainSound "L4D/Tank/Pain"
 	DeathSound "L4D/Tank/Death"
 	MeleeRange 100
+	//BloodColor Red
 	DamageFactor "SpitterAcid", 0.2
 //Undead
 	DamageFactor "AEPoison", 0.5
@@ -89,6 +90,7 @@ Actor L4DTank //cyberdemon
 	DamageFactor "ChaosExpl2", 0
 	Obituary "%o underestimated the Tank's throwing abilities."
 	HitObituary "%o felt the unpleasant experience of being hulk smashed by the Tank."
+	BloodColor "Red"
 	States
 	{
 	Spawn:
@@ -185,7 +187,7 @@ Actor L4DTank //cyberdemon
 		TNT1 AAAAA 0 A_SpawnItemEx("SmallGibDropper",0,0,random(20,40),0,0,0,0,GibDropperFlags)
 		TNT1 A 0 A_SpawnItemEx("QuakeSmallGibDropper",0,0,random(20,40),0,0,0,0,GibDropperFlags)
 		TNT1 A 0 A_Fall
-		TNT1 A 1 
+		TNT1 A 10
 		Stop
 	Death.UnholyDisint:
 	Death.PlasmaDisint:
@@ -2527,7 +2529,7 @@ Actor L4DHunter
 			{
 				A_FaceTarget(0,0,0,0,FAF_TOP,GetDistance(true)/5.0);
 			}
-			A_ChangeVelocity(cos(-pitch)*40,0,sin(pitch)*40,CVF_RELATIVE|CVF_REPLACE);
+			A_ChangeVelocity(cos(pitch)*40,0,-sin(pitch)*40,CVF_RELATIVE|CVF_REPLACE);
 			//A_Recoil(-38);
 			//ThrustThingZ(0,35,0,0);
 		}

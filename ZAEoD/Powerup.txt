@@ -1,3 +1,13 @@
+
+
+
+
+//==============================================================================
+//==============================================================================
+
+//==============================================================================
+//==============================================================================
+
 Class PowerInvulBase : PowerInvulnerable
 {
 	Default
@@ -25,8 +35,14 @@ Class PentagramChecker : Actor
 	States
 	{
 	Spawn:
-		TNT1 A 1 
+		TNT1 A 1 NoDelay
 		{
+			if (!master)
+			{
+				Destroy();
+				return;
+			}
+			
 			if (CountInv("PentagramCountdown",MasterPtr))
 			{
 				user_time += CountInv("PentagramCountdown",MasterPtr);
@@ -56,10 +72,11 @@ Class PentagramChecker : Actor
 				A_SetInventory("PentagramCountdown",0,MasterPtr);
 				A_SetInventory("PentagramDispelled",0,MasterPtr);
 				A_SetInventory("PentagramIsOn",0,MasterPtr);
-				A_GiveInventory("AllowPainSwitchOn",1,TargetPtr);
-				return ResolveState("Null");
+				master.bALLOWPAIN = true;
+				Destroy();
+				return;
 			}
-			return ResolveState(null);
+			return;
 		}
 		Wait;
 	}
@@ -319,7 +336,7 @@ Class DMSoulMissile : Actor
 		X099 A 1
 		{
 			A_FaceTracer(0,0,0,0,FAF_TOP);
-			A_ChangeVelocity(cos(-pitch)*20,0,sin(pitch)*20,CVF_RELATIVE|CVF_REPLACE);
+			A_ChangeVelocity(cos(pitch)*20,0,-sin(pitch)*20,CVF_RELATIVE|CVF_REPLACE);
 			if (GetDistance(true,TracerPtr) <= 32)
 			{	return ResolveState("End");	}
 			return ResolveState(null);

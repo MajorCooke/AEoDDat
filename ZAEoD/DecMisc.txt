@@ -1,0 +1,215 @@
+Class BulletTracerFX : Actor 
+{
+	const Sparsity = 125.0;
+	const Distance = 3.25;
+	const Multiplier = 1;
+	const SpawnSpeed = 300;
+	const TravelTic = Sparsity * 30.0;
+	enum BulletTracerFX
+	{
+		ModelOnly = 		1,
+		ParticleOnly =		2,
+		ParticleTrail =		3,
+		TrailOnly =			4,
+	};
+	int user_inv;
+	int user_count;
+	int user_rng;
+	int user_render;
+	double user_dista;
+	double user_distb;
+	
+	override void PostBeginPlay()
+	{
+		if (target) pitch = target.pitch;
+		Super.PostBeginPlay();
+	}
+	
+	Default 
+	{
+		+NOINTERACTION
+		+NOTONAUTOMAP
+		+NOTIMEFREEZE
+		RenderStyle "None";
+		Speed 1;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{	
+			if (A_CheckSight("Null"))
+			{	return ResolveState("Null");	}
+			
+			A_FaceMovementDirection();
+			pitch *= -1;
+
+			if (!IsPointerEqual(TracerPtr,NullPtr))
+			{	user_distb = Clamp(GetDistance(true,TracerPtr),0.0,3000.0);	}
+			else
+			{	user_distb = 0;	}
+			
+			return ResolveState("B1");
+		}
+	B1:
+		TNT1 A 1;
+	Break:
+		TNT1 A 1 
+		{
+			if (user_count > 14 || A_CheckSight("Null") || (pos.z < floorz) || (pos.z > ceilingz) ) 
+			{	return ResolveState("Null");	} // Destroy it.
+			user_dista = 0;
+			return ResolveState(null); //Play out the tic.
+		}
+	Looping:	// Spawns the trail.
+		TNT1 A 0
+		{
+			// If running GZDoom, spawn the neat trail.
+			if (GetCvar("vid_renderer"))
+			{
+				if (user_dista <= 0.0)
+				{	user_dista = 64.0;	}
+				A_SpawnItemEx("BulletTrailBeam",cos(pitch)*user_dista,0,-sin(pitch)*user_dista,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH);
+				user_dista += Sparsity;
+			}
+			else //Otherwise, do the ol' fashion particles.
+			{
+				A_SpawnParticle("FFE99E",SPF_FULLBRIGHT|SPF_RELATIVE,100,random(3,6),0,
+					cos(pitch)*user_dista,0,-sin(pitch)*user_dista,
+					frandom(1.0,2.0),0,0,
+					-0.005,0,0.005,
+					frandom(0.5,1.0),frandom(0.06,0.12));
+				
+				user_dista += frandom(3.0,6.0);
+			}
+			
+			if (user_distb > 0.0)
+			{
+				if (user_dista > user_distb)
+				{	return ResolveState("Null");	}
+				return ResolveState("Looping");
+			}
+			else if (user_dista >= TravelTic)
+			{
+				user_count++;
+				A_Warp(DefPtr,cos(pitch)*TravelTic,0,-sin(pitch)*TravelTic,0,WARPF_NOCHECKPOSITION);
+				return ResolveState("Break");
+			}
+			return ResolveState("Looping");
+		}
+		Loop;
+	End:
+		TNT1 A 0;
+		Stop;
+	}
+}
+
+Class TrailBeam : Actor 
+{
+	const ZOffset = 16;
+	const NoSpawn = 256;
+	const PFlags = WARPF_INTERPOLATE|WARPF_NOCHECKPOSITION|WARPF_COPYVELOCITY|WARPF_ABSOLUTEOFFSET;
+	double user_time;
+	double user_scale;
+	int user_neg;
+	Default 
+	{
+		+NOINTERACTION
+		+FLATSPRITE
+		+BRIGHT
+		+ROLLCENTER
+		YScale 0.25; //Don't touch this! Otherwise the trail will become broken up!
+		XScale 0.03; //This modifies the width of the beam. It is safe to play around with.
+		Alpha 0;
+		RenderStyle "Add";
+	}
+	// DO NOT add a translation. If you need to change the colors, make a sprite
+	// entry in TEXTURES lump and use BLEND. NEVER TRANSLATE!
+	States
+	{
+	Spawn:
+		X163 B 0 NoDelay
+		{
+			// Sets how long to split the scaling-in effect.
+			user_time = 3.0;
+			
+			// Set this to the actor's same name. The TID will prevent it spawning infinitely (tid * 256).
+			A_SpawnItemEx("TrailBeam",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERSCALE|SXF_TRANSFERPOINTERS,tid * 256,1);
+			return ResolveState("Process");
+		}
+	Process:
+		"####" "#" 1
+		{
+			//A_Warp(DefPtr,0,0,ZOffset,0,WARPF_NOCHECKPOSITION);
+			user_scale = Scale.X;
+			user_neg = ((user_scale < 0) ? 1 : 0);
+			// If it's a secondary trail (vertical)
+			if (tid > 0)	
+			{	
+				Thing_ChangeTID(0,0);
+				roll = pitch + 90;
+				pitch = 90;
+				angle += 90;
+			}
+			A_FadeIn(1.0,FTF_CLAMP);
+		}
+		"####" "#" 1 
+		{
+			// Keep 'shrinking'. NEVER fade out!
+			
+			if (user_neg)
+			{
+				A_SetScale(Scale.X - (user_scale / Max(1.0, user_time)), Scale.Y);
+				if (Scale.X >= 0)	{ return ResolveState("Null"); }
+			}
+			else
+			{			
+				A_SetScale(Scale.X - (user_scale / Max(1.0, user_time)), Scale.Y);
+				if (Scale.X <= 0)	{ return ResolveState("Null"); }
+			}
+			return ResolveState(null);
+		}
+		Wait;
+	}
+}
+
+Class BulletTrailBeam : TrailBeam
+{
+	Default 
+	{
+		XScale 0.05;
+		YScale 1; //Don't touch.
+	}
+	States
+	{
+	Spawn:
+		X163 B 0 NoDelay
+		{
+			// user_time = time to shrink to nothing
+			user_time = 4.0;
+			A_SpawnItemEx("BulletTrailBeam",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERSCALE|SXF_TRANSFERPOINTERS,tid * 256,1);
+			return ResolveState("Process");
+		}
+	}
+}
+
+Class BulletTrailBeamInverted : BulletTrailBeam
+{
+	Default 
+	{
+		XScale 0.05;
+		YScale 1; //Don't touch.
+	}
+	States
+	{
+	Spawn:
+		X163 B 0 NoDelay
+		{
+			// user_time = time to shrink to nothing
+			pitch *= -1;
+			user_time = 4.0;
+			A_SpawnItemEx("BulletTrailBeamInverted",0,0,0,0,0,0,180,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERSCALE|SXF_TRANSFERPOINTERS,tid * 256,1);
+			return ResolveState("Process");
+		}
+	}
+}

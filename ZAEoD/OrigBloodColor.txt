@@ -227,46 +227,39 @@ enum bloodcolors//TIDs ONLY. DO NOT USE IN THE TRANSLATIONS PROPERTY.
 //==============================================================================
 //==============================================================================
 
-// The Base Spawner
-
-Class GibSpawnerBase : Actor
+//==============================================================================
+// The Struct
+//==============================================================================
+Struct GibSpawnerList
 {
-	int user_t;
-	bool simple;
 	const MaxSize = 10;
 	Class<Actor> Gibs[MaxSize]; 	// Name of the gibs to store.
 	int SpawnAmount[MaxSize];		// Amount of these to spawn based on Index.
 	int Index;
 	int Cap;
-	int SpawnChance;				// Just for the sake of making things simple...
+	int SpawnChance;
+	int user_t;						// Just for the sake of making things simple...
 	Color Trans;
 	Color P1;
 	Vector3 Vel;
 	double MulBy[2];
 	double RAdd;
 	
-	
 	//--------------------------------------------------------------------------
-	// PostBeginPlay
-	//
-	// Since we have no reason to even do anything else, take care of business 
-	// go away.
+	// Reset
 	//--------------------------------------------------------------------------
-	override void PostBeginPlay()
+	void Reset()
 	{
-		if (GetClass() == "GibSpawnerBase" || !CheckReqs())
-		{	Destroy(); return;	}
+		for (Index = 0; Index < 10; Index++)
+		{
+			Gibs[Index] = null;
+			SpawnAmount[Index] = 0;
+		}
+		Index = user_t = SpawnChance = 0;
+		Vel = ( 0, 0, 0 );
+		RAdd = MulBy[0] = MulBy[1] = 0.0;
 		
-		RAdd = 8;
-		MulBy[0] = 1;
-		MulBy[1] = 2;
-		
-		AddGibs();
-		SpawnGibs();
-		Destroy();
-		//Super.PostBeginPlay();
 	}
-	
 	//--------------------------------------------------------------------------
 	// AddGib (classname, amount, index)
 	//
@@ -290,8 +283,10 @@ Class GibSpawnerBase : Actor
 	//--------------------------------------------------------------------------
 	// SpawnGibs (caller)
 	//--------------------------------------------------------------------------
-	void SpawnGibs()
+	void SpawnGibs(Actor caller)
 	{
+		if (!caller) return;
+		
 		if (Cap < 0 || Cap >= MaxSize) Cap = 9;
 		
 		for (Index = 0; Index <= Cap; Index++)
@@ -300,34 +295,106 @@ Class GibSpawnerBase : Actor
 			{	continue;	}
 			
 			for ( ; SpawnAmount[Index] > 0; SpawnAmount[Index]--)
-			{				
-				let blood = GibletBase(Spawn(Gibs[Index], pos));
+			{
 				
-				// The target is intentionally set to this
-				if (blood)	
+			//	caller.tracer = null;
+			//	caller.A_SpawnItemEx(Gibs[Index],0,0,0,
+			//		Vel.X * frandom(MulBy[0],MulBy[1]) + frandom(-RAdd,RAdd),
+			//		Vel.Y * frandom(MulBy[0],MulBy[1]) + frandom(-RAdd,RAdd),
+			//		Vel.Z * frandom(MulBy[0],MulBy[1]) + frandom(-RAdd,RAdd),
+			//		0,GibFlags|SXF_ISTRACER,0,user_t);
+					
+			//	let bl = GibletBase(tg);
+				
+				Actor bf = caller.Spawn(Gibs[Index],caller.pos);
+				let bl = GibletBase(bf);
+				if (bl)	
 				{	
-					blood.Pitch = Pitch;
-					blood.Angle = Angle;
-					blood.target = self; 
-					blood.master = master;
-					blood.tracer = tracer;
-					blood.A_ChangeVelocity(
+					bl.Pitch = caller.Pitch;
+					bl.Angle = caller.Angle;
+					bl.target = caller.target;
+					bl.master = caller.master;
+					bl.tracer = caller.tracer;
+					bl.A_ChangeVelocity(
 						Vel.X * frandom(MulBy[0],MulBy[1]) + frandom(-RAdd,RAdd),
 						Vel.Y * frandom(MulBy[0],MulBy[1]) + frandom(-RAdd,RAdd),
 						Vel.Z * frandom(MulBy[0],MulBy[1]) + frandom(-RAdd,RAdd),
 						CVF_REPLACE);
-					if (target)	blood.P1 = P1;
-					else		blood.P1 = translation;
+					bl.translation = Trans;
+					bl.P1 = P1;
 				}
 			}
 		}
 	}
-	//--------------------------------------------------------------------------
-	// CheckReqs
-	// Checks to see if the gib count map-wide is < Max(Soft)GibCount.
-	// If greater than soft max and < hard max, reduce the number of gibs it'll
-	// spawn. If > hard max, don't spawn at all.
-	//--------------------------------------------------------------------------
+}
+
+// The Base Spawner
+
+Class GibSpawnerBase : Actor
+{
+	virtual void AddGibs(GibSpawnerList sp) { return; }
+
+	int RAdd;
+	int user_t;
+	bool simple;
+	Color P1;
+	Default
+	{
+		+NOTELESTOMP
+		+NOTONAUTOMAP
+		+NOINTERACTION
+		RenderStyle "None";
+	}
+	
+	// In order...
+	// Ensure the base version is never spawned.
+	override void BeginPlay()
+	{
+		if (GetClass() == "GibSpawnerBase")
+		{	Destroy(); return;	}
+		
+		// Copy the velocities.
+		if (target)		
+		{	
+			Vel = target.Vel;
+			P1 = target.bloodcolor;
+		}
+		else
+		{
+			P1 = bloodcolor;
+		}
+		
+		RAdd = 8;
+		Super.BeginPlay();
+	}
+	
+	
+	override void PostBeginPlay()
+	{
+		if (!CheckReqs())
+		{	Destroy(); return;	}
+		
+		
+		
+		GibSpawnerList sp;
+		AddGibs(sp);
+		SetGibDefaults(sp);
+		sp.SpawnGibs(self);
+		Super.PostBeginPlay();
+	}
+	
+	void SetGibDefaults(GibSpawnerList sp)
+	{
+		sp.Vel = Vel;
+		sp.RAdd = RAdd;
+		sp.MulBy[0] = 1;
+		sp.MulBy[1] = 2;
+		sp.user_t = user_t;
+		sp.Trans = translation;
+		sp.P1 = P1;
+		
+	}
+	
 	bool CheckReqs()
 	{
 		user_t = tid;
@@ -339,41 +406,24 @@ Class GibSpawnerBase : Actor
 		}
 		
 		int count = 0;
-		int SoftGibMax = GetCvar("MaxSoftGibCount");
-		int HardGibMax = GetCvar("MaxGibCount");
-		
+		int gc1 = GetCvar("MaxSoftGibCount");
+		int gc2 = GetCvar("MaxGibCount");
 		ThinkerIterator it = ThinkerIterator.Create("GibletBase");
 		Actor mo;
 		
-		while ((count < HardGibMax) && (mo = GibletBase(it.Next())))
+		while ((count < gc2) && (mo = GibletBase(it.Next())))
 		{
-			count++;
+			if (Distance2D(mo) <= 2048)
+			{	count++;	}
 			
-			// Over the soft gib threshold.
-			if (!simple && count >= SoftGibMax)
+			if (!simple && count >= gc1)
 			{	simple = true;	}
-			
 		}
-		// Too many gibs spawned.
-		if (count >= HardGibMax)
+		
+		if (count >= gc2)
 		{	return false;	}
 		
 		return true;
-	}
-	
-	// Do not use this in the base version. These will be for the subclasses.
-	virtual void AddGibs() 
-	{
-		return;
-	}
-	
-	Default
-	{
-		+NOTELESTOMP
-		+NOTONAUTOMAP
-		+NOINTERACTION
-		RenderStyle "None";
-		BloodColor "Red";
 	}
 	
 	States
@@ -412,11 +462,18 @@ Class GibletBase : Actor
 		Radius 6;
 		Height 5;
 		BounceFactor 0.45;
+		BloodColor "Red";
 		DistanceCheck "user_MaxDrawDistance";
 	}
 	
 	override void BeginPlay()
-	{	
+	{
+		if (GetClass() == "GibletBase")
+		{	
+			Destroy();
+			return;
+		}
+		
 		user_spawntrail = GetCvar("SpawnBloodTrails");
 		Super.BeginPlay();
 	}
@@ -435,11 +492,14 @@ Class GibletBase : Actor
 	{
 		if (user_spawntrail && !A_CheckSightOrRange(BloodDistanceLimit,"Null"))
 		{	
-			A_FaceMovementDirection();
-			let blood = MCBloodFXMain(Spawn("MCBloodFXMain",pos));
+			A_FaceMovementDirection(); 
+			//Actor temp = target;
+			//A_SpawnItemEx("GibBloodSmall",0,0,0,Vel.X,Vel.Y,Vel.Z,0,SXF_ABSOLUTEVELOCITY|SXF_TRANSFERPITCH|SXF_USEBLOODCOLOR|SXF_TRANSFERPOINTERS|SXF_ISTARGET,0,user_w);
+			//let blood = MCBloodFXTrail(Spawn("MCBloodFXTrail",pos));
+			let blood = MCBloodFXTrail(Spawn("MCBloodFXTrail",pos));
 			if (blood)
 			{
-				blood.target = self;
+				blood.target = target;
 				blood.master = master;
 				blood.tracer = tracer;
 				blood.pitch = pitch;
@@ -503,10 +563,7 @@ Class MCBloodFXMain : Actor replaces Blood
 			if (target is "GibletBase")
 			{
 				let gib = GibletBase(target);
-				if (gib)
-				{	
-					P1 = gib.P1;
-				}
+				P1 = gib.P1;
 			}
 			else
 			{
@@ -519,15 +576,14 @@ Class MCBloodFXMain : Actor replaces Blood
 	
 	void SpawnParticleBlood()
 	{
-		let blood = MCBloodParticle(Spawn("MCBloodParticle",pos));
-		if (blood)
+		let bl = MCBloodParticle(Spawn("MCBloodParticle",pos));
+		if (bl)
 		{	
-			blood.angle = angle;
-			blood.pitch = pitch;
-			blood.target = target;
-			blood.A_Warp(DefPtr,frandom(0,2),0,random(1,4),0,WARPF_NOCHECKPOSITION);
-			blood.Vel = Vel;
-			blood.P1 = P1;
+			bl.angle = angle;
+			bl.pitch = pitch;
+			bl.A_Warp(DefPtr,frandom(0,2),0,random(1,4),0,WARPF_NOCHECKPOSITION);
+			bl.Vel = Vel;
+			bl.P1 = P1;
 		}
 	}
 	States
@@ -542,9 +598,6 @@ Class MCBloodFXMain : Actor replaces Blood
 		TNT1 A 0
 		{
 			SpawnParticleBlood();
-			
-			if (user_inv <= 0)
-			{	Destroy();	}
 		}
 		TNT1 AAA 1 
 		{
@@ -553,7 +606,7 @@ Class MCBloodFXMain : Actor replaces Blood
 			else
 			{	return ResolveState("Null");	}
 			return ResolveState(null);
-		}
+		}	
 		Stop;
 	}
 }
@@ -572,7 +625,7 @@ Class MCBloodFXTrail : MCBloodFXMain
 			{	SpawnParticleBlood();	}
 		}
 		Stop;
-	} 
+	}
 }
 
 Class MCBloodParticle : Actor
@@ -650,11 +703,6 @@ Class MCBloodParticle : Actor
 		
 		user_t = tid;
 		Thing_ChangeTID(0,0);
-		
-		if (target && !(target is "GibletBase"))
-		{
-			P1 = target.bloodcolor;
-		}
 		Super.PostBeginPlay();
 	}
 	
@@ -686,7 +734,7 @@ Class MCBloodParticle : Actor
 				"Grey",
 				"AEDarkYellowD2"
 			};
-
+			
 			static const Color PrimaryColor[] =
 			{
 				"Red",
@@ -711,13 +759,22 @@ Class MCBloodParticle : Actor
 				"Yellow" // 19
 			};
 			
+
+
+			bool found = false;
+			
 			for (int index = 0; index < arraySize; index++)
 			{
+				//if ((P1 & 0xffffff) == Color(PrimaryColor[index]))
 				if (P1 == PrimaryColor[index])
 				{
 					P2 = SecondaryColor[index];
 					break;
 				}
+			}
+			if (tracer)
+			{
+				P1 = tracer.bloodcolor;
 			}
 			while (user_count < MaxCount3)
 			{
@@ -725,6 +782,7 @@ Class MCBloodParticle : Actor
 				else				{ A_SpawnParticle(P2,	PFlag, Lifetime, random(Size2Min,Size2Max), frandom(-AOff, AOff), frandom(XOffMin2,XOffMax2), 0, frandom(ZOffMin2,ZOffMax2), (cos(-pitch) * user_vel) + (frandom(XVelMin2,XVelMax2)), frandom(XVelMin2,XVelMax2) * randompick(-1,1), (((sin(-pitch) * Vel.Z) * VelMul) + (frandom(-ZVelMax2,ZVelMax2)))/2, frandom(XAccMin2,XAccMax2), 0, frandom(ZAccMin2,ZAccMax2), StartAlpha2, frandom(FadeMin2,FadeMax2)); }
 				user_count += randompick(1,1,1,2,3);
 			}
+			
 		}
 		Stop;
 	}
@@ -755,8 +813,10 @@ Class AEBloodBatShitRainbow : MCBloodFXMain	{}
 
 //It's going to be impossible to translate blood splatters via particles directly
 //so just have it spawn the ordinary Class instead.
-Class MCBloodSplatter : MCBloodSprite replaces BloodSplatter	{ }
-Class GibBloodSmall : MCBloodFXTrail 				{}
+Class MCBloodSplatter : MCBloodSprite replaces BloodSplatter
+{ }
+
+Class GibBloodSmall : MCBloodFXTrail 	{}
 Class GibBloodTrailMediumSize	: MCBloodFXTrail	{}
 
 //==============================================================================
@@ -767,95 +827,95 @@ Class GibBloodTrailMediumSize	: MCBloodFXTrail	{}
 
 Class SmallGibDropper : GibSpawnerBase
 {
-	override void AddGibs()
+	override void AddGibs(GibSpawnerList sp)
 	{
 		if (simple)
 		{
-			AddGib("HGib1Small", 1, 0);
+			sp.AddGib("HGib1Small", 1, 0);
 		}
 		else
 		{
 			// Increment each index parameter by one.
-			AddGib("HGib1Small", 1, 0);
-			AddGib("HGib2Small", 1, 1);
-			AddGib("HGib3Small", 1, 2);
+			sp.AddGib("HGib1Small", 1, 0);
+			sp.AddGib("HGib2Small", 1, 1);
+			sp.AddGib("HGib3Small", 1, 2);
 		}
 	}
 }
 
 Class GibDropper : GibSpawnerBase
 {
-	override void AddGibs()
+	override void AddGibs(GibSpawnerList sp)
 	{
 		if (simple)
 		{
-			AddGib("HGib1", 1, 0);
+			sp.AddGib("HGib1", 1, 0);
 		}
 		else
 		{
-			AddGib("HGib1", 1, 0);
-			AddGib("HGib2", 1, 1);
-			AddGib("HGib3", 1, 2);
+			sp.AddGib("HGib1", 1, 0);
+			sp.AddGib("HGib2", 1, 1);
+			sp.AddGib("HGib3", 1, 2);
 		}
 	}
 }
 
 Class QuakeGibDropper : GibSpawnerBase
 {
-	override void AddGibs()
+	override void AddGibs(GibSpawnerList sp)
 	{
 		if (simple)
 		{
-			AddGib("Gib1", 1, 0);
+			sp.AddGib("Gib1", 1, 0);
 		}
 		else
 		{
 			int amt = random(3,6);
 			int rng = random(1,amt);
-			AddGib("Gib1", 		rng, 		0);
-			AddGib("Gib2", 		amt - rng, 	1);
-			AddGib("GibTorso", 	1, 			2);
+			sp.AddGib("Gib1", 		rng, 		0);
+			sp.AddGib("Gib2", 		amt - rng, 	1);
+			sp.AddGib("GibTorso", 	1, 			2);
 		}
 	}
 }
 Class QuakeSmallGibDropper : GibSpawnerBase
 {
-	override void AddGibs()
+	override void AddGibs(GibSpawnerList sp)
 	{
 		if (simple)
 		{
-			AddGib("SmallGib1", 1, 0);
+			sp.AddGib("SmallGib1", 1, 0);
 		}
 		else
 		{
 			int amt = random(3,5);
 			int rng = random(1,amt);
-			AddGib("SmallGib1", 		rng, 		0);
-			AddGib("SmallGib2", 		amt - rng, 	1);
-			AddGib("SmallGibTorso", 	1, 			2);
+			sp.AddGib("SmallGib1", 		rng, 		0);
+			sp.AddGib("SmallGib2", 		amt - rng, 	1);
+			sp.AddGib("SmallGibTorso", 	1, 			2);
 		}
 	}
 }
 
 Class BloodGibDropper : GibSpawnerBase
 {
-	override void AddGibs()
+	override void AddGibs(GibSpawnerList sp)
 	{
 		if (simple)
 		{
-			AddGib("NewMeat", 2, 0);
-			AddGib("BloodGib1", 1, 1);
-			AddGib("BloodGib2", 1, 2);
-			AddGib("BloodGib3", 1, 3);
-			AddGib("BloodGib4", 1, 4);
+			sp.AddGib("NewMeat", 2, 0);
+			sp.AddGib("BloodGib1", 1, 1);
+			sp.AddGib("BloodGib2", 1, 2);
+			sp.AddGib("BloodGib3", 1, 3);
+			sp.AddGib("BloodGib4", 1, 4);
 		}
 		else
 		{
-			AddGib("NewMeat", 6, 0);
-			AddGib("BloodGib1", random(1,3), 1);
-			AddGib("BloodGib2", random(1,3), 2);
-			AddGib("BloodGib3", random(1,3), 3);
-			AddGib("BloodGib4", random(1,3), 4);
+			sp.AddGib("NewMeat", 6, 0);
+			sp.AddGib("BloodGib1", random(1,3), 1);
+			sp.AddGib("BloodGib2", random(1,3), 2);
+			sp.AddGib("BloodGib3", random(1,3), 3);
+			sp.AddGib("BloodGib4", random(1,3), 4);
 		}
 	}
 	
@@ -890,24 +950,18 @@ Class NewMeat : GibletBase replaces Meat
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay
+		TNT1 A 0 NoDelay 
 		{
-			sprite = GetSpriteIndex("MEAT");
-			frame = random(0,19);
+			return A_Jump(256,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20);
 		}
-		//MEAT ABCDEFGHIJLKMNOPQRST 0 { return ResolveState("Play1"); }
+		MEAT ABCDEFGHIJLKMNOPQRST 0 { return ResolveState("Play1"); }
 	Play1:
-		"####" "#" 2 
+		"####" "##" 2 
 		{
 			SpawnGibBloodTrail();
+			
 			StateLabel dest = null;
-			
-			user_time++;
-			
-			if (pos.z <= floorz || user_time >= 87)		
-			{	
-				dest = "Death";	
-			}
+			if (pos.z <= floorz || user_time >= 87)		dest = "Death";
 			return ResolveState(dest);
 		}
 // when the gib crashes:
