@@ -301,23 +301,23 @@ Class GibSpawnerBase : Actor
 			
 			for ( ; SpawnAmount[Index] > 0; SpawnAmount[Index]--)
 			{				
-				let blood = GibletBase(Spawn(Gibs[Index], pos));
+				let gib = GibletBase(Spawn(Gibs[Index], pos));
 				
 				// The target is intentionally set to this
-				if (blood)	
+				if (gib)	
 				{	
-					blood.Pitch = Pitch;
-					blood.Angle = Angle;
-					blood.target = self; 
-					blood.master = master;
-					blood.tracer = tracer;
-					blood.A_ChangeVelocity(
+					gib.Pitch = Pitch;
+					gib.Angle = Angle;
+					gib.target = self; 
+					gib.master = master;
+					gib.tracer = tracer;
+					gib.A_ChangeVelocity(
 						Vel.X * frandom(MulBy[0],MulBy[1]) + frandom(-RAdd,RAdd),
 						Vel.Y * frandom(MulBy[0],MulBy[1]) + frandom(-RAdd,RAdd),
 						Vel.Z * frandom(MulBy[0],MulBy[1]) + frandom(-RAdd,RAdd),
 						CVF_REPLACE);
-					if (target)	blood.P1 = P1;
-					else		blood.P1 = translation;
+					if (target)	gib.P1 = (target.bloodcolor & 0xffffff);
+					else		gib.P1 = Color("Red");
 				}
 			}
 		}
@@ -439,7 +439,7 @@ Class GibletBase : Actor
 			let blood = MCBloodFXMain(Spawn("MCBloodFXMain",pos));
 			if (blood)
 			{
-				blood.target = self;
+				blood.target = target;
 				blood.master = master;
 				blood.tracer = tracer;
 				blood.pitch = pitch;
@@ -480,7 +480,7 @@ Class MCBloodFXMain : Actor replaces Blood
 		+NOINTERACTION
 		+NOTELESTOMP
 		+HITTRACER
-		//BloodColor "Red";
+		BloodColor "Red";
 		RenderStyle "None";
 		Radius 1;
 		Height 1;
@@ -498,21 +498,7 @@ Class MCBloodFXMain : Actor replaces Blood
 		A_FaceMovementDirection();
 		user_inv = CountInv("BloodSpriteToken",Player1);
 		
-		if (target)
-		{
-			if (target is "GibletBase")
-			{
-				let gib = GibletBase(target);
-				if (gib)
-				{	
-					P1 = gib.P1;
-				}
-			}
-			else
-			{
-				P1 = bloodcolor;
-			}
-		}
+		
 		
 		Super.PostBeginPlay();
 	}
@@ -525,9 +511,37 @@ Class MCBloodFXMain : Actor replaces Blood
 			blood.angle = angle;
 			blood.pitch = pitch;
 			blood.target = target;
+			blood.master = master;
+			blood.tracer = tracer;
 			blood.A_Warp(DefPtr,frandom(0,2),0,random(1,4),0,WARPF_NOCHECKPOSITION);
 			blood.Vel = Vel;
 			blood.P1 = P1;
+			
+			if (target)
+			{
+				if (target is "GibletBase")
+				{
+					let gib = GibletBase(target);
+					if (gib)
+					{	
+						P1 = gib.P1;
+					}
+					else
+					{
+						A_Log("Uh oh");
+					}
+				}
+				else
+				{
+					P1 = (target.bloodcolor & 0xffffff);
+				}
+			}
+			else
+			{
+				P1 = (bloodcolor & 0xffffff);
+			}
+			blood.P1 = P1;
+			
 		}
 	}
 	States
@@ -651,18 +665,21 @@ Class MCBloodParticle : Actor
 		user_t = tid;
 		Thing_ChangeTID(0,0);
 		
-		if (target && !(target is "GibletBase"))
-		{
-			P1 = target.bloodcolor;
-		}
 		Super.PostBeginPlay();
 	}
 	
 	States
 	{
 	Spawn:
-		TNT1 A 1 NoDelay
-		{
+		TNT1 A 0;
+		TNT1 A 1
+		{		
+			/*
+			if (target && !(target is "GibletBase"))
+			{
+				P1 = (target.bloodcolor & 0xffffff);
+			}
+			*/
 			static const Color SecondaryColor[] =
 			{
 				"DarkRed",
