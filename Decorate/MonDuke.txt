@@ -63,26 +63,26 @@ Actor FWarLord //7210	// spider mastermind
 		TNT1 A 0 A_Jump(64,"Grenade")
 		F03M A 1 A_FaceTarget(0,0) //IMPORTANT. Need to set max pitch to 0 or it won't set its pitch at all!
 		"####" A 0 A_PlaySound("weapons/dnchaingun")
-		"----" A 0 A_CustomMissile("BulletTracerFX",10,25,random(-10,10),CMF_OFFSETPITCH,random(-10,10))
+		"----" A 0 A_SpawnProjectile("BulletTracerFXInverted",10,25,random(-10,10),CMF_OFFSETPITCH,random(-10,10))
 		F03M B 2 Bright A_CustomBulletAttack(10,10,1,5,"BulletDamagePuff")
 		F03M B 1 A_SpidRefire 
 		Goto Missile+1
 	Grenade:
 		F03M A 20 A_FaceTarget
 		TNT1 A 0 A_PlaySound("q2weapon/grenadelaunfire")
-		F03M B 8 A_CustomMissile("WarLordGrenade", 30, 25, 0)
+		F03M B 8 A_SpawnProjectile("WarLordGrenade", 30, 25, 0)
 		F03M A 8 A_FaceTarget
 		TNT1 A 0 A_PlaySound("q2weapon/grenadelaunfire")
-		F03M B 8 A_CustomMissile("WarLordGrenade", 30, 25, 0)
+		F03M B 8 A_SpawnProjectile("WarLordGrenade", 30, 25, 0)
 		F03M A 8 A_FaceTarget
 		TNT1 A 0 A_PlaySound("q2weapon/grenadelaunfire")
-		F03M B 8 A_CustomMissile("WarLordGrenade", 30, 25, 0)
+		F03M B 8 A_SpawnProjectile("WarLordGrenade", 30, 25, 0)
 		F03M A 8 A_FaceTarget
 		TNT1 A 0 A_PlaySound("q2weapon/grenadelaunfire")
-		F03M B 8 A_CustomMissile("WarLordGrenade", 30, 25, 0)
+		F03M B 8 A_SpawnProjectile("WarLordGrenade", 30, 25, 0)
 		F03M A 8 A_FaceTarget
 		TNT1 A 0 A_PlaySound("q2weapon/grenadelaunfire")
-		F03M B 8 A_CustomMissile("WarLordGrenade", 30, 25, 0)
+		F03M B 8 A_SpawnProjectile("WarLordGrenade", 30, 25, 0)
 		F03M A 8 A_FaceTarget
 		Goto See
 	Pain:
@@ -135,16 +135,16 @@ Actor WarLordGrenade
 	Spawn:
 		MI04 AAA 0
 		MI04 A 0 Bright ThrustThingZ(0,50,0,1)
-		TNT1 A 0 A_CustomMissile("WGGhost",0,0,0)
+		TNT1 A 0 A_SpawnProjectile("WGGhost",0,0,0)
 		MI04 A 2 Bright ThrustThingZ(0,15,0,1)
-		TNT1 A 0 A_CustomMissile("WGGhost",0,0,0)
+		TNT1 A 0 A_SpawnProjectile("WGGhost",0,0,0)
 		MI04 B 2 Bright ThrustThingZ(0,10,0,1)
-		TNT1 A 0 A_CustomMissile("WGGhost",0,0,0)
+		TNT1 A 0 A_SpawnProjectile("WGGhost",0,0,0)
 		MI04 C 2 Bright ThrustThingZ(0,3,0,1)
-		TNT1 A 0 A_CustomMissile("WGGhost",0,0,0)
+		TNT1 A 0 A_SpawnProjectile("WGGhost",0,0,0)
 		MI04 D 2 Bright ThrustThingZ(0,1,0,1)
-		TNT1 A 0 A_CustomMissile("WGGhost",0,0,0)
-		MI04 ABCD 4 Bright A_CustomMissile("WGGhost",0,0,0)
+		TNT1 A 0 A_SpawnProjectile("WGGhost",0,0,0)
+		MI04 ABCD 4 Bright A_SpawnProjectile("WGGhost",0,0,0)
 		Goto Spawn+12
 	Death:
 		TNT1 A 0 A_SpawnItemEx("NewExplosionMediumConcentrated",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
@@ -235,13 +235,13 @@ Actor FDinoChaingun 7211	// chaingun guy
 	Missile:
 		TNT1 A 0 A_Jump(80,"GreenThing")
 		F09M A 1 A_FaceTarget(0,0)
-		"----" A 0 A_CustomMissile("BulletTracerFX",20,0,random(-5,5),CMF_OFFSETPITCH,random(-4,4))
+		"----" A 0 A_SpawnProjectile("BulletTracerFXInverted",20,0,random(-5,5),CMF_OFFSETPITCH,random(-4,4))
 		F09M B 1 Bright A_CustomBulletAttack(5,4,1,2,"BulletDamagePuff")
 		F09M A 2 A_SpidRefire 
 		Goto Missile+1
 	GreenThing:
 		F09C AAAAAA 6 A_FaceTarget
-		F09C B 5 A_CustomMissile("GreenGrenade",30,5,0)
+		F09C B 5 A_SpawnProjectile("GreenGrenade",30,5,0)
 		F09C AAA 6 
 		Goto See
 	Pain:
@@ -267,14 +267,14 @@ Actor FDinoChaingun 7211	// chaingun guy
 		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"Defilement")
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 AAAAAAAAAAAA 0 A_TossGib
-		TNT1 A 0 A_CustomMissile("BloodGib3",random(20,50),0,random(0,359))
-		TNT1 A 0 A_CustomMissile("BloodGib3",random(20,50),0,random(0,359))
-		TNT1 A 0 A_CustomMissile("BloodGib4",random(20,50),0,random(0,359))
-		TNT1 A 0 A_CustomMissile("BloodGib1",random(20,50),0,random(0,359))
-		TNT1 A 0 A_CustomMissile("LizardCGunnerHead",random(20,50),0,random(0,359))
-		TNT1 A 0 A_CustomMissile("LizardCGunnerArm",random(20,50),0,random(0,359))
-		TNT1 A 0 A_CustomMissile("LizardCGunnerLeg",random(20,50),0,random(0,359))
-		TNT1 A 0 A_CustomMissile("LizardCGunnerLeg2",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("BloodGib3",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("BloodGib3",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("BloodGib4",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("BloodGib1",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("LizardCGunnerHead",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("LizardCGunnerArm",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("LizardCGunnerLeg",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("LizardCGunnerLeg2",random(20,50),0,random(0,359))
 		TNT1 A 1 A_Fall
 		Stop
 	Raise:
@@ -476,9 +476,9 @@ Actor FDinoBlaster 7212		// zombieman
 		Loop
 	Missile:
 		F06M A 7 A_FaceTarget
-		F06M B 7 Bright A_CustomMissile("DinoBlaster", 34, 7, 0) 
+		F06M B 7 Bright A_SpawnProjectile("DinoBlaster", 34, 7, 0) 
 		F06M A 7 A_FaceTarget
-		F06M B 7 Bright A_CustomMissile("DinoBlaster", 34, 7, 0) 
+		F06M B 7 Bright A_SpawnProjectile("DinoBlaster", 34, 7, 0) 
 		Goto See
 	Pain:
 		TNT1 A 0 A_JumpIfInventory("KneeToken2",1,"PainNoCheck")
@@ -530,14 +530,14 @@ Actor FDinoBlaster 7212		// zombieman
 		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"Defilement")
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 AAAAAAAAAAAAA 0 A_TossGib
-		TNT1 A 0 A_CustomMissile("BloodGib3",random(20,50),0,random(0,359))
-		TNT1 A 0 A_CustomMissile("BloodGib3",random(20,50),0,random(0,359))
-		TNT1 A 0 A_CustomMissile("BloodGib4",random(20,50),0,random(0,359))
-		TNT1 A 0 A_CustomMissile("BloodGib1",random(20,50),0,random(0,359))
-		TNT1 A 0 A_CustomMissile("LizardCrapHead",random(20,50),0,random(0,359))
-		TNT1 A 0 A_CustomMissile("LizardCrapArm",random(20,50),0,random(0,359))
-		TNT1 A 0 A_CustomMissile("LizardCrapLeg",random(20,50),0,random(0,359))
-		TNT1 A 0 A_CustomMissile("LizardCrapLeg2",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("BloodGib3",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("BloodGib3",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("BloodGib4",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("BloodGib1",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("LizardCrapHead",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("LizardCrapArm",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("LizardCrapLeg",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("LizardCrapLeg2",random(20,50),0,random(0,359))
 		TNT1 A 1 A_Fall
 		Stop
 	Raise:
@@ -739,14 +739,14 @@ Actor FOverLord 7213	// cyberdemon
 	Missile:
 		TNT1 A 0 A_jump(128,"Missile2")
 		F04M B 4 A_FaceTarget
-		F04M B 0 Bright A_CustomMissile("DNBoss2Rocket", 65, -13, 0)
-		F04M C 3 Bright A_CustomMissile("DNBoss2Rocket", 65, 13, 0)
+		F04M B 0 Bright A_SpawnProjectile("DNBoss2Rocket", 65, -13, 0)
+		F04M C 3 Bright A_SpawnProjectile("DNBoss2Rocket", 65, 13, 0)
 		F04M B 5 A_SpidRefire 
 		Goto Missile+1
 	Missile2:
 		F04M B 10 A_FaceTarget
-		F04M B 0 Bright A_CustomMissile("ZombieSuperRocket", 65, -13, 0)
-		F04M C 10 Bright A_CustomMissile("ZombieSuperRocket", 65, 13, 0)
+		F04M B 0 Bright A_SpawnProjectile("ZombieSuperRocket", 65, -13, 0)
+		F04M C 10 Bright A_SpawnProjectile("ZombieSuperRocket", 65, 13, 0)
 		F04M B 10 
 		F04M B 1 A_CPosReFire
 		Loop
@@ -802,7 +802,7 @@ Actor DNBoss2Rocket
 		Loop
 	Death:
 		TNT1 A 0 A_Explode(80,128)
-		CHRK A 2 Bright A_CustomMissile("ExploDN", 0, 0, 0)
+		CHRK A 2 Bright A_SpawnProjectile("ExploDN", 0, 0, 0)
 		Stop
 	}
 }
@@ -887,71 +887,71 @@ Actor FDNFinalBoss 7214		// cyberdemon
 	Missile:
 		TNT1 A 0 A_Jump(128,"Missile2","Missile3")
 		F05M A 3 A_FaceTarget
-		F05M A 0 A_CustomMissile("DNBoss3Rocket", 30, 13, 0+random(-15,15))
-		F05M A 0 A_CustomMissile("DNBoss3Rocket", 30, 13, 0)
-		F05M B 4 Bright A_CustomMissile("DNBoss2Rocket", 30, 13, 0+random(-15,15))
+		F05M A 0 A_SpawnProjectile("DNBoss3Rocket", 30, 13, 0+random(-15,15))
+		F05M A 0 A_SpawnProjectile("DNBoss3Rocket", 30, 13, 0)
+		F05M B 4 Bright A_SpawnProjectile("DNBoss2Rocket", 30, 13, 0+random(-15,15))
 		F05M A 3 A_SpidRefire 
 		Goto Missile +1
 	Missile2:
 		F05N AAAAAAAA 5 A_FaceTarget
 		TNT1 A 0 A_FaceTarget
-		TNT1 A 0 A_CustomMissile("BossSonicBall", 50, 25, 0+random(-35,35))
-		TNT1 A 0 A_CustomMissile("BossSonicBall", 50, 25, 0+random(-35,35))
-		F05N B 3 Bright A_CustomMissile("BossSonicBall", 50, 25, 0+random(-35,35))
+		TNT1 A 0 A_SpawnProjectile("BossSonicBall", 50, 25, 0+random(-35,35))
+		TNT1 A 0 A_SpawnProjectile("BossSonicBall", 50, 25, 0+random(-35,35))
+		F05N B 3 Bright A_SpawnProjectile("BossSonicBall", 50, 25, 0+random(-35,35))
 		TNT1 A 0 A_FaceTarget
-		TNT1 A 0 A_CustomMissile("BossSonicBall", 50, 25, 0+random(-35,35))
-		TNT1 A 0 A_CustomMissile("BossSonicBall", 50, 25, 0+random(-35,35))
-		F05N B 3 Bright A_CustomMissile("BossSonicBall", 50, 25, 0+random(-35,35))
+		TNT1 A 0 A_SpawnProjectile("BossSonicBall", 50, 25, 0+random(-35,35))
+		TNT1 A 0 A_SpawnProjectile("BossSonicBall", 50, 25, 0+random(-35,35))
+		F05N B 3 Bright A_SpawnProjectile("BossSonicBall", 50, 25, 0+random(-35,35))
 		TNT1 A 0 A_FaceTarget
-		TNT1 A 0 A_CustomMissile("BossSonicBall", 50, 25, 0+random(-35,35))
-		TNT1 A 0 A_CustomMissile("BossSonicBall", 50, 25, 0+random(-35,35))
-		F05N B 3 Bright A_CustomMissile("BossSonicBall", 50, 25, 0+random(-35,35))
+		TNT1 A 0 A_SpawnProjectile("BossSonicBall", 50, 25, 0+random(-35,35))
+		TNT1 A 0 A_SpawnProjectile("BossSonicBall", 50, 25, 0+random(-35,35))
+		F05N B 3 Bright A_SpawnProjectile("BossSonicBall", 50, 25, 0+random(-35,35))
 		TNT1 A 0 A_FaceTarget
-		TNT1 A 0 A_CustomMissile("BossSonicBall", 50, 25, 0+random(-35,35))
-		TNT1 A 0 A_CustomMissile("BossSonicBall", 50, 25, 0+random(-35,35))
-		F05N B 3 Bright A_CustomMissile("BossSonicBall", 50, 25, 0+random(-35,35))
+		TNT1 A 0 A_SpawnProjectile("BossSonicBall", 50, 25, 0+random(-35,35))
+		TNT1 A 0 A_SpawnProjectile("BossSonicBall", 50, 25, 0+random(-35,35))
+		F05N B 3 Bright A_SpawnProjectile("BossSonicBall", 50, 25, 0+random(-35,35))
 		TNT1 A 0 A_FaceTarget
-		TNT1 A 0 A_CustomMissile("BossSonicBall", 50, 25, 0+random(-35,35))
-		TNT1 A 0 A_CustomMissile("BossSonicBall", 50, 25, 0+random(-35,35))
-		F05N B 3 Bright A_CustomMissile("BossSonicBall", 50, 25, 0+random(-35,35))
+		TNT1 A 0 A_SpawnProjectile("BossSonicBall", 50, 25, 0+random(-35,35))
+		TNT1 A 0 A_SpawnProjectile("BossSonicBall", 50, 25, 0+random(-35,35))
+		F05N B 3 Bright A_SpawnProjectile("BossSonicBall", 50, 25, 0+random(-35,35))
 		TNT1 A 0 A_FaceTarget
-		TNT1 A 0 A_CustomMissile("BossSonicBall", 50, 25, 0+random(-35,35))
-		TNT1 A 0 A_CustomMissile("BossSonicBall", 50, 25, 0+random(-35,35))
-		F05N B 3 Bright A_CustomMissile("BossSonicBall", 50, 25, 0+random(-35,35))
+		TNT1 A 0 A_SpawnProjectile("BossSonicBall", 50, 25, 0+random(-35,35))
+		TNT1 A 0 A_SpawnProjectile("BossSonicBall", 50, 25, 0+random(-35,35))
+		F05N B 3 Bright A_SpawnProjectile("BossSonicBall", 50, 25, 0+random(-35,35))
 		TNT1 A 0 A_FaceTarget
-		TNT1 A 0 A_CustomMissile("BossSonicBall", 50, 25, 0+random(-35,35))
-		TNT1 A 0 A_CustomMissile("BossSonicBall", 50, 25, 0+random(-35,35))
-		F05N B 3 Bright A_CustomMissile("BossSonicBall", 50, 25, 0+random(-35,35))
+		TNT1 A 0 A_SpawnProjectile("BossSonicBall", 50, 25, 0+random(-35,35))
+		TNT1 A 0 A_SpawnProjectile("BossSonicBall", 50, 25, 0+random(-35,35))
+		F05N B 3 Bright A_SpawnProjectile("BossSonicBall", 50, 25, 0+random(-35,35))
 		TNT1 A 0 A_FaceTarget
-		TNT1 A 0 A_CustomMissile("BossSonicBall", 50, 25, 0+random(-35,35))
-		TNT1 A 0 A_CustomMissile("BossSonicBall", 50, 25, 0+random(-35,35))
-		F05N B 3 Bright A_CustomMissile("BossSonicBall", 50, 25, 0+random(-35,35))
+		TNT1 A 0 A_SpawnProjectile("BossSonicBall", 50, 25, 0+random(-35,35))
+		TNT1 A 0 A_SpawnProjectile("BossSonicBall", 50, 25, 0+random(-35,35))
+		F05N B 3 Bright A_SpawnProjectile("BossSonicBall", 50, 25, 0+random(-35,35))
 		TNT1 A 0 A_FaceTarget
-		TNT1 A 0 A_CustomMissile("BossSonicBall", 50, 25, 0+random(-35,35))
-		TNT1 A 0 A_CustomMissile("BossSonicBall", 50, 25, 0+random(-35,35))
-		F05N B 3 Bright A_CustomMissile("BossSonicBall", 50, 25, 0+random(-35,35))
+		TNT1 A 0 A_SpawnProjectile("BossSonicBall", 50, 25, 0+random(-35,35))
+		TNT1 A 0 A_SpawnProjectile("BossSonicBall", 50, 25, 0+random(-35,35))
+		F05N B 3 Bright A_SpawnProjectile("BossSonicBall", 50, 25, 0+random(-35,35))
 		TNT1 A 0 A_FaceTarget
-		TNT1 A 0 A_CustomMissile("BossSonicBall", 50, 25, 0+random(-35,35))
-		TNT1 A 0 A_CustomMissile("BossSonicBall", 50, 25, 0+random(-35,35))
-		F05N B 3 Bright A_CustomMissile("BossSonicBall", 50, 25, 0+random(-35,35))
+		TNT1 A 0 A_SpawnProjectile("BossSonicBall", 50, 25, 0+random(-35,35))
+		TNT1 A 0 A_SpawnProjectile("BossSonicBall", 50, 25, 0+random(-35,35))
+		F05N B 3 Bright A_SpawnProjectile("BossSonicBall", 50, 25, 0+random(-35,35))
 		TNT1 A 0 A_FaceTarget
-		TNT1 A 0 A_CustomMissile("BossSonicBall", 50, 25, 0+random(-35,35))
-		TNT1 A 0 A_CustomMissile("BossSonicBall", 50, 25, 0+random(-35,35))
-		F05N B 3 Bright A_CustomMissile("BossSonicBall", 50, 25, 0+random(-35,35))
+		TNT1 A 0 A_SpawnProjectile("BossSonicBall", 50, 25, 0+random(-35,35))
+		TNT1 A 0 A_SpawnProjectile("BossSonicBall", 50, 25, 0+random(-35,35))
+		F05N B 3 Bright A_SpawnProjectile("BossSonicBall", 50, 25, 0+random(-35,35))
 		Goto See
 	Missile3:
 		F05M AAA 6 A_FaceTarget
-		TNT1 A 0 A_CustomMissile("ZombieSuperRocket", 30, 13, 0+random(-15,15))
-		TNT1 A 0 A_CustomMissile("ZombieSuperRocket", 30, 13, 0)
-		F05M B 6 Bright A_CustomMissile("ZombieSuperRocket", 30, 13, 0+random(-15,15))
+		TNT1 A 0 A_SpawnProjectile("ZombieSuperRocket", 30, 13, 0+random(-15,15))
+		TNT1 A 0 A_SpawnProjectile("ZombieSuperRocket", 30, 13, 0)
+		F05M B 6 Bright A_SpawnProjectile("ZombieSuperRocket", 30, 13, 0+random(-15,15))
 		F05M A 6 A_FaceTarget
-		TNT1 A 0 A_CustomMissile("ZombieSuperRocket", 30, 13, 0+random(-15,15))
-		TNT1 A 0 A_CustomMissile("ZombieSuperRocket", 30, 13, 0)
-		F05M B 6 Bright A_CustomMissile("ZombieSuperRocket", 30, 13, 0+random(-15,15))
+		TNT1 A 0 A_SpawnProjectile("ZombieSuperRocket", 30, 13, 0+random(-15,15))
+		TNT1 A 0 A_SpawnProjectile("ZombieSuperRocket", 30, 13, 0)
+		F05M B 6 Bright A_SpawnProjectile("ZombieSuperRocket", 30, 13, 0+random(-15,15))
 		F05M A 6 A_FaceTarget
-		TNT1 A 0 A_CustomMissile("ZombieSuperRocket", 30, 13, 0+random(-15,15))
-		TNT1 A 0 A_CustomMissile("ZombieSuperRocket", 30, 13, 0)
-		F05M B 6 Bright A_CustomMissile("ZombieSuperRocket", 30, 13, 0+random(-15,15))
+		TNT1 A 0 A_SpawnProjectile("ZombieSuperRocket", 30, 13, 0+random(-15,15))
+		TNT1 A 0 A_SpawnProjectile("ZombieSuperRocket", 30, 13, 0)
+		F05M B 6 Bright A_SpawnProjectile("ZombieSuperRocket", 30, 13, 0+random(-15,15))
 		Goto See
 	Pain:
 		F05D A 3
@@ -1007,7 +1007,7 @@ Actor DNBoss3Rocket
 		MI09 A 1 Bright
 		Loop
 	Death:
-		CHRK A 4 Bright A_CustomMissile("ExploDN", 0, 0, 0)
+		CHRK A 4 Bright A_SpawnProjectile("ExploDN", 0, 0, 0)
 		Stop
 	}
 }
@@ -1103,43 +1103,43 @@ Actor FMutantMother 7215	// spider mastermind
 		Goto "LightningRay"+2
 	LightningBolt:
 		F02M AB 5 Bright A_FaceTarget
-		F02M C 5 Bright A_CustomMissile("DLSorcLightning",56,0,0)
+		F02M C 5 Bright A_SpawnProjectile("DLSorcLightning",56,0,0)
 		F02M B 5 Bright A_FaceTarget
-		F02M C 5 Bright A_CustomMissile("DLSorcLightning",56,0,0) 
+		F02M C 5 Bright A_SpawnProjectile("DLSorcLightning",56,0,0) 
 		F02M B 5 Bright A_FaceTarget
-		F02M C 5 Bright A_CustomMissile("DLSorcLightning",56,0,0) 
+		F02M C 5 Bright A_SpawnProjectile("DLSorcLightning",56,0,0) 
 		Goto See
 	LightningBalls:
 		F02M AB 5 Bright A_FaceTarget
-		F02M C 2 Bright A_CustomMissile("MutantElectricity", 45, 0, 0+random(-5,5))
+		F02M C 2 Bright A_SpawnProjectile("MutantElectricity", 45, 0, 0+random(-5,5))
 		TNT1 A 0 Bright A_FaceTarget
-		F02M C 2 Bright A_CustomMissile("MutantElectricity", 45, 0, 0+random(-5,5))
+		F02M C 2 Bright A_SpawnProjectile("MutantElectricity", 45, 0, 0+random(-5,5))
 		TNT1 A 0 Bright A_FaceTarget
-		F02M C 2 Bright A_CustomMissile("MutantElectricity", 45, 0, 0+random(-5,5))
+		F02M C 2 Bright A_SpawnProjectile("MutantElectricity", 45, 0, 0+random(-5,5))
 		TNT1 A 0 Bright A_FaceTarget
-		F02M C 2 Bright A_CustomMissile("MutantElectricity", 45, 0, 0+random(-5,5))
+		F02M C 2 Bright A_SpawnProjectile("MutantElectricity", 45, 0, 0+random(-5,5))
 		TNT1 A 0 Bright A_FaceTarget
-		F02M C 2 Bright A_CustomMissile("MutantElectricity", 45, 0, 0+random(-5,5))
+		F02M C 2 Bright A_SpawnProjectile("MutantElectricity", 45, 0, 0+random(-5,5))
 		TNT1 A 0 Bright A_FaceTarget
-		F02M C 2 Bright A_CustomMissile("MutantElectricity", 45, 0, 0+random(-5,5))
+		F02M C 2 Bright A_SpawnProjectile("MutantElectricity", 45, 0, 0+random(-5,5))
 		TNT1 A 0 Bright A_FaceTarget
-		F02M C 2 Bright A_CustomMissile("MutantElectricity", 45, 0, 0+random(-5,5))
+		F02M C 2 Bright A_SpawnProjectile("MutantElectricity", 45, 0, 0+random(-5,5))
 		TNT1 A 0 Bright A_FaceTarget
-		F02M C 2 Bright A_CustomMissile("MutantElectricity", 45, 0, 0+random(-5,5))
+		F02M C 2 Bright A_SpawnProjectile("MutantElectricity", 45, 0, 0+random(-5,5))
 		TNT1 A 0 Bright A_FaceTarget
-		F02M C 2 Bright A_CustomMissile("MutantElectricity", 45, 0, 0+random(-5,5))
+		F02M C 2 Bright A_SpawnProjectile("MutantElectricity", 45, 0, 0+random(-5,5))
 		TNT1 A 0 Bright A_FaceTarget
-		F02M C 2 Bright A_CustomMissile("MutantElectricity", 45, 0, 0+random(-5,5))
+		F02M C 2 Bright A_SpawnProjectile("MutantElectricity", 45, 0, 0+random(-5,5))
 		TNT1 A 0 Bright A_FaceTarget
-		F02M C 2 Bright A_CustomMissile("MutantElectricity", 45, 0, 0+random(-5,5))
+		F02M C 2 Bright A_SpawnProjectile("MutantElectricity", 45, 0, 0+random(-5,5))
 		TNT1 A 0 Bright A_FaceTarget
-		F02M C 2 Bright A_CustomMissile("MutantElectricity", 45, 0, 0+random(-5,5))
+		F02M C 2 Bright A_SpawnProjectile("MutantElectricity", 45, 0, 0+random(-5,5))
 		TNT1 A 0 Bright A_FaceTarget
-		F02M C 2 Bright A_CustomMissile("MutantElectricity", 45, 0, 0+random(-5,5))
+		F02M C 2 Bright A_SpawnProjectile("MutantElectricity", 45, 0, 0+random(-5,5))
 		TNT1 A 0 Bright A_FaceTarget
-		F02M C 2 Bright A_CustomMissile("MutantElectricity", 45, 0, 0+random(-5,5))
+		F02M C 2 Bright A_SpawnProjectile("MutantElectricity", 45, 0, 0+random(-5,5))
 		TNT1 A 0 Bright A_FaceTarget
-		F02M C 2 Bright A_CustomMissile("MutantElectricity", 45, 0, 0+random(-5,5))
+		F02M C 2 Bright A_SpawnProjectile("MutantElectricity", 45, 0, 0+random(-5,5))
 		F02M CB 5 Bright A_FaceTarget
 		Goto See
 	Pain:
@@ -1191,7 +1191,7 @@ Actor MutantElectricity
 	States
 	{
 	Spawn:
-		MI01 AB 3 Bright A_CustomMissile("MutElecTrail",0,0,0)
+		MI01 AB 3 Bright A_SpawnProjectile("MutElecTrail",0,0,0)
 		Loop
 	Death:
 		TNT1 AAA 0 A_SpawnItemEx("MutantElectLeak",0,0,0,random(2,-2),random(2,-2),random(1,5),random(0,359),0)
@@ -1315,14 +1315,14 @@ Actor FDNPig 7216	// shotgun guy
 	Missile:
 		TNT1 A 0 A_Jump(80,"Crouch")
 		F08M B 9 A_FaceTarget(0,0)
-		"----" A 0 A_CustomMissile("BulletTracerFX",20,0,random(-4,4),CMF_OFFSETPITCH,random(-4,4))
+		"----" A 0 A_SpawnProjectile("BulletTracerFXInverted",20,0,random(-4,4),CMF_OFFSETPITCH,random(-4,4))
 		F08M C 8 Bright A_CustomBulletAttack(4,4,3,5,"BulletDamagePuff")
 		TNT1 A 0 A_PlaySound("weapons/shtgn2rl")
 		F08M BA 4 A_FaceTarget 
 		Goto See
 	Crouch:
 		F08C AABB 4 A_FaceTarget(0,0)
-		"----" A 0 A_CustomMissile("BulletTracerFX",20,0,random(-4,4),CMF_OFFSETPITCH,random(-4,4))
+		"----" A 0 A_SpawnProjectile("BulletTracerFXInverted",20,0,random(-4,4),CMF_OFFSETPITCH,random(-4,4))
 		F08C C 8 Bright A_CustomBulletAttack(4,4,3,5,"BulletDamagePuff")
 		TNT1 A 0 A_PlaySound("weapons/shtgn2rl")
 		F08C BB 8 A_FaceTarget 
@@ -1349,12 +1349,12 @@ Actor FDNPig 7216	// shotgun guy
 		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"Defilement")
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 AAAAAAAAAAAAAAA 0 A_TossGib
-		PLAY A 0 A_CustomMissile("BloodGib2",random(20,50),0,random(0,359))
-		PLAY A 0 A_CustomMissile("BloodGib3",random(20,50),0,random(0,359))
-		PLAY A 0 A_CustomMissile("BloodGib3",random(20,50),0,random(0,359))
-		PLAY A 0 A_CustomMissile("BloodGib2",random(20,50),0,random(0,359))
-		PLAY A 0 A_CustomMissile("BloodGib4",random(20,50),0,random(0,359))
-		PLAY A 0 A_CustomMissile("BloodGib1",random(20,50),0,random(0,359))
+		PLAY A 0 A_SpawnProjectile("BloodGib2",random(20,50),0,random(0,359))
+		PLAY A 0 A_SpawnProjectile("BloodGib3",random(20,50),0,random(0,359))
+		PLAY A 0 A_SpawnProjectile("BloodGib3",random(20,50),0,random(0,359))
+		PLAY A 0 A_SpawnProjectile("BloodGib2",random(20,50),0,random(0,359))
+		PLAY A 0 A_SpawnProjectile("BloodGib4",random(20,50),0,random(0,359))
+		PLAY A 0 A_SpawnProjectile("BloodGib1",random(20,50),0,random(0,359))
 		TNT1 A 1 A_Fall
 		Stop
 	Raise:
@@ -1450,7 +1450,7 @@ Actor FOctoBrain 7217	// cacodemon
 		Goto See
 	Missile: 
 		F11M AB 8 Bright A_FaceTarget 
-		F11M A 8 Bright A_CustomMissile("OctoBrainSonicBall", 24, 0, 0)
+		F11M A 8 Bright A_SpawnProjectile("OctoBrainSonicBall", 24, 0, 0)
 		Goto See 
 	Pain: 
 		F11M A 3 
@@ -1475,12 +1475,12 @@ Actor FOctoBrain 7217	// cacodemon
 		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"Defilement")
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 AAAAAAAAAAAAAAAA 0 A_TossGib
-		PLAY A 0 A_CustomMissile("BloodGib2",random(20,50),0,random(0,359))
-		PLAY A 0 A_CustomMissile("BloodGib3",random(20,50),0,random(0,359))
-		PLAY A 0 A_CustomMissile("BloodGib3",random(20,50),0,random(0,359))
-		PLAY A 0 A_CustomMissile("BloodGib2",random(20,50),0,random(0,359))
-		PLAY A 0 A_CustomMissile("BloodGib4",random(20,50),0,random(0,359))
-		PLAY A 0 A_CustomMissile("BloodGib1",random(20,50),0,random(0,359))
+		PLAY A 0 A_SpawnProjectile("BloodGib2",random(20,50),0,random(0,359))
+		PLAY A 0 A_SpawnProjectile("BloodGib3",random(20,50),0,random(0,359))
+		PLAY A 0 A_SpawnProjectile("BloodGib3",random(20,50),0,random(0,359))
+		PLAY A 0 A_SpawnProjectile("BloodGib2",random(20,50),0,random(0,359))
+		PLAY A 0 A_SpawnProjectile("BloodGib4",random(20,50),0,random(0,359))
+		PLAY A 0 A_SpawnProjectile("BloodGib1",random(20,50),0,random(0,359))
 		TNT1 A 1 A_Fall
 		Stop
 	Raise: 
@@ -1603,41 +1603,41 @@ Actor FDukeNukem 7218	// baron
 		TNT1 A 0 A_Jump(158,6)
 		F07I A 12 A_FaceTarget(0,0)
 		F07I A 0 A_PlaySound("weapons/dnchaingun")
-		TNT1 A 0 A_CustomMissile("FakeAttackLightning",0,0,0)
-		"----" A 0 A_CustomMissile("BulletTracerFX",20,0,random(-2,2),CMF_OFFSETPITCH,random(-2,2))
+		TNT1 A 0 A_SpawnProjectile("FakeAttackLightning",0,0,0)
+		"----" A 0 A_SpawnProjectile("BulletTracerFXInverted",20,0,random(-2,2),CMF_OFFSETPITCH,random(-2,2))
 		F07I A 2 Bright A_CustomBulletAttack(2,2,1,4,"BulletDamagePuff")
 		F07I A 2 A_SpidRefire 
 		Goto Missile+2
 		TNT1 A 0 A_Jump(170,4)
 		F07I A 12 A_FaceTarget
-		F07I A 6 Bright A_CustomMissile("DNBoss2Rocket",34,0,0)
+		F07I A 6 Bright A_SpawnProjectile("DNBoss2Rocket",34,0,0)
 		F07I A 5 A_FaceTarget
 		Goto See
 		TNT1 A 0 A_Jump(128,8)
 		F07I A 9 A_FaceTarget(0,0)
 		TNT1 A 0 A_PlaySound("weapons/shtgn2fr")
-		TNT1 A 0 A_CustomMissile("FakeAttackLightning",0,0,0)
-		"----" A 0 A_CustomMissile("BulletTracerFX",20,0,random(-4,4),CMF_OFFSETPITCH,random(-4,4))
+		TNT1 A 0 A_SpawnProjectile("FakeAttackLightning",0,0,0)
+		"----" A 0 A_SpawnProjectile("BulletTracerFXInverted",20,0,random(-4,4),CMF_OFFSETPITCH,random(-4,4))
 		F07I A 8 Bright A_CustomBulletAttack(4,4,4,5,"BulletDamagePuff")
 		TNT1 A 0 A_PlaySound("weapons/shtgn2rl")
 		F07I AA 8 A_FaceTarget 
 		Goto See
 		F07I A 12 A_FaceTarget
-		F07I A 4 Bright A_CustomMissile("DukeFreezeBall",34,0,0)
+		F07I A 4 Bright A_SpawnProjectile("DukeFreezeBall",34,0,0)
 		F07I A 0 A_FaceTarget
-		F07I A 4 Bright A_CustomMissile("DukeFreezeBall",34,0,0)
+		F07I A 4 Bright A_SpawnProjectile("DukeFreezeBall",34,0,0)
 		F07I A 0 A_FaceTarget
-		F07I A 4 Bright A_CustomMissile("DukeFreezeBall",34,0,0)
+		F07I A 4 Bright A_SpawnProjectile("DukeFreezeBall",34,0,0)
 		F07I A 0 A_FaceTarget
-		F07I A 4 Bright A_CustomMissile("DukeFreezeBall",34,0,0)
+		F07I A 4 Bright A_SpawnProjectile("DukeFreezeBall",34,0,0)
 		F07I A 0 A_FaceTarget
-		F07I A 4 Bright A_CustomMissile("DukeFreezeBall",34,0,0)
+		F07I A 4 Bright A_SpawnProjectile("DukeFreezeBall",34,0,0)
 		F07I A 0 A_FaceTarget
-		F07I A 4 Bright A_CustomMissile("DukeFreezeBall",34,0,0)
+		F07I A 4 Bright A_SpawnProjectile("DukeFreezeBall",34,0,0)
 		F07I A 0 A_FaceTarget
-		F07I A 4 Bright A_CustomMissile("DukeFreezeBall",34,0,0)
+		F07I A 4 Bright A_SpawnProjectile("DukeFreezeBall",34,0,0)
 		F07I A 0 A_FaceTarget
-		F07I A 4 Bright A_CustomMissile("DukeFreezeBall",34,0,0)
+		F07I A 4 Bright A_SpawnProjectile("DukeFreezeBall",34,0,0)
 		F07I A 4 A_FaceTarget
 		Goto See
 	Pain:
@@ -1660,9 +1660,9 @@ Actor FDukeNukem 7218	// baron
 	XDeath:
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 AAAAAAAAAAAAAAAAAA 0 A_TossGib
-		TNT1 A 0 A_CustomMissile("DukeNukemTorso",random(20,50),0,random(0,359))
-		TNT1 A 0 A_CustomMissile("DukeNukemArm",random(20,50),0,random(0,359))
-		TNT1 AA 0 A_CustomMissile("DukeNukemLeg",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("DukeNukemTorso",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("DukeNukemArm",random(20,50),0,random(0,359))
+		TNT1 AA 0 A_SpawnProjectile("DukeNukemLeg",random(20,50),0,random(0,359))
 		TNT1 A 1 A_Fall
 		TNT1 A 1 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
 		Stop
@@ -1718,12 +1718,12 @@ Actor DukeNukemTorso
 		Goto Spawn+14
 	Crash:
 		TNT1 AAAAAA 0 A_TossGib
-		TNT1 A 0 A_CustomMissile("BloodGib2",random(20,50),0,random(0,359))
-		TNT1 A 0 A_CustomMissile("BloodGib3",random(20,50),0,random(0,359))
-		TNT1 A 0 A_CustomMissile("BloodGib3",random(20,50),0,random(0,359))
-		TNT1 A 0 A_CustomMissile("BloodGib2",random(20,50),0,random(0,359))
-		TNT1 A 0 A_CustomMissile("BloodGib4",random(20,50),0,random(0,359))
-		TNT1 A 0 A_CustomMissile("BloodGib1",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("BloodGib2",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("BloodGib3",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("BloodGib3",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("BloodGib2",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("BloodGib4",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("BloodGib1",random(20,50),0,random(0,359))
 		TNT1 A 1
 		Stop
 	}
@@ -1869,7 +1869,7 @@ Actor FDNMutant 7219	// revenant
 		Goto See
 	Missile:
 		F01N A 7 A_FaceTarget
-		F01N BB 7 Bright A_CustomMissile("MutantElectricity", 34, 0, 0) 
+		F01N BB 7 Bright A_SpawnProjectile("MutantElectricity", 34, 0, 0) 
 		F01N A 7 A_FaceTarget
 		Goto See
 	Pain:
@@ -1994,7 +1994,7 @@ Actor FFatRocketer 7220		// pain elemental
 	Missile: 
 		F12N AB 8 Bright A_FaceTarget 
 		TNT1 A 0 A_Recoil(4)
-		F12N B 8 Bright A_CustomMissile("DNBoss2Rocket",14,0,0)
+		F12N B 8 Bright A_SpawnProjectile("DNBoss2Rocket",14,0,0)
 		Goto See 
 	Pain: 
 		F12P A 3 
@@ -2010,12 +2010,12 @@ Actor FFatRocketer 7220		// pain elemental
 	XDeath:
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 AAAAAAAAAAAAAAAAA 0 A_TossGib
-		PLAY A 0 A_CustomMissile("BloodGib1",random(20,50),0,random(0,359))
-		PLAY A 0 A_CustomMissile("BloodGib2",random(20,50),0,random(0,359))
-		PLAY A 0 A_CustomMissile("BloodGib3",random(20,50),0,random(0,359))
-		PLAY A 0 A_CustomMissile("BloodGib3",random(20,50),0,random(0,359))
-		PLAY A 0 A_CustomMissile("BloodGib2",random(20,50),0,random(0,359))
-		PLAY A 0 A_CustomMissile("BloodGib4",random(20,50),0,random(0,359))
+		PLAY A 0 A_SpawnProjectile("BloodGib1",random(20,50),0,random(0,359))
+		PLAY A 0 A_SpawnProjectile("BloodGib2",random(20,50),0,random(0,359))
+		PLAY A 0 A_SpawnProjectile("BloodGib3",random(20,50),0,random(0,359))
+		PLAY A 0 A_SpawnProjectile("BloodGib3",random(20,50),0,random(0,359))
+		PLAY A 0 A_SpawnProjectile("BloodGib2",random(20,50),0,random(0,359))
+		PLAY A 0 A_SpawnProjectile("BloodGib4",random(20,50),0,random(0,359))
 		TNT1 A 1 A_Fall
 		Stop
 	Raise: 
@@ -2217,37 +2217,37 @@ Actor FDukeNukemEnhanced 7222	// cyberdemon
 	Chaingun:
 		F07I A 12 A_FaceTarget(0,0)
 		F07I A 0 A_PlaySound("weapons/dnchaingun")
-		TNT1 A 0 A_CustomMissile("FakeAttackLightning",0,0,0)
-		"----" A 0 A_CustomMissile("BulletTracerFX",20,0,random(-5,5),CMF_OFFSETPITCH,random(-5,5))
+		TNT1 A 0 A_SpawnProjectile("FakeAttackLightning",0,0,0)
+		"----" A 0 A_SpawnProjectile("BulletTracerFXInverted",20,0,random(-5,5),CMF_OFFSETPITCH,random(-5,5))
 		F07I A 2 Bright A_CustomBulletAttack(5,5,1,4,"BulletDamagePuff")
 		F07I A 2 A_SpidRefire 
 		Goto "Chaingun"+1
 	Rockets:
 		F07I A 12 A_FaceTarget
-		F07I A 8 Bright A_CustomMissile("DNBoss2Rocket",34,0,0)
+		F07I A 8 Bright A_SpawnProjectile("DNBoss2Rocket",34,0,0)
 		F07I AA 10 A_FaceTarget
-		F07I A 8 Bright A_CustomMissile("DNBoss2Rocket",34,0,0)
+		F07I A 8 Bright A_SpawnProjectile("DNBoss2Rocket",34,0,0)
 		F07I AA 10 A_FaceTarget
-		F07I A 8 Bright A_CustomMissile("DNBoss2Rocket",34,0,0)
+		F07I A 8 Bright A_SpawnProjectile("DNBoss2Rocket",34,0,0)
 		F07I AA 10 A_FaceTarget
-		F07I A 8 Bright A_CustomMissile("DNBoss2Rocket",34,0,0)
+		F07I A 8 Bright A_SpawnProjectile("DNBoss2Rocket",34,0,0)
 		F07I AA 10 A_FaceTarget
-		F07I A 8 Bright A_CustomMissile("DNBoss2Rocket",34,0,0)
+		F07I A 8 Bright A_SpawnProjectile("DNBoss2Rocket",34,0,0)
 		F07I AA 10 A_FaceTarget
 		Goto See
 	Shotgun:
 		F07I A 9 A_FaceTarget(0,0)
 		TNT1 A 0 A_PlaySound("weapons/shtgn2fr")
-		TNT1 A 0 A_CustomMissile("FakeAttackLightning",0,0,0)
-		"----" AAAAAAAA 0 A_CustomMissile("BulletTracerFX",20,0,random(-4,4),CMF_OFFSETPITCH,random(-4,4))
+		TNT1 A 0 A_SpawnProjectile("FakeAttackLightning",0,0,0)
+		"----" AAAAAAAA 0 A_SpawnProjectile("BulletTracerFXInverted",20,0,random(-4,4),CMF_OFFSETPITCH,random(-4,4))
 		F07I A 8 Bright A_CustomBulletAttack(4,4,8,6,"BulletDamagePuff")
 		TNT1 A 0 A_PlaySound("weapons/shtgn2rl")
 		F07I AAA 8 A_FaceTarget 
 		TNT1 A 0 A_Jump(32,"See")
 		F07I A 9 A_FaceTarget(0,0)
 		TNT1 A 0 A_PlaySound("weapons/shtgn2fr")
-		TNT1 A 0 A_CustomMissile("FakeAttackLightning",0,0,0)
-		"----" AAAAAAAA 0 A_CustomMissile("BulletTracerFX",20,0,random(-4,4),CMF_OFFSETPITCH,random(-4,4))
+		TNT1 A 0 A_SpawnProjectile("FakeAttackLightning",0,0,0)
+		"----" AAAAAAAA 0 A_SpawnProjectile("BulletTracerFXInverted",20,0,random(-4,4),CMF_OFFSETPITCH,random(-4,4))
 		F07I A 8 Bright A_CustomBulletAttack(4,4,8,6,"BulletDamagePuff")
 		TNT1 A 0 A_PlaySound("weapons/shtgn2rl")
 		F07I AAA 8 A_FaceTarget 
@@ -2255,44 +2255,44 @@ Actor FDukeNukemEnhanced 7222	// cyberdemon
 		Goto "Shotgun"
 	Freeze:
 		F07I A 12 A_FaceTarget
-		F07I A 7 Bright A_CustomMissile("DukeFreezeBall",34,0,0)
+		F07I A 7 Bright A_SpawnProjectile("DukeFreezeBall",34,0,0)
 		F07I A 0 A_FaceTarget
-		F07I A 8 Bright A_CustomMissile("DukeFreezeBall",34,0,0)
+		F07I A 8 Bright A_SpawnProjectile("DukeFreezeBall",34,0,0)
 		F07I A 0 A_FaceTarget
-		F07I A 8 Bright A_CustomMissile("DukeFreezeBall",34,0,0)
+		F07I A 8 Bright A_SpawnProjectile("DukeFreezeBall",34,0,0)
 		F07I A 0 A_FaceTarget
-		F07I A 8 Bright A_CustomMissile("DukeFreezeBall",34,0,0)
+		F07I A 8 Bright A_SpawnProjectile("DukeFreezeBall",34,0,0)
 		F07I A 0 A_FaceTarget
-		F07I A 8 Bright A_CustomMissile("DukeFreezeBall",34,0,0)
+		F07I A 8 Bright A_SpawnProjectile("DukeFreezeBall",34,0,0)
 		F07I A 0 A_FaceTarget
-		F07I A 8 Bright A_CustomMissile("DukeFreezeBall",34,0,0)
+		F07I A 8 Bright A_SpawnProjectile("DukeFreezeBall",34,0,0)
 		F07I A 0 A_FaceTarget
-		F07I A 8 Bright A_CustomMissile("DukeFreezeBall",34,0,0)
+		F07I A 8 Bright A_SpawnProjectile("DukeFreezeBall",34,0,0)
 		F07I A 0 A_FaceTarget
-		F07I A 8 Bright A_CustomMissile("DukeFreezeBall",34,0,0)
+		F07I A 8 Bright A_SpawnProjectile("DukeFreezeBall",34,0,0)
 		F07I A 0 A_FaceTarget
-		F07I A 8 Bright A_CustomMissile("DukeFreezeBall",34,0,0)
+		F07I A 8 Bright A_SpawnProjectile("DukeFreezeBall",34,0,0)
 		F07I A 0 A_FaceTarget
-		F07I A 8 Bright A_CustomMissile("DukeFreezeBall",34,0,0)
+		F07I A 8 Bright A_SpawnProjectile("DukeFreezeBall",34,0,0)
 		F07I A 0 A_FaceTarget
-		F07I A 8 Bright A_CustomMissile("DukeFreezeBall",34,0,0)
+		F07I A 8 Bright A_SpawnProjectile("DukeFreezeBall",34,0,0)
 		F07I A 0 A_FaceTarget
-		F07I A 8 Bright A_CustomMissile("DukeFreezeBall",34,0,0)
+		F07I A 8 Bright A_SpawnProjectile("DukeFreezeBall",34,0,0)
 		F07I A 0 A_FaceTarget
-		F07I A 8 Bright A_CustomMissile("DukeFreezeBall",34,0,0)
+		F07I A 8 Bright A_SpawnProjectile("DukeFreezeBall",34,0,0)
 		F07I A 0 A_FaceTarget
-		F07I A 8 Bright A_CustomMissile("DukeFreezeBall",34,0,0)
+		F07I A 8 Bright A_SpawnProjectile("DukeFreezeBall",34,0,0)
 		F07I A 8 A_FaceTarget
 		Goto See
 	Devastator:
 		F07I A 4 A_FaceTarget
 		TNT1 A 0 A_PlaySound("weapons/devshot")
-		F07I A 0 A_CustomMissile("DevastatorShot",30,-3,random(2,-2))
-		F07I A 3 A_CustomMissile("DevastatorShot",31,-3,random(2,-2))
+		F07I A 0 A_SpawnProjectile("DevastatorShot",30,-3,random(2,-2))
+		F07I A 3 A_SpawnProjectile("DevastatorShot",31,-3,random(2,-2))
 		F07I A 3 A_FaceTarget
 		TNT1 A 0 A_PlaySound("weapons/devshot")
-		F07I A 0 A_CustomMissile("DevastatorShot",30,3,random(2,-2))
-		F07I A 3 A_CustomMissile("DevastatorShot",31,3,random(2,-2))
+		F07I A 0 A_SpawnProjectile("DevastatorShot",30,3,random(2,-2))
+		F07I A 3 A_SpawnProjectile("DevastatorShot",31,3,random(2,-2))
 		F07I A 4 A_CPosReFire
 		Goto "Devastator"
 	Pain:
@@ -2311,9 +2311,9 @@ Actor FDukeNukemEnhanced 7222	// cyberdemon
 	XDeath:
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 AAAAAAAAAAAAAA 0 A_TossGib
-		TNT1 A 0 A_CustomMissile("DukeNukemTorso",random(20,50),0,random(0,359))
-		TNT1 A 0 A_CustomMissile("DukeNukemArm",random(20,50),0,random(0,359))
-		TNT1 AA 0 A_CustomMissile("DukeNukemLeg",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("DukeNukemTorso",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("DukeNukemArm",random(20,50),0,random(0,359))
+		TNT1 AA 0 A_SpawnProjectile("DukeNukemLeg",random(20,50),0,random(0,359))
 		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
 		TNT1 A 1 A_Fall
 		Stop
@@ -2409,14 +2409,14 @@ Actor Marauder 7223	// hell knight
 		F03M A 4 A_FaceTarget
 		F03M A 1 A_FaceTarget(0,0)
 		TNT1 A 0 A_PlaySound("weapons/dnchaingun")
-		"----" A 0 A_CustomMissile("BulletTracerFX",20,0,random(-6,6),CMF_OFFSETPITCH,random(-6,6))
+		"----" A 0 A_SpawnProjectile("BulletTracerFXInverted",20,0,random(-6,6),CMF_OFFSETPITCH,random(-6,6))
 		F03M B 2 Bright A_CustomBulletAttack(6,6,1,5,"BulletDamagePuff")
 		F03M A 2 A_SpidRefire 
 		Goto Missile+2
 	Missile2:
 		F03M A 4 A_FaceTarget
 		F03M A 3 A_FaceTarget
-		F03M B 2 Bright A_CustomMissile("DinoBlaster",25,14,random(4,-4))
+		F03M B 2 Bright A_SpawnProjectile("DinoBlaster",25,14,random(4,-4))
 		F03M A 2 A_SpidRefire 
 		Goto "Missile2"+1
 	Pain:
@@ -2523,7 +2523,7 @@ Actor DinoHyperBlaster 7224	// arachnotron
 	Missile:
 		F09M A 20 A_FaceTarget
 		F09M A 1 A_FaceTarget
-		F09M B 1 Bright A_CustomMissile("DHBShot",34,14,0)
+		F09M B 1 Bright A_SpawnProjectile("DHBShot",34,14,0)
 		F09M A 2 A_SpidRefire 
 		Goto Missile+1
 	Pain:
@@ -2541,13 +2541,13 @@ Actor DinoHyperBlaster 7224	// arachnotron
 	XDeath:
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 AAAAAAAAAAAAA 0 A_TossGib
-		TNT1 A 0 A_CustomMissile("BloodGib3",random(20,50),0,random(0,359))
-		TNT1 A 0 A_CustomMissile("BloodGib3",random(20,50),0,random(0,359))
-		TNT1 A 0 A_CustomMissile("BloodGib4",random(20,50),0,random(0,359))
-		TNT1 A 0 A_CustomMissile("BloodGib1",random(20,50),0,random(0,359))
-		TNT1 A 0 A_CustomMissile("LizardCGunnerHead",random(20,50),0,random(0,359))
-		TNT1 A 0 A_CustomMissile("LizardCGunnerArm",random(20,50),0,random(0,359))
-		TNT1 AA 0 A_CustomMissile("LizardCGunnerLeg",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("BloodGib3",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("BloodGib3",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("BloodGib4",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("BloodGib1",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("LizardCGunnerHead",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("LizardCGunnerArm",random(20,50),0,random(0,359))
+		TNT1 AA 0 A_SpawnProjectile("LizardCGunnerLeg",random(20,50),0,random(0,359))
 		TNT1 A 0 A_KillMaster("Massacre",KILS_FOILINVUL,None,"AEoDSpawner")
 		TNT1 A 1 A_Fall
 		Stop
@@ -2675,11 +2675,11 @@ Actor LizardTrooper2 7225	// doomimp
 	TeleportMovement:
 	TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAA 2 A_Wander
 	TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAA 2 A_Wander
-	TNT1 A 2 A_CustomMissile("ATT4",0,0,0)
-	TNT1 A 2 A_CustomMissile("ATT3",0,0,0)
+	TNT1 A 2 A_SpawnProjectile("ATT4",0,0,0)
+	TNT1 A 2 A_SpawnProjectile("ATT3",0,0,0)
 	TNT1 A 0 A_PlaySound("misc/teleport")
-	TNT1 A 2 A_CustomMissile("ATT2",0,0,0)
-	TNT1 A 2 A_CustomMissile("ATT1",0,0,0)
+	TNT1 A 2 A_SpawnProjectile("ATT2",0,0,0)
+	TNT1 A 2 A_SpawnProjectile("ATT1",0,0,0)
 	TNT1 A 0 A_SetShootable	  
 	TNT1 A 0 A_SetSolid
 	Goto See
@@ -2688,33 +2688,33 @@ Actor LizardTrooper2 7225	// doomimp
 	TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAA 2 A_Wander
 	TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAA 2 A_Wander
 	TNT1 A 0 // A_ChangeFlag("FRIGHTENED",0)
-	TNT1 A 2 A_CustomMissile("ATT4",0,0,0)
-	TNT1 A 2 A_CustomMissile("ATT3",0,0,0)
+	TNT1 A 2 A_SpawnProjectile("ATT4",0,0,0)
+	TNT1 A 2 A_SpawnProjectile("ATT3",0,0,0)
 	TNT1 A 0 A_PlaySound("misc/teleport")
-	TNT1 A 2 A_CustomMissile("ATT2",0,0,0)
-	TNT1 A 2 A_CustomMissile("ATT1",0,0,0)
+	TNT1 A 2 A_SpawnProjectile("ATT2",0,0,0)
+	TNT1 A 2 A_SpawnProjectile("ATT1",0,0,0)
 	TNT1 A 0 A_SetShootable	  
 	TNT1 A 0 A_SetSolid	  
 	Goto See
 	Missile:
 	TNT1 A 0 A_Jump(80,"Teleport")
 		ASCA E 7 A_FaceTarget
-		ASCA F 7 Bright A_CustomMissile("DinoBlaster", 34, 7, 0) 
+		ASCA F 7 Bright A_SpawnProjectile("DinoBlaster", 34, 7, 0) 
 		ASCA E 7 A_FaceTarget
-		ASCA F 7 Bright A_CustomMissile("DinoBlaster", 34, 7, 0) 
+		ASCA F 7 Bright A_SpawnProjectile("DinoBlaster", 34, 7, 0) 
 		ASCA E 7 A_FaceTarget
-		ASCA F 7 Bright A_CustomMissile("DinoBlaster", 34, 7, 0) 
+		ASCA F 7 Bright A_SpawnProjectile("DinoBlaster", 34, 7, 0) 
 		Goto See
 	Teleport:
 	ASCA I 10
 	ASCA J 5
 	TNT1 A 0 A_UnSetShootable
 	TNT1 A 0 A_UnSetSolid
-	TNT1 A 2 A_CustomMissile("ATT1",0,0,0)
-	TNT1 A 2 A_CustomMissile("ATT2",0,0,0)
+	TNT1 A 2 A_SpawnProjectile("ATT1",0,0,0)
+	TNT1 A 2 A_SpawnProjectile("ATT2",0,0,0)
 	TNT1 A 0 A_PlaySound("misc/teleport")
-	TNT1 A 2 A_CustomMissile("ATT3",0,0,0)
-	TNT1 A 2 A_CustomMissile("ATT4",0,0,0)
+	TNT1 A 2 A_SpawnProjectile("ATT3",0,0,0)
+	TNT1 A 2 A_SpawnProjectile("ATT4",0,0,0)
 	Goto TeleportMovement
 	Pain:
 		ASCA A 3
@@ -2738,13 +2738,13 @@ Actor LizardTrooper2 7225	// doomimp
 	TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"Defilement")
 	TNT1 A 0 A_PlaySound("other/gibdeath")
 	TNT1 AAAAAAAAAAAAA 0 A_TossGib
-	TNT1 A 0 A_CustomMissile("BloodGib3",random(20,50),0,random(0,359))
-	TNT1 A 0 A_CustomMissile("BloodGib3",random(20,50),0,random(0,359))
-	TNT1 A 0 A_CustomMissile("BloodGib4",random(20,50),0,random(0,359))
-	TNT1 A 0 A_CustomMissile("BloodGib1",random(20,50),0,random(0,359))
-	TNT1 A 0 A_CustomMissile("LizardCrapHead",random(20,50),0,random(0,359))
-	TNT1 A 0 A_CustomMissile("LizardCrapArm",random(20,50),0,random(0,359))
-	TNT1 AA 0 A_CustomMissile("LizardCrapLeg",random(20,50),0,random(0,359))
+	TNT1 A 0 A_SpawnProjectile("BloodGib3",random(20,50),0,random(0,359))
+	TNT1 A 0 A_SpawnProjectile("BloodGib3",random(20,50),0,random(0,359))
+	TNT1 A 0 A_SpawnProjectile("BloodGib4",random(20,50),0,random(0,359))
+	TNT1 A 0 A_SpawnProjectile("BloodGib1",random(20,50),0,random(0,359))
+	TNT1 A 0 A_SpawnProjectile("LizardCrapHead",random(20,50),0,random(0,359))
+	TNT1 A 0 A_SpawnProjectile("LizardCrapArm",random(20,50),0,random(0,359))
+	TNT1 AA 0 A_SpawnProjectile("LizardCrapLeg",random(20,50),0,random(0,359))
 	TNT1 A 1 A_Fall
 	Stop
 	Raise:
@@ -2867,8 +2867,8 @@ Actor FDNMutant2 	// fatso
 	Goto See
 	Missile:
 		F01N A 7 A_FaceTarget
-	  F01N BBB 0 Bright A_CustomMissile("Mutant2RedBall1", 32, 0, random(15,-15)) 
-		F01N BB 0 Bright A_CustomMissile("Mutant2RedBall2", 32, 0, random(5,-5)) 
+	  F01N BBB 0 Bright A_SpawnProjectile("Mutant2RedBall1", 32, 0, random(15,-15)) 
+		F01N BB 0 Bright A_SpawnProjectile("Mutant2RedBall2", 32, 0, random(5,-5)) 
 	  F01N B 7 Bright
 		F01N A 7 A_FaceTarget
 	  TNT1 a 0 A_Jump(40,"See")
@@ -3049,8 +3049,8 @@ Actor LizardGuardian 	// demon
 	Continue:
 		F04M BB 2 A_FaceTarget
 		TNT1 A 0 A_PlaySound("demonmissilefire")
-		F04M B 0 Bright A_CustomMissile("DNLizGuardFireBall", 30, -6, 0)
-		F04M C 3 Bright A_CustomMissile("DNLizGuardFireBall", 30, 6, 0)
+		F04M B 0 Bright A_SpawnProjectile("DNLizGuardFireBall", 30, -6, 0)
+		F04M C 3 Bright A_SpawnProjectile("DNLizGuardFireBall", 30, 6, 0)
 		F04M B 2 A_SpidRefire 
 		Goto Missile
 	Pain:
@@ -3177,9 +3177,9 @@ Actor DNBigMutant 	// baron
 		Loop
 	Missile:
 		F02M AB 5 A_FaceTarget
-		F02M C 5 A_CustomMissile("BigMutantAttBall",34,0,0)
+		F02M C 5 A_SpawnProjectile("BigMutantAttBall",34,0,0)
 		F02M B 5 A_FaceTarget
-		F02M C 5 A_CustomMissile("BigMutantAttBall",34,0,0)
+		F02M C 5 A_SpawnProjectile("BigMutantAttBall",34,0,0)
 		F02M BA 5
 		Goto See
 	Pain:
@@ -3337,30 +3337,30 @@ Actor UbberLizard		//archvile
 	Tesla1:
 		F06M A 7 A_FaceTarget
 		TNT1 A 0 A_PlaySound("caleb/tesla")
-		F06M B 5 Bright A_CustomMissile("TeslaShot", 37, 9, 0)
+		F06M B 5 Bright A_SpawnProjectile("TeslaShot", 37, 9, 0)
 		TNT1 A 0 A_CPosRefire
 		Goto Tesla1+1
 	Tesla2:
 		F06M AA 7 A_FaceTarget
 		TNT1 A 0 A_PlaySound("caleb/teslaalt")
-		F06M B 7 Bright A_CustomMissile("TeslaShotAltMon2", 37, 9, 0) 
+		F06M B 7 Bright A_SpawnProjectile("TeslaShotAltMon2", 37, 9, 0) 
 		F06M AAA 7
 		F06M AA 7 A_FaceTarget
 		TNT1 A 0 A_PlaySound("caleb/teslaalt")
-		F06M B 7 Bright A_CustomMissile("TeslaShotAltMon2", 37, 9, 0) 
+		F06M B 7 Bright A_SpawnProjectile("TeslaShotAltMon2", 37, 9, 0) 
 		F06M AAAA 7
 		Goto See
 	Summon1:
 		F06M AA 7 A_FaceTarget
 		TNT1 A 0 A_PlaySound("quake4/Weapons/GrenLaunch/Fire")
-		F06M B 7 Bright A_CustomMissile("UbberlizSpawner", 34, 7, random(0,359)) 
+		F06M B 7 Bright A_SpawnProjectile("UbberlizSpawner", 34, 7, random(0,359)) 
 		F06M AAAAAA 7
 		Goto See
 	Summon2:
 		F06M AA 7 A_FaceTarget
 		TNT1 A 0 A_PlaySound("quake4/Weapons/GrenLaunch/Fire")
-		F06M B 0 Bright A_CustomMissile("UbberlizSpawner", 34, 7, random(45,-45)) 
-		F06M B 7 Bright A_CustomMissile("UbberlizSpawner", 34, 7, random(45,-45)) 
+		F06M B 0 Bright A_SpawnProjectile("UbberlizSpawner", 34, 7, random(45,-45)) 
+		F06M B 7 Bright A_SpawnProjectile("UbberlizSpawner", 34, 7, random(45,-45)) 
 		F06M AAAAAA 7
 		Goto See
 	Pain:
@@ -3379,14 +3379,14 @@ Actor UbberLizard		//archvile
 		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"Defilement")
 		TNT1 A 0 A_PlaySound("other/gibdeath")
 		TNT1 AAAAAAAAAAAAA 0 A_TossGib
-		TNT1 A 0 A_CustomMissile("BloodGib3",random(20,50),0,random(0,359))
-		TNT1 A 0 A_CustomMissile("BloodGib3",random(20,50),0,random(0,359))
-		TNT1 A 0 A_CustomMissile("BloodGib4",random(20,50),0,random(0,359))
-		TNT1 A 0 A_CustomMissile("BloodGib1",random(20,50),0,random(0,359))
-		TNT1 A 0 A_CustomMissile("LizardCrapHead",random(20,50),0,random(0,359))
-		TNT1 A 0 A_CustomMissile("LizardCrapArm",random(20,50),0,random(0,359))
-		TNT1 A 0 A_CustomMissile("LizardCrapLeg",random(20,50),0,random(0,359))
-		TNT1 A 0 A_CustomMissile("LizardCrapLeg2",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("BloodGib3",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("BloodGib3",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("BloodGib4",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("BloodGib1",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("LizardCrapHead",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("LizardCrapArm",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("LizardCrapLeg",random(20,50),0,random(0,359))
+		TNT1 A 0 A_SpawnProjectile("LizardCrapLeg2",random(20,50),0,random(0,359))
 		TNT1 A 1 A_Fall
 		Stop
 	Raise:

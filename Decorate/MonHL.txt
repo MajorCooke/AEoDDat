@@ -204,7 +204,7 @@ actor HLHoundEye //7840		//demon
 		Goto MeleeLoop
     MeleeLoop:
 		TNT1 A 0 A_JumpIf(user_attangle>=360,"MeleeEnd")
-		TNT1 A 0 A_CustomMissile("HoundEyeShockW1",0,0,user_attangle)
+		TNT1 A 0 A_SpawnProjectile("HoundEyeShockW1",0,0,user_attangle)
 		TNT1 A 0 A_SetUserVar("user_attangle",user_attangle+10)
 		Loop
     MeleeEnd:
@@ -509,7 +509,7 @@ actor HLController //7842		//cacodemon
 		TNT1 A 0 A_Jump(128,"Missile2")
 		HLCA ABCD 3 A_FaceTarget
 		FireMissiles:
-		HLCA EEEEEE 5 A_CustomMissile("ControllerFireball1",32,0,random(10,-10))
+		HLCA EEEEEE 5 A_SpawnProjectile("ControllerFireball1",32,0,random(10,-10))
 		HLCA F 4 A_Stop
 		Goto See
     Missile2:
@@ -517,7 +517,7 @@ actor HLController //7842		//cacodemon
 		HLCB CCCCC 3 A_FaceTarget
 		HLCB D 7
 		HLCB E 14
-		HLCB F 15 A_CustomMissile("ControllerFireball2",42,0,0)
+		HLCB F 15 A_SpawnProjectile("ControllerFireball2",42,0,0)
 		HLCB G 9
 		HLCB H 5 A_Stop
 		Goto See
@@ -749,7 +749,7 @@ actor HLBullSquid //7843		//chaingunguy
 		TNT1 A 0 A_PlaySound("halflife/monsters/bullsquid/spit")
 		HLDB D 6 A_FaceTarget
 		TNT1 AAAAAAA 0 A_SpawnItemEx("BSSpitExtra2",0,0,20,random(2,5),random(2,-2),random(1,3),0,0)
-		HLDB E 6 A_CustomMissile("BullSquidSpit",20,0,0) 
+		HLDB E 6 A_SpawnProjectile("BullSquidSpit",20,0,0) 
 		HLDB FG 6
 		Goto See
     Pain:
@@ -1209,8 +1209,8 @@ actor HLVortigaunt //7846		//imp
 		HLFN D 3 A_SpawnItemEx ("VortiLightning", 0, 0, 0, 0, 0, 0, 0, 48, 0)
 		TNT1 A 0 A_PlaySoundEx("halflife/weapons/gausshit1","SoundSlot5")
 		TNT1 A 0 A_KillChildren
-		HLFN E 0 A_CustomMissile("VortigauntShot",32,9,0)
-		HLFN E 3 A_CustomMissile("VortigauntShot",32,-9,0)
+		HLFN E 0 A_SpawnProjectile("VortigauntShot",32,9,0)
+		HLFN E 3 A_SpawnProjectile("VortigauntShot",32,-9,0)
 		HLFN F 6
 		Goto See
     Pain:
@@ -1538,7 +1538,7 @@ actor HLVoltigore //7847		//arachnotron
 		HAGI A 6 A_FaceTarget
 		TNT1 A 0 A_PlaySound("halflife/monsters/voltigore/shockatt")
 		HAGN ABC 5 A_FaceTarget
-		HAGN D 6 A_CustomMissile("VoltigoreShot",40,0,0)
+		HAGN D 6 A_SpawnProjectile("VoltigoreShot",40,0,0)
 		HAGN EF 6
 		HAGW AABBCCDDEEFF 4 A_ExtChase(1,0)
 		Goto See
@@ -1735,7 +1735,7 @@ actor HLGonome //7848		//hellknight
     Missile:
 		HLHI A 5 A_FaceTarget
 		HLHN ABCD 5 A_FaceTarget
-		HLHN F 6 A_CustomMissile("GonomeShot",32,0,0)
+		HLHN F 6 A_SpawnProjectile("GonomeShot",32,0,0)
 		HLHN F 6
 		Goto See+1
     Pain:
@@ -1901,7 +1901,7 @@ actor HLPitDrone //7849		//zombieman
 		HLII A 4 A_FaceTarget
 		TNT1 A 0 A_PlaySound("halflife/monsters/pitdrone/melee")
 		HLIN AAA 4 A_FaceTarget
-		HLIN B 5 A_CustomMissile("PitDroneSpike",32,0,0)
+		HLIN B 5 A_SpawnProjectile("PitDroneSpike",32,0,0)
 		HLIN CCCC 4
 		Goto See
     Pain:
@@ -2026,7 +2026,7 @@ actor HLStrooper //7850		//revenant
 		TNT1 A 0 A_Jump(128,"Grenade")
 		HLJI AA 4 A_FaceTarget
 		HLJI B 4 A_FaceTarget
-		HLJI C 5 A_CustomMissile("ShockTrooperShot",42,8,0)
+		HLJI C 5 A_SpawnProjectile("ShockTrooperShot",42,8,0)
 		TNT1 A 0 A_CPosRefire
 		Goto Missile+4
     Grenade:
@@ -2035,7 +2035,7 @@ actor HLStrooper //7850		//revenant
 		HLJG B 15 A_FaceTarget
 		HLJG CDE 5 A_FaceTarget
 		TNT1 A 0 A_PlaySound("halflife/weapons/sporegrenadeshot")
-		HLJG F 14 A_CustomMissile("ShockTrooperSporeGrenade",50,0,0)
+		HLJG F 14 A_SpawnProjectile("ShockTrooperSporeGrenade",50,0,0)
 		Goto See
     Pain:
 		HLJP A 8 A_Pain
@@ -2125,7 +2125,7 @@ Actor ShockTrooperSporeGrenade
 		TNT1 A 0 A_PlaySound("halflife/weapons/sporehit")
 		TNT1 AAAAAAAAAAAAA 0 A_SpawnItemEx("STroopGrenExploGas",0,0,0,random(1,-1),random(1,-1),random(0,2),0,0)
 		TNT1 AAAAAAAAA 0 A_SpawnItemEx("BSSpitExtra",0,0,0,random(1,-1),random(1,-1),random(0,4),0,0)
-		TNT1 A 0 A_CustomMissile("STroopGrenExplo",0,0,0)
+		TNT1 A 0 A_SpawnProjectile("STroopGrenExplo",0,0,0)
 		Stop
     }
 }
@@ -2223,7 +2223,7 @@ actor HLNihilant //7851			//cyberdemon(very rare)
 		HLLI A 5 A_FaceTarget
 		HLLM ABCD 7 A_FaceTarget
 		HLLM EEEE 4 A_FaceTarget
-		TNT1 A 0 A_CustomMissile("NihThunderBall",40,0,0)
+		TNT1 A 0 A_SpawnProjectile("NihThunderBall",40,0,0)
 		HLLM FGH 7
 		Goto Chasing
     Missile2:		//shower
@@ -2232,8 +2232,8 @@ actor HLNihilant //7851			//cyberdemon(very rare)
 		TNT1 A 0 A_PlaySoundEx("halflife/weapons/shockroachdischarge","SoundSlot5")
 		TNT1 A 0 A_JumpIfInventory("NihCounter",40,"Miss2End")
 		TNT1 A 0 A_GiveInventory("NihCounter",1)
-		TNT1 AA 0 A_CustomMissile("NihFireballSmallNoSound",random(30,80),random(20,-20),random(-5,5))
-		TNT1 AA 0 A_CustomMissile("NihFireballSmall",random(30,80),random(20,-20),random(-5,5))
+		TNT1 AA 0 A_SpawnProjectile("NihFireballSmallNoSound",random(30,80),random(20,-20),random(-5,5))
+		TNT1 AA 0 A_SpawnProjectile("NihFireballSmall",random(30,80),random(20,-20),random(-5,5))
 		HLLM E 4 A_FaceTarget 
 		Goto "Missile2"+6
     Miss2End:
@@ -2248,19 +2248,19 @@ actor HLNihilant //7851			//cyberdemon(very rare)
 		TNT1 A 0 A_SpawnItemEx("NihilantVulFX",0,10,110,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
 		TNT1 A 0 A_SpawnItemEx("NihilantVulFX",0,-10,110,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
 		TNT1 A 0 A_SpawnItemEx("NihilantVul",0,0,80,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
-		TNT1 A 0 A_CustomMissile("NihProjFake",60,-45,0)
-		TNT1 A 0 A_CustomMissile("NihProjFake",50,-30,0)
-		TNT1 A 0 A_CustomMissile("NihProjFake",40,-15,0)
-		TNT1 A 0 A_CustomMissile("NihProjFake",60,45,0)
-		TNT1 A 0 A_CustomMissile("NihProjFake",50,30,0)
-		TNT1 A 0 A_CustomMissile("NihProjFake",40,15,0)
+		TNT1 A 0 A_SpawnProjectile("NihProjFake",60,-45,0)
+		TNT1 A 0 A_SpawnProjectile("NihProjFake",50,-30,0)
+		TNT1 A 0 A_SpawnProjectile("NihProjFake",40,-15,0)
+		TNT1 A 0 A_SpawnProjectile("NihProjFake",60,45,0)
+		TNT1 A 0 A_SpawnProjectile("NihProjFake",50,30,0)
+		TNT1 A 0 A_SpawnProjectile("NihProjFake",40,15,0)
 		HLLN FFFFFFF 3 A_FaceTarget
-		TNT1 A 0 A_CustomMissile("NihProjStrong",60,-45,0)
-		TNT1 A 0 A_CustomMissile("NihProjStrong",50,-30,0)
-		TNT1 A 0 A_CustomMissile("NihProjStrong",40,-15,0)
-		TNT1 A 0 A_CustomMissile("NihProjStrong",60,45,0)
-		TNT1 A 0 A_CustomMissile("NihProjStrong",50,30,0)
-		TNT1 A 0 A_CustomMissile("NihProjStrong",40,15,0)
+		TNT1 A 0 A_SpawnProjectile("NihProjStrong",60,-45,0)
+		TNT1 A 0 A_SpawnProjectile("NihProjStrong",50,-30,0)
+		TNT1 A 0 A_SpawnProjectile("NihProjStrong",40,-15,0)
+		TNT1 A 0 A_SpawnProjectile("NihProjStrong",60,45,0)
+		TNT1 A 0 A_SpawnProjectile("NihProjStrong",50,30,0)
+		TNT1 A 0 A_SpawnProjectile("NihProjStrong",40,15,0)
 		HLLN GGGGGGGG 5 A_FaceTarget
 		HLLN HIJ 8
 		Goto See+1
@@ -2272,9 +2272,9 @@ actor HLNihilant //7851			//cyberdemon(very rare)
 		TNT1 A 0 A_SpawnItemEx("NihilantVulFX",0,-10,110,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
 		TNT1 A 0 A_SpawnItemEx("NihilantVul",0,0,80,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
 		HLLN FFFFFFF 3 A_FaceTarget
-		TNT1 A 0 A_CustomMissile("NihMonsterSpawner",60,0,60)
-		TNT1 A 0 A_CustomMissile("NihMonsterSpawner",60,0,-60)
-		TNT1 A 0 A_CustomMissile("NihMonsterSpawner",60,0,0)
+		TNT1 A 0 A_SpawnProjectile("NihMonsterSpawner",60,0,60)
+		TNT1 A 0 A_SpawnProjectile("NihMonsterSpawner",60,0,-60)
+		TNT1 A 0 A_SpawnProjectile("NihMonsterSpawner",60,0,0)
 		HLLN GGGGGGGG 5 A_FaceTarget
 		HLLN HIJ 8
 		Goto See+1
@@ -2498,7 +2498,7 @@ Actor NihMonsterSpawner
 		X018 ABCDEFGHIJKLMNOPQRSTUVWXY 2 Bright
 		Loop
     Death:
-		TNT1 A 0 A_CustomMissile("NihMonSpawEffect",40,0,0)
+		TNT1 A 0 A_SpawnProjectile("NihMonSpawEffect",40,0,0)
 		TNT1 A 10
 		TNT1 A 0 A_Jump(255,"SpawnVort","SpawnCont","SpawnHGrunt")
     SpawnCont:
@@ -2745,7 +2745,7 @@ actor HLBarney //7852		//shotguy
 		HLMM C 2 A_FaceTarget(0,0)
 		TNT1 A 0 A_PlaySoundEx("halflife/weapons/pistol","SoundSlot5")
 		TNT1 AA 0 A_SpawnItemEx("GunSmallSmoke",20,2,42,0,0,0,0,0)
-		"----" A 0 A_CustomMissile("BulletTracerFX",20,0,random(-7,7),CMF_OFFSETPITCH,random(-7,7))
+		"----" A 0 A_SpawnProjectile("BulletTracerFXInverted",20,0,random(-7,7),CMF_OFFSETPITCH,random(-7,7))
 		HLMM D 5 A_CustomBulletAttack(7,7,1,5,"BulletDamagePuff")
 		HLMM CC 3 A_FaceTarget
 		TNT1 A 0 A_CPosRefire
@@ -2755,12 +2755,12 @@ actor HLBarney //7852		//shotguy
 		HLMM ABCC 4 A_FaceTarget(0,0)
 		TNT1 A 0 A_PlaySoundEx("halflife/weapons/magnumshot","SoundSlot5")
 		TNT1 AA 0 A_SpawnItemEx("GunSmoke",20,2,42,0,0,0,0,0)
-		"----" A 0 A_CustomMissile("BulletTracerFX",20,0,random(-2,2),CMF_OFFSETPITCH,random(-2,2))
+		"----" A 0 A_SpawnProjectile("BulletTracerFXInverted",20,0,random(-2,2),CMF_OFFSETPITCH,random(-2,2))
 		HLMM D 5 A_CustomBulletAttack(2,2,1,20,"BulletDamagePuff")
 		HLMM CCCCC 8 A_FaceTarget(0,0)
 		TNT1 A 0 A_PlaySoundEx("halflife/weapons/magnumshot","SoundSlot5")
 		TNT1 AA 0 A_SpawnItemEx("GunSmoke",20,2,42,0,0,0,0,0)
-		"----" A 0 A_CustomMissile("BulletTracerFX",20,0,random(-2,2),CMF_OFFSETPITCH,random(-2,2))
+		"----" A 0 A_SpawnProjectile("BulletTracerFXInverted",20,0,random(-2,2),CMF_OFFSETPITCH,random(-2,2))
 		HLMM D 5 A_CustomBulletAttack(2,2,1,20,"BulletDamagePuff")
 		HLMM CCCCC 8 A_FaceTarget
 		Goto See
@@ -2950,7 +2950,7 @@ actor HLGonarch //7853		//spidermastermind
 		HLNO BB 4 A_FaceTarget
 		TNT1 A 0 A_SpawnItemEx("ShieldSpawner8Tics",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		TNT1 AAAAAAAAAAAAAAA 0 A_SpawnItemEx("GonarchAcidExtra",0,0,80,random(2,-2),random(2,-2),random(1,8),0,0)
-		HLNO C 4 A_CustomMissile("GonarchAcid",80,0,0)		
+		HLNO C 4 A_SpawnProjectile("GonarchAcid",80,0,0)		
 		HLNO C 4
 		TNT1 A 0 A_SpawnItemEx("ShieldSpawner8Tics",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		HLNO DD 4
@@ -2964,7 +2964,7 @@ actor HLGonarch //7853		//spidermastermind
 		HLNO BB 4 A_FaceTarget
 		TNT1 A 0 A_SpawnItemEx("ShieldSpawner8Tics",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		TNT1 AAAAAAAAAAAAAAA 0 A_SpawnItemEx("GonarchAcid2Extra",0,0,80,random(2,-2),random(2,-2),random(1,8),0,0)
-		HLNO C 4 A_CustomMissile("GonarchAcid2",80,0,0)		
+		HLNO C 4 A_SpawnProjectile("GonarchAcid2",80,0,0)		
 		HLNO C 4
 		TNT1 A 0 A_SpawnItemEx("ShieldSpawner8Tics",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 		HLNO DD 4
@@ -3388,22 +3388,22 @@ actor HLHornetGrunt //7854		//baronofhell
 		Goto See
     Missile:
 		HLON AB 5 A_FaceTarget
-		HLON C 4 A_CustomMissile("HGruntHornet",36,5,0)
+		HLON C 4 A_SpawnProjectile("HGruntHornet",36,5,0)
 		HLON B 4 A_FaceTarget 
-		HLON C 4 A_CustomMissile("HGruntHornet",36,5,0)
+		HLON C 4 A_SpawnProjectile("HGruntHornet",36,5,0)
 		HLON B 4 A_FaceTarget
-		HLON C 4 A_CustomMissile("HGruntHornet",36,5,0)
+		HLON C 4 A_SpawnProjectile("HGruntHornet",36,5,0)
 		HLON B 4 A_FaceTarget
-		HLON C 4 A_CustomMissile("HGruntHornet",36,5,0)
+		HLON C 4 A_SpawnProjectile("HGruntHornet",36,5,0)
 		HLON B 4 A_FaceTarget
 		TNT1 A 0 A_Jump(80,"MisEnd")
-		HLON C 4 A_CustomMissile("HGruntHornet",36,5,0)
+		HLON C 4 A_SpawnProjectile("HGruntHornet",36,5,0)
 		TNT1 A 0 A_Jump(100,"MisEnd")
-		HLON C 4 A_CustomMissile("HGruntHornet",36,5,0)
+		HLON C 4 A_SpawnProjectile("HGruntHornet",36,5,0)
 		TNT1 A 0 A_Jump(120,"MisEnd")
-		HLON C 4 A_CustomMissile("HGruntHornet",36,5,0)
+		HLON C 4 A_SpawnProjectile("HGruntHornet",36,5,0)
 		TNT1 A 0 A_Jump(140,"MisEnd")
-		HLON C 4 A_CustomMissile("HGruntHornet",36,5,0)
+		HLON C 4 A_SpawnProjectile("HGruntHornet",36,5,0)
 		HLON B 4 A_FaceTarget
 		MisEnd:
 		TNT1 A 0
@@ -3535,7 +3535,7 @@ Actor HGHornetShooter1
 		Stop
     SuccessfulChase:
 		PLAY A 0 A_FaceTarget
-		PLAY A 0 A_CustomMissile("HGruntHornetNoSightSound",0,0,0)
+		PLAY A 0 A_SpawnProjectile("HGruntHornetNoSightSound",0,0,0)
 		Stop
     }
 }
@@ -3851,7 +3851,7 @@ actor HLBat //7857	//painelement
 		HLSM ABC 4 A_FaceTarget
 		TNT1 A 0 A_PlaySound("halflife/monsters/bullsquid/spit")
 		TNT1 AAAAAAA 0 A_SpawnItemEx("BSSpitExtra2",0,0,20,random(2,5),random(2,-2),random(1,3),0,0)
-		HLSM DDDD 2 A_CustomMissile("BullSquidSpit",20,0,random(-3,3))
+		HLSM DDDD 2 A_SpawnProjectile("BullSquidSpit",20,0,random(-3,3))
 		HLSM EF 4
 		Goto See
     Pain:
@@ -3980,69 +3980,69 @@ actor HLGargantua //7858		//cyberdemon
 		HL0N E 0 A_SpawnItemEx("GargFloorBoom",10,0,0,20,0,0,-18,SXF_NOCHECKPOSITION)
 		HL0N E 0 A_SpawnItemEx("GargFloorBoom",10,0,0,20,0,0,-24,SXF_NOCHECKPOSITION)
 		HL0N E 10 A_SpawnItemEx("GargFloorBoom",10,0,0,20,0,0,-30,SXF_NOCHECKPOSITION)		//where it aimed first
-	//	HL0N E 10 A_CustomMissile("GargFloorBoom",0,0,0)			//aimed at target
+	//	HL0N E 10 A_SpawnProjectile("GargFloorBoom",0,0,0)			//aimed at target
 		Goto See
     Fireballs:
 		HL0M ABC 7 A_FaceTarget
 		TNT1 A 0 A_FaceTarget
 		HL0M D 0 A_PlaySound("reilsss/weapons/ionecannonaltfire")
-		HL0M D 0 A_CustomMissile("GargFireball",70,-51)
-		HL0M D 5 A_CustomMissile("GargFireball",70,51)
+		HL0M D 0 A_SpawnProjectile("GargFireball",70,-51)
+		HL0M D 5 A_SpawnProjectile("GargFireball",70,51)
 		TNT1 A 0 A_FaceTarget
 		HL0M D 0 A_PlaySound("reilsss/weapons/ionecannonaltfire")
-		HL0M D 0 A_CustomMissile("GargFireball",70,-51)
-		HL0M D 5 A_CustomMissile("GargFireball",70,51)
+		HL0M D 0 A_SpawnProjectile("GargFireball",70,-51)
+		HL0M D 5 A_SpawnProjectile("GargFireball",70,51)
 		TNT1 A 0 A_FaceTarget
 		HL0M D 0 A_PlaySound("reilsss/weapons/ionecannonaltfire")
-		HL0M D 0 A_CustomMissile("GargFireball",70,-51)
-		HL0M D 5 A_CustomMissile("GargFireball",70,51)
+		HL0M D 0 A_SpawnProjectile("GargFireball",70,-51)
+		HL0M D 5 A_SpawnProjectile("GargFireball",70,51)
 		TNT1 A 0 A_FaceTarget
 		HL0M D 0 A_PlaySound("reilsss/weapons/ionecannonaltfire")
-		HL0M D 0 A_CustomMissile("GargFireball",70,-51)
-		HL0M D 5 A_CustomMissile("GargFireball",70,51)
+		HL0M D 0 A_SpawnProjectile("GargFireball",70,-51)
+		HL0M D 5 A_SpawnProjectile("GargFireball",70,51)
 		TNT1 A 0 A_FaceTarget
 		HL0M D 0 A_PlaySound("reilsss/weapons/ionecannonaltfire")
-		HL0M D 0 A_CustomMissile("GargFireball",70,-51)
-		HL0M D 5 A_CustomMissile("GargFireball",70,51)
+		HL0M D 0 A_SpawnProjectile("GargFireball",70,-51)
+		HL0M D 5 A_SpawnProjectile("GargFireball",70,51)
 		TNT1 A 0 A_FaceTarget
 		HL0M D 0 A_PlaySound("reilsss/weapons/ionecannonaltfire")
-		HL0M D 0 A_CustomMissile("GargFireball",70,-51)
-		HL0M D 5 A_CustomMissile("GargFireball",70,51)
+		HL0M D 0 A_SpawnProjectile("GargFireball",70,-51)
+		HL0M D 5 A_SpawnProjectile("GargFireball",70,51)
 		TNT1 A 0 A_FaceTarget
 		HL0M D 0 A_PlaySound("reilsss/weapons/ionecannonaltfire")
-		HL0M D 0 A_CustomMissile("GargFireball",70,-51)
-		HL0M D 5 A_CustomMissile("GargFireball",70,51)
+		HL0M D 0 A_SpawnProjectile("GargFireball",70,-51)
+		HL0M D 5 A_SpawnProjectile("GargFireball",70,51)
 		TNT1 A 0 A_FaceTarget
 		HL0M D 0 A_PlaySound("reilsss/weapons/ionecannonaltfire")
-		HL0M D 0 A_CustomMissile("GargFireball",70,-51)
-		HL0M D 5 A_CustomMissile("GargFireball",70,51)
+		HL0M D 0 A_SpawnProjectile("GargFireball",70,-51)
+		HL0M D 5 A_SpawnProjectile("GargFireball",70,51)
 		TNT1 A 0 A_FaceTarget
 		HL0M D 0 A_PlaySound("reilsss/weapons/ionecannonaltfire")
-		HL0M D 0 A_CustomMissile("GargFireball",70,-51)
-		HL0M D 5 A_CustomMissile("GargFireball",70,51)
+		HL0M D 0 A_SpawnProjectile("GargFireball",70,-51)
+		HL0M D 5 A_SpawnProjectile("GargFireball",70,51)
 		HL0M D 0 A_PlaySound("reilsss/weapons/ionecannonaltfire")
-		HL0M D 0 A_CustomMissile("GargFireball",70,-51)
-		HL0M D 5 A_CustomMissile("GargFireball",70,51)
+		HL0M D 0 A_SpawnProjectile("GargFireball",70,-51)
+		HL0M D 5 A_SpawnProjectile("GargFireball",70,51)
 		TNT1 A 0 A_FaceTarget
 		HL0M D 0 A_PlaySound("reilsss/weapons/ionecannonaltfire")
-		HL0M D 0 A_CustomMissile("GargFireball",70,-51)
-		HL0M D 5 A_CustomMissile("GargFireball",70,51)
+		HL0M D 0 A_SpawnProjectile("GargFireball",70,-51)
+		HL0M D 5 A_SpawnProjectile("GargFireball",70,51)
 		TNT1 A 0 A_FaceTarget
 		HL0M D 0 A_PlaySound("reilsss/weapons/ionecannonaltfire")
-		HL0M D 0 A_CustomMissile("GargFireball",70,-51)
-		HL0M D 5 A_CustomMissile("GargFireball",70,51)
+		HL0M D 0 A_SpawnProjectile("GargFireball",70,-51)
+		HL0M D 5 A_SpawnProjectile("GargFireball",70,51)
 		TNT1 A 0 A_FaceTarget
 		HL0M D 0 A_PlaySound("reilsss/weapons/ionecannonaltfire")
-		HL0M D 0 A_CustomMissile("GargFireball",70,-51)
-		HL0M D 5 A_CustomMissile("GargFireball",70,51)
+		HL0M D 0 A_SpawnProjectile("GargFireball",70,-51)
+		HL0M D 5 A_SpawnProjectile("GargFireball",70,51)
 		TNT1 A 0 A_FaceTarget
 		HL0M D 0 A_PlaySound("reilsss/weapons/ionecannonaltfire")
-		HL0M D 0 A_CustomMissile("GargFireball",70,-51)
-		HL0M D 5 A_CustomMissile("GargFireball",70,51)
+		HL0M D 0 A_SpawnProjectile("GargFireball",70,-51)
+		HL0M D 5 A_SpawnProjectile("GargFireball",70,51)
 		TNT1 A 0 A_FaceTarget
 		HL0M D 0 A_PlaySound("reilsss/weapons/ionecannonaltfire")
-		HL0M D 0 A_CustomMissile("GargFireball",70,-51)
-		HL0M D 5 A_CustomMissile("GargFireball",70,51)
+		HL0M D 0 A_SpawnProjectile("GargFireball",70,-51)
+		HL0M D 5 A_SpawnProjectile("GargFireball",70,51)
 		HL0M CBA 6
 		Goto See
     Flame:
@@ -4052,20 +4052,20 @@ actor HLGargantua //7858		//cyberdemon
 		TNT1 A 0 A_GiveInventory("FlameToken",1)
     FlameLoop:
 		TNT1 A 0 A_FaceTarget
-		HL0M D 0 A_CustomMissile("HLGargFlame",70,-51)
-		HL0M D 1 A_CustomMissile("HLGargFlame",70,51)
+		HL0M D 0 A_SpawnProjectile("HLGargFlame",70,-51)
+		HL0M D 1 A_SpawnProjectile("HLGargFlame",70,51)
 		TNT1 A 0 A_FaceTarget
-		HL0M D 0 A_CustomMissile("HLGargFlame",70,-51)
-		HL0M D 1 A_CustomMissile("HLGargFlame",70,51)
+		HL0M D 0 A_SpawnProjectile("HLGargFlame",70,-51)
+		HL0M D 1 A_SpawnProjectile("HLGargFlame",70,51)
 		TNT1 A 0 A_FaceTarget
-		HL0M D 0 A_CustomMissile("HLGargFlame",70,-51)
-		HL0M D 1 A_CustomMissile("HLGargFlame",70,51)
+		HL0M D 0 A_SpawnProjectile("HLGargFlame",70,-51)
+		HL0M D 1 A_SpawnProjectile("HLGargFlame",70,51)
 		TNT1 A 0 A_FaceTarget
-		HL0M D 0 A_CustomMissile("HLGargFlame",70,-51)
-		HL0M D 1 A_CustomMissile("HLGargFlame",70,51)
+		HL0M D 0 A_SpawnProjectile("HLGargFlame",70,-51)
+		HL0M D 1 A_SpawnProjectile("HLGargFlame",70,51)
 		TNT1 A 0 A_FaceTarget
-		HL0M D 0 A_CustomMissile("HLGargFlame",70,-51)
-		HL0M D 1 A_CustomMissile("HLGargFlame",70,51)
+		HL0M D 0 A_SpawnProjectile("HLGargFlame",70,-51)
+		HL0M D 1 A_SpawnProjectile("HLGargFlame",70,51)
 		TNT1 A 0 A_CPosRefire						//checks if player is dead (or out of LOS) and stop the attack
 		TNT1 A 0 A_JumpIfCloser(300,"FlameLoop")			//If still in range, will loop the attack
     FlameEnd:
@@ -4526,7 +4526,7 @@ actor HLGruntM16	//7874		//Baronofhell
 		HK1O A 2 A_FaceTarget(0,0)
 		TNT1 A 0 A_PlaySoundEx("reilsss/weapons/m16fire2","SoundSlot5")
 		TNT1 AA 0 A_SpawnItemEx("GunSmallSmoke",15,3,43,0,0,0,0,0)
-		"----" A 0 A_CustomMissile("BulletTracerFX",20,0,random(-7,7),CMF_OFFSETPITCH,random(-7,7))
+		"----" A 0 A_SpawnProjectile("BulletTracerFXInverted",20,0,random(-7,7),CMF_OFFSETPITCH,random(-7,7))
 		HK1O B 2  A_CustomBulletAttack(7,7,1,6,"BulletDamagePuff")
 		TNT1 A 0 A_Jump(15,"See")
 		TNT1 A 0 A_CposRefire
@@ -4537,11 +4537,11 @@ actor HLGruntM16	//7874		//Baronofhell
 		TNT1 A 0 A_PlaySoundEx("halflife/weapons/grenadelaunch","SoundSlot5")
 		TNT1 AA 0 A_SpawnItemEx("GunSmoke",15,3,43,0,0,0,0,0)
 		TNT1 a 0 A_JumpIfCloser(500,"GrenadeGunClose")
-		HK1M B 5 A_CustomMissile("HLGruntGunGrenade",38,0,0)
+		HK1M B 5 A_SpawnProjectile("HLGruntGunGrenade",38,0,0)
 		HK1M BA 5
 		Goto See
     GrenadeGunClose:
-		HK1M B 5 A_CustomMissile("HLGruntGunGrenadeClose",38,0,0)
+		HK1M B 5 A_SpawnProjectile("HLGruntGunGrenadeClose",38,0,0)
 		HK1M BA 5
 		Goto See
     Grenade:
@@ -4550,7 +4550,7 @@ actor HLGruntM16	//7874		//Baronofhell
 		HK1N A 3 A_FaceTarget
 		HK1N B 17
 		HK1N CD 5 A_FaceTarget
-		HK1N E 6 A_CustomMissile("GruntHandGrenade",40,0,0)
+		HK1N E 6 A_SpawnProjectile("GruntHandGrenade",40,0,0)
 		HK1N F 7
 		Goto See
     Melee:		
@@ -4559,7 +4559,7 @@ actor HLGruntM16	//7874		//Baronofhell
 		HK1N B 10
 		HK1N C 5 A_FaceTarget
 		TNT1 A 0 A_GiveInventory("CloseGrenCheck",1)
-		HK1N D 6 A_CustomMissile("GruntHandGrenadeClose",40,0,0)
+		HK1N D 6 A_SpawnProjectile("GruntHandGrenadeClose",40,0,0)
 		HK1N F 7
 		Goto See
     Pain:
@@ -4762,7 +4762,7 @@ actor HLGruntShotgun : HLGruntM16	//7875	//hellknight
 		HK6N AAA 4 A_FaceTarget(0,0)
 		TNT1 A 0 A_PlaySoundEx("halflife/weapons/shotgunsingle","SoundSlot5")
 		TNT1 AA 0 A_SpawnItemEx("GunSmoke",15,4,43,0,0,0,0,0)
-		"----" AAAAAA 0 A_CustomMissile("BulletTracerFX",20,0,random(-7,7),CMF_OFFSETPITCH,random(-7,7))
+		"----" AAAAAA 0 A_SpawnProjectile("BulletTracerFXInverted",20,0,random(-7,7),CMF_OFFSETPITCH,random(-7,7))
 		HK6N B 4  A_CustomBulletAttack(7,7,6,5,"BulletDamagePuff")
 		HK6N BCBA 4
 		TNT1 A 0 A_Jump(40,"See")
@@ -4773,7 +4773,7 @@ actor HLGruntShotgun : HLGruntM16	//7875	//hellknight
 		HK6N AAAAA 4 A_FaceTarget(0,0)
 		TNT1 A 0 A_PlaySoundEx("halflife/weapons/shotgundouble","SoundSlot5")
 		TNT1 AA 0 A_SpawnItemEx("GunSmoke",15,4,43,0,0,0,0,0)
-		"----" AAAAAA 0 A_CustomMissile("BulletTracerFX",20,0,random(-7,7),CMF_OFFSETPITCH,random(-7,7))
+		"----" AAAAAA 0 A_SpawnProjectile("BulletTracerFXInverted",20,0,random(-7,7),CMF_OFFSETPITCH,random(-7,7))
 		HK6N B 4  A_CustomBulletAttack(7,7,12,6,"BulletDamagePuff")
 		HK6N BCBA 4
 		HK6N AAA 4 A_FaceTarget
@@ -4785,7 +4785,7 @@ actor HLGruntShotgun : HLGruntM16	//7875	//hellknight
 		HK6M A 3 A_FaceTarget
 		HK6M B 17
 		HK6M CD 5 A_FaceTarget
-		HK6M E 6 A_CustomMissile("GruntHandGrenade",40,0,0)
+		HK6M E 6 A_SpawnProjectile("GruntHandGrenade",40,0,0)
 		HK6M F 7
 		Goto See
     Melee:		
@@ -4794,7 +4794,7 @@ actor HLGruntShotgun : HLGruntM16	//7875	//hellknight
 		HK6M B 10
 		HK6M C 5 A_FaceTarget
 		TNTT A 0 A_GiveInventory("CloseGrenCheck",1)
-		HK6M D 6 A_CustomMissile("GruntHandGrenadeClose",40,0,0)
+		HK6M D 6 A_SpawnProjectile("GruntHandGrenadeClose",40,0,0)
 		HK6M F 7
 		Goto See
     Pain:
@@ -4917,36 +4917,36 @@ actor MiniGarg 			//archvile
     Hornets:
 		HL0M ABC 4 A_FaceTarget
 		TNT1 A 0 A_FaceTarget
-		HL0M D 0 A_CustomMissile("HGruntHornet",35,-20)
-		HL0M D 7 A_CustomMissile("HGruntHornet",35,20)
+		HL0M D 0 A_SpawnProjectile("HGruntHornet",35,-20)
+		HL0M D 7 A_SpawnProjectile("HGruntHornet",35,20)
 		HL0M D 10 A_FaceTarget
-		HL0M D 0 A_CustomMissile("HGruntHornet",35,-20)
-		HL0M D 7 A_CustomMissile("HGruntHornet",35,20)
+		HL0M D 0 A_SpawnProjectile("HGruntHornet",35,-20)
+		HL0M D 7 A_SpawnProjectile("HGruntHornet",35,20)
 		HL0M D 10 A_FaceTarget
-		HL0M D 0 A_CustomMissile("HGruntHornet",35,-20)
-		HL0M D 7 A_CustomMissile("HGruntHornet",35,20)
+		HL0M D 0 A_SpawnProjectile("HGruntHornet",35,-20)
+		HL0M D 7 A_SpawnProjectile("HGruntHornet",35,20)
 		HL0M CBA 4
 		Goto See
     ShockMissiles:
 		HL0M ABC 4 A_FaceTarget
 		TNT1 A 0 A_FaceTarget
-		HL0M D 0 A_CustomMissile("ShockTrooperShot",35,-20)
-		HL0M D 7 A_CustomMissile("ShockTrooperShot",35,20)
+		HL0M D 0 A_SpawnProjectile("ShockTrooperShot",35,-20)
+		HL0M D 7 A_SpawnProjectile("ShockTrooperShot",35,20)
 		HL0M D 0 A_FaceTarget
-		HL0M D 0 A_CustomMissile("ShockTrooperShot",35,-20)
-		HL0M D 7 A_CustomMissile("ShockTrooperShot",35,20)
+		HL0M D 0 A_SpawnProjectile("ShockTrooperShot",35,-20)
+		HL0M D 7 A_SpawnProjectile("ShockTrooperShot",35,20)
 		TNT1 A 0 A_FaceTarget
-		HL0M D 0 A_CustomMissile("ShockTrooperShot",35,-20)
-		HL0M D 7 A_CustomMissile("ShockTrooperShot",35,20)
+		HL0M D 0 A_SpawnProjectile("ShockTrooperShot",35,-20)
+		HL0M D 7 A_SpawnProjectile("ShockTrooperShot",35,20)
 		HL0M D 0 A_FaceTarget
-		HL0M D 0 A_CustomMissile("ShockTrooperShot",35,-20)
-		HL0M D 7 A_CustomMissile("ShockTrooperShot",35,20)
+		HL0M D 0 A_SpawnProjectile("ShockTrooperShot",35,-20)
+		HL0M D 7 A_SpawnProjectile("ShockTrooperShot",35,20)
 		HL0M D 0 A_FaceTarget
-		HL0M D 0 A_CustomMissile("ShockTrooperShot",35,-20)
-		HL0M D 7 A_CustomMissile("ShockTrooperShot",35,20)
+		HL0M D 0 A_SpawnProjectile("ShockTrooperShot",35,-20)
+		HL0M D 7 A_SpawnProjectile("ShockTrooperShot",35,20)
 		HL0M D 0 A_FaceTarget
-		HL0M D 0 A_CustomMissile("ShockTrooperShot",35,-20)
-		HL0M D 7 A_CustomMissile("ShockTrooperShot",35,20)
+		HL0M D 0 A_SpawnProjectile("ShockTrooperShot",35,-20)
+		HL0M D 7 A_SpawnProjectile("ShockTrooperShot",35,20)
 		TNT1 A 0 A_FaceTarget
 		HL0M CBA 4
 		Goto See
@@ -5027,44 +5027,44 @@ Actor MiniGarg2 : MiniGarg		//fatso
 		HL0M ABC 4 A_FaceTarget
 		TNT1 A 0 A_FaceTarget
 		TNT1 A 0 A_PlaySoundEx("halflife/weapons/gausshit1","SoundSlot5")
-		HL0M D 0 A_CustomMissile("VortigauntShot",35,-20)
-		HL0M D 7 A_CustomMissile("VortigauntShot",35,20)
+		HL0M D 0 A_SpawnProjectile("VortigauntShot",35,-20)
+		HL0M D 7 A_SpawnProjectile("VortigauntShot",35,20)
 		HL0M D 10 A_FaceTarget
 		TNT1 A 0 A_PlaySoundEx("halflife/weapons/gausshit1","SoundSlot5")
-		HL0M D 0 A_CustomMissile("VortigauntShot",35,-20)
-		HL0M D 7 A_CustomMissile("VortigauntShot",35,20)
+		HL0M D 0 A_SpawnProjectile("VortigauntShot",35,-20)
+		HL0M D 7 A_SpawnProjectile("VortigauntShot",35,20)
 		HL0M D 10 A_FaceTarget
 		TNT1 A 0 A_PlaySoundEx("halflife/weapons/gausshit1","SoundSlot5")
-		HL0M D 0 A_CustomMissile("VortigauntShot",35,-20)
-		HL0M D 7 A_CustomMissile("VortigauntShot",35,20)
+		HL0M D 0 A_SpawnProjectile("VortigauntShot",35,-20)
+		HL0M D 7 A_SpawnProjectile("VortigauntShot",35,20)
 		HL0M D 10 A_FaceTarget
 		TNT1 A 0 A_PlaySoundEx("halflife/weapons/gausshit1","SoundSlot5")
-		HL0M D 0 A_CustomMissile("VortigauntShot",35,-20)
-		HL0M D 7 A_CustomMissile("VortigauntShot",35,20)
+		HL0M D 0 A_SpawnProjectile("VortigauntShot",35,-20)
+		HL0M D 7 A_SpawnProjectile("VortigauntShot",35,20)
 		HL0M CBA 4
 		Goto See
     Missiles:
 		HL0M ABC 4 A_FaceTarget
 		TNT1 A 0 A_FaceTarget
 		HL0M D 0 A_PlaySound("reilsss/weapons/ionecannonaltfire")
-		HL0M D 0 A_CustomMissile("ControllerFireball1",35,-20)
-		HL0M D 7 A_CustomMissile("ControllerFireball1",35,20)
+		HL0M D 0 A_SpawnProjectile("ControllerFireball1",35,-20)
+		HL0M D 7 A_SpawnProjectile("ControllerFireball1",35,20)
 		HL0M D 0 A_FaceTarget
 		HL0M D 0 A_PlaySound("reilsss/weapons/ionecannonaltfire")
-		HL0M D 0 A_CustomMissile("ControllerFireball1",35,-20)
-		HL0M D 7 A_CustomMissile("ControllerFireball1",35,20)
+		HL0M D 0 A_SpawnProjectile("ControllerFireball1",35,-20)
+		HL0M D 7 A_SpawnProjectile("ControllerFireball1",35,20)
 		TNT1 A 0 A_FaceTarget
 		HL0M D 0 A_PlaySound("reilsss/weapons/ionecannonaltfire")
-		HL0M D 0 A_CustomMissile("ControllerFireball1",35,-20)
-		HL0M D 7 A_CustomMissile("ControllerFireball1",35,20)
+		HL0M D 0 A_SpawnProjectile("ControllerFireball1",35,-20)
+		HL0M D 7 A_SpawnProjectile("ControllerFireball1",35,20)
 		HL0M D 0 A_FaceTarget
 		HL0M D 0 A_PlaySound("reilsss/weapons/ionecannonaltfire")
-		HL0M D 0 A_CustomMissile("ControllerFireball1",35,-20)
-		HL0M D 7 A_CustomMissile("ControllerFireball1",35,20)
+		HL0M D 0 A_SpawnProjectile("ControllerFireball1",35,-20)
+		HL0M D 7 A_SpawnProjectile("ControllerFireball1",35,20)
 		TNT1 A 0 A_FaceTarget
 		HL0M D 0 A_PlaySound("reilsss/weapons/ionecannonaltfire")
-		HL0M D 0 A_CustomMissile("ControllerFireball1",35,-20)
-		HL0M D 7 A_CustomMissile("ControllerFireball1",35,20)
+		HL0M D 0 A_SpawnProjectile("ControllerFireball1",35,-20)
+		HL0M D 7 A_SpawnProjectile("ControllerFireball1",35,20)
 		TNT1 A 0 A_FaceTarget
 		HL0M CBA 4
 		Goto See
@@ -5076,13 +5076,13 @@ Actor MiniGarg2 : MiniGarg		//fatso
     Loop1:
 		TNT1 A 0 A_SetUserVar("user_something",0)
 		TNT1 A 0 A_JumpIf(user_something>=360,"Loop2")
-		TNT1 A 0 A_CustomMissile("HoundEyeShockW1",0,0,user_something)
+		TNT1 A 0 A_SpawnProjectile("HoundEyeShockW1",0,0,user_something)
 		TNT1 A 0 A_SetUserVar("user_something",user_something+10)
 		Goto Loop1+1
     Loop2:
 		TNT1 A 0 A_SetUserVar("user_something",0)
 		TNT1 A 0 A_JumpIf(user_something>=360,"End")
-		TNT1 A 0 A_CustomMissile("HoundEyeShockW2",0,0,user_something)
+		TNT1 A 0 A_SpawnProjectile("HoundEyeShockW2",0,0,user_something)
 		TNT1 A 0 A_SetUserVar("user_something",user_something+10)
 		Goto Loop2+1
     End:
@@ -5191,7 +5191,7 @@ actor HLMiniBat 	//lost soul
 		Loop
     Missile:
 		HLSM ABC 3 A_FaceTarget
-		HLSM D 3 A_CustomMissile("HLMiniBatShot",10,0,random(-3,3))
+		HLSM D 3 A_SpawnProjectile("HLMiniBatShot",10,0,random(-3,3))
 		HLSM EF 3
 		Goto See
     Mele:

@@ -75,17 +75,17 @@ ACTOR HSBanshee	//7900	//revenant
     Missile1:
         BNSH F 10 A_FaceTarget
         BNSH E 0 A_PlaySound ("BansheeAttack")
-        BNSH E 4 BRIGHT A_CustomMissile("SuicideSoul", 32, 10, 0)
+        BNSH E 4 BRIGHT A_SpawnProjectile("SuicideSoul", 32, 10, 0)
         Goto See
     Missile2:
         BNSH F 10 A_FaceTarget
         BNSH E 0 A_PlaySound ("BansheeAttack")
-        BNSH E 4 BRIGHT A_CustomMissile("RevenantTracer", 32, 10, 0)
+        BNSH E 4 BRIGHT A_SpawnProjectile("RevenantTracer", 32, 10, 0)
         Goto See
     Missile3:
         BNSH F 10 A_FaceTarget
         BNSH E 0 A_PlaySound ("BansheeAttack")
-        BNSH E 4 BRIGHT A_CustomMissile("BansheeBomb", 32, 10, 0)
+        BNSH E 4 BRIGHT A_SpawnProjectile("BansheeBomb", 32, 10, 0)
         Goto See
     Pain:
         BNSH G 8 A_Pain
@@ -248,7 +248,7 @@ Actor BansheeBomb
 	Loop
     Death:
 	TNT1 A 0 A_Explode(32,64)
-	TNT1 AAAAAAAA 0 A_CustomMissile ("BansheeBombExtra", 0, 0, random(0,359))
+	TNT1 AAAAAAAA 0 A_SpawnProjectile ("BansheeBombExtra", 0, 0, random(0,359))
 	TNT1 A 0 A_SpawnItemEx("MonExplosionMediumSimple",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 	Stop
     }
@@ -378,7 +378,7 @@ ACTOR HSBanshee2 7901		//zombieman
     Missile:
         BNSH F 10 A_FaceTarget
         BNSH E 0 A_PlaySound ("BansheeAttack")
-        BNSH E 4 BRIGHT A_CustomMissile("HSBan2Dart", 32, 10, 0)
+        BNSH E 4 BRIGHT A_SpawnProjectile("HSBan2Dart", 32, 10, 0)
         Goto See
     Pain:
         BNSH G 8 A_Pain
@@ -524,7 +524,7 @@ ACTOR HSCaveDemon 7902		//baron
 	CDMN H 0 A_SetInvulnerable
 	CDMN H 0 A_GiveInventory("CDemonCharge",1)
 	CDMN H 0 A_JumpIfInventory("CDemonChargeLoop",12,"See")
-	CDMN H 0 A_CustomMissile("HellRootS2T1", 0, -16, 0)
+	CDMN H 0 A_SpawnProjectile("HellRootS2T1", 0, -16, 0)
 	CDMN H 0 A_FaceTarget
 	CDMN H 1 A_Recoil(-2)
 	CDMN H 0 A_JumpIf(momx==0,2)
@@ -549,7 +549,7 @@ ACTOR HSCaveDemon 7902		//baron
 	CDMN H 0 A_Jump(256,2)
 	CDMN H 0 A_JumpIf(momy==0,"See")
 	CDMN H 0 A_JumpIfCloser(70,"See")
-	CDMN I 0 A_CustomMissile("HellRootS2T1", 0, 16, 0)
+	CDMN I 0 A_SpawnProjectile("HellRootS2T1", 0, 16, 0)
 	CDMN I 0 A_FaceTarget
 	CDMN I 1 A_Recoil(-2)
 	CDMN I 0 A_JumpIf(momx==0,2)
@@ -580,7 +580,7 @@ ACTOR HSCaveDemon 7902		//baron
 	TNT1 A 0 A_playSound("GDemonSight")
 	CDMN E 4 A_FaceTarget
 	CDMN F 0 A_FaceTarget
-	CDMN F 3 A_CustomMissile("CaveDemonFireball",36,0,0)
+	CDMN F 3 A_SpawnProjectile("CaveDemonFireball",36,0,0)
 	CDMN A 0 A_CPosRefire
 	Goto Projectile+3
     Pain:
@@ -736,7 +736,7 @@ ACTOR HSCorpseWorm 	7903 	//lost soul
 	Loop
     Missile:
 	CWRM E 10 A_FaceTarget
-	CWRM EEE 8 BRIGHT A_CustomMissile("CorpseFX", 32, 0, 0)
+	CWRM EEE 8 BRIGHT A_SpawnProjectile("CorpseFX", 32, 0, 0)
 	Goto See
     Pain:
 	CWRM D 10 A_Pain
@@ -781,7 +781,7 @@ ACTOR CorpseFX
     {
     Spawn:
 	CWFX A 16
-	CWFX AA 4 //A_CustomMissile("Blood", 4, 0, 0)
+	CWFX AA 4 //A_SpawnProjectile("Blood", 4, 0, 0)
 	Goto Spawn+1
     Death:
 	BLUD ABC 5
@@ -867,7 +867,7 @@ ACTOR HSHeadHunter 7904		// chaingun guy
 	HHNT EFG 2 A_FaceTarget
 	HHNT EFG 1 A_FaceTarget
 	HHNT E 0 A_PlaySound("HeadHunterAttack")
-	HHNT EFG 1 A_CustomMissile("HeadHunterFX", 26, 0, 0)
+	HHNT EFG 1 A_SpawnProjectile("HeadHunterFX", 26, 0, 0)
 	HHNT EFG 1 A_FaceTarget
 	HHNT EFG 2 A_FaceTarget
 	HHNT EFG 3 A_FaceTarget
@@ -1007,11 +1007,11 @@ ACTOR HSHeadHunter2 7905	//Arachno
 	HHNT EFG 3 A_FaceTarget
 	HHNT EFG 2 A_FaceTarget
 	HHNT E 0 A_PlaySound("enforcer/shot")
-	TNT1 A 0 A_CustomMissile("TIMPLight",0,0,0)
+	TNT1 A 0 A_SpawnProjectile("TIMPLight",0,0,0)
 	HHNT E 2 A_CustomRailgun(random(1,4),0,none,"10 10 FF",4,5,1,"PlasmaPuffDMG", 1,1,0, 5,1.0,2.0)
-	TNT1 A 0 A_CustomMissile("TIMPLight",0,0,0)
+	TNT1 A 0 A_SpawnProjectile("TIMPLight",0,0,0)
 	HHNT F 2 A_CustomRailgun(random(1,4),0,none,"10 10 FF",4,5,1,"PlasmaPuffDMG", 1,1,0, 5,1.0,2.0)
-	TNT1 A 0 A_CustomMissile("TIMPLight",0,0,0)
+	TNT1 A 0 A_SpawnProjectile("TIMPLight",0,0,0)
 	HHNT G 2 A_CustomRailgun(random(1,4),0,none,"10 10 FF",4,5,1,"PlasmaPuffDMG", 1,1,0, 5,1.0,2.0)
 	TNT1 A 0 A_CPosRefire
 	Goto "Missile1"+9
@@ -1020,11 +1020,11 @@ ACTOR HSHeadHunter2 7905	//Arachno
 	HHNT EFG 3 A_FaceTarget
 	HHNT EFG 3 A_FaceTarget
 	HHNT E 0 A_PlaySound("weapons/d3plasma1")
-	HHNT E 3 A_CustomMissile("HSHHPlasma",32,0,0)
+	HHNT E 3 A_SpawnProjectile("HSHHPlasma",32,0,0)
 	HHNT E 0 A_PlaySound("weapons/d3plasma1")
-	HHNT F 3 A_CustomMissile("HSHHPlasma",32,0,0)
+	HHNT F 3 A_SpawnProjectile("HSHHPlasma",32,0,0)
 	HHNT E 0 A_PlaySound("weapons/d3plasma1")
-	HHNT G 3 A_CustomMissile("HSHHPlasma",32,0,0)
+	HHNT G 3 A_SpawnProjectile("HSHHPlasma",32,0,0)
 	TNT1 A 0 A_CPosRefire
 	Goto "Missile2"+9
     Pain:
@@ -1153,16 +1153,16 @@ ACTOR HSCyclop : Wraith	7906	//cacodemon
 	TNT1 A 0 A_Jump(128,"Missile2")
 	H1TH E 6 A_FaceTarget
 	H1TH F 6
-	H1TH G 3 A_CustomMissile("SPCyclopsBall", 32, 0)
-	H1TH G 3 A_CustomMissile("SPCyclopsBall", 32, 0)
-	H1TH G 3 A_CustomMissile("SPCyclopsBall", 32, 0)
+	H1TH G 3 A_SpawnProjectile("SPCyclopsBall", 32, 0)
+	H1TH G 3 A_SpawnProjectile("SPCyclopsBall", 32, 0)
+	H1TH G 3 A_SpawnProjectile("SPCyclopsBall", 32, 0)
 	Goto See
     Missile2:
 	H1TH E 6 A_FaceTarget
 	H1TH F 6
-	H1TH G 0 A_CustomMissile("SPCyclopsBall", 10, -15)
-	H1TH G 0 A_CustomMissile("SPCyclopsBall", 10, 15)
-	H1TH G 6 A_CustomMissile("SPCyclopsBall", 44, 0)
+	H1TH G 0 A_SpawnProjectile("SPCyclopsBall", 10, -15)
+	H1TH G 0 A_SpawnProjectile("SPCyclopsBall", 10, 15)
+	H1TH G 6 A_SpawnProjectile("SPCyclopsBall", 44, 0)
 	Goto See
     Death:
 	TNT1 A 0 A_ChangeFlag("FLOORCLIP",1)
@@ -1406,56 +1406,56 @@ ACTOR HSCyclop2 : Bishop 7907		//pain elemental
 	H2SH A 3 A_FaceTarget
 	H2SH DE 3 A_FaceTarget
 	TNT1 AAA 0 A_SpawnItemEx("HSCy2FX",0,0,36,random(0,2),random(-2,2),random(-2,2),0,0)
-	H2SH F 2 A_CustomMissile("HSCyclop2Shot",36,0,0)
+	H2SH F 2 A_SpawnProjectile("HSCyclop2Shot",36,0,0)
 	H2SH E 1 A_FaceTarget
 	TNT1 AAA 0 A_SpawnItemEx("HSCy2FX",0,0,36,random(0,2),random(-2,2),random(-2,2),0,0)
-	H2SH F 2 A_CustomMissile("HSCyclop2Shot",36,0,0)
+	H2SH F 2 A_SpawnProjectile("HSCyclop2Shot",36,0,0)
 	H2SH E 1 A_FaceTarget
 	TNT1 AAA 0 A_SpawnItemEx("HSCy2FX",0,0,36,random(0,2),random(-2,2),random(-2,2),0,0)
-	H2SH F 2 A_CustomMissile("HSCyclop2Shot",36,0,0)
+	H2SH F 2 A_SpawnProjectile("HSCyclop2Shot",36,0,0)
 	H2SH E 1 A_FaceTarget
 	TNT1 AAA 0 A_SpawnItemEx("HSCy2FX",0,0,36,random(0,2),random(-2,2),random(-2,2),0,0)
-	H2SH F 2 A_CustomMissile("HSCyclop2Shot",36,0,0)
+	H2SH F 2 A_SpawnProjectile("HSCyclop2Shot",36,0,0)
 	H2SH E 1 A_FaceTarget
 	TNT1 AAA 0 A_SpawnItemEx("HSCy2FX",0,0,36,random(0,2),random(-2,2),random(-2,2),0,0)
-	H2SH F 2 A_CustomMissile("HSCyclop2Shot",36,0,0)
+	H2SH F 2 A_SpawnProjectile("HSCyclop2Shot",36,0,0)
 	H2SH E 1 A_FaceTarget
 	TNT1 AAA 0 A_SpawnItemEx("HSCy2FX",0,0,36,random(0,2),random(-2,2),random(-2,2),0,0)
-	H2SH F 2 A_CustomMissile("HSCyclop2Shot",36,0,0)
+	H2SH F 2 A_SpawnProjectile("HSCyclop2Shot",36,0,0)
 	H2SH E 1 A_FaceTarget
 	TNT1 AAA 0 A_SpawnItemEx("HSCy2FX",0,0,36,random(0,2),random(-2,2),random(-2,2),0,0)
-	H2SH F 2 A_CustomMissile("HSCyclop2Shot",36,0,0)
+	H2SH F 2 A_SpawnProjectile("HSCyclop2Shot",36,0,0)
 	H2SH E 1 A_FaceTarget
 	TNT1 AAA 0 A_SpawnItemEx("HSCy2FX",0,0,36,random(0,2),random(-2,2),random(-2,2),0,0)
-	H2SH F 2 A_CustomMissile("HSCyclop2Shot",36,0,0)
+	H2SH F 2 A_SpawnProjectile("HSCyclop2Shot",36,0,0)
 	H2SH E 1 A_FaceTarget
 	Goto See
     Missile2:
 	H2SH A 3 A_FaceTarget
 	H2SH DE 3 A_FaceTarget
 	TNT1 AAA 0 A_SpawnItemEx("HSCy2FX",0,0,36,random(0,2),random(-2,2),random(-2,2),0,0)
-	H2SH FE 2 A_CustomMissile("HSCyclop2Shot2",36+random(10,-10),random(15,-15),0)
+	H2SH FE 2 A_SpawnProjectile("HSCyclop2Shot2",36+random(10,-10),random(15,-15),0)
 	TNT1 A 0 A_FaceTarget
 	TNT1 AAA 0 A_SpawnItemEx("HSCy2FX",0,0,36,random(0,2),random(-2,2),random(-2,2),0,0)
-	H2SH FE 2 A_CustomMissile("HSCyclop2Shot2",36+random(10,-10),random(15,-15),0)
+	H2SH FE 2 A_SpawnProjectile("HSCyclop2Shot2",36+random(10,-10),random(15,-15),0)
 	TNT1 A 0 A_FaceTarget
 	TNT1 AAA 0 A_SpawnItemEx("HSCy2FX",0,0,36,random(0,2),random(-2,2),random(-2,2),0,0)
-	H2SH FE 2 A_CustomMissile("HSCyclop2Shot2",36+random(10,-10),random(15,-15),0)
+	H2SH FE 2 A_SpawnProjectile("HSCyclop2Shot2",36+random(10,-10),random(15,-15),0)
 	TNT1 A 0 A_FaceTarget
 	TNT1 AAA 0 A_SpawnItemEx("HSCy2FX",0,0,36,random(0,2),random(-2,2),random(-2,2),0,0)
-	H2SH FE 2 A_CustomMissile("HSCyclop2Shot2",36+random(10,-10),random(15,-15),0)
+	H2SH FE 2 A_SpawnProjectile("HSCyclop2Shot2",36+random(10,-10),random(15,-15),0)
 	TNT1 A 0 A_FaceTarget
 	TNT1 AAA 0 A_SpawnItemEx("HSCy2FX",0,0,36,random(0,2),random(-2,2),random(-2,2),0,0)
-	H2SH FE 2 A_CustomMissile("HSCyclop2Shot2",36+random(10,-10),random(15,-15),0)
+	H2SH FE 2 A_SpawnProjectile("HSCyclop2Shot2",36+random(10,-10),random(15,-15),0)
 	TNT1 A 0 A_FaceTarget
 	TNT1 AAA 0 A_SpawnItemEx("HSCy2FX",0,0,36,random(0,2),random(-2,2),random(-2,2),0,0)
-	H2SH FE 2 A_CustomMissile("HSCyclop2Shot2",36+random(10,-10),random(15,-15),0)
+	H2SH FE 2 A_SpawnProjectile("HSCyclop2Shot2",36+random(10,-10),random(15,-15),0)
 	TNT1 A 0 A_FaceTarget
 	TNT1 AAA 0 A_SpawnItemEx("HSCy2FX",0,0,36,random(0,2),random(-2,2),random(-2,2),0,0)
-	H2SH FE 2 A_CustomMissile("HSCyclop2Shot2",36+random(10,-10),random(15,-15),0)
+	H2SH FE 2 A_SpawnProjectile("HSCyclop2Shot2",36+random(10,-10),random(15,-15),0)
 	TNT1 A 0 A_FaceTarget
 	TNT1 AAA 0 A_SpawnItemEx("HSCy2FX",0,0,36,random(0,2),random(-2,2),random(-2,2),0,0)
-	H2SH FE 2 A_CustomMissile("HSCyclop2Shot2",36+random(10,-10),random(15,-15),0)
+	H2SH FE 2 A_SpawnProjectile("HSCyclop2Shot2",36+random(10,-10),random(15,-15),0)
 	TNT1 A 0 A_FaceTarget
 	Goto See
     Death:
@@ -1663,61 +1663,61 @@ ACTOR HSCrawler	7908	//fatso
 	TNT1 A 0 A_Jump(255,"Missile1","Missile2","Missile3")
     Missile1:
 	H3TT E 20 A_FaceTarget
-	H3TT F 4 BRIGHT A_CustomMissile("HSCrawlerProj1",30,0,random(30,-30))
+	H3TT F 4 BRIGHT A_SpawnProjectile("HSCrawlerProj1",30,0,random(30,-30))
 	TNT1 A 0 A_FaceTarget
-	H3TT F 4 BRIGHT A_CustomMissile("HSCrawlerProj1",30,0,random(30,-30))
+	H3TT F 4 BRIGHT A_SpawnProjectile("HSCrawlerProj1",30,0,random(30,-30))
 	TNT1 A 0 A_FaceTarget
-	H3TT F 4 BRIGHT A_CustomMissile("HSCrawlerProj1",30,0,random(30,-30))
+	H3TT F 4 BRIGHT A_SpawnProjectile("HSCrawlerProj1",30,0,random(30,-30))
 	TNT1 A 0 A_FaceTarget
-	H3TT F 4 BRIGHT A_CustomMissile("HSCrawlerProj1",30,0,random(30,-30))
+	H3TT F 4 BRIGHT A_SpawnProjectile("HSCrawlerProj1",30,0,random(30,-30))
 	TNT1 A 0 A_FaceTarget
-	H3TT F 4 BRIGHT A_CustomMissile("HSCrawlerProj1",30,0,random(30,-30))
+	H3TT F 4 BRIGHT A_SpawnProjectile("HSCrawlerProj1",30,0,random(30,-30))
 	TNT1 A 0 A_FaceTarget
-	H3TT F 4 BRIGHT A_CustomMissile("HSCrawlerProj1",30,0,random(30,-30))
+	H3TT F 4 BRIGHT A_SpawnProjectile("HSCrawlerProj1",30,0,random(30,-30))
 	TNT1 A 0 A_FaceTarget
-	H3TT F 4 BRIGHT A_CustomMissile("HSCrawlerProj1",30,0,random(30,-30))
+	H3TT F 4 BRIGHT A_SpawnProjectile("HSCrawlerProj1",30,0,random(30,-30))
 	TNT1 A 0 A_FaceTarget
-	H3TT F 4 BRIGHT A_CustomMissile("HSCrawlerProj1",30,0,random(30,-30))
+	H3TT F 4 BRIGHT A_SpawnProjectile("HSCrawlerProj1",30,0,random(30,-30))
 	TNT1 A 0 A_FaceTarget
 	H3TT E 5
 	Goto See
     Missile2:
 	H3TT E 20 A_FaceTarget
-	H3TT F 2 BRIGHT A_CustomMissile("HSCrawlerProj2",30,0,random(30,-30))
+	H3TT F 2 BRIGHT A_SpawnProjectile("HSCrawlerProj2",30,0,random(30,-30))
 	TNT1 A 0 A_FaceTarget
-	H3TT F 2 BRIGHT A_CustomMissile("HSCrawlerProj2",30,0,random(30,-30))
+	H3TT F 2 BRIGHT A_SpawnProjectile("HSCrawlerProj2",30,0,random(30,-30))
 	TNT1 A 0 A_FaceTarget
-	H3TT F 2 BRIGHT A_CustomMissile("HSCrawlerProj2",30,0,random(30,-30))
+	H3TT F 2 BRIGHT A_SpawnProjectile("HSCrawlerProj2",30,0,random(30,-30))
 	TNT1 A 0 A_FaceTarget
-	H3TT F 2 BRIGHT A_CustomMissile("HSCrawlerProj2",30,0,random(30,-30))
+	H3TT F 2 BRIGHT A_SpawnProjectile("HSCrawlerProj2",30,0,random(30,-30))
 	TNT1 A 0 A_FaceTarget
-	H3TT F 2 BRIGHT A_CustomMissile("HSCrawlerProj2",30,0,random(30,-30))
+	H3TT F 2 BRIGHT A_SpawnProjectile("HSCrawlerProj2",30,0,random(30,-30))
 	TNT1 A 0 A_FaceTarget
-	H3TT F 2 BRIGHT A_CustomMissile("HSCrawlerProj2",30,0,random(30,-30))
+	H3TT F 2 BRIGHT A_SpawnProjectile("HSCrawlerProj2",30,0,random(30,-30))
 	TNT1 A 0 A_FaceTarget
-	H3TT F 2 BRIGHT A_CustomMissile("HSCrawlerProj2",30,0,random(30,-30))
+	H3TT F 2 BRIGHT A_SpawnProjectile("HSCrawlerProj2",30,0,random(30,-30))
 	TNT1 A 0 A_FaceTarget
-	H3TT F 2 BRIGHT A_CustomMissile("HSCrawlerProj2",30,0,random(30,-30))
+	H3TT F 2 BRIGHT A_SpawnProjectile("HSCrawlerProj2",30,0,random(30,-30))
 	TNT1 A 0 A_FaceTarget
 	H3TT E 5
 	Goto See
     Missile3:
 	H3TT E 20 A_FaceTarget
-	H3TT F 3 BRIGHT A_CustomMissile("HSCrawlerProj3",30,0,random(30,-30))
+	H3TT F 3 BRIGHT A_SpawnProjectile("HSCrawlerProj3",30,0,random(30,-30))
 	TNT1 A 0 A_FaceTarget
-	H3TT F 3 BRIGHT A_CustomMissile("HSCrawlerProj3",30,0,random(30,-30))
+	H3TT F 3 BRIGHT A_SpawnProjectile("HSCrawlerProj3",30,0,random(30,-30))
 	TNT1 A 0 A_FaceTarget
-	H3TT F 3 BRIGHT A_CustomMissile("HSCrawlerProj3",30,0,random(30,-30))
+	H3TT F 3 BRIGHT A_SpawnProjectile("HSCrawlerProj3",30,0,random(30,-30))
 	TNT1 A 0 A_FaceTarget
-	H3TT F 3 BRIGHT A_CustomMissile("HSCrawlerProj3",30,0,random(30,-30))
+	H3TT F 3 BRIGHT A_SpawnProjectile("HSCrawlerProj3",30,0,random(30,-30))
 	TNT1 A 0 A_FaceTarget
-	H3TT F 3 BRIGHT A_CustomMissile("HSCrawlerProj3",30,0,random(30,-30))
+	H3TT F 3 BRIGHT A_SpawnProjectile("HSCrawlerProj3",30,0,random(30,-30))
 	TNT1 A 0 A_FaceTarget
-	H3TT F 3 BRIGHT A_CustomMissile("HSCrawlerProj3",30,0,random(30,-30))
+	H3TT F 3 BRIGHT A_SpawnProjectile("HSCrawlerProj3",30,0,random(30,-30))
 	TNT1 A 0 A_FaceTarget
-	H3TT F 3 BRIGHT A_CustomMissile("HSCrawlerProj3",30,0,random(30,-30))
+	H3TT F 3 BRIGHT A_SpawnProjectile("HSCrawlerProj3",30,0,random(30,-30))
 	TNT1 A 0 A_FaceTarget
-	H3TT F 3 BRIGHT A_CustomMissile("HSCrawlerProj3",30,0,random(30,-30))
+	H3TT F 3 BRIGHT A_SpawnProjectile("HSCrawlerProj3",30,0,random(30,-30))
 	TNT1 A 0 A_FaceTarget
 	H3TT E 5
 	Goto See
@@ -1918,36 +1918,36 @@ ACTOR HSTeslaImp	7909	//hellkinght
 	TNT1 A 0 A_Jump(95,"Missile2")
         TIMP F 8 A_FaceTarget
         TIMP GHGH 3 A_FaceTarget
-	TNT1 A 0 A_CustomMissile("TIMPLight",32,0,0)
+	TNT1 A 0 A_SpawnProjectile("TIMPLight",32,0,0)
         TIMP G 3 BRIGHT A_CustomRailgun(random(10,90),0,"Blue","Yellow",0,5|RGF_FULLBRIGHT,1,"BulletDamagePuff", 0,0,0, 50,1.1,1.0)
         Goto See
     Missile2:
 	TNT1 A 0 A_PlaySound("weapons/sigilcharge")
         TIMP F 8 A_FaceTarget
         TIMP GHGH 3 A_FaceTarget
-	TNT1 A 0 A_CustomMissile("TIMPLight",32,0,0)
+	TNT1 A 0 A_SpawnProjectile("TIMPLight",32,0,0)
 	TIMP G 0 A_FaceTarget
 	TNT1 A 0 A_PlaySound("reilsss/weapons/lasergunfire")
         TIMP G 4 BRIGHT A_CustomRailgun(random(1,16),0,none,"FF 00 00",1,1,1,"PlasmaPuffDMG", 0,0,0, 12,1.1,2.0)
-	TNT1 A 0 A_CustomMissile("TIMPLight",32,0,0)
+	TNT1 A 0 A_SpawnProjectile("TIMPLight",32,0,0)
 	TNT1 A 0 A_PlaySound("reilsss/weapons/lasergunfire")
         TIMP G 4 BRIGHT A_CustomRailgun(random(1,16),0,none,"FF 00 00",1,1,1,"PlasmaPuffDMG", 0,0,0, 12,1.1,2.0)
-	TNT1 A 0 A_CustomMissile("TIMPLight",32,0,0)
+	TNT1 A 0 A_SpawnProjectile("TIMPLight",32,0,0)
 	TNT1 A 0 A_PlaySound("reilsss/weapons/lasergunfire")
         TIMP G 4 BRIGHT A_CustomRailgun(random(1,16),0,none,"FF 00 00",1,1,1,"PlasmaPuffDMG", 0,0,0, 12,1.1,2.0)
-	TNT1 A 0 A_CustomMissile("TIMPLight",32,0,0)
+	TNT1 A 0 A_SpawnProjectile("TIMPLight",32,0,0)
 	TNT1 A 0 A_PlaySound("reilsss/weapons/lasergunfire")
         TIMP G 4 BRIGHT A_CustomRailgun(random(1,16),0,none,"FF 00 00",1,1,1,"PlasmaPuffDMG", 0,0,0, 12,1.1,2.0)
-	TNT1 A 0 A_CustomMissile("TIMPLight",32,0,0)
+	TNT1 A 0 A_SpawnProjectile("TIMPLight",32,0,0)
 	TNT1 A 0 A_PlaySound("reilsss/weapons/lasergunfire")
         TIMP G 4 BRIGHT A_CustomRailgun(random(1,16),0,none,"FF 00 00",1,1,1,"PlasmaPuffDMG", 0,0,0, 12,1.1,2.0)
-	TNT1 A 0 A_CustomMissile("TIMPLight",32,0,0)
+	TNT1 A 0 A_SpawnProjectile("TIMPLight",32,0,0)
 	TNT1 A 0 A_PlaySound("reilsss/weapons/lasergunfire")
         TIMP G 4 BRIGHT A_CustomRailgun(random(1,16),0,none,"FF 00 00",1,1,1,"PlasmaPuffDMG", 0,0,0, 12,1.1,2.0)
-	TNT1 A 0 A_CustomMissile("TIMPLight",32,0,0)
+	TNT1 A 0 A_SpawnProjectile("TIMPLight",32,0,0)
 	TNT1 A 0 A_PlaySound("reilsss/weapons/lasergunfire")
         TIMP G 4 BRIGHT A_CustomRailgun(random(1,16),0,none,"FF 00 00",1,1,1,"PlasmaPuffDMG", 0,0,0, 12,1.1,2.0)
-	TNT1 A 0 A_CustomMissile("TIMPLight",32,0,0)
+	TNT1 A 0 A_SpawnProjectile("TIMPLight",32,0,0)
 	TNT1 A 0 A_PlaySound("reilsss/weapons/lasergunfire")
         TIMP G 4 BRIGHT A_CustomRailgun(random(1,16),0,none,"FF 00 00",1,1,1,"PlasmaPuffDMG", 0,0,0, 12,1.1,2.0)
         Goto See
@@ -2086,12 +2086,12 @@ ACTOR HSScorpionMinion 	7910	// shotgun guy
         SCR5 A 10 A_FaceTarget
         SCR5 G 5 A_FaceTarget
         SCR5 G 0 A_PlaySound("Tesla2Launch")
-        SCR5 F 1 BRIGHT A_CustomMissile("LaserFX", 32, 0, 0)
-        SCR5 F 1 BRIGHT A_CustomMissile("LaserFX2", 32, 0, 0)
-        SCR5 F 1 BRIGHT A_CustomMissile("LaserFX2", 32, 0, 0)
-        SCR5 F 1 BRIGHT A_CustomMissile("LaserFX2", 32, 0, 0)
-        SCR5 F 1 BRIGHT A_CustomMissile("LaserFX2", 32, 0, 0)
-        SCR5 F 1 BRIGHT A_CustomMissile("LaserFX2", 32, 0, 0)
+        SCR5 F 1 BRIGHT A_SpawnProjectile("LaserFX", 32, 0, 0)
+        SCR5 F 1 BRIGHT A_SpawnProjectile("LaserFX2", 32, 0, 0)
+        SCR5 F 1 BRIGHT A_SpawnProjectile("LaserFX2", 32, 0, 0)
+        SCR5 F 1 BRIGHT A_SpawnProjectile("LaserFX2", 32, 0, 0)
+        SCR5 F 1 BRIGHT A_SpawnProjectile("LaserFX2", 32, 0, 0)
+        SCR5 F 1 BRIGHT A_SpawnProjectile("LaserFX2", 32, 0, 0)
         SCR5 G 4 A_CPosRefire
         Goto Missile+1
     Pain:
@@ -2244,20 +2244,20 @@ ACTOR HSScorpionMinion2 7911		//arachno
         SCR5 A 10 A_FaceTarget
         SCR5 G 1 A_FaceTarget
         SCR5 G 0 A_PlaySound("Tesla2Launch")
-        SCR5 F 3 BRIGHT A_CustomMissile("HSSMMissile1", 46, 0, 0)
-        SCR5 F 3 BRIGHT A_CustomMissile("HSSMMissile1", 46, 0, 0)
-        SCR5 F 3 BRIGHT A_CustomMissile("HSSMMissile1", 46, 0, 0)
-        SCR5 F 3 BRIGHT A_CustomMissile("HSSMMissile1", 46, 0, 0)
-        SCR5 F 3 BRIGHT A_CustomMissile("HSSMMissile1", 46, 0, 0)
-        SCR5 F 3 BRIGHT A_CustomMissile("HSSMMissile1", 46, 0, 0)
+        SCR5 F 3 BRIGHT A_SpawnProjectile("HSSMMissile1", 46, 0, 0)
+        SCR5 F 3 BRIGHT A_SpawnProjectile("HSSMMissile1", 46, 0, 0)
+        SCR5 F 3 BRIGHT A_SpawnProjectile("HSSMMissile1", 46, 0, 0)
+        SCR5 F 3 BRIGHT A_SpawnProjectile("HSSMMissile1", 46, 0, 0)
+        SCR5 F 3 BRIGHT A_SpawnProjectile("HSSMMissile1", 46, 0, 0)
+        SCR5 F 3 BRIGHT A_SpawnProjectile("HSSMMissile1", 46, 0, 0)
         SCR5 G 4 A_CPosRefire
         Goto Missile+2
     Missile2:
         SCR5 A 10 A_FaceTarget
         SCR5 G 5 A_FaceTarget
-        SCR5 F 5 BRIGHT A_CustomMissile("ZombieRocket", 46, 0, 0)
+        SCR5 F 5 BRIGHT A_SpawnProjectile("ZombieRocket", 46, 0, 0)
         SCR5 G 5 A_FaceTarget
-        SCR5 F 5 BRIGHT A_CustomMissile("ZombieRocket", 46, 0, 0)
+        SCR5 F 5 BRIGHT A_SpawnProjectile("ZombieRocket", 46, 0, 0)
         SCR5 G 14
 	Goto See
     Pain:
@@ -2413,32 +2413,32 @@ ACTOR HSFormerBerserker 7912		//cyberdemon
     Vulcan:
 	FBER A 1 A_FaceTarget
 	FBER I 0 A_PlaySound ("human/minigun")
-	FBER I 1 BRIGHT A_CustomMissile("VulcanBullet", 56, 33, 0)
-	FBER I 1 A_CustomMissile("ShotSmoke",56, 33,5+Random(30,-30))
+	FBER I 1 BRIGHT A_SpawnProjectile("VulcanBullet", 56, 33, 0)
+	FBER I 1 A_SpawnProjectile("ShotSmoke",56, 33,5+Random(30,-30))
 	FBER I 0 A_PlaySound ("human/minigun")
-	FBER J 1 BRIGHT A_CustomMissile("VulcanBullet", 41, 41, 0)
-	FBER J 1 A_CustomMissile("ShotSmoke",41, 41,5+Random(30,-30))
+	FBER J 1 BRIGHT A_SpawnProjectile("VulcanBullet", 41, 41, 0)
+	FBER J 1 A_SpawnProjectile("ShotSmoke",41, 41,5+Random(30,-30))
 	FBER I 0 A_PlaySound ("human/minigun")
-	FBER K 1 BRIGHT A_CustomMissile("VulcanBullet", 41, 24, 0)
-	FBER K 1 A_CustomMissile("ShotSmoke",41, 24,5+Random(30,-30))
+	FBER K 1 BRIGHT A_SpawnProjectile("VulcanBullet", 41, 24, 0)
+	FBER K 1 A_SpawnProjectile("ShotSmoke",41, 24,5+Random(30,-30))
 	FBER I 0 A_CPosRefire
 	Goto Missile+3
     Grenade:
 	FBER A 3
 	FBER G 4 A_FaceTarget
 	FBER H 0 A_PlaySound ("weapons/grenadelaunch")
-	FBER H 4 BRIGHT A_CustomMissile("BerGrenade", 48, 2, 0)
+	FBER H 4 BRIGHT A_SpawnProjectile("BerGrenade", 48, 2, 0)
 	FBER G 4
 	Goto See
     SwarmRocket:
 	FBER AL 4 A_FaceTarget
-	FBER M 8 BRIGHT A_CustomMissile("SwarmRocket", 104, -37, 0)
+	FBER M 8 BRIGHT A_SpawnProjectile("SwarmRocket", 104, -37, 0)
 	FBER LA 4 A_FaceTarget
 	Goto See
     Morser:
 	FBER L 3 A_PlaySound("reilsss/weapons/morserlauncherfire", CHAN_AUTO, 1.0, 0)
 	TNT1 a 0 A_FaceTarget
-	FBER M 8 BRIGHT A_CustomMissile("MorserRocketMon",104, -37, 0)
+	FBER M 8 BRIGHT A_SpawnProjectile("MorserRocketMon",104, -37, 0)
 	FBER L 4 A_FaceTarget
 	FBER A 7 A_FaceTarget
         FBER AAAAA 5 A_FaceTarget
@@ -2450,7 +2450,7 @@ ACTOR HSFormerBerserker 7912		//cyberdemon
 	FBER F 0 A_Jump(64, 2)
 	FBER F 0
 	Goto See
-	FBER F 16 A_CustomMissile("BerserkerFlag", 0, 0, 0)
+	FBER F 16 A_SpawnProjectile("BerserkerFlag", 0, 0, 0)
 	Goto See
     Death:
 	FBER N 6 BRIGHT A_SpawnItemEx("BossDeathExplosion",random(0,30),0,random(0,90),0,0,0,random(0,359),SXF_NOCHECKPOSITION)  
@@ -2499,7 +2499,7 @@ Death:
 	TNT1 A 0 A_SpawnItemEx("MonExplosionMedium",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
 	TNT1 A 0 Bright A_Explode(125,64,1)
 	TNT1 AAAAAAAAA 0 A_SpawnItemEx("MorserSwarm",0,0,0,random(-2,2),random(-2,2),random(5,15),random(0,359),SXF_NOCHECKPOSITION)
-	TNT1 A 0 A_CustomMissile("ExpQuakeSmall",0,0,0)
+	TNT1 A 0 A_SpawnProjectile("ExpQuakeSmall",0,0,0)
 	TNT1 A 0
 	Stop
 }
@@ -2570,12 +2570,12 @@ ACTOR SwarmDummy
 	Loop
     See:
 	SWRM A 0 A_PlaySound ("SwarmLaunch2")
-	SWRM A 1 BRIGHT A_CustomMissile("SwarmMissile", 0, 8, -90)
-	SWRM A 1 BRIGHT A_CustomMissile("SwarmMissile", 0, -8, 90)  
-	SWRM A 1 BRIGHT A_CustomMissile("SwarmMissile", 8, 16, -80)  
-	SWRM A 1 BRIGHT A_CustomMissile("SwarmMissile", 8, -16, 80)  
-	SWRM A 1 BRIGHT A_CustomMissile("SwarmMissile", 16, 8, -70)  
-	SWRM A 1 BRIGHT A_CustomMissile("SwarmMissile", 16, -8, 70)  
+	SWRM A 1 BRIGHT A_SpawnProjectile("SwarmMissile", 0, 8, -90)
+	SWRM A 1 BRIGHT A_SpawnProjectile("SwarmMissile", 0, -8, 90)  
+	SWRM A 1 BRIGHT A_SpawnProjectile("SwarmMissile", 8, 16, -80)  
+	SWRM A 1 BRIGHT A_SpawnProjectile("SwarmMissile", 8, -16, 80)  
+	SWRM A 1 BRIGHT A_SpawnProjectile("SwarmMissile", 16, 8, -70)  
+	SWRM A 1 BRIGHT A_SpawnProjectile("SwarmMissile", 16, -8, 70)  
 	SWRM A 999
 	Stop
     }
@@ -2595,12 +2595,12 @@ ACTOR SwarmRocket
     States
     {
     Spawn:
-	SWRM ABABA 2 A_CustomMissile ("Vapor", 0, 0, 0)
-	SWRM BABAB 2 A_CustomMissile ("Vapor", 0, 0, 0)
-	SWRM ABABA 2 A_CustomMissile ("Vapor", 0, 0, 0)
-	SWRM BAB 2 A_CustomMissile ("Vapor", 0, 0, 0)
-	SWRM A 2 BRIGHT A_CustomMissile("SwarmDummy", 0, 0, 0)  
-	SWR3 AB 2 A_CustomMissile ("Vapor", 0, 0, 0)
+	SWRM ABABA 2 A_SpawnProjectile ("Vapor", 0, 0, 0)
+	SWRM BABAB 2 A_SpawnProjectile ("Vapor", 0, 0, 0)
+	SWRM ABABA 2 A_SpawnProjectile ("Vapor", 0, 0, 0)
+	SWRM BAB 2 A_SpawnProjectile ("Vapor", 0, 0, 0)
+	SWRM A 2 BRIGHT A_SpawnProjectile("SwarmDummy", 0, 0, 0)  
+	SWR3 AB 2 A_SpawnProjectile ("Vapor", 0, 0, 0)
 	Goto Spawn+19
     Death:
 	TNT1 A 0 A_Explode(256,128)
@@ -2627,9 +2627,9 @@ ACTOR SwarmMissile
     {
     Spawn:
 	SWR2 A 0 A_PlaySound ("SwarmLaunch2")
-	SWR2 ABAB 1 A_CustomMissile ("Vapor", 0, 0, 0)
+	SWR2 ABAB 1 A_SpawnProjectile ("Vapor", 0, 0, 0)
 	SWR2 B 0 A_SeekerMissile (20, 30)
-	SWR2 ABAB 1 A_CustomMissile ("Vapor", 0, 0, 0)
+	SWR2 ABAB 1 A_SpawnProjectile ("Vapor", 0, 0, 0)
 	Goto Spawn+1
     Death:
 	TNT1 A 0 A_Explode
@@ -2659,17 +2659,17 @@ ACTOR BerGrenade
 	Loop
     Death:
 	TNT1 A 0 A_Explode(128,256)
-	TNT1 A 0 A_CustomMissile("ExploSmokeGeneral",0,0,0)
-	BBOM A 4 BRIGHT A_CustomMissile("MonExplosionMedium", 4, 0, 0)  
+	TNT1 A 0 A_SpawnProjectile("ExploSmokeGeneral",0,0,0)
+	BBOM A 4 BRIGHT A_SpawnProjectile("MonExplosionMedium", 4, 0, 0)  
 	PUFF A 4 A_Jump(128, 3)
 	TNT1 A 0 A_Explode(80,128)
-	BBOM A 4 BRIGHT A_CustomMissile("MonExplosionMedium", 16, -16, 0)  
+	BBOM A 4 BRIGHT A_SpawnProjectile("MonExplosionMedium", 16, -16, 0)  
 	PUFF A 4 A_Jump(128, 3)
 	TNT1 A 0 A_Explode(80,128)
-	BBOM A 4 BRIGHT A_CustomMissile("MonExplosionMedium", 16, 16, 0)  
+	BBOM A 4 BRIGHT A_SpawnProjectile("MonExplosionMedium", 16, 16, 0)  
 	PUFF A 4 A_Jump(128, 3)
 	TNT1 A 0 A_Explode(80,128)
-	BBOM A 4 BRIGHT A_CustomMissile("MonExplosionMedium", 12, 0, 0)  
+	BBOM A 4 BRIGHT A_SpawnProjectile("MonExplosionMedium", 12, 0, 0)  
 	BBOM A 1
 	Stop
     }
@@ -2790,242 +2790,242 @@ ACTOR HSHammerHound	//7913	//spider master
     Missile:
         HHND A 0
         Goto Missile+3
-        HHND A 0 A_CustomMissile("HHBlastingCap", 0, 48, 0)
-        HHND A 16 A_CustomMissile("HHBlastingCap", 0, -48, 0)
+        HHND A 0 A_SpawnProjectile("HHBlastingCap", 0, 48, 0)
+        HHND A 16 A_SpawnProjectile("HHBlastingCap", 0, -48, 0)
         Goto See+12
         HHND A 0 A_Jump (144, 8)
         HHND APQ 4 A_FaceTarget
-        HHND R 0 A_CustomMissile("HHTorp", 0, 48, 250)
-        HHND R 0 A_CustomMissile("HHTorp", 0, -48, 110)
-        HHND R 0 A_CustomMissile("HHTorp", 0, -48, 20)
-        HHND R 16 A_CustomMissile("HHTorp", 0, 48, -20)
+        HHND R 0 A_SpawnProjectile("HHTorp", 0, 48, 250)
+        HHND R 0 A_SpawnProjectile("HHTorp", 0, -48, 110)
+        HHND R 0 A_SpawnProjectile("HHTorp", 0, -48, 20)
+        HHND R 16 A_SpawnProjectile("HHTorp", 0, 48, -20)
         Goto See+1
         HHND C 4 A_FaceTarget
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 0)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 10)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 20)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 30)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 40)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 50)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 60)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 70)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 80)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 90)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 100)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 110)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 120)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 130)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 140)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 150)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 160)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 180)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 190)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 200)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 210)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 220)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 230)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 240)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 250)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 260)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 270)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 280)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 290)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 300)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 310)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 320)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 330)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 340)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 350)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 0)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 10)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 20)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 30)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 40)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 50)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 60)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 70)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 80)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 90)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 100)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 110)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 120)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 130)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 140)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 150)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 160)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 180)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 190)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 200)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 210)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 220)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 230)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 240)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 250)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 260)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 270)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 280)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 290)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 300)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 310)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 320)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 330)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 340)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 350)
         HHND E 0 A_PlaySound ("hammerhound/attack")
         HHND B 8 A_MissileAttack
         HHND C 4 A_FaceTarget
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 0)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 10)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 20)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 30)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 40)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 50)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 60)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 70)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 80)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 90)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 100)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 110)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 120)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 130)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 140)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 150)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 160)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 180)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 190)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 200)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 210)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 220)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 230)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 240)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 250)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 260)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 270)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 280)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 290)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 300)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 310)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 320)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 330)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 340)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 350)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 0)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 10)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 20)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 30)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 40)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 50)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 60)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 70)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 80)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 90)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 100)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 110)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 120)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 130)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 140)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 150)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 160)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 180)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 190)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 200)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 210)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 220)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 230)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 240)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 250)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 260)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 270)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 280)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 290)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 300)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 310)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 320)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 330)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 340)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 350)
         HHND E 0 A_PlaySound ("hammerhound/attack")
         HHND D 16 A_MissileAttack
         HHND C 4 A_FaceTarget
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 0)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 10)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 20)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 30)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 40)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 50)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 60)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 70)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 80)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 90)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 100)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 110)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 120)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 130)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 140)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 150)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 160)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 180)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 190)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 200)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 210)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 220)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 230)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 240)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 250)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 260)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 270)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 280)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 290)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 300)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 310)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 320)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 330)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 340)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 350)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 0)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 10)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 20)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 30)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 40)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 50)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 60)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 70)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 80)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 90)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 100)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 110)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 120)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 130)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 140)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 150)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 160)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 180)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 190)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 200)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 210)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 220)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 230)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 240)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 250)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 260)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 270)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 280)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 290)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 300)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 310)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 320)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 330)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 340)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 350)
         HHND E 0 A_PlaySound ("hammerhound/attack")
         HHND B 16 A_MissileAttack
         HHND C 4 A_FaceTarget
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 0)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 10)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 20)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 30)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 40)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 50)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 60)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 70)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 80)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 90)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 100)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 110)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 120)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 130)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 140)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 150)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 160)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 180)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 190)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 200)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 210)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 220)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 230)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 240)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 250)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 260)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 270)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 280)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 290)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 300)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 310)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 320)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 330)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 340)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 350)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 0)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 10)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 20)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 30)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 40)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 50)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 60)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 70)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 80)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 90)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 100)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 110)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 120)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 130)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 140)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 150)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 160)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 180)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 190)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 200)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 210)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 220)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 230)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 240)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 250)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 260)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 270)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 280)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 290)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 300)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 310)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 320)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 330)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 340)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 350)
         HHND E 0 A_PlaySound ("hammerhound/attack")
         HHND D 16 A_MissileAttack
         HHND C 4 A_FaceTarget
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 0)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 10)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 20)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 30)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 40)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 50)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 60)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 70)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 80)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 90)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 100)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 110)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 120)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 130)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 140)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 150)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 160)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 180)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 190)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 200)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 210)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 220)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 230)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 240)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 250)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 260)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 270)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 280)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 290)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 300)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 310)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 320)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 330)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 340)
-        HHND B 0 A_CustomMissile("HHShock", 0, -48, 350)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 0)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 10)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 20)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 30)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 40)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 50)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 60)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 70)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 80)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 90)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 100)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 110)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 120)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 130)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 140)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 150)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 160)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 180)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 190)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 200)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 210)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 220)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 230)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 240)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 250)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 260)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 270)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 280)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 290)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 300)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 310)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 320)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 330)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 340)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, -48, 350)
         HHND E 0 A_PlaySound ("hammerhound/attack")
         HHND B 16 A_MissileAttack
         HHND C 4 A_FaceTarget
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 0)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 10)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 20)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 30)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 40)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 50)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 60)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 70)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 80)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 90)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 100)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 110)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 120)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 130)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 140)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 150)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 160)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 180)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 190)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 200)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 210)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 220)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 230)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 240)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 250)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 260)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 270)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 280)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 290)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 300)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 310)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 320)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 330)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 340)
-        HHND B 0 A_CustomMissile("HHShock", 0, 48, 350)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 0)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 10)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 20)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 30)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 40)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 50)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 60)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 70)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 80)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 90)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 100)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 110)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 120)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 130)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 140)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 150)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 160)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 180)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 190)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 200)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 210)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 220)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 230)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 240)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 250)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 260)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 270)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 280)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 290)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 300)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 310)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 320)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 330)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 340)
+        HHND B 0 A_SpawnProjectile("HHShock", 0, 48, 350)
         HHND E 0 A_PlaySound ("hammerhound/attack")
         HHND D 16 A_MissileAttack
         Goto See+1
@@ -3034,9 +3034,9 @@ ACTOR HSHammerHound	//7913	//spider master
         HHND I 0 A_Jump(80, 3)
         HHND JI 6
         Goto See+1
-        HHND J 0 A_CustomMissile ("HHOrbitRockSpawn", 32, 0, -180)
-        HHND J 0 A_CustomMissile ("HHOrbitRockSpawn", 32, 0, -60)
-        HHND J 6 A_CustomMissile ("HHOrbitRockSpawn", 32, 0, 60)
+        HHND J 0 A_SpawnProjectile ("HHOrbitRockSpawn", 32, 0, -180)
+        HHND J 0 A_SpawnProjectile ("HHOrbitRockSpawn", 32, 0, -60)
+        HHND J 6 A_SpawnProjectile ("HHOrbitRockSpawn", 32, 0, 60)
         HHND I 6
         Goto See+1
     Death.UnholyDisint:
@@ -3054,17 +3054,17 @@ ACTOR HSHammerHound	//7913	//spider master
         HHND I 5
         HHND J 5 A_Scream
 	TNT1 A 0 A_SpawnItemEx("ExploSmokeGeneral",0,0,10,0,0,0,0,SXF_NOCHECKPOSITION)
-        HHND K 2 A_CustomMissile("Boomy", 64, 0, 0)  
-        HHND K 3 A_CustomMissile("HHHead", 64, 0, -45)  
-        HHND LLL 2 A_CustomMissile("HHBlood", 48, 0, -40)  
+        HHND K 2 A_SpawnProjectile("Boomy", 64, 0, 0)  
+        HHND K 3 A_SpawnProjectile("HHHead", 64, 0, -45)  
+        HHND LLL 2 A_SpawnProjectile("HHBlood", 48, 0, -40)  
 	TNT1 A 0 A_SpawnItemEx("ExploSmokeGeneral",0,0,10,0,0,0,0,SXF_NOCHECKPOSITION)
-        HHND L 0 A_CustomMissile("Boomy", 48, -32, 0)  
-        HHND MMM 2 A_CustomMissile("HHBlood", 48, 0, -50)  
+        HHND L 0 A_SpawnProjectile("Boomy", 48, -32, 0)  
+        HHND MMM 2 A_SpawnProjectile("HHBlood", 48, 0, -50)  
 	TNT1 A 0 A_SpawnItemEx("ExploSmokeGeneral",0,0,10,0,0,0,0,SXF_NOCHECKPOSITION)
-        HHND M 0 A_CustomMissile("Boomy", 16, 32, 0)  
-        HHND NN 2 A_CustomMissile("HHBlood", 48, 0, -60)  
+        HHND M 0 A_SpawnProjectile("Boomy", 16, 32, 0)  
+        HHND NN 2 A_SpawnProjectile("HHBlood", 48, 0, -60)  
 	TNT1 A 0 A_SpawnItemEx("ExploSmokeGeneral",0,0,10,0,0,0,0,SXF_NOCHECKPOSITION)
-        HHND M 0 A_CustomMissile("Boomy", 8, -64, 0)  
+        HHND M 0 A_SpawnProjectile("Boomy", 8, -64, 0)  
         HHND N 2 A_NoBlocking
 		"####" "#" 0 A_QueueCorpse
 		"####" "#" 0 A_ChangeFlag("CORPSE",1)
@@ -3192,15 +3192,15 @@ ACTOR HHTorp
     Spawn:
 	HTRP ABC 3
 	HTRP A 0 A_PlaySound("hammerhound/torpedo")
-	HTRP AAA 1 A_CustomMissile("HHTorpFX", 0, 0, 0)
-	HTRP BBB 1 A_CustomMissile("HHTorpFX", 0, 0, 0)
-	HTRP CCC 1 A_CustomMissile("HHTorpFX", 0, 0, 0)
+	HTRP AAA 1 A_SpawnProjectile("HHTorpFX", 0, 0, 0)
+	HTRP BBB 1 A_SpawnProjectile("HHTorpFX", 0, 0, 0)
+	HTRP CCC 1 A_SpawnProjectile("HHTorpFX", 0, 0, 0)
 	HTRP A 0 A_SeekerMissile (10, 20)
-	HTRP A 0 A_CustomMissile("HHTorpFX", 0, 0, 0)
+	HTRP A 0 A_SpawnProjectile("HHTorpFX", 0, 0, 0)
 	Goto Spawn+3
     Death:
 	HTRP A 4 
-	TNT1 A 0 A_CustomMissile("ExploSmokeGeneral",0,0,0)
+	TNT1 A 0 A_SpawnProjectile("ExploSmokeGeneral",0,0,0)
 	HTRP Z 4 A_SpawnItemEx("MonExplosionMedium", 0, 0, 0,0,0,0,0,SXF_NOCHECKPOSITION)
 	Stop
     }
@@ -3242,11 +3242,11 @@ ACTOR HHHead
     {
     Spawn:
 	"####" "#" 0 A_QueueCorpse
-	HHED A 3 A_CustomMissile("HHBlood", 4, 0, 135)  
-	HHED B 3 A_CustomMissile("HHBlood", 4, 0, 45)  
-	HHED C 3 A_CustomMissile("HHBlood", 4, 0, 315)  
-	HHED D 3 A_CustomMissile("HHBlood", 4, 0, 225)  
-	HHED E 3 A_CustomMissile("HHBlood", 4, 0, 180)  
+	HHED A 3 A_SpawnProjectile("HHBlood", 4, 0, 135)  
+	HHED B 3 A_SpawnProjectile("HHBlood", 4, 0, 45)  
+	HHED C 3 A_SpawnProjectile("HHBlood", 4, 0, 315)  
+	HHED D 3 A_SpawnProjectile("HHBlood", 4, 0, 225)  
+	HHED E 3 A_SpawnProjectile("HHBlood", 4, 0, 180)  
 	Loop
     Death:
 	HHED E 1 
@@ -3308,7 +3308,7 @@ ACTOR HHBlastingCap
     Melee:
 	HBCP A 0 //A_Die
     Death:
-	HBCP A 0 A_CustomMissile("HHBoom", 0, 0, 0)
+	HBCP A 0 A_SpawnProjectile("HHBoom", 0, 0, 0)
 	HBCP Z 999
 	Stop
     }
@@ -3352,7 +3352,7 @@ actor HHOrbitRockSpawn
     {
     Spawn:
 	HHRB A 24
-	HHRB A 0 A_CustomMissile("HHOrbitRock", 0, 0, 75)
+	HHRB A 0 A_SpawnProjectile("HHOrbitRock", 0, 0, 75)
 	Stop
     }
 }
@@ -3371,9 +3371,9 @@ actor HHOrbitRock
     Spawn:
 	HHRB A 16
 	HHRB A 0 A_Jump(24, 2)
-	HHRB A 0 A_CustomMissile("HHOrbitRock", 0, 0, 75)
+	HHRB A 0 A_SpawnProjectile("HHOrbitRock", 0, 0, 75)
 	Stop
-	HHRB A 0 A_CustomMissile("HHOrbitRockDummy", 0, 0, 0)
+	HHRB A 0 A_SpawnProjectile("HHOrbitRockDummy", 0, 0, 0)
 	HHRB Z 999
 	Stop
     }
@@ -3400,7 +3400,7 @@ ACTOR HHOrbitRockDummy
 	HHRB AA 1 A_Look
 	Loop
     See:
-	HHRB A 1 A_CustomMissile("HHRock2", 0, 0, 0)
+	HHRB A 1 A_SpawnProjectile("HHRock2", 0, 0, 0)
 	HHRB A 999
 	Stop
     }
@@ -3427,13 +3427,13 @@ ACTOR HHRock2
     Death:
 	HHRB A 3
 	HHRB B 3 A_Explode
-	HHPF A 0 A_CustomMissile("HHRock3", 4, 0, -55)
-	HHPF A 2 A_CustomMissile("HHRock3", 4, 0, 40)
-	HHPF B 0 A_CustomMissile("HHRock3", 4, 0, -15)
-	HHPF B 2 A_CustomMissile("HHRock3", 4, 0, 0)
-	HHPF C 0 A_CustomMissile("HHRock3", 4, 0, 15)
-	HHPF C 2 A_CustomMissile("HHRock3", 4, 0, -40)
-	HHPF D 0 A_CustomMissile("HHRock3", 4, 0, 55)
+	HHPF A 0 A_SpawnProjectile("HHRock3", 4, 0, -55)
+	HHPF A 2 A_SpawnProjectile("HHRock3", 4, 0, 40)
+	HHPF B 0 A_SpawnProjectile("HHRock3", 4, 0, -15)
+	HHPF B 2 A_SpawnProjectile("HHRock3", 4, 0, 0)
+	HHPF C 0 A_SpawnProjectile("HHRock3", 4, 0, 15)
+	HHPF C 2 A_SpawnProjectile("HHRock3", 4, 0, -40)
+	HHPF D 0 A_SpawnProjectile("HHRock3", 4, 0, 55)
 	HHPF DEF 2
 	Stop
     }
@@ -3553,8 +3553,8 @@ ACTOR HSHellsBattery 7914		// spider mastermind
 	//Chaos Rocket
 	HELB E 10 A_FaceTarget
 	HELB K 0 A_PlaySound("hellsbattery\chaos")
-	HELB L 0 A_CustomMissile("ChaosRocket", 127, 39, 0, 1)
-	HELB L 8 A_CustomMissile("ChaosRocket", 127, -39, 0, 1)
+	HELB L 0 A_SpawnProjectile("ChaosRocket", 127, 39, 0, 1)
+	HELB L 8 A_SpawnProjectile("ChaosRocket", 127, -39, 0, 1)
 	HELB E 4 A_FaceTarget
 	Goto See
 	HELB E 10 A_SetInvulnerable
@@ -3562,46 +3562,46 @@ ACTOR HSHellsBattery 7914		// spider mastermind
 	HELB J 0 A_Jump(90, 8)
 	//Battery
 	HELB K 0 A_PlaySound("hellsbattery\battery")
-	HELB K 0 A_CustomMissile("Nukey", 109, 0, 0)
-	HELB K 0 A_CustomMissile("Nukey", 109, 11, -16)
-	HELB K 8 BRIGHT A_CustomMissile("Nukey", 109, -11, 16)
-	HELB J 0 A_CustomMissile("CannonShell", 96, 0, 180)
-	HELB J 0 A_CustomMissile("CannonShell", 96, 16, 160)
-	HELB J 105 A_CustomMissile("CannonShell", 96, -16, 200)
+	HELB K 0 A_SpawnProjectile("Nukey", 109, 0, 0)
+	HELB K 0 A_SpawnProjectile("Nukey", 109, 11, -16)
+	HELB K 8 BRIGHT A_SpawnProjectile("Nukey", 109, -11, 16)
+	HELB J 0 A_SpawnProjectile("CannonShell", 96, 0, 180)
+	HELB J 0 A_SpawnProjectile("CannonShell", 96, 16, 160)
+	HELB J 105 A_SpawnProjectile("CannonShell", 96, -16, 200)
 	Goto Pain+2
 	//Hellfire Mortar
 	HELB N 8  A_PlaySound("hellsbattery\mortar")
 	HELB J 0 A_CPosRefire
-	HELB J 24 A_CustomMissile("MortarSpawner", 0, 0, 0)
+	HELB J 24 A_SpawnProjectile("MortarSpawner", 0, 0, 0)
 	HELB J 10 A_FaceTarget
 	HELB N 8  A_PlaySound("hellsbattery\mortar")
 	HELB J 0 A_CPosRefire
-	HELB J 24 A_CustomMissile("MortarSpawner", 0, 0, 0)
+	HELB J 24 A_SpawnProjectile("MortarSpawner", 0, 0, 0)
 	HELB J 10 A_FaceTarget
 	HELB N 8  A_PlaySound("hellsbattery\mortar")
 	HELB J 0 A_CPosRefire
-	HELB J 24 A_CustomMissile("MortarSpawner", 0, 0, 0)
+	HELB J 24 A_SpawnProjectile("MortarSpawner", 0, 0, 0)
 	HELB J 10 A_FaceTarget
 	HELB N 8  A_PlaySound("hellsbattery\mortar")
 	HELB J 0 A_CPosRefire
-	HELB J 24 A_CustomMissile("MortarSpawner", 0, 0, 0)
+	HELB J 24 A_SpawnProjectile("MortarSpawner", 0, 0, 0)
 	HELB J 10 A_FaceTarget
 	Goto Pain+2
     Melee:
 	//Plasma Cluster
 	HELB E 2 A_FaceTarget
-	HELB M 0 BRIGHT A_CustomMissile("HHPlasmaBall2", 71, 39, 0, 1)
-	HELB M 0 BRIGHT A_CustomMissile("HHPlasmaBall2", 71, -39, 0, 1)
-	HELB M 0 BRIGHT A_CustomMissile("HHPlasmaBall2", 67, 32, 0, 1)
-	HELB M 0 BRIGHT A_CustomMissile("HHPlasmaBall2", 67, -32, 0, 1)
-	HELB M 0 BRIGHT A_CustomMissile("HHPlasmaBall2", 59, 32, 0, 1)
-	HELB M 0 BRIGHT A_CustomMissile("HHPlasmaBall", 59, -32, 0, 1)
-	HELB M 0 BRIGHT A_CustomMissile("HHPlasmaBall2", 56, 39, 0, 1)
-	HELB M 0 BRIGHT A_CustomMissile("HHPlasmaBall2", 56, -39, 0, 1)
-	HELB M 0 BRIGHT A_CustomMissile("HHPlasmaBall2", 59, 46, 0, 1)
-	HELB M 0 BRIGHT A_CustomMissile("HHPlasmaBall2", 59, -46, 0, 1)
-	HELB M 0 BRIGHT A_CustomMissile("HHPlasmaBall2", 67, 46, 0, 1)
-	HELB M 2 BRIGHT A_CustomMissile("HHPlasmaBall2", 67, -46, 0, 1)
+	HELB M 0 BRIGHT A_SpawnProjectile("HHPlasmaBall2", 71, 39, 0, 1)
+	HELB M 0 BRIGHT A_SpawnProjectile("HHPlasmaBall2", 71, -39, 0, 1)
+	HELB M 0 BRIGHT A_SpawnProjectile("HHPlasmaBall2", 67, 32, 0, 1)
+	HELB M 0 BRIGHT A_SpawnProjectile("HHPlasmaBall2", 67, -32, 0, 1)
+	HELB M 0 BRIGHT A_SpawnProjectile("HHPlasmaBall2", 59, 32, 0, 1)
+	HELB M 0 BRIGHT A_SpawnProjectile("HHPlasmaBall", 59, -32, 0, 1)
+	HELB M 0 BRIGHT A_SpawnProjectile("HHPlasmaBall2", 56, 39, 0, 1)
+	HELB M 0 BRIGHT A_SpawnProjectile("HHPlasmaBall2", 56, -39, 0, 1)
+	HELB M 0 BRIGHT A_SpawnProjectile("HHPlasmaBall2", 59, 46, 0, 1)
+	HELB M 0 BRIGHT A_SpawnProjectile("HHPlasmaBall2", 59, -46, 0, 1)
+	HELB M 0 BRIGHT A_SpawnProjectile("HHPlasmaBall2", 67, 46, 0, 1)
+	HELB M 2 BRIGHT A_SpawnProjectile("HHPlasmaBall2", 67, -46, 0, 1)
 	TNT1 a 0 A_Jump(10,"See")
 	HELB E 0 A_CPosRefire
 	Loop
@@ -3615,8 +3615,8 @@ ACTOR HSHellsBattery 7914		// spider mastermind
 	HELB E 10 A_FaceTarget
 	HELB [ 5 BRIGHT
 	HLB2 A 5 BRIGHT
-	HELB ] 0 BRIGHT A_CustomMissile("HHHellsFury", 0, -32, 32)    
-	HELB ] 5 BRIGHT A_CustomMissile("HHHellsFury", 0, 32, -32)
+	HELB ] 0 BRIGHT A_SpawnProjectile("HHHellsFury", 0, -32, 32)    
+	HELB ] 5 BRIGHT A_SpawnProjectile("HHHellsFury", 0, 32, -32)
 	HLB2 A 5 
 	HELB [ 5 
 	HELB E 10
@@ -3689,65 +3689,65 @@ ACTOR HellsBatteryGore
     See:
 	HELB Q 0 A_PlaySound("hellsbattery\hoof")
 	HELB Q 0 A_Jump(128, 2)
-	HELB Q 0 A_CustomMissile("HBBloodSplatterFX", 96, 16, -90)
+	HELB Q 0 A_SpawnProjectile("HBBloodSplatterFX", 96, 16, -90)
 	HELB Q 5 A_Chase
 	HELB Q 0 A_Jump(128, 2)
-	HELB Q 0 A_CustomMissile("BloodSplatterFX2", 64, -32, 0)
+	HELB Q 0 A_SpawnProjectile("BloodSplatterFX2", 64, -32, 0)
 	HELB Q 5 A_Chase
 	HELB Q 0 A_Jump(128, 2)
-	HELB O 0 A_CustomMissile("HBBloodSplatterFX", 96, 16, -90)
+	HELB O 0 A_SpawnProjectile("HBBloodSplatterFX", 96, 16, -90)
 	HELB O 5 A_Chase
 	HELB Q 0 A_Jump(128, 2)
-	HELB O 0 A_CustomMissile("BloodSplatterFX2", 64, -32, 0)
+	HELB O 0 A_SpawnProjectile("BloodSplatterFX2", 64, -32, 0)
 	HELB O 5 A_Chase
-	HELB P 5 A_CustomMissile("HBBloodSplatterFX", 96, 16, -90)
-	HELB P 5 A_CustomMissile("BloodSplatterFX2", 64, -32, 0)
+	HELB P 5 A_SpawnProjectile("HBBloodSplatterFX", 96, 16, -90)
+	HELB P 5 A_SpawnProjectile("BloodSplatterFX2", 64, -32, 0)
 	Goto See
     Missile:
 	HELB O 10 A_FaceTarget
 	HLB2 A 5 BRIGHT
 	HLB2 B 5 BRIGHT
-	HLB2 C 0 BRIGHT A_CustomMissile("HHHellsFury", 0, 0, 80)
-	HLB2 C 0 BRIGHT A_CustomMissile("HHHellsFury", 0, 0, -80)
-	HLB2 C 5 BRIGHT A_CustomMissile("HHHellsFury", 0, 0, 0)
+	HLB2 C 0 BRIGHT A_SpawnProjectile("HHHellsFury", 0, 0, 80)
+	HLB2 C 0 BRIGHT A_SpawnProjectile("HHHellsFury", 0, 0, -80)
+	HLB2 C 5 BRIGHT A_SpawnProjectile("HHHellsFury", 0, 0, 0)
 	HLB2 B 5 
 	HLB2 A 5 
 	HELB O 10
 	Goto See
     Death:
-	HELB R 5 A_CustomMissile("BloodSplatterFX", 112, 0, 0)
+	HELB R 5 A_SpawnProjectile("BloodSplatterFX", 112, 0, 0)
 	HELB S 5 A_Scream
-	HELB T 0 A_CustomMissile("Boomy", 96, -32, 0)
-	HELB T 5 A_CustomMissile("BloodSplatterFX", 96, 0, 180)
-	HELB U 5 A_CustomMissile("BloodSplatterFX", 80, 0, 60)
-	HELB T 0 A_CustomMissile("Boomy", 32, 16, 0)
-	HELB V 5 A_CustomMissile("BloodSplatterFX", 64, 0, 240)
-	TNT1 A 0 A_CustomMissile("NukeBoomy", 0, 0, 0)  
-	TNT1 A 0 A_CustomMissile("NukeRing", 0, 0, 0)  
-	TNT1 A 0 A_CustomMissile("NukeRing", 0, 0, -30)  
-	TNT1 A 0 A_CustomMissile("NukeRing", 0, 0, 30)  
-	TNT1 A 0 A_CustomMissile("NukeRing", 0, 0, -60)  
-	TNT1 A 0 A_CustomMissile("NukeRing", 0, 0, 60)  
-	TNT1 A 0 A_CustomMissile("NukeRing", 0, 0, -90)  
-	TNT1 A 0 A_CustomMissile("NukeRing", 0, 0, 90)  
-	TNT1 A 0 A_CustomMissile("NukeRing", 0, 0, -120)  
-	TNT1 A 0 A_CustomMissile("NukeRing", 0, 0, 120)  
-	TNT1 A 0 A_CustomMissile("NukeRing", 0, 0, -150)  
-	TNT1 A 0 A_CustomMissile("NukeRing", 0, 0, 150) 
+	HELB T 0 A_SpawnProjectile("Boomy", 96, -32, 0)
+	HELB T 5 A_SpawnProjectile("BloodSplatterFX", 96, 0, 180)
+	HELB U 5 A_SpawnProjectile("BloodSplatterFX", 80, 0, 60)
+	HELB T 0 A_SpawnProjectile("Boomy", 32, 16, 0)
+	HELB V 5 A_SpawnProjectile("BloodSplatterFX", 64, 0, 240)
+	TNT1 A 0 A_SpawnProjectile("NukeBoomy", 0, 0, 0)  
+	TNT1 A 0 A_SpawnProjectile("NukeRing", 0, 0, 0)  
+	TNT1 A 0 A_SpawnProjectile("NukeRing", 0, 0, -30)  
+	TNT1 A 0 A_SpawnProjectile("NukeRing", 0, 0, 30)  
+	TNT1 A 0 A_SpawnProjectile("NukeRing", 0, 0, -60)  
+	TNT1 A 0 A_SpawnProjectile("NukeRing", 0, 0, 60)  
+	TNT1 A 0 A_SpawnProjectile("NukeRing", 0, 0, -90)  
+	TNT1 A 0 A_SpawnProjectile("NukeRing", 0, 0, 90)  
+	TNT1 A 0 A_SpawnProjectile("NukeRing", 0, 0, -120)  
+	TNT1 A 0 A_SpawnProjectile("NukeRing", 0, 0, 120)  
+	TNT1 A 0 A_SpawnProjectile("NukeRing", 0, 0, -150)  
+	TNT1 A 0 A_SpawnProjectile("NukeRing", 0, 0, 150) 
 	TNT1 AAAAAAAAAAAAAAAAA 0 A_TossGib
-	HELB W 5 A_CustomMissile("BloodSplatterFX", 48, 0, -60)
-	HELB X 0 A_CustomMissile("BloodSplatterFX", 32, 0, 0)
-	HELB X 0 A_CustomMissile("BloodSplatterFX", 32, 0, 30)
-	HELB X 0 A_CustomMissile("BloodSplatterFX", 32, 0, -30)
-	HELB X 0 A_CustomMissile("BloodSplatterFX", 32, 0, 60)
-	HELB X 0 A_CustomMissile("BloodSplatterFX", 32, 0, -60)
-	HELB X 0 A_CustomMissile("BloodSplatterFX", 32, 0, 90)
-	HELB X 0 A_CustomMissile("BloodSplatterFX", 32, 0, -90)
-	HELB X 0 A_CustomMissile("BloodSplatterFX", 32, 0, 120)
-	HELB X 0 A_CustomMissile("BloodSplatterFX", 32, 0, -120)
-	HELB X 0 A_CustomMissile("BloodSplatterFX", 32, 0, 150)
-	HELB X 0 A_CustomMissile("BloodSplatterFX", 32, 0, -150)
-	HELB X 5 A_CustomMissile("BloodSplatterFX", 32, 0, 180)
+	HELB W 5 A_SpawnProjectile("BloodSplatterFX", 48, 0, -60)
+	HELB X 0 A_SpawnProjectile("BloodSplatterFX", 32, 0, 0)
+	HELB X 0 A_SpawnProjectile("BloodSplatterFX", 32, 0, 30)
+	HELB X 0 A_SpawnProjectile("BloodSplatterFX", 32, 0, -30)
+	HELB X 0 A_SpawnProjectile("BloodSplatterFX", 32, 0, 60)
+	HELB X 0 A_SpawnProjectile("BloodSplatterFX", 32, 0, -60)
+	HELB X 0 A_SpawnProjectile("BloodSplatterFX", 32, 0, 90)
+	HELB X 0 A_SpawnProjectile("BloodSplatterFX", 32, 0, -90)
+	HELB X 0 A_SpawnProjectile("BloodSplatterFX", 32, 0, 120)
+	HELB X 0 A_SpawnProjectile("BloodSplatterFX", 32, 0, -120)
+	HELB X 0 A_SpawnProjectile("BloodSplatterFX", 32, 0, 150)
+	HELB X 0 A_SpawnProjectile("BloodSplatterFX", 32, 0, -150)
+	HELB X 5 A_SpawnProjectile("BloodSplatterFX", 32, 0, 180)
 	HELB Y 5 A_Fall
 	"####" "#" 0 A_QueueCorpse
 	"####" "#" 0 A_ChangeFlag("CORPSE",1)
@@ -3788,13 +3788,13 @@ ACTOR HBArm1
     {
     Spawn:
 	HELG G 0 A_Jump(128, 2)
-	HELG G 0 A_CustomMissile("BloodSplatterFX", 0, 0, 180)
+	HELG G 0 A_SpawnProjectile("BloodSplatterFX", 0, 0, 180)
 	HELG G 4 
 	HELG G 0 A_Jump(128, 2)
-	HELG G 0 A_CustomMissile("BloodSplatterFX", 0, 0, 180)
+	HELG G 0 A_SpawnProjectile("BloodSplatterFX", 0, 0, 180)
 	HELG B 4
 	HELG G 0 A_Jump(128, 2)
-	HELG G 0 A_CustomMissile("BloodSplatterFX", 0, 0, 180)
+	HELG G 0 A_SpawnProjectile("BloodSplatterFX", 0, 0, 180)
 	HELG C 4
 	Loop
     Death:
@@ -3820,13 +3820,13 @@ ACTOR HBArm2
     {
     Spawn:
 	HELG G 0 A_Jump(128, 2)
-	HELG G 0 A_CustomMissile("BloodSplatterFX", 0, 0, 180)
+	HELG G 0 A_SpawnProjectile("BloodSplatterFX", 0, 0, 180)
 	HELG D 4 
 	HELG G 0 A_Jump(128, 2)
-	HELG G 0 A_CustomMissile("BloodSplatterFX", 0, 0, 180)
+	HELG G 0 A_SpawnProjectile("BloodSplatterFX", 0, 0, 180)
 	HELG E 4
 	HELG G 0 A_Jump(128, 2)
-	HELG G 0 A_CustomMissile("BloodSplatterFX", 0, 0, 180)
+	HELG G 0 A_SpawnProjectile("BloodSplatterFX", 0, 0, 180)
 	HELG F 4
 	Loop
     Death:
@@ -3848,7 +3848,7 @@ ACTOR HBBloodSplatterFX
     {
     Spawn:
 	TNT1 A 1
-	TNT1 A 100 A_CustomMissile("BloodSplatterFX", 0, 0, 180)
+	TNT1 A 100 A_SpawnProjectile("BloodSplatterFX", 0, 0, 180)
 	Stop
     }
 }
@@ -3902,23 +3902,23 @@ ACTOR ChaosRocket
 	CHRK A 0 A_PlaySound("hellsbattery\fly")
 	CHRK ABABAB 2
 	CHRK A 0 A_PlaySound("hellsbattery\fly")
-	CHRK AB 1 A_CustomMissile ("VaporSP", 0, 0, 0)
+	CHRK AB 1 A_SpawnProjectile ("VaporSP", 0, 0, 0)
 	CHRK A 0 A_Jump(128, 2)
-	CHRK A 0 A_CustomMissile ("ChaosCharge", 0, 0, 90)
+	CHRK A 0 A_SpawnProjectile ("ChaosCharge", 0, 0, 90)
 	CHRK A 0 A_Jump(128, 2)
-	CHRK A 0 A_CustomMissile ("ChaosCharge", 0, 0, 270)
+	CHRK A 0 A_SpawnProjectile ("ChaosCharge", 0, 0, 270)
 	CHRK A 0
 	//Rinse and repeat
-	CHRK AB 1 A_CustomMissile ("VaporSP", 0, 0, 0)
+	CHRK AB 1 A_SpawnProjectile ("VaporSP", 0, 0, 0)
 	CHRK A 0 A_Jump(128, 2)
-	CHRK A 0 A_CustomMissile ("ChaosCharge", 0, 0, 90)
+	CHRK A 0 A_SpawnProjectile ("ChaosCharge", 0, 0, 90)
 	CHRK A 0 A_Jump(128, 2)
-	CHRK A 0 A_CustomMissile ("ChaosCharge", 0, 0, 270)
+	CHRK A 0 A_SpawnProjectile ("ChaosCharge", 0, 0, 270)
 	CHRK A 0
 	Goto Spawn+7
     Death:
 	TNT1 A 0 A_Explode (160,128)
-	CHRK A 1 BRIGHT A_CustomMissile("MonExplosionMediumBig", 0, 0, 0)  
+	CHRK A 1 BRIGHT A_SpawnProjectile("MonExplosionMediumBig", 0, 0, 0)  
 	Stop
     }
 }
@@ -3952,7 +3952,7 @@ ACTOR ChaosCharge
 	Goto Spawn+6
     Death:
 	TRAN A 0 A_PlaySound("Explode")
-	TRAN A 10 A_CustomMissile("MonExplosionSmallTooSimple", 0, 0, 0)
+	TRAN A 10 A_SpawnProjectile("MonExplosionSmallTooSimple", 0, 0, 0)
 	Stop
     }
 }
@@ -3963,9 +3963,9 @@ Actor VaporSP
     {
     Spawn:
 	TNT1 A 0
-	TNT1 A 0 A_CustomMissile("QRockTrail",0,0,0,0)
-	MISS A 0 A_CustomMissile("BarbasRocket1Trail2",random(3,-3),random(3,-3),0)
-	TNT1 AA 0 A_CustomMissile("BarbasRocket1Trail1",random(3,-3),random(3,-3),0)
+	TNT1 A 0 A_SpawnProjectile("QRockTrail",0,0,0,0)
+	MISS A 0 A_SpawnProjectile("BarbasRocket1Trail2",random(3,-3),random(3,-3),0)
+	TNT1 AA 0 A_SpawnProjectile("BarbasRocket1Trail1",random(3,-3),random(3,-3),0)
 	Stop
     }
 }
@@ -3986,20 +3986,20 @@ ACTOR Nukey
     {
     Spawn:
 	CRND A 6
-	CRND A 0 A_CustomMissile("CannonSteam", 0, 0, 0)
+	CRND A 0 A_SpawnProjectile("CannonSteam", 0, 0, 0)
 	CRND AA 4
 	Goto Spawn+2
     Death:
 	TNT1 A 0
-	TNT1 A 0 A_CustomMissile("NukeBoomyMedium", 0, 0, 0)  
-	TNT1 A 0 A_CustomMissile("NukeRingSmall", 0, 0, 0)  
-	TNT1 A 0 A_CustomMissile("NukeRingSmall", 0, 0, 45)  
-	TNT1 A 0 A_CustomMissile("NukeRingSmall", 0, 0, 90)  
-	TNT1 A 0 A_CustomMissile("NukeRingSmall", 0, 0, 135)  
-	TNT1 A 0 A_CustomMissile("NukeRingSmall", 0, 0, 180)  
-	TNT1 A 0 A_CustomMissile("NukeRingSmall", 0, 0, -45)  
-	TNT1 A 0 A_CustomMissile("NukeRingSmall", 0, 0, -90)
-	TNT1 A 0 A_CustomMissile("NukeRingSmall", 0, 0, -135)  
+	TNT1 A 0 A_SpawnProjectile("NukeBoomyMedium", 0, 0, 0)  
+	TNT1 A 0 A_SpawnProjectile("NukeRingSmall", 0, 0, 0)  
+	TNT1 A 0 A_SpawnProjectile("NukeRingSmall", 0, 0, 45)  
+	TNT1 A 0 A_SpawnProjectile("NukeRingSmall", 0, 0, 90)  
+	TNT1 A 0 A_SpawnProjectile("NukeRingSmall", 0, 0, 135)  
+	TNT1 A 0 A_SpawnProjectile("NukeRingSmall", 0, 0, 180)  
+	TNT1 A 0 A_SpawnProjectile("NukeRingSmall", 0, 0, -45)  
+	TNT1 A 0 A_SpawnProjectile("NukeRingSmall", 0, 0, -90)
+	TNT1 A 0 A_SpawnProjectile("NukeRingSmall", 0, 0, -135)  
 	TNT1 A 140
 	Stop
     }
@@ -4128,7 +4128,7 @@ ACTOR HexMaker
     Spawn:
 	BAL1 A 1
 	BAL1 A 1 A_Fire
-	BAL1 E 0 A_CustomMissile("HexMakerB", 0, 0, 0)
+	BAL1 E 0 A_SpawnProjectile("HexMakerB", 0, 0, 0)
 	BAL1 E 250
 	Stop
     }
@@ -4142,11 +4142,11 @@ ACTOR HexMakerB
     {
     Spawn:
 	BAL1 E 0
-	BAL1 E 0 A_CustomMissile("PentFX", 32, 0, 0)
-	BAL1 E 0 A_CustomMissile("PentFX", 32, 0, 72)
-	BAL1 E 0 A_CustomMissile("PentFX", 32, 0, -72)
-	BAL1 E 0 A_CustomMissile("PentFX", 32, 0, 144)
-	BAL1 E 0 A_CustomMissile("PentFX", 32, 0, -144)
+	BAL1 E 0 A_SpawnProjectile("PentFX", 32, 0, 0)
+	BAL1 E 0 A_SpawnProjectile("PentFX", 32, 0, 72)
+	BAL1 E 0 A_SpawnProjectile("PentFX", 32, 0, -72)
+	BAL1 E 0 A_SpawnProjectile("PentFX", 32, 0, 144)
+	BAL1 E 0 A_SpawnProjectile("PentFX", 32, 0, -144)
 	BAL1 E 250
 	Stop
     }
@@ -4165,8 +4165,8 @@ ACTOR PentFX
     {
     Spawn:
 	BAL1 Z 12
-	BAL1 Z 0 BRIGHT A_CustomMissile("PentFX2", 0, 0, 17)
-	BAL1 Z 0 BRIGHT A_CustomMissile("PentFX2", 0, 0, -17)
+	BAL1 Z 0 BRIGHT A_SpawnProjectile("PentFX2", 0, 0, 17)
+	BAL1 Z 0 BRIGHT A_SpawnProjectile("PentFX2", 0, 0, -17)
 	Stop
     }
 }
@@ -4183,7 +4183,7 @@ ACTOR PentFX2
     States
     {
     Spawn:
-	BAL1 AAAAAA 2 BRIGHT A_CustomMissile("PentFXTail", 0, 0, 0)
+	BAL1 AAAAAA 2 BRIGHT A_SpawnProjectile("PentFXTail", 0, 0, 0)
 	Stop
     }
 }
@@ -4257,18 +4257,18 @@ ACTOR MortarShell
 	Loop
     Death:
 	TNT1 A 1 
-	TNT1 A 0 A_CustomMissile("NukeRing", 32, 0, 0,2,0)  
-	TNT1 A 0 A_CustomMissile("NukeRing", 32, 0, -30,2,0)  
-	TNT1 A 0 A_CustomMissile("NukeRing", 32, 0, 30,2,0)  
-	TNT1 A 0 A_CustomMissile("NukeRing", 32, 0, -60,2,0)  
-	TNT1 A 0 A_CustomMissile("NukeRing", 32, 0, 60,2,0)  
-	TNT1 A 0 A_CustomMissile("NukeRing", 32, 0, -90,2,0)  
-	TNT1 A 0 A_CustomMissile("NukeRing", 32, 0, 90,2,0)  
-	TNT1 A 0 A_CustomMissile("NukeRing", 32, 0, -120,2,0)  
-	TNT1 A 0 A_CustomMissile("NukeRing", 32, 0, 120,2,0)  
-	TNT1 A 0 A_CustomMissile("NukeRing", 32, 0, -150,2,0)  
-	TNT1 A 0 A_CustomMissile("NukeRing", 32, 0, 150,2,0) 
-	TNT1 A 0 A_CustomMissile("NukeBoomy", 0, 0, 0)  
+	TNT1 A 0 A_SpawnProjectile("NukeRing", 32, 0, 0,2,0)  
+	TNT1 A 0 A_SpawnProjectile("NukeRing", 32, 0, -30,2,0)  
+	TNT1 A 0 A_SpawnProjectile("NukeRing", 32, 0, 30,2,0)  
+	TNT1 A 0 A_SpawnProjectile("NukeRing", 32, 0, -60,2,0)  
+	TNT1 A 0 A_SpawnProjectile("NukeRing", 32, 0, 60,2,0)  
+	TNT1 A 0 A_SpawnProjectile("NukeRing", 32, 0, -90,2,0)  
+	TNT1 A 0 A_SpawnProjectile("NukeRing", 32, 0, 90,2,0)  
+	TNT1 A 0 A_SpawnProjectile("NukeRing", 32, 0, -120,2,0)  
+	TNT1 A 0 A_SpawnProjectile("NukeRing", 32, 0, 120,2,0)  
+	TNT1 A 0 A_SpawnProjectile("NukeRing", 32, 0, -150,2,0)  
+	TNT1 A 0 A_SpawnProjectile("NukeRing", 32, 0, 150,2,0) 
+	TNT1 A 0 A_SpawnProjectile("NukeBoomy", 0, 0, 0)  
 	TNT1 A 140
 	Stop
     }
@@ -4292,13 +4292,13 @@ ACTOR PentFXTail
     Spawn:
 	TNT1 A 0
     See:
-	BAL1 A 0 A_CustomMissile("TargetFire", 0, 0, 0)
+	BAL1 A 0 A_SpawnProjectile("TargetFire", 0, 0, 0)
 	BAL1 AAAA 4 A_Explode(64,32)
-	BAL1 A 0 A_CustomMissile("TargetFire", 0, 0, 0)
+	BAL1 A 0 A_SpawnProjectile("TargetFire", 0, 0, 0)
 	BAL1 AAAA 4 A_Explode(64,32)
-	BAL1 A 0 A_CustomMissile("TargetFire", 0, 0, 0)
+	BAL1 A 0 A_SpawnProjectile("TargetFire", 0, 0, 0)
 	BAL1 AAAA 4 A_Explode(64,32)
-	BAL1 A 0 A_CustomMissile("TargetFire", 0, 0, 0)
+	BAL1 A 0 A_SpawnProjectile("TargetFire", 0, 0, 0)
 	BAL1 AAAA 4 A_Explode(64,32)
 	TNT1 A 1 A_Die		//is better to kill it instead of just "stop"ing it
 	Wait
@@ -4327,7 +4327,7 @@ ACTOR HHHellsFury
     States
     {
     Spawn:
-	HBFR ABC 4 BRIGHT A_CustomMissile("PentFXTail", 0, 0, 0)
+	HBFR ABC 4 BRIGHT A_SpawnProjectile("PentFXTail", 0, 0, 0)
 	HBFR A 0 A_SeekerMissile (10, 20)
 	Loop
     Death:
@@ -4463,72 +4463,72 @@ ACTOR HSHellsCannon	//7915	//cyberdemon
     Miss1:
 	KOR2 E 10 A_FaceTarget
 	KOR2 F 2 Bright A_FaceTarget
-	KOR2 F 0 Bright A_CustomMissile("SwarmRocket", 112, 40, 0)
-	KOR2 F 0 Bright A_CustomMissile("SwarmRocket", 112, -40, 0)
-	KOR2 F 0 Bright A_CustomMissile("BansheeBomb", 78, 52, 0)
-	KOR2 F 0 Bright A_CustomMissile("BansheeBomb", 82, -52, 0)
-	KOR2 F 0 Bright A_CustomMissile("BansheeBomb", 52, 52, 0)
-	KOR2 F 0 Bright A_CustomMissile("BansheeBomb", 52, -52, 0)
+	KOR2 F 0 Bright A_SpawnProjectile("SwarmRocket", 112, 40, 0)
+	KOR2 F 0 Bright A_SpawnProjectile("SwarmRocket", 112, -40, 0)
+	KOR2 F 0 Bright A_SpawnProjectile("BansheeBomb", 78, 52, 0)
+	KOR2 F 0 Bright A_SpawnProjectile("BansheeBomb", 82, -52, 0)
+	KOR2 F 0 Bright A_SpawnProjectile("BansheeBomb", 52, 52, 0)
+	KOR2 F 0 Bright A_SpawnProjectile("BansheeBomb", 52, -52, 0)
 	KOR2 F 6 Bright 
 	KOR2 E 8
 	Goto See
     Miss2:
 	KOR2 E 10 A_FaceTarget
 	KOR2 F 2 Bright A_FaceTarget
-	KOR2 F 0 Bright A_CustomMissile("ConcussionMissileMon", 112, 40, 0)        //might be weak, but this things are fast as hell
-	KOR2 F 0 Bright A_CustomMissile("ConcussionMissileMon", 112, -40, 0)
-	KOR2 F 0 Bright A_CustomMissile("ZombieBombRocket", 78, 52, 0)
-	KOR2 F 0 Bright A_CustomMissile("ZombieBombRocket", 82, -52, 0)
-	KOR2 F 0 Bright A_CustomMissile("ZombieBombRocket", 52, 52, 0)
-	KOR2 F 0 Bright A_CustomMissile("ZombieBombRocket", 52, -52, 0)
+	KOR2 F 0 Bright A_SpawnProjectile("ConcussionMissileMon", 112, 40, 0)        //might be weak, but this things are fast as hell
+	KOR2 F 0 Bright A_SpawnProjectile("ConcussionMissileMon", 112, -40, 0)
+	KOR2 F 0 Bright A_SpawnProjectile("ZombieBombRocket", 78, 52, 0)
+	KOR2 F 0 Bright A_SpawnProjectile("ZombieBombRocket", 82, -52, 0)
+	KOR2 F 0 Bright A_SpawnProjectile("ZombieBombRocket", 52, 52, 0)
+	KOR2 F 0 Bright A_SpawnProjectile("ZombieBombRocket", 52, -52, 0)
 	KOR2 F 6 Bright 
 	KOR2 E 8
 	Goto See
     Miss3:
 	KOR2 E 10 A_FaceTarget
 	KOR2 F 2 Bright A_FaceTarget
-	KOR2 F 0 Bright A_CustomMissile("PhalanxShot", 112, 40, 0)
-	KOR2 F 0 Bright A_CustomMissile("PhalanxShot", 112, -40, 0)
-	KOR2 F 0 Bright A_CustomMissile("BansheeBomb", 78, 52, 0)
-	KOR2 F 0 Bright A_CustomMissile("BansheeBomb", 82, -52, 0)
-	KOR2 F 0 Bright A_CustomMissile("BansheeBomb", 52, 52, 0)
-	KOR2 F 0 Bright A_CustomMissile("BansheeBomb", 52, -52, 0)
+	KOR2 F 0 Bright A_SpawnProjectile("PhalanxShot", 112, 40, 0)
+	KOR2 F 0 Bright A_SpawnProjectile("PhalanxShot", 112, -40, 0)
+	KOR2 F 0 Bright A_SpawnProjectile("BansheeBomb", 78, 52, 0)
+	KOR2 F 0 Bright A_SpawnProjectile("BansheeBomb", 82, -52, 0)
+	KOR2 F 0 Bright A_SpawnProjectile("BansheeBomb", 52, 52, 0)
+	KOR2 F 0 Bright A_SpawnProjectile("BansheeBomb", 52, -52, 0)
 	KOR2 F 6 Bright 
 	KOR2 E 8
 	Goto See
     Miss4:
 	KOR2 E 10 A_FaceTarget
 	KOR2 F 2 Bright A_FaceTarget
-	KOR2 F 0 Bright A_CustomMissile("PlayerNapalmRocket", 112, 40, 0)
-	KOR2 F 0 Bright A_CustomMissile("PlayerNapalmRocket", 112, -40, 0)
-	KOR2 F 0 Bright A_CustomMissile("BansheeBomb", 78, 52, 0)
-	KOR2 F 0 Bright A_CustomMissile("BansheeBomb", 82, -52, 0)
-	KOR2 F 0 Bright A_CustomMissile("BansheeBomb", 52, 52, 0)
-	KOR2 F 0 Bright A_CustomMissile("BansheeBomb", 52, -52, 0)
+	KOR2 F 0 Bright A_SpawnProjectile("PlayerNapalmRocket", 112, 40, 0)
+	KOR2 F 0 Bright A_SpawnProjectile("PlayerNapalmRocket", 112, -40, 0)
+	KOR2 F 0 Bright A_SpawnProjectile("BansheeBomb", 78, 52, 0)
+	KOR2 F 0 Bright A_SpawnProjectile("BansheeBomb", 82, -52, 0)
+	KOR2 F 0 Bright A_SpawnProjectile("BansheeBomb", 52, 52, 0)
+	KOR2 F 0 Bright A_SpawnProjectile("BansheeBomb", 52, -52, 0)
 	KOR2 F 6 Bright 
 	KOR2 E 8
 	Goto See
     Miss5:
 	KOR2 E 10 A_FaceTarget
 	KOR2 F 2 Bright A_FaceTarget
-	KOR2 F 0 Bright A_CustomMissile("DarkCannonBMissPlayer", 112, 40, 0)
-	KOR2 F 0 Bright A_CustomMissile("DarkCannonBMissPlayer", 112, -40, 0)
-	KOR2 F 0 Bright A_CustomMissile("BansheeBomb", 78, 52, 0)
-	KOR2 F 0 Bright A_CustomMissile("BansheeBomb", 82, -52, 0)
-	KOR2 F 0 Bright A_CustomMissile("BansheeBomb", 52, 52, 0)
-	KOR2 F 0 Bright A_CustomMissile("BansheeBomb", 52, -52, 0)
+	KOR2 F 0 Bright A_SpawnProjectile("DarkCannonBMissPlayer", 112, 40, 0)
+	KOR2 F 0 Bright A_SpawnProjectile("DarkCannonBMissPlayer", 112, -40, 0)
+	KOR2 F 0 Bright A_SpawnProjectile("BansheeBomb", 78, 52, 0)
+	KOR2 F 0 Bright A_SpawnProjectile("BansheeBomb", 82, -52, 0)
+	KOR2 F 0 Bright A_SpawnProjectile("BansheeBomb", 52, 52, 0)
+	KOR2 F 0 Bright A_SpawnProjectile("BansheeBomb", 52, -52, 0)
 	KOR2 F 6 Bright 
 	KOR2 E 8
 	Goto See
     Miss6:
 	KOR2 E 10 A_FaceTarget
 	KOR2 F 2 Bright A_FaceTarget
-	KOR2 F 0 Bright A_CustomMissile("DrunkMissileMon", 112, 40, 0)
-	KOR2 F 0 Bright A_CustomMissile("DrunkMissileMon", 112, -40, 0)
-	KOR2 F 0 Bright A_CustomMissile("DrunkMissileMon", 78, 52, 0)
-	KOR2 F 0 Bright A_CustomMissile("DrunkMissileMon", 82, -52, 0)
-	KOR2 F 0 Bright A_CustomMissile("DrunkMissileMon", 52, 52, 0)
-	KOR2 F 0 Bright A_CustomMissile("DrunkMissileMon", 52, -52, 0)
+	KOR2 F 0 Bright A_SpawnProjectile("DrunkMissileMon", 112, 40, 0)
+	KOR2 F 0 Bright A_SpawnProjectile("DrunkMissileMon", 112, -40, 0)
+	KOR2 F 0 Bright A_SpawnProjectile("DrunkMissileMon", 78, 52, 0)
+	KOR2 F 0 Bright A_SpawnProjectile("DrunkMissileMon", 82, -52, 0)
+	KOR2 F 0 Bright A_SpawnProjectile("DrunkMissileMon", 52, 52, 0)
+	KOR2 F 0 Bright A_SpawnProjectile("DrunkMissileMon", 52, -52, 0)
 	KOR2 F 6 Bright 
 	KOR2 E 8
 	Goto See
@@ -4564,7 +4564,7 @@ ACTOR DrunkMissileMon : DrunkMissile
 Death:
 	TNT1 A 0 A_PlaySound("RLXPLOD",CHAN_AUTO,1.0,0)
 	TNT1 A 0 A_SpawnItemEx("NewExplosionMedium",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-	TNT1 A 0 A_CustomMissile("ExpQuakeSmall",0,0,0)
+	TNT1 A 0 A_SpawnProjectile("ExpQuakeSmall",0,0,0)
 	TNT1 A 2 Bright A_Explode(64,150,1)
 	Stop
     }
@@ -4579,7 +4579,7 @@ States
 Death:
 	TNT1 AAA 0 A_PlaySound("RLXPLOD",CHAN_AUTO,1.0,0)
 	TNT1 A 0 A_SpawnItemEx("MonExplosionMedium",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-	TNT1 A 0 A_CustomMissile("ExpQuakeSmall",0,0,0)
+	TNT1 A 0 A_SpawnProjectile("ExpQuakeSmall",0,0,0)
 	TNT1 A 0 A_Explode(40,50,1)
 	Stop
 }
@@ -4654,16 +4654,16 @@ Actor HSFormerSoldier 7916	//revenant
 	TNT1 A 0 A_Jump(128,"Missile2","Missile3")
 	SSGM EE 5 A_FaceTarget(0,0)
 	TNT1 A 0 A_PlaySound("weapons/d3shtgnf")
-	TNT1 A 0 A_CustomMissile("HSFSLightY",32,0,0)
-	"----" AAAAA 0 A_CustomMissile("BulletTracerFX",32,0,random(-8,8),CMF_OFFSETPITCH,random(-8,8))
+	TNT1 A 0 A_SpawnProjectile("HSFSLightY",32,0,0)
+	"----" AAAAA 0 A_SpawnProjectile("BulletTracerFXInverted",32,0,random(-8,8),CMF_OFFSETPITCH,random(-8,8))
 	SSGM F 6 Bright A_CustomBulletAttack(8,8,5,5,"BulletDamagePuff")
 	SSGM E 8 A_PlaySoundEx("weapons/d3shtgnbk","SoundSlot5")
 	TNT1 A 0 A_PlaySoundEx("weapons/d3shtgnfd","SoundSlot5")
 	TNT1 A 0 A_Jump(100,"See")
 	SSGM EE 5 A_FaceTarget(0,0)
 	TNT1 A 0 A_PlaySound("weapons/d3shtgnf")
-	TNT1 A 0 A_CustomMissile("HSFSLightY",32,0,0)
-	"----" AAAAA 0 A_CustomMissile("BulletTracerFX",20,0,random(-8,8),CMF_OFFSETPITCH,random(-8,8))
+	TNT1 A 0 A_SpawnProjectile("HSFSLightY",32,0,0)
+	"----" AAAAA 0 A_SpawnProjectile("BulletTracerFXInverted",20,0,random(-8,8),CMF_OFFSETPITCH,random(-8,8))
 	SSGM F 6 Bright A_CustomBulletAttack(8,8,5,5,"BulletDamagePuff")
 	SSGM E 8 A_PlaySoundEx("weapons/d3shtgnbk","SoundSlot5")
 	TNT1 A 0 A_PlaySoundEx("weapons/d3shtgnfd","SoundSlot5")
@@ -4672,8 +4672,8 @@ Actor HSFormerSoldier 7916	//revenant
 	SSGM EE 5 A_FaceTarget
 	SSGM E 0 A_FaceTarget(0,0)
 	TNT1 A 0 A_PlaySound("q2weapon/machinegun")
-	TNT1 A 0 A_CustomMissile("HSFSLightY",32,0,0)
-	"----" A 0 A_CustomMissile("BulletTracerFX",20,0,random(-7,7),CMF_OFFSETPITCH,random(-7,7))
+	TNT1 A 0 A_SpawnProjectile("HSFSLightY",32,0,0)
+	"----" A 0 A_SpawnProjectile("BulletTracerFXInverted",20,0,random(-7,7),CMF_OFFSETPITCH,random(-7,7))
 	SSGM F 2 Bright A_CustomBulletAttack(7,7,1,4,"BulletDamagePuff")
 	SSGM E 2 
 	TNT1 A 0 A_Jump(16,"See")
@@ -4683,8 +4683,8 @@ Actor HSFormerSoldier 7916	//revenant
 	SSGM EE 5 A_FaceTarget
 	SSGM E 0 A_FaceTarget(0,0)
 	TNT1 A 0 A_PlaySound("wizard/pain")
-	TNT1 A 0 A_CustomMissile("HSFSLightG",32,0,0)
-	"----" AA 0 A_CustomMissile("BulletTracerFX",20,0,random(-9,9),CMF_OFFSETPITCH,random(-9,9))
+	TNT1 A 0 A_SpawnProjectile("HSFSLightG",32,0,0)
+	"----" AA 0 A_SpawnProjectile("BulletTracerFXInverted",20,0,random(-9,9),CMF_OFFSETPITCH,random(-9,9))
 	SSGM F 3 Bright A_CustomBulletAttack(9,9,2,2,"MBPuff")
 	SSGM E 3 
 	TNT1 A 0 A_Jump(16,"See")
@@ -4819,16 +4819,16 @@ ACTOR HSTeslaImp2	7917	// baron
 	TNT1 a 0 A_Jump(40,"Missile2")
 	TIMP F 8 A_FaceTarget
 	TIMP GHGH 3 A_FaceTarget
-	TNT1 A 0 A_CustomMissile("TIMPLight",32,0,0)
+	TNT1 A 0 A_SpawnProjectile("TIMPLight",32,0,0)
 	TNT1 A 0 A_PlaySound("reilsss/weapons/shockriflefire")
 	TIMP G 3 BRIGHT A_CustomRailgun(random(20,60),0,"none","Blue",1,1,0,"Nothing", 0,0,0, 50,1.1,1.0)
 	Goto See
     Missile2:
 	TIMP F 8 A_FaceTarget
 	TIMP GHGH 3 A_FaceTarget
-	TNT1 A 0 A_CustomMissile("TIMPLight",32,0,0)
+	TNT1 A 0 A_SpawnProjectile("TIMPLight",32,0,0)
 	TNT1 A 0 A_PlaySound("reilsss/weapons/shockriflealtfire")
-	TIMP G 3 BRIGHT A_CustomMissile("ShockBoltMonster",35,0,0)
+	TIMP G 3 BRIGHT A_SpawnProjectile("ShockBoltMonster",35,0,0)
 	TIMP GHGH 3 A_FaceTarget
 	Goto See
     Pain:
@@ -4979,41 +4979,41 @@ ACTOR MourningFallen 7502	// arch-vile
     See:
         FALN A 0 A_UnSetInvulnerable
         FALN A 2 A_Chase
-        FALN A 0 A_CustomMissile("FallenBody", 12, 0, 0)
+        FALN A 0 A_SpawnProjectile("FallenBody", 12, 0, 0)
         FALN A 2 A_Chase
-        FALN A 0 A_CustomMissile("FallenBody", 12, 0, 0)
+        FALN A 0 A_SpawnProjectile("FallenBody", 12, 0, 0)
         FALN B 2 A_Chase
         FALN B 0 A_PlaySound("FallenWing")
-        FALN B 0 A_CustomMissile("FallenBody", 12, 0, 0)
+        FALN B 0 A_SpawnProjectile("FallenBody", 12, 0, 0)
         FALN B 2 A_Chase
-        FALN B 0 A_CustomMissile("FallenBody", 12, 0, 0)
+        FALN B 0 A_SpawnProjectile("FallenBody", 12, 0, 0)
         FALN C 2 A_Chase
-        FALN C 0 A_CustomMissile("FallenBody", 12, 0, 0)
+        FALN C 0 A_SpawnProjectile("FallenBody", 12, 0, 0)
         FALN C 2 A_Chase
-        FALN C 0 A_CustomMissile("FallenBody", 12, 0, 0)
+        FALN C 0 A_SpawnProjectile("FallenBody", 12, 0, 0)
         FALN D 2 A_Chase
-        FALN D 0 A_CustomMissile("FallenBody", 12, 0, 0)
+        FALN D 0 A_SpawnProjectile("FallenBody", 12, 0, 0)
         FALN D 2 A_Chase
-        FALN D 0 A_CustomMissile("FallenBody", 12, 0, 0)
+        FALN D 0 A_SpawnProjectile("FallenBody", 12, 0, 0)
         Goto See+1
     Missile:
         FALN E 0 A_JUMP (64, 12)
-        FALN E 0 A_CustomMissile("FallenBody", 12, 0, 0)
-        FALN E 1 A_CustomMissile("FallenRocket", 12, 0, 0)
-        FALN E 0 A_CustomMissile("FallenBody", 12, 0, 0)
-        FALN AABBCCDD 2 A_CustomMissile("FallenBody", 12, 0, 0)
+        FALN E 0 A_SpawnProjectile("FallenBody", 12, 0, 0)
+        FALN E 1 A_SpawnProjectile("FallenRocket", 12, 0, 0)
+        FALN E 0 A_SpawnProjectile("FallenBody", 12, 0, 0)
+        FALN AABBCCDD 2 A_SpawnProjectile("FallenBody", 12, 0, 0)
         Goto See
         FALN E 0 A_SetInvulnerable
         FALN E 0 A_SkullAttack
         FALN E 0 A_PlaySound("clericflamefire")
-        FALN E 0 A_CustomMissile("FallenFire", 12, 0, 0)
-        FALN E 0 A_CustomMissile("FallenFire", 12, 0, -5)
-        FALN E 0 A_CustomMissile("FallenFire", 12, 0, 5)
-        FALN E 1 A_CustomMissile("FallenBody2", 12, 0, 0)
+        FALN E 0 A_SpawnProjectile("FallenFire", 12, 0, 0)
+        FALN E 0 A_SpawnProjectile("FallenFire", 12, 0, -5)
+        FALN E 0 A_SpawnProjectile("FallenFire", 12, 0, 5)
+        FALN E 1 A_SpawnProjectile("FallenBody2", 12, 0, 0)
         Goto Missile+15
     Pain:
         FALN F 2 A_Pain
-        FALN FFFF 2 A_CustomMissile("FallenBody2", 12, 0, 0)
+        FALN FFFF 2 A_SpawnProjectile("FallenBody2", 12, 0, 0)
         Goto See
     Death:
         FALN F 4
@@ -5028,7 +5028,7 @@ ACTOR MourningFallen 7502	// arch-vile
     Crash:
 	  "####" "#" 0 A_JumpIfInventory("DisintegrateToken",1,"DisintegrateCont")
         FALN M 3 //A_Mushroom
-        FALN M 0 A_CustomMissile("FallenCorpse", 12, 0, 0)
+        FALN M 0 A_SpawnProjectile("FallenCorpse", 12, 0, 0)
         Stop
     XDeath:
     XDeathBlood:
@@ -5127,19 +5127,19 @@ ACTOR FallenRocket
 	FNFX ABCABC 4 BRIGHT
 	FNFX A 2 BRIGHT
 	FNFX A 2 A_Jump(128, 2)
-	FNFX A 0 A_CustomMissile("FallenChaos", 0, 0, 90)
+	FNFX A 0 A_SpawnProjectile("FallenChaos", 0, 0, 90)
 	FNFX A 2 A_Jump(128, 2)
-	FNFX A 0 A_CustomMissile("FallenChaos", 0, 0, -90)
+	FNFX A 0 A_SpawnProjectile("FallenChaos", 0, 0, -90)
 	FNFX B 2 BRIGHT
 	FNFX B 2 A_Jump(128, 2)
-	FNFX B 0 A_CustomMissile("FallenChaos", 0, 0, 90)
+	FNFX B 0 A_SpawnProjectile("FallenChaos", 0, 0, 90)
 	FNFX B 2 A_Jump(128, 2)
-	FNFX B 0 A_CustomMissile("FallenChaos", 0, 0, -90)
+	FNFX B 0 A_SpawnProjectile("FallenChaos", 0, 0, -90)
 	FNFX C 2 BRIGHT
 	FNFX C 2 A_Jump(128, 2)
-	FNFX C 0 A_CustomMissile("FallenChaos", 0, 0, 90)
+	FNFX C 0 A_SpawnProjectile("FallenChaos", 0, 0, 90)
 	FNFX C 2 A_Jump(128, 2)
-	FNFX C 0 A_CustomMissile("FallenChaos", 0, 0, -90)
+	FNFX C 0 A_SpawnProjectile("FallenChaos", 0, 0, -90)
 	FNFX D 0
 	Goto Spawn+1
     Death:
@@ -5259,12 +5259,12 @@ Actor ShieldDemon : Ailsower 7503	// mancubus
     Missile:
 	  TNT1 A 0 A_Jump(128,"Missile2")
         CEN2 E 5 A_FaceTarget
-        CEN2 FFF 9 Bright A_CustomMissile("ShieldDemonMissile", 30, 0, 0)
+        CEN2 FFF 9 Bright A_SpawnProjectile("ShieldDemonMissile", 30, 0, 0)
         CEN2 E 5 A_FaceTarget
         Goto See
     Missile2:
         CEN2 E 5 A_FaceTarget
-        CEN2 FFF 9 Bright A_CustomMissile("FatShot", 30, 0, 0)
+        CEN2 FFF 9 Bright A_SpawnProjectile("FatShot", 30, 0, 0)
         CEN2 E 5 A_FaceTarget
         Goto See
     Pain:
@@ -5520,7 +5520,7 @@ ACTOR HSCaveDemon2 		// imp
 	TNT1 A 0 A_playSound("GDemonSight")
 	CDMN E 4 A_FaceTarget
 	CDMN F 0 A_FaceTarget
-	CDMN F 3 A_CustomMissile("CaveDemonFireballWeak",25,0,0)
+	CDMN F 3 A_SpawnProjectile("CaveDemonFireballWeak",25,0,0)
 	CDMN E 6
 	Goto See
     Pain:

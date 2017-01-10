@@ -64,14 +64,14 @@ Actor FCultist //7180	// chaingun guy
 	Missile:
 		TNT1 A 0 A_JumpIfCloser(450,5)	//check if close enough to throw TNT
 		E21A B 1 A_FaceTarget			//If target is not in 450MU, will do rapid Fire (Tommy gun?)
-		"----" A 0 A_CustomMissile("BulletTracerFX",10,0,random(-10,10),CMF_OFFSETPITCH,random(-10,10))
+		"----" A 0 A_SpawnProjectile("BulletTracerFXInverted",10,0,random(-10,10),CMF_OFFSETPITCH,random(-10,10))
 		E21A A 2 Bright A_CustomBulletAttack(4,2,1,3,"BulletDamagePuff")
 		E21A B 0 A_CPosRefire
 		E21A B 2 
 		Goto Missile+1
 		TNT1 A 0 A_Jump(128,7)			//only 50% fo times if less than 450MU, will throw TNT
 		E21A CDEF 4 A_FaceTarget
-		E21A G 4 A_CustomMissile("TNTSmall",30,0,0)
+		E21A G 4 A_SpawnProjectile("TNTSmall",30,0,0)
 		E21A H 4
 		Goto See
 		E21A B 1 A_FaceTarget			//Again rapid Fire (Tommy gun?)
@@ -163,11 +163,11 @@ Actor TNTSmall
 	TNT2 ABC 3
 	TNT2 ABC 3
 		TNT1 A 0 A_PlaySound("weapons/rockexplo")
-		TNT1 A 0 A_CustomMissile("MonExplosionMediumConcentrated",0,0,0)
+		TNT1 A 0 A_SpawnProjectile("MonExplosionMediumConcentrated",0,0,0)
 		TNT1 A 0 A_Explode(40,64)
 	XDeath:		//ifbleeding
 		TNT1 A 0 A_PlaySound("weapons/rockexplo")
-		TNT1 A 0 A_CustomMissile("MonExplosionMediumConcentrated",0,0,0)
+		TNT1 A 0 A_SpawnProjectile("MonExplosionMediumConcentrated",0,0,0)
 		TNT1 A 0 A_Explode(40,64)
 		Stop
 	Death:
@@ -179,7 +179,7 @@ Actor TNTSmall
 	TNT2 ABC 3
 	TNT2 ABC 3
 		TNT1 A 0 A_PlaySound("weapons/rockexplo")
-		TNT1 A 0 A_CustomMissile("MonExplosionMediumConcentrated",0,0,0)
+		TNT1 A 0 A_SpawnProjectile("MonExplosionMediumConcentrated",0,0,0)
 		TNT1 A 0 A_Explode(40,64)
 		Stop
 	}
@@ -197,8 +197,8 @@ Actor TNTExplo
 	{
 	Spawn:
 		TNT1 A 0
-		TNT1 A 0 A_CustomMissile("ExploSmokeGeneralSmall",0,0,0)
-	EXPL A 0 A_CustomMissile("ExploSmoke",0+Random(0,25),0+Random(5,-5),0+Random(0,370))
+		TNT1 A 0 A_SpawnProjectile("ExploSmokeGeneralSmall",0,0,0)
+	EXPL A 0 A_SpawnProjectile("ExploSmoke",0+Random(0,25),0+Random(5,-5),0+Random(0,370))
 		TNT1 AAAA 0 A_SpawnItemEx("Q2RocketExtra",0,0,0,1,0,random(-1,3),random(1,360))
 	XPL2 ABCDEFGHIJK 3 Bright A_FadeOut
 		Stop
@@ -235,17 +235,17 @@ Actor FCultist2 : FCultist 7181		// zombie
 	Missile:
 		TNT1 A 0 A_JumpIfCloser(450,4)	//check if close enough to throw TNT
 		E21A B 8 A_FaceTarget(0,0)	
-		"----" AAA 0 A_CustomMissile("BulletTracerFX",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(3),3))
+		"----" AAA 0 A_SpawnProjectile("BulletTracerFXInverted",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(3),3))
 		E21A A 6 Bright A_CustomBulletAttack(4,3,3,5,"BulletDamagePuff")
 		E21A B 8 A_FaceTarget
 		Goto See
 		TNT1 A 0 A_Jump(128,7)			//only 50% fo times if less than 450MU, will throw TNT
 		E21A CDEF 4 A_FaceTarget
-		E21A G 4 A_CustomMissile("TNTSmall",30,0,0)
+		E21A G 4 A_SpawnProjectile("TNTSmall",30,0,0)
 		E21A H 4
 		Goto See
 		E21A B 8 A_FaceTarget(0,0)
-		"----" AAA 0 A_CustomMissile("BulletTracerFX",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(3),3))
+		"----" AAA 0 A_SpawnProjectile("BulletTracerFXInverted",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(3),3))
 		E21A A 6 Bright A_CustomBulletAttack(4,3,3,5)
 		E21A B 8 A_FaceTarget
 		Goto See
@@ -284,37 +284,37 @@ Actor FCultist3 : FCultist 7182		// shotgun guy
 		TNT1 A 0 A_JumpIfCloser(450,15)	//check if close enough to throw TNT
 		E21A B 4 A_FaceTarget
 		E21A A 0 A_Playsound("weapons/frzball")
-		E21A A 4 Bright A_CustomMissile("CultistFreezeBall",32,0,0)
+		E21A A 4 Bright A_SpawnProjectile("CultistFreezeBall",32,0,0)
 		E21A B 4 A_FaceTarget
 		E21A B 4 A_FaceTarget
 		E21A A 0 A_Playsound("weapons/frzball")
-		E21A A 4 Bright A_CustomMissile("CultistFreezeBall",32,0,0)
+		E21A A 4 Bright A_SpawnProjectile("CultistFreezeBall",32,0,0)
 		E21A B 4 A_FaceTarget
 		E21A A 0 A_Playsound("weapons/frzball")
-		E21A A 4 Bright A_CustomMissile("CultistFreezeBall",32,0,0)
+		E21A A 4 Bright A_SpawnProjectile("CultistFreezeBall",32,0,0)
 		E21A B 4 A_FaceTarget
 		E21A A 0 A_Playsound("weapons/frzball")
-		E21A A 4 Bright A_CustomMissile("CultistFreezeBall",32,0,0)
+		E21A A 4 Bright A_SpawnProjectile("CultistFreezeBall",32,0,0)
 		E21A B 4 A_FaceTarget
 		Goto See
 		TNT1 A 0 A_Jump(128,7)			//only 50% fo times if less than 450MU, will throw TNT
 		E21A CDEF 4 A_FaceTarget
-		E21A G 4 A_CustomMissile("TNTSmall",30,0,0)
+		E21A G 4 A_SpawnProjectile("TNTSmall",30,0,0)
 		E21A H 4
 		Goto See
 		E21A B 4 A_FaceTarget
 		E21A A 0 A_Playsound("weapons/frzball")
-		E21A A 4 Bright A_CustomMissile("CultistFreezeBall",32,0,0)
+		E21A A 4 Bright A_SpawnProjectile("CultistFreezeBall",32,0,0)
 		E21A B 4 A_FaceTarget
 		E21A B 4 A_FaceTarget
 		E21A A 0 A_Playsound("weapons/frzball")
-		E21A A 4 Bright A_CustomMissile("CultistFreezeBall",32,0,0)
+		E21A A 4 Bright A_SpawnProjectile("CultistFreezeBall",32,0,0)
 		E21A B 4 A_FaceTarget
 		E21A A 0 A_Playsound("weapons/frzball")
-		E21A A 4 Bright A_CustomMissile("CultistFreezeBall",32,0,0)
+		E21A A 4 Bright A_SpawnProjectile("CultistFreezeBall",32,0,0)
 		E21A B 4 A_FaceTarget
 		E21A A 0 A_Playsound("weapons/frzball")
-		E21A A 4 Bright A_CustomMissile("CultistFreezeBall",32,0,0)
+		E21A A 4 Bright A_SpawnProjectile("CultistFreezeBall",32,0,0)
 		E21A B 4 A_FaceTarget
 		Goto See
 	}
@@ -373,26 +373,26 @@ Actor FCultist4 : FCultist 7204		// imp
 		TNT1 A 0 A_JumpIfCloser(450,"TNT")	//check if close enough to throw TNT
 		E21A A 0 A_Jump(100,4)
 		E21A B 8 A_FaceTarget(0,0)
-		"----" A 0 A_CustomMissile("BulletTracerFX",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(3),3))
+		"----" A 0 A_SpawnProjectile("BulletTracerFXInverted",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(3),3))
 		E21A A 6 Bright A_CustomBulletAttack(4,3,3,5,"BulletDamagePuff")
 		E21A B 8 A_FaceTarget
 		Goto See
 	Flare:
 		E21A B 4 A_FaceTarget
 		E21A A 0 A_Playsound("caleb/flare")
-		E21A A 4 Bright A_CustomMissile("CultistFlareGunShot",32,0,0)
+		E21A A 4 Bright A_SpawnProjectile("CultistFlareGunShot",32,0,0)
 		E21A B 4 A_FaceTarget
 		Goto See
 	TNT:
 		TNT1 A 0 A_Jump(128,"Shotgun")			//only 50% fo times if less than 450MU, will throw TNT
 		E21A CDEF 4 A_FaceTarget
-		E21A G 4 A_CustomMissile("TNTSmall",30,0,0)
+		E21A G 4 A_SpawnProjectile("TNTSmall",30,0,0)
 		E21A H 4
 		Goto See
 	Shotgun:
 		E21A A 0 A_Jump(100,"Flare")
 		E21A B 8 A_FaceTarget(0,0)
-		"----" A 0 A_CustomMissile("BulletTracerFX",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(3),3))
+		"----" A 0 A_SpawnProjectile("BulletTracerFXInverted",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(3),3))
 		E21A A 6 Bright A_CustomBulletAttack(4,3,3,5,"BulletDamagePuff")
 		E21A B 8 A_FaceTarget
 		Goto See
@@ -527,14 +527,14 @@ Actor FCerberus 7183	// spider mastermind
 	Missile:
 		TNT1 A 0 A_JumpIfHealthLower(2500,"Missile2")
 		E13A A 7 A_FaceTarget
-		E13A B 7 Bright A_CustomMissile("CerberusFireBall", 34, 15, 0) 
+		E13A B 7 Bright A_SpawnProjectile("CerberusFireBall", 34, 15, 0) 
 		E13A C 7 A_FaceTarget
-		E13A D 7 Bright A_CustomMissile("CerberusFireBall", 34, -15, 0) 
+		E13A D 7 Bright A_SpawnProjectile("CerberusFireBall", 34, -15, 0) 
 		Goto See
 	Missile2:
 		E13A E 7 A_FaceTarget
 		E13A E 0 A_FaceTarget
-		E13A F 7 Bright A_CustomMissile("CerberusFireBall", 34, 15, 0) 
+		E13A F 7 Bright A_SpawnProjectile("CerberusFireBall", 34, 15, 0) 
 		E13A E 0 A_FaceTarget
 		Goto "See2"
 	Pain:
@@ -597,7 +597,7 @@ Actor CerberusFireBall
 	States
 	{
 	Spawn:
-		FBA2 AAAABBBBCCCCDDDDEEEEFFFF 1 Bright A_CustomMissile("CFBTrail",random(3,-3),random(3,-3),0)
+		FBA2 AAAABBBBCCCCDDDDEEEEFFFF 1 Bright A_SpawnProjectile("CFBTrail",random(3,-3),random(3,-3),0)
 		Loop
 	Death:
 		TNT1 A 0 A_SpawnItemEx("MonExplosionMedium",0,0,0,0,0,0,0,0)
@@ -700,14 +700,14 @@ Actor HellHound : FCerberus			// hell knight
 	Missile:
 		TNT1 A 0 A_JumpIfHealthLower(450,"Missile2")
 		E13A A 7 A_FaceTarget
-		E13A B 7 Bright A_CustomMissile("WyvernHeartFireball", 19, 15, 0)
+		E13A B 7 Bright A_SpawnProjectile("WyvernHeartFireball", 19, 15, 0)
 		E13A C 7 A_FaceTarget
-		E13A D 7 Bright A_CustomMissile("WyvernHeartFireball", 19, -15, 0)
+		E13A D 7 Bright A_SpawnProjectile("WyvernHeartFireball", 19, -15, 0)
 		Goto See
 	Missile2:
 		E13A E 7 A_FaceTarget
 		E13A E 0 A_FaceTarget
-		E13A F 7 Bright A_CustomMissile("WyvernHeartFireball", 19, 15, 0)
+		E13A F 7 Bright A_SpawnProjectile("WyvernHeartFireball", 19, 15, 0)
 		E13A E 0 A_FaceTarget
 		Goto See2
 	Pain:
@@ -823,17 +823,17 @@ Actor FFireDog 7184	// chaingunner
 		TNT1 A 0 A_JumpIfCloser(384,1)
 		Goto See
 		E14A A 7 A_FaceTarget
-		E14A B 2 Bright A_CustomMissile("DogFire", 20, 0, 0) 
+		E14A B 2 Bright A_SpawnProjectile("DogFire", 20, 0, 0) 
 		E14A A 0 A_FaceTarget
-		E14A B 2 Bright A_CustomMissile("DogFire", 20, 0, 0) 
+		E14A B 2 Bright A_SpawnProjectile("DogFire", 20, 0, 0) 
 		E14A A 0 A_FaceTarget
-		E14A B 2 Bright A_CustomMissile("DogFire", 20, 0, 0) 
+		E14A B 2 Bright A_SpawnProjectile("DogFire", 20, 0, 0) 
 		E14A A 0 A_FaceTarget
-		E14A B 2 Bright A_CustomMissile("DogFire", 20, 0, 0) 
+		E14A B 2 Bright A_SpawnProjectile("DogFire", 20, 0, 0) 
 		E14A A 0 A_FaceTarget
-		E14A B 2 Bright A_CustomMissile("DogFire", 20, 0, 0) 
+		E14A B 2 Bright A_SpawnProjectile("DogFire", 20, 0, 0) 
 		E14A A 0 A_FaceTarget
-		E14A B 2 Bright A_CustomMissile("DogFire", 20, 0, 0) 
+		E14A B 2 Bright A_SpawnProjectile("DogFire", 20, 0, 0) 
 		E14A A 0 A_FaceTarget
 		E14A C 7 A_FaceTarget 
 		Goto See
@@ -1006,7 +1006,7 @@ Actor FFatZombie 7185	// revenant
 		Goto See
 	Missile:
 		E15A GHI 6 A_FaceTarget
-		E15A J 5 Bright A_CustomMissile("Vomit", 40, 0, 0) 
+		E15A J 5 Bright A_SpawnProjectile("Vomit", 40, 0, 0) 
 		Goto See
 	Pain:
 		E15A G 3
@@ -1155,7 +1155,7 @@ Actor FWingedDemon 7186		// cacodemon
 		Loop
 	Missile: 
 		E17A ABC 6 A_FaceTarget
-		E17A D 5 A_CustomMissile("Bone",30,0,0)
+		E17A D 5 A_SpawnProjectile("Bone",30,0,0)
 		E17A EF 6 A_FaceTarget
 		Goto See 
 	Melee:
@@ -1349,7 +1349,7 @@ Actor FReaper 7187	// pain elemental
 		E20A A 5 A_FaceTarget
 		E20A B 5 A_FaceTarget
 		E20A C 4 A_FaceTarget
-		E20A D 5 A_CustomMissile("DSGhost",30,0,0)
+		E20A D 5 A_SpawnProjectile("DSGhost",30,0,0)
 		E20A E 4 A_FaceTarget
 		Goto See 
 	Pain: 
@@ -1421,7 +1421,7 @@ Actor DSGhost
 		GHOS C 2 Bright A_SeekerMissile(10,20)	TNT1 A 0 A_SpawnItem("DSGhostTrail",-2)
 		Loop
 	Death:
-		TNT1 A 0 A_CustomMissile("DSGhostExplo",0,0,0)
+		TNT1 A 0 A_SpawnProjectile("DSGhostExplo",0,0,0)
 		GHOD AAABBBCCC 1 Bright A_FadeOut
 		Stop
 	}
@@ -1761,41 +1761,41 @@ Actor FTchernobog 7193		// cyberdemon
 	Missile:
 		TNT1 A 0 A_Jump(128,"Missile2")
 		E23A ABC 6 Bright A_FaceTarget
-		E23A D 0 Bright A_CustomMissile("TechnoBall3", 80, 0, 15) 
-		E23A D 0 Bright A_CustomMissile("TechnoBall3", 80, 0, -15) 
-		E23A D 5 Bright A_CustomMissile("TechnoBall3", 80, 0, 0) 
+		E23A D 0 Bright A_SpawnProjectile("TechnoBall3", 80, 0, 15) 
+		E23A D 0 Bright A_SpawnProjectile("TechnoBall3", 80, 0, -15) 
+		E23A D 5 Bright A_SpawnProjectile("TechnoBall3", 80, 0, 0) 
 		E23A E 6 A_FaceTarget
 		Goto See
 	Missile2:
 		E23A ABC 6 Bright A_FaceTarget(0,0)
-		"----" AA 0 A_CustomMissile("BulletTracerFX",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(3),3))
+		"----" AA 0 A_SpawnProjectile("BulletTracerFXInverted",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(3),3))
 		E23A C 4 Bright A_CustomBulletAttack(7,7,2,5,"TLeechPuff")
 		TNT1 A 0 A_FaceTarget(0,0)
-		"----" AA 0 A_CustomMissile("BulletTracerFX",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(3),3))
+		"----" AA 0 A_SpawnProjectile("BulletTracerFXInverted",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(3),3))
 		E23A C 4 Bright A_CustomBulletAttack(7,7,2,5,"TLeechPuff")
 		TNT1 A 0 A_FaceTarget(0,0)
-		"----" AA 0 A_CustomMissile("BulletTracerFX",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(3),3))
+		"----" AA 0 A_SpawnProjectile("BulletTracerFXInverted",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(3),3))
 		E23A C 4 Bright A_CustomBulletAttack(7,7,2,5,"TLeechPuff")
 		TNT1 A 0 A_FaceTarget(0,0)
-		"----" AA 0 A_CustomMissile("BulletTracerFX",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(3),3))
+		"----" AA 0 A_SpawnProjectile("BulletTracerFXInverted",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(3),3))
 		E23A C 4 Bright A_CustomBulletAttack(7,7,2,5,"TLeechPuff")
 		TNT1 A 0 A_FaceTarget(0,0)
-		"----" AA 0 A_CustomMissile("BulletTracerFX",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(3),3))
+		"----" AA 0 A_SpawnProjectile("BulletTracerFXInverted",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(3),3))
 		E23A C 4 Bright A_CustomBulletAttack(7,7,2,5,"TLeechPuff")
 		TNT1 A 0 A_FaceTarget(0,0)
-		"----" AA 0 A_CustomMissile("BulletTracerFX",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(3),3))
+		"----" AA 0 A_SpawnProjectile("BulletTracerFXInverted",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(3),3))
 		E23A C 4 Bright A_CustomBulletAttack(7,7,2,5,"TLeechPuff")
 		TNT1 A 0 A_FaceTarget(0,0)
-		"----" AA 0 A_CustomMissile("BulletTracerFX",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(3),3))
+		"----" AA 0 A_SpawnProjectile("BulletTracerFXInverted",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(3),3))
 		E23A C 4 Bright A_CustomBulletAttack(7,7,2,5,"TLeechPuff")
 		TNT1 A 0 A_FaceTarget(0,0)
-		"----" AA 0 A_CustomMissile("BulletTracerFX",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(3),3))
+		"----" AA 0 A_SpawnProjectile("BulletTracerFXInverted",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(3),3))
 		E23A C 4 Bright A_CustomBulletAttack(7,7,2,5,"TLeechPuff")
 		TNT1 A 0 A_FaceTarget(0,0)
-		"----" AA 0 A_CustomMissile("BulletTracerFX",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(3),3))
+		"----" AA 0 A_SpawnProjectile("BulletTracerFXInverted",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(3),3))
 		E23A C 4 Bright A_CustomBulletAttack(7,7,2,5,"TLeechPuff")
 		TNT1 A 0 A_FaceTarget(0,0)
-		"----" AA 0 A_CustomMissile("BulletTracerFX",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(3),3))
+		"----" AA 0 A_SpawnProjectile("BulletTracerFXInverted",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(3),3))
 		E23A C 4 Bright A_CustomBulletAttack(7,7,2,5,"TLeechPuff")
 		E23A DE 4 Bright
 		Goto See
@@ -1890,18 +1890,18 @@ Actor TechnoBall3
 	States
 	{
 	Spawn:
-		TNT1 AA 0 A_CustomMissile("SLGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
-		VOR2 F 1 Bright A_CustomMissile("TBTrail",0,0,random(45,-45))
-		TNT1 AA 0 A_CustomMissile("SLGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
-		VOR2 G 1 Bright A_CustomMissile("TBTrail",0,0,random(45,-45))
-		TNT1 AA 0 A_CustomMissile("SLGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
-		VOR2 H 1 Bright A_CustomMissile("TBTrail",0,0,random(45,-45))
-		TNT1 AA 0 A_CustomMissile("SLGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
-		VOR2 I 1 Bright A_CustomMissile("TBTrail",0,0,random(45,-45))
+		TNT1 AA 0 A_SpawnProjectile("SLGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
+		VOR2 F 1 Bright A_SpawnProjectile("TBTrail",0,0,random(45,-45))
+		TNT1 AA 0 A_SpawnProjectile("SLGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
+		VOR2 G 1 Bright A_SpawnProjectile("TBTrail",0,0,random(45,-45))
+		TNT1 AA 0 A_SpawnProjectile("SLGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
+		VOR2 H 1 Bright A_SpawnProjectile("TBTrail",0,0,random(45,-45))
+		TNT1 AA 0 A_SpawnProjectile("SLGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
+		VOR2 I 1 Bright A_SpawnProjectile("TBTrail",0,0,random(45,-45))
 		Loop
 	Death:
 		TNT1 A 0 A_Explode(134,160,0)
-		TNT1 A 0 A_CustomMissile("TBExplo",0,0,0)
+		TNT1 A 0 A_SpawnProjectile("TBExplo",0,0,0)
 		Stop
 	}
 }
@@ -1915,7 +1915,7 @@ Actor TechnoBall : TechnoBall3
 	{
 	Death:
 		TNT1 A 0 A_Explode(128,128)
-		TNT1 A 0 A_CustomMissile("TBExplo",0,0,0)
+		TNT1 A 0 A_SpawnProjectile("TBExplo",0,0,0)
 		Stop
 	}
 }
@@ -2034,10 +2034,10 @@ Actor FFishThing 7194	// demon
 		Goto See
 	Missile:
 		E24A A 5 A_FaceTarget
-		E24A B 5 Bright A_CustomMissile("Vomit2", 34, 0, 0) 
+		E24A B 5 Bright A_SpawnProjectile("Vomit2", 34, 0, 0) 
 		E24A C 5 A_FaceTarget
 		E24A A 5 A_FaceTarget
-		E24A B 5 Bright A_CustomMissile("Vomit2", 34, 0, 0) 
+		E24A B 5 Bright A_SpawnProjectile("Vomit2", 34, 0, 0) 
 		E24A C 5 A_FaceTarget
 		Goto See
 	Pain:
@@ -2276,11 +2276,11 @@ Actor FWereWolf2 : FWereWolf	7196	//mancubus
 	Missile:
 		E25A ABC 6 A_FaceTarget
 		TNT1 A 0 A_PlaySound("diablo2/claygolem/attack")
-		E25A DDDDAAAD 0 A_CustomMissile("Bloodshot",34,0,random(10,-10))
-		E25A D 5 A_CustomMissile("Bloodshot",34,0,random(10,-10))
+		E25A DDDDAAAD 0 A_SpawnProjectile("Bloodshot",34,0,random(10,-10))
+		E25A D 5 A_SpawnProjectile("Bloodshot",34,0,random(10,-10))
 		E25A EFG 6 A_FaceTarget
-		E25A DDDDAAAD 0 A_CustomMissile("Bloodshot",34,0,random(10,-10))
-		E25A D 5 A_CustomMissile("Bloodshot",34,0,random(10,-10))
+		E25A DDDDAAAD 0 A_SpawnProjectile("Bloodshot",34,0,random(10,-10))
+		E25A D 5 A_SpawnProjectile("Bloodshot",34,0,random(10,-10))
 		E25A H 5 A_MeleeAttack
 		E25A IJ 6 A_FaceTarget
 		Goto See
@@ -2404,10 +2404,10 @@ Actor StoneLycanthrope //7197		//Spidermaster
 	SLBall:
 		E25A ABC 5 A_FaceTarget
 		TNT1 A 0 A_PlaySound("diablo2/bloodlord/attack")
-		E25A D 5 A_CustomMissile("SLyBall",48,10,0,1)
+		E25A D 5 A_SpawnProjectile("SLyBall",48,10,0,1)
 		E25A EFG 4 A_FaceTarget
 		TNT1 A 0 A_PlaySound("diablo2/bloodlord/attack")
-		E25A H 5 A_CustomMissile("SLyBall",48,-10,0,1)
+		E25A H 5 A_SpawnProjectile("SLyBall",48,-10,0,1)
 		E25A IJ 5 A_FaceTarget
 		Goto See
 	Boulders:
@@ -2415,43 +2415,43 @@ Actor StoneLycanthrope //7197		//Spidermaster
 		TNT1 A 0 A_SetInvulnerable
 	BSMT F 0 A_QuakeEx(4,4,0, 10,0,64,"", QF_SCALEDOWN)
 		TNT1 A 0 A_PlaySoundEx("eidolon/stomp","SoundSlot6")
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,0)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,10)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,20)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,30)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,40)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,50)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,60)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,70)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,80)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,90)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,100)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,110)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,120)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,130)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,140)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,150)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,160)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,170)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,180)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,-10)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,-20)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,-30)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,-40)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,-50)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,-60)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,-70)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,-80)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,-90)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,-100)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,-110)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,-120)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,-130)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,-140)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,-150)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,-160)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,-170)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,-180)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,0)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,10)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,20)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,30)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,40)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,50)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,60)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,70)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,80)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,90)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,100)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,110)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,120)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,130)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,140)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,150)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,160)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,170)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,180)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,-10)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,-20)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,-30)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,-40)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,-50)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,-60)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,-70)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,-80)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,-90)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,-100)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,-110)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,-120)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,-130)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,-140)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,-150)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,-160)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,-170)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,-180)
 		E25K D 5
 		TNT1 A 0 A_SpawnItemEx("GroundRock2Dust",random(50,70),random(-90,90),0,0,0,0,0,SXF_NOCHECKPOSITION)
 		E25K E 4 A_SpawnItemEx("GroundRock2",random(50,70),random(-90,90),0,0,0,0,0,SXF_NOCHECKPOSITION)
@@ -2475,50 +2475,50 @@ Actor StoneLycanthrope //7197		//Spidermaster
 		TNT1 A 0 A_SetInvulnerable
 		BSMT F 0 A_QuakeEx(8,8,0, 20,2,128,"", QF_SCALEDOWN)
 		TNT1 A 0 A_PlaySoundEx("eidolon/stomp","SoundSlot6")
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,0)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,10)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,20)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,30)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,40)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,50)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,60)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,70)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,80)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,90)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,100)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,110)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,120)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,130)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,140)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,150)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,160)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,170)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,180)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,-10)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,-20)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,-30)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,-40)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,-50)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,-60)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,-70)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,-80)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,-90)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,-100)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,-110)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,-120)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,-130)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,-140)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,-150)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,-160)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,-170)
-		TNT1 A 0 A_CustomMissile("ShockWaveSmall",0,0,-180)
-		TNT1 A 0 A_CustomMissile("SLGroundSpike",32,0,0)
-		TNT1 A 0 A_CustomMissile("SLGroundSpike",32,0,10)
-		TNT1 A 0 A_CustomMissile("SLGroundSpike",32,0,20)
-		TNT1 A 0 A_CustomMissile("SLGroundSpike",32,0,30)
-		TNT1 A 0 A_CustomMissile("SLGroundSpike",32,0,-10)
-		TNT1 A 0 A_CustomMissile("SLGroundSpike",32,0,-20)
-		TNT1 A 0 A_CustomMissile("SLGroundSpike",32,0,-30)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,0)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,10)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,20)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,30)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,40)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,50)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,60)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,70)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,80)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,90)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,100)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,110)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,120)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,130)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,140)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,150)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,160)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,170)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,180)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,-10)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,-20)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,-30)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,-40)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,-50)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,-60)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,-70)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,-80)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,-90)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,-100)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,-110)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,-120)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,-130)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,-140)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,-150)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,-160)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,-170)
+		TNT1 A 0 A_SpawnProjectile("ShockWaveSmall",0,0,-180)
+		TNT1 A 0 A_SpawnProjectile("SLGroundSpike",32,0,0)
+		TNT1 A 0 A_SpawnProjectile("SLGroundSpike",32,0,10)
+		TNT1 A 0 A_SpawnProjectile("SLGroundSpike",32,0,20)
+		TNT1 A 0 A_SpawnProjectile("SLGroundSpike",32,0,30)
+		TNT1 A 0 A_SpawnProjectile("SLGroundSpike",32,0,-10)
+		TNT1 A 0 A_SpawnProjectile("SLGroundSpike",32,0,-20)
+		TNT1 A 0 A_SpawnProjectile("SLGroundSpike",32,0,-30)
 		E25K D 5 
 		E25K E 15
 		E25K D 6
@@ -2615,7 +2615,7 @@ Actor SLGroundSpike
 	States
 	{
 	Spawn:	
-		TNT1 D 0 A_CustomMissile("GroundSpikeExt",0,0,0)
+		TNT1 D 0 A_SpawnProjectile("GroundSpikeExt",0,0,0)
 		TNT1 A 2
 		Loop
 	Death:
@@ -2638,26 +2638,26 @@ Actor SLyBall : TechnoBall3
 	States
 	{
 	Spawn:
-		TNT1 A 0 A_CustomMissile("SLyGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
-		TNT1 A 0 A_CustomMissile("SLyGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
-		VOR2 F 1 Bright A_CustomMissile("SLyTrail",0,0,random(45,-45))
+		TNT1 A 0 A_SpawnProjectile("SLyGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
+		TNT1 A 0 A_SpawnProjectile("SLyGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
+		VOR2 F 1 Bright A_SpawnProjectile("SLyTrail",0,0,random(45,-45))
 		VOR2 F 0 A_SeekerMissile(1,1)
-		TNT1 A 0 A_CustomMissile("SLyGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
-		TNT1 A 0 A_CustomMissile("SLyGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
-		VOR2 G 1 Bright A_CustomMissile("SLyTrail",0,0,random(45,-45))
+		TNT1 A 0 A_SpawnProjectile("SLyGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
+		TNT1 A 0 A_SpawnProjectile("SLyGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
+		VOR2 G 1 Bright A_SpawnProjectile("SLyTrail",0,0,random(45,-45))
 		VOR2 G 0 A_SeekerMissile(1,1)
-		TNT1 A 0 A_CustomMissile("SLyGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
-		TNT1 A 0 A_CustomMissile("SLyGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
-		VOR2 H 1 Bright A_CustomMissile("SLyTrail",0,0,random(45,-45))
+		TNT1 A 0 A_SpawnProjectile("SLyGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
+		TNT1 A 0 A_SpawnProjectile("SLyGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
+		VOR2 H 1 Bright A_SpawnProjectile("SLyTrail",0,0,random(45,-45))
 		VOR2 H 0 A_SeekerMissile(1,1)
-		TNT1 A 0 A_CustomMissile("SLyGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
-		TNT1 A 0 A_CustomMissile("SLyGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
-		VOR2 I 1 Bright A_CustomMissile("SLyTrail",0,0,random(45,-45))
+		TNT1 A 0 A_SpawnProjectile("SLyGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
+		TNT1 A 0 A_SpawnProjectile("SLyGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
+		VOR2 I 1 Bright A_SpawnProjectile("SLyTrail",0,0,random(45,-45))
 		VOR2 I 0 A_SeekerMissile(1,1)
 		Loop
 	Death:
 		TNT1 A 0 A_Explode(80,150,0)
-		TNT1 A 0 A_CustomMissile("SLyExplo",-16,0,0)
+		TNT1 A 0 A_SpawnProjectile("SLyExplo",-16,0,0)
 		Stop
 	}
 }
@@ -2773,8 +2773,8 @@ Actor Cheogh 7198	// spider mastermind
 		Loop
 	Missile: 
 		CHEO E 5 A_FaceTarget
-		CHEO E 0 A_CustomMissile("Cheoghball",48,-10,0,1)
-		CHEO E 5 A_CustomMissile("CheoghBall",48,10,0,1)
+		CHEO E 0 A_SpawnProjectile("Cheoghball",48,-10,0,1)
+		CHEO E 5 A_SpawnProjectile("CheoghBall",48,10,0,1)
 		CHEO E 5 A_FaceTarget
 		Goto See 
 	Pain: 
@@ -2824,26 +2824,26 @@ Actor CheoghBall : TechnoBall3
 	States
 	{
 	Spawn:
-		TNT1 A 0 A_CustomMissile("CBGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
-		TNT1 A 0 A_CustomMissile("CBGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
-		VOR2 F 1 Bright A_CustomMissile("CBTrail",0,0,random(45,-45))
+		TNT1 A 0 A_SpawnProjectile("CBGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
+		TNT1 A 0 A_SpawnProjectile("CBGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
+		VOR2 F 1 Bright A_SpawnProjectile("CBTrail",0,0,random(45,-45))
 		VOR2 F 0 A_SeekerMissile(1,1)
-		TNT1 A 0 A_CustomMissile("CBGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
-		TNT1 A 0 A_CustomMissile("CBGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
-		VOR2 G 1 Bright A_CustomMissile("CBTrail",0,0,random(45,-45))
+		TNT1 A 0 A_SpawnProjectile("CBGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
+		TNT1 A 0 A_SpawnProjectile("CBGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
+		VOR2 G 1 Bright A_SpawnProjectile("CBTrail",0,0,random(45,-45))
 		VOR2 G 0 A_SeekerMissile(1,1)
-		TNT1 A 0 A_CustomMissile("CBGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
-		TNT1 A 0 A_CustomMissile("CBGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
-		VOR2 H 1 Bright A_CustomMissile("CBTrail",0,0,random(45,-45))
+		TNT1 A 0 A_SpawnProjectile("CBGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
+		TNT1 A 0 A_SpawnProjectile("CBGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
+		VOR2 H 1 Bright A_SpawnProjectile("CBTrail",0,0,random(45,-45))
 		VOR2 H 0 A_SeekerMissile(1,1)
-		TNT1 A 0 A_CustomMissile("CBGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
-		TNT1 A 0 A_CustomMissile("CBGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
-		VOR2 I 1 Bright A_CustomMissile("CBTrail",0,0,random(45,-45))
+		TNT1 A 0 A_SpawnProjectile("CBGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
+		TNT1 A 0 A_SpawnProjectile("CBGas",0+random(20,-20),0+random(20,-20),random(15,-15),0)
+		VOR2 I 1 Bright A_SpawnProjectile("CBTrail",0,0,random(45,-45))
 		VOR2 I 0 A_SeekerMissile(1,1)
 		Loop
 	Death:
 	  TNT1 A 0 A_Explode(80,150,0)
-	  TNT1 A 0 A_CustomMissile("CBExplo",-16,0,0)
+	  TNT1 A 0 A_SpawnProjectile("CBExplo",-16,0,0)
 	  Stop
 	}
 }
@@ -2971,7 +2971,7 @@ Actor CalebWeak 7199	// arch-vile
 		CALE G 0 A_Jump(252,2)
 		CALE G 0 A_PlaySoundEx("caleb/laugh","SoundSlot5",0,0)
 		CALE G 0 A_PlaySound("caleb/flare")
-		CALE G 5 Bright A_CustomMissile("CalebFlareGunShot",38,0,0)
+		CALE G 5 Bright A_SpawnProjectile("CalebFlareGunShot",38,0,0)
 		CALE G 12 A_FaceTarget
 		CALE G 0 A_SentinelReFire
 		Goto Flare+1
@@ -2980,11 +2980,11 @@ Actor CalebWeak 7199	// arch-vile
 		CALE G 0 A_Jump(240,2)
 		CALE G 0 A_PlaySoundEx("caleb/laugh","SoundSlot5",0,0)
 		CALE G 0 A_PlaySound("Blood2Shotgun/Fire1")
-		"----" AAAAAA 0 A_CustomMissile("BulletTracerFX",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(3),3))
+		"----" AAAAAA 0 A_SpawnProjectile("BulletTracerFXInverted",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(3),3))
 		CALE G 5 Bright A_CustomBulletAttack(4,4,6,1,"BulletDamagePuff")
 		CALE G 7 A_FaceTarget(0,0)
 		CALE G 0 A_PlaySound("Blood2Shotgun/Fire1")
-		"----" AAAAAA 0 A_CustomMissile("BulletTracerFX",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(3),3))
+		"----" AAAAAA 0 A_SpawnProjectile("BulletTracerFXInverted",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(3),3))
 		CALE G 5 Bright A_CustomBulletAttack(4,4,6,1,"BulletDamagePuff")
 		CALE G 10 A_FaceTarget
 		CALE G 0 A_PlaySound("Blood2Shotgun/Reload")
@@ -2994,7 +2994,7 @@ Actor CalebWeak 7199	// arch-vile
 		CALE G 10 A_FaceTarget
 		CALE G 0 A_FaceTarget(0,0)
 		CALE G 0 A_PlaySound("caleb/tommygun")
-		"----" A 0 A_CustomMissile("BulletTracerFX",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(3),3))
+		"----" A 0 A_SpawnProjectile("BulletTracerFXInverted",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(3),3))
 		CALE G 1 Bright A_CustomBulletAttack(5,5,1,2,"BulletDamagePuff")
 		CALE G 1 A_FaceTarget
 		CALE G 0 A_SpidReFire
@@ -3007,21 +3007,21 @@ Actor CalebWeak 7199	// arch-vile
 		CALE G 0 A_Jump(240,2)
 		CALE G 0 A_PlaySoundEx("caleb/laugh","SoundSlot5",0,0)
 		CALE G 0 A_PlaySound("caleb/tnt")
-		CALE G 5 Bright A_CustomMissile("CalebTNT2",32,0,0)
+		CALE G 5 Bright A_SpawnProjectile("CalebTNT2",32,0,0)
 		CALE G 5 A_FaceTarget
 		Goto See
 		CALE G 10 A_FaceTarget
 		CALE G 0 A_Jump(240,2)
 		CALE G 0 A_PlaySoundEx("caleb/laugh","SoundSlot5",0,0)
 		CALE G 0 A_PlaySound("caleb/tnt")
-		CALE G 5 Bright A_CustomMissile("CalebTNT1",32,0,0)
+		CALE G 5 Bright A_SpawnProjectile("CalebTNT1",32,0,0)
 		CALE G 5 A_FaceTarget
 		Goto See
 	Napalm:
 		CALE G 10 A_FaceTarget
 		CALE G 0 A_PlaySoundEx("caleb/laugh","SoundSlot5",0,0)
 		CALE G 0 A_PlaySound("caleb/napalm")
-		CALE G 5 Bright A_CustomMissile("NapalmRocket",38,0,0)
+		CALE G 5 Bright A_SpawnProjectile("NapalmRocket",38,0,0)
 		CALE G 5 A_FaceTarget
 		Goto See
 	Melee:
@@ -3174,7 +3174,7 @@ Actor Caleb 7200	// spider mastermind
 		CALE G 0 A_Jump(245,2)
 		CALE G 0 A_PlaySoundEx("caleb/laugh","SoundSlot5",0,0)
 		CALE G 0 A_PlaySound("caleb/flare")
-		CALE G 5 Bright A_CustomMissile("FlareGunShotAlt",38,0,0)
+		CALE G 5 Bright A_SpawnProjectile("FlareGunShotAlt",38,0,0)
 		CALE G 5 A_FaceTarget
 		CALE G 0 A_SentinelReFire
 		Goto Flare
@@ -3184,11 +3184,11 @@ Actor Caleb 7200	// spider mastermind
 		CALE G 0 A_PlaySoundEx("caleb/laugh","SoundSlot5",0,0)
 		CALE G 0 A_Jump(150,9)
 		CALE G 0 A_PlaySound("Blood2Shotgun/Fire1")
-		"----" AAAAAA 0 A_CustomMissile("BulletTracerFX",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(4),4))
+		"----" AAAAAA 0 A_SpawnProjectile("BulletTracerFXInverted",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(4),4))
 		CALE G 5 Bright A_CustomBulletAttack(4,4,6,2,"BulletDamagePuff")
 		CALE G 7 A_FaceTarget(0,0)
 		CALE G 0 A_PlaySound("Blood2Shotgun/Fire1")
-		"----" AAAAAA 0 A_CustomMissile("BulletTracerFX",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(4),4))
+		"----" AAAAAA 0 A_SpawnProjectile("BulletTracerFXInverted",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(4),4))
 		CALE G 5 Bright A_CustomBulletAttack(4,4,6,2,"BulletDamagePuff")
 		CALE G 10 A_FaceTarget(0,0)
 		CALE G 0 A_PlaySound("Blood2Shotgun/Reload")
@@ -3197,7 +3197,7 @@ Actor Caleb 7200	// spider mastermind
 		Goto SawedOff
 	// Alt-fire
 		CALE G 0 A_PlaySound("Blood2Shotgun/Fire2")
-		"----" AAAAAAAAAAAAAA 0 A_CustomMissile("BulletTracerFX",10,0,random(-12,12),CMF_OFFSETPITCH,random(-(12),12))
+		"----" AAAAAAAAAAAAAA 0 A_SpawnProjectile("BulletTracerFXInverted",10,0,random(-12,12),CMF_OFFSETPITCH,random(-(12),12))
 		CALE G 5 Bright A_CustomBulletAttack(12.5,12.5,14,4,"BulletDamagePuff")
 		CALE G 10 A_FaceTarget
 		CALE G 0 A_PlaySoundEx("Blood2Shotgun/Reload","SoundSlot6",0,0)
@@ -3208,7 +3208,7 @@ Actor Caleb 7200	// spider mastermind
 		CALE G 10 A_FaceTarget
 		CALE G 0 A_FaceTarget(0,0)
 		CALE G 0 A_PlaySound("caleb/tommygun")
-		"----" A 0 A_CustomMissile("BulletTracerFX",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(4),4))
+		"----" A 0 A_SpawnProjectile("BulletTracerFXInverted",10,0,random(-4,4),CMF_OFFSETPITCH,random(-(4),4))
 		CALE G 1 Bright A_CustomBulletAttack(4.5,4.5,1,2,"BulletDamagePuff")
 		CALE G 1 A_FaceTarget
 		CALE G 0 A_SpidReFire
@@ -3219,7 +3219,7 @@ Actor Caleb 7200	// spider mastermind
 		CALE G 0 A_Jump(245,2)
 		CALE G 0 A_PlaySoundEx("caleb/laugh","SoundSlot5",0,0)
 		CALE G 0 A_PlaySound("caleb/napalm")
-		CALE G 5 Bright A_CustomMissile("NapalmRocket",38,0,0)
+		CALE G 5 Bright A_SpawnProjectile("NapalmRocket",38,0,0)
 		CALE G 5 A_FaceTarget
 		CALE G 0 A_SentinelReFire
 		Goto Napalm+1
@@ -3231,14 +3231,14 @@ Actor Caleb 7200	// spider mastermind
 		CALE G 0 A_Jump(240,2)
 		CALE G 0 A_PlaySoundEx("caleb/laugh","SoundSlot5",0,0)
 		CALE G 0 A_PlaySound("caleb/napalm")
-		CALE G 5 Bright A_CustomMissile("NapalmRocketAltLarge2",38,0,0)
+		CALE G 5 Bright A_SpawnProjectile("NapalmRocketAltLarge2",38,0,0)
 		CALE G 5 A_FaceTarget
 		Goto See
 		CALE G 10 A_FaceTarget
 		CALE G 0 A_Jump(240,2)
 		CALE G 0 A_PlaySoundEx("caleb/laugh","SoundSlot5",0,0)
 		CALE G 0 A_PlaySound("caleb/napalm")
-		CALE G 5 Bright A_CustomMissile("NapalmRocketAltLarge1",38,0,0)
+		CALE G 5 Bright A_SpawnProjectile("NapalmRocketAltLarge1",38,0,0)
 		CALE G 5 A_FaceTarget
 		Goto See
 	Dynamite:
@@ -3250,7 +3250,7 @@ Actor Caleb 7200	// spider mastermind
 		CALE G 0 A_Jump(245,2)
 		CALE G 0 A_PlaySoundEx("caleb/laugh","SoundSlot5",0,0)
 		CALE G 0 A_PlaySound("caleb/tnt")
-		CALE G 5 Bright A_CustomMissile("CalebTNT2",32,0,0)
+		CALE G 5 Bright A_SpawnProjectile("CalebTNT2",32,0,0)
 		CALE G 5 A_FaceTarget
 		CALE G 0 A_SentinelReFire
 		Goto Dynamite+1
@@ -3258,7 +3258,7 @@ Actor Caleb 7200	// spider mastermind
 		CALE G 0 A_Jump(245,2)
 		CALE G 0 A_PlaySoundEx("caleb/laugh","SoundSlot5",0,0)
 		CALE G 0 A_PlaySound("caleb/tnt")
-		CALE G 5 Bright A_CustomMissile("CalebTNT1",32,0,0)
+		CALE G 5 Bright A_SpawnProjectile("CalebTNT1",32,0,0)
 		CALE G 5 A_FaceTarget
 		CALE G 0 A_SentinelReFire
 		Goto Dynamite+1
@@ -3270,16 +3270,16 @@ Actor Caleb 7200	// spider mastermind
 		CALE G 0 A_Jump(240,2)
 		CALE G 0 A_PlaySoundEx("caleb/laugh","SoundSlot5",0,0)
 		CALE G 0 A_PlaySound("caleb/tnt")
-		CALE G 0 Bright A_CustomMissile("CalebProxTNT2",32,0,random(3,8))
-		CALE G 5 Bright A_CustomMissile("CalebProxTNT2",32,0,random(-3,-8))
+		CALE G 0 Bright A_SpawnProjectile("CalebProxTNT2",32,0,random(3,8))
+		CALE G 5 Bright A_SpawnProjectile("CalebProxTNT2",32,0,random(-3,-8))
 		CALE G 5 A_FaceTarget
 		Goto See
 		CALE G 10 A_FaceTarget
 		CALE G 0 A_Jump(240,2)
 		CALE G 0 A_PlaySoundEx("caleb/laugh","SoundSlot5",0,0)
 		CALE G 0 A_PlaySound("caleb/tnt")
-		CALE G 0 Bright A_CustomMissile("CalebProxTNT1",32,0,random(3,8))
-		CALE G 5 Bright A_CustomMissile("CalebProxTNT1",32,0,random(-3,-8))
+		CALE G 0 Bright A_SpawnProjectile("CalebProxTNT1",32,0,random(3,8))
+		CALE G 5 Bright A_SpawnProjectile("CalebProxTNT1",32,0,random(-3,-8))
 		CALE G 5 A_FaceTarget
 		Goto See
 	RemoteDet:
@@ -3290,16 +3290,16 @@ Actor Caleb 7200	// spider mastermind
 		CALE G 0 A_Jump(240,2)
 		CALE G 0 A_PlaySoundEx("caleb/laugh","SoundSlot5",0,0)
 		CALE G 0 A_PlaySound("caleb/tnt")
-		CALE G 0 Bright A_CustomMissile("CalebRemoteTNT2",32,0,random(3,8))
-		CALE G 5 Bright A_CustomMissile("CalebRemoteTNT2",32,0,random(-3,-8))
+		CALE G 0 Bright A_SpawnProjectile("CalebRemoteTNT2",32,0,random(3,8))
+		CALE G 5 Bright A_SpawnProjectile("CalebRemoteTNT2",32,0,random(-3,-8))
 		CALE G 5 A_FaceTarget
 		Goto See
 		CALE G 10 A_FaceTarget
 		CALE G 0 A_Jump(240,2)
 		CALE G 0 A_PlaySoundEx("caleb/laugh","SoundSlot5",0,0)
 		CALE G 0 A_PlaySound("caleb/tnt")
-		CALE G 0 Bright A_CustomMissile("CalebRemoteTNT1",32,0,random(3,8))
-		CALE G 5 Bright A_CustomMissile("CalebRemoteTNT1",32,0,random(-3,-8))
+		CALE G 0 Bright A_SpawnProjectile("CalebRemoteTNT1",32,0,random(3,8))
+		CALE G 5 Bright A_SpawnProjectile("CalebRemoteTNT1",32,0,random(-3,-8))
 		CALE G 5 A_FaceTarget
 		Goto See
 	Aerosol:
@@ -3309,65 +3309,65 @@ Actor Caleb 7200	// spider mastermind
 		CALE G 0 A_Jump(240,2)
 		CALE G 0 A_PlaySoundEx("caleb/laugh","SoundSlot5",0,0)
 		CALE G 0 A_PlaySoundEx("caleb/aerosol","SoundSlot7",0,0)
-		CALE G 1 Bright A_CustomMissile("AerosolFire",38,0,random(2,-2))
+		CALE G 1 Bright A_SpawnProjectile("AerosolFire",38,0,random(2,-2))
 		CALE G 0 Bright A_FaceTarget
-		CALE G 1 Bright A_CustomMissile("AerosolFire",38,0,random(2,-2))
+		CALE G 1 Bright A_SpawnProjectile("AerosolFire",38,0,random(2,-2))
 		CALE G 0 Bright A_FaceTarget
-		CALE G 1 Bright A_CustomMissile("AerosolFire",38,0,random(2,-2))
+		CALE G 1 Bright A_SpawnProjectile("AerosolFire",38,0,random(2,-2))
 		CALE G 0 Bright A_FaceTarget
-		CALE G 1 Bright A_CustomMissile("AerosolFire",38,0,random(2,-2))
+		CALE G 1 Bright A_SpawnProjectile("AerosolFire",38,0,random(2,-2))
 		CALE G 0 Bright A_FaceTarget
-		CALE G 1 Bright A_CustomMissile("AerosolFire",38,0,random(2,-2))
+		CALE G 1 Bright A_SpawnProjectile("AerosolFire",38,0,random(2,-2))
 		CALE G 0 Bright A_FaceTarget
-		CALE G 1 Bright A_CustomMissile("AerosolFire",38,0,random(2,-2))
+		CALE G 1 Bright A_SpawnProjectile("AerosolFire",38,0,random(2,-2))
 		CALE G 0 Bright A_FaceTarget
-		CALE G 1 Bright A_CustomMissile("AerosolFire",38,0,random(2,-2))
+		CALE G 1 Bright A_SpawnProjectile("AerosolFire",38,0,random(2,-2))
 		CALE G 0 Bright A_FaceTarget
-		CALE G 1 Bright A_CustomMissile("AerosolFire",38,0,random(2,-2))
+		CALE G 1 Bright A_SpawnProjectile("AerosolFire",38,0,random(2,-2))
 		CALE G 0 Bright A_FaceTarget
-		CALE G 1 Bright A_CustomMissile("AerosolFire",38,0,random(2,-2))
+		CALE G 1 Bright A_SpawnProjectile("AerosolFire",38,0,random(2,-2))
 		CALE G 0 Bright A_FaceTarget
-		CALE G 1 Bright A_CustomMissile("AerosolFire",38,0,random(2,-2))
+		CALE G 1 Bright A_SpawnProjectile("AerosolFire",38,0,random(2,-2))
 		CALE G 0 Bright A_FaceTarget
-		CALE G 1 Bright A_CustomMissile("AerosolFire",38,0,random(2,-2))
+		CALE G 1 Bright A_SpawnProjectile("AerosolFire",38,0,random(2,-2))
 		CALE G 0 Bright A_FaceTarget
-		CALE G 1 Bright A_CustomMissile("AerosolFire",38,0,random(2,-2))
+		CALE G 1 Bright A_SpawnProjectile("AerosolFire",38,0,random(2,-2))
 		CALE G 0 Bright A_FaceTarget
-		CALE G 1 Bright A_CustomMissile("AerosolFire",38,0,random(2,-2))
+		CALE G 1 Bright A_SpawnProjectile("AerosolFire",38,0,random(2,-2))
 		CALE G 0 Bright A_FaceTarget
-		CALE G 1 Bright A_CustomMissile("AerosolFire",38,0,random(2,-2))
+		CALE G 1 Bright A_SpawnProjectile("AerosolFire",38,0,random(2,-2))
 		CALE G 0 Bright A_FaceTarget
-		CALE G 1 Bright A_CustomMissile("AerosolFire",38,0,random(2,-2))
+		CALE G 1 Bright A_SpawnProjectile("AerosolFire",38,0,random(2,-2))
 		CALE G 0 Bright A_FaceTarget
-		CALE G 1 Bright A_CustomMissile("AerosolFire",38,0,random(2,-2))
+		CALE G 1 Bright A_SpawnProjectile("AerosolFire",38,0,random(2,-2))
 		CALE G 0 Bright A_FaceTarget
-		CALE G 1 Bright A_CustomMissile("AerosolFire",38,0,random(2,-2))
+		CALE G 1 Bright A_SpawnProjectile("AerosolFire",38,0,random(2,-2))
 		CALE G 0 Bright A_FaceTarget
-		CALE G 1 Bright A_CustomMissile("AerosolFire",38,0,random(2,-2))
+		CALE G 1 Bright A_SpawnProjectile("AerosolFire",38,0,random(2,-2))
 		CALE G 0 Bright A_FaceTarget
-		CALE G 1 Bright A_CustomMissile("AerosolFire",38,0,random(2,-2))
+		CALE G 1 Bright A_SpawnProjectile("AerosolFire",38,0,random(2,-2))
 		CALE G 0 Bright A_FaceTarget
-		CALE G 1 Bright A_CustomMissile("AerosolFire",38,0,random(2,-2))
+		CALE G 1 Bright A_SpawnProjectile("AerosolFire",38,0,random(2,-2))
 		CALE G 0 Bright A_FaceTarget
-		CALE G 1 Bright A_CustomMissile("AerosolFire",38,0,random(2,-2))
+		CALE G 1 Bright A_SpawnProjectile("AerosolFire",38,0,random(2,-2))
 		CALE G 0 Bright A_FaceTarget
-		CALE G 1 Bright A_CustomMissile("AerosolFire",38,0,random(2,-2))
+		CALE G 1 Bright A_SpawnProjectile("AerosolFire",38,0,random(2,-2))
 		CALE G 0 Bright A_FaceTarget
-		CALE G 1 Bright A_CustomMissile("AerosolFire",38,0,random(2,-2))
+		CALE G 1 Bright A_SpawnProjectile("AerosolFire",38,0,random(2,-2))
 		CALE G 0 Bright A_FaceTarget
-		CALE G 1 Bright A_CustomMissile("AerosolFire",38,0,random(2,-2))
+		CALE G 1 Bright A_SpawnProjectile("AerosolFire",38,0,random(2,-2))
 		CALE G 0 Bright A_FaceTarget
-		CALE G 1 Bright A_CustomMissile("AerosolFire",38,0,random(2,-2))
+		CALE G 1 Bright A_SpawnProjectile("AerosolFire",38,0,random(2,-2))
 		CALE G 0 Bright A_FaceTarget
-		CALE G 1 Bright A_CustomMissile("AerosolFire",38,0,random(2,-2))
+		CALE G 1 Bright A_SpawnProjectile("AerosolFire",38,0,random(2,-2))
 		CALE G 0 Bright A_FaceTarget
-		CALE G 1 Bright A_CustomMissile("AerosolFire",38,0,random(2,-2))
+		CALE G 1 Bright A_SpawnProjectile("AerosolFire",38,0,random(2,-2))
 		CALE G 0 Bright A_FaceTarget
-		CALE G 1 Bright A_CustomMissile("AerosolFire",38,0,random(2,-2))
+		CALE G 1 Bright A_SpawnProjectile("AerosolFire",38,0,random(2,-2))
 		CALE G 0 Bright A_FaceTarget
-		CALE G 1 Bright A_CustomMissile("AerosolFire",38,0,random(2,-2))
+		CALE G 1 Bright A_SpawnProjectile("AerosolFire",38,0,random(2,-2))
 		CALE G 0 Bright A_FaceTarget
-		CALE G 1 Bright A_CustomMissile("AerosolFire",38,0,random(2,-2))
+		CALE G 1 Bright A_SpawnProjectile("AerosolFire",38,0,random(2,-2))
 		CALE G 0 Bright A_FaceTarget
 		CALE G 0 A_StopSoundEx("SoundSlot7")
 		Goto See
@@ -3375,7 +3375,7 @@ Actor Caleb 7200	// spider mastermind
 		CALE G 10 A_FaceTarget
 		CALE G 0 A_FaceTarget
 		CALE G 0 A_PlaySoundEx("caleb/tesla","SoundSlot5",0,0)
-		CALE G 1 Bright A_CustomMissile("TeslaShot",38,0,0)
+		CALE G 1 Bright A_SpawnProjectile("TeslaShot",38,0,0)
 		CALE G 2 A_FaceTarget
 		CALE G 0 A_SpidReFire
 		Goto Tesla+1
@@ -3388,7 +3388,7 @@ Actor Caleb 7200	// spider mastermind
 		CALE G 0 A_FaceTarget
 		CALE G 0 A_ChangeFlag("NOPAIN",1)
 		CALE G 0 A_JumpIfInventory("LLeechChecker",15,4)
-		CALE G 2 A_CustomMissile("LifeLeechFireball",40,0,random(-3,3))
+		CALE G 2 A_SpawnProjectile("LifeLeechFireball",40,0,random(-3,3))
 		CALE G 2 A_FaceTarget
 		CALE G 0 A_GiveInventory("LLeechChecker",1)
 		Goto LLeech+5
@@ -3492,11 +3492,11 @@ Actor LilCaleb
 		CALE G 0 A_Jump(240,2)
 		CALE G 0 A_PlaySoundEx("lilcaleb/laugh","SoundSlot5",0,0)
 		CALE G 0 A_PlaySound("lilcaleb/fire")
-		"----" A 0 A_CustomMissile("BulletTracerFX",4,0,frandom(-1.2,1.2),CMF_OFFSETPITCH,frandom(-(1.2),1.2))
+		"----" A 0 A_SpawnProjectile("BulletTracerFXInverted",4,0,frandom(-1.2,1.2),CMF_OFFSETPITCH,frandom(-(1.2),1.2))
 		CALE G 3 Bright A_CustomBulletAttack(1.2,1.2,1,1,"LilCalebPuff")
 		CALE G 6 A_FaceTarget(0,0)
 		CALE G 0 A_PlaySound("lilcaleb/fire")
-		"----" A 0 A_CustomMissile("BulletTracerFX",4,0,frandom(-1.2,1.2),CMF_OFFSETPITCH,frandom(-(1.2),1.2))
+		"----" A 0 A_SpawnProjectile("BulletTracerFXInverted",4,0,frandom(-1.2,1.2),CMF_OFFSETPITCH,frandom(-(1.2),1.2))
 		CALE G 3 Bright A_CustomBulletAttack(1.2,1.2,1,1,"LilCalebPuff")
 		CALE G 6 A_FaceTarget
 		CALE G 0 A_PlaySound("lilcaleb/reload")
@@ -3777,7 +3777,7 @@ Actor FlareGunShotAlt : FlareGunShot
 		Stop
 	Death:
 		FRME A 0 Bright A_Explode(320,60,0)
-		FRME A 0 Bright A_CustomMissile("FlareExplosionAlt",0,0,0,0)
+		FRME A 0 Bright A_SpawnProjectile("FlareExplosionAlt",0,0,0,0)
 		Stop
 	XDeath:
 		FRME A 0
@@ -3849,21 +3849,21 @@ Actor CalebTNT1
 	Death:
 		FRME A 0 Bright A_Explode(64,128,0)
 		TNT1 A 0 A_PlaySoundEx("caleb/tnt/explode","SoundSlot5")
-/*		TNT1 A 0 A_CustomMissile("ExploSmokeGeneralBig",0,0,0)
+/*		TNT1 A 0 A_SpawnProjectile("ExploSmokeGeneralBig",0,0,0)
 		TNT1 AAAAAAAAAAAAAAA 0 A_SpawnItemEx("Q2RocketExtra",0,0,0,1,0,random(-1,3),random(1,360))
-		EXPL A 0 A_CustomMissile("ExploSmoke",0+Random(0,25),0+Random(5,-5),0+Random(0,370))
-		EXPL A 0 A_CustomMissile("ExploSmoke",0+Random(0,25),0+Random(5,-5),0+Random(0,370))
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,45)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,90)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,0)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,135)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,180)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,225)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,270)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,315)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,66)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,155)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,245)*/
+		EXPL A 0 A_SpawnProjectile("ExploSmoke",0+Random(0,25),0+Random(5,-5),0+Random(0,370))
+		EXPL A 0 A_SpawnProjectile("ExploSmoke",0+Random(0,25),0+Random(5,-5),0+Random(0,370))
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,45)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,90)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,0)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,135)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,180)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,225)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,270)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,315)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,66)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,155)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,245)*/
 		TNT1 A 4 A_SpawnItemEx("MonExplosionMediumBig",0,0,0,0,0,0,0,0)
 		Stop
 	}
@@ -3986,23 +3986,23 @@ Actor ProxMine
 		TNT1 A 0 A_PlaySoundEx("caleb/tnt/explode","SoundSlot5")
 		FRME A 0 Bright A_Explode(180,160)	// 192,128
 		TNT1 A 0 A_SpawnItemEx("NewExplosionMedium",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,45)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,0)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,180)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,270)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,66)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,245)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,45)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,0)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,180)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,270)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,66)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,245)
 		TNT1 A 10 
 		Stop
 	Death:
 		TNT1 A 0 A_PlaySoundEx("caleb/tnt/explode","SoundSlot5")
 		FRME A 0 Bright A_Explode(180,160)
 		TNT1 A 0 A_SpawnItemEx("NewExplosionMedium",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,90)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,135)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,225)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,315)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,155)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,90)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,135)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,225)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,315)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,155)
 		TNT1 A 10 
 		Stop
 	}
@@ -4021,23 +4021,23 @@ Actor CalebProxMine : ProxMine
 		TNT1 A 0 A_PlaySoundEx("caleb/tnt/explode","SoundSlot5")
 		FRME A 0 Bright A_Explode(96,128)
 		TNT1 A 0 A_SpawnItemEx("NewExplosionMedium",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,45)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,0)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,180)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,270)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,66)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,245)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,45)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,0)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,180)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,270)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,66)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,245)
 		TNT1 A 10 
 		Stop
 	Death:
 		TNT1 A 0 A_PlaySoundEx("caleb/tnt/explode","SoundSlot5")
 		FRME A 0 Bright A_Explode(96,128)
 		TNT1 A 0 A_SpawnItemEx("NewExplosionMedium",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,90)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,135)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,225)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,315)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,155)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,90)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,135)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,225)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,315)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,155)
 		TNT1 A 10 
 		Stop
 	}
@@ -4057,23 +4057,23 @@ Actor ProxMineF : ProxMine
 		TNT1 A 0 A_PlaySoundEx("caleb/tnt/explode","SoundSlot5")
 		FRME A 0 Bright A_Explode(150,140)
 		TNT1 A 0 A_SpawnItemEx("NewExplosionMedium",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,90)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,135)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,225)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,315)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,155)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,90)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,135)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,225)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,315)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,155)
 		TNT1 A 10 
 		Stop
 	Death:
 		TNT1 A 0 A_PlaySoundEx("caleb/tnt/explode","SoundSlot5")
 		FRME A 0 Bright A_Explode(150,140)
 		TNT1 A 0 A_SpawnItemEx("NewExplosionMedium",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,45)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,0)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,180)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,270)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,66)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,245)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,45)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,0)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,180)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,270)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,66)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,245)
 		TNT1 A 10 
 		Stop
 	}
@@ -4092,24 +4092,24 @@ Actor CalebProxMineF : ProxMineF
 		TNT1 A 0 A_PlaySoundEx("caleb/tnt/explode","SoundSlot5")
 		FRME A 0 Bright A_Explode(96,128)
 		TNT1 A 0 A_SpawnItemEx("NewExplosionMedium",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,90)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,135)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,225)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,315)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,155)
-		FRME A 0 Bright A_CustomMissile("TNTExplode",0,0,0,0)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,90)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,135)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,225)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,315)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,155)
+		FRME A 0 Bright A_SpawnProjectile("TNTExplode",0,0,0,0)
 		Stop
 	Death:
 		TNT1 A 0 A_PlaySoundEx("caleb/tnt/explode","SoundSlot5")
 		FRME A 0 Bright A_Explode(96,128)
 		TNT1 A 0 A_SpawnItemEx("NewExplosionMedium",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,45)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,0)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,180)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,270)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,66)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,245)
-		FRME A 0 Bright A_CustomMissile("TNTExplode",0,0,0,0)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,45)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,0)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,180)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,270)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,66)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,245)
+		FRME A 0 Bright A_SpawnProjectile("TNTExplode",0,0,0,0)
 		Stop
 	}
 }
@@ -4174,29 +4174,29 @@ Actor CalebTNTRemote
 		TNT1 A 0 A_PlaySoundEx("caleb/tnt/explode","SoundSlot5")
 		FRME A 0 Bright A_Explode(300,140,1)
 		TNT1 A 0 A_SpawnItemEx("NewExplosionMedium",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,45)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,0)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,180)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,270)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,66)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2",0,0,245)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,45)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,0)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,180)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,270)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,66)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2",0,0,245)
 		TNT1 A 10 
 		Stop
 	Death:
 		TNT1 A 0 A_PlaySoundEx("caleb/tnt/explode","SoundSlot5")
 		FRME A 0 Bright A_Explode(300,140,1)
 		TNT1 A 0 A_SpawnItemEx("NewExplosionMedium",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2I",0,0,45)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2I",0,0,90)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2I",0,0,0)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2I",0,0,135)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2I",0,0,180)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2I",0,0,225)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2I",0,0,270)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2I",0,0,315)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2I",0,0,66)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2I",0,0,155)
-		EXPL A 0 A_CustomMissile("SuperRocketBit2I",0,0,245)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2I",0,0,45)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2I",0,0,90)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2I",0,0,0)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2I",0,0,135)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2I",0,0,180)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2I",0,0,225)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2I",0,0,270)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2I",0,0,315)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2I",0,0,66)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2I",0,0,155)
+		EXPL A 0 A_SpawnProjectile("SuperRocketBit2I",0,0,245)
 		TNT1 A 10 
 		Stop
 	}
@@ -4258,15 +4258,15 @@ Actor NapalmRocketAltLarge1 : CerberusFireBall
 	Spawn:
 		TNT1 A 0 
 		TNT1 A 0 ThrustThingZ(0,random(10,15),0,1)
-		FBA2 AABBCCDDEEFF 2 Bright A_CustomMissile("CFBTrail",random(3,-3),random(3,-3),0)
+		FBA2 AABBCCDDEEFF 2 Bright A_SpawnProjectile("CFBTrail",random(3,-3),random(3,-3),0)
 		Goto Spawn+2
 	Death:
 		TNT1 AAAAAAA 0 A_SpawnItemEx("Q2RocketExtra",0,0,0,1,0,random(-1,3),random(1,360))
 		TNT1 AAAAAA 0 A_SpawnItemEx("NapalmRocketAltMedium",0,0,0,random(-10,10),random(-10,10), random(3,6),random(1,360))
 		TNT1 AAA 0 A_SpawnItemEx("Q2RocketAltSmoke",random(4,-4),random(4,-4),random(0,12),random(-1,1),random(-1,1),random(-2,2),random(1,360))
 		TNT1 A 0 A_Explode(130,128,0)
-		TNT1 A 0 A_CustomMissile("CerberusFireballExploSMK",6,0,0)
-		FRME A 0 Bright A_CustomMissile("NapalmRocketExLarge",0,0,0,0)
+		TNT1 A 0 A_SpawnProjectile("CerberusFireballExploSMK",6,0,0)
+		FRME A 0 Bright A_SpawnProjectile("NapalmRocketExLarge",0,0,0,0)
 		Stop
 	}
 }
@@ -4279,7 +4279,7 @@ Actor NapalmRocketAltLarge2 : NapalmRocketAltLarge1
 	Spawn:
 		TNT1 A 0 
 		TNT1 A 0 ThrustThingZ(0,random(20,25),0,1)
-		FBA2 AABBCCDDEEFF 2 Bright A_CustomMissile("CFBTrail",random(3,-3),random(3,-3),0)
+		FBA2 AABBCCDDEEFF 2 Bright A_SpawnProjectile("CFBTrail",random(3,-3),random(3,-3),0)
 		Goto Spawn+2
 	}
 }
@@ -4292,15 +4292,15 @@ Actor NapalmRocketAltMedium : NapalmRocketAltLarge1
 	States
 	{
 	Spawn:
-		FBA2 AABBCCDDEEFF 2 Bright A_CustomMissile("CFBTrail",random(3,-3),random(3,-3),0)
+		FBA2 AABBCCDDEEFF 2 Bright A_SpawnProjectile("CFBTrail",random(3,-3),random(3,-3),0)
 		Loop
 	Death:
 		TNT1 AAAAAAA 0 A_SpawnItemEx("Q2RocketExtra",0,0,0,1,0,random(-1,3),random(1,360))
 		TNT1 AAAAAA 0 A_SpawnItemEx("NapalmRocketAltSmall",0,0,0,random(-10,10),random(-10,10), random(3,6),random(1,360))
 		TNT1 AAA 0 A_SpawnItemEx("Q2RocketAltSmoke",random(4,-4),random(4,-4),random(0,12),random(-1,1),random(-1,1),random(-2,2),random(1,360))
 		TNT1 A 0 A_Explode(80,112,0)
-		TNT1 A 0 A_CustomMissile("CerberusFireballExploSMK",6,0,0)
-		FRME A 0 Bright A_CustomMissile("NapalmRocketExMedium",0,0,0,0)
+		TNT1 A 0 A_SpawnProjectile("CerberusFireballExploSMK",6,0,0)
+		FRME A 0 Bright A_SpawnProjectile("NapalmRocketExMedium",0,0,0,0)
 		Stop
 	}
 }
@@ -4313,14 +4313,14 @@ Actor NapalmRocketAltSmall : NapalmRocketAltLarge1
 	States
 	{
 	Spawn:
-		FBA2 AABBCCDDEEFF 2 Bright A_CustomMissile("CFBTrail",random(3,-3),random(3,-3),0)
+		FBA2 AABBCCDDEEFF 2 Bright A_SpawnProjectile("CFBTrail",random(3,-3),random(3,-3),0)
 		Loop
 	Death:
 		TNT1 AAAAAAA 0 A_SpawnItemEx("Q2RocketExtra",0,0,0,1,0,random(-1,3),random(1,360))
 		TNT1 AAA 0 A_SpawnItemEx("Q2RocketAltSmoke",random(4,-4),random(4,-4),random(0,12),random(-1,1),random(-1,1),random(-2,2),random(1,360))
 		TNT1 A 0 A_Explode(30,96,0)
-		TNT1 A 0 A_CustomMissile("CerberusFireballExploSMK",6,0,0)
-		FRME A 0 Bright A_CustomMissile("NapalmRocketExSmall",0,0,0,0)
+		TNT1 A 0 A_SpawnProjectile("CerberusFireballExploSMK",6,0,0)
+		FRME A 0 Bright A_SpawnProjectile("NapalmRocketExSmall",0,0,0,0)
 		Stop
 	}
 }
@@ -4418,7 +4418,7 @@ Actor LifeLeechTurretC
 	Missile:
 		LLTU I 0 A_FaceTarget
 		LLTU I 0 A_PlaySound("FireDemonAttack")
-		LLTU I 2 Bright A_CustomMissile("TurretFireball",36,0,0)
+		LLTU I 2 Bright A_SpawnProjectile("TurretFireball",36,0,0)
 		LLTU I 2 Bright
 		LLTU I 0 A_SpidRefire
 		Goto Missile
@@ -4548,7 +4548,7 @@ Actor AxeZombie 7201	// demon
 		TNT1 A 0 //A_JumpIfInventory("DefileCheck",1,"DefileDeath")
 		AZD1 A 0
 		AZD1 A 0 A_Jump(200,"FakeDeath")
-		AZD2 A 0 A_CustomMissile("AxeZombieHead",52,0,Random(0,360))
+		AZD2 A 0 A_SpawnProjectile("AxeZombieHead",52,0,Random(0,360))
 		AZD2 AAAAAA 0 A_TossGib
 		AZD2 A 5 A_Scream
 		AZD2 B 5 A_Fall
@@ -4763,12 +4763,12 @@ Actor JessBlacklock : Wraith		//7203  	// Baron of Hell
 		CALE G 0 A_FaceTarget(0,0)
 		CALE G 0 A_PlaySound("reilsss/weapons/coltpistolfire")
 		TNT1 A 0 A_SpawnItemEx("GunSmallSmoke",16,8,33,0,0,frandom(0.1,0.4),0,0)
-		"----" A 0 A_CustomMissile("BulletTracerFX",20,0,random(-(3),3),CMF_OFFSETPITCH,random(-(3),3))
+		"----" A 0 A_SpawnProjectile("BulletTracerFXInverted",20,0,random(-(3),3),CMF_OFFSETPITCH,random(-(3),3))
 		CALE G 6 Bright A_CustomBulletAttack(3,3,1,4,"BulletDamagePuff")
 		CALE G 2 A_FaceTarget(0,0)
 		CALE G 0 A_PlaySound("reilsss/weapons/coltpistolfire")
 		TNT1 A 0 A_SpawnItemEx("GunSmallSmoke",16,-8,32,0,0,frandom(0.1,0.4),0,0)
-		"----" A 0 A_CustomMissile("BulletTracerFX",20,0,random(-(3),3),CMF_OFFSETPITCH,random(-(3),3))
+		"----" A 0 A_SpawnProjectile("BulletTracerFXInverted",20,0,random(-(3),3),CMF_OFFSETPITCH,random(-(3),3))
 		CALE G 6 Bright A_CustomBulletAttack(3,3,1,4,"BulletDamagePuff")
 		CALE G 2 A_FaceTarget
 		TNT1 A 0 A_Jump(18,"Speed")
@@ -4779,12 +4779,12 @@ Actor JessBlacklock : Wraith		//7203  	// Baron of Hell
 		CALE G 0 A_FaceTarget(0,0)
 		CALE G 0 A_PlaySound("reilsss/weapons/pistolfire2")
 		TNT1 AA 0 A_SpawnItemEx("GunSmallSmoke",16,8,33,0,0,frandom(0.1,0.4),0,0)
-		"----" A 0 A_CustomMissile("BulletTracerFX",20,0,random(-(3),3),CMF_OFFSETPITCH,random(-(3),3))
+		"----" A 0 A_SpawnProjectile("BulletTracerFXInverted",20,0,random(-(3),3),CMF_OFFSETPITCH,random(-(3),3))
 		CALE G 6 Bright A_CustomBulletAttack(3,3,1,14,"BulletDamagePuff")
 		CALE G 2 A_FaceTarget(0,0)
 		CALE G 0 A_PlaySound("reilsss/weapons/pistolfire2")
 		TNT1 AA 0 A_SpawnItemEx("GunSmallSmoke",16,-8,32,0,0,frandom(0.1,0.4),0,0)
-		"----" A 0 A_CustomMissile("BulletTracerFX",20,0,random(-(3),3),CMF_OFFSETPITCH,random(-(3),3))
+		"----" A 0 A_SpawnProjectile("BulletTracerFXInverted",20,0,random(-(3),3),CMF_OFFSETPITCH,random(-(3),3))
 		CALE G 6 Bright A_CustomBulletAttack(3,3,1,14,"BulletDamagePuff")
 		CALE GG 2 A_FaceTarget
 		TNT1 A 0 A_Jump(8,"Speed")

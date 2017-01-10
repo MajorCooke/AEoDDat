@@ -42,7 +42,7 @@ Class BulletTracerFX : Actor
 			{	return ResolveState("Null");	}
 			
 			A_FaceMovementDirection();
-			pitch *= -1;
+			//pitch *= -1;
 
 			if (!IsPointerEqual(TracerPtr,NullPtr))
 			{	user_distb = Clamp(GetDistance(true,TracerPtr),0.0,3000.0);	}
@@ -101,6 +101,29 @@ Class BulletTracerFX : Actor
 	End:
 		TNT1 A 0;
 		Stop;
+	}
+}
+
+Class BulletTracerFXInverted : BulletTracerFX
+{
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{	
+			if (A_CheckSight("Null"))
+			{	return ResolveState("Null");	}
+			
+			A_FaceMovementDirection();
+			pitch *= -1;
+
+			if (!IsPointerEqual(TracerPtr,NullPtr))
+			{	user_distb = Clamp(GetDistance(true,TracerPtr),0.0,3000.0);	}
+			else
+			{	user_distb = 0;	}
+			
+			return ResolveState("B1");
+		}
 	}
 }
 
