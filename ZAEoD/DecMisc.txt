@@ -196,6 +196,216 @@ Class TrailBeam : Actor
 	}
 }
 
+Class MovingTrailBeam : Actor 
+{
+	const NoSpawn = 256;
+	double  user_dist;
+	int user_t;
+	int user_zoffset;
+	double user_angle;
+	double user_pitch;
+	double user_time;
+	double user_scale;
+	int user_pflags;
+	int user_neg;
+	Vector3 next1, next2;
+	int uid;
+	Default 
+	{
+		+NOINTERACTION
+		+FLATSPRITE
+		+BRIGHT
+		+ROLLCENTER
+		YScale 0.25; //Don't touch this! Otherwise the trail will become broken up!
+		XScale 0.03; //This modifies the width of the beam. It is safe to play around with.
+		Alpha 0;
+		RenderStyle "Add";
+	}
+	// DO NOT add a translation. If you need to change the colors, make a sprite
+	// entry in TEXTURES lump and use BLEND. NEVER TRANSLATE!
+	
+	States
+	{
+	Spawn:
+		X202 B 0 NoDelay
+		{
+			// Sets how long to split the scaling-in effect.
+			user_time = 3.0;
+			user_zoffset = 16;
+			
+			// Set this to the actor's same name. The TID will prevent it spawning infinitely (tid * 256).
+			A_SpawnItemEx("MovingTrailBeam",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERSCALE|SXF_TRANSFERPOINTERS,tid * 256,1);
+		}
+		Goto Process;
+	Process:
+		"####" "#" 0
+		{
+			if (!user_pflags)	{ user_pflags = WARPF_INTERPOLATE|WARPF_NOCHECKPOSITION|WARPF_ABSOLUTEOFFSET;	}
+			A_Warp(DefPtr,0,0,user_zoffset,0,WARPF_NOCHECKPOSITION);
+			// If it's a secondary trail (vertical)
+			if (tid > 0)	
+			{	
+				ChangeTID(0);
+				roll = pitch + 90;
+				pitch = 90;
+				angle += 90;
+			}
+		
+			// Save our current information so we know how to properly interpolate whenever
+			// the owner moves.
+			user_neg = (Scale.X < 0) ? 1 : 0;
+			user_scale = Scale.X;
+			user_angle = angle;
+			user_pitch = pitch;
+			user_dist = GetDistance(false, TargetPtr);
+			next1 = pos;
+			
+			// Move to the shooter so we can get just how far out we are.
+			A_Warp(TargetPtr,0,0,0,0,WARPF_NOCHECKPOSITION);
+			next2 = next1 - pos;
+			
+			// Now move back without interpolating. Otherwise it'll look weird.
+			A_Warp(TargetPtr,next2.x,next2.y,next2.z,0,WARPF_NOCHECKPOSITION|WARPF_ABSOLUTEOFFSET);
+			angle = user_angle;
+			pitch = user_pitch;
+		}
+		"####" "#" 1 
+		{
+			A_FadeIn(1.0,FTF_CLAMP);
+			A_Warp(TargetPtr, next2.x + vel.x, next2.y + vel.y, next2.z + vel.z, 0, user_pflags);
+			angle = user_angle;
+			pitch = user_pitch;
+		}
+		"####" "#" 1 
+		{
+			// Keep 'shrinking'. NEVER fade out!
+			if (user_neg)
+			{
+				A_SetScale(Scale.X - (user_scale / Max(1.0, user_time)), Scale.Y);
+				if (Scale.X >= 0)	{ return ResolveState("Null"); }
+			}
+			else
+			{
+				A_SetScale(Scale.X - (user_scale / Max(1.0, user_time)), Scale.Y);
+				if (Scale.X <= 0)	{ return ResolveState("Null"); }
+			}
+			A_Warp(TargetPtr, next2.x + vel.x, next2.y + vel.y, next2.z + vel.z ,0, user_pflags);
+			angle = user_angle;
+			pitch = user_pitch;
+			return ResolveState(null);
+		}
+		Wait;
+	}
+}
+
+/*
+Class MovingTrailBeam : Actor 
+{
+	const NoSpawn = 256;
+	double user_dist;
+	int user_t;
+	int user_zoffset;
+	double user_angle;
+	double user_pitch;
+	Vector3 pa, pb;
+	double user_time;
+	double user_scale;
+	int user_pflags;
+	int user_neg;
+	int uid;
+	Default 
+	{
+		+NOINTERACTION
+		+FLATSPRITE
+		+BRIGHT
+		+ROLLCENTER
+		YScale 0.25; //Don't touch this! Otherwise the trail will become broken up!
+		XScale 0.03; //This modifies the width of the beam. It is safe to play around with.
+		Alpha 0;
+		RenderStyle "Add";
+	}
+	// DO NOT add a translation. If you need to change the colors, make a sprite
+	// entry in TEXTURES lump and use BLEND. NEVER TRANSLATE!
+	
+	override void BeginPlay()
+	{
+		uid = tid;
+		ChangeTID(0);
+		Super.BeginPlay();
+	}
+	
+	States
+	{
+	Spawn:
+		X202 B 0 NoDelay
+		{
+			// Sets how long to split the scaling-in effect.
+			user_time = 3.0;
+			user_zoffset = 16;
+			// Set this to the actor's same name. The TID will prevent it spawning infinitely (tid * 256).
+			A_SpawnItemEx("MovingTrailBeam",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERSCALE|SXF_TRANSFERPOINTERS,uid * 256,1);
+			return ResolveState("Process");
+		}
+	Process:
+		"####" "#" 0
+		{
+			if (!user_pflags)	{ user_pflags = WARPF_INTERPOLATE|WARPF_NOCHECKPOSITION|WARPF_ABSOLUTEOFFSET;	}
+			A_Warp(DefPtr,0,0,user_zoffset,0,WARPF_NOCHECKPOSITION);
+			// If it's a secondary trail (vertical)
+			if (uid > 0)	
+			{
+				roll = pitch + 90;
+				pitch = 90;
+				angle -= 90;
+			}
+		
+			// Save our current information so we know how to properly interpolate whenever
+			// the owner moves.
+			user_neg = (Scale.X < 0) ? 1 : 0;
+			user_scale = Scale.X;
+			user_angle = angle;
+			user_pitch = pitch;
+			user_dist = GetDistance(false, TargetPtr);
+			pa = pos;
+			
+			// Move to the shooter so we can get just how far out we are.
+			A_Warp(TargetPtr,0,0,0,0,WARPF_NOCHECKPOSITION);
+			pb = pa - pos;
+			
+			// Now move back without interpolating. Otherwise it'll look weird.
+			A_Warp(TargetPtr, pb.x, pb.y, pb.z,0,WARPF_NOCHECKPOSITION|WARPF_ABSOLUTEOFFSET);
+			angle = user_angle;
+			pitch = user_pitch;
+		}
+		"####" "#" 1 
+		{
+			A_FadeIn(1.0,FTF_CLAMP);
+			A_Warp(TargetPtr, pb.x + vel.x, pb.y + vel.y, pb.z + vel.z, 0, user_pflags);
+			angle = user_angle;
+			pitch = user_pitch;
+		}
+		"####" "#" 1 
+		{
+			// Keep 'shrinking'. NEVER fade out!
+			if (user_neg)
+			{
+				A_SetScale(Scale.X - (user_scale / Max(1.0, user_time)), Scale.Y);
+				if (Scale.X >= 0)	{ return Destroy(); }
+			}
+			else
+			{
+				A_SetScale(Scale.X - (user_scale / Max(1.0, user_time)), Scale.Y);
+				if (Scale.X <= 0)	{ return Destroy(); }
+			}
+			A_Warp(TargetPtr, pb.x + vel.x, pb.y + vel.y, pb.z + vel.z, flags: user_pflags);
+			angle = user_angle;
+			pitch = user_pitch;
+		}
+		Wait;
+	}
+}
+*/
+
 Class BulletTrailBeam : TrailBeam
 {
 	Default 

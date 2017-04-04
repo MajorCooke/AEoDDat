@@ -8,118 +8,14 @@ class DropItem : Object native
 }
 */
 
-Class AEoDRandomSpawner : Actor
+Class AEoDRandomSpawner : RandomSpawner
 {
-	Class<Actor> SpawnName;
-	override void BeginPlay()
+	override void PostSpawn(Actor spawned)
 	{
-		if (GetClass() == "AEoDRandomSpawner")
-		{	Destroy();	return;	}
-	
-		DropItem di;
-		DropItem drop;
-		int n = 0;
-		
-		Super.BeginPlay();
-		drop = di = GetDropItems();
-		
-		if (di != null)
-		{
-			while (di != null)
-			{
-				if (di.Name != 'none')
-				{
-					if (di.Amount < 0) di.Amount = 1; // default value is -1, we need a positive value.
-					n += di.Amount; // this is how we can weight the list.
-					di = di.Next;
-				}
-			}
-			if (n == 0)
-			{ // Nothing left to spawn.
-				Destroy();
-				return;
-			}
-			// Then we reset the iterator to the start position...
-			di = drop;
-			// Take a random number...
-			n = random[pr_randomspawn](0,n);
-			// And iterate in the array up to the random number chosen.
-			while (n > -1 && di != null)
-			{
-				if (di.Name != 'none')	//&& (!nomonsters || !IsMonster(di)))
-				{
-					n -= di.Amount;
-					if ((di.Next != null) && (n > -1))
-						di = di.Next;
-					else
-						n = -1;
-				}
-				else
-				{
-					di = di.Next;
-				}
-			}
-			
-			int r = random[pr_randomspawn](0,255);
-			// So now we can spawn the dropped item.
-			if (di == NULL || bouncecount >= 32)	// Prevents infinite recursions
-			{
-				Spawn("Unknown", pos, NO_REPLACE);		// Show that there's a problem.
-				Destroy();
-				return;
-			}
-			else if (r <= di.Probability)	// prob 255 = always spawn, prob 0 = almost never spawn.
-			{
-				SpawnName = di.Name;
-				if (!SpawnName)
-				{
-					A_Log("Unknown actor");
-					A_Log(di.Name);
-					Destroy();
-					return;
-				}
-			}
-		}
-	}
-	
-	override void PostBeginPlay()
-	{
-		Super.PostBeginPlay();
-		
-		if (SpawnName)
-		{
-			Actor mobj = Spawn(SpawnName,pos,ALLOW_REPLACE);
-			if (mobj)
-			{
-				mobj.target = target;
-				mobj.master = master;
-				mobj.tracer = tracer;
-				mobj.vel = vel;
-				mobj.angle = angle;
-				mobj.pitch = pitch;
-				mobj.roll = roll;
-				mobj.special = special;
-				mobj.args[0] = args[0];
-				mobj.args[1] = args[1];
-				mobj.args[2] = args[2];
-				mobj.args[3] = args[3];
-				mobj.args[4] = args[4];
-				mobj.ChangeTID(tid);
-			}
-		}
-		
-		Destroy();
-		return;
-	} 
-	
-	Default
-	{
-		+NOINTERACTION
-		+NOBLOCKMAP
-		+NOTELESTOMP
-		+NOSECTOR
-		+THRUACTORS
-		+NOGRAVITY
+		if (!spawned)	return;
+		spawned.target = target;
+		spawned.master = master;
+		spawned.tracer = tracer;
 	}
 }
 

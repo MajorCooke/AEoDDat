@@ -11,6 +11,7 @@ Actor ClipReplacer : CustomInventory replaces Clip
 	var int user_Type;
 	+INVENTORY.QUIET
 	+INVENTORY.ALWAYSPICKUP
+	+THRUACTORS
 	Inventory.Amount 0
 	States
 	{
@@ -36,7 +37,7 @@ Actor ClipReplacer : CustomInventory replaces Clip
 		TNT1 A 0 A_SpawnItemEx("AENails",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS,192)
 		Stop	
 	End:
-		TNT1 A -1
+		TNT1 A -1 A_ChangeFlag("THRUACTORS",false)
 		Stop
 	}
 } 
@@ -54,6 +55,7 @@ Actor ClipBoxReplacer : CustomInventory replaces ClipBox
 	var int user_Type;
 	+INVENTORY.QUIET
 	+INVENTORY.ALWAYSPICKUP
+	+THRUACTORS
 	Inventory.Amount 0
 	States
 	{
@@ -83,7 +85,7 @@ Actor ClipBoxReplacer : CustomInventory replaces ClipBox
 		TNT1 A 0 A_SpawnItemEx("AECellBox",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS,192)
 		Stop	
 	End:
-		TNT1 A -1
+		TNT1 A -1 A_ChangeFlag("THRUACTORS",false)
 		Stop
 	}
 } 
@@ -104,6 +106,7 @@ Actor ShellReplacer : CustomInventory replaces Shell
 	var int user_Type;
 	+INVENTORY.QUIET
 	+INVENTORY.ALWAYSPICKUP
+	+THRUACTORS
 	Inventory.Amount 0
 	States
 	{
@@ -133,7 +136,7 @@ Actor ShellReplacer : CustomInventory replaces Shell
 		TNT1 A 0 A_SpawnItemEx("AENails",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS,210)	
 		Goto End
 	End:
-		TNT1 A -1
+		TNT1 A -1 A_ChangeFlag("THRUACTORS",false)
 		Stop
 	}
 } 
@@ -153,6 +156,7 @@ Actor ShellBoxReplacer : CustomInventory replaces ShellBox
 	var int user_Type;
 	+INVENTORY.QUIET
 	+INVENTORY.ALWAYSPICKUP
+	+THRUACTORS
 	Inventory.Amount 0
 	States
 	{
@@ -181,7 +185,7 @@ Actor ShellBoxReplacer : CustomInventory replaces ShellBox
 		TNT1 A 0 A_SpawnItemEx("AENailsBox",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS,210)	
 		Goto End
 	End:
-		TNT1 A 2
+		TNT1 A -1 A_ChangeFlag("THRUACTORS",false)
 		Stop
 	}
 } 
@@ -202,6 +206,7 @@ Actor CellReplacer : CustomInventory replaces Cell
 	var int user_Type;
 	+INVENTORY.QUIET
 	+INVENTORY.ALWAYSPICKUP
+	+THRUACTORS
 	Inventory.Amount 0
 	States
 	{
@@ -231,7 +236,7 @@ Actor CellReplacer : CustomInventory replaces Cell
 		TNT1 A 0 A_SpawnItemEx("ASTF",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS,190)
 		Goto End
 	End:
-		TNT1 A -1
+		TNT1 A -1 A_ChangeFlag("THRUACTORS",false)
 		Stop
 	}
 } 
@@ -252,6 +257,7 @@ Actor CellPackReplacer : CustomInventory replaces CellPack
 	var int user_Type;
 	+INVENTORY.QUIET
 	+INVENTORY.ALWAYSPICKUP
+	+THRUACTORS
 	Inventory.Amount 0
 	States
 	{
@@ -281,7 +287,7 @@ Actor CellPackReplacer : CustomInventory replaces CellPack
 		TNT1 A 0 A_SpawnItemEx("ASTFPack",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS,190)
 		Goto End
 	End:
-		TNT1 A -1
+		TNT1 A -1 A_ChangeFlag("THRUACTORS",false)
 		Stop
 	}
 } 
@@ -302,6 +308,7 @@ Actor RocketAmmoReplacer : CustomInventory replaces RocketAmmo
 	var int user_Type;
 	+INVENTORY.QUIET
 	+INVENTORY.ALWAYSPICKUP
+	+THRUACTORS
 	Inventory.Amount 0
 	States
 	{
@@ -336,7 +343,7 @@ Actor RocketAmmoReplacer : CustomInventory replaces RocketAmmo
 		TNT1 A 0 A_SpawnItemEx("MiniRockets",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS,160)	
 		Goto End
 	End:
-		TNT1 A -1
+		TNT1 A -1 A_ChangeFlag("THRUACTORS",false)
 		Stop
 	}
 } 
@@ -357,6 +364,7 @@ Actor RocketBoxReplacer : CustomInventory replaces RocketBox
 	var int user_Type;
 	+INVENTORY.QUIET
 	+INVENTORY.ALWAYSPICKUP
+	+THRUACTORS
 	Inventory.Amount 0
 	States
 	{
@@ -391,7 +399,7 @@ Actor RocketBoxReplacer : CustomInventory replaces RocketBox
 		TNT1 A 0 A_SpawnItemEx("MiniRocketBox",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS,160)	
 		Goto End
 	End:
-		TNT1 A -1
+		TNT1 A -1 A_ChangeFlag("THRUACTORS",false)
 		Stop
 	}
 } 
@@ -408,13 +416,13 @@ Actor RocketBoxReplacer : CustomInventory replaces RocketBox
 
 //===========================================================================================================
 //===========================================================================================================
-Actor BulletAmmo : RandomSpawner
+Actor BulletAmmo : AEoDRandomSpawner
 {
 	DropItem "AEClip" 128
 	DropItem "AENails" 128
 }
 
-Actor BulletBigAmmo : RandomSpawner
+Actor BulletBigAmmo : AEoDRandomSpawner
 {
 	DropItem "AEClipBox" 128
 	DropItem "AENailsBox" 128
@@ -422,13 +430,13 @@ Actor BulletBigAmmo : RandomSpawner
 
 
 //-----------------------------------------------------------------------------------
-Actor ShellAmmo : RandomSpawner
+Actor ShellAmmo : AEoDRandomSpawner
 {
 	DropItem "AEShell" 230
 	DropItem "AENails" 15
 	DropItem "AEClip" 15
 }
-Actor ShellBigAmmo : RandomSpawner
+Actor ShellBigAmmo : AEoDRandomSpawner
 {
 	DropItem "AEShellBox" 230
 	DropItem "AENailsBox" 10
@@ -437,13 +445,13 @@ Actor ShellBigAmmo : RandomSpawner
 
 
 //-----------------------------------------------------------------------------------
-Actor CellAmmo : RandomSpawner
+Actor CellAmmo : AEoDRandomSpawner
 {
 	DropItem "PlasmaRodSmall" 128
 	DropItem "AECell" 128
 	DropItem "ASTF" 25
 }
-Actor CellBigAmmo : RandomSpawner
+Actor CellBigAmmo : AEoDRandomSpawner
 {
 	DropItem "PlasmaRod" 128
 	DropItem "AECellBox" 128
@@ -451,13 +459,13 @@ Actor CellBigAmmo : RandomSpawner
 }
 
 //-----------------------------------------------------------------------------------
-Actor ExploAmmo : RandomSpawner
+Actor ExploAmmo : AEoDRandomSpawner
 {
 	DropItem "AERocket" 175
 	DropItem "AEGrenade" 85
 	DropItem "MiniRockets" 85
 }
-Actor ExploBigAmmo : RandomSpawner
+Actor ExploBigAmmo : AEoDRandomSpawner
 {
 	DropItem "AERocketBox" 175
 	DropItem "AEGrenadeBox" 85
@@ -467,14 +475,14 @@ Actor ExploBigAmmo : RandomSpawner
 
 //-----------------------------------------------------------------------------------
 
-Actor Mana1Ammo : RandomSpawner
+Actor Mana1Ammo : AEoDRandomSpawner
 {
 	DropItem "BlueMana" 190
 	DropItem "GreenMana" 50
 }
 
 
-Actor Mana1BigAmmo : RandomSpawner
+Actor Mana1BigAmmo : AEoDRandomSpawner
 {
 	DropItem "BigBlueMana" 190
 	DropItem "BigGreenMana" 50
@@ -482,12 +490,12 @@ Actor Mana1BigAmmo : RandomSpawner
 
 
 //-----------------------------------------------------------------------------------
-Actor Mana2Ammo : RandomSpawner
+Actor Mana2Ammo : AEoDRandomSpawner
 {
 	DropItem "GreenMana" 200
 	DropItem "RedMana" 95
 }
-Actor Mana2BigAmmo : RandomSpawner
+Actor Mana2BigAmmo : AEoDRandomSpawner
 {
 	DropItem "BigGreenMana" 200
 	DropItem "BigRedMana" 95
