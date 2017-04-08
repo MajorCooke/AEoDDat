@@ -1,4 +1,292 @@
+/*==============================================================================
+================================================================================
+								The Deadlights
+				Graphics from Happy Time Circus 2 by Shtbag555
+							 Coded by Major Cooke
+							 
+	What spawned IT? Where does he come from? A side question the rejects
+	often asked themselves, but whatever answer lie out of reach, it's
+	well beyond their understanding. That goddamn clown will never let 
+	go of his hate.
+	
+	Injured by battery acid, he found this to be a serious flaw in his
+	defensive abilities. This would not suffice. He needed to perfect his
+	mortal form and prevent such things from being a weakness ever again.
+	The idea came to him one night when he was about to devour two children
+	resting on a hillside, staring up at the clear night sky, silently
+	sneaking upon them. Preparing for a test, they were quizzing one another
+	over the capabilities of stars, and several questions caught his
+	attention. Brilliant questions and answers. Retreating to his lair under
+	the sewers, he forged them with several traits of the stars in mind,
+	forming eight deadly orbiting projectiles that damage and slice through
+	anything they touch.
+	
+	The deadlights are made from an unknown material that has different
+	reactions based on whom the owner is. For Pennywise, they render him
+	completely invulnerable to any and all attacks from outsiders as he
+	he uses very little energy when moving. Humans on the other hand do
+	use up a bunch of energy, and thus the deadlights can only afford to
+	render them temporarily invulnerable upon being stricken, and reflecting
+	the attack back at the offender. This invulnerability is so strong, it
+	can even deflect the particle phase-injections of the teleporters, which
+	makes enemies explode from the inside out when something is teleporting
+	onto the spot that happens to be in the way.
+	
+================================================================================
+==============================================================================*/
 
+Class DeadLightPowerup : CustomInventory
+{
+	Default
+	{
+		Inventory.MaxAmount 3;
+		Inventory.Amount 1;
+		Inventory.InterHubAmount 3;
+		Inventory.PickupSound "HTC2/Deadlight/Pickup";
+		Inventory.UseSound "HTC2/Deadlight/Activate";
+		Inventory.PickupMessage "You won the Dead Lights! Drive your enemies through multi-colored madness!";
+		+INVENTORY.INVBAR
+		+VISIBILITYPULSE
+		+DONTGIB
+		Inventory.Icon "X091A0";
+		Species "Permanent";
+		//+FLOATBOB
+		Tag "Invulnerable when hit, floating deadlights hurt nearby enemies, reflecting projectiles";
+	}
+	States
+	{
+	Spawn:
+		X091 A 2 Light("DeadWhite");
+        X091 B 2 Light("DeadRed");
+        X091 C 2 Light("DeadGreen");
+        X091 D 2 Light("DeadBlue");
+		Loop;
+	Use:
+		TNT1 A 0 
+		{
+			if (CountInv("PowerDemonMorph") || CountInv("PowerDLProtector"))
+			{	return false;	}
+			A_GiveInventory("DLPowerEffect",1);
+			A_SetReflective();
+			//A_SpawnItemEx("DLController",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER);
+			//A_SpawnItemEx("DLMonitor",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER);
+			A_PlaySound("powerups/pentagramuse",5,1,0,ATTN_NONE);
+			A_PlaySound("powerups/pentagramuse",6,1,0,ATTN_NONE);
+			A_SpawnItemEx("PlayerDeadLightWarp",0,0,30,12,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER);
+			A_SpawnItemEx("PlayerDeadLightWarp",0,0,30,12,0,0,90,SXF_NOCHECKPOSITION|SXF_SETMASTER);
+			A_SpawnItemEx("PlayerDeadLightWarp",0,0,30,12,0,0,180,SXF_NOCHECKPOSITION|SXF_SETMASTER);
+			A_SpawnItemEx("PlayerDeadLightWarp",0,0,30,12,0,0,270,SXF_NOCHECKPOSITION|SXF_SETMASTER);
+			A_SpawnItemEx("PlayerDeadLightWarp2",0,0,30,12,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER);
+			A_SpawnItemEx("PlayerDeadLightWarp2",0,0,30,12,0,0,90,SXF_NOCHECKPOSITION|SXF_SETMASTER);
+			A_SpawnItemEx("PlayerDeadLightWarp2",0,0,30,12,0,0,180,SXF_NOCHECKPOSITION|SXF_SETMASTER);
+			A_SpawnItemEx("PlayerDeadLightWarp2",0,0,30,12,0,0,270,SXF_NOCHECKPOSITION|SXF_SETMASTER);
+			return true;
+		}
+		Stop;
+	}
+}
+
+Class PowerDLProtector : PowerProtection
+{
+	Default
+	{
+		DamageFactor "Normal", 0.6;
+		Inventory.Icon "X091A0";
+	}
+	
+	override void DoEffect()
+	{
+		if (owner)
+		{
+			owner.bREFLECTIVE = true;
+			if (owner.bJUSTHIT && !owner.CountInv("PowerFake") && !owner.bINVULNERABLE && !owner.bNODAMAGE)
+			{
+				owner.A_GiveInventory("DLFlasher",1);
+			}
+			owner.bJUSTHIT = false;
+		}
+		Super.DoEffect();
+	}
+	
+	override void EndEffect()
+	{
+		if (owner)
+		{
+			if (!owner.CountInv("PowerPlayerGrounder"))
+				owner.bREFLECTIVE = false;
+			owner.A_KillChildren("Normal",KILS_KILLMISSILES,null,'PlayerDeadLight');
+		}
+		Super.EndEffect();
+	}
+}
+
+Class PowerFake : PowerProtection
+{
+	Default
+	{
+		+INVENTORY.NOSCREENBLINK;
+		DamageFactor "Normal", 1.0;
+		Powerup.Duration 45;
+	}
+	
+	override void InitEffect()
+	{
+		if (owner)
+		{			
+			owner.bINVULNERABLE = owner.bNODAMAGE = owner.bNOPAIN = true;
+		}
+		Super.InitEffect();
+	}
+	
+	override void EndEffect()
+	{
+		if (owner)
+		{
+			let inv = PowerInvulnerable(owner.FindInventory("PowerInvulnerable",true));
+			owner.bINVULNERABLE = (inv != null);
+			owner.bNODAMAGE = owner.bNOPAIN = (owner.CountInv("PowerPlayerGrounder") != 0);
+		}
+		Super.EndEffect();
+	}
+	
+}
+
+Class DLPowerEffect : PowerupGiver
+{
+	Default
+	{
+		Powerup.Type "PowerDLProtector";
+		Powerup.Duration -666;
+		Inventory.MaxAmount 0;
+		Inventory.InterHubAmount 0;
+		+INVENTORY.ALWAYSPICKUP
+		+INVENTORY.AUTOACTIVATE
+	}
+}
+
+Class DLFlasher : PowerupGiver
+{
+	Default
+	{
+		Powerup.Type "PowerFake"; //Doesn't matter, invulnerable when this happens.
+		Inventory.MaxAmount 0;
+		Powerup.Duration 45;
+		Powerup.Colormap 0.0, 0.0, 0.0, 1.0, 1.0, 1.0;
+		+INVENTORY.NOSCREENBLINK
+		+INVENTORY.ALWAYSPICKUP
+		+INVENTORY.AUTOACTIVATE
+	}
+}
+
+Class DeadlightToken : Inventory
+{
+	Default
+	{
+		Inventory.MaxAmount 1;
+		Inventory.InterHubAmount 0;
+	}
+}
+
+Class PlayerDeadLightWarp : Actor
+{
+	int dirMove;
+	Property AngleMove: dirMove;
+	Default
+	{
+		PlayerDeadLightWarp.AngleMove 3;
+		BounceFactor 1;
+		WallBounceFactor 1;
+		Height 16;
+		Projectile;
+		+SEEKERMISSILE
+		+FORCERADIUSDMG
+		+STRIFEDAMAGE
+		+NOINTERACTION
+		+EXTREMEDEATH
+		+FOILINVUL
+		+NODAMAGETHRUST
+		+DONTSPLASH
+		Alpha 0.3;
+		Scale 0.5;
+		Speed 12;
+		Damage 1;
+		Species "PlayerDeadLight";
+		RenderStyle "Translucent";
+	}
+	
+	States
+	{
+	Spawn:
+		X091 A 0;
+	PreMove:
+		X091 A 1 Light("DeadWhite") A_Explode(random(6,12),32,0,0,32);
+        X091 B 1 Light("DeadRed") A_Explode(random(6,12),32,0,0,32);
+        X091 C 1 Light("DeadGreen") A_Explode(random(6,12),32,0,0,32);
+        X091 D 1 Light("DeadBlue") A_Explode(random(6,12),32,0,0,32);
+		X091 A 1 Light("DeadWhite") A_Explode(random(6,12),32,0,0,32);
+        X091 B 1 Light("DeadRed") A_Explode(random(6,12),32,0,0,32);
+        X091 C 1 Light("DeadGreen") A_Explode(random(6,12),32,0,0,32);
+        X091 D 1 Light("DeadBlue") A_Explode(random(6,12),32,0,0,32);
+	Warping:
+		X091 A 1 Light("DeadWhite") 
+		{
+			A_Weave(0,1,0,10);
+			A_Warp(AAPTR_MASTER,92,0,32,dirMove,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE|WARPF_USECALLERANGLE);
+			A_Explode(random(6,12),32,0,0,32);
+		}
+		X091 B 1 Light("DeadRed") 
+		{
+			A_Weave(0,1,0,10);
+			A_Warp(AAPTR_MASTER,92,0,32,dirMove,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE|WARPF_USECALLERANGLE);
+			A_Explode(random(6,12),32,0,0,32);
+		}
+		X091 C 1 Light("DeadGreen") 
+		{
+			A_Weave(0,1,0,10);
+			A_Warp(AAPTR_MASTER,92,0,32,dirMove,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE|WARPF_USECALLERANGLE);
+			A_Explode(random(6,12),32,0,0,32);
+		}
+		X091 D 1 Light("DeadBlue") 
+		{
+			A_Weave(0,1,0,10);
+			A_Warp(AAPTR_MASTER,92,0,32,dirMove,WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE|WARPF_USECALLERANGLE);
+			A_Explode(random(6,12),32,0,0,32);
+		}
+		Loop;
+	Death:
+		X091 E 4 
+		{
+			A_Stop();
+			bNOINTERACTION = true;
+		}
+		X091 F 4 Bright 
+		{
+			A_Explode(96,128,0);
+			
+			for (int i = 0; i < 41; i++)
+				A_SpawnProjectile("Sparkles", 8, 0, random(-180, 180), 2, random(-180, 180));
+		}
+		X091 G 4 Bright 
+		{
+			for (int i = 0; i < 82; i++)
+				A_SpawnProjectile("Sparkles", 8, 0, random(-180, 180), 2, random(-180, 180));
+		}
+        X091 HI 4 Bright;
+		X087 JKL 4 Bright;
+        Stop;
+	Ender:
+		TNT1 A 0;
+		Stop;
+	}
+}
+
+Class PlayerDeadLightWarp2 : PlayerDeadLightWarp
+{
+	Default
+	{
+		PlayerDeadLightWarp.AngleMove -3;
+	}
+}
 
 
 
@@ -479,14 +767,13 @@ Class DemonMorphPowerup : CustomInventory
 			*/
 			if (GetClass() == "DemonPlayerMorph" || CountInv("AEoDDemonMorphHand") || CountInv("PowerDemonMorph"))
 			{
-				A_LogInt(1);
 				A_SetBlend("Grey",1,17);
 				A_GiveInventory("DemonMorphGiver",1);
 				A_GiveInventory("DemonMorphFullBright",1);
 				A_SpawnItemEx("DemonMorphStartSound",flags: SXF_NOCHECKPOSITION|SXF_SETMASTER);
 				return true;
 			}
-			if (CountInv("MorphOverrideable") > 0 || FindInventory("PowerMorph",true) != null)
+			if (FindInventory("PowerMorph",true) != null)
 			{
 				A_LogInt(2);
 				//Class<Inventory> morph = FindInventory("PowerMorph",true).GetClass();

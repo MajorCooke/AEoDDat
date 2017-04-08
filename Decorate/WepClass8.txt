@@ -7256,14 +7256,9 @@ For the firing frames, we'll want it to perform a reload after the shells are sp
 		QDBS BB 1 A_WeaponReady(WRF_NOBOB|WRF_NOFIRE)
 		QDBS A 0 
 		{
-			if (CountInv("PowerEconomizer") || CountInv("InfiniteAmmo"))
-			{
-				A_TakeInventory("AEShell",(20-CountInv("BoneDusterClip")),1);
-			}
+			A_TakeInventory("AEShell",(20-CountInv("BoneDusterClip")),TIF_NOTAKEINFINITE);
 			A_GiveInventory("BoneDusterClip",(20-CountInv("BoneDusterClip")));
 		}
-		QDBS A 0 A_JumpIfInventory("PowerEconomizer",1,"ReloadSpecial") //Treat it like they have more than 20 shells at all times.
-		QDBS A 0 A_JumpIfInventory("InfiniteAmmo",1,"ReloadSpecial")
 	ReloadSpecial:
 		
 		Goto Ready
