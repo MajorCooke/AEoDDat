@@ -497,7 +497,9 @@ Script "RecordWeapon" (void)
 	{
 		SetUserCvar(plr, "AEoD_PreMorphWeapon", "");
 	}
-	SetUserCvar(plr, "AEoD_PreMorphWeapon", GetWeapon());
+	SetUserCvar(plr, "AEoD_PreMorphWeapon", weap);
+	if (GetCvar("aeodweapondebug"))
+		Log(s: GetUserCvar(plr,"AEoD_PreMorphWeapon"), s: "\n");
 }
 
 Script "PostMorphWeapon" ENTER
@@ -507,6 +509,8 @@ Script "PostMorphWeapon" ENTER
 	
 	if (!stricmp(weap,"") || !stricmp(weap,"AEoDDemonMorphHand"))
 	{
+		if (GetCvar("aeodweapondebug"))
+			Log(s: weap, s: "\n");
 		SetWeapon(weap);
 	}
 }

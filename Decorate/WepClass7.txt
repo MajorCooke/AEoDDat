@@ -7761,27 +7761,38 @@ Actor DrunkMissile : ConcussionMissile
 	+EXTREMEDEATH
 	Radius 8
 	Height 8
-	Speed 100
+	Speed 20
 	Damage 75
 	SeeSound "RLSTEREO"
 	DeathSound "RLXPLOD"
 	Scale 0.9
 	MissileHeight 8
+	MissileType ""
 	States
 	{
 	Spawn:
-		TNT1 A 0
-		QROK A 1 Bright A_SeekerMissile(10,10,1)
-		TNT1 A 0 A_SpawnItemEx("Q2RocketAltSmoke",-4,random(3,-3),0,0,frandom(0.3,-0.3),frandom(0.3,0.75),0,SXF_NOCHECKPOSITION)
-		QROK A 1 Bright A_SeekerMissile(10,10,1)
-		TNT1 A 0 A_SpawnItemEx("Q2RocketAltSmoke",-4,random(3,-3),0,0,frandom(0.3,-0.3),frandom(0.3,0.75),0,SXF_NOCHECKPOSITION)
-		QROK A 0 Bright A_SpawnItemEx("DrunkMissile",0,0,0,20,frandom(-4,4),momz+(frandom(-1,1)),frandom(-2,2),SXF_NOCHECKPOSITION,0)
-		Stop
+		QROK A 1 Bright NoDelay 
+		{
+			A_SeekerMissile(10,10,SMF_LOOK);
+			A_SpawnItemEx("Q2RocketAltSmoke",-4,random(3,-3),0,0,frandom(0.3,-0.3),frandom(0.3,0.75),0,SXF_NOCHECKPOSITION);
+		}
+		QROK A 1 Bright
+		{
+			angle += frandom(-5.0, 5.0);
+			pitch += frandom(-5.0, 5.0);
+			A_ChangeVelocity(cos(pitch) * speed, 0, -sin(pitch) * speed,CVF_RELATIVE);
+			A_SeekerMissile(10,10,SMF_LOOK);
+			A_SpawnItemEx("Q2RocketAltSmoke",-4,random(3,-3),0,0,frandom(0.3,-0.3),frandom(0.3,0.75),0,SXF_NOCHECKPOSITION);
+		}
+		Loop
 	Death:
-		TNT1 A 0 A_PlaySound("RLXPLOD",CHAN_AUTO,1.0,0)
-		TNT1 A 0 A_SpawnItemEx("NewExplosionMedium",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
-		TNT1 A 0 A_CustomMissile("ExpQuakeSmall",0,0,0)
-		TNT1 A 2 Bright A_Explode(115,150,1)
+		TNT1 A 2 
+		{
+			A_PlaySound("RLXPLOD",CHAN_AUTO,1.0,0);
+			A_SpawnItemEx("NewExplosionMedium",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION);
+			A_CustomMissile("ExpQuakeSmall",0,0,0);
+			A_Explode(115,150,1);
+		}
 		Stop
 	}
 }

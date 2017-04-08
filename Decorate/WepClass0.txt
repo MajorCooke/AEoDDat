@@ -2127,11 +2127,11 @@ Actor ApocSprayPlayer
 	enum
 	{
 		MaxDistance = 4096,
-		DistDamage = 6144,
+		DistDamage = 8192,
 	};
 	// Range damage reduction. The higher, the closer you have to be to the targets
 	// to deal increased damage.
-	const float Negate = 5.5; 
+	const float Negate = 6.5; 
 	var int user_damage;
 	var int user_s1;
 	Projectile
@@ -2155,7 +2155,7 @@ Actor ApocSprayPlayer
 			if (CheckClass("PlayerPawn",TargetPtr,true) || A_CheckProximity("Null","PlayerPawn",MaxDistance,1,CPXF_ANCESTOR|CPXF_NOZ|CPXF_SETTARGET))
 			{				
 				user_damage = (200 + 
-					(abs(DistDamage - Clamp((GetDistance(false,TargetPtr) - 128) * Negate,0,DistDamage))*1));
+					(abs(DistDamage - Clamp((GetDistance(false,TargetPtr) - 128) * Negate,0,DistDamage))));
 				A_FaceTarget;
 				A_Warp(TracerPtr,0,0,0,0,WARPF_NOCHECKPOSITION|WARPF_USECALLERANGLE,"Null",0.1,0.2);
 				A_DamageTracer(user_damage,"Holy",DMSS_FOILINVUL|DMSS_AFFECTARMOR,None,None,TargetPtr);
@@ -8964,7 +8964,7 @@ Actor AEoDRedeemerNoAmmo : AEoDRedeemerItem
 
 // Lastly, Death's aspect knows where to hit them where it hurts. By channelling 
 // spirits of vengeance with untold knowledge, they can penetrate through any
-// shield and cut down any foe, save for the one he gave this power to originally.
+// shield and cut down any foe, save for the one it gave this power to originally.
 
 // The Death Bringer's sigil can be switched at any time to change modes, and his
 // hand guides the user as if they have had all his experience with it. With only
@@ -9059,21 +9059,14 @@ Actor AEoDHellHeavenHand : AEoDWeaponBase // 6066
 		UNK1 B 1 A_WeaponReady //Protection side lit
 		Goto Ready3
 	Deselect:
-		UNK2 B 0 A_RemoveChildren(1,RMVF_EVERYTHING,"HHHAmmoTaker")
-		UNK1 A 0 A_StopSound(CHAN_WEAPON)
-		UNK1 A 0 A_StopSound(CHAN_LISTENERZ)
-		TNT1 A 0 	
-		UNK1 A 0 A_ChangeFlag("DONTTHRUST",0)
-		UNK2 B 0 A_StopSound(CHAN_WEAPON)
-		UNK2 B 0 A_StopSound(CHAN_LISTENERZ)
-		UNK2 B 0 A_JumpIfInventory("PowerNoSeek",1,3)
-		UNK2 B 0 A_ChangeFlag("DONTRIP",0)
-		UNK2 B 0 A_ChangeFlag("NORADIUSDMG",0)
-		UNK2 B 0 A_ChangeFlag("NODAMAGE",0)
-		UNK2 B 0 A_JumpIfInventory("PentagramIsOn",1,2)
-		UNK2 B 0 A_UnSetReflectiveInvulnerable
-		UNK2 B 0 A_TakeInventory("PowerPlayerGrounder",1)
-		UNK2 B 0 A_TakeInventory("PGrounder",1)
+		UNK2 B 0 
+		{
+			A_RemoveChildren(1,RMVF_EVERYTHING,"HHHAmmoTaker");
+			A_StopSound(CHAN_WEAPON);
+			A_StopSound(CHAN_LISTENERZ);
+			A_GiveInventory("HHHProtectionOff",1);
+			A_TakeInventory("PowerPlayerGrounder",1);
+		}
 	Desel2:
 		UNK1 A 1 A_Lower 
 		TNT1 AA 0 A_Lower
@@ -9186,9 +9179,12 @@ Actor AEoDHellHeavenHand : AEoDWeaponBase // 6066
 		UNK1 FGE 5 bright
 		Goto Ready
 	FireProtection:
-		UNK2 A 0 A_JumpIfInventory("PowerEconomizer",1,3)
-		UNK2 A 0 A_JumpIfInventory("InfiniteAmmo",1,2)
-		UNK2 A 0 A_JumpIfInventory("DarkMana",1,1)
+		UNK2 A 1
+		{
+			if (CountInv("DarkMana") || GetCvar("sv_infiniteammo") || CountInv("PowerEconomizer") || CountInv("PowerInfiniteAmmo"))
+			{	return state(1);	}
+			return state(0);
+		}
 		Goto Ready
 		
 		UNK2 B 0 A_SpawnItemEx("HHHAmmoTaker",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
@@ -9220,7 +9216,6 @@ Actor AEoDHellHeavenHand : AEoDWeaponBase // 6066
 		Goto Ready
 		
 		UNK2 B 0 A_FireCustomMissile("ProtectionShover", 0, 0, 0, 0)
-		UNK2 B 0 A_ChangeFlag(DONTRIP,1)
 		UNK2 B 13 Bright A_GiveInventory("HHHProtectionOn",1)
 		UNK2 B 0 A_ReFire("ProtectionHold")
 		UNK2 B 0 A_TakeInventory("HHHAudioToken",1000)
@@ -9295,6 +9290,52 @@ Actor HHHProtectionAudio
 	States
 	{
 	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			A_PlaySound("HHH/fire2main",5,1,1);
+			A_PlaySound("HHH/fire2chant",6,0.7,1);
+			A_PlaySound("DemonMorph/Loop",7,0.6,1);
+			A_SetInventory("HHHAudioSpawned",1,MasterPtr);
+			user_d = 90;
+		}
+	Play:
+		TNT1 A 1 
+		{
+			if (CountInv("PowerDemonMorph",MasterPtr) || user_d < 1)
+			{
+				A_StopSound(5);
+				A_StopSound(6);
+				A_StopSound(7);
+				A_SetInventory("HHHAudioSpawned",0,MasterPtr);
+				A_SetInventory("HHHAudioToken",0,MasterPtr);
+				return state("Null");
+			}
+			
+			if (CountInv("HHHAudioToken",MasterPtr) >= 2)
+			{	
+				if (user_d < 2000)
+				{	user_d += 90;	}
+				else
+				{	user_d = 2000;	}
+			}
+			else	
+			{	user_d -= 90;	}
+			A_Warp(AAPTR_MASTER,2000 - user_d,0,16,0,WARPF_NOCHECKPOSITION);
+			return state(0);
+		}
+		Wait
+	}
+}
+
+/*
+Actor HHHProtectionAudio
+{
+	var int user_d;
+	+NOINTERACTION
+	+NOTIMEFREEZE
+	States
+	{
+	Spawn:
 		TNT1 A 0 NoDelay A_PlaySound("HHH/fire2main",5,1,1)
 		TNT1 A 0 A_PlaySound("HHH/fire2chant",6,0.7,1)
 		TNT1 A 0 A_PlaySound("DemonMorph/Loop",7,0.6,1)
@@ -9326,6 +9367,7 @@ Actor HHHProtectionAudio
 		Stop
 	}
 }
+*/
 
 Actor HHHAmmoTaker
 {
@@ -9347,20 +9389,23 @@ Actor HHHProtectionOn : CustomInventory
 	States
 	{
 	Pickup:
-		TNT1 A 0 A_SetReflectiveInvulnerable
-		TNT1 A 0 A_ChangeFlag("NOPAIN",1)
-		TNT1 A 0 A_ChangeFlag("NODAMAGE",1)
-		TNT1 A 0 A_ChangeFlag("DONTTHRUST",1)
-		TNT1 A 0 A_ChangeFlag(DONTRIP,1)
-		TNT1 A 0 A_JumpIfInventory("Unrideable",1,2)
-		TNT1 A 0 A_GiveInventory("Unrideable",1)
-		TNT1 A 0 A_JumpIfInventory("HHHCheck",1,2)
-		TNT1 A 0 A_GiveInventory("HHHCheck",1)
-		TNT1 A 0 A_GiveInventory("HHHHealth",1)
-		TNT1 A 0 A_JumpIfInventory("BasicArmor",664,2)
-		TNT1 A 0 A_GiveInventory("HHHArmor",2)
-		Stop
-		TNT1 A 0 A_GiveInventory("UltimateArmor",1)
+		TNT1 A 0 
+		{
+			A_GiveInventory("PGrounder",1);
+			A_SetReflectiveInvulnerable;
+			A_ChangeFlag("NOPAIN",1);
+			A_ChangeFlag("NODAMAGE",1);
+			A_ChangeFlag("DONTTHRUST",1);
+			A_ChangeFlag("DONTRIP",1);
+			A_SetInventory("Unrideable",1);
+			A_SetInventory("HHHCheck",1);
+			A_GiveInventory("HHHHealth",1);
+			if (CountInv("BasicArmor") > 664)
+			{	A_GiveInventory("UltimateArmor",1);	}
+			else
+			{	A_GiveInventory("HHHArmor",2);	}
+			return true;
+		}
 		Stop
 	}
 }
@@ -9372,22 +9417,30 @@ Actor HHHProtectionOff : CustomInventory
 	Inventory.MaxAmount 0
 	States
 	{
-	Use:
-		TNT1 A 0 A_JumpIf(CheckClass("DemonPlayerMorph",AAPTR_DEFAULT,0),"End")
-		TNT1 A 0 A_ChangeFlag("NODAMAGE",0)
-		TNT1 A 0 A_ChangeFlag("NOPAIN",0)
-		TNT1 A 0 A_ChangeFlag("DONTTHRUST",0)
-		TNT1 A 0 A_TakeInventory("Unrideable",1)
-		TNT1 A 0 A_JumpIfInventory("PowerInvulBase",1,2)
-		TNT1 A 0 A_UnsetInvulnerable
-		TNT1 A 0 A_UnsetReflective
-		TNT1 A 0 A_JumpIfInventory("PowerNoSeek",1,3)
-		TNT1 A 0 A_SetRipMin(1)
-		TNT1 A 0 A_ChangeFlag("DONTRIP",0)
-		TNT1 A 0 A_TakeInventory("HHHCheck",10000)
-		Stop
-	End:
-		TNT1 A 0
+	Pickup:
+		TNT1 A 0 
+		{
+			if (CountInv("PowerDemonMorph"))
+			{	return false;	}
+			
+			A_SetInventory("PowerPlayerGrounder",0);
+			A_ChangeFlag("NODAMAGE",0);
+			A_ChangeFlag("NOPAIN",0);
+			A_ChangeFlag("DONTTHRUST",0);
+			A_SetInventory("Unrideable",0);
+			
+			if (!CountInv("PowerInvulBase") && !CountInv("PowerInvulnerable"))
+			{	A_UnsetInvulnerable;	}
+			if (!CountInv("PowerDLProtector"))
+			{	A_UnsetReflective;		}
+			if (!CountInv("PowerNoSeek"))
+			{
+				A_SetRipMin(1);
+				A_ChangeFlag("DONTRIP",0);
+			}
+			A_SetInventory("HHHCheck",0);
+			return true;
+		}
 		Stop
 	}
 }
@@ -9480,12 +9533,14 @@ Actor PowerPlayerGrounder : PowerProtection //Used to stop the player from being
 	DamageFactor "Telefrag", 0.0
 	DamageFactor "Voodoo", 0.0
 	+NOTELEFRAG
-	//Powerup.Duration 9999999999
+	+INVULNERABLE
+	+NODAMAGE
+	+LAXTELEFRAGDMG
 }
 
 Actor PGrounder : PowerupGiver
 {
-	Powerup.Duration 9999999999
+	Powerup.Duration 0x7FFFFFFD
 	Inventory.PickupMessage ""
 	Inventory.MaxAmount 1
 	powerup.type "PlayerGrounder"	

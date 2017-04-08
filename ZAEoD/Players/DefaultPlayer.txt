@@ -43,6 +43,37 @@ Class AEoDmarine : DoomPlayer
 		Super.PostBeginPlay();
 	}
 	
+	override int DamageMobj(Actor inflictor, Actor source, int damage, Name mod, int flags = 0, double angle = 0)
+	{
+		if (mod == 'Reflection')
+			return Super.DamageMobj(inflictor, source, damage, mod, flags, angle);
+		if (CountInv("PowerPlayerGrounder"))
+		{
+			if (damage < 1)
+				return 0;
+			
+			if (inflictor)
+			{
+				if (!source && inflictor.target)
+					source = inflictor.target;
+			}
+			
+			// Make sure never to do this to self! Otherwise, infiniloops happen.
+			// Doze are bad. Weally weally bad. :(
+			if (source && source != self && (source.bSHOOTABLE || source.bVULNERABLE))
+			{
+				source.DamageMobj(null, self, damage, "Reflection");
+			}
+			else if (inflictor && inflictor != self && (inflictor.bSHOOTABLE || inflictor.bVULNERABLE))
+			{
+				source.DamageMobj(null, self, damage, "Reflection");
+			}
+			return 0;
+		}
+		
+		return Super.DamageMobj(inflictor, source, damage, mod, flags, angle);
+	}
+	
 	States
 	{
 	Spawn:

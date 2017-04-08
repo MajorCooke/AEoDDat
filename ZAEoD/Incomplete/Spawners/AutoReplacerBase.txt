@@ -1,0 +1,251 @@
+/*
+	override Class<Actor> PickMonster(String category)
+	{
+		// Set up the monsters here.
+		
+		if (category == 'Doom64')
+		{
+			return "";
+		}
+		if (category == 'Joke')
+		{
+			return "";
+		}
+		if (category == 'ROTT')
+		{
+			return "";
+		}
+		if (category == 'L4DMon')
+		{
+			return "";
+		}
+		if (category == 'Hellspawn')
+		{
+			return "";
+		}
+		
+		if (category == 'Doom')
+		{
+			return "";
+		}
+		if (category == 'Blood')
+		{
+			return "";
+		}
+		if (category == 'DN3D')
+		{
+			return "";
+		}
+		if (category == 'HL')
+		{
+			return "";
+		}
+		if (category == 'HL2')
+		{
+			return "";
+		}
+		if (category == 'Heretic')
+		{
+			return "";
+		}
+		if (category == 'Hexen')
+		{
+			return "";
+		}
+		if (category == 'Hexen2')
+		{
+			return "";
+		}
+		if (category == 'MM')
+		{
+			return "";
+		}
+		if (category == 'Powerslave')
+		{
+			return "";
+		}
+		if (category == 'Quake1')
+		{
+			return "";
+		}
+		if (category == 'Quake2')
+		{
+			return "";
+		}
+		if (category == 'Quake4')
+		{
+			return "";
+		}
+		if (category == 'ShadowWarr')
+		{
+			return "";
+		}
+		if (category == 'Strife')
+		{
+			return "";
+		}
+	}
+*/
+
+Class AEoDMonsterSpawner : Actor
+{
+	int user_Type;
+	int user_multistage;
+	int user_rng;
+	int user_joke;
+	bool stay, classic;
+	
+	Array<String> Types;
+	Array<String> Extras;
+	Array<String> MonsterNames;
+	Array<Int> Chances;
+	Actor mon;
+	String thing;
+	
+	Default
+	{
+		Monster;
+		Health 2000000;
+		//+NOINTERACTION
+		+DONTCORPSE
+		+NORADIUSDMG
+		+NONSHOOTABLE
+		-SHOOTABLE
+		-COUNTKILL
+		+BOSSDEATH
+		+VULNERABLE
+		+NOTIMEFREEZE
+		+CANTSEEK
+		+BOSSDEATH
+		+NEVERTARGET
+		+DONTTHRUST
+		+DONTSPLASH
+		+NOGRAVITY
+		+NOPAIN
+		+NOTRIGGER
+		+NOTONAUTOMAP
+		+LAXTELEFRAGDMG
+		Species "AEoDSpawner";
+		DamageFactor "Normal", 0.0;
+		DamageFactor "Massacre", 666;
+	}
+	
+	virtual void GetExtras()
+	{
+		if (GetCvar("user_Dm64"))		Extras.Push("Doom64");
+		if (GetCvar("user_Hellspawn")) 	Extras.Push("Hellspawn");
+		if (GetCvar("user_Joke"))		Extras.Push("JokeMode");
+		if (GetCvar("user_L4DMon"))		Extras.Push("L4DMon");
+		if (GetCvar("user_ROTT"))		Extras.Push("ROTT");
+	}
+	
+	virtual String PickMonster(String category)
+	{
+		// Set up the monsters here.
+	}
+	
+	override void BeginPlay()
+	{
+		if (GetClass() == "AEoDMonsterSpawner")
+			return Destroy();
+			
+		Super.BeginPlay();
+		
+		Class<Actor> StayCheck = GetReplacee(GetClass());
+		
+		stay = (StayCheck == 'BaronOfHell' ||
+				StayCheck == 'Fatso' ||
+				StayCheck == 'Arachnotron' ||
+				StayCheck == 'Cyberdemon' ||
+				StayCheck == 'SpiderMastermind');
+		
+		if (GetCvar("user_GameMode") == 1)	
+		{
+			SetStateLabel("L4D"); 
+			return;
+		}
+		
+		Extras.Clear();
+		GetExtras();
+		
+		static const String themes[] =
+		{
+			"Doom",			"user_Doom",
+			"Blood",		"user_Blood",
+			"DN3D",			"user_Duke",
+			"HL",			"user_HL",
+			"HL2",			"user_HL2",
+			"Heretic",		"user_Heretic",
+			"Hexen",		"user_Hexen",
+			"Hexen2",		"user_Hexen2",
+			"MM",			"user_MM",
+			"Powerslave",	"user_Powerslave",
+			"Quake1",		"user_Quake1",
+			"Quake2",		"user_Quake2",
+			"Quake4",		"user_Quake4",
+			"ShadowWarr",	"user_SW",
+			"Strife",		"user_Strife"
+		};
+		int total = themes.Size() / 2;
+		Types.Clear();
+		
+		// Gather the list of the above based on cvar.
+		int ThemeCount = 0;
+		for (int i = 0; i < themes.Size(); i += 2)
+		{
+			if (GetCvar(themes[i + 1]))
+			{
+				ThemeCount++;
+				Types.Push(themes[i]);
+			}
+		}
+		
+		// Make sure there's always something in the list to work with.
+		if (ThemeCount >= total || ThemeCount <= 0)
+		{
+			classic = true;
+			if (Types.Size() < 1)
+			{
+				for (i = 0; i < themes.Size(); i += 2)
+				{
+					Types.Push(themes[i]);
+				}
+			}
+		}
+		
+		if (Extras.Size() > 0)
+			for (i = 0; i < Extras.Size(); i++)
+				Types.Push(Extras[i]);
+			
+		
+		
+		if (Types.Size() < 1)
+		{
+			Console.Printf("ERROR: "..GetClass().." had no theme list!");
+			return Destroy();
+		}
+		
+		int rn1 = random(0,Types.Size() - 1);
+		
+		thing = PickMonster(Types[rn1]);
+		Class<Actor> thingclass = thing;
+		if (thingclass)
+		{
+			bool dumb = false;
+			dumb, mon = A_SpawnItemEx(thingclass,0,0,0,vel.x,vel.y,vel.z,0,MonsterSpawnFlags|SXF_ABSOLUTEVELOCITY,0,tid);
+			
+			if (mon)
+			{
+				if (Translation)					mon.Translation = Translation;
+				if (health != GetSpawnHealth())		mon.A_SetHealth(health);
+				mon.bDormant = bDormant;
+			}
+			else return Destroy();
+		}
+		else
+		{
+			Console.Printf("ERROR: "..thing.." is not a proper actor!");
+			return Destroy();
+		}
+	}
+}
