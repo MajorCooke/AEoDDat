@@ -1,4 +1,181 @@
 Class AEoDHandler : EventHandler
 {
+	bool DemonMorph;
+	override void NetworkProcess(ConsoleEvent e)
+	{		
+		if (e.Name == 'EndMorph')
+		{
+			int num = e.Player;
+			let plr = players[num].mo;
+			
+			if (plr)
+			{
+				let dm = DemonPlayerMorph(plr);
+				if (dm)
+				{
+					dm.EndMorph();
+				}
+			}
+			return;
+		}
+		
+		if (e.Name == 'DemonMorphOn')
+		{
+			DemonMorph = true;
+			
+			ThinkerIterator it = ThinkerIterator.Create("Actor");
+			Actor mo;
+			while (mo = Actor(it.Next()))
+			{
+				if (mo.bISMONSTER && mo.health > 0)
+				{
+					if (mo.CountInv("DemonMorphTransToken") 
+						|| mo.Species == 'Director'
+						|| mo.Species == 'AEoDSpawner')	continue;
+					mo.A_SetInventory("DemonMorphTransToken",1);
+					DemonMorphTranslation dm = new("DemonMorphTranslation");
+					dm.who = mo;
+				}
+			}
+		}
+		else if (e.Name == 'DemonMorphOff')
+		{
+			DemonMorph = false;
+			
+			ThinkerIterator it = ThinkerIterator.Create("DemonMorphTranslation");
+			DemonMorphTranslation mo;
+			while (mo = DemonMorphTranslation(it.Next(true)))
+			{
+				mo.Destroy();
+				continue;
+			}
+		}
+	}
 	
+	override void WorldUnloaded(WorldEvent e)
+	{
+		DemonMorph = false;
+	}
+	
+	override void WorldThingSpawned(WorldEvent e)
+	{
+		if (DemonMorph && e.Thing)
+		{
+			Actor mo = e.Thing;
+			if (mo && mo.bISMONSTER && mo.health > 0)
+			{
+				DemonMorphTranslation dm = new("DemonMorphTranslation");
+				dm.who = mo;
+			}
+		}
+	}
+	
+	override void WorldThingRevived(WorldEvent e)
+	{
+		if (DemonMorph && e.Thing)
+		{
+			Actor mo = e.Thing;
+			if (mo && mo.bISMONSTER)
+			{
+				DemonMorphTranslation dm = new("DemonMorphTranslation");
+				dm.who = mo;
+				dm.resurrecting = true;
+			}
+		}
+	}
+}
+
+Class DemonMorphTransToken : Inventory {}
+
+Class DemonMorphTranslation : Thinker
+{
+	uint OldTranslation;
+	uint CurrentTranslation;
+	uint FriendlyTranslation;
+	uint EnemyTranslation;
+	Actor who;
+	bool wasFriendly;
+	bool resurrecting;
+	
+	override void PostBeginPlay()
+	{
+		if (who)
+		{
+			OldTranslation = who.Translation;
+			who.A_SetTranslation("DemonMorphAlly");
+			FriendlyTranslation = who.Translation;
+			who.A_SetTranslation("DemonMorphTarget");
+			EnemyTranslation = who.Translation;
+			
+			if (who.bFRIENDLY)	{ who.A_SetTranslation("DemonMorphAlly"); wasFriendly = true; }
+			else				who.A_SetTranslation("DemonMorphTarget");
+			
+			CurrentTranslation = who.Translation;
+		}
+		Super.PostBeginPlay();
+	}
+	
+	//==========================================================================
+	//
+	// The tick function.
+	//
+	//==========================================================================
+	override void Tick()
+	{
+		// Destroy the thinker if we no actor.
+		if (!who) return Destroy();
+		
+		// Destroy the thinker if actor's dead and not resurrecting, 
+		if (who.health < 0)
+		{
+			if (resurrecting)	return Super.Tick();
+			else				return Super.Destroy();
+		}
+		else resurrecting = false;
+		
+		// No point doing anything if invisible.
+		if (who.alpha <= 0 || who.GetRenderStyle() <= 0 || who.bINVISIBLE)
+			return Super.Tick();
+		
+		
+		// Change the translation based on friendly or not.
+		// Make sure not to record it by changing the base and current
+		// at the same time.
+		if (!wasFriendly && who.bFRIENDLY)
+		{
+			who.Translation = CurrentTranslation = FriendlyTranslation;
+			wasFriendly = true;
+		}
+		else if (wasFriendly && !who.bFRIENDLY)
+		{
+			who.Translation = CurrentTranslation = EnemyTranslation;
+			wasFriendly = false;
+		}
+		
+		
+		// Should their translation change at any point, record it.
+		if (who.Translation != CurrentTranslation)
+		{
+			OldTranslation = who.Translation;
+		}
+		
+		// Then set it again, and done.
+		who.Translation = CurrentTranslation;
+		Super.Tick();
+	}
+	//==========================================================================
+	//
+	// Destroy the thinker after resetting the translation. This only applies
+	// to monsters that don't burst and disappear into tiny fragments.
+	//
+	//==========================================================================
+	override void OnDestroy()
+	{
+		if (who)
+		{
+			who.A_SetInventory("DemonMorphTransToken",0);
+			who.Translation = OldTranslation;
+		}
+		Super.OnDestroy();
+	}
 }

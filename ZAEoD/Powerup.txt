@@ -712,6 +712,7 @@ Class DemonMorphPowerup : CustomInventory
 {
 	int ticking;
 	int limit;
+	bool picked;
 	Default
 	{
 		+INVENTORY.BIGPOWERUP
@@ -758,13 +759,12 @@ Class DemonMorphPowerup : CustomInventory
 	Pickup:
 		TNT1 A 0 
 		{
-			/*
-			let mng = DemonMorphManager(Spawn("DemonMorphManager",pos));
-			if (mng)
-			{
-				mng.master = self;
-			}
-			*/
+			
+			//let mng = DemonMorphManager(Spawn("DemonMorphManager",pos));
+			//if (mng)
+			//{
+			//	mng.master = self;
+			//}			
 			if (GetClass() == "DemonPlayerMorph" || CountInv("AEoDDemonMorphHand") || CountInv("PowerDemonMorph"))
 			{
 				A_SetBlend("Grey",1,17);
@@ -776,8 +776,6 @@ Class DemonMorphPowerup : CustomInventory
 			if (FindInventory("PowerMorph",true) != null)
 			{
 				A_LogInt(2);
-				//Class<Inventory> morph = FindInventory("PowerMorph",true).GetClass();
-				//if (morph)	A_SetInventory(morph,0);
 				ACS_NamedExecuteAlways("ForceUnmorph",0,1,0,0);
 				return true;
 			}
@@ -814,6 +812,7 @@ Class DemonMorphPowerup : CustomInventory
 			
 		}
 		Stop;
+		
 	}
 }
 Class DemonMorphFlashed : Inventory { Default { Inventory.InterhubAmount 0; } }
@@ -866,10 +865,31 @@ Class PowerDemonMorph : PowerMorph
 		+INVENTORY.NOTELEPORTFREEZE
 		PowerMorph.PlayerClass "DemonPlayerMorph";
 		//2 | 16 | 32 | 64 | 128 | 256 | 512 | 2048
-		PowerMorph.MorphStyle MRF_UNDOALWAYS|MRF_WHENINVULNERABLE|MRF_UNDOBYDEATH|MRF_UNDOBYDEATHSAVES|MRF_LOSEACTUALWEAPON|MRF_NEWTIDBEHAVIOUR;
+		PowerMorph.MorphStyle MRF_UNDOALWAYS|MRF_WHENINVULNERABLE|MRF_UNDOBYDEATH|MRF_UNDOBYDEATHFORCED|MRF_UNDOBYDEATHSAVES|MRF_LOSEACTUALWEAPON|MRF_NEWTIDBEHAVIOUR;
 		PowerMorph.MorphFlash "OldFog";
 		PowerMorph.UnmorphFlash "DemonMorphFogOff";
 	}
+	
+	int waitTics;
+	
+	/*
+	override void DoEffect()
+	{
+		if (EffectTics <= 1)
+			AEoDHandler.SendNetworkEvent("DemonMorphOff");
+			
+		Super.DoEffect();
+	}
+	*/
+	
+	override void EndEffect()
+	{
+		// Because this is apparently called when updating a powerup as well.
+		if (EffectTics <= 1)
+			AEoDHandler.SendNetworkEvent("DemonMorphOff");
+		Super.EndEffect();
+	}
+	
 }
 
 Class DemonPlayerMorph : DoomPlayer
@@ -894,8 +914,26 @@ Class DemonPlayerMorph : DoomPlayer
 		+TELESTOMP
 		+LAXTELEFRAGDMG
 		+NOSKIN
+		+NOBLOOD
 		Health 666;
 		Player.MorphWeapon "AEoDDemonMorphHand";
+	}
+	
+	void EndMorph(bool kill = false)
+	{
+		if (kill)
+			Die(null, null);
+		else
+		{
+			let it1 = Powerup(FindInventory("PowerMorph",true));
+			let it2 = Powerup(alternative.FindInventory("PowerMorph",true));
+			let it3 = Powerup(FindInventory("PowerLightAmp",true));
+			let it4 = Powerup(alternative.FindInventory("PowerLightAmp",true));
+			if (it1)	it1.EffectTics = 0;
+			if (it2)	it2.EffectTics = 0;
+			if (it3)	it3.EffectTics = 0;
+			if (it4)	it4.EffectTics = 0;
+		}
 	}
 	
 	override int DamageMobj(Actor inflictor, Actor source, int damage, Name mod, int flags = 0, double angle = 0)
@@ -951,6 +989,7 @@ Class AEoDDemonMorphHand : Weapon
 		M666 A 1 A_SetBlend("White",0.875,10);
 		M666 A 0
 		{
+			AEoDHandler.SendNetworkEvent("DemonMorphOn");
 			A_SetBlend("White",1.0,10);
 			A_SetInventory("DemonMorphFlashed",1);
 			A_GiveInventory("DemonMorphFullBright",1);
