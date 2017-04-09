@@ -95,9 +95,9 @@ Class AEoDMonsterSpawner : Actor
 	int user_joke;
 	bool stay, classic;
 	
-	Array<String> Types;
-	Array<String> Extras;
-	Array<String> MonsterNames;
+	Array<StateLabel> Types;
+	Array<StateLabel> Extras;
+	//Array<String> MonsterNames;
 	Array<Int> Chances;
 	Actor mon;
 	String thing;
@@ -125,6 +125,7 @@ Class AEoDMonsterSpawner : Actor
 		+NOTRIGGER
 		+NOTONAUTOMAP
 		+LAXTELEFRAGDMG
+		+NOINTERACTION
 		Species "AEoDSpawner";
 		DamageFactor "Normal", 0.0;
 		DamageFactor "Massacre", 666;
@@ -168,23 +169,42 @@ Class AEoDMonsterSpawner : Actor
 		Extras.Clear();
 		GetExtras();
 		
-		static const String themes[] =
+		static const StateLabel themes[] = 
 		{
-			"Doom",			"user_Doom",
-			"Blood",		"user_Blood",
-			"DN3D",			"user_Duke",
-			"HL",			"user_HL",
-			"HL2",			"user_HL2",
-			"Heretic",		"user_Heretic",
-			"Hexen",		"user_Hexen",
-			"Hexen2",		"user_Hexen2",
-			"MM",			"user_MM",
-			"Powerslave",	"user_Powerslave",
-			"Quake1",		"user_Quake1",
-			"Quake2",		"user_Quake2",
-			"Quake4",		"user_Quake4",
-			"ShadowWarr",	"user_SW",
-			"Strife",		"user_Strife"
+			"Doom",
+			"Blood",
+			"DN3D",
+			"HL",
+			"HL2",
+			"Heretic",
+			"Hexen",
+			"Hexen2",
+			"MM",
+			"Powerslave",
+			"Quake1",
+			"Quake2",
+			"Quake4",
+			"ShadowWarr",
+			"Strife",
+		}
+		
+		static const String cvars[] =
+		{
+			"user_Doom",
+			"user_Blood",
+			"user_Duke",
+			"user_HL",
+			"user_HL2",
+			"user_Heretic",
+			"user_Hexen",
+			"user_Hexen2",
+			"user_MM",
+			"user_Powerslave",
+			"user_Quake1",
+			"user_Quake2",
+			"user_Quake4",
+			"user_SW",
+			"user_Strife"
 		};
 		int total = themes.Size() / 2;
 		Types.Clear();
@@ -226,26 +246,56 @@ Class AEoDMonsterSpawner : Actor
 		}
 		
 		int rn1 = random(0,Types.Size() - 1);
-		
-		thing = PickMonster(Types[rn1]);
-		Class<Actor> thingclass = thing;
-		if (thingclass)
-		{
-			bool dumb = false;
-			dumb, mon = A_SpawnItemEx(thingclass,0,0,0,vel.x,vel.y,vel.z,0,MonsterSpawnFlags|SXF_ABSOLUTEVELOCITY,0,tid);
+		SetStateLabel(Types[rn1]);
+	}
+	
+	
+	void AdjustMonster()
+	{
+		if (tracer)
+		{			
+			if (Translation)					tracer.Translation = Translation;
+			if (health != GetSpawnHealth())		tracer.A_SetHealth(health);
+			tracer.bDormant = bDormant;
 			
-			if (mon)
+			if (bBOSSSPAWNED)
 			{
-				if (Translation)					mon.Translation = Translation;
-				if (health != GetSpawnHealth())		mon.A_SetHealth(health);
-				mon.bDormant = bDormant;
+				tracer.bBOSSSPAWNED = true;
+				if (players[0] && players[0].mo)
+				{
+					tracer.target = players[0].mo;
+					A_AlertMonsters();
+				}
 			}
-			else return Destroy();
 		}
-		else
+	}
+	
+	States
+	{
+	Teleport:
+	Waiting:
+		TNT1 A 0
 		{
-			Console.Printf("ERROR: "..thing.." is not a proper actor!");
-			return Destroy();
+			bNOINTERACTION = bTHRUACTORS = true;
+			A_GiveToChildren("AEoDToken",1);
+			AdjustMonster();
 		}
+		TNT1 A 70
+		{
+			if (!tracer)
+			{
+				A_BossDeath();
+				return Destroy();
+			}
+		}
+		Wait;
+	End:
+	Death:
+		TNT1 A 0
+		{
+			A_BossDeath();
+			AdjustMonster();
+		}
+		Stop;
 	}
 }

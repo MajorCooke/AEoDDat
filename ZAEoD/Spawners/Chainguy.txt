@@ -7,18 +7,31 @@
 //===========================================================================================================
 Class ChainguyReplacer : AEoDMonsterSpawner replaces ChaingunGuy
 {
-	Radius 20
-	Height 56
+	Default
+	{
+		Radius 20;
+		Height 56;
+	}
+	
+	override void GetExtras()
+	{
+		if (GetCvar("user_Dm64"))		Extras.Push("Doom64");
+		if (GetCvar("user_Hellspawn")) 	Extras.Push("Hellspawn");
+		if (GetCvar("user_Joke"))		Extras.Push("JokeMode");
+		if (GetCvar("user_L4DMon"))		Extras.Push("L4DMon");
+		if (GetCvar("user_ROTT"))		Extras.Push("ROTT");
+	}
+	
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay A_GiveInventory("NoDormantToken",1)
+		TNT1 A 0;
 		
 	//-------------------------------------------------------------------------------------------------------
 	//	Type Check
 	//-------------------------------------------------------------------------------------------------------
-		TNT1 A 35 ACS_NamedExecuteAlways("SpawnDeployMonster",0,0,0,0)
-		Goto ClassicAEoD
+		TNT1 A 35;
+		Goto ClassicAEoD;
 
 
 	//-------------------------------------------------------------------------------------------------------

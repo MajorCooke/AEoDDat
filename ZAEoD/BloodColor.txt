@@ -266,7 +266,6 @@ Class GibSpawnerBase : Actor
 		AddGibs();
 		SpawnGibs();
 		Destroy();
-		//Super.PostBeginPlay();
 	}
 	
 	//--------------------------------------------------------------------------
@@ -490,17 +489,14 @@ Class MCBloodFXMain : Actor replaces Blood
 	
 	override void PostBeginPlay()
 	{
+		Super.PostBeginPlay();
 		if (A_CheckSightOrRange(BloodDistanceLimit,"Null"))
 		{	
-			Destroy();
-			return;
+			return Destroy();
 		}
 		user_t = tid;
 		Thing_ChangeTID(0,0);
 		A_FaceMovementDirection();
-		user_inv = CountInv("BloodSpriteToken",Player1);
-		
-		Super.PostBeginPlay();
 	}
 	
 	void SpawnParticleBlood()
@@ -555,15 +551,18 @@ Class MCBloodFXMain : Actor replaces Blood
 	SpawnBlood:
 		TNT1 A 0
 		{
-			SpawnParticleBlood();
+			user_inv = GetCvar("user_BloodSprites");
+			if (user_inv <= 0 || user_inv >= 2)
+				SpawnParticleBlood();
 			
 			if (user_inv <= 0)
 			{	Destroy();	}
 		}
 		TNT1 AAA 1 
 		{
+			
 			if (user_inv >= 1)
-			{	A_SpawnItemEx("MCBloodSprite",frandom(0,2),0,random(1,4),frandom(0,1.5),0,frandom(0.1,2.0),random(0,359),GibFlags,0);	}
+			{	A_SpawnItemEx("MCBloodSprite",frandom(0,2),0,random(1,4),frandom(0,1.5),0,frandom(0.1,2.0),random(0,359),GibFlags|SXF_TRANSFERTRANSLATION,0);	}
 			else
 			{	return ResolveState("Null");	}
 			return ResolveState(null);
@@ -581,7 +580,7 @@ Class MCBloodFXTrail : MCBloodFXMain
 		{
 			A_FaceMovementDirection();
 			if (user_inv >= 1)
-			{	A_SpawnItemEx("MCBloodSprite",frandom(0,2),0,random(1,4),frandom(0,1.5),0,frandom(0.1,2.0),random(0,359),GibFlags,0);	}
+			{	A_SpawnItemEx("MCBloodSprite",frandom(0,2),0,random(1,4),frandom(0,1.5),0,frandom(0.1,2.0),random(0,359),GibFlags|SXF_TRANSFERTRANSLATION,0);	}
 			if (user_inv <= 0 || user_inv >= 2)
 			{	SpawnParticleBlood();	}
 		}
@@ -658,6 +657,7 @@ Class MCBloodParticle : Actor
 	const arraySize = 19;
 	override void PostBeginPlay()
 	{
+		Super.PostBeginPlay();
 		user_vel = sqrt((Vel.X * Vel.X) + (Vel.Y * Vel.Y)) * VelMul;
 		user_pitch = pitch;
 		user_angle = angle;
@@ -665,7 +665,6 @@ Class MCBloodParticle : Actor
 		user_t = tid;
 		Thing_ChangeTID(0,0);
 		
-		Super.PostBeginPlay();
 	}
 	
 	States
