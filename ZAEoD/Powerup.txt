@@ -94,6 +94,15 @@ Class PowerDLProtector : PowerProtection
 		Inventory.Icon "X091A0";
 	}
 	
+	override void InitEffect()
+	{
+		if (owner)
+		{
+			owner.bJUSTHIT = true;
+		}
+		Super.InitEffect();
+	}
+	
 	override void DoEffect()
 	{
 		if (owner)
@@ -112,6 +121,7 @@ Class PowerDLProtector : PowerProtection
 	{
 		if (owner)
 		{
+			if (EffectTics > 0)	return;
 			if (!owner.CountInv("PowerPlayerGrounder"))
 				owner.bREFLECTIVE = false;
 			owner.A_KillChildren("Normal",KILS_KILLMISSILES,null,'PlayerDeadLight');
@@ -296,20 +306,124 @@ Class PlayerDeadLightWarp2 : PlayerDeadLightWarp
 //==============================================================================
 //==============================================================================
 
+Class PentagramOfProtection : CustomInventory 
+{
+	Default
+	{
+		Inventory.PickupMessage "Pentagram Of Protection";
+		Inventory.PickupSound "powerups/pentagrampickup";
+		Inventory.Amount 1;
+		Inventory.MaxAmount 10;
+		Inventory.InterHubAmount 10;
+		Inventory.UseSound "";
+		Scale 0.25;
+		Species "Permanent";
+		Inventory.Icon "HARTPENT";
+		Tag "Invulnerable (timed)";
+		+COUNTITEM
+		+FLOATBOB
+		+DONTGIB
+		+INVENTORY.INVBAR
+		+INVENTORY.FANCYPICKUPSOUND
+	}
+	
+    States
+    {
+    Spawn:
+		QPEI A 0 NoDelay
+		{
+			if (random(1,256) < 224)
+			{
+				A_SpawnItemEx("DemonMorphPowerup",0,0,0,vel.x,vel.y,vel.z,0,SXF_NOCHECKPOSITION|SXF_ABSOLUTEMOMENTUM|SXF_TRANSFERSPECIAL,0,tid);
+				return Destroy();
+			}
+		}
+	Form:
+		QPEI ABCDEFGHIJKLMNOP 3 Bright;
+		Loop;
+    Use:
+		TNT1 A 0 
+		{
+			if (CountInv("PowerDemonMorph") || CountInv("PowerInvulBase"))
+				return false;
+			bNOPAIN = true;
+			A_GiveInventory("UnMorpher",1);
+			A_GiveInventory("Invulnerability",1);
+			A_PlaySound("powerups/pentagramuse",CHAN_BODY,1,0,ATTN_NONE);
+			A_SpawnItemEx("PentagramChecker",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTARGET|SXF_SETMASTER);
+			return true;
+		}
+		Stop;
+    }
+}
+
+Class Invulnerability : PowerupGiver
+{
+	Default
+	{
+		+INVENTORY.AUTOACTIVATE
+		+INVENTORY.QUIET
+		+INVENTORY.NOSCREENBLINK
+		Powerup.Color "Gold", 0.10;
+		Powerup.Type "PowerInvulBase";
+		Powerup.Duration 700;
+	}
+}
+
 Class PowerInvulBase : PowerInvulnerable
 {
 	Default
 	{
+		+INVENTORY.NOSCREENBLINK
 		Inventory.icon "ARTPENTB";
+	}
+	
+	override void InitEffect()
+	{
+		if (owner)
+		{
+			A_PlaySound("powerups/pentagramuse",6,1,0,ATTN_NONE);
+			owner.bNOPAIN = true;
+		}
+		Super.InitEffect();
+	}
+	
+	override void DoEffect()
+	{
+		if (Owner)
+		{
+			if (globalfreeze || level.Frozen)
+			{
+				EffectTics++; //'Freeze' the timer.
+			}
+			else
+			{
+				Switch (EffectTics)
+				{
+					Case 105:
+						A_PlaySound("powerups/pentagrampickup",5,1,0,ATTN_NONE);
+					Case 70:
+					Case 35:
+						Owner.A_SetBlend("Yellow",0.4,12);
+					Default:
+						break;
+				}
+			}
+		}
+		Super.DoEffect();
+	}
+	
+	override void EndEffect()
+	{
+		if (owner)
+		{
+			owner.bNOPAIN = false;
+		}
+		Super.EndEffect();
 	}
 }
 
-//This here is the "controller" that causes the screen fades to happen when the powerup
-//runs out. It's easy. To set this up, simply change the amount of PentagramCountdown
-//given to the player with the PentagramOfProtection actor, and this will do the rest.
-//I've added failsafes in case if, for instance, the pentagram is dispelled by the
-//diabolical dice. That is to prevent the powerdown effect from occuring, and just gets
-//rid of it entirely.
+//No longer used. Kept for compatibility.
 
 Class PentagramChecker : Actor
 {
@@ -323,6 +437,9 @@ Class PentagramChecker : Actor
 	States
 	{
 	Spawn:
+		TNT1 A 0;
+		Stop;
+		/*
 		TNT1 A 1 NoDelay
 		{
 			if (!master)
@@ -361,12 +478,14 @@ Class PentagramChecker : Actor
 				A_SetInventory("PentagramDispelled",0,MasterPtr);
 				A_SetInventory("PentagramIsOn",0,MasterPtr);
 				master.bALLOWPAIN = true;
+				master.bNOPAIN = false;
 				Destroy();
 				return;
 			}
 			return;
 		}
 		Wait;
+		*/
 	}
 }
 
@@ -797,7 +916,7 @@ Class DemonMorphPowerup : CustomInventory
 			if (A_GiveInventory("DemonMorphGiver",1))
 			{	
 				A_LogInt(3);
-				A_GiveInventory("DemonMorphFullBright",1);
+				//A_GiveInventory("DemonMorphFullBright",1);
 				if (alternative && alternative.player)
 					alternative.pitch = np;
 				else
@@ -1340,13 +1459,15 @@ Class DemonMorphFullBright : PowerupGiver
 	}
 }
 
+
 Class PowerDemonAmp : PowerLightAmp
 {
+	// Invert the function so that it's actually grayscale (see EventHandler).
 	override bool IsBlinking()
 	{
 		if (!Owner.CountInv("DemonMorphFlashed"))
 		{	return true;	}
-		return Super.IsBlinking();
+		return !Super.IsBlinking();
 	}
 }
 
