@@ -30,10 +30,18 @@ Class AEoDHandler : EventHandler
 				SectorD.Clear();
 				SectorD.Reserve(level.Sectors.Size());
 			}
+			
+			for (int i = 0; i < level.Sectors.Size(); i++)
+			{
+				Sector s = level.sectors[i];
+				SectorD[i] = s.Colormap.Desaturation;
+				s.SetColor(s.ColorMap.LightColor, 255);
+			}
 			*/
 			DemonMorph = true;
 			int num = e.Player;
 			let plr = players[num].mo;
+			
 			
 			ThinkerIterator it = ThinkerIterator.Create("Actor");
 			Actor mo;
@@ -51,14 +59,10 @@ Class AEoDHandler : EventHandler
 				}
 			}
 			
-			/*
-			for (int i = 0; i < level.Sectors.Size(); i++)
-			{
-				Sector s = level.sectors[i];
-				SectorD[i] = s.Colormap.Desaturation;
-				s.SetColor(s.ColorMap.LightColor, 255);
-			}
-			*/
+			
+			
+			
+			
 		}
 		else if (e.Name == 'DemonMorphOff')
 		{
@@ -78,6 +82,7 @@ Class AEoDHandler : EventHandler
 				s.SetColor(s.ColorMap.LightColor, SectorD[i]);
 			}
 			*/
+			
 		}
 	}
 	

@@ -332,7 +332,7 @@ Class PentagramOfProtection : CustomInventory
     Spawn:
 		QPEI A 0 NoDelay
 		{
-			if (random(1,256) < 224)
+			if (random(1,256) < 256 - 224)
 			{
 				A_SpawnItemEx("DemonMorphPowerup",0,0,0,vel.x,vel.y,vel.z,0,SXF_NOCHECKPOSITION|SXF_ABSOLUTEMOMENTUM|SXF_TRANSFERSPECIAL,0,tid);
 				return Destroy();
@@ -372,8 +372,11 @@ Class Invulnerability : PowerupGiver
 
 Class PowerInvulBase : PowerInvulnerable
 {
+	bool silent;
+	Property Silent: silent;
 	Default
 	{
+		PowerInvulBase.Silent false;
 		+INVENTORY.NOSCREENBLINK
 		Inventory.icon "ARTPENTB";
 	}
@@ -382,7 +385,7 @@ Class PowerInvulBase : PowerInvulnerable
 	{
 		if (owner)
 		{
-			A_PlaySound("powerups/pentagramuse",6,1,0,ATTN_NONE);
+			if (!silent && EffectTics >= 699) A_PlaySound("powerups/pentagramuse",6,1,0,ATTN_NONE);
 			owner.bNOPAIN = true;
 		}
 		Super.InitEffect();
@@ -518,22 +521,22 @@ Class DMSoulFragment : CustomInventory
 		Inventory.PickupSound "reilsss/health/soul";
 		Inventory.MaxAmount 0;
 	}
+	
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		ChangeTID(SoulFragmentID);
+	}
+	
 	States
 	{
 	Spawn:
 		TNT1 A 10 NoDelay 
 		{
-			invoker.t = tid;
-			Thing_ChangeTID(0,0);
 			A_Stop();
 		}
 		X099 A 0 
 		{
-			invoker.soul = Spawn("DMSoulTarget",pos);
-			if (invoker.soul)
-			{
-				invoker.soul.master = self;
-			}
 			if (pos.z < floorz + 10.0)
 			{	A_Warp(AAPTR_DEFAULT,0,0,10,0,WARPF_NOCHECKPOSITION|WARPF_TOFLOOR);	}
 		}
@@ -915,7 +918,6 @@ Class DemonMorphPowerup : CustomInventory
 			double np = pitch;
 			if (A_GiveInventory("DemonMorphGiver",1))
 			{	
-				A_LogInt(3);
 				//A_GiveInventory("DemonMorphFullBright",1);
 				if (alternative && alternative.player)
 					alternative.pitch = np;
@@ -925,7 +927,6 @@ Class DemonMorphPowerup : CustomInventory
 			}
 			else
 			{
-				A_LogInt(-1);
 				return false;
 			}
 			
@@ -979,6 +980,8 @@ Class DemonMorphGiver : PowerupGiver
 
 Class PowerDemonMorph : PowerMorph
 {
+	int waitTics;
+	Actor screams;
 	Default
 	{
 		+INVENTORY.NOTELEPORTFREEZE
@@ -989,7 +992,22 @@ Class PowerDemonMorph : PowerMorph
 		PowerMorph.UnmorphFlash "DemonMorphFogOff";
 	}
 	
-	int waitTics;
+	
+	override void InitEffect()
+	{
+		Super.InitEffect();
+		if (Owner)
+		{
+			let inv = PowerInvulnerable(Owner.FindInventory("PowerInvulnerable",true));
+			if (inv) inv.EffectTics = 0;
+			Owner.bINVULNERABLE = true;
+			if (!screams)
+			{
+				bool dumb = false;
+				[dumb, screams] = A_SpawnItemEx("DemonMorphScreams",flags: SXF_NOCHECKPOSITION|SXF_SETTARGET);
+			}
+		}
+	}
 	
 	/*
 	override void DoEffect()
@@ -1005,7 +1023,20 @@ Class PowerDemonMorph : PowerMorph
 	{
 		// Because this is apparently called when updating a powerup as well.
 		if (EffectTics <= 1)
+		{
 			AEoDHandler.SendNetworkEvent("DemonMorphOff");
+			if (screams)
+			{
+				screams.A_StopSound(CHAN_VOICE);
+				screams.A_StopSound(CHAN_BODY);
+				screams.A_StopSound(CHAN_WEAPON);
+				screams.A_StopSound(CHAN_ITEM);
+				screams.A_StopSound(5);
+				screams.A_StopSound(6);
+				screams.A_StopSound(7);
+				screams.Destroy();
+			}
+		}
 		Super.EndEffect();
 	}
 	
@@ -1096,7 +1127,6 @@ Class AEoDDemonMorphHand : Weapon
 	Overlay.Begin:
 		M666 A 1 
 		{
-			A_SpawnItemEx("DemonMorphScreams",flags: SXF_NOCHECKPOSITION|SXF_SETTARGET);
 			A_PlaySound("DemonMorph/Loop",7|CHAN_NOPAUSE,1,1,ATTN_NONE);
 			A_SetBlend("White",0.125,10);
 		}
