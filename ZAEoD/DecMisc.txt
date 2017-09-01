@@ -1,4 +1,55 @@
-Class InvisiPuff : Actor
+Class AEoDFX : Actor
+{
+	bool RandomRoll;
+	bool RandomScaleFlip;
+	double RollAdd;
+	double RollAddMin;
+	double RollAddMax;
+	
+	property RollAdd:			RollAdd;
+	property RollAddMin:		RollAddMin;
+	property RollAddMax:		RollAddMax;
+	property RandomRoll: 		RandomRoll;
+	property RandomScaleFlip: 	RandomScaleFlip;
+	
+	Default
+	{
+		AEoDFX.RollAddMin 0.0;
+		AEoDFX.RollAddMax 0.0;
+		AEoDFX.RollAdd 0.0;
+		AEoDFX.RandomRoll false;
+		AEoDFX.RandomScaleFlip false;
+		+ROLLSPRITE
+		+NOTELESTOMP
+	}
+	override void BeginPlay()
+	{
+		ChangeStatNum(StatNum.EFFECTS());
+		Super.BeginPlay();
+	}
+	
+	override void PostBeginPlay()
+	{
+		if (bINVISIBLE) return Super.PostBeginPlay();
+		Super.PostBeginPlay();
+		if (RandomScaleFlip) 	A_SetScale(Scale.X*randompick(-1,1),Scale.Y*randompick(-1,1));
+		if (RandomRoll)			roll = frandom(0.0, 359.9);
+		if (bROLLSPRITE)
+		{
+			if (RollAddMin != 0.0 || RollAddMax != 0.0)
+				RollAdd = frandom(RollAddMin, RollAddMax);
+		}
+	}
+	
+	override void Tick()
+	{
+		if (bINVISIBLE)	return Super.Tick();
+		Super.Tick();
+		if (RollAdd != 0.0)	A_SetRoll(roll + RollAdd, SPF_INTERPOLATE);
+	}
+}
+
+Class InvisiPuff : AEoDFX
 {
 	Default
 	{
@@ -16,7 +67,7 @@ Class InvisiPuff : Actor
 	}
 }
 
-Class BulletTracerFX : Actor 
+Class BulletTracerFX : AEoDFX 
 {
 	const Sparsity = 125.0;
 	const Distance = 3.25;
@@ -145,7 +196,7 @@ Class BulletTracerFXInverted : BulletTracerFX
 	}
 }
 
-Class TrailBeam : Actor 
+Class TrailBeam : AEoDFX 
 {
 	const ZOffset = 16;
 	const NoSpawn = 256;
@@ -214,7 +265,7 @@ Class TrailBeam : Actor
 	}
 }
 
-Class MovingTrailBeam : Actor 
+Class MovingTrailBeam : AEoDFX 
 {
 	const NoSpawn = 256;
 	double  user_dist;
@@ -317,7 +368,7 @@ Class MovingTrailBeam : Actor
 }
 
 /*
-Class MovingTrailBeam : Actor 
+Class MovingTrailBeam : AEoDFX 
 {
 	const NoSpawn = 256;
 	double user_dist;

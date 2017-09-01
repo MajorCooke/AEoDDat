@@ -88,6 +88,7 @@ Class DeadLightPowerup : CustomInventory
 
 Class PowerDLProtector : PowerProtection
 {
+	bool modded;
 	Default
 	{
 		DamageFactor "Normal", 0.6;
@@ -102,7 +103,28 @@ Class PowerDLProtector : PowerProtection
 		}
 		Super.InitEffect();
 	}
+	/*
+	override void ModifyDamage(int damage, Name damageType, out int newdamage, bool passive) 
+	{
+		if (passive && Owner && (Owner.ApplyDamageFactor(damageType, damage) > 0) && !Owner.CountInv("PowerFake"))
+		{
+			modded = true;
+			Owner.bJUSTHIT = true;
+			//owner.A_GiveInventory("DLFlasher",1);
+		}
+		newdamage = damage;
+	}
 	
+	override void AbsorbDamage (int damage, Name damageType, out int newdamage) 
+	{
+		if (!modded && Owner && (Owner.ApplyDamageFactor(damageType, damage) > 0) && !owner.CountInv("PowerFake"))
+		{
+			Owner.bJUSTHIT = true;
+			//owner.A_GiveInventory("DLFlasher",1);
+		}
+		newdamage = damage;
+	}
+	*/
 	override void DoEffect()
 	{
 		if (owner)
@@ -154,7 +176,8 @@ Class PowerFake : PowerProtection
 		{
 			let inv = PowerInvulnerable(owner.FindInventory("PowerInvulnerable",true));
 			owner.bINVULNERABLE = (inv != null);
-			owner.bNODAMAGE = owner.bNOPAIN = (owner.CountInv("PowerPlayerGrounder") != 0);
+			owner.bNODAMAGE = (Owner.CountInv("PowerPlayerGrounder") != 0);
+			Owner.bNOPAIN = (inv || Owner.CountInv("PowerPlayerGrounder") != 0);
 		}
 		Super.EndEffect();
 	}
@@ -372,7 +395,12 @@ Class Invulnerability : PowerupGiver
 
 Class PowerInvulBase : PowerInvulnerable
 {
-	bool silent;
+	const MaxTics = 35;
+	const PentaDelay = 70;
+	int delay;
+	int ticks;
+	double alfa;
+	bool silent; bool modded;
 	Property Silent: silent;
 	Default
 	{
@@ -391,10 +419,52 @@ Class PowerInvulBase : PowerInvulnerable
 		Super.InitEffect();
 	}
 	
+	override void ModifyDamage(int damage, Name damageType, out int newdamage, bool passive) 
+	{
+		Super.ModifyDamage(damage, damageType, newdamage, passive);
+		if (passive)
+		{
+			modded = true;
+			if (damage > 0 && Owner && (Owner.ApplyDamageFactor(damageType, damage) > 0))
+			{
+				if (delay < 1)
+				{
+					A_PlaySound("reilsss/powerup/TimeRune",CHAN_AUTO,1.0,false,ATTN_NONE);
+					delay = 70;
+				}
+				
+				ticks = clamp(damage / 20, 1, 35);
+				alfa = clamp(damage / 100.0, 0.0, 0.5);
+				Owner.A_SetBlend("White",alfa,ticks);
+			}
+		}
+		newdamage = damage;
+	}
+	
+	override void AbsorbDamage (int damage, Name damageType, out int newdamage) 
+	{
+		Super.AbsorbDamage(damage, damageType, newdamage);
+		if (!modded && damage > 0 && Owner && (Owner.ApplyDamageFactor(damageType, damage) > 0))
+		{
+			if (delay < 1)
+			{
+				A_PlaySound("reilsss/powerup/TimeRune",CHAN_AUTO,1.0,false,ATTN_NONE);
+				delay = 70;
+			}
+			
+			ticks = clamp(damage / 20, 1, 35);
+			alfa = clamp(damage / 100.0, 0.0, 0.5);
+			A_SetBlend("White",alfa,ticks);
+		}
+		newdamage = damage;
+	}
+	
 	override void DoEffect()
 	{
 		if (Owner)
 		{
+			modded = false;
+			if (delay > 0)	delay--;
 			if (globalfreeze || level.Frozen)
 			{
 				EffectTics++; //'Freeze' the timer.
@@ -916,6 +986,8 @@ Class DemonMorphPowerup : CustomInventory
 			//A_SetInventory("PowerLightAmp",0);
 			
 			double np = pitch;
+			for (int i = 1; i < 8; i++)
+				A_StopSound(i);
 			if (A_GiveInventory("DemonMorphGiver",1))
 			{	
 				//A_GiveInventory("DemonMorphFullBright",1);
@@ -1005,6 +1077,7 @@ Class PowerDemonMorph : PowerMorph
 			{
 				bool dumb = false;
 				[dumb, screams] = A_SpawnItemEx("DemonMorphScreams",flags: SXF_NOCHECKPOSITION|SXF_SETTARGET);
+				
 			}
 		}
 	}

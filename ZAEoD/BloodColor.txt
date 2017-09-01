@@ -229,7 +229,7 @@ enum bloodcolors//TIDs ONLY. DO NOT USE IN THE TRANSLATIONS PROPERTY.
 
 // The Base Spawner
 
-Class GibSpawnerBase : Actor
+Class GibSpawnerBase : AEoDFX
 {
 	int user_t;
 	bool simple;
@@ -242,7 +242,7 @@ Class GibSpawnerBase : Actor
 	double MulBy[2];
 	double RAdd;
 	
-	Array<String> Gib;
+	Array<Class<Actor> > Gib;
 	Array<Int> Amt;
 	Array<int> SimpleGib;
 	
@@ -254,9 +254,37 @@ Class GibSpawnerBase : Actor
 	//--------------------------------------------------------------------------
 	override void PostBeginPlay()
 	{
-		
-		if (GetClass() == "GibSpawnerBase" || !CheckReqs())
+		if (GetClass() == "GibSpawnerBase")
 		{	 return Destroy();	}
+		
+		user_t = tid;
+		ChangeTID(0);
+		
+		if (A_CheckSightOrRange(BloodDistanceLimit,"Null"))
+		{
+			simple = true;
+		}
+		
+		int count = 0;
+		int SoftGibMax = GetCvar("MaxSoftGibCount");
+		int HardGibMax = GetCvar("MaxGibCount");
+		
+		ThinkerIterator it = ThinkerIterator.Create("GibletBase",StatNum.GIBS());
+		Actor mo;
+		
+		while ((mo = GibletBase(it.Next())))
+		{
+			count++;
+			// Too many gibs spawned.
+			if (count >= HardGibMax)
+				return Destroy();
+			
+			// Over the soft gib threshold.
+			if (!simple && count >= SoftGibMax)
+				simple = true;	
+			
+		}
+		
 		
 		Super.PostBeginPlay();
 		RAdd = 8;
@@ -265,20 +293,17 @@ Class GibSpawnerBase : Actor
 		
 		Gib.Clear();
 		Amt.Clear();
-		Class<Actor> ngib = null;
-		Int namt = 0;
-		int simp = 0;
 		
-		ngib = Gib01; namt = Gam01; simp = Sim01;	if (ngib && namt > 0)	{	Gib.Push(Gib01);	Amt.Push(namt); SimpleGib.Push(simp);	}
-		ngib = Gib02; namt = Gam02; simp = Sim02;	if (ngib && namt > 0)	{	Gib.Push(Gib02);	Amt.Push(namt);	SimpleGib.Push(simp);	}
-		ngib = Gib03; namt = Gam03; simp = Sim03;	if (ngib && namt > 0)	{	Gib.Push(Gib03);	Amt.Push(namt);	SimpleGib.Push(simp);	}
-		ngib = Gib04; namt = Gam04; simp = Sim04;	if (ngib && namt > 0)	{	Gib.Push(Gib04);	Amt.Push(namt);	SimpleGib.Push(simp);	}
-		ngib = Gib05; namt = Gam05; simp = Sim05;	if (ngib && namt > 0)	{	Gib.Push(Gib05);	Amt.Push(namt);	SimpleGib.Push(simp);	}
-		ngib = Gib06; namt = Gam06; simp = Sim06;	if (ngib && namt > 0)	{	Gib.Push(Gib06);	Amt.Push(namt);	SimpleGib.Push(simp);	}
-		ngib = Gib07; namt = Gam07; simp = Sim07;	if (ngib && namt > 0)	{	Gib.Push(Gib07);	Amt.Push(namt);	SimpleGib.Push(simp);	}
-		ngib = Gib08; namt = Gam08; simp = Sim08;	if (ngib && namt > 0)	{	Gib.Push(Gib08);	Amt.Push(namt);	SimpleGib.Push(simp);	}
-		ngib = Gib09; namt = Gam09; simp = Sim09;	if (ngib && namt > 0)	{	Gib.Push(Gib09);	Amt.Push(namt);	SimpleGib.Push(simp);	}
-		ngib = Gib10; namt = Gam10; simp = Sim10;	if (ngib && namt > 0)	{	Gib.Push(Gib10);	Amt.Push(namt);	SimpleGib.Push(simp);	}
+		if (Gib01 && Gam01 > 0) { Gib.Push(Gib01);	Amt.Push(Gam01);	SimpleGib.Push(Sim01);	}
+		if (Gib02 && Gam02 > 0) { Gib.Push(Gib02);	Amt.Push(Gam02);	SimpleGib.Push(Sim02);	}
+		if (Gib03 && Gam03 > 0) { Gib.Push(Gib03);	Amt.Push(Gam03);	SimpleGib.Push(Sim03);	}
+		if (Gib04 && Gam04 > 0) { Gib.Push(Gib04);	Amt.Push(Gam04);	SimpleGib.Push(Sim04);	}
+		if (Gib05 && Gam05 > 0) { Gib.Push(Gib05);	Amt.Push(Gam05);	SimpleGib.Push(Sim05);	}
+		if (Gib06 && Gam06 > 0) { Gib.Push(Gib06);	Amt.Push(Gam06);	SimpleGib.Push(Sim06);	}
+		if (Gib07 && Gam07 > 0) { Gib.Push(Gib07);	Amt.Push(Gam07);	SimpleGib.Push(Sim07);	}
+		if (Gib08 && Gam08 > 0) { Gib.Push(Gib08);	Amt.Push(Gam08);	SimpleGib.Push(Sim08);	}
+		if (Gib09 && Gam09 > 0) { Gib.Push(Gib09);	Amt.Push(Gam09);	SimpleGib.Push(Sim09);	}
+		if (Gib10 && Gam10 > 0) { Gib.Push(Gib10);	Amt.Push(Gam10);	SimpleGib.Push(Sim10);	}
 		
 		if (Gib.Size() < 1)	return Destroy();
 		
@@ -289,8 +314,7 @@ Class GibSpawnerBase : Actor
 			
 			for (int j = 0; j < Amt[i]; j++)
 			{
-				ngib = null;
-				ngib = Gib[i];
+				Class<Actor> ngib = Gib[i];
 				if (!ngib)
 				{
 					Console.Printf(Gib[i]..": bad actor");
@@ -319,46 +343,7 @@ Class GibSpawnerBase : Actor
 		return Destroy();
 	}
 	
-	//--------------------------------------------------------------------------
-	// CheckReqs
-	// Checks to see if the gib count map-wide is < Max(Soft)GibCount.
-	// If greater than soft max and < hard max, reduce the number of gibs it'll
-	// spawn. If > hard max, don't spawn at all.
-	//--------------------------------------------------------------------------
-	bool CheckReqs()
-	{
-		user_t = tid;
-		Thing_ChangeTID(0,0);
-		
-		if (A_CheckSightOrRange(BloodDistanceLimit,"Null"))
-		{
-			simple = true;
-		}
-		
-		int count = 0;
-		int SoftGibMax = GetCvar("MaxSoftGibCount");
-		int HardGibMax = GetCvar("MaxGibCount");
-		
-		ThinkerIterator it = ThinkerIterator.Create("GibletBase");
-		Actor mo;
-		
-		while ((count < HardGibMax) && (mo = GibletBase(it.Next())))
-		{
-			count++;
-			
-			// Over the soft gib threshold.
-			if (!simple && count >= SoftGibMax)
-			{	simple = true;	}
-			
-		}
-		// Too many gibs spawned.
-		if (count >= HardGibMax)
-		{	return false;	}
-		
-		return true;
-	}
-	
-	String Gib01, Gib02, Gib03, Gib04, Gib05, Gib06, Gib07, Gib08, Gib09, Gib10;
+	Class<Actor> Gib01, Gib02, Gib03, Gib04, Gib05, Gib06, Gib07, Gib08, Gib09, Gib10;
 	int Gam01, Gam02, Gam03, Gam04, Gam05, Gam06, Gam07, Gam08, Gam09, Gam10;
 	bool Sim01, Sim02, Sim03, Sim04, Sim05, Sim06, Sim07, Sim08, Sim09, Sim10;
 	
@@ -378,6 +363,7 @@ Class GibSpawnerBase : Actor
 		+NOTELESTOMP
 		+NOTONAUTOMAP
 		+NOINTERACTION
+		+INVISIBLE
 		RenderStyle "None";
 		BloodColor "Red";
 	}
@@ -396,7 +382,7 @@ Class GibSpawnerBase : Actor
 //==============================================================================
 //==============================================================================
 
-Class MCBloodFXMain : Actor replaces Blood
+Class MCBloodFXMain : AEoDFX replaces Blood
 {
 	const VelMul = 1.0;
 	int user_t;
@@ -436,40 +422,6 @@ Class MCBloodFXMain : Actor replaces Blood
 		A_FaceMovementDirection();
 	}
 	
-	void SpawnParticleBlood()
-	{
-		user_inv = GetCvar("user_BloodSprites");
-		if (user_inv <= 0 || user_inv >= 2)
-		{
-			let blood = MCBloodParticle(Spawn("MCBloodParticle",pos));
-			if (blood)
-			{	
-				blood.angle = angle;
-				blood.pitch = pitch;
-				blood.target = target;
-				blood.master = master;
-				blood.tracer = tracer;
-				blood.A_Warp(DefPtr,frandom(0,2),0,random(1,4),0,WARPF_NOCHECKPOSITION);
-				blood.Vel = Vel;
-				blood.P1 = P1;
-				
-				if (target)
-				{
-					if (target is "GibletBase")
-					{
-						let gib = GibletBase(target);
-						if (gib)
-							P1 = gib.P1;
-					}
-					else	P1 = (target.bloodcolor & 0xffffff);
-					
-				}
-				else	P1 = (bloodcolor & 0xffffff);
-				blood.P1 = P1;
-			}
-		}
-	}
-	
 	States
 	{
 	Spawn:
@@ -481,7 +433,36 @@ Class MCBloodFXMain : Actor replaces Blood
 	SpawnBlood:
 		TNT1 A 0
 		{
-			SpawnParticleBlood();
+			user_inv = GetCvar("user_BloodSprites");
+			if (user_inv <= 0 || user_inv >= 2)
+			{
+				let blood = MCBloodParticle(Spawn("MCBloodParticle",pos));
+				if (blood)
+				{	
+					blood.angle = angle;
+					blood.pitch = pitch;
+					blood.target = target;
+					blood.master = master;
+					blood.tracer = tracer;
+					blood.A_Warp(DefPtr,frandom(0,2),0,random(1,4),0,WARPF_NOCHECKPOSITION);
+					blood.Vel = Vel;
+					blood.P1 = P1;
+					
+					if (target)
+					{
+						if (target is "GibletBase")
+						{
+							let gib = GibletBase(target);
+							if (gib)
+								P1 = gib.P1;
+						}
+						else	P1 = (target.bloodcolor & 0xffffff);
+						
+					}
+					else	P1 = (bloodcolor & 0xffffff);
+					blood.P1 = P1;
+				}
+			}
 			
 			if (user_inv <= 0)
 				return Destroy();
@@ -492,8 +473,7 @@ Class MCBloodFXMain : Actor replaces Blood
 			if (user_inv >= 1)
 			{	A_SpawnItemEx("MCBloodSprite",frandom(0,2),0,random(1,4),frandom(0,1.5),0,frandom(0.1,2.0),random(0,359),GibFlags|SXF_TRANSFERTRANSLATION,0);	}
 			else
-			{	return ResolveState("Null");	}
-			return ResolveState(null);
+				return Destroy();	
 		}
 		Stop;
 	}
@@ -509,13 +489,41 @@ Class MCBloodFXTrail : MCBloodFXMain
 			A_FaceMovementDirection();
 			if (user_inv >= 1)
 			{	A_SpawnItemEx("MCBloodSprite",frandom(0,2),0,random(1,4),frandom(0,1.5),0,frandom(0.1,2.0),random(0,359),GibFlags|SXF_TRANSFERTRANSLATION,0);	}
-			SpawnParticleBlood();
+			if (user_inv <= 0 || user_inv >= 2)
+			{
+				let blood = MCBloodParticle(Spawn("MCBloodParticle",pos));
+				if (blood)
+				{	
+					blood.angle = angle;
+					blood.pitch = pitch;
+					blood.target = target;
+					blood.master = master;
+					blood.tracer = tracer;
+					blood.A_Warp(DefPtr,frandom(0,2),0,random(1,4),0,WARPF_NOCHECKPOSITION);
+					blood.Vel = Vel;
+					blood.P1 = P1;
+					
+					if (target)
+					{
+						if (target is "GibletBase")
+						{
+							let gib = GibletBase(target);
+							if (gib)
+								P1 = gib.P1;
+						}
+						else	P1 = (target.bloodcolor & 0xffffff);
+						
+					}
+					else	P1 = (bloodcolor & 0xffffff);
+					blood.P1 = P1;
+				}
+			}
 		}
 		Stop;
 	} 
 }
 
-Class MCBloodParticle : Actor
+Class MCBloodParticle : AEoDFX
 {
 	// Take note, enums are for integers only. Thus, flags and regular numbers
 	// can fit inside them, but floats cannot.
@@ -763,7 +771,7 @@ Class BloodGibDropper : GibSpawnerBase
 // Giblet Bases for inheritance purposes.
 //==============================================================================
 
-Class GibletBase : Actor 
+Class GibletBase : AEoDFX 
 { 
 	int user_short;
 	int user_time;
@@ -797,7 +805,8 @@ Class GibletBase : Actor
 	override void BeginPlay()
 	{	
 		user_spawntrail = GetCvar("SpawnBloodTrails");
-		Super.BeginPlay();
+		ChangeStatNum(StatNum.GIBS());
+		Actor.BeginPlay();
 	}
 	
 	override void PostBeginPlay()
@@ -1330,7 +1339,7 @@ Class BloodGib4 : BloodGib1		//bloodthing
 //==============================================================================
 //==============================================================================
 
-Class GibletBaseSpawner : Actor 
+Class GibletBaseSpawner : AEoDFX 
 {	
 	Color P1;
 	Default 

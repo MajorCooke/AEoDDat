@@ -94,10 +94,9 @@ Class AEoDMonsterSpawner : Actor
 	int user_rng;
 	int user_joke;
 	bool stay, classic;
-	
 	Array<StateLabel> Types;
 	Array<StateLabel> Extras;
-	//Array<String> MonsterNames;
+	Array<Class<Actor> > Monsters;
 	Array<Int> Chances;
 	Actor mon;
 	String thing;
@@ -106,7 +105,6 @@ Class AEoDMonsterSpawner : Actor
 	{
 		Monster;
 		Health 2000000;
-		//+NOINTERACTION
 		+DONTCORPSE
 		+NORADIUSDMG
 		+NONSHOOTABLE
@@ -129,15 +127,6 @@ Class AEoDMonsterSpawner : Actor
 		Species "AEoDSpawner";
 		DamageFactor "Normal", 0.0;
 		DamageFactor "Massacre", 666;
-	}
-	
-	virtual void GetExtras()
-	{
-		if (GetCvar("user_Dm64"))		Extras.Push("Doom64");
-		if (GetCvar("user_Hellspawn")) 	Extras.Push("Hellspawn");
-		if (GetCvar("user_Joke"))		Extras.Push("JokeMode");
-		if (GetCvar("user_L4DMon"))		Extras.Push("L4DMon");
-		if (GetCvar("user_ROTT"))		Extras.Push("ROTT");
 	}
 	
 	virtual String PickMonster(String category)
@@ -166,10 +155,8 @@ Class AEoDMonsterSpawner : Actor
 			return;
 		}
 		
-		Extras.Clear();
-		GetExtras();
 		
-		static const StateLabel themes[] = 
+		static const StateLabel Themes[] = 
 		{
 			"Doom",
 			"Blood",
@@ -188,7 +175,7 @@ Class AEoDMonsterSpawner : Actor
 			"Strife",
 		}
 		
-		static const String cvars[] =
+		static const String Cvars[] =
 		{
 			"user_Doom",
 			"user_Blood",
@@ -206,14 +193,14 @@ Class AEoDMonsterSpawner : Actor
 			"user_SW",
 			"user_Strife"
 		};
-		int total = themes.Size() / 2;
+		int total = themes.Size();
 		Types.Clear();
 		
 		// Gather the list of the above based on cvar.
 		int ThemeCount = 0;
-		for (int i = 0; i < themes.Size(); i += 2)
+		for (int i = 0; i < total; i++)
 		{
-			if (GetCvar(themes[i + 1]))
+			if (GetCvar(Cvars[i]))
 			{
 				ThemeCount++;
 				Types.Push(themes[i]);
@@ -226,27 +213,47 @@ Class AEoDMonsterSpawner : Actor
 			classic = true;
 			if (Types.Size() < 1)
 			{
-				for (i = 0; i < themes.Size(); i += 2)
+				for (i = 0; i < total; i++)
 				{
-					Types.Push(themes[i]);
+					if (ResolveState(Themes[i]) != null)
+						Types.Push(Themes[i]);
 				}
 			}
 		}
 		
-		if (Extras.Size() > 0)
-			for (i = 0; i < Extras.Size(); i++)
-				Types.Push(Extras[i]);
-			
+		static const StateLabel ExtraList[] =
+		{	
+			"Doom64", 
+			"Hellspawn", 
+			"JokeMode", 
+			"L4DMon", 
+			"ROTT"
+		};
 		
+		static const String ExtraVar[] =
+		{	
+			"user_Dm64", 
+			"user_Hellspawn", 
+			"user_Joke", 
+			"user_L4DMon", 
+			"user_ROTT" 
+		};
+		
+		int size = ExtraList.Size();
+		for (int i = 0; i < size; i++)
+		{
+			if (GetCvar(ExtraVar[i]) && ResolveState(ExtraList))
+				Types.Push(ExtraList[i]);
+		}
 		
 		if (Types.Size() < 1)
 		{
-			Console.Printf("ERROR: "..GetClass().." had no theme list!");
+			String cname = GetClassName(); //Just being safe.
+			Console.Printf("ERROR: %s has no themes!", cname);
 			return Destroy();
 		}
-		
 		int rn1 = random(0,Types.Size() - 1);
-		SetStateLabel(Types[rn1]);
+		//SetStateLabel(Types[rn1]);
 	}
 	
 	

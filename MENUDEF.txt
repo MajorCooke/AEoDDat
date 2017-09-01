@@ -1,3 +1,32 @@
+LISTMENU "MainMenu"
+{
+	StaticPatch 94, 2, "M_DOOM"
+	Position 97, 72
+	IfOption(ReadThis)
+	{
+		Position 97, 64
+	}
+	
+	PatchItem "M_NGAME", "n", "PlayerclassMenu"
+	ifOption(SwapMenu)
+	{
+		PatchItem "M_LOADG", "l", "LoadGameMenu"
+		PatchItem "M_SAVEG", "s", "SaveGameMenu"
+		PatchItem "M_OPTION","o", "OptionsMenu"
+	}
+	else
+	{
+		PatchItem "M_OPTION","o", "OptionsMenu"
+		PatchItem "M_LOADG", "l", "LoadGameMenu"
+		PatchItem "M_SAVEG", "s", "SaveGameMenu"
+	}
+	ifOption(ReadThis)
+	{
+		PatchItem "M_RDTHIS","r", "ReadThisMenu"
+	}
+	PatchItem "M_QUITG", "q", "QuitMenu"
+}
+
 //-------------------------------------------------------------------------------------------
 //
 // Controls Menu
@@ -6,26 +35,31 @@
 OptionMenu "OptionsMenu"
 {
 	Title "OPTIONS"
+	Submenu "$OPTMNU_CONTROLS",			"CustomizeControls"
+	Submenu "$OPTMNU_MOUSE",			"MouseOptions"
+	Submenu "$OPTMNU_JOYSTICK",			"JoystickOptions"
+	StaticText " "
+	Submenu "$OPTMNU_PLAYER",			"PlayerMenu"
+	Submenu "$OPTMNU_GAMEPLAY",			"GameplayOptions"
+	Submenu "$OPTMNU_COMPATIBILITY",	"CompatibilityOptions"
+	Submenu "$OPTMNU_AUTOMAP",			"AutomapOptions"
+	Submenu "$OPTMNU_HUD",				"HUDOptions"
+	Submenu "$OPTMNU_MISCELLANEOUS",	"MiscOptions"
+	Submenu "$OPTMNU_NETWORK",			"NetworkOptions"
+	Submenu "$OPTMNU_SOUND",			"SoundOptions"
+	Submenu "$OPTMNU_DISPLAY",			"VideoOptions"
+	Submenu "$OPTMNU_VIDEO",			"VideoModeMenu"
+	Submenu "$OPTMNU_CHANGERENDER",		"RendererMenu"
+	StaticText " "
+	SafeCommand "$OPTMNU_DEFAULTS",		"reset2defaults"
+	SafeCommand	"$OPTMNU_RESETTOSAVED",	"reset2saved"
+	Command "$OPTMNU_CONSOLE",			"menuconsole"
+}
+
+AddOptionMenu "OptionsMenu"
+{
+	StaticText " "
 	Submenu "AEons of Death Options",		"AEoDConfigMenu"
-	StaticText " "
-	StaticText "ZDoom Options", 1
-	Submenu "Customize Controls",			"CustomizeControls"
-	Submenu "Mouse options",				"MouseOptions"
-	Submenu "Joystick options",				"JoystickOptions"
-	StaticText " "
-	Submenu "Player Setup",					"PlayerMenu"
-	Submenu "Gameplay Options",				"GameplayOptions"
-	Submenu "Compatibility Options",		"CompatibilityOptions"
-	Submenu "Automap Options",				"AutomapOptions"
-	Submenu "HUD Options",					"HUDOptions"
-	Submenu "Miscellaneous Options",		"MiscOptions"
-	Submenu "Sound Options",				"SoundOptions"
-	Submenu "Display Options",				"VideoOptions"
-	Submenu "Set video mode",				"VideoModeMenu"
-	StaticText " "
-	SafeCommand "Reset to defaults",		"reset2defaults"
-	SafeCommand   "Reset to last saved",	"reset2saved"
-	Command "Go to console",         		"menuconsole"
 }
 /*
 OptionMenu "VideoOptions"

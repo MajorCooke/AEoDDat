@@ -2,11 +2,11 @@ Class AEoDHandler : EventHandler
 {
 	bool DemonMorph;
 	
-	Array<uint8> SectorD;
+	//Array<uint8> SectorD;
 		
 	override void NetworkProcess(ConsoleEvent e)
 	{		
-		if (e.Name == 'EndMorph')
+		if (e.Name == 'EndDemonMorph')
 		{
 			int num = e.Player;
 			let plr = players[num].mo;
@@ -58,11 +58,6 @@ Class AEoDHandler : EventHandler
 					dm.plr = plr;
 				}
 			}
-			
-			
-			
-			
-			
 		}
 		else if (e.Name == 'DemonMorphOff')
 		{
@@ -72,7 +67,7 @@ Class AEoDHandler : EventHandler
 			DemonMorphTranslation mo;
 			while (mo = DemonMorphTranslation(it.Next(true)))
 			{
-				mo.Destroy();
+				mo.DestroyMe = true;
 				continue;
 			}
 			/*
@@ -118,6 +113,36 @@ Class AEoDHandler : EventHandler
 		}
 	}
 }
+/*
+Class DemonMorphTranslator : Inventory
+{
+	DemonMorphTranslation dm;
+	
+	override bool TryPickup (in out Actor toucher)
+	{
+		if (toucher && toucher.CountInv(self.GetClass()))
+			return false;
+		if (Super.TryPickup(toucher))
+		{
+			if (invoker.Owner)
+			{
+				invoker.dm = new("DemonMorphTranslation");
+				invoker.dm.who = invoker.Owner;
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	override void OwnerDied()
+	{
+		if (invoker.dm && )
+		{
+			invoker.Owner.
+		}
+	}
+}
+*/
 
 Class DemonMorphTransToken : Inventory {}
 
@@ -131,6 +156,7 @@ Class DemonMorphTranslation : Thinker
 	Actor plr;
 	bool wasFriendly;
 	bool resurrecting;
+	bool DestroyMe;
 	
 	
 	override void PostBeginPlay()
@@ -160,13 +186,13 @@ Class DemonMorphTranslation : Thinker
 	override void Tick()
 	{
 		// Destroy the thinker if we no actor.
-		if (!who) return Destroy();
+		if (!who || DestroyMe) return Destroy();
 		
 		// Destroy the thinker if actor's dead and not resurrecting, 
 		if (who.health < 0)
 		{
 			if (resurrecting)	return Super.Tick();
-			else				return Super.Destroy();
+			else				return Destroy();
 		}
 		else resurrecting = false;
 		

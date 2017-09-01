@@ -20,7 +20,7 @@ Class SoulReaperBeam : Actor
 		+NOTIMEFREEZE
 		+NODAMAGETHRUST +CANNOTPUSH
 		+EXTREMEDEATH
-		Speed 20;
+		Speed 4;
 		Radius 4;
 		Height 2;
 		Damage 0;
@@ -35,17 +35,9 @@ Class SoulReaperBeam : Actor
 		//skip = true;
 		if (tracer && tracer != target)
 		{
-			if (abs(vel.X) + abs(vel.Y) != 0)
+			if (abs(vel.X) + abs(vel.Y) != 0.0)
 				A_FaceMovementDirection();
 			A_Stop();
-			/*
-			FTranslatedLineTarget t;
-			
-			LineAttack(angle, vel.Length(), pitch, 0, 'Normal', "InvisiPuff", LAF_NORANDOMPUFFZ|LAF_NOIMPACTDECAL, t);
-			
-			if (t && t.linetarget)
-				tracer = t.linetarget;
-			*/
 			
 			if (tracer && tracer.bSHOOTABLE && tracer.health > 0)
 			{
@@ -69,19 +61,50 @@ Class SoulReaperBeam : Actor
 		Super.OnDestroy();
 	}
 	
+	
 	override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();
 		if (target)	pitch = target.pitch;
 	}
-	
+	/*
+	override int SpecialMissileHit(Actor victim)
+	{
+		if (!victim || victim.health < 1)	
+			return -1;
+		if (victim == target)	
+			return 1;
+		
+		if (victim && victim.health > 0 && victim.bSHOOTABLE)
+		{
+			bTHRUACTORS = true;
+			int dmg = random(1,2);
+			Vector3 SoulPos = victim.pos;
+				SoulPos.z = pos.z;
+				
+			int ret = victim.DamageMobj(self, target, dmg, "SoulReaperPull", DMG_FOILINVUL | DMG_THRUSTLESS);
+			if (!victim || victim.health < 1)
+			{
+				let ms = tracer.Spawn("DMSoulMissile", SoulPos);
+				if (ms)
+				{
+					ms.target = target;
+					ms.master = master;
+					ms.tracer = tracer;
+				}
+			}
+			return 0;
+		}
+		return -1;
+	}
+	*/
 	States
 	{
 	Spawn:
-		TNT1 A -1 NoDelay 
+		TNT1 A 1 NoDelay 
 		{
 			skip = false;
-			int maxTime = 30;
+			int maxTime = 150;
 			closestDist = 500;
 			closest = null;
 			
@@ -111,8 +134,10 @@ Class SoulReaperBeam : Actor
 						skip = true;
 						return Destroy();
 					}
-					A_SpawnItemEx("SoulReaperBeamTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS);
-					A_Face(closest,10,10,0,0,FAF_BOTTOM);
+					if (maxTime % 5 == 0)
+						A_SpawnItemEx("SoulReaperBeamTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS);
+					A_Face(closest,2,2,0,0,FAF_BOTTOM);
+					
 					A_Warp(DefPtr, cos(pitch) * speed, 0, -sin(pitch) * speed, 0, WARPF_NOCHECKPOSITION);
 					maxTime--;
 				}
@@ -132,41 +157,44 @@ Class SoulReaperBeam : Actor
 			{
 				while (maxTime > 0)
 				{
-					A_SpawnItemEx("SoulReaperBeamTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS);
-					A_SeekerMissile(1,1,SMF_PRECISE|SMF_LOOK,256,4);
-					if (tracer)
-						A_FaceTracer(10,10,0,0,FAF_MIDDLE);
+					if (maxTime % 5 == 0)
+					{
+						A_SpawnItemEx("SoulReaperBeamTrail",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS);
+						if (!tracer || tracer.health < 1) A_SeekerMissile(1,1,SMF_PRECISE|SMF_LOOK,256,4);
+					}
 					
+					if (tracer)	A_FaceTracer(2,2,0,0,FAF_MIDDLE);
 					
 					if (!A_Warp(AAPTR_DEFAULT,cos(pitch) * speed, 0, -sin(pitch) * speed,0,0,"Null") || 
 						(tracer && Distance3D(tracer) < minDist))
 					{
 						if (abs(vel.X) + abs(vel.Y) != 0)
 							A_FaceMovementDirection();
-						A_Stop();
+						//A_Stop();
+						
 						if (!tracer)
 						{
-							A_CheckLOF("Null",
-								CLOFF_JUMPENEMY|CLOFF_JUMPNONHOSTILE|CLOFF_JUMPOBJECT|CLOFF_SKIPFRIEND|
-								CLOFF_SETTRACER|CLOFF_NOAIM|CLOFF_FROMBASE|CLOFF_ALLOWNULL|CLOFF_MUSTBESHOOTABLE,
-								speed,0,angle,0,height / 2,0,AAPTR_NULL,radius);
+							int fla = CLOFF_JUMPENEMY|CLOFF_JUMPNONHOSTILE|CLOFF_JUMPOBJECT|CLOFF_SKIPFRIEND|
+									CLOFF_SETTRACER|CLOFF_NOAIM|CLOFF_FROMBASE|CLOFF_ALLOWNULL|CLOFF_MUSTBESHOOTABLE|
+									CLOFF_SKIPTARGET;
+							A_CheckLOF("Null",fla,speed + radius,0,angle,0,height / 2.0,0,AAPTR_NULL);
 						}
 						bNOINTERACTION = true;
 						skip = (tracer == null);
-						return Destroy();
+						return;
 					}
 					maxTime--;
 				}
 			}
-			return Destroy();	
 		}
+		TNT1 A 1;
 		Stop;
 	Death:
-		TNT1 A -1 { skip = true; return Destroy(); }
+		TNT1 A 1; // { skip = true; }
 		Stop;
 	Crash:
 	XDeath:
-		TNT1 A -1 { skip = false; return Destroy(); }
+		TNT1 A 1; // { skip = false; }
 		Stop;
 		
 	}

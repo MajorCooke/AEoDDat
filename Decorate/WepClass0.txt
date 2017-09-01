@@ -185,11 +185,16 @@ Actor GodBall
 		GDBA AABBCCDD 1 bright
 		{
 			A_SeekerMissile(90,90,SMF_LOOK|SMF_PRECISE);
+			A_SeekerMissile(90,90,SMF_LOOK|SMF_PRECISE);
 			A_FaceTracer;
 			A_SpawnItemEx("GodsBallTrailSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION);
-			if (!A_JumpIfTargetInLOS("Null",360,JLOSF_CHECKTRACER,512))
-			{	A_RearrangePointers(AAPTR_DEFAULT,AAPTR_DEFAULT,AAPTR_NULL,PTROP_NOSAFEGUARDS);	}
-			A_SetUserVar(user_c, (user_c + 1) % 2);
+			if (!A_JumpIfTargetInLOS("Null",360,JLOSF_CHECKTRACER|JLOSF_DEADNOJUMP,512))
+			{	
+				A_RearrangePointers(AAPTR_DEFAULT,AAPTR_DEFAULT,AAPTR_NULL,PTROP_NOSAFEGUARDS);
+				A_SeekerMissile(90,90,SMF_LOOK|SMF_PRECISE);
+				A_SeekerMissile(90,90,SMF_LOOK|SMF_PRECISE);
+			}
+			user_c = (user_c + 1) % 2;
 			if (user_c)	{ A_SpawnItemEx("GodBallVaporizer",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS);	}
 		}
 		Loop

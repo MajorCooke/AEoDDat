@@ -1,0 +1,4283 @@
+// Line 2988
+
+Class NewExplosionMedium : AEoDFX
+{
+	int user_t;
+	//int uang;
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP +NOTONAUTOMAP
+		RenderStyle "None"; +INVISIBLE
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			user_t = tid; ChangeTID(0);
+			Class<Actor> what = (user_t != 0 || A_CheckSight("Simple")) ? "ExploMediumBack1" : "ExploMediumBack2";
+			A_SpawnItemEx(what,0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		}
+	Simple:
+	Main:
+		TNT1 A 0 
+		{
+			for (int i = 0; i < 360; i += 15)
+				A_SpawnItemEx("TT1",0,0,0,frandom(0.5,1.8),0,0,i,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+			
+		}
+	CheckSpawnPos:
+		TNT1 A 0 A_CheckFloor("InFloor");
+	InAir:
+		TNT1 AAAAAAAAAAA 0 A_SpawnItemEx("ExplosionMediumSprite",0,0,0,frandom(0.1,1.3),0,frandom(-1.3,1.3),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAAAAAAAAAAAA 0 A_SpawnItemEx("TT1",0,0,0,frandom(0.1,1.8),0,frandom(-1.8,1.8),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAAAAAA 2 A_SpawnItemEx("ExplosionMediumSprite",0,0,0,frandom(0.1,1.3),0,frandom(0.3,1.6),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		Stop;
+	InFloor:
+		TNT1 AAAAAAAAAAA 0 A_SpawnItemEx("ExplosionMediumSprite",0,0,0,frandom(0.1,1.3),0,frandom(0.3,1.6),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAAAAAAAAAAAA 0 A_SpawnItemEx("TT1",0,0,0,frandom(0.1,1.8),0,frandom(0.3,1.9),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAAAAAA 2 A_SpawnItemEx("ExplosionMediumSprite",0,0,0,frandom(0.1,1.3),0,frandom(0.3,1.6),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		Stop;
+	}
+}
+
+Class NewExploMediumSmoke : AEoDFX
+{
+	Default
+	{
+		AEoDFX.RandomScaleFlip true;
+		AEoDFX.RandomRoll true;
+		AEoDFX.RollAddMin -3.0;
+		AEoDFX.RollAddMax  3.0;
+		+NOINTERACTION +NOTELESTOMP +NOTONAUTOMAP
+		Radius 2;
+		Height 2;
+		RenderStyle "Translucent";
+		Alpha 0.5;
+		Scale 0.6;
+		DistanceCheck "user_MaxDrawDistance";
+	}
+	States
+	{
+	Spawn:
+		X037 A 0 NoDelay 
+		{
+			Frame = random(Fr_A, Fr_D);
+		}
+	Act:
+		"----" A 3 { A_FadeOut(0.023); A_ScaleVelocity(0.95); }
+		Loop;
+	}
+}
+
+Class NewExploMediumSmoke2 : NewExploMediumSmoke
+{	} 
+
+//***************************************************
+Class ExplosionMediumSprite : AEoDFX
+{
+	Default
+	{
+		AEoDFX.RandomRoll true;
+		AEoDFX.RollAddMin -3.0;
+		AEoDFX.RollAddMax  3.0;
+		+NOINTERACTION +NOTELESTOMP
+		Speed 0;
+		Radius 3;
+		Height 5;
+		RenderStyle "Add";
+		Alpha 0.7;
+		Scale 0.49;
+		DistanceCheck "user_MaxDrawDistance";
+	}
+	States
+	{
+	Spawn:
+		---- A 0 NoDelay A_Jump(128,2,4,5);
+		X003 ABCDE 1 Bright A_FadeOut(0.025);
+		---- A 0 A_ScaleVelocity(0.8);
+		X003 FGHIJ 1 Bright A_FadeOut(0.025);
+		---- A 0 A_ScaleVelocity(0.7);
+		X003 KLMNO 1 Bright A_FadeOut(0.025);
+		---- A 0 A_ScaleVelocity(0.55);
+		X003 PQRST 1 Bright A_FadeOut(0.025);
+		---- A 0 A_ScaleVelocity(0.45);
+		X003 UVWXYZ 1 Bright A_FadeOut(0.025);
+		Stop;
+	}
+}
+//**************************************************************************
+Class ExploMediumBack1 : AEoDFX
+{
+	Default
+	{
+		AEoDFX.RandomRoll true;
+		AEoDFX.RollAddMin -3.0;
+		AEoDFX.RollAddMax  3.0;
+		AEoDFX.RandomScaleFlip true;
+		+NOINTERACTION +NOTELESTOMP
+		RenderStyle "Add";
+		Scale 0.8;
+	}
+	States
+	{
+	Spawn:
+		X004 ABCDEFGHIJKLMNOPQ 1 NoDelay Bright A_FadeOut(0.03);
+		Stop;
+	}
+}
+
+Class ExploMediumBack2 : ExploMediumBack1 {} 
+
+//************************************************************************************************
+//************************************************************************************************
+
+//************************************************************************************************
+//************************************************************************************************
+Class NewExplosionMediumConcentrated : AEoDFX
+{
+	//int uang;
+	int user_t;
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP
+		RenderStyle "None"; +INVISIBLE
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			user_t = tid; ChangeTID(0);
+			Class<Actor> what = (user_t != 0 || A_CheckSight("Simple")) ? "ExploMediumBack1" : "ExploMediumBack2";
+			A_SpawnItemEx(what,0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		}
+	Simple:
+	Main:
+		TNT1 A 0
+		{
+			for (int i = 0; i < 360; i += 15)
+			{
+				A_SpawnItemEx("NewExploMediumSmoke",0,0,0,frandom(0.3,1.2),0,0,i,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+			}
+		}
+	CheckSpawnPos:
+		TNT1 A 0 A_CheckFloor("InFloor");
+		
+	InAir:
+		TNT1 A 10
+		{
+			for (int i = 0; i < 16; i++)
+			{
+				if (i < 9)
+					A_SpawnItemEx("ExplosionMediumSprite",0,0,0,frandom(0.1,1.0),0,frandom(-1.0,1.0),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+				A_SpawnItemEx("NewExploMediumSmoke",0,0,0,frandom(0.1,1.2),0,frandom(-1.2,1.2),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+			}
+		}
+		Stop;
+	InFloor:
+		TNT1 A 10
+		{
+			for (int i = 0; i < 16; i++)
+			{
+				if (i < 9)
+					A_SpawnItemEx("ExplosionMediumSprite",0,0,0,frandom(0.1,1.1),0,frandom(0.3,1.1),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+				A_SpawnItemEx("NewExploMediumSmoke",0,0,0,frandom(0.1,1.2),0,frandom(0.3,1.4),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+			}
+		}
+		Stop;
+	}
+}
+
+
+
+//************************************************************************************************
+//************************************************************************************************
+
+//************************************************************************************************
+//************************************************************************************************
+Class NewExplosionMediumBig : AEoDFX
+{
+	//int uang;
+	int user_t;
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP +NOTONAUTOMAP
+		RenderStyle "None"; +INVISIBLE
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			user_t = tid; ChangeTID(0);
+			Class<Actor> what = (user_t != 0 || A_CheckSight("Simple")) ? "ExploMediumBigBack1" : "ExploMediumBigBack2";
+			A_SpawnItemEx(what,0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		}
+	Simple:
+	Main:
+		TNT1 A 0
+		{
+			for (int i = 0; i < 360; i += 15)
+			{
+				A_SpawnItemEx("NewExploMediumBigSmoke",0,0,0,frandom(0.5,2.6),0,0,i,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION); 
+			}
+		}
+	CheckSpawnPos:
+		TNT1 A 0 A_CheckFloor("InFloor");
+	InAir:
+		TNT1 A 10
+		{
+			for (int i = 0; i < 21; i++)
+			{
+				if (i < 8)
+				{
+					A_SpawnItemEx("ExplosionMediumBigSprite",0,0,0,frandom(0.1,2.0),0,frandom(-2.0,2.0),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+					A_SpawnItemEx("NewExploMediumBigSmoke",0,0,0,frandom(0.5,2.6),0,frandom(-2.6,2.6),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+				}
+				A_SpawnItemEx("NewExploMediumBigSmoke",0,0,0,frandom(0.5,2.6),0,frandom(-2.6,2.6),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+			}
+		}
+		Stop;
+	InFloor:
+		TNT1 A 10
+		{
+			for (int i = 0; i < 21; i++)
+			{
+				if (i < 8)
+				{
+					A_SpawnItemEx("ExplosionMediumBigSprite",0,0,0,frandom(0.1,2.0),0,frandom(0.3,2.0),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+					A_SpawnItemEx("NewExploMediumBigSmoke",0,0,0,frandom(0.5,2.6),0,frandom(0.6,2.8),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+				}
+				A_SpawnItemEx("NewExploMediumBigSmoke",0,0,0,frandom(0.5,2.6),0,frandom(0.6,2.8),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+			}
+		}
+		Stop;
+	}
+}
+
+Class NewExploMediumBigSmoke : AEoDFX
+{
+	Default
+	{
+		AEoDFX.RandomScaleFlip true;
+		AEoDFX.RandomRoll true;
+		AEoDFX.RollAddMin -3.0;
+		AEoDFX.RollAddMax  3.0;
+		+NOINTERACTION +NOTELESTOMP	+NOTONAUTOMAP
+		RenderStyle "Translucent";
+		Alpha 0.5;
+		Scale 0.9;
+		DistanceCheck "user_MaxDrawDistance";
+	}
+	States
+	{
+	Spawn:
+		X037 A 0 NoDelay
+		{	Frame = random(Fr_A, Fr_D);		}
+	Act:
+		"----" A 3 { A_FadeOut(0.023); A_ScaleVelocity(0.95); }
+		Loop;
+	}
+}
+
+Class NewExploMediumBigSmoke2 : NewExploMediumBigSmoke
+{	}
+
+//***************************************************
+Class ExplosionMediumBigSprite : AEoDFX
+{
+	Default
+	{
+		AEoDFX.RandomScaleFlip true;
+		AEoDFX.RandomRoll true;
+		AEoDFX.RollAddMin -3.0;
+		AEoDFX.RollAddMax  3.0;
+		+NOINTERACTION +NOTELESTOMP
+		Speed 0;
+		Radius 3;
+		Height 5;
+		RenderStyle "Add";
+		Alpha 0.7;
+		Scale 0.73;
+		DistanceCheck "user_MaxDrawDistance";
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_Jump(128,2,4,5);
+		X003 ABCDE 2 Bright A_FadeOut(0.03);
+		---- A 0 A_ScaleVelocity(0.8);
+		X003 FGHIJ 2 Bright A_FadeOut(0.03);
+		---- A 0 A_ScaleVelocity(0.7);
+		X003 KLMNO 2 Bright A_FadeOut(0.03);
+		---- A 0 A_ScaleVelocity(0.55);
+		X003 PQRST 2 Bright A_FadeOut(0.03);
+		---- A 0 A_ScaleVelocity(0.45);
+		X003 UVWXYZ 2 Bright A_FadeOut(0.035);
+		Stop;
+	}
+}
+//**************************************************************************
+
+
+Class ExploMediumBigBack1 : AEoDFX
+{
+	Default
+	{
+		AEoDFX.RandomScaleFlip true;
+		AEoDFX.RandomRoll true;
+		AEoDFX.RollAddMin -3.0;
+		AEoDFX.RollAddMax  3.0;
+		+NOINTERACTION +NOTELESTOMP
+		RenderStyle "Add";
+		Scale 1.4;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_Jump(256,"S1","S2","S3","S4");
+	S1:
+		X004 A 0 A_SetScale(1.4*randompick(-1,1),1.4*randompick(-1,1));
+		X004 ABCDEFGHIJKLMNOPQ 2 Bright A_FadeOut(0.03);
+		Stop;
+	S2:
+		X005 A 0 A_SetScale(1.3*randompick(-1,1),1.3*randompick(-1,1));
+		X005 ABCDEFGHI 1 Bright A_FadeOut(0.015);
+		X005 JKLMNOPQRSTUVWX 2 Bright A_FadeOut(0.03);
+		Stop;
+	S3:
+		X006 A 0 A_SetScale(1.3*randompick(-1,1),1.3*randompick(-1,1));
+		X006 ABCDEFGHIJKLMNOP 2 Bright A_FadeOut(0.03);
+		Stop;
+	S4:
+		X015 A 0 A_SetScale(2.7*randompick(-1,1),2.7*randompick(-1,1));
+		X015 ABCDEFGHIJKLMNOPQRSTUVWX 2 Bright A_FadeOut(0.042);
+		Stop;
+	}
+}
+
+Class ExploMediumBigBack2: ExploMediumBigBack1 {}
+
+
+//************************************************************************************************
+//************************************************************************************************
+
+//************************************************************************************************
+//************************************************************************************************
+Class NewExplosionBig : AEoDFX
+{
+	//int uang;
+	int user_t;
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP
+		RenderStyle "None"; +INVISIBLE
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			user_t = tid; ChangeTID(0);
+			Class<Actor> what = (user_t != 0 || A_CheckSight("Simple")) ? "ExploBigBack1" : "ExploBigBack2";
+			A_SpawnItemEx(what,0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		}
+	Simple:
+	Main:
+		TNT1 A 0
+		{
+			for (int i = 0; i < 360; i += 15)
+			{
+				A_SpawnItemEx("NewExploBigSmoke",0,0,0,frandom(0.5,5.0),0,0,i,SXF_NOCHECKPOSITION);
+			}
+		}
+	CheckSpawnPos:
+		TNT1 A 0 A_CheckFloor("InFloor");
+	InAir:
+		TNT1 A 0
+		{
+			for (int i = 0; i < 32; i++)
+			{
+				if (i < 10)
+				{
+					A_SpawnItemEx("ExplosionBigSprite",0,0,0,frandom(0.1,4.0),0,frandom(-4.0,4.0),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+				}
+				A_SpawnItemEx("NewExploBigSmoke",0,0,0,frandom(0.5,5.0),0,frandom(-5.0,5.0),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+			}
+		}
+		TNT1 AAAAAAAAAA 1 A_SpawnItemEx("ExplosionBigSprite",0,0,0,frandom(0.1,4.0),0,frandom(0.3,4.0),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		Stop;
+	InFloor:
+		TNT1 A 0
+		{
+			for (int i = 0; i < 32; i++)
+			{
+				if (i < 10)
+				{
+					A_SpawnItemEx("ExplosionBigSprite",0,0,0,frandom(0.1,4.0),0,frandom(0.3,4.0),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+				}
+				A_SpawnItemEx("NewExploBigSmoke",0,0,0,frandom(5.0,5.0),0,frandom(0.6,5.5),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+			}
+		}
+		TNT1 AAAAAAAAAA 1 A_SpawnItemEx("ExplosionBigSprite",0,0,0,frandom(0.1,4.0),0,frandom(0.3,4.0),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		Stop;
+	}
+}
+
+
+Class NewExploBigSmoke : AEoDFX
+{
+	Default
+	{
+		AEoDFX.RandomScaleFlip true;
+		AEoDFX.RandomRoll true;
+		AEoDFX.RollAddMin -3.0;
+		AEoDFX.RollAddMax  3.0;
+		+NOINTERACTION +NOTELESTOMP	+NOTONAUTOMAP
+		Radius 2;
+		Height 2;
+		RenderStyle "Translucent";
+		Alpha 0.5;
+		Scale 1.5;
+		DistanceCheck "user_MaxDrawDistance";
+	}
+	States
+	{
+	Spawn:
+		X037 A 0 NoDelay 
+		{	Frame = random(Fr_A, Fr_D);		}
+	Act:
+		"----" A 3 { A_FadeOut(0.023); A_ScaleVelocity(0.95); }
+		Loop;	
+	}
+}
+
+Class NewExploBigSmoke2 : NewExploBigSmoke
+{	}
+
+//***************************************************
+Class ExplosionBigSprite : AEoDFX
+{
+	Default
+	{
+		AEoDFX.RandomScaleFlip true;
+		AEoDFX.RandomRoll true;
+		AEoDFX.RollAddMin -3.0;
+		AEoDFX.RollAddMax  3.0;
+		+NOINTERACTION +NOTELESTOMP
+		Speed 0;
+		Radius 3;
+		Height 5;
+		RenderStyle "Add";
+		Alpha 0.7;
+		Scale 0.9;
+		DistanceCheck "user_MaxDrawDistance";
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_SetScale(Scale.X*randompick(-1,1),Scale.Y*randompick(-1,1));
+		TNT1 A 0 A_Jump(128,2,4,5);
+		X003 ABCDE 2 Bright A_FadeOut(0.02);
+		TNT1 A 0 A_ScaleVelocity(0.8);
+		X003 FGHIJ 2 Bright A_FadeOut(0.02);
+		TNT1 A 0 A_ScaleVelocity(0.7);
+		X003 KLMNO 2 Bright A_FadeOut(0.02);
+		TNT1 A 0 A_ScaleVelocity(0.55);
+		X003 PQRST 2 Bright A_FadeOut(0.02);
+		TNT1 A 0 A_ScaleVelocity(0.45);
+		X003 UVWXYZ 2 Bright A_FadeOut(0.05);
+		Stop;
+	}
+}
+//**************************************************************************
+
+Class ExploBigBack1 : AEoDFX
+{
+	Default
+	{
+		AEoDFX.RandomScaleFlip true;
+		AEoDFX.RandomRoll true;
+		AEoDFX.RollAddMin -3.0;
+		AEoDFX.RollAddMax  3.0;
+		+NOINTERACTION +NOTELESTOMP
+		RenderStyle "Add";
+		Scale 1.8;
+	}
+	States
+	{
+	Spawn:
+		X004 ABCDEFGHIJKLMNOPQ 2 NoDelay Bright A_FadeOut(0.03);
+		Stop;
+	}
+}
+
+Class ExploBigBack2 : ExploBigBack1 {}
+
+//************************************************************************************************
+//************************************************************************************************
+
+//************************************************************************************************
+//************************************************************************************************
+Class NewExplosionSmall : AEoDFX
+{
+	int user_t;
+	//int uang;
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP +NOTONAUTOMAP
+		RenderStyle "None"; +INVISIBLE
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			user_t = tid; ChangeTID(0);
+			Class<Actor> what = (user_t != 0 || A_CheckSight("Simple")) ? "ExploSmallBack1" : "ExploSmallBack2";
+			A_SpawnItemEx(what,0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		}
+	Simple:
+	Main:
+		TNT1 A 0 A_CheckFloor("InFloor");
+	InAir:
+		TNT1 AAAA 0 A_SpawnItemEx("ExplosionSmallSprite",0,0,0,frandom(0.05,0.3),0,frandom(0.05,0.3),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAA 0 A_SpawnItemEx("NewExploSmallSmoke",0,0,0,frandom(0.05,0.4),0,frandom(-0.4,0.4),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 A 10 ;
+		Stop;
+	InFloor:
+		TNT1 AAAA 0 A_SpawnItemEx("ExplosionSmallSprite",0,0,0,frandom(0.05,0.3),0,frandom(0.05,0.3),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAA 0 A_SpawnItemEx("NewExploSmallSmoke",0,0,0,frandom(-0.4,0.4),0,frandom(0.1,0.45),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 A 10 ;
+		Stop;
+	}
+}
+
+Class NewExplosionSmallSimple : AEoDFX
+{
+	//int uang;
+	int user_t;
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP +NOTONAUTOMAP
+		RenderStyle "None"; +INVISIBLE
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			user_t = tid; ChangeTID(0);
+			Class<Actor> what = (user_t != 0 || A_CheckSight("Simple")) ? "ExploSmallBack1" : "ExploSmallBack2";
+			A_SpawnItemEx(what,0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		}
+	Simple:
+	Main:
+		TNT1 A 0 A_CheckFloor("InFloor");
+	InAir:
+		TNT1 AAAA 0 A_SpawnItemEx("ExplosionSmallSprite",0,0,0,frandom(0.05,0.3),0,frandom(0.05,0.3),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAA 0 A_SpawnItemEx("NewExploSmallSmoke",0,0,0,frandom(0.05,0.4),0,frandom(-0.4,0.4),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 A 10 ;
+		Stop;
+	InFloor:
+		TNT1 AAAA 0 A_SpawnItemEx("ExplosionSmallSprite",0,0,0,frandom(0.05,0.3),0,frandom(0.05,0.3),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAA 0 A_SpawnItemEx("NewExploSmallSmoke",0,0,0,frandom(-0.4,0.4),0,frandom(0.1,0.45),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 A 10 ;
+		Stop;
+	}
+}
+
+Class NewExplosionSmallLittleBigger : NewExplosionSmall
+{
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP +NOTONAUTOMAP
+		RenderStyle "None"; +INVISIBLE
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			user_t = tid; ChangeTID(0);
+			Class<Actor> what = (user_t != 0 || A_CheckSight("Simple")) ? "ExploSmallBack1" : "ExploSmallBack2";
+			A_SpawnItemEx(what,0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		}
+	Simple:
+	Main:
+		TNT1 A 0 A_CheckFloor("InFloor");
+	InAir:
+		TNT1 AAAA 0 A_SpawnItemEx("ExplosionSmallSprite",0,0,0,frandom(0.1,0.7),0,frandom(0.1,0.7),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAAAAAA 0 A_SpawnItemEx("NewExploSmallSmoke",0,0,0,frandom(0.1,0.8),0,frandom(-0.1,0.8),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 A 10 ;
+		Stop;
+	InFloor:
+		TNT1 AAAA 0 A_SpawnItemEx("ExplosionSmallSprite",0,0,0,frandom(0.1,0.7),0,frandom(0.1,0.7),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAAAAAA 0 A_SpawnItemEx("NewExploSmallSmoke",0,0,0,frandom(-0.8,0.8),0,frandom(0.1,0.8),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 A 10 ;
+		Stop;
+	}
+}
+
+
+
+
+Class NewExploSmallSmoke : AEoDFX
+{
+	Default
+	{
+		AEoDFX.RandomScaleFlip true;
+		AEoDFX.RandomRoll true;
+		AEoDFX.RollAddMin -3.0;
+		AEoDFX.RollAddMax  3.0;
+		+NOINTERACTION +NOTELESTOMP	+NOTONAUTOMAP
+		Radius 2;
+		Height 2;
+		RenderStyle "Translucent";
+		Alpha 0.5;
+		Scale 0.3;
+		DistanceCheck "user_MaxDrawDistance";
+	}
+	States
+	{
+	Spawn:
+		X037 A 0 NoDelay
+		{
+			Frame = random(Fr_A, Fr_D);
+		}
+	Act:
+		"----" A 3 { A_FadeOut(0.04); A_ScaleVelocity(0.95); }
+		Loop;
+	}
+}
+
+Class NewExploSmallSmoke2 : NewExploSmallSmoke
+{	}
+
+Class ExplosionSmallSprite : AEoDFX
+{
+	Default
+	{
+		AEoDFX.RandomScaleFlip true;
+		AEoDFX.RandomRoll true;
+		AEoDFX.RollAddMin -3.0;
+		AEoDFX.RollAddMax  3.0;
+		+NOINTERACTION +NOTELESTOMP
+		Speed 0;
+		Radius 3;
+		Height 5;
+		RenderStyle "Add";
+		Alpha 0.7;
+		Scale 0.16;
+		DistanceCheck "user_MaxDrawDistance";
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_Jump(128,2,4,5);
+		X003 ABCDE 2 Bright A_FadeOut(0.03);
+		TNT1 A 0 A_ScaleVelocity(0.8);
+		X003 FGHIJ 2 Bright A_FadeOut(0.03);
+		TNT1 A 0 A_ScaleVelocity(0.7);
+		X003 KLMNO 2 Bright A_FadeOut(0.03);
+		TNT1 A 0 A_ScaleVelocity(0.55);
+		X003 PQRST 2 Bright A_FadeOut(0.03);
+		TNT1 A 0 A_ScaleVelocity(0.45);
+		X003 UVWXYZ 2 Bright A_FadeOut(0.05);
+		Stop;
+	}
+}
+
+Class ExploSmallBack1 : AEoDFX
+{
+	Default
+	{
+		AEoDFX.RandomScaleFlip true;
+		AEoDFX.RandomRoll true;
+		AEoDFX.RollAddMin -3.0;
+		AEoDFX.RollAddMax  3.0;
+		+NOINTERACTION +NOTELESTOMP
+		RenderStyle "Add";
+		Scale 0.28;
+	}
+	States
+	{
+	Spawn:
+		X004 ABCDEFGHIJKLMNOPQ 1 NoDelay Bright A_FadeOut(0.03);
+		Stop;
+	}
+}
+
+Class ExploSmallBack2 : ExploSmallBack1	{}	//No Lights
+
+
+
+
+//====================================================================
+//====================================================================
+
+
+//====================================================================
+//====================================================================
+
+Class MonExplosionMedium : AEoDFX
+{
+	//int uang;
+	int user_t;
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP
+		RenderStyle "None"; +INVISIBLE
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			user_t = tid; ChangeTID(0);
+			Class<Actor> what = (user_t != 0 || A_CheckSight("Simple")) ? "ExploMediumBack1" : "ExploMediumBack2";
+			A_SpawnItemEx(what,0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		}
+	Simple:
+	Main:
+		TNT1 A 0 
+		{
+			for (int i = 0; i < 360; i += 45)
+				A_SpawnItemEx("NewExploMediumSmoke",0,0,0,frandom(0.5,1.8),0,0,i,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		}
+	CheckSpawnPos:
+		TNT1 A 0 A_CheckFloor("InFloor");
+	InAir:
+		TNT1 AAAA 0 A_SpawnItemEx("ExplosionMediumSprite",0,0,0,frandom(0.1,1.3),0,frandom(-1.3,1.3),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAA 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,frandom(0.1,1.8),0,frandom(-1.8,1.8),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAA 2 A_SpawnItemEx("ExplosionMediumSprite",0,0,0,frandom(0.1,1.3),0,frandom(-1.3,1.3),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		Stop;
+	InFloor:
+		TNT1 AAAA 0 A_SpawnItemEx("ExplosionMediumSprite",0,0,0,frandom(0.1,1.3),0,frandom(0.3,1.6),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAA 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,frandom(0.1,1.8),0,frandom(0.3,1.9),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAA 2 A_SpawnItemEx("ExplosionMediumSprite",0,0,0,frandom(0.1,1.3),0,frandom(0.3,1.6),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		Stop;
+	}
+}
+
+Class MonExplosionMediumSimple : AEoDFX
+{
+	//int uang;
+	int user_t;
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP +NOTONAUTOMAP
+		RenderStyle "None"; +INVISIBLE
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			user_t = tid; ChangeTID(0);
+			Class<Actor> what = (user_t != 0 || A_CheckSight("Simple")) ? "ExploMediumBack1" : "ExploMediumBack2";
+			A_SpawnItemEx(what,0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		}
+	Simple:
+	Main:
+		TNT1 A 0 
+		{
+			for (int i = 0; i < 360; i += 45)
+				A_SpawnItemEx("NewExploMediumSmoke",0,0,0,frandom(0.5,1.8),0,0,i,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		}
+	CheckSpawnPos:
+		TNT1 A 0 A_CheckFloor("InFloor");
+	InAir:
+		TNT1 AA 0 A_SpawnItemEx("ExplosionMediumSprite",0,0,0,frandom(0.1,1.3),0,frandom(-1.3,1.3),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAA 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,frandom(0.1,1.8),0,frandom(-1.8,1.8),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAA 2 A_SpawnItemEx("ExplosionMediumSprite",0,0,0,frandom(0.1,1.3),0,frandom(-1.3,1.3),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		Stop;
+	InFloor:
+		TNT1 AA 0 A_SpawnItemEx("ExplosionMediumSprite",0,0,0,frandom(0.1,1.3),0,frandom(0.3,1.6),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAA 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,frandom(0.1,1.8),0,frandom(0.3,1.9),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAA 2 A_SpawnItemEx("ExplosionMediumSprite",0,0,0,frandom(0.1,1.3),0,frandom(0.3,1.6),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		Stop;
+	}
+}
+
+Class MonExplosionMediumNoSmokeSimple : AEoDFX
+{
+	//int uang;
+	int user_t;
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP +NOTONAUTOMAP
+		RenderStyle "None"; +INVISIBLE
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			user_t = tid; ChangeTID(0);
+			Class<Actor> what = (user_t != 0 || A_CheckSight("Simple")) ? "ExploMediumBack1" : "ExploMediumBack2";
+			A_SpawnItemEx(what,0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		}
+	Simple:
+	Main:
+		TNT1 A 0 
+		{
+			for (int i = 0; i < 360; i += 45)
+				A_SpawnItemEx("ExplosionMediumSprite",0,0,0,frandom(0.5,1.8),0,0,i,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		}
+	CheckSpawnPos:
+		TNT1 A 0 A_CheckFloor("InFloor");
+	InAir:
+		TNT1 AA 0 A_SpawnItemEx("ExplosionMediumSprite",0,0,0,frandom(0.1,1.3),0,frandom(-1.3,1.3),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAA 0 A_SpawnItemEx("ExplosionMediumSprite",0,0,0,frandom(0.1,1.8),0,frandom(-1.8,1.8),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAA 2 A_SpawnItemEx("ExplosionMediumSprite",0,0,0,frandom(0.1,1.3),0,frandom(-1.3,1.3),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		Stop;
+	InFloor:
+		TNT1 AA 0 A_SpawnItemEx("ExplosionMediumSprite",0,0,0,frandom(0.1,1.3),0,frandom(0.3,1.6),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAA 0 A_SpawnItemEx("ExplosionMediumSprite",0,0,0,frandom(0.1,1.8),0,frandom(0.3,1.9),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAA 2 A_SpawnItemEx("ExplosionMediumSprite",0,0,0,frandom(0.1,1.3),0,frandom(0.3,1.6),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		Stop;
+	}
+}
+
+Class MonExplosionMediumConcentrated : AEoDFX
+{
+	//int uang;
+	int user_t;
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP +NOTONAUTOMAP
+		RenderStyle "None"; +INVISIBLE
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			user_t = tid; ChangeTID(0);
+			Class<Actor> what = (user_t != 0 || A_CheckSight("Simple")) ? "ExploMediumBack1" : "ExploMediumBack2";
+			A_SpawnItemEx(what,0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		}
+	Simple:
+	Main:
+		TNT1 A 0 
+		{
+			for (int i = 0; i < 360; i += 45)
+				A_SpawnItemEx("NewExploMediumSmoke",0,0,0,frandom(0.3,1.2),0,0,i,SXF_NOCHECKPOSITION);
+		}
+	CheckSpawnPos:
+		TNT1 A 0 A_CheckFloor("InFloor");
+	InAir:
+		TNT1 AAA 0 A_SpawnItemEx("ExplosionMediumSprite",0,0,0,frandom(0.1,1.0),0,frandom(-1.0,1.0),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAA 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,frandom(0.1,1.2),0,frandom(-1.2,1.2),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAA 1 A_SpawnItemEx("ExplosionMediumSprite",0,0,0,frandom(0.1,1.0),0,frandom(-1.0,1.0),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		Stop;
+	InFloor:
+		TNT1 AAA 0 A_SpawnItemEx("ExplosionMediumSprite",0,0,0,frandom(0.1,1.1),0,frandom(0.3,1.1),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAA 0 A_SpawnItemEx("NewExploMediumSmoke",0,0,0,frandom(0.1,1.2),0,frandom(0.3,1.4),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAA 1 A_SpawnItemEx("ExplosionMediumSprite",0,0,0,frandom(0.1,1.1),0,frandom(0.3,1.1),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		Stop;
+	}
+}
+
+Class MonExplosionMediumBig : AEoDFX
+{
+	//int uang;
+	int user_t;
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP +NOTONAUTOMAP
+		RenderStyle "None"; +INVISIBLE
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			user_t = tid; ChangeTID(0);
+			Class<Actor> what = (user_t != 0 || A_CheckSight("Simple")) ? "ExploMediumBigBack1" : "ExploMediumBigBack2";
+			A_SpawnItemEx(what,0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		}
+	Simple:
+	Main:
+		TNT1 A 0 
+		{
+			for (int i = 0; i < 360; i += 45)
+				A_SpawnItemEx("NewExploMediumBigSmoke",0,0,0,frandom(0.5,2.6),0,0,i,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);		
+		}
+	CheckSpawnPos:
+		TNT1 A 0 A_CheckFloor("InFloor");
+	InAir:
+		TNT1 AAAAAA 0 A_SpawnItemEx("ExplosionMediumBigSprite",0,0,0,frandom(0.1,2.0),0,frandom(-2.0,2.0),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAAAAAA 0 A_SpawnItemEx("NewExploMediumBigSmoke",0,0,0,frandom(0.5,2.6),0,frandom(-2.6,2.6),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 A 10 ;
+		Stop;
+	InFloor:
+		TNT1 AAAAAA 0 A_SpawnItemEx("ExplosionMediumBigSprite",0,0,0,frandom(0.1,2.0),0,frandom(0.3,2.0),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAAAAAA 0 A_SpawnItemEx("NewExploMediumBigSmoke",0,0,0,frandom(0.5,2.6),0,frandom(0.6,2.8),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 A 10 ;
+		Stop;
+	}
+}
+
+Class MonExplosionBig : AEoDFX
+{
+	//int uang;
+	int user_t;
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP +NOTONAUTOMAP
+		RenderStyle "None"; +INVISIBLE
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			user_t = tid; ChangeTID(0);
+			Class<Actor> what = (user_t != 0 || A_CheckSight("Simple")) ? "ExploBigBack1" : "ExploBigBack2";
+			A_SpawnItemEx(what,0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		}
+	Simple:
+	Main:
+		TNT1 A 0 
+		{
+			for (int i = 0; i < 360; i += 30)
+				A_SpawnItemEx("NewExploBigSmoke",0,0,0,frandom(0.5,5.0),0,0,i,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		}
+	CheckSpawnPos:
+		TNT1 A 0 A_CheckFloor("InFloor");
+	InAir:
+		TNT1 AAAAAAAA 0 A_SpawnItemEx("ExplosionBigSprite",0,0,0,frandom(0.1,4.0),0,frandom(-4.0,4.0),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("NewExploBigSmoke",0,0,0,frandom(0.5,5.0),0,frandom(-5.0,5.0),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 A 10 ;
+		Stop;
+	InFloor:
+		TNT1 AAAAAAAA 0 A_SpawnItemEx("ExplosionBigSprite",0,0,0,frandom(0.1,4.0),0,frandom(0.3,4.0),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("NewExploBigSmoke",0,0,0,frandom(5.0,5.0),0,frandom(0.6,5.5),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 A 10 ;
+		Stop;
+	}
+}
+
+Class MonExplosionBigSimple : AEoDFX
+{
+	int user_t;
+	//int uang;
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP +NOTONAUTOMAP
+		RenderStyle "None"; +INVISIBLE
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			user_t = tid; ChangeTID(0);
+			Class<Actor> what = (user_t != 0 || A_CheckSight("Simple")) ? "ExploBigBack1" : "ExploBigBack2";
+			A_SpawnItemEx(what,0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		}
+	Simple:
+	Main:
+		TNT1 A 0 
+		{
+			for (int i = 0; i < 360; i += 30)
+				A_SpawnItemEx("NewExploBigSmoke",0,0,0,frandom(0.5,5.0),0,0,i,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		}
+	CheckSpawnPos:
+		TNT1 A 0 A_CheckFloor("InFloor");
+	InAir:
+		TNT1 AAAAAA 0 A_SpawnItemEx("ExplosionBigSprite",0,0,0,frandom(0.1,4.0),0,frandom(-4.0,4.0),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAAAAAAA 0 A_SpawnItemEx("NewExploBigSmoke",0,0,0,frandom(0.5,5.0),0,frandom(-5.0,5.0),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 A 10 ;
+		Stop;
+	InFloor:
+		TNT1 AAAAAA 0 A_SpawnItemEx("ExplosionBigSprite",0,0,0,frandom(0.1,4.0),0,frandom(0.3,4.0),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAAAAAAA 0 A_SpawnItemEx("NewExploBigSmoke",0,0,0,frandom(5.0,5.0),0,frandom(0.6,5.5),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 A 10 ;
+		Stop;
+	}
+}
+
+Class MonExplosionBigNoSmokeSimple : AEoDFX
+{
+	int user_t;
+	//int uang;
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP +NOTONAUTOMAP
+		RenderStyle "None"; +INVISIBLE
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			user_t = tid; ChangeTID(0);
+			Class<Actor> what = (user_t != 0 || A_CheckSight("Simple")) ? "ExploBigBack1" : "ExploBigBack2";
+			A_SpawnItemEx(what,0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		}
+	Simple:
+	Main:
+		TNT1 A 0 
+		{
+			for (int i = 0; i < 360; i += 30)
+				A_SpawnItemEx("ExplosionBigSprite",0,0,0,frandom(0.5,5.0),0,0,i,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		}
+	CheckSpawnPos:
+		TNT1 A 0 A_CheckFloor("InFloor");
+	InAir:
+		TNT1 AAAA 0 A_SpawnItemEx("ExplosionBigSprite",0,0,0,frandom(0.1,4.0),0,frandom(-4.0,4.0),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAAA 0 A_SpawnItemEx("ExplosionBigSprite",0,0,0,frandom(0.5,5.0),0,frandom(-5.0,5.0),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 A 10 ;
+		Stop;
+	InFloor:
+		TNT1 AAAA 0 A_SpawnItemEx("ExplosionBigSprite",0,0,0,frandom(0.1,4.0),0,frandom(0.3,4.0),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAAA 0 A_SpawnItemEx("ExplosionBigSprite",0,0,0,frandom(5.0,5.0),0,frandom(0.6,5.5),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 A 10 ;
+		Stop;
+	}
+}
+
+Class MonExplosionSmallTooSimple : AEoDFX
+{
+	//int uang;
+	int user_t;
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP +NOTONAUTOMAP
+		RenderStyle "None"; +INVISIBLE
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			user_t = tid; ChangeTID(0);
+			Class<Actor> what = (user_t != 0 || A_CheckSight("Simple")) ? "ExploSmallBack1" : "ExploSmallBack2";
+			A_SpawnItemEx(what,0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		}
+	Simple:
+	Main:
+		TNT1 A 0 A_CheckFloor("InFloor");
+	InAir:
+		TNT1 AA 0 A_SpawnItemEx("ExplosionSmallSprite",0,0,0,frandom(0.05,0.3),0,frandom(0.05,0.3),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAA 0 A_SpawnItemEx("NewExploSmallSmoke",0,0,0,frandom(0.05,0.4),0,frandom(-0.4,0.4),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 A 10 ;
+		Stop;
+	InFloor:
+		TNT1 AA 0 A_SpawnItemEx("ExplosionSmallSprite",0,0,0,frandom(0.05,0.3),0,frandom(0.05,0.3),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAA 0 A_SpawnItemEx("NewExploSmallSmoke",0,0,0,frandom(-0.4,0.4),0,frandom(0.1,0.45),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 A 10 ;
+		Stop;
+	}
+}
+
+
+//==================================================================================
+//==================================================================================
+/*
+New effects by Major Cooke
+
+Ripped straight from my Pipe Bomb addon that I made for fun one day.
+
+List of usable Class packages include:
+
+PBExplosionSpawner
+PBExplosionSpawnerHalf
+PBExplosionClusterSpawner
+PBExplosionDebrisless
+*/
+//==================================================================================
+//==================================================================================
+
+Class PBExplosionSpawner : AEoDFX
+{
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP +NOTONAUTOMAP
+		RenderStyle "None"; +INVISIBLE
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_CheckFloor("Ground");
+	Air:
+		TNT1 AAA 0 A_SpawnItemEx("PBExploBack",random(-5,5),0,random(-5,5),0,0,random(2,6),random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAAA 0 A_SpawnItemEx("PBExploMiniBack",random(-5,5),0,random(-5,5),0,0,random(2,6),random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION,192);
+		TNT1 A 2;
+		TNT1 AAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PBMidSmoke",frandom(0,3),0,frandom(0,3),frandom(-2,2),0,frandom(-3,3),random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION,64);
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PBShockwaveSmoke",frandom(5,10),0,0,frandom(15,20),0,0,random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION,64);
+		TNT1 A 0 A_SpawnItemEx("PBDebris",0,0,0,random(15,30),0,random(10,35),random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION,128);
+		TNT1 AAAAAAAA 0 A_SpawnItemEx("PBDebris",0,0,0,random(10,20),0,random(10,25),random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION,200);
+		TNT1 AAAAAAA 1 A_SpawnItemEx("PBExploMiniBack",random(0,7),0,random(-7,7),0,0,random(-4,4),random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		Stop;
+	Ground:
+		TNT1 AAA 0 A_SpawnItemEx("PBExploBack",random(0,5),0,random(1,8),0,0,random(2,6),random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAAA 0 A_SpawnItemEx("PBExploMiniBack",random(0,5),0,random(1,8),0,0,random(2,6),random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION,192);
+		TNT1 A 2;
+		TNT1 AAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PBMidSmoke",frandom(0,3),0,frandom(0,3),frandom(0,2),0,frandom(0,3),random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION,64);
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PBShockwaveSmoke",frandom(5,10),0,7,frandom(15,20),0,0,random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION,64);
+		TNT1 A 0 A_SpawnItemEx("PBDebris",0,0,0,random(15,30),0,random(10,35),random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION,128);
+		TNT1 AAAAAAAA 0 A_SpawnItemEx("PBDebris",0,0,0,random(10,20),0,random(10,25),random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION,200);
+		TNT1 AAAAAAA 1 A_SpawnItemEx("PBExploMiniBack",random(0,7),0,random(1,8),0,0,random(2,6),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		Stop;
+	}
+}
+
+Class PBExplosion : PBExplosionSpawner
+{}
+
+Class PBExplosionSpawnerSmokeless : AEoDFX
+{
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP
+		RenderStyle "None"; +INVISIBLE
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_CheckFloor("Ground");
+	Air:
+		TNT1 AAAA 0 A_SpawnItemEx("PBExploBack",random(-5,5),0,random(-5,5),0,0,random(2,6),random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAAAAAAA 0 A_SpawnItemEx("PBExploMiniBack",random(-5,5),0,random(-5,5),0,0,random(2,6),random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION,192);
+		TNT1 A 2;
+		TNT1 AAAAAAA 1 A_SpawnItemEx("PBExploMiniBack",random(0,7),0,random(-7,7),0,0,random(-4,4),random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		Stop;
+	Ground:
+		TNT1 AAAA 0 A_SpawnItemEx("PBExploBack",random(0,5),0,random(1,8),0,0,random(2,6),random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAAAAAAA 0 A_SpawnItemEx("PBExploMiniBack",random(0,5),0,random(1,8),0,0,random(2,6),random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION,192);
+		TNT1 A 2;
+		TNT1 AAAAAAA 1 A_SpawnItemEx("PBExploMiniBack",random(0,7),0,random(1,8),0,0,random(2,6),random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		Stop;
+	}
+}
+
+Class PBExplosionClusterSpawner : AEoDFX
+{
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP
+		RenderStyle "None"; +INVISIBLE
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_CheckFloor("Ground");
+	Air:
+		TNT1 AAAA 0 A_SpawnItemEx("PBExploBack",random(-5,5),0,random(-5,5),0,0,random(2,6),random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAAAAAAA 0 A_SpawnItemEx("PBExploMiniBack",random(-5,5),0,random(-5,5),0,0,random(2,6),random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION,192);
+		TNT1 A 2;
+		TNT1 AAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PBMidSmoke",frandom(0,3),0,frandom(0,3),frandom(-2,2),0,frandom(-3,3),random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PBShockwaveSmoke",frandom(5,10),0,0,frandom(15,20),0,0,random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AA 0 A_SpawnItemEx("PBCluster",0,0,0,random(15,30),0,random(10,35),random(0,360),SXF_NOCHECKPOSITION|SXF_SETMASTER|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAAAA 0 A_SpawnItemEx("PBCluster",0,0,0,random(10,20),0,random(10,25),random(0,360),SXF_NOCHECKPOSITION|SXF_SETMASTER|SXF_TRANSFERTRANSLATION,128);
+		TNT1 AAAAAAA 1 A_SpawnItemEx("PBExploMiniBack",random(0,7),0,random(-7,7),0,0,random(-4,4),random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		Stop;
+	Ground:
+		TNT1 AAAA 0 A_SpawnItemEx("PBExploBack",random(0,5),0,random(1,8),0,0,random(2,6),random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAAAAAAA 0 A_SpawnItemEx("PBExploMiniBack",random(0,5),0,random(1,8),0,0,random(2,6),random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION,192);
+		TNT1 A 2;
+		TNT1 AAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PBMidSmoke",frandom(0,3),0,frandom(0,3),frandom(0,2),0,frandom(0,3),random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PBShockwaveSmoke",frandom(5,10),0,7,frandom(15,20),0,0,random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AA 0 A_SpawnItemEx("PBCluster",0,0,0,random(15,30),0,random(10,35),random(0,360),SXF_NOCHECKPOSITION|SXF_SETMASTER|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAAAA 0 A_SpawnItemEx("PBCluster",0,0,0,random(10,20),0,random(10,25),random(0,360),SXF_NOCHECKPOSITION|SXF_SETMASTER|SXF_TRANSFERTRANSLATION,128);
+		TNT1 AAAAAAA 1 A_SpawnItemEx("PBExploMiniBack",random(0,7),0,random(1,8),0,0,random(2,6),random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		Stop;
+	}
+}
+
+Class PBExplosionDebrisless : PBExplosionSpawner
+{
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_CheckFloor("Ground");
+	Air:
+		TNT1 AAAA 0 A_SpawnItemEx("PBExploBack",random(-5,5),0,random(-5,5),0,0,random(2,6),random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAAAAAAA 0 A_SpawnItemEx("PBExploMiniBack",random(-5,5),0,random(-5,5),0,0,random(2,6),random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION,192);
+		TNT1 A 2;
+		TNT1 AAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PBMidSmoke",frandom(0,3),0,frandom(0,3),frandom(-2,2),0,frandom(-3,3),random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PBShockwaveSmoke",frandom(5,10),0,0,frandom(15,20),0,0,random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		Stop;
+	Ground:
+		TNT1 AAAA 0 A_SpawnItemEx("PBExploBack",random(0,5),0,random(1,8),0,0,random(2,6),random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAAAAAAA 0 A_SpawnItemEx("PBExploMiniBack",random(0,5),0,random(1,8),0,0,random(2,6),random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION,192);
+		TNT1 A 2;
+		TNT1 AAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PBMidSmoke",frandom(0,3),0,frandom(0,3),frandom(0,2),0,frandom(0,3),random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PBShockwaveSmoke",frandom(5,10),0,7,frandom(15,20),0,0,random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAAA 1 A_SpawnItemEx("PBExploMiniBack",random(0,7),0,random(1,8),0,0,random(2,6),random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		Stop;
+	}
+}
+
+Class PBExploBack : AEoDFX
+{
+	Default
+	{
+		AEoDFX.RandomScaleFlip true;
+		AEoDFX.RandomRoll true;
+		AEoDFX.RollAddMin -3.0;
+		AEoDFX.RollAddMax  3.0;
+		Scale 1.9;
+		RenderStyle "Add";
+		+NOINTERACTION +NOTELESTOMP
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			A_SetScale(Scale.X+frandom(-0.15,0.25));
+			return A_Jump(256,"One","Two","Three");
+		}
+	One:
+		X006 ABCDEFGHIJKLMNOP 1 Bright A_ScaleVelocity(0.98);
+		//X006 LMNOP 1 Bright A_FadeOut(0.05)
+		Stop;
+	Two:
+		X007 ABCDEFGHIJ 1 Bright A_ScaleVelocity(0.98);
+		Stop;
+	Three:
+		X033 ABCDEFGHIJKLMNOPQR 1 Bright A_ScaleVelocity(0.98);
+		Stop;
+	}
+}
+
+Class PBFlash : AEoDFX
+{
+	Default
+	{
+		AEoDFX.RandomScaleFlip true;
+		AEoDFX.RandomRoll true;
+		AEoDFX.RollAddMin -3.0;
+		AEoDFX.RollAddMax  3.0;
+		+NOINTERACTION +NOTELESTOMP
+		RenderStyle "Add";
+		Scale 1.3;
+	}
+	States
+	{
+	Spawn:
+		CB02 ABCDEFGHIJKLMNOPQRS 1 NoDelay Bright A_FadeOut(0.02);
+		Stop;
+	}
+}
+
+Class PBExploMiniBack : PBExploBack
+{
+	Default
+	{
+		Scale 1.4;
+	}
+}
+
+Class PBMidSmoke : NewExploMediumSmoke
+{
+	Default
+	{
+		+NOTONAUTOMAP
+		Scale 1.5;
+		DistanceCheck "user_MaxDrawDistance";
+	}
+}
+
+Class PBShockwaveSmoke : NewExploMediumSmoke
+{
+	Default
+	{
+		AEoDFX.RandomScaleFlip true;
+		AEoDFX.RandomRoll true;
+		AEoDFX.RollAddMin -3.0;
+		AEoDFX.RollAddMax  3.0;
+		Scale 1;
+		+NOTONAUTOMAP
+		DistanceCheck "user_MaxDrawDistance";
+	}
+	States
+	{
+	Spawn:
+		X037 A 0 NoDelay 
+		{
+			Frame = random(Fr_A, Fr_D);
+		}
+		---- A 3
+		{
+			A_FadeOut(0.04);
+			A_ScaleVelocity(0.75);
+		}
+		Wait;
+	}
+}
+
+Class PBDebris : AEoDFX
+{
+	int user_ticker;
+	int user_limit;
+	
+	Default
+	{
+		Projectile;
+		+ALLOWBOUNCEONACTORS
+		+BOUNCEONACTORS
+		+BOUNCEONWALLS
+		+BOUNCEONFLOORS
+		+CANBOUNCEWATER
+		+BOUNCEONCEILINGS
+		-NOGRAVITY
+		+NOTONAUTOMAP
+		+NOTELESTOMP
+		+INVISIBLE
+		BounceType "Doom";
+		Speed 25;
+		Radius 4;
+		Height 4;
+		Gravity 0.75;
+		WallBounceFactor 0.9;
+		BounceFactor 0.6;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay
+		{
+			user_limit = random(20,400);
+		}
+	ParticleSpawner:
+		TNT1 A 1 
+		{
+			A_SpawnItemEx("PBDebrisPuff",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);	
+			user_ticker++;
+			if (user_ticker > user_limit)
+				return Destroy();
+		}
+		Loop;
+	}
+}
+
+Class PBDebrisPuff : AEoDFX
+{
+	Default
+	{
+		AEoDFX.RandomScaleFlip true;
+		AEoDFX.RandomRoll true;
+		AEoDFX.RollAddMin -3.0;
+		AEoDFX.RollAddMax  3.0;
+		+NOINTERACTION +NOTELESTOMP
+		Scale 0.25;
+		RenderStyle "Add";
+		Translation "0:255=%[0,0,0]:[1,0.5,0]";
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			A_SpawnItemEx("PBDebrisSmoke",frandom(0,1),0,frandom(0,1),frandom(0,1),0,1,random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+			return A_Jump(256,"One","Two","Three");
+		}
+	One:
+		X006 ABCDEFGHIJKLMNOP 1 Bright ;
+		//X006 LMNOP 1 Bright A_FadeOut(0.05)
+		Stop;
+	Two:
+		X007 ABCDEFGHIJ 1 Bright ;
+		Stop;
+	Three:
+		X033 ABCDEFGHIJKLMNOPQR 1 Bright ;
+		Stop;
+	}
+}
+
+Class PBDebrisPuff2x : PBDebrisPuff
+{
+	Default
+	{
+		Scale 0.5;
+	}
+}
+
+Class PBDebrisSmoke : NewExploMediumSmoke
+{
+	Default
+	{
+		AEoDFX.RandomScaleFlip true;
+		AEoDFX.RandomRoll true;
+		AEoDFX.RollAddMin -3.0;
+		AEoDFX.RollAddMax  3.0;
+		Alpha 0.1;
+		Scale 0.6;
+		+NOTONAUTOMAP
+		DistanceCheck "user_MaxDrawDistance";
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 5;
+		X037 A 0
+		{
+			Frame = random(Fr_A, Fr_D);
+		}
+		---- AAAAAAAAAA 1 A_FadeIn(0.07);
+		---- A 3
+		{
+			A_FadeOut(0.055);
+			A_ScaleVelocity(0.95);
+		}
+		Wait;
+	}
+}
+
+Class PBCluster : PBDebris
+{
+	Default
+	{
+		Damage 2;
+		+FORCERADIUSDMG
+		+EXTREMEDEATH
+		-THRUACTORS
+		-BOUNCEONACTORS
+		+RIPPER
+		-NOCLIP
+		+DONTREFLECT
+		+BOUNCEONCEILINGS
+		+INVISIBLE
+		//DeathSound "PipeKaboom" //will need a new sound.
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay { user_limit = random(100,400); }
+	ParticleSpawner:
+		TNT1 A 1 
+		{
+			StateLabel next = null;
+			A_SpawnItemEx("PBDebrisPuff2x",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+			user_ticker++;
+			if (user_ticker >= user_limit)
+				next = "Death";
+			return ResolveState(next);				
+		}
+		Loop;
+	Death:
+		TNT1 A 1 A_SpawnItemEx("PBExplosionDebrisless",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		Stop;
+	}
+}
+
+//==================================================================================
+//==================================================================================
+// L4D2 grenade-ish explosion, smaller
+//==================================================================================
+//==================================================================================
+Class PBExplosionSpawnerHalf : PBExplosionSpawner
+{
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_CheckFloor("Ground");
+	Air:
+		TNT1 AAA 0 A_SpawnItemEx("PBExploBackHalf",frandom(-2.5,2.5),0,frandom(-2.5,2.5),0,0,random(1,3),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAA 0 A_SpawnItemEx("PBExploMiniBackHalf",frandom(-2.5,2.5),0,frandom(-2.5,2.5),0,0,random(1,3),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION,192);
+		TNT1 A 2;
+		TNT1 AAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PBMidSmokeHalf",frandom(0,1.5),0,frandom(0,1.5),frandom(-1,1),0,frandom(-3,3),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PBShockwaveSmokeHalf",frandom(2.5,5),0,0,frandom(7.5,10),0,0,random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 A 0 A_SpawnItemEx("PBDebrisHalf",0,0,0,frandom(7.5,15),0,frandom(5,17.5),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAA 0 A_SpawnItemEx("PBDebrisHalf",0,0,0,random(5,10),0,frandom(5,12.5),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION,128);
+		Stop;
+	Ground:
+		TNT1 AAA 0 A_SpawnItemEx("PBExploBackHalf",frandom(0,2.5),0,frandom(0.5,4),0,0,random(1,3),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAA 0 A_SpawnItemEx("PBExploMiniBackHalf",frandom(0,2.5),0,frandom(0.5,4),0,0,random(1,3),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION,192);
+		TNT1 A 2;
+		TNT1 AAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PBMidSmokeHalf",frandom(0,1.5),0,frandom(0,1.5),frandom(0,1),0,frandom(0,1.5),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PBShockwaveSmokeHalf",frandom(2.5,5),0,4,frandom(7.5,10),0,0,random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 A 0 A_SpawnItemEx("PBDebrisHalf",0,0,0,frandom(7.5,15),0,frandom(7,10),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAA 0 A_SpawnItemEx("PBDebrisHalf",0,0,0,random(5,10),0,frandom(7,10),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION,128);
+		Stop;
+	}
+}
+ 
+Class PBExploBackHalf : AEoDFX
+{
+	Default
+	{
+		AEoDFX.RandomScaleFlip true;
+		AEoDFX.RandomRoll true;
+		AEoDFX.RollAddMin -3.0;
+		AEoDFX.RollAddMax  3.0;
+		Scale 1;
+		RenderStyle "Add";
+		+NOINTERACTION +NOTELESTOMP
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_Jump(256,"One","Two","Three");
+		
+	One:
+		X006 ABCDEFGHIJKLMNOP 1 Bright A_ScaleVelocity(0.98);
+		Stop;
+	Two:
+		X007 ABCDEFGHIJ 1 Bright A_ScaleVelocity(0.98);
+		Stop;
+	Three:
+		X033 ABCDEFGHIJKLMNOPQR 1 Bright A_ScaleVelocity(0.98);
+		Stop;
+	}
+}
+ 
+Class PBExploMiniBackHalf : PBExploMiniBack
+{
+	Default
+	{
+		Scale 0.7;
+	}
+}
+ 
+Class PBDebrisPuffHalf : PBDebrisPuff
+{
+	Default
+	{
+		AEoDFX.RandomScaleFlip true;
+		AEoDFX.RandomRoll true;
+		AEoDFX.RollAddMin -3.0;
+		AEoDFX.RollAddMax  3.0;
+		+NOINTERACTION +NOTELESTOMP
+		Scale 0.13;
+		RenderStyle "Add";
+		Translation "0:255=%[0,0,0]:[1,0.5,0]";
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			A_SpawnItemEx("PBDebrisSmokeHalf",frandom(0,1),0,frandom(0,1),frandom(0,1),0,1,random(0,360),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+			return A_Jump(256,"One","Two","Three");
+		}
+	One:
+		X006 ABCDEFGHIJKLMNOP 1 Bright ;
+		//X006 LMNOP 1 Bright A_FadeOut(0.05)
+		Stop;
+	Two:
+		X007 ABCDEFGHIJ 1 Bright ;
+		Stop;
+	Three:
+		X033 ABCDEFGHIJKLMNOPQR 1 Bright ;
+		Stop;
+	}
+}
+ 
+Class PBDebrisPuff2xHalf : PBDebrisPuff2x
+{
+	Default
+	{
+		Scale 0.25;
+	}
+}
+ 
+Class PBDebrisSmokeHalf : PBDebrisSmoke
+{
+	Default
+	{
+		AEoDFX.RandomScaleFlip true;
+		AEoDFX.RandomRoll true;
+		AEoDFX.RollAddMin -3.0;
+		AEoDFX.RollAddMax  3.0;
+		Scale 0.3;
+		Alpha 0.1;
+		+NOTONAUTOMAP
+		DistanceCheck "user_MaxDrawDistance";
+	}
+	States
+	{
+	Spawn:
+		
+		X037 A 0 NoDelay
+		{
+			Frame = random(Fr_A, Fr_D);
+		}
+		---- AAAAAAAAAA 1 A_FadeIn(0.07);
+		---- A 3
+		{
+			A_FadeOut(0.055);
+			A_ScaleVelocity(0.95);
+		}
+		Wait;
+	}
+}
+ 
+Class PBDebrisHalf : PBDebris
+{
+	Default
+	{
+		BounceFactor 0.5;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay { user_limit = random(20, 300); }
+	ParticleSpawner:
+		TNT1 A 1 
+		{
+			A_SpawnItemEx("PBDebrisPuffHalf",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION);
+			user_ticker++;
+			if (user_ticker >= user_limit)
+				return Destroy();
+		}
+		Loop;
+	}
+}
+ 
+Class PBMidSmokeHalf : PBMidSmoke
+{
+	Default
+	{
+		Scale 0.75;
+		+NOTONAUTOMAP
+		DistanceCheck "user_MaxDrawDistance";
+	}
+}
+ 
+Class PBShockwaveSmokeHalf : PBShockwaveSmoke
+{
+	Default
+	{
+		Scale 0.5;
+		+NOTONAUTOMAP
+		DistanceCheck "user_MaxDrawDistance";
+	}
+}
+
+//==================================================================================
+//==================================================================================
+// New smoke effects (used mostly for the generic explosions)
+// Sprites ripped by Major Cooke
+// Implemented by DBT
+//==================================================================================
+//==================================================================================
+
+Class TT1 : AEoDFX replaces NewExploMediumSmoke
+{
+	int user_t;
+	Default
+	{
+		AEoDFX.RandomScaleFlip true;
+		AEoDFX.RandomRoll true;
+		AEoDFX.RollAddMin -3.0;
+		AEoDFX.RollAddMax  3.0;
+		+NOINTERACTION +NOTELESTOMP	+NOTONAUTOMAP
+		RenderStyle "Translucent";
+		Alpha 0.57;
+		Scale 0.4;
+		DistanceCheck "user_MaxDrawDistance";
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			A_SetScale(Scale.X*randompick(-1,1),Scale.Y*randompick(-1,1));
+			user_t = tid;	ChangeTID(0);
+			if (user_t > 0)
+			{
+				if (user_t < 95)
+				{	Thing_SetTranslation(0,user_t);	}
+				else
+				{	Thing_SetTranslation(0,random(58,94));	}
+			}
+			int rng = random(0,3);
+			Name Spr = "X038";
+			Switch (rng)
+			{
+				Default:	break;
+				Case 1:		Spr = "X039";	break;
+				Case 2:		Spr = "X040";	break;
+				Case 3:		Spr = "X041";	break;
+			}
+			Sprite = GetSpriteIndex(Spr);
+			Frame = random(0,22);
+		}
+		/*
+	Decide:
+	Choose1of4:
+		
+		TNT1 A 0 A_Jump(256,"R1","R2","R3","R4")
+
+	R1:
+		TNT1 A 0 A_Jump(256,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22)
+		X038 ABCDEFGHIJKLMNOPQRSTUV 0 A_Jump(256,"Behavior")
+		Goto Behavior;
+	R2:
+		TNT1 A 0 A_Jump(256,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22)
+		X039 ABCDEFGHIJKLMNOPQRSTUV 0 A_Jump(256,"Behavior")
+		Goto Behavior;
+	R3:
+		TNT1 A 0 A_Jump(256,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22)
+		X040 ABCDEFGHIJKLMNOPQRSTUV 0 A_Jump(256,"Behavior")
+		Goto Behavior;
+	R4:
+		TNT1 A 0 A_Jump(256,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22)
+		X041 ABCDEFGHIJKLMNOPQRSTUV 0 A_Jump(256,"Behavior")
+		Goto Behavior;
+		*/
+	Behavior:
+		"----" A 3 	{ A_FadeOut(0.023); A_ScaleVelocity(0.95); }
+		Loop;
+
+	Precache:
+		X038 ABCDEFGHIJKLMNOPQRSTUV 0;
+		X039 ABCDEFGHIJKLMNOPQRSTUV 0;
+		X040 ABCDEFGHIJKLMNOPQRSTUV 0;
+		X041 ABCDEFGHIJKLMNOPQRSTUV 0;
+		Stop;
+	}
+}
+
+Class TT2 : TT1 replaces NewExploBigSmoke
+{
+	Default
+	{
+		Alpha 0.5;
+		Scale 0.6;
+	}
+}
+
+Class TT3 : TT1 replaces NewExploSmallSmoke
+{
+	Default
+	{
+		Alpha 0.57;
+		Scale 0.175;
+	}
+}
+
+Class TT4 : TT1 replaces NewExploMediumBigSmoke
+{
+	Default
+	{
+		Alpha 0.57;
+		Scale 0.5;
+	}
+}
+
+Class TT5 : TT1
+{
+	Default
+	{
+		Scale 0.04;
+	}
+}
+
+//================================================================
+//Migrated these over from MonShadowW and DecMisc for convenience.
+//================================================================
+
+Class BossDeathExplosion : AEoDFX
+{
+	//int uang;
+	int user_t;
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP +NOTONAUTOMAP
+		RenderStyle "None"; +INVISIBLE
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			A_PlaySound("weapons/rockexplo");
+			user_t = tid; ChangeTID(0);
+			Class<Actor> what = (user_t != 0 || A_CheckSight("Simple")) ? "ExploMediumBigBack1" : "ExploMediumBigBack2";
+			A_SpawnItemEx(what,0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		}
+	Simple:
+	Main:
+		TNT1 A 0 
+		{
+			for (int i = 0; i < 315; i += 45)
+				A_SpawnItemEx("NewExploMediumBigSmoke",0,0,0,frandom(0.5,2.6),0,0,i,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		}
+	CheckSpawnPos:
+		TNT1 A 0 A_CheckFloor("InFloor");
+	InAir:
+		TNT1 AAAAAA 0 A_SpawnItemEx("ExplosionMediumBigSprite",0,0,0,frandom(0.1,2.0),0,frandom(-2.0,2.0),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAA 0 A_SpawnItemEx("NewExploMediumBigSmoke",0,0,0,frandom(0.5,2.6),0,frandom(-2.6,2.6),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 A 10 ;
+		Stop;
+	InFloor:
+		TNT1 AAAAAA 0 A_SpawnItemEx("ExplosionMediumBigSprite",0,0,0,frandom(0.1,2.0),0,frandom(0.3,2.0),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 AAAAA 0 A_SpawnItemEx("NewExploMediumBigSmoke",0,0,0,frandom(0.5,2.6),0,frandom(0.6,2.8),random(0,359),SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
+		TNT1 A 10 ;
+		Stop;
+	}
+}
+
+Class BossDeathExplosionHuge : BossDeathExplosion
+{
+	Default
+	{
+		Scale 3.2;
+	}
+	/*
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_SetScale(Scale.X*randompick(-1,1),Scale.Y*randompick(-1,1));
+		TNT1 A 1 A_PlaySound("BigSorcererBallExplode");
+		TNT1 A 0 A_CustomMissile("ExploSmokeGeneralBig",0,0,0);
+		EXP3 A 0 A_CustomMissile("ExploSmoke",0+Random(0,25),0+Random(5,-5),0+Random(0,370));
+		EXP3 A 2 Bright 
+		EXP3 A 0 A_CustomMissile("ExploSmoke",0+Random(0,25),0+Random(5,-5),0+Random(0,370));
+		EXP3 BCDEFGHIJKLMNOPQRSTUVWXYZ 2 Bright A_FadeOut(0.025);
+		Stop;
+	}
+	*/
+}
+
+
+//============================================
+//============================================
+//New Fusion Cannon FX - Major Cooke
+//============================================
+//============================================
+
+Class FusionPFX : AEoDFX
+{
+	int count;
+	int cap[4];
+	
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP +NOTONAUTOMAP
+		RenderStyle "None"; +INVISIBLE
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			cap[0] = random(25, 30);
+			cap[1] = random(45, 55);
+			cap[2] = random(35, 65);
+			cap[3] = max(cap[0], cap[1], cap[2]);
+		}
+		//Spawns red plasmog (plasma fog) that will act similar to the BFG spray.
+		TNT1 A 1
+		{
+			for (int i = 0; i < cap[3]; i++)
+			{
+				// Inner spikes
+				if (i < cap[0])
+				{
+					A_SpawnItemEx("RedPlasmog",random(0,15),0,frandom(0,1),0,0,random(12,16),random(0,359),SXF_NOCHECKPOSITION,128); //Up
+					A_SpawnItemEx("RedPlasmog",random(0,15),0,frandom(0,-1),0,0,random(-12,-16),random(0,359),SXF_NOCHECKPOSITION,128); //Down
+				}
+				// Outer spikes
+				if (i < cap[1])
+				{
+					A_SpawnItemEx("RedPlasmog",random(20,40),0,frandom(0,1),0,0,random(6,8),random(0,359),SXF_NOCHECKPOSITION,128); //Up
+					A_SpawnItemEx("RedPlasmog",random(20,40),0,frandom(0,-1),0,0,random(-6,-8),random(0,359),SXF_NOCHECKPOSITION,128); //Down
+				}
+				// Mid Vorpals
+				if (i < cap[2])
+				{
+					A_SpawnItemEx("MiniRedPlasmog",random(0,60),0,frandom(0,1),0,0,random(1,5),random(0,359),SXF_NOCHECKPOSITION,128); //Up
+					A_SpawnItemEx("MiniRedPlasmog",random(0,60),0,frandom(0,-1),0,0,random(-1,-5),random(0,359),SXF_NOCHECKPOSITION,128); //Down
+				}
+			}
+		}
+		Stop;
+	}
+}
+
+Class RedPlasmog : AEoDFX
+{
+	Default
+	{
+		AEoDFX.RandomScaleFlip true;
+		AEoDFX.RandomRoll true;
+		AEoDFX.RollAddMin -3.0;
+		AEoDFX.RollAddMax  3.0;
+		+NOINTERACTION +NOTELESTOMP +NOTONAUTOMAP
+		RenderStyle "Add";
+		Translation "0:255=%[0,0,0]:[1,0,0]";
+		Alpha 0.7;
+		Scale 0.2;
+		DistanceCheck "user_MaxDrawDistance";
+	}
+	States
+	{
+	Precache:
+		X038 ABCDEFGHIJKLMNOPQRSTUV 0;
+		X039 ABCDEFGHIJKLMNOPQRSTUV 0;
+		X040 ABCDEFGHIJKLMNOPQRSTUV 0;
+		X041 ABCDEFGHIJKLMNOPQRSTUV 0;
+		Stop;
+	Spawn:
+		X038 A 0 NoDelay 
+		{
+			A_SetScale(Scale.X*randompick(-1,1),Scale.Y*randompick(-1,1));
+			int rng = random(0,3);
+			Name Spr = "X038";
+			Frame = random(Fr_A, Fr_V);
+			Switch (rng)
+			{
+				Default:	return ResolveState("Playoff");
+				Case 1:	Spr = "X039";	break;
+				Case 2:	Spr = "X040";	break;
+				Case 3:	Spr = "X041";	break;
+			}
+			Sprite = GetSpriteIndex(Spr);
+			return ResolveState("Playoff");
+		}
+	Playoff:
+		//"####" "#" 3
+		"####" "########" 1 Bright A_ScaleVelocity(0.7);
+		"####" "#" 0 A_ScaleVelocity(-1);
+		"####" "########" 1 Bright A_ScaleVelocity(1.3);
+		//"####" "#" 3 
+		"####" "#" 0 A_ChangeVelocity(random(15,35),0,0,3);
+		"####" "#" 1 Bright A_FadeOut(0.03);
+		Wait;
+	}
+}
+
+Class MiniRedPlasmog : RedPlasmog
+{
+	Default
+	{
+		Scale 0.15;
+		Alpha 0.5;
+		Translation "0:255=%[0,0,0]:[1,0.5,0.5]";
+	}
+}
+
+
+//============================================
+//============================================
+//New Dark Flame Staff FX - Major Cooke
+//============================================
+//============================================
+
+Class KESFX : AEoDFX
+{
+	int count;
+	Default
+	{
+		Projectile;
+		+THRUACTORS
+		Radius 1;
+		Height 1;
+		Speed 20;
+		Damage 0;
+		WeaveIndexZ 32;
+		+INVISIBLE
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 1 
+		{
+			if (count > 14)
+			{
+				A_SpawnItemEx("KESCloud1",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION);
+				A_Weave(4,2,3,3);
+				count = 0;
+			}
+			else
+			{
+				A_Weave(2,2,3,3);
+				count++;
+			}
+		}
+		Wait;
+	Death:
+		TNT1 A 0;
+		Stop;
+	}
+}
+
+Class KESFX2 : KESFX
+{
+	States
+	{
+	Spawn:
+		TNT1 A 1 
+		{
+			if (count > 14)
+			{
+				A_SpawnItemEx("KESCloud1",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION);
+				A_Weave(-4,2,3,3);
+				count = 0;
+			}
+			else
+			{
+				A_Weave(-2,2,3,3);
+				count++;
+			}
+		}
+		Wait;
+	}
+}
+
+Class KESFX3 : KESFX
+{
+	States
+	{
+	Spawn:
+		TNT1 A 1 
+		{
+			if (count > 14)
+			{
+				A_SpawnItemEx("KESCloud1",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION);
+				A_Weave(-4,-2,3,3);
+				count = 0;
+			}
+			else
+			{
+				A_Weave(-2,-2,3,3);
+				count++;
+			}
+		}
+		Wait;
+	}
+}
+
+Class KESFX4 : KESFX
+{
+	States
+	{
+	Spawn:
+		TNT1 A 1 
+		{
+			if (count > 14)
+			{
+				A_SpawnItemEx("KESCloud1",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION);
+				A_Weave(4,-2,3,3);
+				count = 0;
+			}
+			else
+			{
+				A_Weave(2,-2,3,3);
+				count++;
+			}
+		}
+		Wait;
+	}
+}
+
+Class KESCloudSpawner1 : AEoDFX
+{
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP
+		+INVISIBLE
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0;
+		TNT1 AA 0 A_SpawnItemEx("KESCloud1",0,0,0,frandom(-10,10),0,frandom(-10,10),random(0,359),SXF_NOCHECKPOSITION);
+		TNT1 AAAAAA 0 A_SpawnItemEx("KESCloud1",0,0,0,frandom(-10,10),0,frandom(-10,10),random(0,359),SXF_NOCHECKPOSITION,128);
+		Stop;
+	}
+}
+
+Class KESCloud1 : AEoDFX
+{
+	Default
+	{
+		AEoDFX.RandomScaleFlip true;
+		AEoDFX.RandomRoll true;
+		AEoDFX.RollAddMin -3.0;
+		AEoDFX.RollAddMax  3.0;
+		+NOINTERACTION +NOTELESTOMP
+		RenderStyle "Translucent";
+		Alpha 0.55;
+		Scale 0.15;
+		Translation "0:255=%[0,0,0]:[0.25,0.25,0.25]";
+	}
+	States
+	{
+	Precache:
+		X038 A 0;
+		X039 A 0;
+		X040 A 0;
+		X041 A 0;
+		Stop;
+	Spawn:
+		X038 A 0 NoDelay
+		{
+			static const Name spr[] =
+			{
+				"X038",
+				"X039",
+				"X040",
+				"X041"
+			};
+			
+			Name which = spr[random(0,spr.Size() - 1)];
+			Sprite = GetSpriteIndex(which);
+		}
+	Playoff:
+		//"####" "#####" 1 A_ScaleVelocity(0.6)
+		//"####" "#" 1 A_ScaleVelocity(-1.00)
+		//"####" "#" 1 A_ChangeVelocity(cos(-pitch)*Vel.X,Vel.Y,0,3)
+		//Goto "Fader"
+	Fader:
+		"####" "#" 1 
+		{
+			A_ScaleVelocity(1.02);
+			A_FadeOut(0.02);
+		}
+		Loop;
+	}
+}
+
+//==============================================================================
+//New flashes by DBT, based in the ones from AlphaEnt's quake4 weapons mod
+//Graphic edit by Major Cooke
+//==============================================================================
+Class MuzzleFlashOrange : AEoDFX
+{
+	Default
+	{
+		AEoDFX.RandomRoll true;
+		RenderStyle "Add";
+		Radius 1;
+		Height 1;
+		PROJECTILE;
+		Speed 9;
+		Damage 0;
+		Scale 0.1;
+		+NOINTERACTION +NOTELESTOMP
+		DistanceCheck "user_MaxDrawDistance";
+	}
+	States
+	{
+	Spawn:
+		//TNT1 A 1
+		MUZ2 A 2 Bright NoDelay
+		{
+			A_Stop();
+			Frame = random(Fr_A, Fr_F);
+		}
+		Stop;
+	}
+}
+
+Class MuzzleFlashOrangeSmall : MuzzleFlashOrange
+{	
+	Default
+	{
+		Scale 0.067;
+	}
+}
+
+Class MuzzleFlashGreen : MuzzleFlashOrange
+{
+	Default
+	{
+		Scale 0.13;
+	}
+	States
+	{
+	Spawn:
+		MUZ2 M 2 Bright NoDelay
+		{
+			A_Stop();
+			Frame = random(Fr_M, Fr_Q);
+		}
+		Stop;
+	}
+}
+
+Class MuzzleFlashGreenSmall : MuzzleFlashGreen
+{	
+	Default
+	{
+		Scale 0.072;
+	}
+}
+
+
+
+Class MuzzleFlashBlue : MuzzleFlashOrange
+{
+	Default
+	{
+		Scale 0.14;
+	}
+	States
+	{
+	Spawn:
+		MUZ2 G 2 Bright NoDelay
+		{
+			A_Stop();
+			Frame = random(Fr_G, Fr_L);
+		}
+		Stop;
+	}
+}
+
+Class MuzzleFlashBlueSmall : MuzzleFlashBlue
+{
+	Default
+	{
+		Scale 0.082;
+	}
+}
+
+//==============================================================================
+Class SpecialExploSpawner : AEoDFX
+{
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP +INVISIBLE +NOTONAUTOMAP
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 2 NoDelay 
+		{
+			A_SpawnItemEx("ExploMediumBigBack1",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION);
+			A_PlaySound("HLExplosion");
+		}
+		Stop;
+	}
+}
+
+Class SpecialExploSpawner2 : AEoDFX
+{
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP +INVISIBLE +NOTONAUTOMAP
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 2 NoDelay A_SpawnItemEx("ExploMediumBigBack1NoGL",0,0,0,Vel.X,Vel.Y,Vel.Z,0,SXF_NOCHECKPOSITION|SXF_ABSOLUTEMOMENTUM);
+		Stop;
+	}
+}
+
+Class ExploMediumBigBack1NoGL : ExploMediumBigBack1 {}
+Class ExploMediumBigBack2NoGL : ExploMediumBigBack2 {}
+
+Class SpecialExploShockwave : AEoDFX
+{
+	//int uang;
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP +INVISIBLE +NOTONAUTOMAP
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 1 NoDelay
+		{
+			for (int i = 0; i < 360; i += 5)
+				A_SpawnItemEx("SpecialExploShockwaveMissile",0,0,0,15,0,0,i,SXF_NOCHECKPOSITION);
+		}
+		Stop;
+	}
+}
+
+Class SpecialExploShockwaveMissile : AEoDFX
+{
+	Default
+	{
+		Projectile;
+		+THRUACTORS
+		+STEPMISSILE
+		+INVISIBLE
+		+NOTONAUTOMAP
+		Radius 8;
+		Height 2;
+		MaxStepHeight 2048;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 5 NoDelay A_SpawnItemEx("SpecialExploSpawner2",random(-10,10),random(-30,30),random(-15,15),0,0,0,0,SXF_NOCHECKPOSITION);
+		Loop;
+	Death:
+		TNT1 A 0;
+		Stop;
+	}
+}
+
+//==============================================================================
+//New QSG effects
+//==============================================================================
+
+Class InfinityPortalFX : AEoDFX
+{
+	int t;	
+	Default
+	{ +NOINTERACTION +NOTELESTOMP +NOTONAUTOMAP +INVISIBLE }
+	States
+	{
+	Spawn:
+		TNT1 A 1 NoDelay
+		{
+			if (t <= 600)
+			{
+				A_SpawnItemEx("IPBlackFog",-200,0,0,5,0,0,t,SXF_NOCHECKPOSITION);
+				A_SpawnItemEx("IPBlackFog",-200,0,0,5,0,0,t + 120,SXF_NOCHECKPOSITION);
+				A_SpawnItemEx("IPBlackFog",-200,0,0,5,0,0,t + 240,SXF_NOCHECKPOSITION);
+			}
+			for (int i = 0; i < 8; i++)
+			{
+				if (i < 4)
+					A_SpawnItemEx("IPMembraneFog",0,0,0,frandom(-12,12),0,frandom(-12,12),random(0,359),SXF_NOCHECKPOSITION);
+				A_SpawnItemEx("IPMembraneFog",0,0,0,frandom(-12,12),0,frandom(-12,12),random(0,359),SXF_NOCHECKPOSITION,128);
+			}
+			t++;
+			
+			if (t >= 635)
+				return Destroy();
+		}
+		Wait;
+	}
+}
+
+Class IPBlackFog : AEoDFX
+{
+	int user_scale;
+	Default
+	{
+		AEoDFX.RandomRoll true;
+		AEoDFX.RollAddMin -3.0;
+		AEoDFX.RollAddMax  3.0;
+		+NOINTERACTION +NOTELESTOMP
+		RenderStyle "Stencil";
+		StencilColor "Black";
+		DistanceCheck "user_MaxDrawDistance";
+		//Alpha 1
+		Scale 0.0;
+	}
+	States
+	{
+	Spawn:
+		NB03 L 1 NoDelay A_SetScale(0);
+		//NB03 L 0 A_SetUserVar("user_scale",(Scale.X*100))
+		NB03 LLLLLLLLLLLLLLLLLLL 1 A_SetScale((Scale.X+0.0125));
+		NB03 LLLLLLLLLLLLLLLLLLL 1 A_SetScale((Scale.X+0.0125));
+		Stop;
+	}
+}
+
+Class IPMembraneFog : AEoDFX
+{
+	int count;
+	Default
+	{
+		AEoDFX.RandomScaleFlip true;
+		AEoDFX.RandomRoll true;
+		AEoDFX.RollAddMin -3.0;
+		AEoDFX.RollAddMax  3.0;
+		+NOINTERACTION +NOTELESTOMP
+		RenderStyle "Translucent";
+		Scale 0.05;
+		Alpha 0.0;
+		Translation "0:255=%[0,0,0]:[0.2,0,0.6]";
+	}
+	States
+	{
+	Precache:
+		X038 A 0;
+		X039 A 0;
+		X040 A 0;
+		X041 A 0;
+		Stop;
+	Spawn:
+		X038 A 0 NoDelay 
+		{
+			A_SetScale(Scale.X*randompick(-1,1),Scale.Y*randompick(-1,1));
+			static const Name Spr[] =
+			{
+				"X038",
+				"X039",
+				"X040",
+				"X041"
+			};
+			
+			Sprite = GetSpriteIndex(Spr[random(0, Spr.Size() - 1)]);
+			Frame = random(Fr_A, Fr_V);
+		}
+	Playoff:
+		---- A 1
+		{
+			if (count >= 15)
+			{
+				A_ScaleVelocity(-1);
+				return ResolveState(1);
+			}
+			else
+			{
+				A_SetScale((Scale.X+0.035));
+				A_FadeTo(0.65,0.1,0);
+				A_ScaleVelocity(0.85);
+				count++;
+			}
+			return ResolveState(null);
+		}
+		Wait;
+		"####" "######" 1 A_ScaleVelocity(1.3);
+	Playoff2:
+		"####" "#" 1 A_FadeTo(0,0.1,1);
+		Loop;
+	}
+}
+
+//==============================================================================
+//==============================================================================
+//New Hand of God alt FX
+//==============================================================================
+//==============================================================================
+
+Class HeavenlyPortalFX : AEoDFX
+{
+	int count;
+	int column[8];
+	int uang[2];
+	
+	Default
+	{ +NOINTERACTION +NOTELESTOMP +INVISIBLE +NOTONAUTOMAP }
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay
+		{
+			column[1] = 8;
+			column[2] = 16;
+			column[3] = 24;
+			column[4] = 32;
+			column[5] = 40;
+			column[6] = 48;
+			column[7] = 56;
+		}
+	Time1:
+		TNT1 A 1 
+		{
+			if (count >= 202)	return Destroy();
+			A_SpawnItemEx("HeavenPuff",-50,0,column[0],10,0,0,uang[0],SXF_NOCHECKPOSITION);
+			A_SpawnItemEx("HeavenPuff",-50,0,column[0],10,0,0,uang[0]+90,SXF_NOCHECKPOSITION);
+			A_SpawnItemEx("HeavenPuff",-50,0,column[0],10,0,0,uang[0]+180,SXF_NOCHECKPOSITION);
+			A_SpawnItemEx("HeavenPuff",-50,0,column[0],10,0,0,uang[0]+270,SXF_NOCHECKPOSITION);
+			
+			
+			if (count >= 16)
+			{
+				A_SpawnItemEx("HeavenPuff",-50,0,column[1],10,0,0,uang[1],SXF_NOCHECKPOSITION);
+				A_SpawnItemEx("HeavenPuff",-50,0,column[1],10,0,0,uang[1]+90,SXF_NOCHECKPOSITION);
+				A_SpawnItemEx("HeavenPuff",-50,0,column[1],10,0,0,uang[1]+180,SXF_NOCHECKPOSITION);
+				A_SpawnItemEx("HeavenPuff",-50,0,column[1],10,0,0,uang[1]+270,SXF_NOCHECKPOSITION);
+			}
+			if (count >= 32)
+			{
+				A_SpawnItemEx("HeavenPuff",-50,0,column[2],10,0,0,uang[0],SXF_NOCHECKPOSITION);
+				A_SpawnItemEx("HeavenPuff",-50,0,column[2],10,0,0,uang[0]+90,SXF_NOCHECKPOSITION);
+				A_SpawnItemEx("HeavenPuff",-50,0,column[2],10,0,0,uang[0]+180,SXF_NOCHECKPOSITION);
+				A_SpawnItemEx("HeavenPuff",-50,0,column[2],10,0,0,uang[0]+270,SXF_NOCHECKPOSITION);
+			}
+			if (count >= 48)
+			{
+				A_SpawnItemEx("HeavenPuff",-50,0,column[3],10,0,0,uang[1],SXF_NOCHECKPOSITION);
+				A_SpawnItemEx("HeavenPuff",-50,0,column[3],10,0,0,uang[1]+90,SXF_NOCHECKPOSITION);
+				A_SpawnItemEx("HeavenPuff",-50,0,column[3],10,0,0,uang[1]+180,SXF_NOCHECKPOSITION);
+				A_SpawnItemEx("HeavenPuff",-50,0,column[3],10,0,0,uang[1]+270,SXF_NOCHECKPOSITION);
+			}
+			if (count >= 64)
+			{
+				A_SpawnItemEx("HeavenPuff",-50,0,column[4],10,0,0,uang[0],SXF_NOCHECKPOSITION);
+				A_SpawnItemEx("HeavenPuff",-50,0,column[4],10,0,0,uang[0]+90,SXF_NOCHECKPOSITION);
+				A_SpawnItemEx("HeavenPuff",-50,0,column[4],10,0,0,uang[0]+180,SXF_NOCHECKPOSITION);
+				A_SpawnItemEx("HeavenPuff",-50,0,column[4],10,0,0,uang[0]+270,SXF_NOCHECKPOSITION);
+			}
+			if (count >= 80)
+			{
+				A_SpawnItemEx("HeavenPuff",-50,0,column[5],10,0,0,uang[1],SXF_NOCHECKPOSITION);
+				A_SpawnItemEx("HeavenPuff",-50,0,column[5],10,0,0,uang[1]+90,SXF_NOCHECKPOSITION);
+				A_SpawnItemEx("HeavenPuff",-50,0,column[5],10,0,0,uang[1]+180,SXF_NOCHECKPOSITION);
+				A_SpawnItemEx("HeavenPuff",-50,0,column[5],10,0,0,uang[1]+270,SXF_NOCHECKPOSITION);
+			}
+			if (count >= 96)
+			{
+				A_SpawnItemEx("HeavenPuff",-50,0,column[6],10,0,0,uang[0],SXF_NOCHECKPOSITION);
+				A_SpawnItemEx("HeavenPuff",-50,0,column[6],10,0,0,uang[0]+90,SXF_NOCHECKPOSITION);
+				A_SpawnItemEx("HeavenPuff",-50,0,column[6],10,0,0,uang[0]+180,SXF_NOCHECKPOSITION);
+				A_SpawnItemEx("HeavenPuff",-50,0,column[6],10,0,0,uang[0]+270,SXF_NOCHECKPOSITION);
+			}
+			if (count >= 112)
+			{
+				A_SpawnItemEx("HeavenPuff",-50,0,column[7],10,0,0,uang[1],SXF_NOCHECKPOSITION);
+				A_SpawnItemEx("HeavenPuff",-50,0,column[7],10,0,0,uang[1]+90,SXF_NOCHECKPOSITION);
+				A_SpawnItemEx("HeavenPuff",-50,0,column[7],10,0,0,uang[1]+180,SXF_NOCHECKPOSITION);
+				A_SpawnItemEx("HeavenPuff",-50,0,column[7],10,0,0,uang[1]+270,SXF_NOCHECKPOSITION);
+			}
+			uang[0] += 10;
+			uang[1] -= 10;
+			count++;
+		}
+		Wait;
+	}
+}
+
+Class HeavenPuff : AEoDFX
+{
+	Default
+	{
+		AEoDFX.RandomScaleFlip true;
+		AEoDFX.RandomRoll true;
+		AEoDFX.RollAddMin -3.0;
+		AEoDFX.RollAddMax  3.0;
+		+NOINTERACTION +NOTELESTOMP
+		Scale 0.5;
+		RenderStyle "Add";
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			return A_Jump(256,"One","Two","Three");
+		}
+	One:
+		X006 ABCDEFGHIJKLMNOP 1 Bright A_ScaleVelocity(0.98);
+		//X006 LMNOP 1 Bright A_FadeOut(0.05)
+		Stop;
+	Two:
+		X007 ABCDEFGHIJ 1 Bright A_ScaleVelocity(0.98);
+		Stop;
+	Three:
+		X033 ABCDEFGHIJKLMNOPQR 1 Bright A_ScaleVelocity(0.98);
+		Stop;
+	}
+}
+
+//==============================================================================
+//==============================================================================
+//	New DBT Death Effects
+//==============================================================================
+//==============================================================================
+/*
+Class DBTShardFog : AEoDFX
+{
+	int user_scale;
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP
+		RenderStyle "Add";
+		Alpha 0.4;
+		Scale 0.3;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_Jump(256,"T1","T2","T3","T4","T5","T6")
+	T1:
+		MUZ2 G 0
+		Goto Playoff;
+	T2:
+		MUZ2 H 0
+		Goto Playoff;
+	T3:
+		MUZ2 I 0
+		Goto Playoff;
+	T4:
+		MUZ2 J 0
+		Goto Playoff;
+	T5:
+		MUZ2 K 0
+		Goto Playoff;
+	T6:
+		MUZ2 L 0
+		Goto Playoff;
+	Playoff:
+		"####" "#" 0 A_SetScale(Scale.X*1.05)
+		"####" "#" 2 A_FadeOut(0.01)
+		Loop;
+	}
+}
+
+Class DBTShardExplosion : AEoDFX
+{
+	int count[3];
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0
+	DustOff:
+		TNT1 AAAA 0 A_SpawnItemEx("DBTColdExploBack",random(-5,5),0,random(-5,5),0,0,random(2,6),random(0,360),SXF_NOCHECKPOSITION)
+		TNT1 AAAAAAAAAAA 0 A_SpawnItemEx("DBTColdExploMiniBack",random(-5,5),0,random(-5,5),0,0,random(2,6),random(0,360),SXF_NOCHECKPOSITION,192)
+		TNT1 A 2
+		TNT1 AAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("DBTColdSmoke",frandom(0,5),0,frandom(0,1),frandom(-2,2),0,frandom(0,3),random(0,360),SXF_NOCHECKPOSITION)
+		//TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("DBTColdSmoke",frandom(5,10),0,0,frandom(15,20),0,0,random(0,360),SXF_NOCHECKPOSITION)
+		Stop;
+	}
+}
+
+Class DBTColdExploBack : PBExploBack
+{
+	Default
+	{
+		Translation "0:255=%[0,0,0]:[0.2,0.1,1]";
+	}
+}
+
+Class DBTColdExploMiniBack : PBExploMiniBack
+{
+	Default
+	{
+		Translation "0:255=%[0,0,0]:[0.2,0.1,1]";
+	}
+}
+
+Class DBTColdSmoke : PBMidSmoke
+{
+	Default
+	{
+	+NOTONAUTOMAP
+	Translation "0:255=%[0,0,0]:[0,0,1]"
+}
+
+Class DBTFrozenCrackle : AEoDFX
+{
+	Projectile
+	+NOINTERACTION +NOTELESTOMP
+	+DONTSPLASH
+	Scale 3
+	Alpha 0
+	RenderStyle "Translucent";
+	Translation "0:255=%[0,0,0]:[0,0.25,1]"
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		GDB2 A 0 A_FadeTo(1,0.05,0)
+		GDB2 A 1 A_SetScale(Scale.X-0.2)
+		GDB2 A 0 A_JumpIf(Scale.X<=0.4,"SpawnWave")
+		Loop;
+	SpawnWave:
+		TNT1 A 0 A_Explode(10,512,0)
+		TNT1 A 0 A_SpawnItemEx("DBTColdBlast",0,0,5,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
+		Stop;
+	}
+}
+
+Class DBTFrozenCrackleFinal : AEoDFX
+{ } //Will finish later...
+
+Class DBTColdBlast : AEoDFX
+{
+	//int uang;
+	Projectile
+	+NOINTERACTION +NOTELESTOMP
+	+DONTSPLASH
+	States
+	{
+	Spawn:
+		TNT1 A 0 
+		TNT1 A 0 A_SetUserVar("uang",0)
+	Ringer:
+		TNT1 A 0 A_SpawnItemEx("DBTColdBlastParticle1",3,0,0,25,0,0,uang,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("DBTColdBlastParticle2",3,0,0,30,0,0,uang+5,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SetUserVar("uang",uang+10)
+		TNT1 A 0 A_JumpIf(uang>=359,1)
+		Loop;
+		TNT1 A 0
+		Stop;
+	}
+}
+
+//Blast particles are fast and just disappear, no slow-down.
+
+Class DBTColdBlastParticle1 : AEoDFX
+{
+	+NOINTERACTION +NOTELESTOMP
+	Scale 0.3
+	Alpha 0.25
+	Translation "0:255=%[0,0,0]:[0,0.15,1]"
+	RenderStyle "Add";
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_Jump(255,"S1","S2","S3","S4","S5")
+	S1:
+		X048 A 0
+		Goto Playoff;
+	S2:
+		X048 B 0
+		Goto Playoff;
+	S3:
+		X048 C 0
+		Goto Playoff;
+	S4:
+		X048 D 0
+		Goto Playoff;
+	S5:
+		X048 E 0
+		Goto Playoff;
+	Playoff:
+		"####" "#" 10
+		//"####" "#" 0 A_ScaleVelocity(0.01)
+		//"####" "#" 0 A_ScaleVelocity(-1)
+		Stop;
+	}
+}
+
+Class DBTColdBlastParticle2 : AEoDFX
+{
+	+NOINTERACTION +NOTELESTOMP
+	RenderStyle "Add";
+	YScale 2
+	XScale 0.75
+	Alpha 0.25
+	Translation "0:255=%[0,0,0]:[0,0,1]"
+	States
+	{
+	Spawn:
+		GDBA A 0
+		GDBA A 10
+		Stop;
+	}
+}
+
+
+		Class RedeemerMushroom
+		{
+			int count;
+			+NOINTERACTION +NOTELESTOMP
+			States
+			{
+			Spawn:
+					TNT1 A 0
+					TNT1 A 0 A_ChangeVelocity(0,0,4,3) //Override anything else.
+					TNT1 A 0 A_SetUserVar("count",0)
+			Particles:
+					TNT1 AAAAAAAAAA 0 A_SpawnItemEx("RedeemerFF1",0,0,5,random(10,16),0,random(8,13),random(0,359),SXF_NOCHECKPOSITION,192)
+					TNT1 AAAAAAAAAAA 0 A_SpawnItemEx("RedeemerFF1",0,0,5,random(10,16),0,random(-8,-13),random(0,359),SXF_NOCHECKPOSITION,192)
+					TNT1 AA 0 A_SpawnItemEx("RedeemExplosionMediumSprite",random(0,3),0,random(0,12),random(0,2),0,random(-2,-6),random(0,359),SXF_NOCHECKPOSITION)
+					TNT1 AAAA 0 A_SpawnItemEx("RedeemExplosionMediumSprite",random(0,3),0,random(0,12),random(0,2),0,random(-2,-6),random(0,359),SXF_NOCHECKPOSITION,128)
+					TNT1 A 0 A_SetUserVar("count",count+1)
+					TNT1 A 1 A_JumpIf(count>=15,1)
+					Loop;
+			Particles2:
+					TNT1 AAAAAAAAAAA 0 A_SpawnItemEx("RedeemerFF1",0,0,5,random(10,16),0,random(8,13),random(0,359),SXF_NOCHECKPOSITION,192)
+					TNT1 AAAAAAAAAAA 0 A_SpawnItemEx("RedeemerFF1",0,0,5,random(10,16),0,random(-8,-13),random(0,359),SXF_NOCHECKPOSITION,192)
+					TNT1 AAA 0 A_SpawnItemEx("RedeemExplosionMediumSprite",random(0,3),0,random(0,12),random(0,2),0,random(-2,-6),random(0,359),SXF_NOCHECKPOSITION)
+					TNT1 AAAAA 0 A_SpawnItemEx("RedeemExplosionMediumSprite",random(0,6),0,0,random(2,5),0,random(1,3),random(0,359),SXF_NOCHECKPOSITION)
+					TNT1 AAAAAA 0 A_SpawnItemEx("RedeemExplosionMediumSprite",random(0,3),0,random(0,12),random(0,2),0,random(-2,-6),random(0,359),SXF_NOCHECKPOSITION,128)
+					TNT1 AAAAAAAAAAA 0 A_SpawnItemEx("RedeemExplosionMediumSprite",random(0,6),0,0,random(2,5),0,random(1,3),random(0,359),SXF_NOCHECKPOSITION,128)
+					TNT1 A 0 A_SetUserVar("count",count+1)
+					TNT1 A 1 A_JumpIf(count>=35,1)
+					Loop;
+					TNT1 A 0 A_ChangeVelocity(0,0,1,3)
+			Particles3:
+					TNT1 AA 0 A_SpawnItemEx("RedeemExploMediumBigBack1",random(0,15),0,random(-4,12),random(1,5),0,random(1,5),random(0,359),SXF_NOCHECKPOSITION)
+					TNT1 AAA 0 A_SpawnItemEx("RedeemExploMediumBigBack2",random(0,15),0,random(-4,12),random(1,5),0,random(1,5),random(0,359),SXF_NOCHECKPOSITION,128)
+					TNT1 AAA 0 A_SpawnItemEx("RedeemExploMediumBigBack3",random(0,15),0,random(-4,12),random(1,5),0,random(1,5),random(0,359),SXF_NOCHECKPOSITION,128)
+					TNT1 AAA 0 A_SpawnItemEx("RedeemExploMediumBigBack4",random(0,15),0,random(-4,12),random(1,5),0,random(1,5),random(0,359),SXF_NOCHECKPOSITION,128)
+					TNT1 A 0 A_SetUserVar("count",count+1)
+					TNT1 A 1 A_JumpIf(count>=(35*3),1)
+					Loop;
+					TNT1 A 0
+					Stop;
+				}
+		}
+		 
+		 //The following actors are just copies of the originals, but to eliminate the dynamic light on them, since they tend
+		 //to cause needless slowdowns easily avoidable by having something else emit one huge light
+		 Class RedeemExplosionMediumSprite : ExplosionMediumSprite	{}
+		 Class RedeemExploMediumBigBack1 : ExploMediumBigBack1 {}
+		 Class RedeemExploMediumBigBack2 : ExploMediumBigBack2 {}
+		 Class RedeemExploMediumBigBack3 : ExploMediumBigBack3 {}
+		 Class RedeemExploMediumBigBack4 : ExploMediumBigBack4 {}
+ */
+ 
+Class RedeemerMushroom : AEoDFX
+{
+	int count;
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP +INVISIBLE +NOTONAUTOMAP
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay
+		{
+			A_ChangeVelocity(0,0,4,3); //Override anything else.
+		}
+	Particles:
+		TNT1 A 1
+		{
+			for (int i = 0; i < 11; i++)
+			{
+				if (i < 2)		A_SpawnItemEx("RedeemExplosionMediumSprite",random(0,3),0,random(0,12),random(0,2),0,random(-2,-6),random(0,359),SXF_NOCHECKPOSITION);
+				if (i < 4)		A_SpawnItemEx("RedeemExplosionMediumSprite",random(0,3),0,random(0,12),random(0,2),0,random(-2,-6),random(0,359),SXF_NOCHECKPOSITION,128);
+				A_SpawnItemEx("RedeemerFF1",0,0,5,random(10,16),0,random(8,13),random(0,359),SXF_NOCHECKPOSITION,192);
+				A_SpawnItemEx("RedeemerFF1",0,0,5,random(10,16),0,random(-8,-13),random(0,359),SXF_NOCHECKPOSITION,192);
+				
+			}
+			count++;
+			return A_JumpIf(count > 14,1);
+		}
+		Wait;
+	Particles2:
+		TNT1 A 1
+		{
+			for (int i = 0; i < 11; i++)
+			{
+				if (i < 3)	A_SpawnItemEx("RedeemExplosionMediumSprite",random(0,3),0,random(0,6),random(0,2),0,random(-1,-3),random(0,359),SXF_NOCHECKPOSITION);
+				if (i < 5)	A_SpawnItemEx("RedeemExplosionMediumSprite",random(0,6),0,0,random(2,5),0,random(1,3),random(0,359),SXF_NOCHECKPOSITION);
+				if (i < 6)	A_SpawnItemEx("RedeemExplosionMediumSprite",random(0,3),0,random(0,6),random(0,2),0,random(-1,-3),random(0,359),SXF_NOCHECKPOSITION,128);
+				A_SpawnItemEx("RedeemerFF1",0,0,5,random(10,16),0,random(8,13),random(0,359),SXF_NOCHECKPOSITION,192);
+				A_SpawnItemEx("RedeemerFF1",0,0,5,random(10,16),0,random(-8,-13),random(0,359),SXF_NOCHECKPOSITION,192);
+				A_SpawnItemEx("RedeemExplosionMediumSprite",random(0,6),0,0,random(2,5),0,random(1,3),random(0,359),SXF_NOCHECKPOSITION,128);
+			}
+			count++;
+			if (count > 34)
+			{
+				A_ChangeVelocity(0,0,1,3);
+				return ResolveState(1);
+			}
+			return ResolveState(null);
+		}
+		Wait;
+	Particles3:
+		TNT1 A 1
+		{
+			for (int i = 0; i < 3; i++)
+			{
+				if (i < 1)	A_SpawnItemEx("RedeemExplosionMediumSprite",random(0,3),0,random(0,6),random(0,2),0,random(-1,-3),random(0,359),SXF_NOCHECKPOSITION);
+				if (i < 2)
+				{
+					A_SpawnItemEx("RedeemExplosionMediumSprite",random(0,3),0,random(0,6),random(0,2),0,random(-1,-3),random(0,359),SXF_NOCHECKPOSITION,192);
+					A_SpawnItemEx("RedeemExploMediumBigBack1",random(0,15),0,random(-4,12),random(1,5),0,random(1,5),random(0,359),SXF_NOCHECKPOSITION);
+				}
+				A_SpawnItemEx("RedeemExploMediumBigBack2",random(0,15),0,random(-4,12),random(1,5),0,random(1,5),random(0,359),SXF_NOCHECKPOSITION,128);
+				A_SpawnItemEx("RedeemExploMediumBigBack3",random(0,15),0,random(-4,12),random(1,5),0,random(1,5),random(0,359),SXF_NOCHECKPOSITION,128);
+				A_SpawnItemEx("RedeemExploMediumBigBack4",random(0,15),0,random(-4,12),random(1,5),0,random(1,5),random(0,359),SXF_NOCHECKPOSITION,128);
+			}
+			count++;
+			if (count >= (35 * 3))	return Destroy();
+		}
+		Wait;
+	}
+}
+		 
+//The following actors are just copies of the originals, but to eliminate the dynamic light on them, since they tend
+//to cause needless slowdowns easily avoidable by having something else emit one huge light
+Class RedeemExplosionMediumSprite : ExplosionMediumSprite	
+{
+	Default
+	{
+		AEoDFX.RandomScaleFlip true;
+		AEoDFX.RandomRoll true;
+		AEoDFX.RollAddMin -3.0;
+		AEoDFX.RollAddMax  3.0;
+		+NOINTERACTION +NOTELESTOMP
+		//Translation "0:255=%[0,0,0]:[1,0.5,0]"
+		RenderStyle "Add";
+		Scale 1.5;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			A_SetScale(frandom(0.85,1.25)*randompick(-1,1));
+			return A_Jump(256,"S1","S2","S3","S4","S5","S6","S7","S8","S9","S10");
+		}
+	S1:
+		X002 ABCDEFG 3 Bright A_ScaleVelocity(0.98);
+		X002 HIJKLM 2 Bright A_ScaleVelocity(0.95);
+		X002 OPQRSTU 1 Bright A_FadeOut(0.09);
+		Wait;
+	S2:
+		X003 ABCDEFGHIJK 3 Bright A_ScaleVelocity(0.98);
+		X003 LMNOPQ 2 Bright A_ScaleVelocity(0.95);
+		X003 RSTUVWXYZ 1 Bright A_FadeOut(0.1);
+		Wait;
+	S3:
+		X004 ABCDEF 3 Bright A_ScaleVelocity(0.98);
+		X004 GHIJKLMN 2 Bright A_ScaleVelocity(0.95);
+		X004 OPQ 1 Bright A_FadeOut(0.2);
+		Wait;
+	S4:
+		X005 ABCDEFGHIJK 3 Bright A_ScaleVelocity(0.98);
+		X005 LMNOPQ 2 Bright A_ScaleVelocity(0.95);
+		X005 RSTUVWX 1 Bright A_FadeOut(0.09);
+		Wait;
+	S5:
+		X006 ABCDEFG 3 Bright A_ScaleVelocity(0.98);
+		X006 HIJKLM 2 Bright A_ScaleVelocity(0.95);
+		X006 NOP 1 Bright A_FadeOut(0.2);
+		Wait;
+	S6:
+		X007 ABCDEFG 3 Bright A_ScaleVelocity(0.95);
+		X007 HHIIJJ 1 Bright A_FadeOut(0.15);
+		Wait;
+	S7:
+		TNT1 A 0 Thing_SetTranslation(0,random(51,52));
+		X111 ABCDEFGHIJK 3 Bright A_ScaleVelocity(0.98);
+		X111 LMNOPQ 2 Bright A_ScaleVelocity(0.95);
+		X111 RSTUVWXYZ 1 Bright A_FadeOut(0.09);
+		Wait;
+	S8:
+		TNT1 A 0 Thing_SetTranslation(0,random(51,52));
+		X112 ABCD 3 Bright A_ScaleVelocity(0.98);
+		X112 EFG 2 Bright A_ScaleVelocity(0.95);
+		X112 H 1 Bright A_FadeOut(0.2);
+		Wait;
+	S9:
+		TNT1 A 0 Thing_SetTranslation(0,random(51,52));
+		X121 ABCDEFGHIJK 3 Bright A_ScaleVelocity(0.98);
+		X121 LMNOPQ 2 Bright A_ScaleVelocity(0.95);
+		X121 RSTUV 1 Bright A_FadeOut(0.18);
+		Wait;
+	S10:
+		TNT1 A 0 Thing_SetTranslation(0,random(51,52));
+		X121 ABCDEFGHIJK 3 Bright A_ScaleVelocity(0.98);
+		X121 LMNOPQ 2 Bright A_ScaleVelocity(0.95);
+		X121 R 1 Bright A_FadeOut(0.2);
+		Wait;
+	/*
+	Spawn:
+			TNT1 A 0 A_Jump(256,"E1","E2")
+	E1:
+			X068 ABCDEFGHIJKLM 1 bright
+			X068 NOPQRSTUVWXYZ 1 bright
+			X069 ABCDEFGHIJKLMNOPQRS 1 Bright A_FadeOut(0.01)
+			Stop;
+	E2:
+			X070 ABCDEFGHIJKLM 1 bright
+			X070 NOPQRSTUVWXYZ 1 bright
+			X07A ABCDEFGHIJKLMNOPQRSTU 1 Bright A_FadeOut(0.01)
+			Stop;
+			*/
+	}
+}
+
+Class RedeemExploMediumBigBack1 : RedeemExplosionMediumSprite {Default{ Scale 1.3; }}
+Class RedeemExploMediumBigBack2 : RedeemExplosionMediumSprite {Default{ Scale 1.7; }}
+Class RedeemExploMediumBigBack3 : RedeemExplosionMediumSprite {Default{ Scale 1.1; }}
+Class RedeemExploMediumBigBack4 : RedeemExplosionMediumSprite {Default{ Scale 1.2; }}
+
+ 
+//These actors are what will be the cloud movements.
+//The effect we basically want to replicate is the particles going out/down, and then going
+//in/up afterwards.
+Class RedeemerFF1 : AEoDFX
+{
+	Default
+	{
+		AEoDFX.RandomScaleFlip true;
+		AEoDFX.RandomRoll true;
+		AEoDFX.RollAddMin -3.0;
+		AEoDFX.RollAddMax  3.0;
+		+NOINTERACTION +NOTELESTOMP
+		Scale 0.7;
+		Alpha 0.6;
+		RenderStyle "Add";
+		//Translation "0:255=%[0,0,0]:[0.95,0.65,0.1]";
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay
+		{
+			static const Name Spr[] =
+			{
+				"X003",
+				"X003",
+				"X004",
+				"X005",
+				"X006",
+				"X007",
+				"X011",
+				"X015",
+				"X019",
+				"X021",
+				"X026",
+				"X033"
+			};
+			
+			static const int Frm[] =
+			{
+				Fr_F,
+				Fr_J,
+				Fr_I,
+				Fr_E,
+				Fr_F,
+				Fr_K,
+				Fr_P,
+				Fr_I,
+				Fr_I,
+				Fr_F,
+				Fr_L,
+				Fr_F
+			};
+			
+			int rng = random(0,Spr.Size() - 1);
+			
+			Sprite = GetSpriteIndex(Spr[rng]);
+			Frame = Frm[rng];
+			
+			return ResolveState("Playoff");
+		}
+	Precache:
+		X003 FJ 0;
+		X004 F 0;
+		X005 I 0;
+		X006 E 0;
+		X007 F 0;
+		X011 K 0;
+		X014 P 0;
+		X015 I 0;
+		X019 I 0;
+		X021 F 0;
+		X026 L 0;
+		X033 F 0;
+	Playoff:
+		"####" "########" 1 A_ScaleVelocity(0.9);
+		"####" "###########" 1 A_ScaleVelocity(0.8);
+		"####" "#" 0 A_ScaleVelocity(-1.0);
+		"####" "#######" 1 A_ScaleVelocity(1.1);
+		"####" "########" 1 A_ScaleVelocity(1.05);
+		"####" "##################" 1 A_ChangeVelocity(0,0,0.1,1);
+		"####" "#" 1 A_FadeOut(0.02);
+		Wait;
+	}
+}
+
+
+//==============================================================================
+//==============================================================================
+//New Death's Hand FX 
+//Created by Major Cooke
+//==============================================================================
+//==============================================================================
+
+Class DeathsHandPrimaryFX : AEoDFX
+{
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP +INVISIBLE +NOTONAUTOMAP
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			A_PlaySound("SorcererBigBallExplode");
+			A_CheckFloor("FloorFX");
+		}
+	NormalFX:
+		TNT1 A 0 
+		{
+			A_SpawnItemEx("MCBigExplosionBack2",random(0,20),0,frandom(-5,5),frandom(0,2),0,0,random(0,359),SXF_NOCHECKPOSITION);
+			A_SpawnItemEx("MCBigExplosionBack3",random(0,20),0,frandom(-5,5),frandom(0,2),0,0,random(0,359),SXF_NOCHECKPOSITION);
+			for (int i = 0; i < 10; i++)
+			{
+				if (i < 2) A_SpawnItemEx("MCBigExplosionBack",random(0,20),0,frandom(-5,5),frandom(0,2),0,0,random(0,359),SXF_NOCHECKPOSITION);
+				A_SpawnItemEx("MCBigExplosionP1",random(0,75),0,frandom(-25,25),frandom(-4,4),0,frandom(-10,10),random(0,359),SXF_NOCHECKPOSITION);
+				A_SpawnItemEx("MCBigExplosionP1",random(0,75),0,frandom(-25,25),frandom(-4,4),0,frandom(-10,10),random(0,359),SXF_NOCHECKPOSITION,64);
+			}
+		}
+		TNT1 AAAAAAAAAA 1 A_SpawnItemEx("MCBigExplosionP1",random(0,75),0,frandom(-25,25),frandom(-4,4),0,frandom(-10,10),random(0,359),SXF_NOCHECKPOSITION,128);
+		TNT1 AAAAAAAAAA 1 A_SpawnItemEx("MCBigExplosionP1",random(0,75),0,frandom(-25,25),frandom(-4,4),0,frandom(-10,10),random(0,359),SXF_NOCHECKPOSITION,128);
+		Stop;
+	FloorFX:
+		TNT1 A 0 
+		{
+			A_SpawnItemEx("MCBigExplosionBack2",0,0,frandom(20,50),frandom(0,2),0,0,random(0,359),SXF_NOCHECKPOSITION);
+			A_SpawnItemEx("MCBigExplosionBack3",0,0,frandom(20,50),frandom(0,2),0,0,random(0,359),SXF_NOCHECKPOSITION);
+			A_SpawnItemEx("MCBigExplosionBack",random(0,20),0,random(20,50),0,0,random(1,3),random(0,359),SXF_NOCHECKPOSITION);
+			A_SpawnItemEx("MCBigExplosionBack",random(0,20),0,random(20,50),0,0,random(1,3),random(0,359),SXF_NOCHECKPOSITION);
+			for (int i = 0; i < 10; i++)
+			{
+				A_SpawnItemEx("MCBigExplosionP1",random(0,75),0,frandom(5,55),frandom(-4,4),0,frandom(0.1,10),random(0,359),SXF_NOCHECKPOSITION);
+				A_SpawnItemEx("MCBigExplosionP1",random(0,75),0,frandom(5,55),frandom(-4,4),0,frandom(0.1,10),random(0,359),SXF_NOCHECKPOSITION,64);
+			}
+		}
+		TNT1 AAAAAAAAAA 1 A_SpawnItemEx("MCBigExplosionP1",random(0,75),0,frandom(5,55),frandom(-4,4),0,frandom(0.1,10),random(0,359),SXF_NOCHECKPOSITION,128);
+		TNT1 AAAAAAAAAA 1 A_SpawnItemEx("MCBigExplosionP1",random(0,75),0,frandom(5,55),frandom(-4,4),0,frandom(0.1,10),random(0,359),SXF_NOCHECKPOSITION,128);
+		Stop;
+	}
+}
+
+Class MCBigExplosionBack : AEoDFX
+{
+	Default
+	{
+		AEoDFX.RandomScaleFlip true;
+		AEoDFX.RandomRoll true;
+		AEoDFX.RollAddMin -3.0;
+		AEoDFX.RollAddMax  3.0;
+		+NOINTERACTION +NOTELESTOMP
+		Scale 2.4;
+		Alpha 0.8;
+		RenderStyle "Translucent";
+		Translation "0:255=%[0,0,0]:[0.1,0.1,1]";
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_Jump(256,"E1","E2");
+	E1:
+		X068 ABCDEFGHIJKLM 2 bright;
+		X068 NOPQRSTUVWXYZ 1 bright;
+		X069 ABCDEFGHIJKLMNOPQRS 1 Bright A_FadeOut(0.01);
+		Stop;
+	E2:
+		X070 ABCDEFGHIJKLM 2 bright;
+		X070 NOPQRSTUVWXYZ 1 bright;
+		X07A ABCDEFGHIJKLMNOPQRSTU 1 Bright A_FadeOut(0.01);
+		Stop;
+	}
+}
+
+Class MCBigExplosionBack2 : AEoDFX
+{
+	Default
+	{
+		AEoDFX.RandomScaleFlip true;
+		AEoDFX.RandomRoll true;
+		AEoDFX.RollAddMin -3.0;
+		AEoDFX.RollAddMax  3.0;
+		Scale 3;
+		RenderStyle "Add";
+		StencilColor "Blue";
+		Alpha 0.8;
+		+NOINTERACTION +NOTELESTOMP
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_Jump(256,"One","Two","Three");
+	One:
+		X006 ABCDEFGHIJKLMNOP 1 Bright Light("BlueBigFlicker2");
+		Stop;
+	Two:
+		X007 ABCDEFGHIJ 1 Bright Light("BlueBigFlicker2");
+		Stop;
+	Three:
+		X033 ABCDEFGHIJKLMNOPQR 1 Bright Light("BlueBigFlicker2");
+		Stop;
+	}
+}
+
+Class MCBigExplosionBack3 : MCBigExplosionBack2
+{
+	Default
+	{
+		StencilColor "White";
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_Jump(256,"One","Two","Three");
+	One:
+		X006 ABCDEFGHIJKLMNOP 1 Bright Light("WhiteBigFlicker1");
+		//X006 LMNOP 1 Bright A_FadeOut(0.05)
+		Stop;
+	Two:
+		X007 ABCDEFGHIJ 1 Bright Light("WhiteBigFlicker1");
+		Stop;
+	Three:
+		X033 ABCDEFGHIJKLMNOPQR 1 Bright Light("WhiteBigFlicker1");
+		Stop;
+	}
+}
+
+Class MCBigExplosionP1 : AEoDFX
+{
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP
+		Scale 1.0;
+		RenderStyle "Translucent";
+		Alpha 0.7;
+		Translation "0:255=%[0,0,0]:[0.1,0.1,1]";
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_Jump(256,"E1","E2");//,"E3","E4")
+	E1:
+		X068 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1;
+		X069 ABCDEFGHIJKLMNOPQRS 1 A_FadeOut(0.01);
+		Stop;
+	E2:
+		X070 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1;
+		X07A ABCDEFGHIJKLMNOPQRSTU 1 A_FadeOut(0.01);
+		Stop;
+	E3:
+		X071 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1;
+		X072 ABCDEFGHIJKLMNOPQRS 1 A_FadeOut(0.01);
+		Stop;
+	E4:
+		X073 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1;
+		X074 ABCDEFGHIJKLMNOPQRSTU 1 A_FadeOut(0.01);
+		Stop;
+	}
+}
+
+Class DHSpiralParticle : HeavenPuff
+{
+	Default
+	{
+		Scale 0.5;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Class OrbWhiteFX : AEoDFX
+{
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP +INVISIBLE +NOTONAUTOMAP
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0;
+		TNT1 A 0 A_SpawnItemEx("OrbWhiteTraveller",-100,0,40,10,0,0,0,SXF_NOCHECKPOSITION);
+		TNT1 A 0 A_SpawnItemEx("OrbWhiteTraveller",-100,0,40,10,0,0,90,SXF_NOCHECKPOSITION);
+		TNT1 A 0 A_SpawnItemEx("OrbWhiteTraveller",-100,0,40,10,0,0,180,SXF_NOCHECKPOSITION);
+		TNT1 A 0 A_SpawnItemEx("OrbWhiteTraveller",-100,0,40,10,0,0,270,SXF_NOCHECKPOSITION);
+		Stop;
+	}
+}
+
+Class BigOrbWhiteFX : OrbWhiteFX
+{ }
+
+Class OrbOrangeFX : OrbWhiteFX
+{ }
+
+Class BigOrbOrangeFX : OrbWhiteFX
+{ }
+
+Class OrbRedFX : OrbWhiteFX
+{ }
+
+Class OrbWhitePuff : ExplosionSmallSprite
+{
+	Default { Translation "0:255=%[0,0,0]:[1,1,1]"; }
+}
+
+Class OrbWhiteTraveller : AEoDFX
+{
+	int count;
+	Default
+	{
+		Projectile;
+		+NOINTERACTION +NOTELESTOMP +INVISIBLE +NOTONAUTOMAP
+		WeaveIndexZ 41;
+		WeaveIndexXY 7;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 1
+		{
+			A_SpawnItemEx("OrbWhitePuff",0,0,0,0,0,frandom(0.1,2.0),0,SXF_NOCHECKPOSITION);
+			A_Weave(2,1,26,21);
+			count++;
+			if (count >= 12)	return Destroy();
+		}
+		Loop;
+		TNT1 A 0;
+		Stop;
+	}
+}
+
+//==============================================================================
+//==============================================================================
+//LemonNade FX
+//Made by Major Cooke
+//==============================================================================
+//==============================================================================
+
+Class LemonJuiceTrail : AEoDFX
+{
+	Default
+	{
+		AEoDFX.RandomScaleFlip true;
+		AEoDFX.RandomRoll true;
+		AEoDFX.RollAddMin -3.0;
+		AEoDFX.RollAddMax  3.0;
+		Projectile;
+		+NOEXPLODEFLOOR
+		+BOUNCEONFLOORS
+		+BOUNCEONWALLS
+		+BOUNCEONCEILINGS
+		+CANBOUNCEWATER
+		-NOGRAVITY
+		+THRUACTORS
+		+DONTSPLASH
+		+DONTBLAST
+		Translation "0:255=%[0.25,0.25,0.25]:[1.5,1.5,0]";
+		RenderStyle "Translucent";
+		Gravity 0.35;
+		Scale 0.9;
+		Alpha 0.75;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_Jump(256,"B11","B12","B13","B14","B21","B22","B23","B24","B31","B32","B33","B34");
+	B11:
+		X057 ABCDEF 1 A_FadeOut(0.03);
+		X057 GHIJK 1 A_FadeOut(0.03);
+		X057 LMNOPQRS 1 A_FadeOut(0.03);
+		Wait;
+	B12:
+		XA57 ABCDEF 1 A_FadeOut(0.03);
+		XA57 GHIJK 1 A_FadeOut(0.03);
+		XA57 LMNOPQRS 1 A_FadeOut(0.03);
+		Wait;
+	B13:
+		XB57 ABCDEF 1 A_FadeOut(0.03);
+		XB57 GHIJK 1 A_FadeOut(0.03);
+		XB57 LMNOPQRS 1 A_FadeOut(0.03);
+		Wait;
+	B14:
+		XC57 ABCDEF 1 A_FadeOut(0.03);
+		XC57 GHIJK 1 A_FadeOut(0.03);
+		XC57 LMNOPQRS 1 A_FadeOut(0.03);
+		Wait;
+	B21:
+		X058 ABCDEF 1 A_FadeOut(0.03);
+		X058 GHIJK 1 A_FadeOut(0.03);
+		X058 LMNOPQR 1 A_FadeOut(0.03);
+		Wait;
+	B22:
+		XA58 ABCDEF 1 A_FadeOut(0.03);
+		XA58 GHIJK 1 A_FadeOut(0.03);
+		XA58 LMNOPQR 1 A_FadeOut(0.03);
+		Wait;
+	B23:
+		XB58 ABCDEF 1 A_FadeOut(0.03);
+		XB58 GHIJK 1 A_FadeOut(0.03);
+		XB58 LMNOPQR 1 A_FadeOut(0.03);
+		Wait;
+	B24:
+		XC58 ABCDEF 1 A_FadeOut(0.03);
+		XC58 GHIJK 1 A_FadeOut(0.03);
+		XC58 LMNOPQR 1 A_FadeOut(0.03);
+		Wait;
+	B31:
+		X059 ABCD 1 A_FadeOut(0.03);
+		X059 EFGHIJ 1 A_FadeOut(0.03);
+		X059 KLM 1 A_FadeOut(0.03);
+		Wait;
+	B32:
+		XA59 ABCD 1 A_FadeOut(0.03);
+		XA59 EFGHIJ 1 A_FadeOut(0.03);
+		XA59 KLM 1 A_FadeOut(0.03);
+		Wait;
+	B33:
+		XB59 ABCD 1 A_FadeOut(0.03);
+		XB59 EFGHIJ 1 A_FadeOut(0.03);
+		XB59 KLM 1 A_FadeOut(0.03);
+		Wait;
+	B34:
+		XC59 ABCD 1 A_FadeOut(0.03);
+		XC59 EFGHIJ 1 A_FadeOut(0.03);
+		XC59 KLM 1 A_FadeOut(0.03);
+		Wait;
+	}
+}
+
+Class LemonJuiceBigBack : LemonJuiceTrail
+{
+	Default
+	{
+		Gravity 0.1;
+		Scale 3.0;
+		Alpha 1;
+		RenderStyle "Add";
+	}
+}
+
+Class LemonJuiceBiggerBack : LemonJuiceBigBack
+{
+	Default
+	{
+		Scale 4.0;
+	}
+}
+
+Class LemonJuiceBig : LemonJuiceTrail
+{
+	Default
+	{
+		Scale 2.4;
+		Alpha 0.8;
+		RenderStyle "Add";
+	}
+}
+
+Class LemonNadeExplosion : AEoDFX
+{
+	int count;
+	//int uang;
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP +NOTONAUTOMAP +INVISIBLE
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay
+		{
+			A_PlaySound("LemonNade/Explosion",CHAN_BODY,1,0);
+			A_PlaySound("LemonNade/Warble",CHAN_VOICE,1,0);
+			if (A_CheckFloor("JuicerFloor"))		return ResolveState("JuicerFloor");
+			if (A_CheckCeiling("JuicerCeiling"))	return ResolveState("JuicerCeiling");
+			return ResolveState("JuicerNormal");
+		}
+	JuicerNormal:
+		TNT1 A 0 
+		{
+			A_SpawnItemEx("LemonJuiceBiggerBack",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION);
+			for (int i = 0; i < 9; i++)
+			{
+				if (i < 8)	
+				{
+					A_SpawnItemEx("LemonJuiceBigBack",random(0,18),0,frandom(-6,6),frandom(0,8),0,frandom(-6,6),random(0,359),SXF_NOCHECKPOSITION);
+					if (i < 7)	
+					{
+						A_SpawnItemEx("LemonJuiceBig",random(0,32),0,frandom(-18,18),random(0,16),0,frandom(-12,12),random(0,359),SXF_NOCHECKPOSITION);
+						if (i < 3)	A_SpawnItemEx("LemonJuiceBigBack",random(0,18),0,frandom(-6,6),frandom(0,8),0,frandom(-6,6),random(0,359),SXF_NOCHECKPOSITION,128);
+					}
+				}
+				A_SpawnItemEx("LemonJuiceBig",random(0,32),0,frandom(-18,18),random(0,16),0,frandom(-12,12),random(0,359),SXF_NOCHECKPOSITION,192);
+			}
+		}
+		Goto Squirtation;
+	JuicerFloor:
+		TNT1 A 0 A_SpawnItemEx("LemonJuiceBiggerBack",0,0,random(10,30),0,0,0,0,SXF_NOCHECKPOSITION);
+		TNT1 AAAA 0 A_SpawnItemEx("LemonJuiceBigBack",random(0,18),0,random(16,48),frandom(0,8),0,frandom(0.1,8),random(0,359),SXF_NOCHECKPOSITION);
+		TNT1 AAAA 0 A_SpawnItemEx("LemonJuiceBigBack",random(0,18),0,random(16,48),frandom(0,8),0,frandom(0.1,8),random(0,359),SXF_NOCHECKPOSITION);
+		TNT1 AAA 0 A_SpawnItemEx("LemonJuiceBigBack",random(0,18),0,random(4,32),frandom(0,8),0,frandom(0.1,8),random(0,359),SXF_NOCHECKPOSITION,128);
+		TNT1 AAAAAAA 0 A_SpawnItemEx("LemonJuiceBig",random(0,32),0,random(8,48),random(0,16),0,frandom(0,24),random(0,359),SXF_NOCHECKPOSITION);
+		TNT1 AAAAAAAAA 0 A_SpawnItemEx("LemonJuiceBig",random(0,32),0,random(8,48),random(0,16),0,frandom(0,24),random(0,359),SXF_NOCHECKPOSITION,192);
+		Goto Squirtation;
+	JuicerCeiling:
+		TNT1 A 0 A_SpawnItemEx("LemonJuiceBiggerBack",0,0,random(-5,-20),0,0,0,0,SXF_NOCHECKPOSITION);
+		TNT1 AAAA 0 A_SpawnItemEx("LemonJuiceBigBack",frandom(0,18),0,frandom(-4,-32),frandom(0,8),0,frandom(-0.1,-12),random(0,359),SXF_NOCHECKPOSITION);
+		TNT1 AAAA 0 A_SpawnItemEx("LemonJuiceBigBack",random(0,18),0,random(-16,-48),frandom(0,8),0,frandom(0.1,8),random(0,359),SXF_NOCHECKPOSITION);
+		TNT1 AAA 0 A_SpawnItemEx("LemonJuiceBigBack",frandom(0,18),0,frandom(-4,-32),frandom(0,8),0,frandom(-0.1,-12),random(0,359),SXF_NOCHECKPOSITION,128);
+		TNT1 AAAAAAA 0 A_SpawnItemEx("LemonJuiceBig",frandom(0,32),0,random(-8,-48),random(0,16),0,frandom(0,-24),random(0,359),SXF_NOCHECKPOSITION);
+		TNT1 AAAAAAAAA 0 A_SpawnItemEx("LemonJuiceBig",frandom(0,32),0,random(-8,-48),random(0,16),0,frandom(0,-24),random(0,359),SXF_NOCHECKPOSITION,192);
+		Goto Squirtation;
+	Squirtation:
+		TNT1 AAAAAA 0 A_SpawnItemEx("LemonJuiceTrail",random(0,32),0,random(0,48),frandom(3,16),0,frandom(0,24),random(0,359),SXF_NOCHECKPOSITION);
+		TNT1 AAAAAAAAAAAAAAA 0 A_SpawnItemEx("LemonJuiceTrail",frandom(0,32),0,random(0,48),frandom(3,16),0,frandom(0,24),random(0,359),SXF_NOCHECKPOSITION,192);
+		TNT1 A 1 
+		{
+			count++;
+			if (count >= 15)	return Destroy();
+		}
+		Loop;
+	}
+}
+
+Class LemonNadeExplosionSmall : AEoDFX
+{
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP +NOTONAUTOMAP +INVISIBLE
+	}
+	States
+	{
+	Spawn:
+		TNT1 AAA 0 NoDelay A_SpawnItemEx("LemonJuiceBig",frandom(0,6),0,frandom(0,15),frandom(0,8),0,frandom(-4,4),random(0,359),SXF_NOCHECKPOSITION);
+		TNT1 AAAAAAAAA 0 A_SpawnItemEx("LemonJuiceBig",frandom(0,3),0,frandom(-3,15),frandom(0,4),0,frandom(-4,4),random(0,359),SXF_NOCHECKPOSITION,192);
+		TNT1 AAAAAAAAAA 0 A_SpawnItemEx("LemonJuiceTrail",frandom(2,4),0,frandom(-2,2),frandom(0,8),0,frandom(-2,6),random(0,359),SXF_NOCHECKPOSITION);
+		Stop;
+	}
+}
+
+Class LemonNadeExplosionBig : AEoDFX
+{
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP +NOTONAUTOMAP +INVISIBLE
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay
+		{
+			A_PlaySound("LemonNade/Explosion",CHAN_BODY,1,0);
+			A_PlaySound("LemonNade/Warble",CHAN_VOICE,1,0);
+			for (int i = 0; i < 15; i++)
+			{
+				if (i < 2)
+				{
+					A_SpawnItemEx("LemonJuiceBiggerBack",random(0,32),0,random(0,64),random(1,8),0,random(-2,2),random(0,359),SXF_NOCHECKPOSITION);
+					A_SpawnItemEx("LemonJuiceBiggerBack",random(0,32),0,random(64,128),random(1,8),0,random(-2,2),random(0,359),SXF_NOCHECKPOSITION);
+					A_SpawnItemEx("LemonJuiceBiggerBack",random(0,32),0,random(128,192),random(1,8),0,random(-2,2),random(0,359),SXF_NOCHECKPOSITION);
+					A_SpawnItemEx("LemonJuiceBiggerBack",random(0,32),0,random(192,256),random(1,8),0,random(-2,2),random(0,359),SXF_NOCHECKPOSITION);
+					A_SpawnItemEx("LemonJuiceBiggerBack",random(0,32),0,random(256,320),random(1,8),0,random(-2,2),random(0,359),SXF_NOCHECKPOSITION);
+				}
+				A_SpawnItemEx("LemonJuiceBig",random(0,64),0,random(0,64),random(0,5),0,frandom(0.1,3),random(0,359),SXF_NOCHECKPOSITION);
+				A_SpawnItemEx("LemonJuiceBig",random(0,16),0,random(48,92),random(0,5),0,random(-4,4),random(0,359),SXF_NOCHECKPOSITION);
+				A_SpawnItemEx("LemonJuiceBig",random(16,128),0,random(92,128),random(0,5),0,random(-4,4),random(0,359),SXF_NOCHECKPOSITION);
+				A_SpawnItemEx("LemonJuiceBig",random(128,256),0,random(128,256),random(0,5),0,frandom(0.1,3),random(0,359),SXF_NOCHECKPOSITION);
+				A_SpawnItemEx("LemonJuiceBig",random(64,192),0,random(256,320),random(0,5),0,frandom(0.1,3),random(0,359),SXF_NOCHECKPOSITION);
+			}
+		}
+		Stop;
+	}
+}
+
+//==============================================================================
+//New SBC Cannon alt-fire FX
+//Made by Major Cooke
+//==============================================================================
+
+Class DisintegrateGib : AEoDFX
+{
+	int props;
+	Default
+	{
+		AEoDFX.RandomScaleFlip true;
+		AEoDFX.RandomRoll true;
+		AEoDFX.RollAddMin -3.0;
+		AEoDFX.RollAddMax  3.0;
+		Projectile;
+		-NOGRAVITY
+		+THRUACTORS
+		Gravity 0.125;
+		Scale 0.75;
+		BounceType "Doom";
+		Translation	"0:255=%[0,0,0]:[0.25,0.25,0.25]";
+	}
+	States
+	{
+	Spawn:
+		GIB1 A 0 NoDelay
+		{
+			Frame = random(0,6);
+		}
+	Perform:
+		"####" "#" 0
+		{
+			props = random(10,60);
+		}
+	Spawn1:
+		"####" "#" 1 
+		{
+			A_SpawnItemEx("DisintegrateAtomSplitter",0,0,0,frandom(0,6),0,frandom(-6,6),random(0,359),SXF_NOCHECKPOSITION,250);
+			A_SpawnItemEx("DisintegrateSpark2",0,0,0,frandom(0.1,1),frandom(-4,4),frandom(-4,4),random(0,359),SXF_NOCHECKPOSITION);
+			for (int i = 0; i < 3; i++)
+			{
+				A_SpawnItemEx("DisintegrateSpark3",0,frandom(-2,2),frandom(-4,0),0,0,frandom(0.1,2),random(0,359),SXF_NOCHECKPOSITION,128);
+				if (i < 2)
+				{
+					A_SpawnItemEx("DisintegrateSpark2",0,0,0,frandom(0.1,1),frandom(-4,4),frandom(-4,4),random(0,359),SXF_NOCHECKPOSITION,128);
+					A_SpawnItemEx("DisintegrateSpark3",0,frandom(-2,2),frandom(-4,0),0,0,frandom(0.1,2),random(0,359),SXF_NOCHECKPOSITION);
+				}
+			}
+			
+			if (props < 1)
+			{
+				A_SetScale(Scale.X - 0.01);
+				if (Scale.X <= 0) return Destroy();
+			}
+			else props--;
+			
+		}
+		Loop;
+	}
+}
+
+Class DisintegrateAtomSplitter : AEoDFX
+{
+	int user_life;
+	int user_weave[4];
+	Default
+	{
+		Projectile;
+		+THRUACTORS +NOTONAUTOMAP +INVISIBLE
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay
+		{
+			user_weave[0] = random(1,4);
+			user_weave[1] = random(1,4);
+			user_weave[2] = random(1,8);
+			user_weave[3] = random(1,8);
+			user_life = random(45, 250);
+		}
+	Move:
+		TNT1 A 1
+		{
+			A_SpawnItemEx("DisintegrateSpark2",0,0,0,6,random(-2,2),random(-2,2),0,SXF_NOCHECKPOSITION);
+			A_SpawnItemEx("DisintegrateSpark2",0,0,0,0,0,frandom(0,1),0,SXF_NOCHECKPOSITION);
+			A_SpawnItemEx("DisintegrateSpark3",0,frandom(-2,2),frandom(-4,0),0,0,frandom(0.1,2),random(0,359),SXF_NOCHECKPOSITION);
+			for (int i = 0; i < 3; i++)
+				A_SpawnItemEx("DisintegrateSpark3",0,frandom(-2,2),frandom(-4,0),0,0,frandom(0.1,2),random(0,359),SXF_NOCHECKPOSITION,128);
+			
+			A_Weave(user_weave[0],user_weave[1],user_weave[2],user_weave[3]);
+			
+			user_life -= random(1,2);
+			if (user_life < 1)
+				return Destroy();
+		}
+		Loop;
+	}
+}
+
+Class DisintegrateSpark2 : AEoDFX
+{
+	Default
+	{
+		AEoDFX.RandomScaleFlip true;
+		AEoDFX.RandomRoll true;
+		AEoDFX.RollAddMin -3.0;
+		AEoDFX.RollAddMax  3.0;
+		+NOINTERACTION +NOTELESTOMP
+		Scale 0.1;
+		RenderStyle "Add";
+	}
+	States
+	{
+	Spawn:
+		X079 A 0 NoDelay
+		{
+			Frame = random(0,7);
+		}
+	Perform:
+		"####" "#" 1 
+		{
+			A_SetScale(Scale.X+0.01);
+			A_FadeOut(0.05);
+		}
+		Loop;
+	}
+}
+
+Class DisintegrateSpark3 : AEoDFX
+{
+	Default
+	{
+		AEoDFX.RandomScaleFlip true;
+		AEoDFX.RandomRoll true;
+		AEoDFX.RollAddMin -3.0;
+		AEoDFX.RollAddMax  3.0;
+		+NOINTERACTION +NOTELESTOMP
+		Scale 0.3;
+		RenderStyle "Add";
+	}
+	States
+	{
+	Spawn:
+		X080 A 0 NoDelay
+		{
+			Frame = random(0,15);
+			bSPRITEFLIP = random(0,1);
+		}
+	Perform:
+		"####" "#" 1 
+		{
+			A_ScaleVelocity(1.02);
+			A_SetScale(Scale.X-0.02);
+			if (Scale.X <= 0)
+				return Destroy();
+		}
+		Loop;
+	}
+}
+
+Class SBCShadowBig : AEoDFX
+{
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP
+		RenderStyle "None"; +INVISIBLE
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			A_PlaySound("dis/zapper",CHAN_VOICE);
+			for (int i = 0; i < 6; i++)
+			{
+				if (i < 3)
+				{
+					A_SpawnItemEx("DisintegrateGib",random(0,40),0,random(-20,20),random(0,20),0,random(0,20),random(0,359),SXF_NOCHECKPOSITION);
+					A_SpawnItemEx("DisintegrateSpark3",0,frandom(-2,2),frandom(-2,2),0,0,frandom(0.1,2),random(0,359),SXF_NOCHECKPOSITION);
+				}
+				A_SpawnItemEx("DisintegrateGib",random(0,40),0,random(-20,20),random(0,20),0,random(0,20),random(0,359),SXF_NOCHECKPOSITION);
+				A_SpawnItemEx("DisintegrateSpark3",0,frandom(-2,2),frandom(-2,2),0,0,frandom(0.1,2),random(0,359),SXF_NOCHECKPOSITION,128);
+			}
+			A_SpawnItemEx("PBExplosionSpawnerSmokeless",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION);
+		}
+		VORT ABCDEFGHI 2 A_SpawnItemEx("DisintegrateGib",random(0,40),0,random(-20,20),random(0,20),0,random(0,20),random(0,359),SXF_NOCHECKPOSITION);
+		---- A 0 A_PlaySound("hl2/weapons/disintegrate",CHAN_WEAPON,0.5,0);
+		VORT JKLMN 2 A_SpawnItemEx("DisintegrateGib",random(0,40),0,random(-20,20),random(0,20),0,random(0,20),random(0,359),SXF_NOCHECKPOSITION);
+		VORT O 1
+		{
+			for (int i = 0; i < 15; i++)
+			{	A_SpawnItemEx("DisintegrateAtomSplitter",0,0,0,frandom(0,6),0,frandom(-6,6),random(0,359),SXF_NOCHECKPOSITION,250);	}
+			A_SpawnItemEx("DisintegrateAtomSplitter",0,0,0,frandom(0,6),0,frandom(-6,6),random(0,359),SXF_NOCHECKPOSITION,250);
+		}
+		VORT OOOPPQQRRSSTTUUVVWW 1 A_SpawnItemEx("DisintegrateAtomSplitter",0,0,0,frandom(0,6),0,frandom(-6,6),random(0,359),SXF_NOCHECKPOSITION,250);
+		VORT XXYY 1 A_SpawnItemEx("DisintegrateAtomSplitter",0,0,0,frandom(0,6),0,frandom(-6,6),random(0,359),SXF_NOCHECKPOSITION,250);
+		Stop;
+	}
+}
+
+//==============================================================================
+// Incendiary bomb particle
+//==============================================================================
+
+Class IncendiaryFlamelet1 : AEoDFX
+{
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP
+		RenderStyle "Add";
+		Alpha 0.4;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay
+		{
+			A_SetScale(frandom(0.15,0.55));
+			return A_Jump(256,"F1","F2","F3","F4","F5","F6","F7");
+		}
+		
+	F1:
+		X052 AB 1 bright;
+		X052 CDEFGH 1 Bright A_ScaleVelocity(0.92);
+		X052 IJKLMNO 1 Bright A_ScaleVelocity(0.9);
+		X052 PQRS 1 Bright A_ScaleVelocity(0.87);
+		Stop;
+	F2:
+		X053 AB 2 bright;
+		X053 CDEFGHIJ 3 Bright A_ScaleVelocity(0.92);
+		X053 KLMN 2 Bright A_ScaleVelocity(0.9);
+		X053 OPQRS 1 Bright A_ScaleVelocity(0.87);
+		Stop;
+	F3:
+		X054 ABCD 2 bright;
+		X054 EFGHIJK 3 Bright A_ScaleVelocity(0.92);
+		X054 LMNO 2 Bright A_ScaleVelocity(0.9);
+		X054 PQRS 2 Bright A_ScaleVelocity(0.87);
+		Stop;
+	F4:
+		X055 ABC 2 bright;
+		X055 DEFGHIJKLMN 3 Bright A_ScaleVelocity(0.92);
+		X055 OP 2 Bright A_ScaleVelocity(0.9);
+		X055 QRS 2 Bright A_ScaleVelocity(0.87);
+		Stop;
+	F5:
+		X056 ABCDE 2 Bright ;
+		X056 FGHIJ 3 Bright A_ScaleVelocity(0.92);
+		X056 KLMN 2 Bright A_ScaleVelocity(0.9);
+		X056 OPQR 1 Bright A_ScaleVelocity(0.87);
+		Stop;
+	F6:
+		X068 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 Bright A_ScaleVelocity(0.95);
+		X069 ABCDEFGHIJKLMNOPQRS 1 Bright A_ScaleVelocity(0.93);
+		Stop;
+	F7:
+		X070 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 Bright A_ScaleVelocity(0.95);
+		X07A ABCDEFGHIJKLMNOPQRSTU 1 Bright A_ScaleVelocity(0.93);
+		Stop;
+	}
+}
+
+//------------------------------------------------------------------------
+//------------------------------------------------------------------------
+
+//------------------------------------------------------------------------
+//------------------------------------------------------------------------
+
+/*Class DisintegrateSpark : AEoDFX	//v5 spark
+{
+	Translation "112:127=80:111"
+	+NOINTERACTION +NOTELESTOMP
+	Scale 0.3
+	RenderStyle "Add";
+	States
+	{
+	Spawn:
+		EBLT ABCDEF 3 Bright
+		Stop;
+	}
+}*/
+
+Class DisintegrationShadow : AEoDFX
+{
+	//Sparks Height
+	const VerySmallS =		8;
+	const SmallS =			10;
+	const SmallMediumS =	18;
+	const MediumS = 		30;
+	const MediumBigS = 		40;
+	const BigS = 			45;
+	int user_t;
+	int user_s;
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP
+		Alpha 1.0;
+		RenderStyle "Stencil";
+		StencilColor "Black";
+	}
+	States
+	{
+	Spawn:
+		"####" "#" 1 NoDelay 
+		{
+			user_t = tid; ChangeTID(0);
+			A_FadeOut(0.015,FTF_CLAMP);
+		}
+		"####" "#" 0 
+		{
+				 if (user_t == Big)			{	A_SpawnItemEx("DisintegrateShadowBig",0,0,BigS,0,0,0,0,SXF_NOCHECKPOSITION);			}
+			else if (user_t == MediumBig)	{	A_SpawnItemEx("DisintegrateShadowMediumBig",0,0,MediumBigS,0,0,0,0,SXF_NOCHECKPOSITION);		}
+			else if (user_t == SmallMedium)	{	A_SpawnItemEx("DisintegrateShadowSmallMedium",0,0,SmallMediumS,0,0,0,0,SXF_NOCHECKPOSITION);	}
+			else if (user_t == Small)		{	A_SpawnItemEx("DisintegrateShadowSmall",0,0,SmallS,0,0,0,0,SXF_NOCHECKPOSITION);			}
+			else if (user_t == VerySmall)	{	A_SpawnItemEx("DisintegrateShadowVerySmall",0,0,VerySmallS,0,0,0,0,SXF_NOCHECKPOSITION);		}
+			else /*medium*/					{	A_SpawnItemEx("DisintegrateShadowMedium",0,0,MediumS,0,0,0,0,SXF_NOCHECKPOSITION);	}
+			return ResolveState("Out");
+		}
+	Out:
+		"####" "##" 2 A_FadeOut(0.03);
+		Loop;
+	}
+}
+
+Class DisintegrateSpark : AEoDFX
+{
+	Default
+	{
+		AEoDFX.RandomScaleFlip true;
+		AEoDFX.RandomRoll true;
+		AEoDFX.RollAddMin -3.0;
+		AEoDFX.RollAddMax  3.0;
+		+NOINTERACTION +NOTELESTOMP
+		Scale 0.1;
+		RenderStyle "Add"; 
+		Translation "0:255=%[0,0,0]:[1,1,1]";
+	}
+	States
+	{
+	Precache:
+		X079 ABCDEFGH 0;
+		Stop;
+	Spawn:
+		X079 A 2 Bright NoDelay 
+		{
+			Frame = random(Fr_A, Fr_H);
+		}
+	Perform:
+		"####" "#" 2 Bright A_FadeOut(0.06);
+		Wait;
+	}
+
+}
+
+Class DisintegrateSparkBig : DisintegrateSpark
+{ 	Default{ Scale 0.25; }}
+Class DisintegrateSparkSmall : DisintegrateSpark
+{ 	Default{ Scale 0.05; }}
+Class DisintegrateSparkMini : DisintegrateSpark
+{ 	Default{ Scale 0.025; }}
+
+// generic disintegrate death  
+
+Class DisintegrateSparksVerySmall : AEoDFX
+{
+	int user_vel;
+	int user_p;
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP
+		RenderStyle "None"; +INVISIBLE
+		Scale 0.025;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 2 NoDelay 
+		{
+			if (A_CheckSight("Null"))	{ 	return Destroy();	}
+			A_Stop();
+			user_p = random(-900,900);
+			user_vel = random(10,150);
+			A_SpawnItemEx("DisintegrateSpark",random(0,2),0,random(-2,2),
+				(cos(-(user_p*0.1))*(user_vel*0.01)),0,
+				(sin(-(user_p*0.1))*(user_vel*0.01)),random(0,359),32|SXF_TRANSFERSCALE);
+		}
+		Stop;
+	}
+}
+
+Class DisintegrateSparksSmall : AEoDFX
+{
+	int count;
+	int user_vel;
+	int user_p;
+	int user_dist;
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP
+		RenderStyle "None"; +INVISIBLE
+		Scale 0.05;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			if (A_CheckSight("Null"))	{	return Destroy();	}
+			A_Stop();
+			count = tid;	ChangeTID(0);
+		}
+	Act:
+		TNT1 A 2 
+		{
+			user_p = random(-900,900);
+			user_vel = random(10,200);
+			user_dist = random(0,7);
+			A_SpawnItemEx("DisintegrateSpark",user_dist,0,user_dist*randompick(-1,1),
+				(cos(-(user_p*0.1))*(user_vel*0.01)),0,
+				(sin(-(user_p*0.1))*(user_vel*0.01)),random(0,359),32|SXF_TRANSFERSCALE);
+			count++;
+			if (count > 2) return Destroy();
+		}
+		Loop;
+	}
+}
+
+
+Class DisintegrateSparksSmallMedium : AEoDFX
+{
+	int count;
+	int user_vel;
+	int user_p;
+	int user_dist;
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP
+		RenderStyle "None"; +INVISIBLE
+		Scale 0.1;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			if (A_CheckSight("Null"))	{	return Destroy();	}
+			A_Stop();
+			if (tid > 0)
+			{
+				count = tid;	ChangeTID(0);
+			}
+		}
+	Act:
+		TNT1 A 2 
+		{
+			user_p = random(-900,900);
+			user_vel = random(10,200);
+			user_dist = random(0,10);
+			A_SpawnItemEx("DisintegrateSpark",user_dist,0,user_dist*randompick(-1,1),
+				(cos(-(user_p*0.1))*(user_vel*0.01)),0,
+				(sin(-(user_p*0.1))*(user_vel*0.01)),random(0,359),32|SXF_TRANSFERSCALE);
+			count++;
+			if (count > 2) return Destroy();
+		}
+		Loop;
+	}
+}
+
+Class DisintegrateSparksMedium : AEoDFX
+{
+	int count;
+	int user_vel;
+	int user_p;
+	int user_dist;
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP
+		RenderStyle "None"; +INVISIBLE
+		Scale 0.1;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			if (A_CheckSight("Null"))	{	return Destroy();	}
+			A_Stop();
+			if (tid > 0)
+			{
+				count = tid;	ChangeTID(0);
+			}
+		}
+	Act:
+		TNT1 A 2 
+		{
+			user_p = random(-900,900);
+			user_vel = random(10,200);
+			user_dist = random(0,12);
+			A_SpawnItemEx("DisintegrateSpark",user_dist,0,user_dist*randompick(-1,1),
+				(cos(-(user_p*0.1))*(user_vel*0.01)),0,
+				(sin(-(user_p*0.1))*(user_vel*0.01)),random(0,359),32|SXF_TRANSFERSCALE);
+			count++;
+			if (count > 2) return Destroy();
+		}
+		Loop;
+	}
+}
+
+Class DisintegrateSparksMediumBig : AEoDFX
+{
+	int count;
+	int user_vel;
+	int user_p;
+	int user_dist;
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP
+		RenderStyle "None"; +INVISIBLE
+		Scale 0.1;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			if (A_CheckSight("Null"))	{	return Destroy();	}
+			A_Stop();
+			if (tid > 0)
+			{
+				count = tid;	ChangeTID(0);
+			}
+		}
+	Act:
+		TNT1 A 2 
+		{
+			user_p = random(-900,900);
+			user_vel = random(10,200);
+			user_dist = random(0,22);
+			A_SpawnItemEx("DisintegrateSpark",user_dist,0,user_dist*randompick(-1,1),
+				(cos(-(user_p*0.1))*(user_vel*0.01)),0,
+				(sin(-(user_p*0.1))*(user_vel*0.01)),random(0,359),32|SXF_TRANSFERSCALE);
+			count++;
+			if (count > 3) return Destroy();
+		}
+		Loop;
+	}
+}
+
+
+Class DisintegrateSparksBig : AEoDFX
+{
+	int count;
+	int user_vel;
+	int user_p;
+	int user_dist;
+	Default
+	{
+		+NOINTERACTION +NOTELESTOMP
+		RenderStyle "None"; +INVISIBLE
+		Scale 0.25;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay 
+		{
+			if (A_CheckSight("Null"))	{	return Destroy();	}
+			A_Stop();
+			if (tid > 0)
+			{
+				count = tid;	ChangeTID(0);
+			}
+		}
+	Act:
+		TNT1 A 2 
+		{
+			user_p = random(-900,900);
+			user_vel = random(10,200);
+			user_dist = random(0,40);
+			A_SpawnItemEx("DisintegrateSpark",user_dist,0,user_dist*randompick(-1,1),
+				(cos(-(user_p*0.1))*(user_vel*0.01)),0,
+				(sin(-(user_p*0.1))*(user_vel*0.01)),random(0,359),32|SXF_TRANSFERSCALE);
+			count++;
+			if (count > 4) return Destroy();
+		}
+		Loop;
+	}
+}
+//------------------------------------------------------------------------
+//------------------------------------------------------------------------
+Class DisintegrateShadowVerySmall : AEoDFX
+{
+	Default
+	{
+		AEoDFX.RandomScaleFlip true;
+		AEoDFX.RandomRoll true;
+		AEoDFX.RollAddMin -3.0;
+		AEoDFX.RollAddMax  3.0;
+		Scale 0.1;
+		Height 4;
+		Radius 2;
+		RenderStyle "Add";
+		+NOINTERACTION +NOTELESTOMP
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_PlaySound("disintegrate/extrasnd/extra",CHAN_BODY);
+		VORT ABCDEFGHI 2 Bright A_FadeOut(0.01);
+		---- A 0 A_PlaySound("hl2/weapons/disintegrate",CHAN_WEAPON);
+		VORT JKLMN 2 Bright A_FadeOut(0.01);
+		---- AAAA 0 A_SpawnItemEx("DisintegrateSparksVerySmall",0,0,0,0,0,0,0,32);
+		VORT OOPQRSTUVW 2 Bright A_FadeOut(0.01);
+		VORT XXYY 1 Bright A_FadeOut();
+		Wait;
+	}
+}
+
+Class DisintegrateShadowSmall : DisintegrateShadowVerySmall 
+{
+	Default
+	{
+		Scale 0.25;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_PlaySound("disintegrate/extrasnd/extra",CHAN_BODY);
+		VORT ABCDEFGHI 2 Bright A_FadeOut(0.01);
+		---- A 0 A_PlaySound("hl2/weapons/disintegrate",CHAN_WEAPON);
+		VORT JKLMN 2 Bright A_FadeOut(0.01);
+		---- AAAAAA 0 A_SpawnItemEx("DisintegrateSparkSmall",0,0,0,0,0,0,0,32,0,2);
+		VORT OOPQRSTUVW 2 Bright A_FadeOut(0.01);
+		VORT XXYY 1 Bright A_FadeOut();
+		Wait;
+	}
+}
+
+Class DisintegrateShadowSmallMedium : DisintegrateShadowVerySmall 
+{
+	Default
+	{
+		Scale 0.4;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_PlaySound("disintegrate/extrasnd/extra",CHAN_BODY);
+		VORT ABCDEFGHI 2 Bright A_FadeOut(0.01);
+		---- A 0 A_PlaySound("hl2/weapons/disintegrate",CHAN_WEAPON);
+		VORT JKLMN 2 Bright A_FadeOut(0.01);
+		---- AAAAAA 0 A_SpawnItemEx("DisintegrateSparksSmallMedium",0,0,0,0,0,0,0,32,0,2);
+		VORT OOPQRSTUVW 2 Bright A_FadeOut(0.01);
+		VORT XXYY 1 Bright A_FadeOut();
+		Wait;
+	}
+}
+Class DisintegrateShadowMedium : DisintegrateShadowVerySmall 
+{
+	Default
+	{
+		Scale 0.52;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_PlaySound("disintegrate/extrasnd/extra",CHAN_BODY);
+		VORT ABCDEFGHI 2 Bright A_FadeOut(0.01);
+		---- A 0 A_PlaySound("hl2/weapons/disintegrate",CHAN_WEAPON);
+		VORT JKLMN 2 Bright A_FadeOut(0.01);
+		---- AAAAAAAA 0 A_SpawnItemEx("DisintegrateSparksMedium",0,0,0,0,0,0,0,32,0,3);
+		VORT OOPQRSTUVW  2 Bright A_FadeOut(0.01);
+		VORT XXYY 1 Bright A_FadeOut();
+		Wait;
+	}
+}
+
+Class DisintegrateShadowMediumBig : DisintegrateShadowVerySmall 
+{
+	Default
+	{
+		Scale 0.6;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_PlaySound("disintegrate/extrasnd/extra",CHAN_BODY);
+		VORT ABCDEFGHI 2 Bright A_FadeOut(0.01);
+		---- A 0 A_PlaySound("hl2/weapons/disintegrate",CHAN_WEAPON);
+		VORT JKLMN 2 Bright A_FadeOut(0.01);
+		---- AAAAAAAA 0 A_SpawnItemEx("DisintegrateSparksMediumBig",0,0,0,0,0,0,0,32,0,3);
+		VORT OOPQRSTUVW 2 Bright A_FadeOut(0.01);
+		VORT XXYY 1 Bright A_FadeOut();
+		Wait;
+	}
+}
+
+Class DisintegrateShadowBig : DisintegrateShadowMedium
+{
+	Default
+	{
+		Scale 0.9;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_PlaySound("disintegrate/extrasnd/extra",CHAN_BODY);
+		VORT ABCDEFGHI 2 Bright A_FadeOut(0.01);
+		---- A 0 A_PlaySound("hl2/weapons/disintegrate",CHAN_WEAPON);
+		VORT JKLMN 2 Bright A_FadeOut(0.01);
+		---- AAAAAAAAAAAAAAA 0 A_SpawnItemEx("DisintegrateSparksBig",0,0,0,0,0,0,0,32,0,4);
+		VORT OOPQRSTUVW 2 Bright A_FadeOut(0.01);
+		VORT XXYY 1 Bright A_FadeOut();
+		Wait;
+	}
+}
