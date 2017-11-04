@@ -24,7 +24,7 @@ Class AEoDFX : Actor
 	}
 	override void BeginPlay()
 	{
-		ChangeStatNum(StatNum.EFFECTS());
+		ChangeStatNum(STAT_EFFECTS);
 		Super.BeginPlay();
 	}
 	
@@ -58,6 +58,7 @@ Class InvisiPuff : AEoDFX
 		+BLOODLESSIMPACT
 		+NODECAL
 		+PAINLESS
+		+INVISIBLE
 	}
 	States
 	{
@@ -66,6 +67,214 @@ Class InvisiPuff : AEoDFX
 		Stop;
 	}
 }
+
+
+Class GunSmokeSpawner : AEoDFX
+{
+	
+//	+NOCLIP
+	Default
+	{
+		PROJECTILE;
+		+NOINTERACTION
+		+NOTIMEFREEZE
+		Radius 1;
+		Height 1;
+		Speed 14;
+	}
+	
+	States
+	{
+	Spawn:
+//		TNT1 A 0 A_CustomMissile("GunSmoke2",-2,0,0)
+		TNT1 A 0 NoDelay A_SpawnProjectile("GunSmoke",-2,0,0);
+		Stop;
+	}
+}
+
+Class GunSmoke : AEoDFX
+{
+	const SizeMin = 7;
+	const SizeMax = 14;
+	const AlphaMin = 0.15;
+	const AlphaMax = 0.5;
+	const FadeOut = 0.04;
+	const ZVelMin = 0.5;
+	const ZVelMax = 1.5;
+	Default
+	{
+		+NOINTERACTION
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay
+		{
+			static const Color col[] =
+			{
+				"AAAAAA",
+				"BBBBBB",
+				"CCCCCC",
+				"DDDDDD",
+				"EEEEEE",
+				"FFFFFF"
+			};
+			int rng = random(0,col.Size() - 1);
+			A_SpawnParticle(col[rng],0,35,random(SizeMin,SizeMax),0,frandom(-1.0,1.0),frandom(-1.0,1.0),frandom(0,2),0,0,frandom(ZVelMin,ZVelMax),0,0,-0.01,frandom(AlphaMin,AlphaMax),FadeOut);
+		}
+		Stop;
+	}
+}
+Class GunSmoke2 : GunSmoke
+{
+}
+
+Class GunSmallSmokeSpawner : AEoDFX
+{
+	Default
+	{
+		PROJECTILE;
+	//	+NOCLIP
+		+NOTIMEFREEZE
+		+NOTONAUTOMAP
+		+THRUACTORS
+		Radius 1;
+		Height 1;
+		Speed 14;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_SpawnProjectile("GunSmallSmoke",-2,0,0);
+		Stop;
+	}
+}
+
+Class GunSmallSmoke : AEoDFX
+{
+	const SizeMin = 10;
+	const SizeMax = 15;
+	const AlphaMin = 0.2;
+	const AlphaMax = 0.8;
+	const FadeOut = 0.03;
+	const ZVelMin = 1.0;
+	const ZVelMax = 3.0;
+	Default
+	{
+		+NOINTERACTION
+		+INVISIBLE
+		RenderStyle "None";
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay
+		{
+			static const Color col[] =
+			{
+				"AAAAAA",
+				"BBBBBB",
+				"CCCCCC",
+				"DDDDDD",
+				"EEEEEE",
+				"FFFFFF"
+			};
+			int rng = random(0,col.Size() - 1);
+			A_SpawnParticle(col[rng],0,35,random(SizeMin,SizeMax),0,frandom(-1.0,1.0),frandom(-1.0,1.0),frandom(0,2),0,0,frandom(ZVelMin,ZVelMax),0,0,-0.01,frandom(AlphaMin,AlphaMax),FadeOut);
+		}
+		Stop;
+	}
+}
+Class GunSmallSmoke2 : GunSmallSmoke
+{
+}
+
+Class CopCasing : AEoDFX
+{
+	Default
+	{
+		Height 12;
+		Radius 9;
+		Speed 1;
+		Scale 0.4;
+		PROJECTILE;
+		BounceType "Doom";
+		-NOGRAVITY
+		+DONTSPLASH
+		-NOBLOCKMAP
+		-SOLID
+		SeeSound "Casing/mediumsound";
+	}
+	States
+	{
+	Spawn:
+		CAS6 AFBDEC 1 NoDelay A_SpawnItemEx("CasingSmoke",flags: SXF_NOCHECKPOSITION);
+		Loop;
+	Death:
+		CAS6 A 350
+		{
+			Frame = random(0,5);
+		}
+		---- A 1 A_FadeOut();
+		Stop;
+	}
+}
+
+Class ChGunCasing : AEoDFX
+{
+	Default
+	{
+		Height 12;
+		Radius 9;
+		Speed 6;
+		Scale 0.25;
+		BounceFactor 0.4;
+		PROJECTILE;
+		BounceType "Doom";
+		-NOGRAVITY
+		+DONTSPLASH
+		-NOBLOCKMAP
+		-SOLID
+		SeeSound "Casing/tinysound";
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 ThrustThingZ(0,10,0,1);
+		CSNG A 1 A_SpawnItemEx("CasingSmoke",flags: SXF_NOCHECKPOSITION);
+		CSNG BC 1;
+		CSNG D 1 A_SpawnItemEx("CasingSmoke",flags: SXF_NOCHECKPOSITION);
+		CSNG EF 1 ;
+		CSNG G 1 A_SpawnItemEx("CasingSmoke",flags: SXF_NOCHECKPOSITION);
+		CSNG HI 1;
+		CSNG J 1 A_SpawnItemEx("CasingSmoke",flags: SXF_NOCHECKPOSITION);
+		CSNG KL 1;
+		CSNG M 1 A_SpawnItemEx("CasingSmoke",flags: SXF_NOCHECKPOSITION);
+		CSNG NO 1;
+		CSNG P 1 A_SpawnItemEx("CasingSmoke",flags: SXF_NOCHECKPOSITION);
+
+		CSNG AB 1;
+		CSNG C 1 A_SpawnItemEx("CasingSmoke",flags: SXF_NOCHECKPOSITION);
+		CSNG DE 1;
+		CSNG F 1 A_SpawnItemEx("CasingSmoke",flags: SXF_NOCHECKPOSITION);
+		CSNG GH 1;
+		CSNG I 1 A_SpawnItemEx("CasingSmoke",flags: SXF_NOCHECKPOSITION);
+		CSNG JK 1;
+		CSNG L 1 A_SpawnItemEx("CasingSmoke",flags: SXF_NOCHECKPOSITION);
+		CSNG MN 1;
+		CSNG O 1 A_SpawnItemEx("CasingSmoke",flags: SXF_NOCHECKPOSITION);
+		CSNG P 1;
+
+	Death:
+		CSNG A 350
+		{
+			Frame = randompick(Fr_B, Fr_C, Fr_K, Fr_L, Fr_D, Fr_J, Fr_N);
+		}
+		---- A 1 A_FadeOut();
+		Wait;
+   }
+}
+
 
 Class BulletTracerFX : AEoDFX 
 {

@@ -592,10 +592,10 @@ Class DMSoulFragment : CustomInventory
 		Inventory.MaxAmount 0;
 	}
 	
-	override void PostBeginPlay()
+	override void BeginPlay()
 	{
-		Super.PostBeginPlay();
-		ChangeTID(SoulFragmentID);
+		ChangeStatNum(STAT_SOULS);
+		Super.BeginPlay();
 	}
 	
 	States
@@ -663,6 +663,14 @@ Class DMSoulFragment : CustomInventory
 			return true;
 		}
 		Stop;
+	}
+}
+
+Class DMSoulFragmentRed : DMSoulFragment
+{
+	Default
+	{
+		Translation "0:255=%[0,0,0]:[1,0,0]";
 	}
 }
 

@@ -232,7 +232,7 @@ enum bloodcolors//TIDs ONLY. DO NOT USE IN THE TRANSLATIONS PROPERTY.
 Class GibSpawnerBase : AEoDFX
 {
 	int user_t;
-	bool simple;
+	bool simple, added;
 	int Index;
 	int Cap;
 	int SpawnChance;				// Just for the sake of making things simple...
@@ -254,7 +254,7 @@ Class GibSpawnerBase : AEoDFX
 	//--------------------------------------------------------------------------
 	override void PostBeginPlay()
 	{
-		if (GetClass() == "GibSpawnerBase")
+		if (GetClass() == 'GibSpawnerBase')
 		{	 return Destroy();	}
 		
 		user_t = tid;
@@ -264,14 +264,22 @@ Class GibSpawnerBase : AEoDFX
 		{
 			simple = true;
 		}
+		/*
+		g = AEoDGlobals.Get();
+		if (!g.CheckGibCount())	return Destroy();
+		
+		simple = g.CheckGibCount(true);
+		*/
+		
+		
 		
 		int count = 0;
 		int SoftGibMax = GetCvar("MaxSoftGibCount");
 		int HardGibMax = GetCvar("MaxGibCount");
-		
-		ThinkerIterator it = ThinkerIterator.Create("GibletBase",StatNum.GIBS());
+
+		ThinkerIterator it = ThinkerIterator.Create("GibletBase",STAT_GIBS);
 		Actor mo;
-		
+
 		while ((mo = GibletBase(it.Next())))
 		{
 			count++;
@@ -418,7 +426,7 @@ Class MCBloodFXMain : AEoDFX replaces Blood
 			return Destroy();
 		}
 		user_t = tid;
-		Thing_ChangeTID(0,0);
+		ChangeTID(0);
 		A_FaceMovementDirection();
 	}
 	
@@ -592,13 +600,14 @@ Class MCBloodParticle : AEoDFX
 	const arraySize = 19;
 	override void PostBeginPlay()
 	{
+		user_t = tid;
+		ChangeTID(0);
 		Super.PostBeginPlay();
 		user_vel = vel.Length() * VelMul;
 		user_pitch = pitch;
 		user_angle = angle;
 		
-		user_t = tid;
-		ChangeTID(0);
+		
 	}
 	
 	States
@@ -692,7 +701,7 @@ Class QuakeGibDropper : GibSpawnerBase
 	{
 		if (A_CheckSightOrRange(BloodDistanceLimit,"Null"))
 		{
-			return Super.PostBeginPlay();
+			return Destroy(); // Super.PostBeginPlay();
 		}
 		int a1 = random(3,6);
 		int a2 = random(1, a1 - 1);
@@ -716,7 +725,7 @@ Class QuakeSmallGibDropper : GibSpawnerBase
 	{
 		if (A_CheckSightOrRange(BloodDistanceLimit,"Null"))
 		{
-			return Super.PostBeginPlay();
+			return Destroy();
 		}
 		int a1 = random(3,5);
 		int a2 = random(1, a1 - 1);
@@ -743,7 +752,7 @@ Class BloodGibDropper : GibSpawnerBase
 	{
 		if (A_CheckSightOrRange(BloodDistanceLimit,"Null"))
 		{
-			return Super.PostBeginPlay();
+			return Destroy();
 		}
 		
 		Gam01 = 6;
@@ -772,7 +781,8 @@ Class BloodGibDropper : GibSpawnerBase
 //==============================================================================
 
 Class GibletBase : AEoDFX 
-{ 
+{
+	//AEoDGlobals g;
 	int user_short;
 	int user_time;
 	int user_t;
@@ -805,14 +815,22 @@ Class GibletBase : AEoDFX
 	override void BeginPlay()
 	{	
 		user_spawntrail = GetCvar("SpawnBloodTrails");
-		ChangeStatNum(StatNum.GIBS());
+		ChangeStatNum(STAT_GIBS);
+		//g = AEoDGlobals.Get();
+		//if (g) g.GibUp();
 		Actor.BeginPlay();
 	}
-	
+	/*
+	override void OnDestroy()
+	{
+		if (!g) g = AEoDGlobals.Get();
+		if (g)	g.GibDown();
+	}
+	*/
 	override void PostBeginPlay()
 	{
 		user_t = tid;
-		Thing_ChangeTID(0,0);
+		ChangeTID(0);
 		if (user_t < GibTID)	{	user_w = user_t;	}
 		else					{	user_w = user_t - GibTID;	}
 		

@@ -14,6 +14,11 @@ Class DirectorSpawner : CustomInventory
 
 Class DirectorBase : Actor 
 {
+	override void BeginPlay()
+	{
+		ChangeStatNum(STAT_DIRECTOR);
+		Super.BeginPlay();
+	}
 	Default
 	{
 		Monster;
@@ -38,8 +43,9 @@ Class DirLargeChildCount : Inventory
 Class FreezeDirector : Inventory {}
 Class RemoveDirector : CustomInventory 
 {
-	Default {
-	+INVENTORY.ALWAYSPICKUP
+	Default 
+	{
+		+INVENTORY.ALWAYSPICKUP
 	}
 	States
 	{
@@ -67,8 +73,8 @@ Class SmallSpawnToken : Inventory
 {
 	Default
 	{
-	Inventory.MaxAmount 20;
-	Inventory.InterHubAmount 20;
+		Inventory.MaxAmount 20;
+		Inventory.InterHubAmount 20;
 	}
 }
 
@@ -242,7 +248,7 @@ Class TheDirector : DirectorBase
 				{	return ResolveState("Chasing");	}
 			}
 			
-			if (A_SpawnItemEx("MCLargeMobRunner",flags: SXF_SETMASTER|SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID, tid: mul))
+			if (A_SpawnItemEx("MCLargeMobRunner",flags: SXF_SETMASTER|SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID))
 			{
 				cooldown0 = random(cd4, cd5) + random(0, cd6);
 				return ResolveState("ChanceCD");
@@ -264,7 +270,7 @@ Class TheDirector : DirectorBase
 				{	return ResolveState("Chasing");	}
 			}
 			
-			if (A_SpawnItemEx("MCMediumMobRunner",flags: SXF_SETMASTER|SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID, tid: mul))
+			if (A_SpawnItemEx("MCMediumMobRunner",flags: SXF_SETMASTER|SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID))
 			{
 				cooldown0 = random(cd2, cd3) + random(0, cd6);
 				return ResolveState("ChanceCD");
