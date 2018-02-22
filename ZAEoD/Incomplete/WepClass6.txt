@@ -1,0 +1,491 @@
+/*==============================================================================
+//==============================================================================
+							The Enlightenment Staff
+						  Reprogrammed by Major Cooke
+							    
+								Come Armageddon
+	
+	Dug out by a powerful magical... beast, she saw much potential in this
+	staff. However, it seemed too simple for her tastes. Too much buck. Not
+	enough bang. So, she took it back to her thaumatorium, where she worked
+	her own power to carefully take this weapon apart with painstaking care
+	and slowly modified it over several months, using her abilities. It was
+	the most trying of times for her.
+	
+	Her ex-mentor, who studied the sun, aided the beast with knowledge on
+	how the sun worked more in depth, despite the strain it put on her.
+	She protected her ex-student and worked to manipulate the sun's energies
+	into such a potent weapon, and finally, after so much struggling, they
+	completed this device at long last.
+	
+	But then, the dark one came along on a tidal wave of demons, killing
+	many of her friends and enslaving her kind to work against their wills.
+	You may very well find her on the battlefield...
+//==============================================================================
+//============================================================================*/
+/*
+Actor EnlightenEssence : Ammo
+{
+	+IGNORESKILL	+DONTGIB
+	Inventory.MaxAmount 1000
+	Ammo.BackpackMaxAmount 1000
+	Ammo.BackpackAmount 0
+	Inventory.Icon "M666A0"
+}
+Actor AEoDEnlightenmentStaffItem : CustomInventory
+{
+	+FLOORCLIP
+	+INVENTORY.IGNORESKILL	+DONTGIB
+	+FLOATBOB
+	Scale 0.15
+	Inventory.Amount 1
+	Inventory.PickupMessage "You found the Enlightment staff! Hot and fluffy!"
+	Inventory.PickupSound "weaponbuild"
+	States
+	{
+	Spawn:
+		R6RO ABCDEFGHIJKL 3
+		Loop
+	Pickup:
+		TNT1 A 0 A_JumpIfInventory("AEoDEnlightenmentStaff",1,"Ammo")
+		TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",6) <= 0,"Nothing")
+		TNT1 A 0 A_GiveInventory("Weapon6Count",1)
+		TNT1 A 0 A_GiveInventory("EnlightenmentStaffDrop",1)
+		TNT1 A 0 A_GiveInventory("AEoDEnlightenmentStaff",1)
+		TNT1 A 0 A_PrintBold("\cgSlot 6: Enlightenment Staff")
+		Stop
+	Nothing:
+		TNT1 A 0 A_JumpIfInventory("AEoDEnlightenmentStaff",1,"Ammo")
+		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1)
+		Goto Pickup+2
+		TNT1 A 0 ACS_NamedExecute("s798",0,6,82,0)
+		Fail
+	Ammo:
+	TNT1 A 0 A_GiveInventory("AEoDEnlightenmentStaff",1)
+	Stop
+	}
+}
+
+Actor AEoDEnlightenmentStaff : AEoDWeaponBase // 6132
+{
+	+FLOORCLIP
+	+IGNORESKILL	+DONTGIB
+	+CHEATNOTWEAPON
+	+FLOATBOB
+	+NOAUTOAIM
+	+NOAUTOFIRE
+	+AMMO_OPTIONAL
+	+ALT_AMMO_OPTIONAL
+	+NOALERT
+	Weapon.AmmoType1 "EnlightenEssence"
+	Weapon.AmmoGive1 100
+	Weapon.AmmoUse1 1
+	Weapon.SelectionOrder 11990
+	Inventory.PickupMessage "You found the Enlightenment staff! Hot and fluffy!"
+	Inventory.PickupSound "weaponbuild"
+	weapon.upsound "weapons/draw"
+	Scale 0.15
+	Tag "Enlightenment Staff (uses reload key)"
+	States
+	{
+	Spawn:
+		R6RO ABCDEFGHIJKL 3
+		Loop
+	Deselect:
+		"----" A 1 A_Lower
+		"----" AA 0 A_Lower
+		Loop
+	Select:
+		R06A A 0 A_JumpIfInventory("EnlightenEssence",1,2)
+		R06A N 0
+	SelLoop:
+		"----" A 1 A_Raise
+		"----" AA 0 A_Raise
+		Loop
+	Ready:
+		R06A A 0 A_JumpIfInventory("EnlightenStreamToken",1,"Hold")
+		R06A A 0 A_JumpIfNoAmmo("ReadyEmpty")
+		R06A AAAABBBBCCCCDDDD 1 A_WeaponReady
+		Loop
+	ReadyEmpty:
+		"####" J 0 A_JumpIfInventory("EnlightenEmptyToken",1,"EmptyLoop")
+		"####" J 0 A_GiveInventory("EnlightenEmptyToken",1) //Merely to switch the weapon back and forth is all.
+		"####" JJKKLLMM 1 A_WeaponReady
+	EmptyLoop:
+		"####" N 0 A_JumpIfInventory("EnlightenEssence",1,"Restore")
+		"####" N 1 A_WeaponReady
+		Loop
+	Restore:
+		"####" M 0 A_TakeInventory("EnlightenEmptyToken",10000)
+		"####" MMLLKKJJ 1 A_WeaponReady
+		Goto Ready
+	TooMuch: //Don't let them cheat this ammo type...
+		"####" "#" 0 A_TakeInventory("EnlightenEssence",50000,0)
+		"####" "#" 0 A_GiveInventory("EnlightenEssence",1000)
+	Fire:
+		"####" "#" 0 A_JumpIfNoAmmo("EmptyLoop")
+		"####" "#" 0 A_JumpIfInventory("EnlightenEssence",1001,"TooMuch")
+		"####" E 0 A_JumpIfInventory("EnlightenStreamToken",1,"Reposition")
+		"####" E 0 A_PlaySound("weapons/enlightenmentstaff/start",5,1.0,0)
+		"####" E 0 A_PlaySound("hhh/charge1",CHAN_WEAPON,1,0)
+		"####" EFGHEFGHEFGH 4 //Charge up Frames
+		"####" E 0 Bright A_GunFlash
+		"####" E 0 bright A_GiveInventory("EnlightenStreamToken",1)
+		"####" E 0 A_PlaySound("reilsss/weapons/darkmattercannonfire", CHAN_WEAPON,1.0,0)
+		"####" E 0 A_SpawnItemEx("EnlightenAmmoTaker",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER)
+		"####" E 0 A_SpawnItemEx("ArcaneBlackholeEffect",cos(-pitch)*(radius/2),0,32+sin(-pitch)*(radius/2),0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH)//A_FireCustomMissile("ArcaneBlackholeEffect",0,0,0)
+		Goto Hold
+		//R06A J 0 A_StopSound(CHAN_WEAPON)
+		//R06A JKL 4
+		//Goto Ready
+	Reposition:
+		"####" E 0 A_KillChildren("Normal",KILS_KILLMISSILES|KILS_NOMONSTERS,"ArcaneBlackholeEffect")
+		"####" E 0 A_PlaySound("reilsss/weapons/darkmattercannonfire", CHAN_WEAPON,1.0,0)
+		"####" E 0 A_SpawnItemEx("ArcaneBlackholeEffect",cos(-pitch)*(radius/2),0,32+sin(-pitch)*(radius/2),0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH)
+	Hold:
+		"####" E 1 Bright A_JumpIfInventory("EnlightenStreamToken",1,1)		Goto Reload
+	Hold2:
+		"####" EEEE 1 Bright A_WeaponReady(WRF_ALLOWRELOAD)
+		"####" "#" 0 A_JumpIfInventory("EnlightenStreamToken",1,1)		Goto Reload
+		"####" FFFF 1 Bright A_WeaponReady(WRF_ALLOWRELOAD)
+		"####" "#" 0 A_JumpIfInventory("EnlightenStreamToken",1,1)		Goto Reload
+		"####" GGGG 1 Bright A_WeaponReady(WRF_ALLOWRELOAD)
+		"####" "#" 0 A_JumpIfInventory("EnlightenStreamToken",1,1)		Goto Reload
+		"####" HHHH 1 Bright A_WeaponReady(WRF_ALLOWRELOAD)
+		"####" "#" 0 A_JumpIfInventory("EnlightenStreamToken",1,"Hold2")		Goto Reload
+	Reload:
+		"####" J 0 A_TakeInventory("EnlightenStreamToken",10000)
+		"####" J 0 A_RemoveChildren(1,RMVF_EVERYTHING,"EnlightenAmmoTaker")
+		"####" J 0 A_KillChildren("Normal",KILS_KILLMISSILES|KILS_NOMONSTERS|KILS_FOILINVUL,"ArcaneBlackholeEffect")
+		"####" J 0 A_StopSound(CHAN_WEAPON)
+		"####" JK 3
+		"####" K 0 A_Refire("AltFire")
+		Goto Ready
+	AltFire:
+		"####" E 0 A_JumpIfInventory("EnlightenEssence",1,1)
+		Goto AltInstant
+		"####" E 0 A_PlaySound("weapons/enlightenmentstaff/start",CHAN_BODY,1.0,0)
+		"####" EFGH 2 bright
+		"####" IJKL 2 bright
+	AltInstant:
+		"####" N 4 bright
+		{
+			A_GunFlash;
+			A_PlaySound("reilsss/weapons/enligthingstafffire",CHAN_WEAPON,1.0,0);
+			//A_Overlay(70000,"Overlay.Absorption");
+			A_SpawnItemEx("EnlightenItemAbsorption",0,0,32,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER);
+		}
+		"####" MLABCD 2 Bright //Calm down Frames (Ball returns to Center)
+		//R06A ABCD 4 //Calm down Frames (Normal Sequence)
+		"####" D 0 A_Refire("AltFire")
+		Goto Ready
+	
+	Flash:
+		REMG Z 3 Bright A_Light2
+		REMG Z 3 Bright A_Light1
+		REMG Z 3 Bright A_Light0
+		Stop
+	AltFlash:
+		REMG Z 5 Bright A_Light2 //A_LightInverse
+		REMG Z 5 Bright A_Light0
+		Stop
+	}
+}
+*/
+
+Class EnlightenAmmoTaker : Actor
+{
+	Default
+	{
+		+NOINTERACTION
+		RenderStyle "None"
+	}
+	States
+	{
+	Spawn:
+		//DO NOT add NoDelay here. Also do not insert a TNT1 A 0 here either.
+		//This was designed the way it is, so better yet, DO NOT TOUCH IT.
+		TNT1 A 4 
+		{
+			if (master)
+			A_TakeInventory("EnlightenEssence",1,TIF_NOTAKEINFINITE,AAPTR_MASTER);
+			if (CountInv("AEoDDemonMorphHand",MasterPtr) || 
+				(!GetCvar("sv_infinite_ammo") && !CountInv("EnlightenEssence",MasterPtr)) || 
+				!CountInv("EnlightenStreamToken",MasterPtr))
+			{
+				A_TakeInventory("EnlightenStreamToken",1000,0,AAPTR_MASTER);
+				A_KillSiblings("Normal",KILS_KILLMISSILES|KILS_FOILINVUL,"ArcaneBlackholeEffect");
+				return ResolveState("Null");
+			}
+			return ResolveState(null);
+		}
+		Loop
+	}
+}
+
+Class EnlightenEmptyToken : Inventory { Default { Inventory.InterHubAmount 1; } }
+
+Class ArcaneBlackholeEffect
+{
+	//204
+	int user_s;
+	int user_x;
+	int user_y;
+	Default
+	{
+		Projectile;
+		+SEEKERMISSILE
+		+THRUACTORS
+		Translation "0:255=%[0,0,0]:[2,1,2]";
+		RenderStyle "Add";
+		Radius 10;
+		Height 10;
+		Speed 0;
+		Scale 0.6;
+		Alpha 0;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_RearrangePointers(AAPTR_DEFAULT,AAPTR_TARGET,AAPTR_TARGET,4)
+		TNT1 A 0 A_Stop
+		TNT1 A 0 A_SetPitch(-pitch)
+		TNT1 A 0 A_SpawnItemEx("ArcaneStreamer",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_SETMASTER|SXF_ORIGINATOR|SXF_TRANSFERPITCH)
+		Q27A ABCDEFGHIJ 1 bright A_FadeIn(0.1,FTF_CLAMP)
+	Looping:
+		Q27A KLMNOPQRSTUVWXYZABCDEFGHIJ random(1,2) bright A_JumpIf(IsPointerEqual(AAPTR_TARGET,AAPTR_NULL),"Death")
+		Loop
+		TNT1 AAAAA 35
+		Stop
+	Death:
+		"####" "#" 0 A_RemoveChildren(1,RMVF_EVERYTHING,"ArcaneStreamer")
+		"####" "#" 0 A_JumpIfInventory("EnlightenStreamToken",1,"FastDie",AAPTR_MASTER)
+		"####" "####################" 1 A_FadeOut(0.05)
+	FastDie:
+		TNT1 A 0
+		Stop
+	}
+}
+
+Class ArcaneStreamer
+{
+	//int user_x[3];
+	//int user_y[3];
+	//int user_z;
+	int user_pitch;
+	int user_count;	
+	int user_mc;
+	Default
+	{
+		Projectile;
+		+NOINTERACTION
+		+SEEKERMISSILE
+		+INVULNERABLE
+		Speed 25;
+		Scale 0.4;
+		Species "TwilightCast";
+		Translation "0:255=%[0,0,0]:[1,0.2,1]";
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_Stop
+		//TNT1 A 0 A_FaceTracer(0,0,0,0,FAF_TOP)
+		//TNT1 A 0 A_SeekerMissile(90,90,SMF_PRECISE)
+		R053 A 0 A_ChangeVelocity(cos(-pitch)*25,0,sin(pitch)*25,CVF_REPLACE|CVF_RELATIVE)
+		TNT1 A 0 A_SetUserVar(user_pitch,pitch)
+	Looping:
+		TNT1 A 0 A_JumpIf(user_mc < 35,"L2")
+		TNT1 A 0 A_SpawnItemEx("SunArcStrBlast02",0,0,0,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERPOINTERS|SXF_ABSOLUTEVELOCITY)
+		TNT1 AA 0 A_SpawnItemEx("SunArcStrBlast02",0,0,0,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERPOINTERS|SXF_ABSOLUTEVELOCITY,85)
+	L2:
+		TNT1 A 2 A_SpawnItemEx("SunArcStrBlast01",0,0,0,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERPOINTERS|SXF_ABSOLUTEVELOCITY,0,user_count) 
+		TNT1 A 0 A_Warp(AAPTR_MASTER,0,0,0,0,WARPF_NOCHECKPOSITION)		
+		TNT1 A 0 A_JumpIf(user_mc >= 352,2)
+		TNT1 A 0 A_SetUserVar(user_mc,user_mc+2)
+		TNT1 A 0 A_SetUserVar(user_count,user_count+4)
+		TNT1 A 0 A_JumpIf(user_count < 355,"Looping")
+		TNT1 A 0 A_SetUserVar(user_count,2)
+		Goto Looping
+		//TNT1 A 0 A_JumpIf(user_count < 20,"Looping")
+	}
+}
+
+Class EnlightenStreamToken : Inventory { Default { Inventory.InterHubAmount 0; } }
+
+Class ArcaneStreamBlast : Actor
+{
+	int user_t;
+	int user_dmg;
+	int user_neg[2];
+	int user_yz;
+	int user_speed;
+	int user_offset;
+	Default
+	{
+		Projectile;
+		+NODAMAGETHRUST 
+		+CANNOTPUSH
+		+INVULNERABLE
+		+NOEXTREMEDEATH
+		+BRIGHT
+		Speed 25;
+		Damage 10;
+		DamageType "AEMagic";
+		DeathType "Normal";
+		RenderStyle "Add";
+		Alpha 1;
+		Scale 0.4;
+		Obituary "%o stared too long at the beauty of %k's arcane solar flare.";
+	}
+	States
+	{
+	Spawn:
+		X149 A 0 NoDelay
+		{
+			A_SetUserVar(user_t,tid);
+			Thing_ChangeTID(0,0);
+			A_SetUserArray(user_neg,0,randompick(-1,1));
+			A_SetUserArray(user_neg,1,randompick(-1,1));
+			A_SetScale(ScaleX*user_neg[0],ScaleY*user_neg[1]);
+			A_SpawnItemEx("ArcStrOrb",0,0,0,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERPOINTERS|SXF_SETMASTER|SXF_ORIGINATOR|SXF_ABSOLUTEVELOCITY,0,0+user_t+30000);
+			A_SpawnItemEx("ArcStrOrb",0,0,0,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERPOINTERS|SXF_SETMASTER|SXF_ORIGINATOR|SXF_ABSOLUTEVELOCITY,0,60+user_t+30000);
+			A_SpawnItemEx("ArcStrOrb",0,0,0,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERPOINTERS|SXF_SETMASTER|SXF_ORIGINATOR|SXF_ABSOLUTEVELOCITY,0,120+user_t+30000);
+			A_SpawnItemEx("ArcStrOrb",0,0,0,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERPOINTERS|SXF_SETMASTER|SXF_ORIGINATOR|SXF_ABSOLUTEVELOCITY,0,180+user_t+30000);
+			A_SpawnItemEx("ArcStrOrb",0,0,0,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERPOINTERS|SXF_SETMASTER|SXF_ORIGINATOR|SXF_ABSOLUTEVELOCITY,0,240+user_t+30000);
+			A_SpawnItemEx("ArcStrOrb",0,0,0,velx,vely,velz,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERPOINTERS|SXF_SETMASTER|SXF_ORIGINATOR|SXF_ABSOLUTEVELOCITY,0,300+user_t+30000);
+		}
+		Goto Looping
+	Secondary:
+		X149 A 0 A_SetAngle(angle+frandom(-4.0,4.0))
+		X149 A 0 A_SetPitch(pitch+frandom(-4.0,4.0))
+		X149 A 0 A_ChangeVelocity(cos(-pitch)*25,0,sin(pitch)*25,CVF_RELATIVE|CVF_REPLACE)
+		Goto Looping
+	Looping:
+		Q27A ABCDEFGHIJKLMNOPQRSTUVWXYZ random(1,2) bright 
+		{
+			A_SetScale(ScaleX+(0.005*user_neg[0]),ScaleY+(0.005*user_neg[1]));
+			A_JumpIf(abs(ScaleX) >= 0.65,"Loop2");
+		}
+		
+	Loop2:
+		Q27A ABCDEFGHIJKLMNOPQRSTUVWXYZ random(1,2) bright
+		Loop
+	Death:
+		X149 A 0 
+		{
+			A_SetUserVar(user_dmg,abs(ScaleX)*100);
+			A_KillChildren("None",KILS_KILLMISSILES|KILS_NOMONSTERS,"ArcStrOrb");
+			A_JumpIf(abs(ScaleX) >= 0.65,"S2");
+		}
+	S1:		X149 A 0 A_SpawnItemEx("MonExplosionMediumNoSmokeSimple",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION,0,30000)		Goto DCont
+	S2:		X149 A 0 A_SpawnItemEx("MonExplosionBigNoSmokeSimple",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION,0,30000)		Goto DCont
+	DCont:
+		TNT1 AA 0 A_Explode(random(10,20)+user_dmg,128,0)
+		TNT1 A 35 A_PlaySound("MLP/ExplosionMed",CHAN_AUTO,1,0)
+		Stop
+	}
+}
+
+Class ArcaneStreamBlastNoOrbit : ArcaneStreamBlast
+{
+	States
+	{
+	Spawn:
+		Q27A A 0 NoDelay A_SetUserArray(user_neg,0,randompick(-1,1))
+		Q27A A 0 A_SetUserArray(user_neg,1,randompick(-1,1))
+		Q27A A 0 A_SetAngle(angle+frandom(-4.0,4.0))
+		Q27A A 0 A_SetPitch(pitch+frandom(-4.0,4.0))
+		Q27A A 0 A_ChangeVelocity(cos(-pitch)*25,0,sin(pitch)*25,CVF_RELATIVE|CVF_REPLACE)
+		Goto Looping
+	Looping:
+		Q27A ABCDEFGHIJKLMNOPQRSTUVWXYZ random(1,2) bright
+		Loop
+	Death:
+		X149 A 0 
+		{
+			A_SetUserVar(user_dmg,abs(ScaleX)*100);
+			A_KillChildren("None",KILS_KILLMISSILES|KILS_NOMONSTERS,"ArcStrOrb");
+			A_JumpIf(abs(ScaleX) >= 0.65,"S2");
+		}
+	S1:		X149 A 0 A_SpawnItemEx("MonExplosionMediumNoSmokeSimple",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION,0,1)		Goto DCont
+	S2:		X149 A 0 A_SpawnItemEx("MonExplosionBigNoSmokeSimple",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION,0,1)		Goto DCont
+	DCont:
+		TNT1 AA 0 A_Explode(random(10,20)+(user_dmg/2),128,0)
+		TNT1 A 35 A_PlaySound("MLP/ExplosionMed",CHAN_AUTO,1,0)
+		Stop
+	}
+}
+
+Class SunArcStrBlast01	: ArcaneStreamBlast			{	Default { Translation "0:255=%[0,0,0]:[0.75,0.75,0]" } }
+Class SunArcStrBlast02	: ArcaneStreamBlastNoOrbit 	{	Default { Translation "0:255=%[0,0,0]:[0.75,0.75,0]" } }
+
+Class ArcStrBlast01	: ArcaneStreamBlast		{	Default { 	Translation "0:255=%[0,0,0]:[1.00,0.00,0.00]" }	}
+Class ArcStrBlast02	: ArcaneStreamBlast		{	Default { 	Translation "0:255=%[0,0,0]:[1,00,0.25,0.00]" }	}
+Class ArcStrBlast03	: ArcaneStreamBlast		{	Default { 	Translation "0:255=%[0,0,0]:[1.00,0.50,0.00]" }	}
+Class ArcStrBlast04	: ArcaneStreamBlast		{	Default { 	Translation "0:255=%[0,0,0]:[1.00,0.75,0.00]" }	}
+Class ArcStrBlast05	: ArcaneStreamBlast		{	Default { 	Translation "0:255=%[0,0,0]:[1.00,1.00,0.00]" }	}
+Class ArcStrBlast06	: ArcaneStreamBlast		{	Default { 	Translation "0:255=%[0,0,0]:[0.75,1.00,0.00]" }	}
+Class ArcStrBlast07	: ArcaneStreamBlast		{	Default { 	Translation "0:255=%[0,0,0]:[0.50,1.00,0.00]" }	}
+Class ArcStrBlast08	: ArcaneStreamBlast		{	Default { 	Translation "0:255=%[0,0,0]:[0.25,1.00,0.00]" }	}
+Class ArcStrBlast09	: ArcaneStreamBlast		{	Default { 	Translation "0:255=%[0,0,0]:[0.00,1.00,0.00]" }	}
+Class ArcStrBlast10	: ArcaneStreamBlast		{	Default { 	Translation "0:255=%[0,0,0]:[0.00,1.00,0.25]" }	}
+Class ArcStrBlast11	: ArcaneStreamBlast		{	Default { 	Translation "0:255=%[0,0,0]:[0.00,1.00,0.50]" }	}
+Class ArcStrBlast12	: ArcaneStreamBlast		{	Default { 	Translation "0:255=%[0,0,0]:[0.00,1.00,0.75]" }	}
+Class ArcStrBlast13	: ArcaneStreamBlast		{	Default { 	Translation "0:255=%[0,0,0]:[0.00,1.00,1.00]" }	}
+Class ArcStrBlast14	: ArcaneStreamBlast		{	Default { 	Translation "0:255=%[0,0,0]:[0.00,0.75,1.00]" }	}
+Class ArcStrBlast15	: ArcaneStreamBlast		{	Default { 	Translation "0:255=%[0,0,0]:[0.00,0.50,1.00]" }	}
+Class ArcStrBlast16	: ArcaneStreamBlast		{	Default { 	Translation "0:255=%[0,0,0]:[0.00,0.25,1.00]" }	}
+Class ArcStrBlast17	: ArcaneStreamBlast		{	Default { 	Translation "0:255=%[0,0,0]:[0.00,0.00,1.00]" }	}
+Class ArcStrBlast18	: ArcaneStreamBlast		{	Default { 	Translation "0:255=%[0,0,0]:[0.25,0.00,1.00]" }	}
+Class ArcStrBlast19	: ArcaneStreamBlast		{	Default { 	Translation "0:255=%[0,0,0]:[0.50,0.00,1.00]" }	}
+Class ArcStrBlast20	: ArcaneStreamBlast		{	Default { 	Translation "0:255=%[0,0,0]:[0.75,0.00,1.00]" }	}
+Class ArcStrBlast21	: ArcaneStreamBlast		{	Default { 	Translation "0:255=%[0,0,0]:[1.00,0.00,1.00]" }	}
+Class ArcStrBlast22	: ArcaneStreamBlast		{	Default { 	Translation "0:255=%[0,0,0]:[1.00,0.00,0.75]" }	}
+Class ArcStrBlast23	: ArcaneStreamBlast		{	Default { 	Translation "0:255=%[0,0,0]:[1.00,0.00,0.50]" }	}
+Class ArcStrBlast24	: ArcaneStreamBlast		{	Default { 	Translation "0:255=%[0,0,0]:[1.00,0.00,0.25]" }	}
+
+Class ArcStrOrb : Actor
+{
+	int user_d; //Distance from center
+	int user_s; //Sine wave position
+	int user_x;
+	int user_y;
+	int user_z;
+	int user_neg[2];
+	Projectile
+	+NOINTERACTION
+	+BRIGHT
+	Species "TwilightCast"
+	RenderStyle Add
+	Translation "0:255=%[0,0,0]:[2,1,2]"
+	Alpha 0.6
+	Scale 0.2
+	States
+	{
+	Spawn:
+		X010 P 0 NoDelay A_SetUserVar(user_s,tid)
+		"----" A 0 A_SetUserArray(user_neg,0,randompick(1,-1))
+		"----" A 0 A_SetUserArray(user_neg,1,randompick(1,-1))
+		"----" A 0 A_SetScale(ScaleX*user_neg[0],ScaleY*user_neg[1])
+		"----" A 0 Thing_ChangeTID(0,0)
+		//"----" A 0 A_SetUserVar(user_x,velx)
+		//"----" A 0 A_SetUserVar(user_y,vely)
+		//"----" A 0 A_SetUserVar(user_z,velz)
+	Movement:
+		"----" A 0 A_JumpIf((ScaleX > 0.5) || (ScaleX < -0.5),2)
+		"----" A 0 A_SetScale(ScaleX+(0.003*user_neg[0]),ScaleY+(0.003*user_neg[1]))
+		"----" A 0 A_SetUserVar(user_s,user_s+5) //
+		//"----" A 0 A_JumpIf(user_s <= 360,2)
+		//"----" A 0 A_SetUserVar(user_s,user_s-355)
+		"----" A 1 A_SetUserVar(user_d,user_d+3)
+		"----" A 0 A_JumpIf(user_d < (360*4),2)
+		"----" A 0 A_SetUserVar(user_d,user_d-1) //Decrease by 1 so it just gives 2 instead.
+		"----" A 0 A_Warp(AAPTR_MASTER,(sin(-pitch)*(user_d))*(sin(user_s+90)),(sin(user_s)*user_d),(cos(pitch)*user_d)*(cos(user_s)),0,WARPF_NOCHECKPOSITION|WARPF_COPYVELOCITY|WARPF_INTERPOLATE,"Movement")
+		//"----" A 0 A_Warp(AAPTR_MASTER,cos(-pitch*user_s)*user_d,(cos(-pitch*user_s)*user_d),(sin(-pitch*user_s)*user_d),0,WARPF_NOCHECKPOSITION,"Movement")
+	Death:
+		"----" A 0 A_ChangeVelocity(user_x,user_y,user_z,CVF_REPLACE)
+		"----" A 1 A_FadeOut(0.05)
+		Wait
+	}
+}

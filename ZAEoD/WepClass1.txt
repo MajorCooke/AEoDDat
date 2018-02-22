@@ -1,0 +1,709 @@
+//==============================================================================
+//==============================================================================
+//
+//
+//					AEons Of Death v6: Class 1 weapons
+//
+//
+//==============================================================================
+//==============================================================================
+
+//==============================================================================
+//==============================================================================
+
+//==============================================================================
+//==============================================================================
+
+Class AEoDJackBombItem : AEoDWeaponPickup
+{
+	Default
+	{
+		+FLOORCLIP
+		+INVENTORY.IGNORESKILL	
+		+DONTGIB
+		+FLOATBOB
+		Scale 0.125;
+		Inventory.Amount 1;
+		Inventory.PickupSound "weapons/icewand/pickup";
+		Inventory.PickupMessage "You discovered the JackBomb! Oh, the wonders that lie within this box...";
+	}
+	States
+	{
+	Spawn:
+		WJKB A -1 Bright;
+		Loop;
+	Pickup:
+		TNT1 A 0 A_JumpIfInventory("AEoDJackBomb",1,"Ammo");
+		TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",1) <= 0,"Nothing");
+		TNT1 A 0 A_GiveInventory("Weapon1Count",1);
+		TNT1 A 0 A_GiveInventory("JackBombDrop",1);
+		TNT1 A 0 A_GiveInventory("AEoDJackBomb",1);
+		TNT1 A 0 A_PrintBold("\cgSlot 1: Jack Bomb");
+		Stop;
+	Nothing:
+		TNT1 A 0 A_JumpIfInventory("AEoDJackBomb",1,"Ammo");
+		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1);
+		Goto Pickup+2;
+		
+		TNT1 A 0 ACS_NamedExecute("s798",0,1,7,0);
+		Fail;
+	Ammo:
+		TNT1 A 0 A_GiveInventory("AEGrenade",4);
+		Stop;
+	}
+}
+
+Class AEoDJackBomb : AEoDWeaponBase // 6151
+{
+	Default
+	{
+		+FLOORCLIP
+		+FLOATBOB
+		+WEAPON.CHEATNOTWEAPON
+		+WEAPON.NOAUTOAIM
+		+INVENTORY.IGNORESKILL	
+		+DONTGIB
+		Scale 0.125;
+		Weapon.AmmoType "AEGrenade";
+		Weapon.AmmoGive1 4;
+		Weapon.AmmoUse1 2;
+		Weapon.AmmoUse2 2;
+		Weapon.SelectionOrder 28000;
+		Weapon.UpSound "weapons/draw";
+		Inventory.PickupSound "weapons/icewand/pickup";
+		Inventory.PickupMessage "You discovered the JackBomb! Oh, the wonders that lie within this box...";
+		Tag "Jackbomb";
+	}
+	States
+	{
+	Spawn:
+		WJKB A -1 Bright;
+		Loop;
+	Ready:
+		JBOX A 1 A_WeaponReady();
+		Loop;
+	Deselect:
+		JBOX A 1;
+		JBOX AA 0 A_Lower();
+		Loop;
+	Select:
+		JBOX B 1;
+		TNT1 AA 0 A_Raise();
+		Loop;
+	Fire:
+		JOBX B 0 A_CheckReload();
+		JBOX BCD 1;
+	Hold:
+		M666 A 2 
+		{
+			A_GiveInventory("TNTThrowForce",1);
+			A_GunFlash();
+		}
+		M666 A 0 A_Refire();
+		JBOX EF 1;
+		/*
+		JBOX A 0 A_JumpIfInventory("TNTThrowForce",16,"ThrowJackBombG");
+		JBOX A 0 A_JumpIfInventory("TNTThrowForce",15,"ThrowJackBombG");
+		JBOX A 0 A_JumpIfInventory("TNTThrowForce",14,"ThrowJackBombF");
+		JBOX A 0 A_JumpIfInventory("TNTThrowForce",13,"ThrowJackBombE");
+		JBOX A 0 A_JumpIfInventory("TNTThrowForce",12,"ThrowJackBombD");
+		JBOX A 0 A_JumpIfInventory("TNTThrowForce",11,"ThrowJackBombC");
+		JBOX A 0 A_JumpIfInventory("TNTThrowForce",10,"ThrowJackBombB");
+		JBOX A 0 A_JumpIfInventory("TNTThrowForce",9,"ThrowJackBombA");
+		JBOX A 0 A_JumpIfInventory("TNTThrowForce",8,"ThrowJackBomb9");
+		JBOX A 0 A_JumpIfInventory("TNTThrowForce",7,"ThrowJackBomb8");
+		JBOX A 0 A_JumpIfInventory("TNTThrowForce",6,"ThrowJackBomb7");
+		JBOX A 0 A_JumpIfInventory("TNTThrowForce",5,"ThrowJackBomb6");
+		JBOX A 0 A_JumpIfInventory("TNTThrowForce",4,"ThrowJackBomb5");
+		JBOX A 0 A_JumpIfInventory("TNTThrowForce",3,"ThrowJackBomb4");
+		JBOX A 0 A_JumpIfInventory("TNTThrowForce",2,"ThrowJackBomb3");
+		JBOX A 0 A_JumpIfInventory("TNTThrowForce",1,"ThrowJackBomb2");
+		JBOX A 0 A_GiveInventory("TNTThrowForce",1);
+		JBOX A 2 A_GunFlash();
+		JBOX A 0 A_ReFire();
+		*/
+		
+	ThrowJackBomb:
+		JBOX G 1 
+		{
+			static const Class<Actor> jack[] =
+			{
+				"JackBomb1",
+				"JackBomb2",
+				"JackBomb3",
+				"JackBomb4",
+				"JackBomb5",
+				"JackBomb6",
+				"JackBomb7",
+				"JackBomb8",
+				"JackBomb9",
+				"JackBombA",
+				"JackBombB",
+				"JackBombC",
+				"JackBombD",
+				"JackBombE",
+				"JackBombF",
+				"JackBombG"
+			};
+			int id = Clamp(CountInv("TNTThrowForce"), 0, jack.Size() - 1);
+			A_PlaySound("caleb/tnt", CHAN_WEAPON);
+			A_FireProjectile(jack[id],0,1,8,0);
+			A_SetInventory("TNTThrowForce",0);
+		}
+		Goto FinishThrow;
+	FinishThrow:
+		JBOX HIJKLMNO 1;
+		TNT1 A 8;
+		JBOX DCBA 2;
+		Goto Ready;
+	AltFire:
+		JBOX A 2 A_PlaySound("caleb/tnt", CHAN_WEAPON);
+		TNT1 A 8 A_FireProjectile("JackBombAlt",0,1,8,0);
+		JBOX DCBA 2;
+		Goto Ready;
+	Flash:
+		/*
+		DYNG A 2 bright
+		{
+			if (player != null)
+			{
+				PSprite psp = player.GetPSprite(OverlayID());
+				if (psp)
+					psp.Frame = Clamp(CountInv("TNTThrowForce") - 1, Fr_A, Fr_P);
+			}
+		}
+		*/
+		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",16,32);
+		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",15,30);
+		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",14,28);
+		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",13,26);
+		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",12,24);
+		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",11,22);
+		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",10,20);
+		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",9,18);
+		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",8,16);
+		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",7,14);
+		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",6,12);
+		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",5,10);
+		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",4,8);
+		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",3,6);
+		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",2,4);
+		TNT1 A 0 A_JumpIfInventory("TNTThrowForce",1,2);
+		TNT1 A 0;
+		Stop;
+		DYNG A 2 Bright;
+		Loop;
+		DYNG B 2 Bright;
+		Loop;
+		DYNG C 2 Bright;
+		Loop;
+		DYNG D 2 Bright;
+		Loop;
+		DYNG E 2 Bright;
+		Loop;
+		DYNG F 2 Bright;
+		Loop;
+		DYNG G 2 Bright;
+		Loop;
+		DYNG H 2 Bright;
+		Loop;
+		DYNG I 2 Bright;
+		Loop;
+		DYNG J 2 Bright;
+		Loop;
+		DYNG K 2 Bright;
+		Loop;
+		DYNG L 2 Bright;
+		Loop;
+		DYNG M 2 Bright;
+		Loop;
+		DYNG N 2 Bright;
+		Loop;
+		DYNG O 2 Bright;
+		Loop;
+		DYNG P 2 Bright;
+		Loop;
+	}
+}
+
+
+
+Class JackBomb : Actor
+{
+	int user_time;
+	
+	Default
+	{
+		Speed 0;
+		Radius 8;
+		Height 8;
+		Health 1000000;
+		Scale 0.25;
+		Damage 16;
+		DamageFactor 0;
+		+FRIENDLY
+		+DONTTHRUST
+		+EXTREMEDEATH
+		+INVULNERABLE
+		+SHOOTABLE
+		+NONSHOOTABLE
+		+NOBLOOD
+		+FORCERADIUSDMG
+		+DONTSPLASH
+		+THRUACTORS
+		+FLOORCLIP
+		+SPECTRAL
+		-COUNTKILL
+		-SOLID
+		+NODAMAGE
+		+NOPAIN
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay
+		{
+			A_GiveInventory("Unrideable",1);
+			A_PlaySound("weapons/jackbomb",8,1.2,0);
+			//A_SpawnItemEx("JackBombMonsterForcer",0,0,1,0,0,0,0,SXF_SETMASTER|SXF_NOCHECKPOSITION|SXF_ORIGINATOR);
+		}
+	Looping:
+		JBTH BCDEDCBA 5 Bright 
+		{
+			bool found = false;
+			let it = ThinkerIterator.Create("Actor", Thinker.STAT_DEFAULT);
+			Actor mo;
+			while (mo = Actor(it.Next()))
+			{
+				// Filter out common stuff first. Don't take into account friendly
+				// monsters, missiles, dead things, misc stuff, and don't break
+				// the NOTARGETSWITCH flag.
+				if (mo == self || mo.health < 1 || mo.bFRIENDLY || mo.bMISSILE || 
+					mo.bNOINTERACTION || mo.bNOSECTOR || mo.bKILLED || 
+					mo.bNOTARGETSWITCH || mo.bDORMANT)
+					continue;
+					
+				if (mo.bISMONSTER && mo.health > 0 && CheckSight(mo,SF_IGNOREWATERBOUNDARY))
+				{
+					found = true;
+					mo.target = self;
+				}
+			}
+			
+			if (found)
+				A_AlertMonsters(0, AMF_TARGETEMITTER);
+			
+			user_time++;
+			return A_JumpIf(user_time >= 73,"LoopEnd");
+		}
+		Loop;
+	LoopEnd:
+		JBTH BCD 5 Bright;
+		JBTH FG 3 Bright;
+		JBTH H 14 Bright { bVULNERABLE = true; }
+		JBTH H 1 Bright A_Die();
+	Death:
+		TNT1 A 10 
+		{
+			A_PlaySound("caleb/tnt/explode");
+			A_Explode(1000,350,1);
+			//A_RemoveChildren(1,RMVF_EVERYTHING,"JackBombMonsterForcer");
+			A_SpawnItemEx("JackbombExplosion",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION);
+			for (int i = 0; i < 360; i += 45)
+				A_SpawnProjectile("SuperRocketBit2I",0,0,i);
+		}
+		Stop;
+	}
+}
+
+Class JackBombMonsterForcer : Actor
+{
+	int user_countdowntimer;
+	
+	Default
+	{
+		Monster;
+		Radius 20;
+		Height 10;
+		Health 1000000;
+		DamageType "JackbombAttract";
+		DamageFactor 0;
+		+DONTTHRUST
+		+FRIENDLY
+		+INVULNERABLE
+		+FORCERADIUSDMG
+		+NOPAIN
+		+THRUACTORS
+		+FOILINVUL
+		-COUNTKILL
+		+NODAMAGE
+		+NODAMAGETHRUST 
+		+CANNOTPUSH
+		+OLDRADIUSDMG
+		+PAINLESS
+		+CAUSEPAIN
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_GiveInventory("Unrideable",1);
+	TickTock:
+		TNT1 A 5 
+		{
+			A_Explode(1,10280,XF_NOTMISSILE,1,10280); //Constantly draw their attention.
+			user_countdowntimer++;
+		}
+		TNT1 A 0 A_JumpIf(user_countdowntimer >= 73,"Death");
+		Loop;
+	Death:
+		TNT1 A 10;
+		Stop;
+	}
+}
+
+Class JackbombExplosion : Actor
+{
+	Default
+	{
+		+NOINTERACTION
+		RenderStyle "None";
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0;
+		TNT1 A 0 A_SpawnItemEx("JBFlingy",frandom(0,2),0,frandom(5,15),frandom(3.0,15.0),0,random(5,20),random(0,359),SXF_NOCHECKPOSITION);
+		TNT1 AAAA 0 A_SpawnItemEx("JBFlingy",frandom(0,2),0,frandom(5,15),frandom(3.0,15.0),0,random(5,20),random(0,359),SXF_NOCHECKPOSITION,128);
+		TNT1 AAAAA 0 A_SpawnItemEx("JBFlare",random(0,8),0,random(-4,20),0,0,0,0,SXF_NOCHECKPOSITION);
+		TNT1 AAAAAAAA 0 A_SpawnItemEx("JBFlare",random(0,8),0,random(-4,20),0,0,0,0,SXF_NOCHECKPOSITION,192);
+		TNT1 A 6;
+		TNT1 AAAAAAAAAAAA 0 A_SpawnItemEx("JBSmoke",random(5,35),0,random(0,45),frandom(-5,5),0,frandom(0,8),random(0,359),SXF_NOCHECKPOSITION);
+		TNT1 AAAAAAAAAAA 0 A_SpawnItemEx("JBSmoke",random(5,35),0,random(0,45),frandom(-5,5),0,frandom(0,8),random(0,359),SXF_NOCHECKPOSITION,128);
+		TNT1 AAAAAAAAAAA 0 A_SpawnItemEx("PBMidSmoke",random(5,35),0,random(0,45),frandom(-5,5),0,frandom(0,3),random(0,359),SXF_NOCHECKPOSITION,128);
+		TNT1 AAAAA 0 A_SpawnItemEx("JBSmokeBig",random(0,8),0,random(-3,20),frandom(-1.0,1.0),0,frandom(-2.0,2.0),random(0,359),SXF_NOCHECKPOSITION);
+		TNT1 AAAAAAAAAA 0 A_SpawnItemEx("JBSmokeBig",random(0,8),0,random(-3,20),frandom(-1.0,1.0),0,frandom(-2.0,2.0),random(0,359),SXF_NOCHECKPOSITION,192);
+		Stop;
+	}
+}
+
+Class JBFlingy : Actor
+{
+	Default
+	{
+		-NOGRAVITY
+		+THRUACTORS
+		+SKYEXPLODE
+		+EXPLODEONWATER
+		+DONTSPLASH
+		Projectile;
+		Radius 3;
+		Height 3;
+		Speed 8;
+		Gravity 0.6;
+		RenderStyle "None";
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0;
+	Moving:
+		TNT1 A 8 A_SpawnItemEx("JBFlingyTrail1",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION);
+		TNT1 A 0 A_Jump(64,"Explosion");
+		Loop;
+	Death:
+	Explosion:
+		TNT1 AAAAA 0 A_SpawnItemEx("JBFlingyFX1",0,0,0,random(-10,10),0,random(2,10),random(0,359),SXF_NOCHECKPOSITION);
+		TNT1 AAAAAAAAAAAAAAA 0 A_SpawnItemEx("JBFlingyFX1",0,0,0,random(-10,10),0,random(2,10),random(0,359),SXF_NOCHECKPOSITION,192);
+		Stop;
+	}
+}
+
+Class JBFlingyFX1 : Actor
+{
+	Default
+	{
+		Projectile;
+		+NOINTERACTION
+		RenderStyle "None";
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0;
+	Perform:
+		TNT1 A 12 A_SpawnItemEx("JBFlingyTrail2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION);
+		TNT1 A 8 A_SpawnItemEx("JBFlingyTrail2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION);
+		TNT1 A 4 A_SpawnItemEx("JBFlingyTrail2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION);
+		TNT1 A 2 A_SpawnItemEx("JBFlingyTrail2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION);
+		TNT1 AA 1 A_SpawnItemEx("JBFlingyTrail2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION);
+		Stop;
+	}
+}
+
+Class JBFlingyTrail1 : Actor
+{
+	Default
+	{
+		+NOINTERACTION
+		RenderStyle "Add";
+		Scale 0.6;
+		Alpha 0.9;
+		Translation "0:255=%[0,0,0]:[1,0.15,0.75]";
+	}
+	States
+	{
+	Spawn:
+		LPUF A 0;
+		LPUF AAAAAAAAAA 1 Bright A_SetScale(Scale.X-(0.005));
+		LPUF AAAAA 1 Bright A_SetScale(Scale.X-(0.01));
+		Stop;
+	}
+}
+
+Class JBFlingyTrail2 : JBFlingyTrail1 { Default { Scale 0.3; } }
+
+Class JBFlare : Actor
+{
+	Default
+	{
+		+NOINTERACTION
+		Scale 1.5;
+		RenderStyle "Add";
+		Translation "0:255=%[0,0,0]:[1,0,0.5]";
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0;
+		TNT1 A 0 A_Jump(128,"Two","Three");
+	One:
+		X006 ABCDEFGHIJKLMNOP 2 Bright A_ScaleVelocity(0.98);
+		Stop;
+	Two:
+		X007 ABCDEFGHIJ 2 Bright A_ScaleVelocity(0.98);
+		Stop;
+	Three:
+		X033 ABCDEFGHIJKLMNOPQR 2 Bright A_ScaleVelocity(0.98);
+		Stop;
+	}
+}
+
+Class JBSmoke : PBMidSmoke
+{
+	Default
+	{
+		RenderStyle "Add";
+		Scale 1.0;
+		Translation "0:255=%[0,0,0]:[1.5,0,1.5]";
+	}
+}
+
+Class JBSmokeBig : JBSmoke { Default { Scale 1.5; } }
+
+
+Class JackBomb1 : Actor
+{
+	Default
+	{
+		Speed 6;
+		Radius 8;
+		Height 8;
+		Scale 0.25;
+		Damage 0;
+		Gravity 0.65;
+		BounceFactor 0.4;
+		BounceCount 6;
+		BounceType "Doom";
+		PROJECTILE;
+		+GRENADETRAIL
+		-NOGRAVITY
+		+EXTREMEDEATH
+		+ALLOWBOUNCEONACTORS
+		+BOUNCEONACTORS
+		+CANBOUNCEWATER
+		+PAINLESS
+		+NODAMAGETHRUST 
+		+CANNOTPUSH
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 ;
+		TNT1 A 0 ThrustThingZ(0,random(10,15),0,1);
+		JBTH AAAAAAAAAA 35 Bright ;
+		Goto Death;
+	Death:
+		TNT1 A 0 A_SpawnItemEx("JackBomb",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0);
+		Stop;
+	}
+}
+
+Class JackBomb2 : JackBomb1 { Default { Speed 7; } }
+
+Class JackBomb3 : JackBomb1 { Default { Speed 9; } }
+
+Class JackBomb4 : JackBomb1
+{
+	
+	Default
+	{
+		Speed 10;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 ;
+		TNT1 A 0 ThrustThingZ(0,random(12,14),0,1);
+		JBTH AAAAAAAAAA 35 Bright ;
+		Goto Death;
+	}
+}
+
+Class JackBomb5 : JackBomb4 { Default { Speed 12; } }
+
+Class JackBomb6 : JackBomb4 { Default { Speed 13; } }
+
+Class JackBomb7 : JackBomb1
+{
+	Default
+	{
+		Speed 15;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0;
+		TNT1 A 0 ThrustThingZ(0,random(14,16),0,1);
+		JBTH AAAAAAAAAA 35 Bright ;
+		Goto Death;
+	}
+}
+
+Class JackBomb8 : JackBomb7 { Default { Speed 16; } }
+
+Class JackBomb9 : JackBomb7 { Default { Speed 18; } }
+
+Class JackBombA : JackBomb1
+{
+	Default
+	{
+		Speed 19;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0;
+		TNT1 A 0 ThrustThingZ(0,random(16,18),0,1);
+		JBTH AAAAAAAAAA 35 Bright ;
+		Goto Death;
+	}
+}
+
+Class JackBombB : JackBombA { Default { Speed 21; } }
+
+Class JackBombC : JackBombA { Default { Speed 22; } }
+
+Class JackBombD : JackBomb1
+{
+	Default
+	{
+		Speed 24;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 ;
+		TNT1 A 0 ThrustThingZ(0,random(18,20),0,1);
+		JBTH AAAAAAAAAA 35 Bright ;
+		Goto Death;
+	}
+}
+
+Class JackBombE : JackBombD { Default { Speed 25; } }
+
+Class JackBombF : JackBombD { Default { Speed 27; } }
+
+Class JackBombG : JackBombD { Default { Speed 28; } }
+
+Class JackBombAlt : JackBomb1
+{
+	Default
+	{
+		BounceFactor 0.3;
+		BounceCount 3;
+		Speed 3;
+	}
+	States
+	{
+	Spawn:
+		JBTH AAAAAAAAAA 35 Bright ;
+		Goto Death;
+	}
+}
+
+
+
+Class JackBombDrop : AEoDWeaponDrop
+{
+	Default
+	{
+		Inventory.MaxAmount 1;
+	}
+	States
+	{
+	Use:
+		TNT1 A 0 A_SpawnItemEx("DroppedJackBomb",0,0,32,8,0,0,0,SXF_NOCHECKPOSITION,0);
+		Stop;
+	}
+}
+
+Class DroppedJackBomb : Actor
+{
+	Default
+	{
+		Radius 16;
+		Height 20;
+		Scale 0.125;
+	}
+	States
+	{
+	Spawn:
+		WJKB A 15 Bright;
+		TNT1 A 0 A_SpawnItemEx("AEoDJackBombNoAmmo",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER,0);
+		Stop;
+	}
+}
+
+Class AEoDJackBombNoAmmo : AEoDJackBombItem
+{
+	States
+	{
+	Spawn:
+		WJKB A -1 Bright;
+		Loop;
+	Pickup:
+		TNT1 A 0 A_JumpIf(CallACS("WeaponSlotLimitCheck",1) <= 0,"Nothing");
+		TNT1 A 0 A_JumpIfInventory("AEGrenade",4,"Ammo");
+		TNT1 A 0 A_JumpIfInventory("AEoDJackBomb",1,2);
+		TNT1 A 0 A_GiveInventory("Weapon1Count",1);
+		TNT1 A 0 A_GiveInventory("JackBombDrop",1);
+		TNT1 A 0 A_GiveInventory("AEoDJackBomb",1);
+		TNT1 A 0 A_TakeInventory("AEGrenade",4);
+		TNT1 A 0 ;
+		Stop;
+	Nothing:
+		TNT1 A 0 A_JumpIfInventory("AEoDJackBomb",1,"Ammo");
+		TNT1 A 0 A_JumpIfInventory("LimitScriptActive",1,1);
+		Goto Pickup+2;
+		
+		TNT1 A 0 ACS_NamedExecute("s798",0,1,7,0);
+		Fail;
+	Ammo:
+		TNT1 A 0 A_TakeInventory("AEGrenade",4);
+		TNT1 A 0 A_JumpIfInventory("AEoDJackBomb",1,2);
+		TNT1 A 0 A_GiveInventory("Weapon1Count",1);
+		TNT1 A 0 A_GiveInventory("JackBombDrop",1);
+		TNT1 A 0 A_GiveInventory("AEoDJackBomb",1);
+		Stop;
+	}
+}

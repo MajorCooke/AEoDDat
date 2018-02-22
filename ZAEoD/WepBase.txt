@@ -1,0 +1,57 @@
+/*==============================================================================
+
+								AEons of Death
+							    Item Code Base
+									v6.66
+
+==============================================================================*/
+
+// Used for identification purposes. This makes it easier to perform things like
+// CheckClass functions when searching for ancestors.
+
+Class AEoDInventory : Inventory 			{	Default { +NOTELESTOMP	} }
+Class AEoDCustomInventory : CustomInventory {	Default { +NOTELESTOMP	} }
+Class AEoDAmmo : Ammo						{	Default { +NOTELESTOMP	} }
+
+// This goes for the actual weapon itself.
+Class AEoDWeaponBase : Weapon
+{
+	Default
+	{
+		+INVENTORY.IGNORESKILL
+		+INVENTORY.UNTOSSABLE
+		+INVENTORY.UNDROPPABLE
+		+WEAPON.CHEATNOTWEAPON
+		+DONTGIB
+		+NOTELESTOMP
+		Tag "REPLACE ME YOU IDIOT!";
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0;
+		Stop;
+	}
+}
+
+// This is for the actors doing the pickup checking on slot limits.
+Class AEoDWeaponPickup : CustomInventory
+{
+	Default
+	{
+		+INVENTORY.IGNORESKILL	
+		+FLOORCLIP
+		+DONTGIB
+		+NOTELESTOMP
+	}
+}
+
+Class AEoDWeaponDrop : CustomInventory
+{
+	Default
+	{
+		+INVENTORY.UNDROPPABLE
+		+INVENTORY.UNTOSSABLE
+		+NOTELESTOMP
+	}
+}

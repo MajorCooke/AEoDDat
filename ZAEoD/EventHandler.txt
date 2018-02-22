@@ -4,7 +4,7 @@ Class AEoDHandler : EventHandler
 	//Array<uint8> SectorD;
 		
 	override void NetworkProcess(ConsoleEvent e)
-	{		
+	{	
 		if (e.Name == 'EndDemonMorph')
 		{
 			int num = e.Player;
@@ -20,63 +20,60 @@ Class AEoDHandler : EventHandler
 			}
 			return;
 		}
-		
-		if (e.Name == 'DemonMorphOn')
+		if (!e.IsManual)
 		{
-			/*
-			if (!DemonMorph)
-			{
-				SectorD.Clear();
-				SectorD.Reserve(level.Sectors.Size());
-			}
 			
-			for (int i = 0; i < level.Sectors.Size(); i++)
+			if (e.Name == 'DemonMorphOn')
 			{
-				Sector s = level.sectors[i];
-				SectorD[i] = s.Colormap.Desaturation;
-				s.SetColor(s.ColorMap.LightColor, 255);
-			}
-			*/
-			DemonMorph = true;
-			int num = e.Player;
-			let plr = players[num].mo;
-			
-			
-			ThinkerIterator it = ThinkerIterator.Create("Actor");
-			Actor mo;
-			while (mo = Actor(it.Next()))
-			{
-				if (mo.bISMONSTER && mo.health > 0)
+				/*
+				if (!DemonMorph)
 				{
-					if (mo.CountInv("DemonMorphTransToken") 
-						|| mo.Species == 'Director'
-						|| mo.Species == 'AEoDSpawner')	continue;
-					mo.A_SetInventory("DemonMorphTransToken",1);
-					DemonMorphTranslation dm = new("DemonMorphTranslation");
-					dm.who = mo;
-					dm.plr = plr;
+					SectorD.Clear();
+					SectorD.Reserve(level.Sectors.Size());
+				}
+				
+				for (int i = 0; i < level.Sectors.Size(); i++)
+				{
+					Sector s = level.sectors[i];
+					SectorD[i] = s.Colormap.Desaturation;
+					s.SetColor(s.ColorMap.LightColor, 255);
+				}
+				*/
+				DemonMorph = true;
+				int num = e.Player;
+				let plr = players[num].mo;
+				
+				
+				ThinkerIterator it = ThinkerIterator.Create("Actor", Thinker.STAT_DEFAULT);
+				Actor mo;
+				while (mo = Actor(it.Next()))
+				{
+					if (mo.bISMONSTER && mo.health > 0)
+					{
+						if (mo.CountInv("DemonMorphTranslationItem") 
+							|| mo.Species == 'Director'
+							|| mo.Species == 'AEoDSpawner')	continue;
+						
+						mo.A_GiveInventory("DemonMorphTranslationItem", 1);
+					}
 				}
 			}
-		}
-		else if (e.Name == 'DemonMorphOff')
-		{
-			DemonMorph = false;
-			
-			ThinkerIterator it = ThinkerIterator.Create("DemonMorphTranslation");
-			DemonMorphTranslation mo;
-			while (mo = DemonMorphTranslation(it.Next(true)))
+			else if (e.Name == 'DemonMorphOff')
 			{
-				mo.DestroyMe = true;
-				continue;
+				//Console.Printf("Called");
+				DemonMorph = false;
+				ThinkerIterator it = ThinkerIterator.Create("Actor", Thinker.STAT_DEFAULT);
+				Actor mo;
+				while (mo = Actor(it.Next()))
+				{
+					let inv = Inventory(mo.FindInventory("DemonMorphTranslationItem"));
+					if (inv)	
+					{
+						//Console.Printf("Attempting Destruction");
+						inv.DepleteOrDestroy();
+					}
+				}
 			}
-			/*
-			for (int i = 0; i < level.Sectors.Size(); i++)
-			{
-				Sector s = level.sectors[i];
-				s.SetColor(s.ColorMap.LightColor, SectorD[i]);
-			}
-			*/
-			
 		}
 	}
 	
@@ -90,10 +87,10 @@ Class AEoDHandler : EventHandler
 		if (DemonMorph && e.Thing)
 		{
 			Actor mo = e.Thing;
+			
 			if (mo && mo.bISMONSTER && mo.health > 0)
 			{
-				DemonMorphTranslation dm = new("DemonMorphTranslation");
-				dm.who = mo;
+				mo.A_GiveInventory("DemonMorphTranslationItem", 1);
 			}
 		}
 	}
@@ -105,76 +102,48 @@ Class AEoDHandler : EventHandler
 			Actor mo = e.Thing;
 			if (mo && mo.bISMONSTER)
 			{
-				DemonMorphTranslation dm = new("DemonMorphTranslation");
-				dm.who = mo;
-				dm.resurrecting = true;
+				mo.A_GiveInventory("DemonMorphTranslationItem", 1);
 			}
 		}
 	}
 }
-/*
-Class DemonMorphTranslator : Inventory
-{
-	DemonMorphTranslation dm;
-	
-	override bool TryPickup (in out Actor toucher)
-	{
-		if (toucher && toucher.CountInv(self.GetClass()))
-			return false;
-		if (Super.TryPickup(toucher))
-		{
-			if (invoker.Owner)
-			{
-				invoker.dm = new("DemonMorphTranslation");
-				invoker.dm.who = invoker.Owner;
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	override void OwnerDied()
-	{
-		if (invoker.dm && )
-		{
-			invoker.Owner.
-		}
-	}
-}
-*/
 
 Class DemonMorphTransToken : Inventory {}
 
-Class DemonMorphTranslation : Thinker
+Class DemonMorphTranslationItem : Inventory
 {
 	uint OldTranslation;
 	uint CurrentTranslation;
 	uint FriendlyTranslation;
 	uint EnemyTranslation;
-	Actor who;
-	Actor plr;
 	bool wasFriendly;
 	bool resurrecting;
 	bool DestroyMe;
+	bool restored;
 	
-	
-	override void PostBeginPlay()
+	override bool TryPickup(in out Actor toucher)
 	{
-		if (who)
+		if (!toucher || toucher.health < 1 || toucher.CountInv(GetClass()))
+			return false;
+		
+		bool good = Super.TryPickup(toucher);
+		if (good && toucher)
 		{
-			OldTranslation = who.Translation;
-			who.A_SetTranslation("DemonMorphAlly");
-			FriendlyTranslation = who.Translation;
-			who.A_SetTranslation("DemonMorphTarget");
-			EnemyTranslation = who.Translation;
+			restored = false;
+			OldTranslation = toucher.Translation;
+			toucher.A_SetTranslation("DemonMorphAlly");
+			FriendlyTranslation = toucher.Translation;
+			toucher.A_SetTranslation("DemonMorphTarget");
+			EnemyTranslation = toucher.Translation;
 			
-			if (who.bFRIENDLY)	{ who.A_SetTranslation("DemonMorphAlly"); wasFriendly = true; }
-			else				who.A_SetTranslation("DemonMorphTarget");
+			if (toucher.bFRIENDLY)	{ toucher.A_SetTranslation("DemonMorphAlly"); wasFriendly = true; }
+			else						toucher.A_SetTranslation("DemonMorphTarget");
 			
-			who.bBRIGHT = true;
-			CurrentTranslation = who.Translation;
+			toucher.bBRIGHT = true;
+			CurrentTranslation = toucher.Translation;
+			//Console.Printf("Translation set");
 		}
-		Super.PostBeginPlay();
+		return good;
 	}
 	
 	//==========================================================================
@@ -182,64 +151,89 @@ Class DemonMorphTranslation : Thinker
 	// The tick function.
 	//
 	//==========================================================================
-	override void Tick()
+	override void DoEffect()
 	{
-		// Destroy the thinker if we no actor.
-		if (!who || DestroyMe) return Destroy();
-		
-		// Destroy the thinker if actor's dead and not resurrecting, 
-		if (who.health < 0)
+		// Destroy the thinker if we no actor, or actor's dead.
+		if (DestroyMe || !owner || owner.health < 1)
 		{
-			if (resurrecting)	return Super.Tick();
-			else				return Destroy();
+			return DepleteOrDestroy();
 		}
-		else resurrecting = false;
 		
 		// No point doing anything if invisible.
-		if (who.alpha <= 0 || who.GetRenderStyle() <= 0 || who.bINVISIBLE)
-			return Super.Tick();
+		if (owner.alpha <= 0 || owner.GetRenderStyle() <= 0 || 
+			owner.bINVISIBLE || owner.bNOSECTOR)
+			return Super.DoEffect();
 		
 		
 		// Change the translation based on friendly or not.
 		// Make sure not to record it by changing the base and current
 		// at the same time.
-		if (!wasFriendly && who.bFRIENDLY)
+		if (!wasFriendly && owner.bFRIENDLY)
 		{
-			who.Translation = CurrentTranslation = FriendlyTranslation;
-			wasFriendly = true;
+			owner.Translation = CurrentTranslation = FriendlyTranslation;
 		}
-		else if (wasFriendly && !who.bFRIENDLY)
+		else if (wasFriendly && !owner.bFRIENDLY)
 		{
-			who.Translation = CurrentTranslation = EnemyTranslation;
-			wasFriendly = false;
+			owner.Translation = CurrentTranslation = EnemyTranslation;
 		}
-		
+		wasFriendly = owner.bFRIENDLY;
 		
 		// Should their translation change at any point, record it.
-		if (who.Translation != CurrentTranslation)
-		{
-			OldTranslation = who.Translation;
-		}
+		if (owner.Translation != CurrentTranslation)
+			OldTranslation = owner.Translation;
 		
 		// Then set it again, and done.
-		who.Translation = CurrentTranslation;
-		who.bBRIGHT = true;
-		Super.Tick();
+		owner.Translation = CurrentTranslation;
+		owner.bBRIGHT = true;
+		restored = false;
+		Super.DoEffect();
 	}
 	//==========================================================================
 	//
-	// Destroy the thinker after resetting the translation. This only applies
-	// to monsters that don't burst and disappear into tiny fragments.
+	// As of switching to inventory items, this actually works for
+	// monsters that burst into fragments thanks to the special handling of
+	// inventory items upon death.
 	//
+	// Why do we need all three of these functions? Simply put, calling a
+	// function is very time critical. This ensures all corner cases are
+	// covered and all escape paths are cut off, ensuring the gibs are
+	// returned to normal.
+	// 
+	// For example, OwnerDied in the super function calls Destroy() which then
+	// has to process some other stuff first. By this time it may be too late.
+	// Because this is all processed in a virtual machine, this is one exception
+	// to making a function call for doing the work. It may be tidier, but
+	// call speed is imperative if we want things happening in the proper order.
+	// 
 	//==========================================================================
+	override void OwnerDied()
+	{
+		if (owner && !restored)
+		{
+			owner.Translation = OldTranslation;
+			owner.bBRIGHT = false;
+			restored = true;
+		}
+		Super.OwnerDied();
+	}
 	override void OnDestroy()
 	{
-		if (who)
+		if (owner && !restored)
 		{
-			who.A_SetInventory("DemonMorphTransToken",0);
-			who.Translation = OldTranslation;
-			who.bBRIGHT = false;
+			owner.Translation = OldTranslation;
+			owner.bBRIGHT = false;
+			restored = true;
 		}
 		Super.OnDestroy();
+	}
+	override void DepleteOrDestroy()
+	{
+		if (owner && !restored)
+		{
+			owner.Translation = OldTranslation;
+			owner.bBRIGHT = false;
+			restored = true;
+		}
+		Super.DepleteOrDestroy();
 	}
 }

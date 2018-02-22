@@ -9,12 +9,19 @@ Class NewExplosionMedium : AEoDFX
 		+NOINTERACTION +NOTELESTOMP +NOTONAUTOMAP
 		RenderStyle "None"; +INVISIBLE
 	}
+	
+	override void PostBeginPlay()
+	{
+		user_t = tid; ChangeTID(0);
+		Super.PostBeginPlay();
+	}
+	
 	States
 	{
 	Spawn:
 		TNT1 A 0 NoDelay 
 		{
-			user_t = tid; ChangeTID(0);
+			
 			Class<Actor> what = (user_t != 0 || A_CheckSight("Simple")) ? "ExploMediumBack1" : "ExploMediumBack2";
 			A_SpawnItemEx(what,0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION);
 		}

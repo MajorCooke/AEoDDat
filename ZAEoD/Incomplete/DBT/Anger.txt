@@ -1,0 +1,210 @@
+
+Actor AngerSpawner	//hand-held effect
+{
+	+NOINTERACTION
+	RenderStyle Add
+	Alpha 0.7
+	Scale 0.5
+	States
+	{
+		Spawn:
+			TNT1 A 0 A_FaceTarget
+			X025 ABCEDFGHIJKLMNOPQRSTUVWXY 1 Bright 
+			Stop
+	}
+}
+
+Actor AngerSpawnerShort : AngerSpawner //hand-held effect shorter
+{
+	States
+	{
+		Spawn:
+			TNT1 A 0 A_FaceTarget
+			X025 ABC 1 Bright 
+			Stop
+	}
+}
+
+Actor AngerParticleSpawner //particles when attack starts
+{
+	+NOINTERACTION
+	RenderStyle None
+	States
+	{
+		Spawn:
+			PLAY ABCEDFGHIJKLMNOPQRSTUVWXY 0 A_SpawnItemEx("AngerParticle",0,0,0,frandom(4.0,-4.0),frandom(4.0,-4.0),frandom(4.0,-4.0),0,SXF_NOCHECKPOSITION)
+			PLAY ABCEDFGHIJKLMNOPQRSTUVWXY 0 A_SpawnItemEx("AngerParticle",0,0,0,frandom(4.0,-4.0),frandom(4.0,-4.0),frandom(4.0,-4.0),0,SXF_NOCHECKPOSITION)
+			PLAY ABCEDFGHIJKLMNOPQRSTUVWXY 0 A_SpawnItemEx("AngerParticle",0,0,0,frandom(4.0,-4.0),frandom(4.0,-4.0),frandom(4.0,-4.0),0,SXF_NOCHECKPOSITION)
+			PLAY ABCEDFGHIJKLMNOPQRSTUVWXY 0 A_SpawnItemEx("AngerParticle",0,0,0,frandom(4.0,-4.0),frandom(4.0,-4.0),frandom(4.0,-4.0),0,SXF_NOCHECKPOSITION)
+			Stop
+	}
+}
+
+Actor AngerParticle		//particle itself
+{
+	+NOINTERACTION
+	RenderStyle Add
+	Scale 0.2
+	States
+	{
+	Spawn:
+		X029 A 20
+		X029 AAAAA 2 A_ScaleVelocity(0.5)
+		X029 A 2 A_ScaleVelocity(-1.0)
+		X029 AAAAAAAAAAAA 2 A_ScaleVelocity(1.5)
+		Stop
+	}
+}
+
+//Anger projectile, revamped to deal extensive damage against monsters.
+Actor AngerMissile	
+{
+	Projectile
+	Speed 19
+	Damage 30
+	Scale 0.4
+	RenderStyle Add
+	Alpha 0.97
+	+SeekerMissile
+	+PAINLESS
+	+HITTRACER
+	+GHOST
+	+THRUGHOST
+	+MTHRUSPECIES
+	+DOHARMSPECIES
+	Species "DeathBringer"
+	States
+	{
+	Spawn:
+		TNT1 A 0 Bright A_SpawnItemEx("AngerTrailSpawn",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		X017 A 1 Bright A_SeekerMissile(10,10)
+		TNT1 A 0 Bright A_SpawnItemEx("AngerTrailSpawn",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		X017 B 1 Bright A_SeekerMissile(10,10)
+		TNT1 A 0 Bright A_SpawnItemEx("AngerTrailSpawn",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		X017 C 1 Bright A_SeekerMissile(10,10)
+		TNT1 A 0 Bright A_SpawnItemEx("AngerTrailSpawn",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		X017 D 1 Bright A_SeekerMissile(10,10)
+		TNT1 A 0 Bright A_SpawnItemEx("AngerTrailSpawn",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		X017 E 1 Bright A_SeekerMissile(10,10)
+		TNT1 A 0 Bright A_SpawnItemEx("AngerTrailSpawn",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		X017 F 1 Bright A_SeekerMissile(10,10)
+		TNT1 A 0 Bright A_SpawnItemEx("AngerTrailSpawn",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		X017 G 1 Bright A_SeekerMissile(10,10)
+		TNT1 A 0 Bright A_SpawnItemEx("AngerTrailSpawn",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		X017 H 1 Bright A_SeekerMissile(10,10)
+		TNT1 A 0 Bright A_SpawnItemEx("AngerTrailSpawn",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		X017 I 1 Bright A_SeekerMissile(10,10)
+		TNT1 A 0 Bright A_SpawnItemEx("AngerTrailSpawn",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		X017 J 1 Bright A_SeekerMissile(10,10)
+		TNT1 A 0 Bright A_SpawnItemEx("AngerTrailSpawn",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		X017 K 1 Bright A_SeekerMissile(10,10)
+		TNT1 A 0 Bright A_SpawnItemEx("AngerTrailSpawn",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		X017 L 1 Bright A_SeekerMissile(10,10)
+		TNT1 A 0 Bright A_SpawnItemEx("AngerTrailSpawn",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		X017 M 1 Bright A_SeekerMissile(10,10)
+		TNT1 A 0 Bright A_SpawnItemEx("AngerTrailSpawn",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		X017 N 1 Bright A_SeekerMissile(10,10)
+		TNT1 A 0 Bright A_SpawnItemEx("AngerTrailSpawn",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		X017 O 1 Bright A_SeekerMissile(10,10)
+		TNT1 A 0 Bright A_SpawnItemEx("AngerTrailSpawn",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		X017 P 1 Bright A_SeekerMissile(10,10)
+		TNT1 A 0 Bright A_SpawnItemEx("AngerTrailSpawn",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		X017 Q 1 Bright A_SeekerMissile(10,10)
+		TNT1 A 0 Bright A_SpawnItemEx("AngerTrailSpawn",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		X017 R 1 Bright A_SeekerMissile(10,10)
+		TNT1 A 0 Bright A_SpawnItemEx("AngerTrailSpawn",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		X017 S 1 Bright A_SeekerMissile(10,10)
+		TNT1 A 0 Bright A_SpawnItemEx("AngerTrailSpawn",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		X017 T 1 Bright A_SeekerMissile(10,10)
+		TNT1 A 0 Bright A_SpawnItemEx("AngerTrailSpawn",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		X017 U 1 Bright A_SeekerMissile(10,10)
+		TNT1 A 0 Bright A_SpawnItemEx("AngerTrailSpawn",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		X017 V 1 Bright A_SeekerMissile(10,10)
+		TNT1 A 0 Bright A_SpawnItemEx("AngerTrailSpawn",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		X017 W 1 Bright A_SeekerMissile(10,10)
+		TNT1 A 0 Bright A_SpawnItemEx("AngerTrailSpawn",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		X017 X 1 Bright A_SeekerMissile(10,10)
+		TNT1 A 0 Bright A_SpawnItemEx("AngerTrailSpawn",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		X017 Y 1 Bright A_SeekerMissile(10,10)
+		Loop
+	Death:
+		TNT1 A 0 A_ChangeFlag("PAINLESS",false)
+		TNT1 A 0 A_JumpIf(CheckClass("PlayerPawn",AAPTR_TRACER,1),"PlayerDmg")
+		TNT1 A 0 A_DamageTracer(2000*random(1,10),None,DMSS_NOFACTOR|DMSS_AFFECTARMOR)
+		TNT1 A 0 A_SetDamageType("TempestLightning")
+		TNT1 A 0 A_Explode(512,256,0)
+		Goto Finish
+	PlayerDmg:
+		TNT1 A 0 A_Explode(256,256,0)
+	Finish:
+		TNT1 A 0 A_SpawnItemEx("PhoenixExplo",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("PhoenixExplo2",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 A 0 A_SpawnItemEx("PhoenixExplo3",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 AAAAAAAAAAAAAAAA 0 A_CustomMissile("TelepSmoke1",random(0,60),random(-60,60),0,6) //beautiful explosion isnt it? DBT
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PhoenixExplPart",0,0,20,random(-10,10),random(-10,10),random(-10,10),random(1,360))
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PhoenixExplPart",0,0,20,random(-10,10),random(-10,10),random(-10,10),random(1,360))
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PhoenixExplPart",0,0,20,random(-10,10),random(-10,10),random(-10,10),random(1,360))
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PhoenixExplPart",0,0,20,random(-10,10),random(-10,10),random(-10,10),random(1,360))
+		TNT1 A 0 A_PlaySoundEx("weapons/phoenixhit","SoundSlot5")
+		X014 EFGHIJKLMNOPQRSTUVWXY 1  Bright
+		Stop
+	}
+}
+
+Actor AngerMissilePlayer : AngerMissile	// for players
+{
+	Damage 30
+	States
+	{
+		Death:
+			TNT1 A 0 A_Explode(256,256)
+			X014 EFGHIJKLMNOPQRSTUVWXY 1  Bright
+			Stop
+	}
+}
+
+Actor AngerTrailSpawn	//spawner of the projectile's trail
+{
+	+NOINTERACTION
+	States
+	{	
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("AngerTrailMain",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION)
+		TNT1 AAA 0 A_SpawnItemEx("AngerTrailSecondary",0,random(10,-10),random(10,-10),frandom(4.0,-4.0),frandom(4.0,-4.0),frandom(4.0,-4.0),0,SXF_NOCHECKPOSITION)
+		Stop
+	}
+}
+
+Actor AngerTrailMain	//main trail
+{
+	+NOINTERACTION
+	RenderStyle Add
+	Alpha 0.7
+	Scale 0.4
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_Jump(230,4,6,8,10,12)
+		X017 ABCDEFGHIJKLMOPQRSTUVWXY 1 Bright A_FadeOut(0.0185)
+		Loop
+	}
+}
+
+	
+Actor AngerTrailSecondary : AngerParticle	//projectile particles trail
+{
+	+NOINTERACTION
+	RenderStyle Add
+	Scale 0.2
+	States
+	{
+	Spawn:
+		X029 AAAAA 3 A_ScaleVelocity(0.5)
+		X029 A 2 A_ScaleVelocity(-1.0)
+		X029 AAAAA 3 A_ScaleVelocity(1.5)
+		Stop
+	}
+}
+	
