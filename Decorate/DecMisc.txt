@@ -342,7 +342,7 @@ Actor NoBloodPuff
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay A_SpawnItemEx("NewPuff1",0,0,0,0,0,0,0,32,32)
+		TNT1 A 5 NoDelay A_SpawnItemEx("NewPuff1",0,0,0,0,0,0,0,32,32)
 		Stop
 	}
 }
@@ -416,7 +416,7 @@ Actor NewPuff1 //: BulletPuff
 		//TNT1 A 0 A_SpawnItemEx("PuffFloorSmoke",0,0,0,0,0,0,0,32)
 		Stop
 	XDeath:
-		TNT1 A 1
+		TNT1 A 2
 		{
 			if (A_CheckFlag(INVULNERABLE,"Null",TracerPtr) ||
 				A_CheckFlag(NOBLOOD,"Null",TracerPtr) ||
@@ -427,7 +427,7 @@ Actor NewPuff1 //: BulletPuff
 		}
 		Stop
 	Simple:
-		TNT1 A 1 
+		TNT1 A 2 
 		{
 			if (random(1,2) == 1)	{ A_PlaySound("Doom4/Other/BulletHitConcrete",6,1.0); }
 		}
@@ -2289,11 +2289,15 @@ Actor WeaponSoundStopper : CustomInventory
 	{
 	Use:
 		TNT1 A 0
-		TNT1 A 0 A_StopSound(3)
-		TNT1 A 0 A_StopSound(4)
-		TNT1 A 0 A_StopSound(5)
-		TNT1 A 0 A_StopSound(6)
-		TNT1 A 0 A_StopSound(7)
+		{
+			A_StopSound(1);
+			A_StopSound(2);
+			A_StopSound(3);
+			A_StopSound(4);
+			A_StopSound(5);
+			A_StopSound(6);
+			A_StopSound(7);
+		}
 		Stop
 	}
 }
@@ -2309,15 +2313,15 @@ Actor AEIceChunk replaces IceChunk
 	Height 4
 	Mass 5
 	Gravity 0.35
-	+CORPSE
-	+DROPOFF
-	+CANNOTPUSH
+	Projectile
+	+THRUACTORS
+	-NOGRAVITY
 	+FLOORCLIP
 	+NOTELEPORT
 	+NOBLOCKMAP
 	+MOVEWITHSECTOR
 	Scale 0.06
-	RenderStyle Add
+	RenderStyle "Add"
 	//Alpha 0.7
 	//Translation "0:255=%[0,0.5,0.75]:[1.0,1.0,1.4]"
 	Translation "0:255=%[0.57,0.6,0.84]:[0.9,0.9,0.9]"
@@ -2335,7 +2339,7 @@ Actor AEIceChunk replaces IceChunk
 		GIB8 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1
 		GIB9 ABCDEFGHIJKLMNOPQRSTUVWX 1
 		Goto Spawn+3
-	Crash:
+	Death:
 		"####" "#" 3 A_FadeOut(0.02)
 		Loop
 	}
@@ -2478,6 +2482,7 @@ Actor IDied : Inventory
 Actor Nothing
 {
 	+NOINTERACTION
+	+NOSECTOR
 	States
 	{
 	Spawn:
@@ -2491,19 +2496,6 @@ Actor AmmoUser : Nothing {}
 ////////////////////
 // SPECIAL ACTORS //
 ////////////////////
-
-actor ClientSpawner 19191
-{
-  -SOLID
-  +NOGRAVITY
-  +ALLOWCLIENTSPAWN
-  States
-   {
-   Spawn:
-    TNT1 A 1
-    Loop
-   }
-}
 
 Actor TracerFXToken : Inventory {}
 

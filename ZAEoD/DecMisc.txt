@@ -45,7 +45,11 @@ Class AEoDFX : Actor
 	{
 		if (bINVISIBLE)	return Super.Tick();
 		Super.Tick();
-		if (RollAdd != 0.0)	A_SetRoll(roll + RollAdd, SPF_INTERPOLATE);
+		
+		if (bROLLSPRITE)
+		{
+			if (RollAdd != 0.0)	A_SetRoll(roll + RollAdd, SPF_INTERPOLATE);
+		}
 	}
 }
 
@@ -63,7 +67,7 @@ Class InvisiPuff : AEoDFX
 	States
 	{
 	Spawn:
-		TNT1 A 1;
+		TNT1 A 5;
 		Stop;
 	}
 }
@@ -75,7 +79,6 @@ Class GunSmokeSpawner : AEoDFX
 //	+NOCLIP
 	Default
 	{
-		PROJECTILE;
 		+NOINTERACTION
 		+NOTIMEFREEZE
 		Radius 1;
@@ -134,7 +137,7 @@ Class GunSmallSmokeSpawner : AEoDFX
 	Default
 	{
 		PROJECTILE;
-	//	+NOCLIP
+		+NOINTERACTION
 		+NOTIMEFREEZE
 		+NOTONAUTOMAP
 		+THRUACTORS
@@ -278,10 +281,11 @@ Class ChGunCasing : AEoDFX
 
 Class BulletTracerFX : AEoDFX 
 {
-	const Sparsity = 125.0;
-	const Distance = 3.25;
+	const Sparsity = 100.0;
+	//const Distance = 3.25;
 	const Multiplier = 1;
-	const SpawnSpeed = 300;
+	//const SpawnSpeed = 300;
+	//const TravelTic = 125.0 * 30.0;// * 30.0;
 	const TravelTic = Sparsity * 30.0;
 	enum BulletTracerFX
 	{
@@ -296,9 +300,10 @@ Class BulletTracerFX : AEoDFX
 	int user_render;
 	double user_dista;
 	double user_distb;
-	
+	bool renderer;
 	override void PostBeginPlay()
 	{
+		renderer = GetCVar("vid_renderer");
 		if (target) pitch = target.pitch;
 		Super.PostBeginPlay();
 	}
@@ -317,17 +322,12 @@ Class BulletTracerFX : AEoDFX
 		TNT1 A 0 NoDelay 
 		{	
 			if (A_CheckSight("Null"))
-			{	return ResolveState("Null");	}
+			{	return Destroy();	}
 			
 			A_FaceMovementDirection();
 			//pitch *= -1;
 
-			if (!IsPointerEqual(TracerPtr,NullPtr))
-			{	user_distb = Clamp(GetDistance(true,TracerPtr),0.0,3000.0);	}
-			else
-			{	user_distb = 0;	}
-			
-			return ResolveState("B1");
+			user_distb = tracer ? Clamp(GetDistance(true,TracerPtr),0.0,3000.0) : 0.0;
 		}
 	B1:
 		TNT1 A 1;
@@ -335,18 +335,17 @@ Class BulletTracerFX : AEoDFX
 		TNT1 A 1 
 		{
 			if (user_count > 14 || A_CheckSight("Null") || (pos.z < floorz) || (pos.z > ceilingz) ) 
-			{	return ResolveState("Null");	} // Destroy it.
+			{	return Destroy();	} // Destroy it.
 			user_dista = 0;
-			return ResolveState(null); //Play out the tic.
 		}
 	Looping:	// Spawns the trail.
 		TNT1 A 0
 		{
 			// If running GZDoom, spawn the neat trail.
-			if (GetCvar("vid_renderer"))
+			if (renderer)
 			{
 				if (user_dista <= 0.0)
-				{	user_dista = 64.0;	}
+					user_dista = 16.0;
 				A_SpawnItemEx("BulletTrailBeam",cos(pitch)*user_dista,0,-sin(pitch)*user_dista,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH);
 				user_dista += Sparsity;
 			}
@@ -421,7 +420,7 @@ Class TrailBeam : AEoDFX
 		+ROLLCENTER
 		YScale 0.25; //Don't touch this! Otherwise the trail will become broken up!
 		XScale 0.03; //This modifies the width of the beam. It is safe to play around with.
-		Alpha 0;
+		Alpha 1.0;
 		RenderStyle "Add";
 	}
 	// DO NOT add a translation. If you need to change the colors, make a sprite
@@ -435,7 +434,7 @@ Class TrailBeam : AEoDFX
 			user_time = 3.0;
 			
 			// Set this to the actor's same name. The TID will prevent it spawning infinitely (tid * 256).
-			A_SpawnItemEx("TrailBeam",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERSCALE|SXF_TRANSFERPOINTERS,tid * 256,1);
+			//A_SpawnItemEx("TrailBeam",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERSCALE|SXF_TRANSFERPOINTERS,tid * 256,1);
 			return ResolveState("Process");
 		}
 	Process:
@@ -447,7 +446,7 @@ Class TrailBeam : AEoDFX
 			// If it's a secondary trail (vertical)
 			if (tid > 0)	
 			{	
-				Thing_ChangeTID(0,0);
+				ChangeTID(0);
 				roll = pitch + 90;
 				pitch = 90;
 				angle += 90;
@@ -559,6 +558,7 @@ Class MovingTrailBeam : AEoDFX
 			// Keep 'shrinking'. NEVER fade out!
 			if (user_neg)
 			{
+				//Scale.X -= (user_scale / Max(1.0, user_time))
 				A_SetScale(Scale.X - (user_scale / Max(1.0, user_time)), Scale.Y);
 				if (Scale.X >= 0)	{ return ResolveState("Null"); }
 			}
@@ -576,121 +576,21 @@ Class MovingTrailBeam : AEoDFX
 	}
 }
 
-/*
-Class MovingTrailBeam : AEoDFX 
-{
-	const NoSpawn = 256;
-	double user_dist;
-	int user_t;
-	int user_zoffset;
-	double user_angle;
-	double user_pitch;
-	Vector3 pa, pb;
-	double user_time;
-	double user_scale;
-	int user_pflags;
-	int user_neg;
-	int uid;
-	Default 
-	{
-		+NOINTERACTION
-		+FLATSPRITE
-		+BRIGHT
-		+ROLLCENTER
-		YScale 0.25; //Don't touch this! Otherwise the trail will become broken up!
-		XScale 0.03; //This modifies the width of the beam. It is safe to play around with.
-		Alpha 0;
-		RenderStyle "Add";
-	}
-	// DO NOT add a translation. If you need to change the colors, make a sprite
-	// entry in TEXTURES lump and use BLEND. NEVER TRANSLATE!
-	
-	override void BeginPlay()
-	{
-		uid = tid;
-		ChangeTID(0);
-		Super.BeginPlay();
-	}
-	
-	States
-	{
-	Spawn:
-		X202 B 0 NoDelay
-		{
-			// Sets how long to split the scaling-in effect.
-			user_time = 3.0;
-			user_zoffset = 16;
-			// Set this to the actor's same name. The TID will prevent it spawning infinitely (tid * 256).
-			A_SpawnItemEx("MovingTrailBeam",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERSCALE|SXF_TRANSFERPOINTERS,uid * 256,1);
-			return ResolveState("Process");
-		}
-	Process:
-		"####" "#" 0
-		{
-			if (!user_pflags)	{ user_pflags = WARPF_INTERPOLATE|WARPF_NOCHECKPOSITION|WARPF_ABSOLUTEOFFSET;	}
-			A_Warp(DefPtr,0,0,user_zoffset,0,WARPF_NOCHECKPOSITION);
-			// If it's a secondary trail (vertical)
-			if (uid > 0)	
-			{
-				roll = pitch + 90;
-				pitch = 90;
-				angle -= 90;
-			}
-		
-			// Save our current information so we know how to properly interpolate whenever
-			// the owner moves.
-			user_neg = (Scale.X < 0) ? 1 : 0;
-			user_scale = Scale.X;
-			user_angle = angle;
-			user_pitch = pitch;
-			user_dist = GetDistance(false, TargetPtr);
-			pa = pos;
-			
-			// Move to the shooter so we can get just how far out we are.
-			A_Warp(TargetPtr,0,0,0,0,WARPF_NOCHECKPOSITION);
-			pb = pa - pos;
-			
-			// Now move back without interpolating. Otherwise it'll look weird.
-			A_Warp(TargetPtr, pb.x, pb.y, pb.z,0,WARPF_NOCHECKPOSITION|WARPF_ABSOLUTEOFFSET);
-			angle = user_angle;
-			pitch = user_pitch;
-		}
-		"####" "#" 1 
-		{
-			A_FadeIn(1.0,FTF_CLAMP);
-			A_Warp(TargetPtr, pb.x + vel.x, pb.y + vel.y, pb.z + vel.z, 0, user_pflags);
-			angle = user_angle;
-			pitch = user_pitch;
-		}
-		"####" "#" 1 
-		{
-			// Keep 'shrinking'. NEVER fade out!
-			if (user_neg)
-			{
-				A_SetScale(Scale.X - (user_scale / Max(1.0, user_time)), Scale.Y);
-				if (Scale.X >= 0)	{ return Destroy(); }
-			}
-			else
-			{
-				A_SetScale(Scale.X - (user_scale / Max(1.0, user_time)), Scale.Y);
-				if (Scale.X <= 0)	{ return Destroy(); }
-			}
-			A_Warp(TargetPtr, pb.x + vel.x, pb.y + vel.y, pb.z + vel.z, flags: user_pflags);
-			angle = user_angle;
-			pitch = user_pitch;
-		}
-		Wait;
-	}
-}
-*/
-
 Class BulletTrailBeam : TrailBeam
 {
 	Default 
 	{
 		XScale 0.05;
 		YScale 1; //Don't touch.
+		Translation "0:255=#[255, 192, 96]";
 	}
+	
+	override void PostBeginPlay()
+	{
+		Pitch += 90;
+		Super.PostBeginPlay();
+	}
+	
 	States
 	{
 	Spawn:
@@ -698,7 +598,7 @@ Class BulletTrailBeam : TrailBeam
 		{
 			// user_time = time to shrink to nothing
 			user_time = 4.0;
-			A_SpawnItemEx("BulletTrailBeam",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERSCALE|SXF_TRANSFERPOINTERS,tid * 256,1);
+			//A_SpawnItemEx("BulletTrailBeam",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERSCALE|SXF_TRANSFERPOINTERS,tid * 256,1);
 			return ResolveState("Process");
 		}
 	}
@@ -706,6 +606,7 @@ Class BulletTrailBeam : TrailBeam
 
 Class BulletTrailBeamInverted : BulletTrailBeam
 {
+	/*
 	Default 
 	{
 		XScale 0.05;
@@ -723,4 +624,5 @@ Class BulletTrailBeamInverted : BulletTrailBeam
 			return ResolveState("Process");
 		}
 	}
+	*/
 }
