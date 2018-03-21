@@ -207,7 +207,6 @@ Class TheDirector : DirectorBase
 		TNT1 A 0 
 		{
 			A_UnsetShootable();
-			A_ChangeLinkFlags(false);
 			if (cooldown0 > 0)
 			{	cooldown0 -= (mul*random(7,10));	}
 			if (cooldown1 > 0)
@@ -217,10 +216,7 @@ Class TheDirector : DirectorBase
 	Missile:
 		TNT1 A 0 
 		{
-			if (!CheckClass("PlayerPawn",TargetPtr,true))
-			{
-				A_TransferPointer(Player1,DefPtr,DefPtr,TargetPtr,4);
-			}
+			target = players[0].mo;
 			A_Warp(TargetPtr,0,0,0,0,WARPF_NOCHECKPOSITION);
 		}
 		TNT1 A 0 A_JumpIfInventory("SmallSpawnToken",1,"SmallMobShoot",TargetPtr);

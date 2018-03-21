@@ -1,0 +1,170 @@
+
+
+
+//==============================================================================
+/*	Legend:
+		(R) = Property is required.
+	------------------------------------------------------------
+	Property template is:
+	<Property Name> <Variable Acceptance Type [= Default Value]>
+	------------------------------------------------------------
+	AEoDBeamSpawnerBase's properties are the following:
+	-------------------------------------------
+	StartPuff <Actor = "">
+		Beam start position to be spawned by hitscan. If left blank, will use
+		the spawner's position instead.
+		
+(R) EndPuff <Actor = "AEoDBeamSpawnerBasePuff">
+		The impact puff where the beam attempts to stop at. Does not necessarily
+		mean contact is always made.
+		
+(R)	Beam <Actor = "AEoDBeamSpawnerBase">
+		The lightning beam spawner which does the movement and actual effect
+		spawning. 
+	
+	RandomAim <bool = false>
+		If true, chooses a new impact location between steps. Otherwise,
+		only chooses one at the start.
+	
+	(Angle/Pitch)Random <double>
+		The random amount of angle/pitch to add per step outside of 'choking'
+		(see ChokeMin/Max for details).
+		
+	AngleStart1Min
+	AngleStart1Max
+	AngleStart2Min
+	AngleStart2Max
+	PitchStart1Min
+	PitchStart1Max
+	PitchStart2Min
+	PitchStart2Max
+	(Angle/Pitch)Start(1/2)(Min/Max) <double>
+		The base pitch/angle to add upon its own when Beam spawns Start(1) or 
+		End(2) puff(s) respectively.
+		
+	Choke(Min/Max) <int>
+		# of times the beam can 'wander' before 'choking' itself --
+		re-orienting back on track and aiming at the EndPuff.
+		
+	Step(Min/Max) <int>
+		# of times to dedicate to 'sub-beam' spawning.
+		Sub-beams do not scale out and vanish after Delay(Min/Max) tics pass.
+		
+	Delay(Min/Max) <int>
+		# tics sub-beams will stay alive before replacement with the next step.
+		
+(R)	SpriteName <4 character string> 
+		The four characters used to define what sprite to give the beam. 
+		This works like the <Sprite> <Frame> <Duration> setup in an actor's
+		states, but using only the sprite base itself.
+		
+		I.e.
+		Using a player sprite:
+		--> PLAY <-- A 0
+		AEoDBeamSpawnerBase.SpriteName "PLAY";
+		
+(R)	Frame(Min/Max) <int> 
+		The random frame range picked to give the beam. 
+		Frames are appended by the prefix "Fr_".
+		(See Constants.txt)
+		
+		I.e.
+		AEoDBeamSpawnerBase.FrameMin Fr_A;
+		AEoDBeamSpawnerBase.FrameMax Fr_H;
+		
+	Length(Min/Max) <double>
+		The X scale randomized between min and max for all beams spawned during a step.
+		
+	Width(Min/Max) <double>
+		Y scale equivalent of Length(Min/Max).
+	
+	MaxDistance <double>
+		How far the beam spawner can go before the step ends.
+	
+	HomingDistance <double>
+		When the beam spawner is within this range of the EndPuff, choking is
+		constantly enforced to reach the destination.
+	
+	Failsafe <int = 500>
+		Absolute maximum number of movements the beam spawner can make before
+		forcefully ending it.
+	
+	BranchChance <int = 50>
+	BranchCMax <int = 1000>
+		The basic formula (BranchChance / BranchCMax) for a chance to spawn a branch.
+		BranchChance being 0 means it'll never spawn branches.
+	
+	BranchCount <int>
+		The maximum number of branches one single step can spawn.
+		
+	BranchSize <!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!>
+		Do not use/modify. This is set to 1.0 in the base since it cannot be done
+		otherwise.
+		
+		Every new generation of branch will automatically reduce this by 25%,
+		affecting several properties to ensure branch spawning does not go
+		overboard.
+		
+	ScaleTime(Min/Max) <int>
+		Only the final step spawns beams capable of scaling out to nothing.
+		Sets how many tics all final beams will take scale out and vanish.
+	
+	Silent <bool = false>
+		Disables thunder noise if true.
+		
+	NoFlash <bool = false>
+		Does not perform A_Light() on the player if true.
+	
+	SightCheck <bool = false>
+		Checks to see if within the player's FOV (somewhat...) if true.
+==============================================================================*/
+
+Class ForceCubeBeamSpawner : AEoDBeamSpawnerBase 
+{
+	Default
+	{
+		AEoDBeamSpawnerBase.Beam "ForceCubeBeam";
+		AEoDBeamSpawnerBase.StartPuff "";
+		AEoDBeamSpawnerBase.EndPuff "BeamSpawnerPuff";
+		AEoDBeamSpawnerBase.RandomAim false;
+		AEoDBeamSpawnerBase.PitchStart1Min 0.0;
+		AEoDBeamSpawnerBase.PitchStart1Max 0.0;
+		AEoDBeamSpawnerBase.PitchRandom 10.0;
+		AEoDBeamSpawnerBase.AngleStart1Min 0.0;
+		AEoDBeamSpawnerBase.AngleStart1Max 0.0;
+		AEoDBeamSpawnerBase.AngleRandom 10.0;
+		AEoDBeamSpawnerBase.ChokeMin 1;
+		AEoDBeamSpawnerBase.ChokeMax 3;
+		AEoDBeamSpawnerBase.StepMin 0;
+		AEoDBeamSpawnerBase.StepMax 0;
+		AEoDBeamSpawnerBase.DelayMin 0;						
+		AEoDBeamSpawnerBase.DelayMax 0;
+		AEoDBeamSpawnerBase.SpriteName "X163";
+		AEoDBeamSpawnerBase.FrameMin Fr_B;
+		AEoDBeamSpawnerBase.FrameMax Fr_B;
+		AEoDBeamSpawnerBase.LengthMin 0.02;
+		AEoDBeamSpawnerBase.LengthMax 0.10;
+		AEoDBeamSpawnerBase.WidthMin 0.05;
+		AEoDBeamSpawnerBase.WidthMax 0.10;
+		AEoDBeamSpawnerBase.MaxDistance 512;
+		AEoDBeamSpawnerBase.HomingDistance 32;
+		AEoDBeamSpawnerBase.Failsafe 500;
+		//AEoDBeamSpawnerBase.BranchChance 0;
+		AEoDBeamSpawnerBase.ScaleTimeMin 4;
+		AEoDBeamSpawnerBase.ScaleTimeMax 6;
+		AEoDBeamSpawnerBase.Silent true;
+		AEoDBeamSpawnerBase.NoFlash true;
+		AEoDBeamSpawnerBase.SightCheck false;
+	}
+}
+
+Class ForceCubeBeam : AEoDBeamBase
+{
+	Default
+	{
+		AEoDBeamBase.StepTime 4;
+		AEoDBeamBase.ScaleTime 24;
+		AEoDBeamBase.IsStep false;
+		Translation "0:255=#[255, 192, 96]";
+	}
+}

@@ -1,3 +1,212 @@
+//--------------------------------------------------------------------
+
+Class ForceCube : CustomInventory
+{
+	Default
+	{
+		+FLOATBOB
+		+COUNTITEM
+		+INVENTORY.FANCYPICKUPSOUND
+		+INVENTORY.INVBAR
+		+DONTGIB
+		Inventory.MaxAmount 10;
+		Inventory.Icon "HFCB1Z";
+		Inventory.PickupSound "reilsss/powerup/ForceCube";
+		Inventory.PickupMessage "You found a force cube!";
+		Inventory.UseSound "ForceCube/Use";
+		Scale 0.4;
+		Tag "Attack foes (timed)";
+	}
+	States
+	{
+	Spawn:
+		FCB1 ABCDEFGHIJKLMNOP 4 Bright;
+		Loop;
+	Use:
+		TNT1 A 0
+		{
+			if (!CountInv("PowerDemonMorph"))
+			{		
+				if (!CountInv("LeftCubeToken"))
+				{
+					A_SpawnItemEx("LeftCube",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTARGET|SXF_TRANSFERPITCH);
+					A_GiveInventory("LeftCubeToken",1);
+					return true;
+				}
+				if (!CountInv("RightCubeToken"))
+				{
+					A_SpawnItemEx("RightCube",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTARGET|SXF_TRANSFERPITCH);
+					A_GiveInventory("RightCubeToken",1);
+					return true;
+				}
+			}
+			return false;
+		}
+		Stop;
+	}
+}
+
+Class RealForceCube : Actor
+{
+	double YPos;
+	Class<Inventory> CubeToken;
+	
+	Property YPos: YPos;
+	Property CubeToken: CubeToken;
+}
+
+Class RightCube : RealForceCube
+{
+	const Lifetime = 1575;
+	int countdown;
+	int uang;
+	
+	Default
+	{
+		RealForceCube.YPos 12;
+		RealForceCube.CubeToken "RightCubeToken";
+		Projectile;
+		+NOINTERACTION
+		+SEEKERMISSILE
+		Radius 1;
+		Height 1;
+		Speed 0;
+		Scale 0.1;
+		MinMissileChance 0;
+	}
+	
+	override void PostBeginPlay()
+	{
+		countdown = Lifetime;
+		Super.PostBeginPlay();
+	}
+	
+	override void OnDestroy()
+	{
+		if (target && CubeToken)	target.A_SetInventory(CubeToken,0);
+		Super.OnDestroy();
+	}
+	
+	States
+	{
+	Spawn:
+		FCB2 A 1 NoDelay
+		{
+			if (!target || countdown < 1)	return Destroy();
+			
+			A_SeekerMissile(0,0,SMF_LOOK,256);
+			if (tracer && tracer.health > 0)
+			{
+				A_FaceTracer(0,0,0,0,FAF_MIDDLE);
+				//A_CustomRailgun(4,0,"","",RGF_SILENT,0,0,"CubePuff",0,0,0,0,5.0,0,"ForceCubeTrail");
+				Actor puff = LineAttack(angle, 32767, pitch, 0, "Normal", "BeamSpawnerPuff", LAF_NOINTERACT, null, height * 0.5);
+				if (puff)
+				{
+					let arc = ForceCubeBeamSpawner(Spawn("ForceCubeBeamSpawner",pos + (0, 0, 7.5)));
+					if (arc)
+					{
+						arc.master = self;
+						arc.angle = angle;
+						arc.pitch = pitch;
+						arc.Puff[2] = puff;
+					}
+				}
+				A_CustomRailgun(4,0,"","",RGF_SILENT,0,0,"CubePuff",0,0,0,0,5.0,0);
+				
+				A_PlaySound("ForceCube/Fire",5,1,true);
+				tracer = null;
+			}
+			else
+			{
+				A_StopSound(5);
+			}
+			Warp(target, 20, YPos, 36 * target.GetCrouchFactor(),0,WARPF_INTERPOLATE|WARPF_NOCHECKPOSITION);
+			A_Weave(0,1,0,3);
+			countdown--;
+		}
+		Wait;
+	}
+}
+
+Class LeftCube : RightCube
+{
+	Default
+	{
+		RealForceCube.CubeToken "LeftCubeToken";
+		RealForceCube.YPos -12;
+	}
+}
+
+Class ForceCubeTrail : Actor
+{
+	Default
+	{
+		+NOINTERACTION
+		Scale 0.25;
+		Alpha 0.2;
+		RenderStyle "Add";
+		Translation "0:255=%[0,0,0]:[1,0.85,0]";
+	}
+	
+	override void PostBeginPlay()
+	{
+		A_SetScale(frandom(0.25,0.65));
+		Super.PostBeginPlay();
+	}
+	
+	States
+	{
+	Spawn:
+		TNT1 A 0 
+		{
+			
+		}
+		LPUF A 1 Bright;
+		LPUF A 1 Bright
+		{
+			if (Scale.X <= 0.0)
+				return Destroy();
+			
+			A_SetScale(Scale.X - 0.05);
+		}
+		Wait;
+	}
+}
+
+Class CubePuff : Actor
+{
+	Default
+	{
+		Projectile;
+		+PUFFGETSOWNER
+		+BLOODLESSIMPACT
+		DamageType "TempestLightning";
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0;
+		Stop;
+	}
+}
+Class RightCubeToken : Inventory
+{
+	Default
+	{
+		Inventory.MaxAmount 1;
+		Inventory.InterHubAmount 0;
+	}
+}
+ 
+Class LeftCubeToken : Inventory
+{
+	Default
+	{
+		Inventory.MaxAmount 1;
+		Inventory.InterHubAmount 0;
+	}
+}
+
 /*==============================================================================
 ================================================================================
 								The Deadlights
@@ -1131,7 +1340,7 @@ Class DemonPlayerMorph : DoomPlayer
 		}
 	}
 	
-	override int DamageMobj(Actor inflictor, Actor source, int damage, Name mod, int flags = 0, double angle = 0)
+	override int DamageMobj(Actor inflictor, Actor source, int damage, Name mod, int flags, double angle)
 	{
 		return 0;
 	}

@@ -1,0 +1,494 @@
+
+#include "ZAEoD/Beams.txt"
+
+//==============================================================================
+//==============================================================================
+//
+//==============================================================================
+//==============================================================================
+Class PlayerLightningFlasher : AEoDFX
+{
+	Actor plr;
+	int lamt;
+	bool Silent, NoFlash;
+	Sound snd;
+	
+	
+	override void PostBeginPlay()
+	{
+		// Don't even bother since the noise and flash is what it's designed to do.
+		if (Silent && NoFlash)	
+			return Destroy();
+		Super.PostBeginPlay();
+	}
+	
+	States
+	{
+	Spawn:
+		TNT1 A 4 NoDelay
+		{
+			plr = players[0].mo;
+			if (plr)
+			{
+				if (!Silent)
+				{
+					A_PlaySound(snd,CHAN_AUTO,1,0,ATTN_NONE);
+				}
+				if (!NoFlash)
+				{
+					lamt = random(5,9);
+					plr.A_Light(lamt);
+				}
+			}
+			else return Destroy();
+		}
+		TNT1 A 1 
+		{
+			if (plr && lamt > 0)
+			{
+				lamt--;
+				plr.A_Light(lamt);
+			}
+			else return Destroy();
+		}
+		Wait;
+	}
+}
+
+//==============================================================================
+// The beam spawner. Does the movement and positioning of the beams.
+//==============================================================================
+
+Class AEoDBeamSpawnerBase : AEoDFX
+{
+	Vector3 StartPos, Pos1, Pos2;
+	Actor 	Puff[3];
+	private Actor plr;
+	Class<Actor> EndPuff, StartPuff;
+	Class<Actor> Beam;
+	bool 	RandomAim, IsBranch, DestroyMe, Silent, NoFlash, SightCheck, Aimed,
+			AlwaysAim;
+	Name 	SpriteName;
+	
+	uint 	FrameMin, FrameMax,
+			ChokeMin, ChokeMax, Choke,
+			StepMin, StepMax, Steps,	
+			DelayMin, DelayMax, Delay, Failsafe,
+			BranchChance, BranchCMax, BranchCount,
+			ScaleTimeMin, ScaleTimeMax, ScaleTime;
+			
+	double 	PitchRandom, AngleRandom, 
+			PitchStart1Min, PitchStart1Max, PitchStart2Min, PitchStart2Max,
+		    AngleStart1Min, AngleStart1Max, AngleStart2Min, AngleStart2Max,
+			LengthMin, LengthMax,
+			CurDistance, MaxDistance, HomingDistance,
+			WidthMin, WidthMax, Width;
+			
+	protected double BranchSize;
+	Property Aimed: 			Aimed;
+	Property StartPuff:			StartPuff;		
+	Property EndPuff:			EndPuff;		
+	Property Beam:				Beam;			
+	Property RandomAim:			RandomAim;		
+	Property AngleRandom: 		AngleRandom;	
+	Property AngleStart1Min:	AngleStart1Min;
+	Property AngleStart1Max:	AngleStart1Max;	
+	Property AngleStart2Min:	AngleStart2Min;	
+	Property AngleStart2Max:	AngleStart2Max;	
+	Property PitchRandom: 		PitchRandom;	
+	Property PitchStart1Min: 	PitchStart1Min;	
+	Property PitchStart1Max: 	PitchStart1Max;	
+	Property PitchStart2Min: 	PitchStart2Min;	
+	Property PitchStart2Max: 	PitchStart2Max;	
+	Property ChokeMin:			ChokeMin;		
+	Property ChokeMax:			ChokeMax;		
+	Property StepMin:			StepMin;		
+	Property StepMax:			StepMax;		
+	Property DelayMin:			DelayMin;		
+	Property DelayMax:			DelayMax;		
+	Property SpriteName:		SpriteName;		
+	Property FrameMin:			FrameMin;		
+	Property FrameMax:			FrameMax;		
+	Property LengthMin:			LengthMin;		
+	Property LengthMax:			LengthMax;		
+	Property WidthMin:			WidthMin;		
+	Property WidthMax:			WidthMax;		
+	Property MaxDistance:		MaxDistance;	
+	Property HomingDistance:	HomingDistance;	
+	Property Failsafe:			Failsafe;		
+	Property BranchChance:		BranchChance;
+	Property BranchCMax:		BranchCMax;
+	Property BranchCount:		BranchCount;
+	Property BranchSize:		BranchSize;			
+	Property ScaleTimeMin:		ScaleTimeMin;
+	Property ScaleTimeMax:		ScaleTimeMax;
+	Property Silent:			Silent;
+	Property NoFlash:			NoFlash;
+	Property SightCheck:		SightCheck;
+	Property AlwaysAim:			AlwaysAim;
+	
+	Default
+	{
+		+NOTONAUTOMAP
+		Renderstyle "None";
+		Radius 1;
+		Height 1;
+		
+		// DO NOT USE THIS VALUE ON CHILDREN.
+		// DO NOT TOUCH THIS VALUE.
+		// DO NOT MODIFY THIS VALUE.
+		AEoDBeamSpawnerBase.BranchSize 1.0;	// DO NOT CHANGE THIS VALUE.
+		
+		// YOU 
+		// HAVE 
+		// BEEN 
+		////////////
+		// WARNED //
+		////////////
+	}
+	override void PostBeginPlay()
+	{
+		StartPos = pos;
+		
+		if (SightCheck)
+			plr = players[0].mo;
+		
+		if (IsBranch)
+		{
+			StartPuff = null;
+			BranchChance = floor(Default.BranchChance * BranchSize);
+		}
+		else // Ensure the sprite/model is valid.
+		{
+			if (!ScaleTime) ScaleTime = random(ScaleTimeMin, ScaleTimeMax);
+			int t = GetSpriteIndex(SpriteName);
+			if (t > -1)
+			{
+				Sprite = t;
+				Frame = random(FrameMin, FrameMax);
+				if ((!Silent || !NoFlash))
+				{
+					let flash = PlayerLightningFlasher(Spawn("PlayerLightningFlasher",pos));
+					if (flash)
+					{
+						flash.Silent = Silent;
+						flash.NoFlash = NoFlash;
+					}
+				}
+			}
+			else
+			{
+				Sprite = GetSpriteIndex('TNT1');
+				Frame = 0;
+			}
+		}
+		Super.PostBeginPlay();
+	}
+	
+	override void OnDestroy()
+	{
+		if (Puff[0]) Puff[0].Destroy();
+		if (Puff[1]) Puff[1].Destroy();
+	}
+	
+	void CreateLightningTarget(bool UseRandom = true, bool dual = false)
+	{
+		Choke = random(ChokeMin, ChokeMax);
+		
+		if (Puff[2])	return;
+		
+		double  a1 = 0.0, p1 = 0.0;
+		if (Puff[0])	Puff[0].Destroy();
+		a1 = angle + frandom(AngleStart1Min, AngleStart1Max) + (UseRandom ? frandom(-AngleRandom, AngleRandom) : 0.0);
+		p1 = pitch + frandom(PitchStart1Min, PitchStart1Max) + (UseRandom ? frandom(-PitchRandom, PitchRandom) : 0.0);
+		Puff[0] = LineAttack(a1, 32766, p1, 0, 'None', EndPuff, LAF_NOINTERACT);
+		
+		if (!dual) return;
+		
+		if (Puff[1])	Puff[1].Destroy();
+		a1 = angle + frandom(AngleStart2Min, AngleStart2Max) + (UseRandom ? frandom(-AngleRandom, AngleRandom) : 0.0);
+		p1 = pitch + frandom(PitchStart2Min, PitchStart2Max) + (UseRandom ? frandom(-PitchRandom, PitchRandom) : 0.0);
+		Puff[1] = LineAttack(a1, 32766, p1, 0, 'None', StartPuff, LAF_NOINTERACT);
+	}
+	
+	bool TickLife()
+	{
+		if (Steps < 1 || IsBranch) return false;
+				
+		Failsafe = Default.Failsafe;	// Resets the failsafe back to the defined property value.
+		BranchCount = Default.BranchCount;
+		Steps--;
+		SetOrigin((Puff[1] ? Puff[1].pos : StartPos), false);
+		A_SetTics(Delay);
+		return true;
+	}
+	
+	States
+	{
+	Spawn:
+		---- A 0;
+		---- A 0
+		{
+			if (!EndPuff)
+				return ThrowAbortException("EndPuff is invalid! Make sure the class is defined!");
+				
+			if (!Beam)
+				return ThrowAbortException("Beam is invalid! Make sure the class is defined!");
+			
+			if (IsBranch)
+			{
+				StartPuff = null;
+				MaxDistance *= BranchSize * 0.5;
+				BranchCount = floor(4 * BranchSize);
+				AngleRandom *= BranchSize;
+				PitchRandom *= BranchSize;
+			}
+			else
+			{	// Setting up. Handle branching.
+				Delay = random(DelayMin,DelayMax);
+				Steps = random(StepMin, StepMax);
+			}
+			if (!Puff[2])
+			{
+				CreateLightningTarget(false, (StartPuff != null));
+				if (Puff[1])	SetOrigin(Puff[1].pos, false);
+			}
+			Choke = 0;
+		}
+		
+	Stepping:
+		---- A 1
+		{
+			if (DestroyMe)	return Destroy();
+			else if (Puff[0] || Puff[2] || IsBranch)
+			{
+				if (Puff[2])	Puff[0] = Puff[2];
+				if (SightCheck && plr && abs(deltaangle(plr.angle, plr.AngleTo(self))) > 45)
+				{
+					if (IsBranch || !TickLife())	
+						Destroy();
+					return;
+				}
+				
+				Frame = random(FrameMin, FrameMax);
+				CurDistance = 0.0;
+				tracer = Puff[0];
+				double dist = Puff[0] ? Distance3D(Puff[0]) : MaxDistance;
+				double RealLengthMin = LengthMin * 100;
+				double RealLengthMax = LengthMax * 100;
+				
+				Scale.X = frandom(WidthMin, WidthMax);
+				double SX = Scale.X * 100;
+				
+				// Waste no time or energy spawning and destroying needlessly.
+				// Simply skip to spawning the last beams.
+				if (Delay < 1)	Steps = 0;
+				
+				// Loop through
+				while 	(Failsafe && (IsBranch || (Puff[0] && (dist >= RealLengthMax))) && 
+						(CurDistance < MaxDistance))
+				{
+					Failsafe--;
+					Scale.Y = frandom(LengthMin, LengthMax);
+					
+					// Do not randomize if:
+					// 1. The puff is not in FOV
+					// 2. The puff is close enough.
+					// Hence, distclose is used to fail A_JumpIfTargetInLOS.
+					
+					int flags = CLOFF_SKIPOBSTACLES|
+								CLOFF_SKIPTARGET|
+								CLOFF_ALLOWNULL|
+								CLOFF_FROMBASE|
+								CLOFF_JUMP_ON_MISS|
+								CLOFF_NOAIM;
+								
+					bool hitsurface = A_CheckLOF("Null", flags, SX, ptr_target: AAPTR_NULL);
+					
+					if (!IsBranch && (!Choke || hitsurface || 
+						!A_JumpIfTargetInLOS("Null",90,JLOSF_CHECKTRACER,0,HomingDistance)))
+					{
+						Vector2 off = (0, 0);
+						if (HomingDistance >= 1.0)
+						{
+							double deg = (Min(dist, HomingDistance) / HomingDistance) * 90.0;
+							off.x = sin(deg) * frandom(-AngleRandom, AngleRandom);
+							off.y = sin(deg) * frandom(-PitchRandom, PitchRandom);
+						}
+						A_Face(Puff[0], 0, 0, off.x, off.y, FAF_MIDDLE);
+						Choke = random(ChokeMin, ChokeMax);
+					}
+					else
+					{
+						if (AlwaysAim)	A_Face(Puff[0], 0, 0, 0, 0, FAF_MIDDLE);
+						Angle += frandom(-AngleRandom, AngleRandom);
+						Pitch += frandom(-PitchRandom, PitchRandom);
+						Choke--;
+					}
+					
+					// Spawn the main beam.
+					AEoDBeamBase bolt = AEoDBeamBase(Spawn(Beam,pos));
+					if (bolt)
+					{
+						bolt.tracer = master;
+						bolt.Angle = Angle;
+						bolt.Pitch = Pitch;
+						bolt.Scale = Scale;
+						bolt.StepTime = Delay + 1;
+						bolt.IsStep = (Steps);
+						bolt.ScaleTime = ScaleTime;
+						bolt.Sprite = Sprite;
+						bolt.Frame = Frame;
+					}
+					
+					// Hit a wall, floor or ceiling.
+					if (hitsurface && A_CheckLOF("Null", flags, SX, ptr_target: AAPTR_NULL))
+						break;
+					hitsurface = false;
+	
+					// Spawn branches.
+					/*
+					if (BranchCount && BranchChance && BranchSize > 0.0 && CurDistance > 0.0)
+					{
+						int count = 0;
+						int cc = Min(randompick(1,1,1,1,2),BranchCount);
+						for (int i = 0; i < cc; i++)
+						{
+							if (BranchCMax - random(1,BranchCMax) <= BranchChance)
+							{
+								count++;
+								SNLightning branch = SNLightning(Spawn(GetClass(), pos));
+								if (branch)
+								{
+									branch.IsBranch = true;
+									branch.BranchSize = BranchSize - 0.25;
+									branch.Steps = Steps;
+									branch.ScaleTime = ScaleTime;
+									branch.Puff[0] = Puff[0];
+									branch.Sprite = Sprite;
+									branch.Frame = Frame;
+								}
+							}
+						}
+						BranchCount -= count;
+					}
+					*/
+					double RealScaleY = Scale.Y * 100;
+					CurDistance += RealScaleY;
+					
+					if (pos.z <= floorz || pos.z > ceilingz) break;
+					
+					A_Warp(AAPTR_DEFAULT, cos(pitch) * RealScaleY, 0, -sin(pitch) * RealScaleY, 0, WARPF_NOCHECKPOSITION);
+					
+					if (!IsBranch)	dist = Distance3D(Puff[0]);
+				}
+				// Either expiration or a branch. A branch should never attempt to spawn more.
+				if (IsBranch || !TickLife())	return Destroy();
+				
+				// If enabled, randomize 
+				if (!Puff[2] && RandomAim)	CreateLightningTarget(true,(StartPuff != null));
+				
+			}
+			else return Destroy();
+		}
+		Wait;
+	}
+}
+
+//==============================================================================
+// The bolt itself
+//==============================================================================
+Class AEoDBeamBase : AEoDFX
+{
+	uint StepTime;
+	bool IsStep, Follow;
+	double ScaleTime;
+	double ScaleSub;
+	double dist;
+	Vector3 next1, next2;
+	property Follow: 	Follow;
+	property ScaleTime: ScaleTime;
+	property StepTime:	StepTime;
+	property IsStep:	IsStep;
+	Default
+	{
+		AEoDBeamBase.StepTime 4;
+		AEoDBeamBase.ScaleTime 24;
+		AEoDBeamBase.IsStep false;
+		AEoDBeamBase.Follow false;
+		RenderStyle "Add";
+		XScale 0.1;
+		YScale 1.0;
+		+BRIGHT
+		+NOINTERACTION
+	}
+	
+	override void BeginPlay()
+	{
+		ChangeStatNum(Thinker.STAT_USER);
+		Super.BeginPlay();
+	}
+	override void PostBeginPlay()
+	{
+		if (tracer)
+			dist = Distance3D(tracer);
+		pitch += 90;
+		ScaleTime = Max(1.0, ScaleTime);
+		ScaleSub = Scale.X / ScaleTime;
+		Super.PostBeginPlay();
+	}
+	
+	States
+	{
+	Spawn:
+		X163 B 1 NoDelay
+		{
+			StateLabel next = 'Scaling';
+			if (IsStep)	
+			{
+				A_SetTics(StepTime);
+				next = null;
+			}
+			return ResolveState(next);
+		}
+		Stop;
+	Scaling:
+		#### # 1
+		{
+			
+			if (Follow && tracer)
+			{
+				vel = tracer.vel;
+			}
+			
+			Scale.X -= ScaleSub;
+			if (Scale.X <= 0.0)	return Destroy();
+		}
+		Wait;
+	// Without someone using these, modeldefs will throw a fit and refuse to start.
+	Precache:
+		X163 B 0;
+		Stop;
+	}
+}
+
+Class BeamSpawnerPuff : Actor
+{
+	Default
+	{
+		+ALLOWTHRUFLAGS
+		+THRUACTORS
+		+SKYEXPLODE
+		+ALWAYSPUFF
+		+PUFFONACTORS
+		+NOINTERACTION
+		Radius 4;
+		Height 16;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 10;
+		Stop;
+	}
+}
