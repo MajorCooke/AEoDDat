@@ -1,0 +1,265 @@
+
+#include "ZAEoD/Spawners/Arachnotron.txt"
+#include "ZAEoD/Spawners/Archvile.txt"
+#include "ZAEoD/Spawners/Baron.txt"
+#include "ZAEoD/Spawners/Cacodemon.txt"
+#include "ZAEoD/Spawners/Chainguy.txt"
+#include "ZAEoD/Spawners/Cyberdemon.txt"
+#include "ZAEoD/Spawners/Demon.txt"
+#include "ZAEoD/Spawners/Fatso.txt"
+#include "ZAEoD/Spawners/HellKnight.txt"
+#include "ZAEoD/Spawners/Imp.txt"
+#include "ZAEoD/Spawners/LostSoul.txt"
+#include "ZAEoD/Spawners/Nazi.txt"
+#include "ZAEoD/Spawners/PainElem.txt"
+#include "ZAEoD/Spawners/Revenant.txt"
+#include "ZAEoD/Spawners/Shotguy.txt"
+#include "ZAEoD/Spawners/SpiderMastermind.txt"
+#include "ZAEoD/Spawners/Zombieman.txt"
+
+Class AEoDSpawner : Actor abstract
+{
+	AEoDHandler Handler;
+}
+
+
+Class AEoDMonsterSpawner : AEoDSpawner
+{
+	int Type;
+	int MultiStage;
+	int rng;
+	int joke;
+	bool stay, classic, MultiStage;
+	Array<StateLabel> Types;
+	Array<StateLabel> Extras;
+	Array<Class<Actor> > Monsters;
+	Array<Int> Chances;
+	Actor mon;
+	String thing;
+	AEoDHandler Handler;
+	
+	Default
+	{
+		Monster;
+		Health 2000000;
+		+DONTCORPSE
+		+NORADIUSDMG
+		+NONSHOOTABLE
+		-SHOOTABLE
+		-COUNTKILL
+		+BOSSDEATH
+		+VULNERABLE
+		+NOTIMEFREEZE
+		+CANTSEEK
+		+BOSSDEATH
+		+NEVERTARGET
+		+DONTTHRUST
+		+DONTSPLASH
+		+NOGRAVITY
+		+NOPAIN
+		+NOTRIGGER
+		+NOTONAUTOMAP
+		+LAXTELEFRAGDMG
+		+NOINTERACTION
+		Species "AEoDSpawner";
+		DamageFactor "Normal", 0.0;
+		DamageFactor "Massacre", 666;
+	}
+	
+	override void BeginPlay()
+	{
+		DropItem di;   // di will be our drop item list iterator
+		DropItem drop; // while drop stays as the reference point.
+		int n = 0;
+		bool nomonsters = sv_nomonsters || level.nomonsters;
+
+		Super.BeginPlay();
+	//	class<RandomSpawner> selectedSpawner = /* insert thing for choosing spawner here */
+		let spawnerDef = GetDefaultByType (selectedSpawner);
+
+		if (!spawnerDef)
+		{
+			return Destroy();
+		}
+
+		drop = di = spawnerDef.GetDropItems ();
+		// Insert everything after "drop = di = GetDropItems();" in RandomSpawner's BeginPlay override here
+	}
+	
+	
+	override void PostBeginPlay()
+	{
+		if (GetClass() == "AEoDMonsterSpawner")
+			return Destroy();
+			
+		
+		
+		Class<Actor> StayCheck = GetReplacee(GetClass());
+		
+		stay = (StayCheck == 'BaronOfHell' ||
+				StayCheck == 'Fatso' ||
+				StayCheck == 'Arachnotron' ||
+				StayCheck == 'Cyberdemon' ||
+				StayCheck == 'SpiderMastermind');
+		
+		if (GetCvar("user_GameMode") == 1)	
+		{
+			SetStateLabel("L4D"); 
+			return;
+		}
+		
+		
+		static const StateLabel Themes[] = 
+		{
+			"Doom",
+			"Blood",
+			"DN3D",
+			"HL",
+			"HL2",
+			"Heretic",
+			"Hexen",
+			"Hexen2",
+			"MM",
+			"Powerslave",
+			"Quake1",
+			"Quake2",
+			"Quake4",
+			"ShadowWarr",
+			"Strife",
+		}
+		
+		static const String Cvars[] =
+		{
+			"user_Doom",
+			"user_Blood",
+			"user_Duke",
+			"user_HL",
+			"user_HL2",
+			"user_Heretic",
+			"user_Hexen",
+			"user_Hexen2",
+			"user_MM",
+			"user_Powerslave",
+			"user_Quake1",
+			"user_Quake2",
+			"user_Quake4",
+			"user_SW",
+			"user_Strife"
+		};
+		
+		int total = themes.Size();
+		Types.Clear();
+		
+		// Gather the list of the above based on cvar.
+		int ThemeCount = 0;
+		for (int i = 0; i < total; i++)
+		{
+			if (GetCvar(Cvars[i]))
+			{
+				ThemeCount++;
+				Types.Push(themes[i]);
+			}
+		}
+		
+		// Make sure there's always something in the list to work with.
+		if (ThemeCount >= total || ThemeCount <= 0)
+		{
+			classic = true;
+			if (Types.Size() < 1)
+			{
+				for (i = 0; i < total; i++)
+				{
+					if (ResolveState(Themes[i]) != null)
+						Types.Push(Themes[i]);
+				}
+			}
+		}
+		
+		static const StateLabel ExtraList[] =
+		{	
+			"Doom64", 
+			"Hellspawn", 
+			"JokeMode", 
+			"L4DMon", 
+			"ROTT"
+		};
+		
+		static const String ExtraVar[] =
+		{	
+			"user_Dm64", 
+			"user_Hellspawn", 
+			"user_Joke", 
+			"user_L4DMon", 
+			"user_ROTT" 
+		};
+		
+		int size = ExtraList.Size();
+		for (int i = 0; i < size; i++)
+		{
+			if (GetCvar(ExtraVar[i]) && ResolveState(ExtraList))
+				Types.Push(ExtraList[i]);
+		}
+		
+		if (Types.Size() < 1)
+		{
+			String cname = GetClassName(); //Just being safe.
+			Console.Printf("ERROR: %s has no themes!", cname);
+			return Destroy();
+		}
+		int rn1 = random(0,Types.Size() - 1);
+		SetStateLabel(Types[rn1]);
+		
+		Super.PostBeginPlay();
+	}
+	
+	
+	void AdjustMonster()
+	{
+		mon = tracer;
+		if (mon)
+		{			
+			if (Translation)					mon.Translation = Translation;
+			if (health != GetSpawnHealth())		mon.A_SetHealth(health);
+			mon.bDormant = bDormant;
+			
+			if (bBOSSSPAWNED)
+			{
+				mon.bBOSSSPAWNED = true;
+				if (players[0] && players[0].mo)
+				{
+					mon.target = players[0].mo;
+					A_AlertMonsters();
+				}
+			}
+		}
+	}
+	
+	States
+	{
+	Teleport:
+	Waiting:
+		TNT1 A 0
+		{
+			bNOINTERACTION = bTHRUACTORS = true;
+			A_GiveToChildren("AEoDToken",1);
+			AdjustMonster();
+		}
+		TNT1 A 70
+		{
+			if (!tracer)
+			{
+				A_BossDeath();
+				return Destroy();
+			}
+		}
+		Wait;
+	End:
+	Death:
+		TNT1 A 0
+		{
+			A_BossDeath();
+			AdjustMonster();
+		}
+		Stop;
+	}
+}

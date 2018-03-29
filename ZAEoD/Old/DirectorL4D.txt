@@ -54,8 +54,9 @@ Class SmallSpawnTokenTwo : Inventory
 	}
 }
 
-Class TheDirectorL4D : DirectorMain
+Class TheDirectorL4D : DirectorBase
 {
+	
 	int index;
 	int nightmare;
 	int mul;
@@ -92,135 +93,141 @@ Class TheDirectorL4D : DirectorMain
 	//[1] = Timer
 	//[2] = Cooldown
 	int volume;
-	Actor Populator;
 	
-	override void PostBeginPlay()
+	Default
 	{
-		Event = AEoDHandler(EventHandler.Find("AEoDHandler"));
-		GrabCvars();
-		ChangeTID(0);
-		//Default values
-		mul = RealIntensity;
-		
-		if (mul < 666)	{	volume = 10;	}
-		else			{	volume = 1;		}
-		
-		if (mul < 1)
-		{	
-			Console.Printf("Multiplier was 0. This should not happen!\nReport this to the AEoD team immediately.",7.0);
-			mul = 3;
-		}
-		
-		bFRIENDLY = false;
-		for (int i = 0; i < MAXPLAYERS; i++)
-		{
-			if (playeringame[i])
-			{
-				target = players[i].mo;
-				break;
-			}
-		}
-		
-		if (target)
-		{
-			if (mul > 4)
-			{
-				//Nightmare mode effectively causes regular zombies to spawn roughly twice as fast.
-				nightmare = 1;
-				target.A_SetInventory("NightmareToken",1);
-			}
-			else target.A_SetInventory("NightmareToken",0);
-		}
-		
-		bias[0] = 6;	//#/256 chance to spawn medium
-		bias[1] = 2;	//^ large
-		cd[0] = 2500;	//Small cooldown min
-		cd[1] = 5000;	//Small cooldown max
-		cd[2] = 4000;	//Medium cooldown min
-		cd[3] = 10000;	//Medium cooldown max
-		cd[4] = 10000;	//Large cooldown min
-		cd[5] = 20000;	//Large cooldown max
-		cd[6] = 22200;	//Horde cooldown min
-		cd[7] = 46500;	//Horde cooldown max
-		cd[8] = random(50,175);
-		cc[0] = 6; //small
-		cc[1] = 4; //medium
-		cc[2] = 2; //large
-		Super.PostBeginPlay();
+		Monster;
+		+NOFEAR
+		-CANUSEWALLS
+		-CANPUSHWALLS
+		-ACTIVATEMCROSS
+		+NORADIUSDMG
+		+THRUACTORS
+		+NEVERTARGET
+		+NOTARGETSWITCH
+		+CANTSEEK
+		-FRIENDLY
+		-COUNTKILL
+		+NOCLIP
+		+FLOORHUGGER
+		+LOOKALLAROUND
+		+NEVERFAST
+		+NODAMAGE
+		+NONSHOOTABLE
+		-SHOOTABLE
+		-NODROPOFF
+		//+DROPOFF
+		+NOTRIGGER
+		-TELESTOMP
+		+NOTELESTOMP
+		+DONTMORPH
+		+NOICEDEATH
+		+DONTSPLASH
+		+DONTCORPSE
+		+DONTTHRUST
+		TeleFogSourceType "";
+		TeleFogDestType "";
+		Radius 10;
+		Height 20;
+		Speed 20;
+		Health 1000000;
+		DamageFactor "Normal", 0;
+		Species "Director";
+		RenderStyle "None";
 	}
-	
-	override void OnDestroy()
-	{
-		if (Populator)	Populator.Destroy();
-		Super.OnDestroy();
-	}
-	
-	override void GrabCvars()
-	{
-		Super.GrabCvars();
-		
-		if (Event)
-		{
-			Event.GetCvars();
-			RealIntensity = Event.L4DIntensity;
-		}
-	}
-	
 	States
 	{
 	Spawn:
-		TNT1 A 1050 NoDelay 
+		TNT1 A 0 NoDelay 
 		{
-			bool a;
-			[a, Populator] = A_SpawnItemEx("L4DPopulater",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER|SXF_TRANSFERPOINTERS);
 			
-			if (target)
-			{
-				if (target.CountInv("PFirstTimeToken2"))
-				{
-					A_SetInventory("PFirstTimeToken2",0,TargetPtr);
-					A_SetTics(35 * 60);
-					
-					if (mul < 666)
-						A_GiveInventory("SmallSpawnTokenTwo",(50-(mul*3)),TargetPtr);
-				}
+			bFRIENDLY = false;
+			target = players[0].mo;
+			ChangeTID(0);
+			//Default values
+			mul = GetCvar("L4DIntensity");
+			bias[0] = 6;	//#/256 chance to spawn medium
+			bias[1] = 2;	//^ large
+			cd[0] = 2500;	//Small cooldown min
+			cd[1] = 5000;	//Small cooldown max
+			cd[2] = 4000;	//Medium cooldown min
+			cd[3] = 10000;	//Medium cooldown max
+			cd[4] = 10000;	//Large cooldown min
+			cd[5] = 20000;	//Large cooldown max
+			cd[6] = 22200;	//Horde cooldown min
+			cd[7] = 46500;	//Horde cooldown max
+			cd[8] = random(50,175);
+			cc[0] = 6; //small
+			cc[1] = 4; //medium
+			cc[2] = 2; //large
+			A_TransferPointer(Player1,DefPtr,DefPtr,TargetPtr,4);
+			A_SpawnItemEx("L4DPopulater",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER|SXF_TRANSFERPOINTERS);
+			
+			if (mul < 666)		{	volume = 10;	}
+			else				{	volume = 1;		}
+			
+			if (mul < 0)
+			{	
+				A_PrintBold("Multiplier was 0. This should not happen!\nReport this to the AEoD team immediately.",7.0);
+				mul = 3;
 			}
-			A_SetTics(35);
 		}
 		Goto Idle;
-	Inactive:
-		TNT1 A -1;
 	Idle:
 		TNT1 A 1 A_Look();
 		Loop;
-	Active:
 	See:
+		TNT1 A 1 A_SetTics(GetCvar("DirectorDelay") * 35);
+		TNT1 A 0 A_JumpIfInventory("RemoveDirector",1,"Death",TargetPtr); //The original director has 60 seconds. This one is 30.
+		TNT1 A 0 A_JumpIf(mul > 4,"EnableNightmare");
+		TNT1 A 0 A_TakeInventory("NightmareToken",1,0,TargetPtr);
 	SeeCont:
+		TNT1 A 0 A_JumpIfInventory("PFirstTimeToken2",1,"FirstTime",TargetPtr);
+		Goto Chasing;
+	//Nightmare mode effectively causes regular zombies to spawn roughly twice as fast.
+	EnableNightmare:
+		TNT1 A 0 
+		{
+			nightmare = 1;
+			A_SetInventory("NightmareToken",1,TargetPtr);
+		}
+		/*
+		TNT1 A 0 A_SetUserArray(cd,0,18) //Small cooldown min
+		TNT1 A 0 A_SetUserArray(cd,1,50) //Small cooldown max
+		TNT1 A 0 A_SetUserArray(cd,2,150) //Medium cooldown min
+		TNT1 A 0 A_SetUserArray(cd,3,337) //Medium cooldown max
+		TNT1 A 0 A_SetUserArray(cd,4,225) //Large cooldown min
+		TNT1 A 0 A_SetUserArray(cd,5,450) //Large cooldown max
+		TNT1 A 0 A_SetUserArray(cd,6,273) //Horde cooldown min
+		TNT1 A 0 A_SetUserArray(cd,7,788) //Horde cooldown max
+		*/
+		Goto SeeCont;
+	FirstTime:
+		TNT1 A 0 
+		{
+			A_TakeInventory("PFirstTimeToken2",1,0,TargetPtr);
+			
+			if (mul < 666)
+				A_GiveInventory("SmallSpawnTokenTwo",(50-(mul*3)),TargetPtr);
+		}
 	Chasing:
 		TNT1 A 0 
 		{
 			if (!target || !(target is "PlayerPawn"))
 			{
-				//A_TransferPointer(Player1,DefPtr,DefPtr,TargetPtr,4);
-				target = players[0].mo;
-				A_Chase(null, null, CHF_DONTMOVE);
+				A_TransferPointer(Player1,DefPtr,DefPtr,TargetPtr,4);
 			}
-			for (int i = 0; i < cooldown.Size(); i++)
+			
+			for (index = 0; index < 4; index++)
 			{
-				if (cooldown[i] > 0)
-				{	cooldown[i] -= (mul * random(7,10));	}
+				if (cooldown[index] > 0)
+				{	cooldown[index] -= (mul * random(7,10));	}
 			}
-			StateLabel next = null;
-			if (target)
-			{
-				
-				if (target.CountInv("RemoveDirector"))					next = "Null";
-				//else if (!IsEnabled)									next = "Frozen";
-				else if (target.CountInv("HordeModeTest"))				next = "HordeModeForce";
-				
-			}
-			return ResolveState(next);
 		}
+		
+		TNT1 A 0 A_JumpIfInventory("RemoveDirector",1,"Death",TargetPtr);
+		TNT1 A 0 A_JumpIf(!GetCvar("DirectorsEnabled"),"Frozen");
+		TNT1 A 0 A_JumpIfInventory("HordeModeTest",1,"HordeModeForce",TargetPtr);
 		TNT1 A 2 
 		{
 			A_UnsetShootable();
@@ -229,149 +236,87 @@ Class TheDirectorL4D : DirectorMain
 		Loop;
 	HordeModeForce:
 		TNT1 A 0 
-		{	
+		{
 			A_SetInventory("HordeModeTest",0,TargetPtr);
-			for (int i = 0; i < cooldown.Size(); i++)		//Wipe it clean for testing purposes.
+			for (index = 0; index < 4; index++)		//Wipe it clean for testing purposes.
 			{
-				cooldown[i] = 0;
+				cooldown[index] = 0;
 			}
 			horde[2] = 0;
 		}
 		Goto HordeMode;
 	HordeMode:
+		TNT1 A 0 A_JumpIfInventory("DirSmallChildCount",24,"Chasing"); //Don't go overwhelming on 666 intensities.
+		TNT1 A 0 A_JumpIf(cooldown[3] >= 1,"Chasing");
 		TNT1 A 0 
 		{
-			//Don't go overwhelming on 666 intensities.
-			if (cooldown[3] > 0 || SmallKids.Size() > 24)
-			{
-				//Console.Printf("Size: %d - Cooldown: %d", SmallKids.Size(), cooldown[3]);
-				return ResolveState("Chasing");
-			}
-			
-			
 			A_PlaySound("Director/Horde",5,(volume*0.1),0,ATTN_NONE);
 			A_Stop();
 			A_GiveInventory("HordeToken",1);
+			A_GiveInventory("DirSmallChildCount",6);
 			cooldown[3] = random(cd[6], cd[7]);
 			
 			for (int i = 0; i < 6; i++)
-			{
-				let m = L4DSmallMobRunner(Spawn("L4DSmallMobRunner",pos,ALLOW_REPLACE));
-				if (m)
-				{
-					m.Spawner = self;
-					m.angle = random(0,359);
-					m.thid = mul;
-					m.horde = 1;
-					m.master = self;
-					m.target = target;
-					m.tracer = tracer;
-					SmallKids.Push(m);
-				}
+			{	
+				A_SpawnItemEx("L4DSmallMobRunner",0,0,0,0,0,0,random(0,359),SXF_NOCHECKPOSITION|SXF_SETMASTER|SXF_TRANSFERPOINTERS,0,mul);
 			}
-			return ResolveState(null);
 		}
 		TNT1 AAAAA 35;
-		TNT1 A 0 A_SetInventory("HordeToken",0);
+		TNT1 A 0 A_TakeInventory("HordeToken",1);
 		Goto ChanceCD;
 	Missile:
-		TNT1 A 0 
-		{
-			StateLabel next = null;
-			if (target)
-			{
-				SetOrigin(target.pos, false);
-				int rng = random(0,255);
-				if (target.CountInv("SmallSpawnTokenTwo"))	next = "SmallMobShoot";
-				else if (mul < 666)							next = "Missile2";
-				else if (rng < 104 && cooldown[1] < 1)		next = "MediumMobShoot";
-				else if (rng < 64 && cooldown[2] < 1)
-				{
-					if (random(0,1))						next = "LargeMobShoot";
-					else									next = "HordeMode";
-				}
-			}
-			return ResolveState(next);
-		}
+		TNT1 A 0 A_Warp(AAPTR_TARGET,0,0,0,0,WARPF_NOCHECKPOSITION);
+		TNT1 A 0 A_JumpIfInventory("SmallSpawnTokenTwo",1,"SmallMobShoot",TargetPtr);
+		TNT1 A 0 A_JumpIf(mul < 666,"Missile2");
+		TNT1 A 0 A_Jump(104,"MediumMobshoot");
+		TNT1 A 0 A_Jump(64,"LargeMobshoot","HordeMode");
 		Goto SmallMobShoot;
 	Missile2:
 		TNT1 A 0 A_JumpIf(random(1,2560) <= (bias[1]+(mul*20)),"LargeMobDecide");
-		TNT1 A 0 A_JumpIf(random(1,2560) <= (bias[0]+(mul*60)),"MediumMobShoot");
+		TNT1 A 0 A_JumpIf(random(1,2560) <= (bias[0]+(mul*60)),"MediumMobshoot");
 		Goto SmallMobShoot;
 	LargeMobDecide:
 		TNT1 A 0 A_Jump(192,"HordeMode");
-	LargeMobShoot:
-		TNT1 A 1
+	LargeMobshoot:
+		TNT1 A 0 A_JumpIfInventory("DirLargeChildCount",cc[2]+mul,"Chasing");
+		TNT1 A 0 A_JumpIf(cooldown[2] > 0,"Chasing");
+		TNT1 A 0 Thing_ChangeTID(0,32765);
+		TNT1 A 1 A_SpawnItemEx("L4DLargeMobRunner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID);
+		TNT1 A 0 A_JumpIf(tid != 0, "FailedSpawn");
+		TNT1 A 0 
 		{
-			if (cooldown[2] > 0 || LargeKids.Size() > cc[2] * mul)
-			{
-				//Console.Printf("Size: %d - Cooldown: %d", LargeKids.Size(), cooldown[2]);
-				return ResolveState("Chasing");
-			}
-			
-			let b = L4DLargeMobRunner(Spawn("L4DLargeMobRunner",pos, ALLOW_REPLACE));
-			if (b)
-			{
-				b.master = self;
-				b.Spawner = self;
-				b.angle = angle;
-				b.target = target;
-				b.tracer = tracer;
-				cooldown[2] = random(cd[4],cd[5]);
-				LargeKids.Push(b);
-				return ResolveState("ChanceCD");
-			}
-			return ResolveState("Chasing");	
+			A_GiveInventory("DirLargeChildCount",1);
+			cooldown[2] = random(cd[4],cd[5]);
 		}
 		Goto ChanceCD;
-		
-	MediumMobShoot:
-		TNT1 A 1
+	MediumMobshoot:
+		TNT1 A 0 A_JumpIfInventory("DirMediumChildCount",cc[1]+mul,"Chasing");
+		TNT1 A 0 A_JumpIf(cooldown[1] > 0,"Chasing");
+		TNT1 A 0 Thing_ChangeTID(0,32765);
+		TNT1 A 1 A_SpawnItemEx("L4DMediumMobRunner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID);
+		TNT1 A 0 A_JumpIf(tid != 0, "FailedSpawn");
+		TNT1 A 0 
 		{
-			if (cooldown[1] > 0 || MediumKids.Size() > cc[1] * mul)
-			{
-				//Console.Printf("Size: %d - Cooldown: %d", MediumKids.Size(), cooldown[1]);
-				return ResolveState("Chasing");
-			}
-			let b = L4DMediumMobRunner(Spawn("L4DMediumMobRunner",pos, ALLOW_REPLACE));
-			if (b)
-			{
-				b.master = self;
-				b.Spawner = self;
-				b.angle = angle;
-				b.target = target;
-				b.tracer = tracer;
-				cooldown[1] = random(cd[2],cd[3]);
-				MediumKids.Push(b);
-				return ResolveState("ChanceCD");
-			}
-			return ResolveState("Chasing");	
+			A_GiveInventory("DirMediumChildCount",1);
+			cooldown[1] = random(cd[2],cd[3]);
 		}
+		Goto ChanceCD;
 	SmallMobShoot:
-		TNT1 A 1
+		TNT1 A 0 A_JumpIfInventory("DirSmallChildCount",cc[0]+mul,"Chasing");
+		TNT1 A 0 A_JumpIf(cooldown[0] > 0,"Chasing");
+		TNT1 A 0 A_TakeInventory("SmallSpawnTokenTwo",1,0,TargetPtr);
+		TNT1 A 0 Thing_ChangeTID(0,32765);
+		TNT1 A 1 A_SpawnItemEx("L4DSmallMobRunner",0,0,0,0,0,0,0,SXF_SETMASTER|SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID);
+		TNT1 A 0 A_JumpIf(tid != 0, "FailedSpawn");
+		TNT1 A 0 
 		{
-			if (cooldown[0] > 0 || SmallKids.Size() > cc[0] * mul)
-			{
-				//Console.Printf("Size: %d - Cooldown: %d", SmallKids.Size(), cooldown[0]);
-				return ResolveState("Chasing");
-			}
-			
-			target.A_TakeInventory("SmallSpawnTokenTwo",1,0);
-			let b = L4DSmallMobRunner(Spawn("L4DSmallMobRunner",pos, ALLOW_REPLACE));
-			if (b)
-			{
-				b.master = self;
-				b.Spawner = self;
-				b.angle = angle;
-				//b.thid = mul;
-				b.target = target;
-				b.tracer = tracer;
-				cooldown[0] = random(cd[0],cd[1]);
-				SmallKids.Push(b);
-				return ResolveState("ChanceCD");
-			}
-			return ResolveState("Chasing");	
+			A_GiveInventory("DirSmallChildCount",1);
+			cooldown[0] = random(cd[0],cd[1]);
 		}
+		Goto ChanceCD;
+	FailedSpawn:
+		TNT1 A 0 Thing_ChangeTID(0,0);
+		Goto Chasing;
 	ChanceCD:
 		TNT1 A 0 A_Jump(250,"Chasing");
 		TNT1 A 0 A_Jump(256,1,1,2,2,3,3,4);
@@ -379,7 +324,7 @@ Class TheDirectorL4D : DirectorMain
 		Goto Chasing;
 	Frozen:
 		TNT1 A 35 A_Stop();
-		//TNT1 A 0 A_JumpIf(!IsEnabled,"Frozen");
+		TNT1 A 0 A_JumpIf(!GetCvar("DirectorsEnabled"),"Frozen");
 		Goto Chasing;
 	Death:
 		TNT1 A 35 A_RemoveChildren(1,RMVF_EVERYTHING,null,"Director");
@@ -389,10 +334,10 @@ Class TheDirectorL4D : DirectorMain
 	}
 }
 
-Class L4DPopulater : DirectorKid
+Class L4DPopulater : DirectorBase
 {
-	int user_wander;
-	int user_populate;
+	int wander;
+	int populate;
 	int cooldown;
 	
 	Default
@@ -429,12 +374,6 @@ Class L4DPopulater : DirectorKid
 		RenderStyle "None";
 		Species "Director";
 	}
-	// The "Kid" version is unnecessary here.
-	override void OnDestroy()
-	{
-		Actor.OnDestroy();
-	}
-	
 	States
 	{
 	Spawn:
@@ -442,19 +381,21 @@ Class L4DPopulater : DirectorKid
 	Idle:
 		TNT1 A 1 A_Look();
 		Loop;
-	Active:
 	See:
 	Cooldown:
 		TNT1 A 1 A_SetTics(35*random(1,10));
 	Wandering:
 		TNT1 A 0 A_JumpIfInventory("RemoveDirector",1,"Removal",TargetPtr);
+		TNT1 A 0 A_JumpIf(!GetCvar("DirectorsEnabled"),"Frozen");
+		TNT1 A 0 A_JumpIfInventory("DirectorIsLeaving",1,"Removal",TargetPtr);
 		TNT1 A 1 A_Wander();
-		TNT1 A 0 { user_wander++; }
-		TNT1 A 0 A_JumpIf(user_wander>=900,"Populate");
+		TNT1 A 0 { wander++; }
+		TNT1 A 0 A_JumpIf(wander>=900,"Populate");
 		Loop;
 	Populate:
 		TNT1 A 0 A_JumpIfInventory("RemoveDirector",1,"Removal",TargetPtr);
-		TNT1 A 0 { user_wander = 0; }
+		TNT1 A 0 A_JumpIf(!GetCvar("DirectorsEnabled"),"Frozen");
+		TNT1 A 0 { wander = 0; }
 		TNT1 A 0 A_JumpIfCloser(250,"NoPop");
 		TNT1 A 0 A_JumpIfTargetInLOS("NoPop",360);
 		TNT1 A 0 A_CheckSight(1);
@@ -463,10 +404,10 @@ Class L4DPopulater : DirectorKid
 		TNT1 A 0 A_Warp(AAPTR_DEFAULT,random(15,150),0,0,random(0,359));
 		TNT1 A 0 A_Jump(256,1,2,3,4,5,6,7,8,9,10);
 		TNT1 AAAAAAAAAA 1 A_Wander();
-		TNT1 A 0 { user_populate++; }
-		TNT1 A 0 A_JumpIf(user_populate>=random(15,45),1);
+		TNT1 A 0 { populate++; }
+		TNT1 A 0 A_JumpIf(populate>=random(15,45),1);
 		Loop;
-		TNT1 A 0 { user_populate = 0; }
+		TNT1 A 0 { populate = 0; }
 	MoveBack:
 		TNT1 A 0 A_Warp(TargetPtr,0,0,0,0,WARPF_NOCHECKPOSITION);
 		Goto Cooldown;
@@ -475,7 +416,9 @@ Class L4DPopulater : DirectorKid
 		TNT1 AAAAAAA 1 A_Wander();
 		Goto Populate;
 	Frozen:
+		TNT1 A 0 A_JumpIfInventory("DirectorIsLeaving",1,"Removal",AAPTR_MASTER);
 		TNT1 A 35 A_JumpIfInventory("RemoveDirector",1,"Removal",TargetPtr);
+		TNT1 A 0 A_JumpIf(!GetCvar("DirectorsEnabled"),"Frozen");
 		Goto Wandering;
 	Removal:
 	Death:
@@ -485,10 +428,10 @@ Class L4DPopulater : DirectorKid
 }
 
 
-Class L4DLargeMobRunner : DirectorKid
+Class L4DLargeMobRunner : DirectorBase
 {
-	int user_check[2];
-	int user_t;
+	int check[2];
+	int t;
 	Default
 	{
 		Monster;
@@ -520,9 +463,9 @@ Class L4DLargeMobRunner : DirectorKid
 		+LAXTELEFRAGDMG
 		+ALWAYSTELEFRAG
 		+NOPAIN
-		+DONTTHRUST
 		//MaxDropOffHeight 128
 		//MaxStepHeight 128
+		+DONTTHRUST
 		Speed 14;
 		Radius 60;
 		Height 64;
@@ -542,16 +485,18 @@ Class L4DLargeMobRunner : DirectorKid
 	See:
 	Wanderbout:
 		TNT1 A 0 A_JumpIfInventory("RemoveDirector",1,"Death",AAPTR_TARGET);
+		TNT1 A 0 A_JumpIf(!GetCvar("DirectorsEnabled"),"Frozen");
+		TNT1 A 0 Thing_ChangeTID(0,0);
 		TNT1 A 1 A_Chase();
 		TNT1 AAAAAAAAA 1 A_Wander();
 		
 	//After a bit of time, allow them to leave the floor they are bound to.
 		TNT1 A 0 
 		{
-			if (user_t >= 140)
+			if (t >= 140)
 				bCANTLEAVEFLOORPIC = false;
 			else
-				user_t++;
+				t++;
 		
 		
 	//So here's the deal about A_CheckBlock. For situations like this, we only
@@ -566,32 +511,26 @@ Class L4DLargeMobRunner : DirectorKid
 			A_ChangeLinkFlags(true);
 		}
 	Mobmaking:
-		TNT1 A 0
-		{
-			if (Distance3DSquared(target) <= (250 ** 2) || !A_CheckSight("Null"))
-				return ResolveState("Wanderbout");
-			return ResolveState("MobChance");
-		}
+		//TNT1 A 0 A_JumpIfInventory("HordeToken",1,3,AAPTR_MASTER)
+		TNT1 A 0 A_JumpIfCloser(250,"Wanderbout");
+		TNT1 A 0 A_CheckSight(1);
+		Goto Wanderbout;
+		//TNT1 A 0 A_JumpIfInventory("HordeToken",1,1,AAPTR_MASTER)
+		//Goto MobChance
 	MobChance:
-		TNT1 A 0
-		{
-			bool sp;
-			if (random(0,1))
-				sp = A_SpawnItemEx("L4DTank",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID);
-			else if (random(0,1))
-				sp = A_SpawnItemEx("L4DWitchSitting",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID);
-			else
-				sp = A_SpawnItemEx("L4DWitchWander",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID);
-			if (sp)	return ResolveState("Vanish");
-			return ResolveState("Wanderbout");
-		}
+		TNT1 A 0 Thing_ChangeTID(0,32668);
+		TNT1 A 0 A_Jump(128,2,3);
+		TNT1 A 0 A_SpawnItemEx("L4DTank",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID);
+		Goto Vanish;
+		TNT1 A 0 A_SpawnItemEx("L4DWitchSitting",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID);
+		Goto Vanish;
+		TNT1 A 0 A_SpawnItemEx("L4DWitchWander",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID);
+		Goto Vanish;
 	Vanish:
-		TNT1 A 0 
-		{
-			A_TakeFromSiblings("AEoDToken",100);
-			A_GiveToSiblings("AEoDToken",1);
-			return ResolveState("VanishC");
-		}
+		TNT1 A 0 A_JumpIf(tid!=0,"Wanderbout");
+		TNT1 A 0 A_TakeFromSiblings("AEoDToken",100);
+		TNT1 A 0 A_GiveToSiblings("AEoDToken",1);
+		Goto VanishC;
 	VanishHorde:
 		TNT1 A 1;
 		Goto End;
@@ -605,12 +544,12 @@ Class L4DLargeMobRunner : DirectorKid
 			A_SpawnItemEx("L4DPackageSpawnerMMCheck",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTARGET|SXF_SETMASTER|SXF_ORIGINATOR,0);
 			A_SpawnItemEx("L4DPackageSpawnerCheck",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTARGET|SXF_SETMASTER|SXF_ORIGINATOR,128);
 			A_SpawnItemEx("L4DPackageSpawnerMMCheck",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTARGET|SXF_SETMASTER|SXF_ORIGINATOR,64);
-			return ResolveState("End");
 		}
-		
+		Goto End;
 	Frozen:
 		TNT1 A 35 A_Stop();
 		TNT1 A 0 A_JumpIfInventory("RemoveDirector",1,"Death",AAPTR_TARGET);
+		TNT1 A 0 A_JumpIf(!GetCvar("DirectorsEnabled"),"Frozen");
 		Goto See;
 	Stuck:
 		TNT1 A 0;
@@ -619,26 +558,26 @@ Class L4DLargeMobRunner : DirectorKid
 	End:
 		TNT1 A 0
 		{
-			if (Spawner) Spawner.RemoveKid(self);
 			A_SetSpecies("Nu");
 			bNOINTERACTION = bNOTONAUTOMAP = bNOGRAVITY = true;
 			A_SetTics(35 * 60 * 3);
+			A_TakeInventory("DirLargeChildCount",1,0,AAPTR_MASTER);
 		}
-		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 1 
+		TNT1 A 1 
 		{
 			if (!A_GiveToChildren("DropTimer",1))
 			{	return Destroy();	}
 			
 		}
-		Stop;
+		Wait;
 	}
 }
 
-Class L4DMediumMobRunner : DirectorKid
+Class L4DMediumMobRunner : DirectorBase
 {
-	int user_t;
-	int user_dlimit;
-	int user_limit;
+	int t;
+	int dlimit;
+	int limit;
 	Default
 	{
 		Monster;
@@ -684,21 +623,23 @@ Class L4DMediumMobRunner : DirectorKid
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay { user_limit = random(1,2); }
+		TNT1 A 0 NoDelay { limit = random(1,2); }
 	Idle:
 		TNT1 A 0 { bFRIENDLY = false; }
 		TNT1 AAAAA 1 A_Look();
 		Loop;
 	See:
 	Wanderbout:
+		TNT1 A 0 A_JumpIfInventory("RemoveDirector",1,"Death",AAPTR_TARGET);
+		TNT1 A 0 A_JumpIf(!GetCvar("DirectorsEnabled"),"Frozen");
 		TNT1 A 1 A_Chase();
 		TNT1 AAAAAAAAA 1 A_Wander();
 		TNT1 A 0 
 		{
-			if (user_t >= 140)
+			if (t >= 140)
 				bCANTLEAVEFLOORPIC = false;
 			else
-				user_t++;
+				t++;
 		
 			A_ChangeLinkFlags(false);
 			bTHRUACTORS = false;
@@ -708,41 +649,34 @@ Class L4DMediumMobRunner : DirectorKid
 			A_ChangeLinkFlags(true);
 		}
 	Mobmaking:
-		TNT1 A 0
-		{
-			if (A_JumpIfTargetInLOS("Wanderbout",360,0,250) || !A_CheckSight("Null"))
-				return ResolveState("Wanderbout");
-			return ResolveState("MobChance");
-		}
+		TNT1 A 0 A_JumpIfTargetInLOS("Wanderbout",360);
+		TNT1 A 0 A_JumpIfCloser(250,"Wanderbout");
+		TNT1 A 0 A_CheckSight(1);
+		Goto Wanderbout;
 	MobChance:
-		TNT1 A 0
-		{
-			int rng = random(1,7);
-			Class<Actor> mon = null;
-			Switch(rng)
-			{
-				Case 1:	mon = "L4DJockey";	break;
-				Case 2:	mon = "L4DBoomer";	break;
-				Case 3:	mon = "L4DSmoker";	break;
-				Case 4:	mon = "L4DSpitter";	break;
-				Case 5:	mon = "L4DHunter";	break;
-				Case 6:	mon = "L4DCharger";	break;
-				Case 7: return ResolveState("Wanderbout");
-			}
-			if (mon)
-			{
-				if (A_SpawnItemEx(mon, flags: SXF_TRANSFERPOINTERS))
-				{
-					user_dlimit++;
-					A_GiveToSiblings("AEoDToken",1);
-					if (user_dlimit >= user_limit)
-						return ResolveState("VanishC");
-				}
-			}
-			return ResolveState("Wanderbout");
-		}
+		TNT1 A 0 Thing_ChangeTID(0,32669);
+		TNT1 A 0 A_Jump(256,1,2,3,4,5,6,"Wanderbout");
+		TNT1 A 0 A_SpawnItemEx("L4DJockey",0,0,5,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID);
+		Goto CountUp;
+		TNT1 A 0 A_SpawnItemEx("L4DBoomer",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID);
+		Goto CountUp;
+		TNT1 A 0 A_SpawnItemEx("L4DSmoker",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID);
+		Goto CountUp;
+		TNT1 A 0 A_SpawnItemEx("L4DSpitter",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID);
+		Goto CountUp;
+		TNT1 A 0 A_SpawnItemEx("L4DHunter",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID);
+		Goto CountUp;
+		TNT1 A 0 A_SpawnItemEx("L4DCharger",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID);
+		Goto CountUp;
+	CountUp:
+		TNT1 A 0 A_JumpIf(tid!=0,"Wanderbout");
+		TNT1 A 0 A_TakeFromSiblings("AEoDToken",100); //Don't need overflow because someone's using sv_unlimited_pickup...
+		TNT1 A 0 A_GiveToSiblings("AEoDToken",1);
+		TNT1 A 0 { dlimit++; }
+		TNT1 A 0 A_JumpIf(dlimit>=limit,"VanishC");
+		Goto Wanderbout;
 	Vanish:
-		TNT1 A 0 { if (!Spawner) return Destroy(); }
+		TNT1 A 0 A_JumpIf(CheckClass("TheDirectorL4D",AAPTR_MASTER,0),"VanishC");
 	VanishHorde:
 		TNT1 A 1;
 		Goto End;
@@ -758,44 +692,55 @@ Class L4DMediumMobRunner : DirectorKid
 			A_SpawnItemEx("L4DPackageSpawnerMMCheck",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTARGET|SXF_SETMASTER|SXF_ORIGINATOR);
 			A_SpawnItemEx("L4DPackageSpawnerCheck",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTARGET|SXF_SETMASTER|SXF_ORIGINATOR,256-64);
 		}
+		
+		
+		/*
+		TNT1 A 0 A_DropItem("AEoD6SpellSpawner",1,1)
+		TNT1 A 0 A_DropItem("Megasphere",1,32)
+		TNT1 A 0 A_DropItem("SoulSphere",1,64)
+		TNT1 AAA 0 A_DropItem("PowerupsSpawnerDirector",0,128)
+		TNT1 A 0 A_DropItem("L4DPackageSpawnerMMCheck")
+		TNT1 A 1 A_DropItem("L4DPackageSpawnerCheck",0,64)
+		*/
 		Goto End;
 	Frozen:
 		TNT1 A 35 A_Stop();
+		TNT1 A 0 A_JumpIfInventory("RemoveDirector",1,"Death",AAPTR_TARGET);
+		TNT1 A 0 A_JumpIf(!GetCvar("DirectorsEnabled"),"Frozen");
 		Goto See;
 	Stuck:
-		TNT1 A 1 A_JumpIf(user_dlimit > 0, "VanishC");
+		TNT1 A 1 A_JumpIf(dlimit > 0, "VanishC");
 		Goto End;
 	Death:
 	End:
 		TNT1 A 1
 		{
-			if (Spawner) Spawner.RemoveKid(self);
 			A_SetSpecies("Nu");
 			bNOINTERACTION = bNOTONAUTOMAP = bNOGRAVITY = true;
 			A_SetTics(35 * 60 * 3);
+			A_TakeInventory("DirMediumChildCount",1,0,AAPTR_MASTER);
 		}
-		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 1 
+		TNT1 A 1 
 		{
 			if (!A_GiveToChildren("DropTimer",1))
 			{	return Destroy();	}
 		}
-		Stop;
+		Wait;
 	}
 }
 
-Class L4DSmallMobRunner : DirectorKid
+Class L4DSmallMobRunner : DirectorBase
 {
-	int user_dlimit;
-	int user_max;
-	int user_check[2];
+	int dlimit;
+	int max;
+	int check[2];
 	int nightmare;
-	int user_t;
+	int t;
 	int horde;
-	int thid;
-	int user_ambush;
+	int tid;
+	int ambush;
 	int count;
 	Vector3 prev;
-	Class<Actor> mon;
 	Default
 	{
 		Monster;
@@ -827,7 +772,6 @@ Class L4DSmallMobRunner : DirectorKid
 		+LAXTELEFRAGDMG
 		+ALWAYSTELEFRAG
 		+NOPAIN
-		+BLOCKEDBYSOLIDACTORS
 		//MaxDropOffHeight 128
 		//MaxStepHeight 128
 		+DONTTHRUST
@@ -843,28 +787,30 @@ Class L4DSmallMobRunner : DirectorKid
 	Spawn:
 		TNT1 A 0 NoDelay 
 		{
-			mon = (Spawner != null) ? "L4DCommonSpawnerNA" : "L4DCommonSpawner";
+			tid = tid;
+			ChangeTID(0);
+			if (master && master.CountInv("HordeToken"))
+				horde = 1;
+				
+			max = (target && target.CountInv("NightmareToken")) ? random(10,25) : random(7,15);
 		}
 	Idle:
 		TNT1 AAAAA 1 A_Look();
 		Loop;
 	See:
-		TNT1 A 0 
-		{
-			nightmare = (target && target.CountInv("NightmareToken"));
-			user_max = nightmare ? random(10,25) : random(7,15);
-		}
 	Wanderbout:
+		TNT1 A 0 A_JumpIfInventory("RemoveDirector",1,"Death",TargetPtr);
+		TNT1 A 0 A_JumpIf(!GetCvar("DirectorsEnabled"),"Frozen");
 		TNT1 A 0 A_JumpIf(horde == 1, "MobHorde");
 		TNT1 AAAA 1 A_Chase(null,null);
 		TNT1 A 0 A_JumpIfInventory("NightmareToken",1,4,TargetPtr);
 		TNT1 AAAAA 1 A_Wander();
 		TNT1 A 0 
 		{
-			if (user_t >= 140)
+			if (t >= 140)
 				bCANTLEAVEFLOORPIC = false;
 			else
-				user_t++;
+				t++;
 		
 			A_ChangeLinkFlags(false);
 			bTHRUACTORS = false;
@@ -874,79 +820,57 @@ Class L4DSmallMobRunner : DirectorKid
 			A_ChangeLinkFlags(true);
 		}
 	Mobmaking:
-		TNT1 A 0
-		{
-			if (A_JumpIfTargetInLOS("Wanderbout",360,0,250) || !A_CheckSight("Null"))
-				return ResolveState("Wanderbout");
-			return ResolveState("MobChance");
-		}
+		TNT1 A 0 A_JumpIfTargetInLOS("Wanderbout",360);
+		TNT1 A 0 A_JumpIfCloser(250,"Wanderbout");
+		TNT1 A 0 A_CheckSight(1);
+		Goto Wanderbout;
 	MobChance:
+		TNT1 A 0 Thing_ChangeTID(0,32670);
+		TNT1 A 0 A_JumpIf(CheckClass("TheDirectorL4D",AAPTR_MASTER,1),"MobChanceNA");
+		TNT1 A 0 A_SpawnItemEx("L4DCommonSpawner",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID);
+		//This is the only means to check if the spawn was successful or not.
+		//If the TID is cleared, then continue onwards. If not, it failed and force
+		//abortion so it can try again without penalty.
+		TNT1 A 0 A_JumpIf(tid!=0,"Wanderbout");
+		TNT1 AA 0 A_SpawnItemEx("L4DCommonSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS,225);
+		Goto CountUp;
 	MobChanceNA:
-		TNT1 A 0
-		{
-			Class<Actor> mon = master ? "L4DCommonSpawnerNA" : "L4DCommonSpawner";
-			if (A_SpawnItemEx(mon, flags: SXF_TRANSFERPOINTERS))
-			{
-				for (int i = 0; i < 2; i++)
-					A_SpawnItemEx(mon, flags: SXF_TRANSFERPOINTERS|SXF_NOCHECKPOSITION, failchance: 225);
-				A_GiveToSiblings("AEoDToken",1);
-				user_dlimit++;
-			}
-			if (user_dlimit >= user_max)
-				return ResolveState("Vanish");
-			return ResolveState("Wanderbout");
-		}
+		TNT1 A 0 A_SpawnItemEx("L4DCommonSpawnerNA",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID);
+		TNT1 A 0 A_JumpIf(tid!=0,"Wanderbout");
+		TNT1 AA 0 A_SpawnItemEx("L4DCommonSpawnerNA",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS,225);
+		Goto CountUp;
 	MobHorde:
-	MobHordeNightmare:
+		TNT1 A 0 A_JumpIfInventory("RemoveDirector",1,"Death",AAPTR_TARGET);
+		TNT1 A 0 A_JumpIf(!GetCvar("DirectorsEnabled"),"Frozen");
+		TNT1 A 0 A_JumpIfInventory("NightmareToken",1,"MobHordeNightmare",TargetPtr);
+		
+		TNT1 A 1 A_Chase(null, null);
 		TNT1 A 1 A_Wander();
 		TNT1 A 0
 		{
 			A_ChangeLinkFlags(false);
 			bTHRUACTORS = false;
-			if (A_CheckBlock("Null",CBF_DROPOFF) && prev == pos)
-			{
-				bTHRUACTORS = true;
-				A_ChangeLinkFlags(true);
-				return ResolveState("MobHorde");	
-			}
+			if (A_CheckBlock("Stuck",CBF_DROPOFF) && prev == pos)
+			{	return Destroy();	}
 			bTHRUACTORS = true;
 			A_ChangeLinkFlags(true);
 			prev = pos;
-			return ResolveState(null);
 		}
-		
-		TNT1 A 1
+		TNT1 A 0 A_JumpIfTargetInLOS("MobHorde",360);
+		TNT1 A 0 A_JumpIfCloser(250,"MobHorde");
+		TNT1 AAAAAAAAAA 1 A_SpawnItemEx("L4DCommonSpawnerNA",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS);
+		TNT1 AAAAAAAAAA 1 A_SpawnItemEx("L4DCommonSpawnerNA",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS,128);
+		TNT1 AAAAAAAAAA 1 A_SpawnItemEx("L4DCommonSpawnerNA",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS,192);
+		TNT1 A 0 
 		{
-			if (!A_JumpIfTargetInLOS("Null",360,0,250))
-			{
-				if (Spawner)	Spawner.RemoveKid(self);
-				Spawner = null;
-				return ResolveState("SpawnHorde");
-			}
-			return ResolveState(null);
+			A_TakeFromSiblings("AEoDToken",100);
+			A_GiveToSiblings("AEoDToken",1);
+			A_DropItem("AEoD6SpellSpawner",0,1);
+			if (target && target.CountInv("JokeToken"))
+				A_DropItem("L4DJokeWeaponSpawner",0,224);
+			else
+				A_DropItem("L4DGeneralWeaponSpawner",0,224);
 		}
-		Loop;
-	SpawnHorde:
-		TNT1 A 1 
-		{
-			A_SpawnItemEx(mon,0,0,0,frandom(1.0,5.0),0,0,random(0,359),SXF_TRANSFERPOINTERS|SXF_NOCHECKPOSITION);
-			count++;
-			if (count > (nightmare ? 60 : 30))
-			{
-				A_GiveToSiblings("AEoDToken",1);
-				A_DropItem("AEoD6SpellSpawner",0,1);
-				if (target && target.CountInv("JokeToken"))
-					A_DropItem("L4DJokeWeaponSpawner",0,224);
-				else
-					A_DropItem("L4DGeneralWeaponSpawner",0,224);
-				
-				if (thid >= 666)	return ResolveState("SpecialDrops");
-				if (nightmare)		return ResolveState("MHNCont");
-				return ResolveState("MHCont");
-			}
-			return ResolveState(null);
-		}
-		Wait;
 	MHCont:
 		TNT1 A 1
 		{
@@ -959,14 +883,55 @@ Class L4DSmallMobRunner : DirectorKid
 			A_SpawnItemEx("CellPackReplacer",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTARGET|SXF_SETMASTER|SXF_ORIGINATOR,128);
 			A_SpawnItemEx("CellPackReplacer",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTARGET|SXF_SETMASTER|SXF_ORIGINATOR,128);
 			A_SpawnItemEx("SoulSphere",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTARGET|SXF_SETMASTER|SXF_ORIGINATOR,256-26);
-			for (int i = 0; i < 7; i++)
-			{	
-				if (i < 3)
-					A_SpawnItemEx("PowerupsSpawnerDirector",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTARGET|SXF_SETMASTER|SXF_ORIGINATOR,128);
-				A_SpawnItemEx("Medikit",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTARGET|SXF_SETMASTER|SXF_ORIGINATOR,256-224);
-			}
+			
+			for (count = 0; count < 7; count++)
+			{	A_SpawnItemEx("Medikit",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTARGET|SXF_SETMASTER|SXF_ORIGINATOR,256-224);	}
+			for (count = 0; count < 3; count++)
+			{	A_SpawnItemEx("PowerupsSpawnerDirector",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTARGET|SXF_SETMASTER|SXF_ORIGINATOR,128);	}
 		}
 		Goto End;
+	MobHordeNightmare:
+		TNT1 A 0 A_JumpIfInventory("RemoveDirector",1,"Death",AAPTR_TARGET);
+		TNT1 A 0 A_JumpIf(!GetCvar("DirectorsEnabled"),"Frozen");
+		TNT1 A 1 A_Chase(null, null);
+		TNT1 A 1 A_Wander();
+		TNT1 A 0 
+		{
+			A_ChangeLinkFlags(false);
+			bTHRUACTORS = false;
+			if (A_CheckBlock("Stuck",CBF_DROPOFF) && prev == pos)
+			{	return Destroy();	}
+			bTHRUACTORS = true;
+			A_ChangeLinkFlags(true);
+		}
+		TNT1 A 0 A_JumpIfTargetInLOS("MobHordeNightmare",360);
+		TNT1 A 0 A_JumpIfCloser(250,"MobHordeNightmare");
+		TNT1 AAAAAAAAAAAAAAAAAAAA 1 A_SpawnItemEx("L4DCommonSpawnerNA",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS);
+		TNT1 AAAAAAAAAAAAAAAAAAAA 1 A_SpawnItemEx("L4DCommonSpawnerNA",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS,128);
+		TNT1 AAAAAAAAAAAAAAAAAAAA 1 A_SpawnItemEx("L4DCommonSpawnerNA",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS,192);
+		TNT1 A 0 A_TakeFromSiblings("AEoDToken",100);
+		TNT1 A 0 A_GiveToSiblings("AEoDToken",1);
+		TNT1 A 0 A_JumpIf(tid == 666,"SpecialDrops");
+		TNT1 A 0 A_DropItem("AEoD6SpellSpawner",1,1);
+		TNT1 A 0 A_JumpIfInventory("JokeToken",1,2,TargetPtr);
+		TNT1 A 0 A_DropItem("L4DGeneralWeaponSpawner",0,234);
+		Goto MHNCont;
+		TNT1 A 0 A_DropItem("L4DJokeWeaponSpawner",0,234);
+		
+		TNT1 A 0 
+		{
+			if (tid == 666)
+				return ResolveState("SpecialDrops");
+			A_TakeFromSiblings("AEoDToken",100);
+			A_GiveToSiblings("AEoDToken",1);
+			A_DropItem("AEoD6SpellSpawner",0,1);
+			if (target && target.CountInv("JokeToken"))
+				A_DropItem("L4DJokeWeaponSpawner",0,224);
+			else
+				A_DropItem("L4DGeneralWeaponSpawner",0,224);
+			
+			return ResolveState(null);
+		}
 	MHNCont:
 		TNT1 A 1
 		{
@@ -979,20 +944,22 @@ Class L4DSmallMobRunner : DirectorKid
 			A_SpawnItemEx("CellPackReplacer",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTARGET|SXF_SETMASTER|SXF_ORIGINATOR,64);
 			A_SpawnItemEx("CellPackReplacer",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTARGET|SXF_SETMASTER|SXF_ORIGINATOR,64);
 			
-			for (int i = 0; i < 3; i++)
+			for (count = 0; count < 3; count++)
 			{	A_SpawnItemEx("PowerupsSpawnerDirector",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTARGET|SXF_SETMASTER|SXF_ORIGINATOR,128);	}
 		}
 		Goto End;
-	Vanish:
-		TNT1 A 0
+	CountUp:
+		TNT1 A 0 
 		{
-			if (nightmare || target && target.CountInv("NightmareToken"))
-				return ResolveState("VanishNightmare");
-			if (master)
-				return ResolveState("Vanish2");
-			return ResolveState("End");
-			
+			A_TakeFromSiblings("AEoDToken",100);
+			A_GiveToSiblings("AEoDToken",1);
+			dlimit++;
+			return A_JumpIf(dlimit>=max,"Vanish");
 		}
+		Goto Wanderbout;
+	Vanish:
+		TNT1 A 0 A_JumpIfInventory("NightmareToken",1,"VanishNightmare",TargetPtr);
+		TNT1 A 1 A_JumpIf(CheckClass("TheDirectorL4D",AAPTR_MASTER,0),"Vanish2");
 		//TNT1 A 0 //A_JumpIfInventory("DirectorMasterToken",1,1,AAPTR_MASTER)
 		Goto End;
 	Vanish2:
@@ -1004,7 +971,9 @@ Class L4DSmallMobRunner : DirectorKid
 		}
 		Goto End;
 	VanishNightmare:
-		TNT1 A 0 { if (!master && random(1,256) >= 32)	return Destroy();	}
+		TNT1 A 0 A_Jump(32,2);
+		TNT1 A 1 A_JumpIf(CheckClass("TheDirectorL4D",AAPTR_MASTER,0),1);
+		Goto End;
 	VanishNightmare2:
 		TNT1 A 1 
 		{
@@ -1018,6 +987,15 @@ Class L4DSmallMobRunner : DirectorKid
 		Goto End;
 	Frozen:
 		TNT1 A 35 A_Stop();
+		TNT1 A 0 
+		{
+			if (CountInv("RemoveDirector",AAPTR_TARGET) > 0)
+			{	return ResolveState("End");	}
+			if (!GetCvar("DirectorsEnabled"))
+			{	return ResolveState("Frozen");	}
+			
+			return ResolveState("See");
+		}
 		Goto See;
 	SpecialDrops:
 		TNT1 A 1
@@ -1035,21 +1013,21 @@ Class L4DSmallMobRunner : DirectorKid
 			{	A_SpawnItemEx("L4DGeneralWeaponSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER|SXF_ORIGINATOR,256-234);	}
 		}
 	Death:
+	Stuck:
 	End:
 		TNT1 A 0
 		{
-			if (Spawner) Spawner.RemoveKid(self);
-			Spawner = null;
 			A_SetSpecies("Nu");
 			bNOINTERACTION = bNOTONAUTOMAP = bNOGRAVITY = true;
 			A_SetTics(35 * 60 * 3);
+			A_TakeInventory("DirSmallChildCount",1,0,AAPTR_MASTER);
 		}
-		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 1 
+		TNT1 A 1 
 		{
 			if (!A_GiveToChildren("DropTimer",1))
 			{	return Destroy();	}
 		}
-		Stop;
+		Wait;
 	}
 }
 
@@ -1088,7 +1066,7 @@ Class InventoryTimeRemover
 {
 	const int Minute = 35 * 60;
 	const int TimeLimit = Minute * 3; //3 minutes.
-	int user_time;
+	int time;
 	+NOINTERACTION
 	States
 	{
@@ -1097,8 +1075,8 @@ Class InventoryTimeRemover
 		{
 			if (!target)
 			{	return Destroy();	}
-			else if (user_time < TimeLimit)
-			{	user_time++;	}
+			else if (time < TimeLimit)
+			{	time++;	}
 			else
 			{
 				A_SetTics(1);
@@ -1276,7 +1254,7 @@ Class L4DHealthPack : Actor
 
 Class L4DHealthPackMM : Actor
 {
-	int user_d;
+	int d;
 	Default
 	{
 		+NOINTERACTION

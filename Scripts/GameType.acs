@@ -20,7 +20,6 @@ global bool 19: MiniThemeEnabled;
 global str 20:MiniMode[];
 global int 21:L4DIntensity;
 global int 22:MonIntensity;
-
 #define L4DMode 1
 #define BlitzkriegMode 2
 
@@ -178,7 +177,7 @@ Script "s901" enter
 	
 	
 	int diff = GameSkill();
-	
+	/*	
 	if (L4DDir)	//Left 4 Dead Director
 	{
 		GiveInventory("L4DDirectorSpawner",1); //spawn only the l4d director
@@ -186,7 +185,7 @@ Script "s901" enter
 	}	
 	if (NorDir) //if monster mayhem mode
 		giveinventory("DirectorSpawner",1); //spawn the director
-	
+	*/
 		
 	//The above code handles the director, while below handles possible combos.
 	//This code below is used to give the player a perfect skill count dummy
@@ -550,7 +549,8 @@ Script "SpawnerSetup" enter
 	L4DIntensity = GetCvar("user_L4DIntensity");
 	MiniThemeEnabled = false;
 	// modes
-	AEoDGameMode = 0;		MonsterMayhem = false;
+	AEoDGameMode = GetCvar("AEoDGameMode");
+	MonsterMayhem = false;
 	// directors
 	L4DDir = false;			NorDir = false;
 	// themes
@@ -850,11 +850,14 @@ Script "FreezeDirector" (void)
 	if (AEoDGameMode > 0 && DirDebug == 0)
 	{
 		PrintBold(s:"Directors cannot be disabled in this game mode");
+		ScriptCall("ACSConverter", "ToggleDirectors", 1);
 		SetCvar("DirectorsEnabled",true);
-		TakeInventory("FreezeDirector",32767); //You panzies.
+		TakeInventory("FreezeDirector",32767); //You pansies.
 		//PLAY IT RIGHT OR GTFO.
 		Terminate;
 	}
+	ScriptCall("ACSConverter", "ToggleDirectors", 0, 1); // 0 means toggling, -1 = off, 1 = on
+	/*
 	if (!GetCvar("DirectorsEnabled"))
 	{
 		PrintBold(s:"Directors Enabled");
@@ -865,6 +868,7 @@ Script "FreezeDirector" (void)
 		PrintBold(s:"Directors Disabled");
 		SetCvar("DirectorsEnabled",false);
 	}
+	*/
 }
 
 script "IdfaTrap" (void)

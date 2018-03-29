@@ -1,8 +1,128 @@
+Class ACSConverter play
+{
+	static void ToggleDirectors(int on = 0, bool text = false)
+	{
+		AEoDHandler.SendNetworkEvent("ToggleDirectors", on, text);
+	}
+}
+
 Class AEoDHandler : EventHandler
 {
-	bool DemonMorph;
-	//Array<uint8> SectorD;
+	enum CvarList
+	{
+		Game_Blood,
+		Game_Doom,
+		Game_Duke,
+		Game_Heretic,
+		Game_Hexen,
+		Game_Hexen2,
+		Game_HL,
+		Game_HL2,
+		Game_MM,
+		Game_Powerslave,
+		Game_Quake1,
+		Game_Quake2,
+		Game_Quake4,
+		Game_SW,
+		Extra_Dm64,
+		Extra_Hellspawn,
+		Extra_Joke,
+		Extra_L4DMon,
+		Extra_ROTT,
 		
+		GameCount = 10,
+		ExtraCount = 5,
+		TotalCount = GameCount + ExtraCount
+	};
+	
+	bool DemonMorph;
+	bool CvarsUpdated;
+	bool DirectorsEnabled;
+	DirectorBase L4DDirector;
+	DirectorBase NormalDirector;
+	int L4DIntensity, MonIntensity, DirDelay, GameMode, L4DDir, NorDir;
+	
+	//Array<uint8> SectorD;	
+	transient Cvar 	Themes[TotalCount];
+	transient Cvar 	CL4DIntensity, CMonIntensity, CDirDelay, CEnabled, CL4DDir, CNorDir,
+					CGameMode;
+	//transient Cvar DirCvar[3];
+	
+	
+	void GetCvars()
+	{
+		/*
+		static const String Cvars[] =
+		{
+			"user_Doom",
+			"user_Blood",
+			"user_Duke",
+			"user_HL",
+			"user_HL2",
+			"user_Heretic",
+			"user_Hexen",
+			"user_Hexen2",
+			"user_MM",
+			"user_Powerslave",
+			"user_Quake1",
+			"user_Quake2",
+			"user_Quake4",
+			"user_SW",
+			"user_Strife"
+			//-------------- The rest below are extras, not themes.
+			"user_Dm64", 
+			"user_Hellspawn", 
+			"user_Joke", 
+			"user_L4DMon", 
+			"user_ROTT" 
+		};
+		
+		for (int i = 0; i < Themes.Size(); i++)
+		{
+			
+		}
+		*/
+		if (!CGameMode)			CGameMode = Cvar.FindCvar("AEoDGameMode");
+		if (!CL4DIntensity)		CL4DIntensity = Cvar.FindCvar("user_L4DIntensity");
+		if (!CMonIntensity)		CMonIntensity = Cvar.FindCvar("user_MonIntensity");
+		if (!CDirDelay)			CDirDelay = Cvar.FindCvar("DirectorDelay");
+		if (!CNorDir)			CNorDir = Cvar.FindCvar("user_NorDir");
+		if (!CL4DDir)			CL4DDir = Cvar.FindCvar("user_L4DDir");
+		
+		if (CL4DIntensity)		L4DIntensity = 		CL4DIntensity.GetInt();
+		if (CMonIntensity)		MonIntensity = 		CMonIntensity.GetInt();
+		if (CDirDelay)			DirDelay = 			CDirDelay.GetInt();
+		if (CGameMode)			GameMode =			CGameMode.GetInt();
+		if (CNorDir)			NorDir =			CNorDir.GetBool();
+		if (CL4DDir)			L4DDir =			CL4DDir.GetBool();
+	}
+	
+	override void OnRegister()
+	{
+		GetCvars();
+	}
+	
+	override void WorldLoaded(WorldEvent e)
+	{
+		let plr = players[0].mo;
+		if (GameMode == 1)
+		{
+			L4DDirector =					TheDirectorL4D(Actor.Spawn("TheDirectorL4D", plr.pos));
+			plr.A_GiveInventory("L4DDirToken");
+		}
+		else
+		{
+			if (NorDir)	NormalDirector = 	TheDirector(Actor.Spawn("TheDirector", plr.pos));
+			if (L4DDir)	
+			{
+				L4DDirector =		TheDirectorL4D(Actor.Spawn("TheDirectorL4D", plr.pos));
+				plr.A_GiveInventory("L4DDirToken");
+			}
+		}
+		
+		DirectorsEnabled = (NorDir || L4DDir);
+	}
+	
 	override void NetworkProcess(ConsoleEvent e)
 	{	
 		if (e.Name == 'EndDemonMorph')
@@ -18,9 +138,55 @@ Class AEoDHandler : EventHandler
 					dm.EndMorph();
 				}
 			}
-			return;
 		}
-		if (!e.IsManual)
+		else if (e.Name == 'ToggleDirectors' && !e.IsManual)
+		{
+			let plr = players[0].mo;
+			if (plr)
+			{
+				bool good = (L4DDirector || NormalDirector);
+				if (good)
+				{
+					Switch(e.Args[0])
+					{
+						Case 1:	// Enable
+							if (!DirectorsEnabled)
+							{
+								if (e.Args[1])		Console.Printf("Directors Enabled");
+								if (L4DDirector)	L4DDirector.Activate(null);
+								if (NormalDirector)	NormalDirector.Activate(null);
+								DirectorsEnabled = true;
+							}
+							break;
+						Case -1: // Disable
+							if (DirectorsEnabled)
+							{
+								if (e.Args[1])		Console.Printf("Directors Disabled");
+								if (L4DDirector)	L4DDirector.Deactivate(null);
+								if (NormalDirector)	NormalDirector.Deactivate(null);
+								DirectorsEnabled = false;
+							}
+							break;
+						Default: // Toggle
+							if (DirectorsEnabled)
+							{
+								if (e.Args[1])		Console.Printf("Directors Disabled");
+								if (L4DDirector)	L4DDirector.Deactivate(null);
+								if (NormalDirector)	NormalDirector.Deactivate(null);
+							}
+							else
+							{
+								if (e.Args[1])		Console.Printf("Directors Enabled");
+								if (L4DDirector)	L4DDirector.Activate(null);
+								if (NormalDirector)	NormalDirector.Activate(null);
+							}
+							DirectorsEnabled = !DirectorsEnabled;
+							break;
+					}
+				}
+			}
+		}
+		else if (!e.IsManual)
 		{
 			
 			if (e.Name == 'DemonMorphOn')
@@ -65,15 +231,36 @@ Class AEoDHandler : EventHandler
 	
 	override void WorldUnloaded(WorldEvent e)
 	{
-		DemonMorph = false;
+		DemonMorph = CvarsUpdated = false;
+		for (int i = 0; i < MAXPLAYERS; i++)
+		{
+			if (playeringame[i])
+			{
+				let plr = players[i].mo;
+				if (plr)	plr.A_SetInventory("RemoveDirector",0);
+			}
+		}
 	}
 	
 	override void WorldThingSpawned(WorldEvent e)
 	{
-		if (DemonMorph && e.Thing)
+		Actor mo = e.Thing;
+		if (mo is "DirectorBase")
 		{
-			Actor mo = e.Thing;
-			
+			// Do not allow more than one director of each type to spawn.
+			if (mo is "TheDirectorL4D")
+			{
+				if (L4DDirector && mo != L4DDirector) 		mo.Destroy();
+				else 				L4DDirector = TheDirectorL4D(mo);
+			}
+			else if (mo is "TheDirector")
+			{
+				if (NormalDirector && mo != NormalDirector)	mo.Destroy();
+				else				NormalDirector = TheDirector(mo);
+			}
+		}
+		else if (DemonMorph && mo)
+		{	
 			if (mo && mo.bISMONSTER && mo.health > 0)
 			{
 				mo.A_GiveInventory("DemonMorphTranslationItem", 1);

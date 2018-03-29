@@ -59,6 +59,11 @@ Class SoulReaperBeam : Actor
 		Super.OnDestroy();
 	}
 	
+	override int SpecialMissileHit(Actor victim)
+	{
+		if (!victim || (victim.bSOLID && !victim.bSHOOTABLE))	return 1;
+		return -1;
+	}
 	
 	override void PostBeginPlay()
 	{
