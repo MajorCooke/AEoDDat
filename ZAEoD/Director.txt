@@ -315,6 +315,31 @@ Class TheDirector : DirectorMain
 	override void PostBeginPlay()
 	{
 		Event = AEoDHandler(EventHandler.Find("AEoDHandler"));
+		target = players[0].mo;
+		GrabCvars();
+		bias0 = 48; //#/256 chance to spawn medium
+		bias1 = 24; //^ large
+		cc0 = 3; //max small children spawners
+		cc1 = 2; //^ medium
+		cc2 = 1; //^ large
+		cc3 = 12; //Absolute maximum number of children at any time.
+		cd0 = 750; //Small cooldown min
+		cd1 = 2000; //Small cooldown max
+		cd2 = 2000; //Medium cooldown min
+		cd3 = 4500; //Medium cooldown max
+		cd4 = 3000; //Large cooldown min
+		cd5 = 6000; //Large cooldown max
+		cd6 = random(50,175);
+		mul = RealIntensity;
+		if (mul <= 0)
+		{
+			A_PrintBold("Multiplier <= 0. This should not happen!\nReport this to the AEoD team immediately.",7.0);
+			mul = 3; //Prevent division by 0.
+		}
+		bFRIENDLY = false;	
+		
+		SetOrigin(target.pos, false);
+		angle = target.angle;
 		Super.PostBeginPlay();
 	}
 	
@@ -336,36 +361,12 @@ Class TheDirector : DirectorMain
 		// 60 seconds
 		TNT1 A 2100 NoDelay 
 		{
-			target = players[0].mo;
-			GrabCvars();
-			bias0 = 48; //#/256 chance to spawn medium
-			bias1 = 24; //^ large
-			cc0 = 3; //max small children spawners
-			cc1 = 2; //^ medium
-			cc2 = 1; //^ large
-			cc3 = 12; //Absolute maximum number of children at any time.
-			cd0 = 750; //Small cooldown min
-			cd1 = 2000; //Small cooldown max
-			cd2 = 2000; //Medium cooldown min
-			cd3 = 4500; //Medium cooldown max
-			cd4 = 3000; //Large cooldown min
-			cd5 = 6000; //Large cooldown max
-			cd6 = random(50,175);
-			mul = RealIntensity;
-			if (mul <= 0)
-			{
-				A_PrintBold("Multiplier <= 0. This should not happen!\nReport this to the AEoD team immediately.",7.0);
-				mul = 3; //Prevent division by 0.
-			}
-			bFRIENDLY = false;	
 			if (target && target.CountInv("PFirstTimeToken"))
 			{
 				A_SetTics(35 * 120);
 				target.A_SetInventory("PFirstTimeToken",0);
 				target.A_GiveInventory("SmallSpawnToken",20);
 			}
-			SetOrigin(target.pos, false);
-			angle = target.angle;
 		}
 		Goto Idle;
 	Active:
@@ -419,7 +420,11 @@ Class TheDirector : DirectorMain
 	LargeMobShoot:
 		TNT1 A 0 
 		{
-			if (cooldown0 > 0)	{	return ResolveState("Chasing");	}
+			if (cooldown0 > 0 || LargeKids.Size() > cc2 + mul)	
+			{	
+				//Console.Printf("Size: %d - Cooldown: %d", LargeKids.Size(), cooldown0);
+				return ResolveState("Chasing");	
+			}
 			/*
 			int count = 0;
 			ThinkerIterator telefragger = ThinkerIterator.Create("MCLargeMobRunner");
@@ -431,17 +436,17 @@ Class TheDirector : DirectorMain
 				{	return ResolveState("Chasing");	}
 			}
 			*/
-			int s = LargeKids.Size();
-			if (s >= cc2 + mul || s >= cc3)	return ResolveState("Chasing");
 			let kid = MCLargeMobRunner(Spawn("MCLargeMobRunner",pos, ALLOW_REPLACE));
 			if (kid)
 			{
-				LargeKids.Push(kid);
+				
 				kid.master = self;
 				kid.target = target;
 				kid.tracer = tracer;
 				kid.angle = angle;
+				kid.Spawner = self;
 				cooldown0 = random(cd4, cd5) + random(0, cd6);
+				LargeKids.Push(kid);
 				return ResolveState("ChanceCD");
 			}
 			
@@ -450,9 +455,13 @@ Class TheDirector : DirectorMain
 	MediumMobShoot:
 		TNT1 A 0 
 		{
-			if (cooldown0 > 0)	{	return ResolveState("Chasing");	}
 			int s = MediumKids.Size();
-			if (s >= cc1 + mul || s >= cc3)	return ResolveState("Chasing");
+			if (cooldown0 > 0 || s >= cc1 + mul)	
+			{
+				//Console.Printf("Size: %d - Cooldown: %d", MediumKids.Size(), cooldown0);
+				return ResolveState("Chasing");
+			}
+			
 			/*
 			int count = 0;
 			ThinkerIterator telefragger = ThinkerIterator.Create("MCMediumMobRunner");
@@ -467,12 +476,13 @@ Class TheDirector : DirectorMain
 			let kid = MCMediumMobRunner(Spawn("MCMediumMobRunner",pos, ALLOW_REPLACE));
 			if (kid)
 			{
-				MediumKids.Push(kid);
 				kid.master = self;
 				kid.target = target;
 				kid.tracer = tracer;
 				kid.angle = angle;
+				kid.Spawner = self;
 				cooldown0 = random(cd2, cd3) + random(0, cd6);
+				MediumKids.Push(kid);
 				return ResolveState("ChanceCD");
 			}
 			
@@ -481,9 +491,12 @@ Class TheDirector : DirectorMain
 	SmallMobShoot:
 		TNT1 A 0 
 		{
-			if (cooldown1 > 0)	{	return ResolveState("Chasing");	}
 			int s = SmallKids.Size();
-			if (s >= cc0 + mul || s >= cc3)	return ResolveState("Chasing");
+			if (cooldown1 > 0 || s >= cc0 + mul)	
+			{
+				//Console.Printf("Size: %d - Cooldown: %d", SmallKids.Size(), cooldown1);
+				return ResolveState("Chasing");
+			}
 			/*
 			int count = 0;
 			ThinkerIterator telefragger = ThinkerIterator.Create("MCSmallMobRunner");
@@ -500,13 +513,16 @@ Class TheDirector : DirectorMain
 			let kid = MCSmallMobRunner(Spawn("MCSmallMobRunner",pos, ALLOW_REPLACE));
 			if (kid)
 			{
-				SmallKids.Push(kid);
+				
 				kid.master = self;
 				kid.target = target;
 				kid.tracer = tracer;
 				kid.angle = angle;
 				kid.thid = mul;
+				kid.Spawner = self;
 				cooldown1 = random(cd1, cd2) + random(0, cd6);
+				if (target)	target.A_TakeInventory("SmallSpawnToken",1);
+				SmallKids.Push(kid);
 				return ResolveState("ChanceCD");
 			}
 			
@@ -616,7 +632,7 @@ Class MCLargeMobRunner : DirectorKid
 		TNT1 A 0
 		{
 			ChangeTID(0);
-			if (!Spawner || !target || target.CountInv("RemoveDirector"))
+			if (!Spawner || target || target.CountInv("RemoveDirector"))
 				return Destroy();
 		}
 		TNT1 A 1 A_Chase(null,null);
