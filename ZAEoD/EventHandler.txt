@@ -104,23 +104,26 @@ Class AEoDHandler : EventHandler
 	
 	override void WorldLoaded(WorldEvent e)
 	{
-		let plr = players[0].mo;
-		if (GameMode == 1)
+		if (!e.IsReopen)
 		{
-			L4DDirector =					TheDirectorL4D(Actor.Spawn("TheDirectorL4D", plr.pos));
-			plr.A_GiveInventory("L4DDirToken");
-		}
-		else
-		{
-			if (NorDir)	NormalDirector = 	TheDirector(Actor.Spawn("TheDirector", plr.pos));
-			if (L4DDir)	
+			let plr = players[0].mo;
+			if (GameMode == 1)
 			{
-				L4DDirector =		TheDirectorL4D(Actor.Spawn("TheDirectorL4D", plr.pos));
+				L4DDirector =					TheDirectorL4D(Actor.Spawn("TheDirectorL4D", plr.pos));
 				plr.A_GiveInventory("L4DDirToken");
 			}
+			else
+			{
+				if (NorDir)	NormalDirector = 	TheDirector(Actor.Spawn("TheDirector", plr.pos));
+				if (L4DDir)	
+				{
+					L4DDirector =		TheDirectorL4D(Actor.Spawn("TheDirectorL4D", plr.pos));
+					plr.A_GiveInventory("L4DDirToken");
+				}
+			}
+			
+			DirectorsEnabled = (NorDir || L4DDir);
 		}
-		
-		DirectorsEnabled = (NorDir || L4DDir);
 	}
 	
 	override void NetworkProcess(ConsoleEvent e)
