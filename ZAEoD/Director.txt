@@ -314,8 +314,13 @@ Class TheDirector : DirectorMain
 	
 	override void PostBeginPlay()
 	{
-		Super.PostBeginPlay();
+		
 		Event = AEoDHandler(EventHandler.Find("AEoDHandler"));
+		if (Event.NormalDirector)	
+		{
+			return Destroy();
+		}
+		Event.NormalDirector = self;
 		target = players[0].mo;
 		GrabCvars();
 		bias0 = 48; //#/256 chance to spawn medium
@@ -341,6 +346,7 @@ Class TheDirector : DirectorMain
 		
 		SetOrigin(target.pos, false);
 		angle = target.angle;
+		Super.PostBeginPlay();
 	}
 	
 	override void GrabCvars()

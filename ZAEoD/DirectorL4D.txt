@@ -97,6 +97,12 @@ Class TheDirectorL4D : DirectorMain
 	override void PostBeginPlay()
 	{
 		Event = AEoDHandler(EventHandler.Find("AEoDHandler"));
+		if (Event.L4DDirector)	
+		{
+			Console.Printf("Destroyed");
+			return Destroy();
+		}
+		Event.L4DDirector = self;
 		GrabCvars();
 		ChangeTID(0);
 		//Default values
@@ -277,19 +283,18 @@ Class TheDirectorL4D : DirectorMain
 	Missile:
 		TNT1 A 0 
 		{
-			StateLabel next = null;
+			StateLabel next = "Missile2";
 			if (target)
 			{
 				SetOrigin(target.pos, false);
 				int rng = random(0,255);
+				
 				if (target.CountInv("SmallSpawnTokenTwo"))	next = "SmallMobShoot";
-				else if (mul < 666)							next = "Missile2";
-				else if (rng < 104 && cooldown[1] < 1)		next = "MediumMobShoot";
-				else if (rng < 64 && cooldown[2] < 1)
+				else if (mul >= 666)	
 				{
-					if (random(0,1))						next = "LargeMobShoot";
-					else									next = "HordeMode";
+					return A_Jump(256,"SmallMobShoot","MediumMobShoot","LargeMobDecide");
 				}
+				else										next = "Missile2";
 			}
 			return ResolveState(next);
 		}
@@ -917,7 +922,7 @@ Class L4DSmallMobRunner : DirectorKid
 		
 		TNT1 A 1
 		{
-			if (!A_JumpIfTargetInLOS("Null",360,0,250))
+			if (!A_JumpIfTargetInLOS("Null",360,0,250) && A_CheckSight("Null"))
 			{
 				if (Spawner)	Spawner.RemoveKid(self);
 				Spawner = null;
@@ -1028,7 +1033,13 @@ Class L4DSmallMobRunner : DirectorKid
 			A_SpawnItemEx("PowerupsSpawnerDirector",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTARGET|SXF_SETMASTER|SXF_ORIGINATOR,128);
 			A_SpawnItemEx("RandomWeaponPowerAmmoGive",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTARGET|SXF_SETMASTER|SXF_ORIGINATOR,64);
 			A_SpawnItemEx("RandomWeaponPowerAmmoGive",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETTARGET|SXF_SETMASTER|SXF_ORIGINATOR,128);
-			
+			/*
+			Class<Actor> mo = (target && target.CountInv("JokeToken")) ? "L4DJokeWeaponSpawner" : "L4DGeneralWeaponSpawner";
+			if (mo)
+			{
+				let item = L4DItemSpawner(Spawn(mo, pos, ALLOW_REPLACE));
+			}
+			*/
 			if (CountInv("JokeToken",TargetPtr) > 0)
 			{	A_SpawnItemEx("L4DJokeWeaponSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_SETMASTER|SXF_ORIGINATOR,256-234);	}
 			else
@@ -1321,6 +1332,139 @@ Class L4DHealthPackMM : Actor
 	}
 }
 
+Class L4DItemSpawner : RandomSpawner
+{
+	int mul;
+	Property Multiplier: mul;
+	Default
+	{
+		L4DItemSpawner.Multiplier 1;
+		+NOTELESTOMP
+		+NOTONAUTOMAP
+	}
+	/*
+	int RemapRangeInt(int x, int fromMin, int fromMax, int toMin, int toMax) 
+	{
+		return (x - fromMin) * (toMax - toMin) / (fromMax - fromMin) + toMin;
+	}
+	*/
+	/// Remaps a value in a range to another range.
+	int RemapRangeInt(int value, int range1L, int range1H, int range2L, int range2H) 
+	{
+		return int(range2L + (value - range1L) * (range2H - range1H) / double(range1H - range1L));
+	}
+	// To handle "RandomSpawning" missiles, the code has to be split in two parts.
+	// If the following code is not done in BeginPlay, missiles will use the
+	// random spawner's velocity (0...) instead of their own.
+	override void BeginPlay()
+	{
+		DropItem di;   // di will be our drop item list iterator
+		DropItem drop; // while drop stays as the reference point.
+		int n = 0;
+		int imin = 1000000, imax = 0;
+		
+		drop = di = GetDropItems();
+		if (di != null)
+		{
+			if (mul > 0)
+			{
+				while (di != null)
+				{
+					if (di.Name != 'None')
+					{
+						int amt = di.Amount;
+						if (amt < 0)	amt = 1;
+						if (amt < imin)	imin = amt;
+						if (amt > imax)	imax = amt;
+					}
+					di = di.Next;
+				}
+				di = drop;
+			}
+		}
+		if (di != null)
+		{
+			while (di != null)
+			{
+				if (di.Name != 'None')
+				{
+					int amt = di.Amount;
+					if (amt < 0 || mul < 1) amt = 1; 	// default value is -1, we need a positive value.
+					
+					int scaled = RemapRangeInt(amt, imin, imax, imin, imax * mul);
+					n += scaled;
+					//n += amt; 				// this is how we can weight the list.
+					
+				}
+				di = di.Next;
+			}
+			if (n == 0)
+			{ // Nothing left to spawn.
+				return Destroy();
+			}
+			// Then we reset the iterator to the start position...
+			di = drop;
+			// Take a random number...
+			n = random[randomspawn](0, n-1);
+			// And iterate in the array up to the random number chosen.
+			while (n > -1 && di != null)
+			{
+				if (di.Name != 'None')
+				{
+					int amt = di.Amount;
+					if (amt < 0 || mul < 1) amt = 1;
+					int scaled = RemapRangeInt(amt, imin, imax, imin, imax * mul);
+					n -= scaled;
+					if ((di.Next != null) && (n > -1))
+						di = di.Next;
+					else
+						n = -1;
+				}
+				else
+				{
+					di = di.Next;
+				}
+			}
+			// So now we can spawn the dropped item.
+			if (di == null || bouncecount >= MAX_RANDOMSPAWNERS_RECURSION)	// Prevents infinite recursions
+			{
+				Spawn("Unknown", Pos, NO_REPLACE);		// Show that there's a problem.
+				Destroy();
+				return;
+			}
+			else if (random[randomspawn]() <= di.Probability)	// prob 255 = always spawn, prob 0 = almost never spawn.
+			{
+				// Handle replacement here so as to get the proper speed and flags for missiles
+				Class<Actor> cls = di.Name;
+				if (cls != null)
+				{
+					Class<Actor> rep = GetReplacement(cls);
+					if (rep != null)
+					{
+						cls = rep;
+					}
+				}
+				if (cls != null)
+				{
+					Species = Name(cls);
+					readonly<Actor> defmobj = GetDefaultByType(cls);
+					Speed = defmobj.Speed;
+					bMissile |= defmobj.bMissile;
+					bSeekerMissile |= defmobj.bSeekerMissile;
+					bSpectral |= defmobj.bSpectral;
+				}
+				else
+				{
+					A_Log(TEXTCOLOR_RED .. "Unknown item class ".. di.Name .." to drop from a random spawner\n");
+					Species = 'None';
+				}
+			}
+		}
+	}
+}
+
+Class L4DItemSpawnerHarder : L4DItemSpawner {}
+
 Class L4DArmorSpawner : RandomSpawner
 {
 	Default
@@ -1391,18 +1535,18 @@ Class L4DGeneralWeaponSpawner : RandomSpawner
 {
 	Default
 	{
-	+NOTELESTOMP
-	+NOTONAUTOMAP
-	DropItem "Slot1Weps", 255, 16;
-	DropItem "Slot2Weps", 255, 32;
-	DropItem "Slot3Weps", 255, 32;
-	DropItem "Slot4Weps", 255, 32;
-	DropItem "Slot5Weps", 255, 24;
-	DropItem "Slot6Weps", 255, 16;
-	DropItem "Slot7Weps", 255, 12;
-	DropItem "Slot8Weps", 255,  8;
-	DropItem "Slot9Weps", 255,  4;
-	DropItem "Slot0Weps", 255,  2;
+		+NOTELESTOMP
+		+NOTONAUTOMAP
+		DropItem "Slot1Weps", 255, 16;
+		DropItem "Slot2Weps", 255, 32;
+		DropItem "Slot3Weps", 255, 32;
+		DropItem "Slot4Weps", 255, 32;
+		DropItem "Slot5Weps", 255, 24;
+		DropItem "Slot6Weps", 255, 16;
+		DropItem "Slot7Weps", 255, 12;
+		DropItem "Slot8Weps", 255,  8;
+		DropItem "Slot9Weps", 255,  4;
+		DropItem "Slot0Weps", 255,  2;
 	}
 }
 
