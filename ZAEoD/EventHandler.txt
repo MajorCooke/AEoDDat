@@ -1,5 +1,3 @@
-#include "ZAEoD/WeaponSwitch.txt"
-
 Class ACSConverter play
 {
 	static void ToggleDirectors(int on = 0, bool text = false)
@@ -7,73 +5,7 @@ Class ACSConverter play
 		AEoDHandler.SendNetworkEvent("ToggleDirectors", on, text);
 	}
 }
-/*
-class ScrollWheelHijackEventHandler : EventHandler {
-    static const String KeyBindsCCMDs [] = { "weapnext", "weapprev" };
-    static const String KeyBindsNetEvents [] = { "next", "prev" };
 
-    override bool InputProcess (InputEvent e) {
-        if (e.Type != InputEvent.Type_KeyDown)
-            return false;
-
-		int bind1, bind2;
-		for (int i = 0; i < 12; i++) {
-			[bind1, bind2] = Bindings.GetKeysForCommand (KeyBindsCCMDs [i]);
-
-			if (e.KeyScan == bind1 || e.KeyScan == bind2) {
-				EventHandler.SendNetworkEvent (String.Format ("ScrollWheelHijack:%s", KeyBindsNetEvents [i]));
-				return true;
-			}
-		}
-
-        return false;
-    }
-
-	override void NetworkProcess (ConsoleEvent e) {
-		if (e.Player < 0) // Don't execute this if the player isn't given/valid
-			return;
-		if (!playeringame [e.Player] || !players [e.Player].mo) // Don't execute if the player isn't ingame, the player is null or the player's PlayerPawn is null
-			return;
-
-		Array<String> strings;
-		e.Name.Split (strings, ":");
-
-		if (strings.Size () < 2) // Return if the array has less than two strings
-			return;
-
-		if (strings [0] == "ScrollWheelHijack")
-			WeapBindsSystem (e);
-	}
-
-	void WeapBindsSystem (ConsoleEvent e) {
-		PlayerInfo player = players [e.Player];
-
-		if (!player) // Return if the player is null
-			return;
-
-		Array<String> commandStrings;
-		e.Name.Split (commandStrings, ":");
-		if (commandStrings.Size () < 2) // Return if the array contains less than two strings
-			return;
-
-		if (commandStrings [1] == "next") {
-			S7_BaseWeapon weapon = weapBinds.CycleWeapons (false, false);
-
-			if (player.ReadyWeapon != weapon) {
-				player.PendingWeapon = weapon;
-				weapBinds.LastWeapon = weapon;
-			}
-		} else if (commandStrings [1] == "prev") {
-			S7_BaseWeapon weapon = weapBinds.CycleWeapons (true, false);
-
-			if (player.ReadyWeapon != weapon) {
-				player.PendingWeapon = weapon;
-				weapBinds.LastWeapon = weapon;
-			}
-		}
-	}
-}
-*/
 Class AEoDHandler : EventHandler
 {
 	enum CvarList
@@ -172,90 +104,35 @@ Class AEoDHandler : EventHandler
 	
 	override void WorldLoaded(WorldEvent e)
 	{
-		let plr = players[0].mo;
 		if (!e.IsReopen)
 		{
-			
+			let plr = players[0].mo;
 			if (GameMode == 1)
 			{
-				Actor.Spawn("TheDirectorL4D", plr.pos);
+				L4DDirector =					TheDirectorL4D(Actor.Spawn("TheDirectorL4D", plr.pos));
 				plr.A_GiveInventory("L4DDirToken");
 			}
 			else
 			{
-				if (NorDir)	Actor.Spawn("TheDirector", plr.pos);
+				if (NorDir)	NormalDirector = 	TheDirector(Actor.Spawn("TheDirector", plr.pos));
 				if (L4DDir)	
 				{
-					Actor.Spawn("TheDirectorL4D", plr.pos);
+					L4DDirector =		TheDirectorL4D(Actor.Spawn("TheDirectorL4D", plr.pos));
 					plr.A_GiveInventory("L4DDirToken");
 				}
 			}
 			
 			DirectorsEnabled = (NorDir || L4DDir);
 		}
-		
-	}
-	
-	// Tremendous thanks to Phantombeta for helping me out with this.
-	override bool InputProcess(InputEvent ev)
-	{
-		
-		if (ev.Type == InputEvent.Type_KeyDown)// && ev.KeyChar >= 0x30 && ev.KeyChar <= 0x39) // 0x30, 0x39 are '0' and '9'
-		{		
-			// Make sure the player exists.
-			let plr = players[consoleplayer].mo;
-			if (!plr || plr.health < 1 || plr.FindInventory("PowerMorph",true))
-				// Ignore players that are morphed, dead or non-existent.
-				return false;
-				
-			static const String KeyBindsCCMDs [] = {
-				"slot 1", "slot 2", "slot 3", "slot 4", "slot 5",
-				"slot 6", "slot 7", "slot 8", "slot 9", "slot 0",
-				"weapnext", "weapprev"	};
-			static const String KeyBindsNetEvents [] = {
-				"slot:1", "slot:2", "slot:3", "slot:4", "slot:5",
-				"slot:6", "slot:7", "slot:8", "slot:9", "slot:0",
-				"next", "prev"	};
-			
-			int bind1, bind2;
-			for (int i = 0; i < 12; i++) 
-			{
-				[bind1, bind2] = Bindings.GetKeysForCommand (KeyBindsCCMDs [i]);
-
-				if (ev.KeyScan == bind1 || ev.KeyScan == bind2) 
-				{
-				//	EventHandler.SendNetworkEvent (String.Format ("ScrollWheelHijack:%s", KeyBindsNetEvents [i]));
-					EventHandler.SendNetworkEvent(String.Format("AEoD_SelectWeapon:%s", KeyBindsNetEvents[i]));
-					return false;
-				}
-			}
-		}
-		return false;
 	}
 	
 	override void NetworkProcess(ConsoleEvent e)
 	{	
-		int num = e.Player;
-		let plr = players[num].mo;
-		
-		Array<String> strings;
-		e.Name.Split (strings, ":");
-
-		if (plr && strings.Size() > 1)
+		if (e.Name == 'EndDemonMorph')
 		{
-			if (strings[0] == "AEoD_SelectWeapon")
-				ChangeWeapons(e);
-		}
-		else if (e.Name == 'WeapCvar')
-		{
-			// Debug: outputs a cvar if it has one.
-			let wep = (plr) ? AEoDWeaponBase(plr.player.ReadyWeapon) : null;
-			String s = "Null";
-			if (wep)	s = wep.GetCvarThings();
-			Console.Printf("%s", s);
-		}
-		else if (e.Name == 'EndDemonMorph')
-		{
+			int num = e.Player;
+			let plr = players[num].mo;
+			
 			if (plr)
 			{
 				let dm = DemonPlayerMorph(plr);
@@ -265,7 +142,53 @@ Class AEoDHandler : EventHandler
 				}
 			}
 		}
-		
+		else if (e.Name == 'ToggleDirectors' && !e.IsManual)
+		{
+			let plr = players[0].mo;
+			if (plr)
+			{
+				bool good = (L4DDirector || NormalDirector);
+				if (good)
+				{
+					Switch(e.Args[0])
+					{
+						Case 1:	// Enable
+							if (!DirectorsEnabled)
+							{
+								if (e.Args[1])		Console.Printf("Directors Enabled");
+								if (L4DDirector)	L4DDirector.Activate(null);
+								if (NormalDirector)	NormalDirector.Activate(null);
+								DirectorsEnabled = true;
+							}
+							break;
+						Case -1: // Disable
+							if (DirectorsEnabled)
+							{
+								if (e.Args[1])		Console.Printf("Directors Disabled");
+								if (L4DDirector)	L4DDirector.Deactivate(null);
+								if (NormalDirector)	NormalDirector.Deactivate(null);
+								DirectorsEnabled = false;
+							}
+							break;
+						Default: // Toggle
+							if (DirectorsEnabled)
+							{
+								if (e.Args[1])		Console.Printf("Directors Disabled");
+								if (L4DDirector)	L4DDirector.Deactivate(null);
+								if (NormalDirector)	NormalDirector.Deactivate(null);
+							}
+							else
+							{
+								if (e.Args[1])		Console.Printf("Directors Enabled");
+								if (L4DDirector)	L4DDirector.Activate(null);
+								if (NormalDirector)	NormalDirector.Activate(null);
+							}
+							DirectorsEnabled = !DirectorsEnabled;
+							break;
+					}
+				}
+			}
+		}
 		else if (!e.IsManual)
 		{
 			
@@ -306,13 +229,6 @@ Class AEoDHandler : EventHandler
 					}
 				}
 			}
-			else if (e.Name == 'ToggleDirectors')
-			{
-				if (plr)
-				{
-					ToggleDirectors(e);
-				}
-			}
 		}
 	}
 	
@@ -331,11 +247,24 @@ Class AEoDHandler : EventHandler
 	
 	override void WorldThingSpawned(WorldEvent e)
 	{
-		if (DemonMorph)
+		Actor mo = e.Thing;
+		if (mo is "DirectorBase")
 		{
-			Actor mo = e.Thing;
-			if (!mo || mo.bNOINTERACTION)	return;
-			if (!(mo is "DirectorBase") && mo.bISMONSTER && mo.health > 0)
+			// Do not allow more than one director of each type to spawn.
+			if (mo is "TheDirectorL4D")
+			{
+				if (L4DDirector && mo != L4DDirector) 		mo.Destroy();
+				else 				L4DDirector = TheDirectorL4D(mo);
+			}
+			else if (mo is "TheDirector")
+			{
+				if (NormalDirector && mo != NormalDirector)	mo.Destroy();
+				else				NormalDirector = TheDirector(mo);
+			}
+		}
+		else if (DemonMorph && mo)
+		{	
+			if (mo && mo.bISMONSTER && mo.health > 0)
 			{
 				mo.A_GiveInventory("DemonMorphTranslationItem", 1);
 			}
@@ -353,106 +282,134 @@ Class AEoDHandler : EventHandler
 			}
 		}
 	}
-	
-	//==========================================================================
-	// Custom functions here
-	//==========================================================================
-	
-	void ChangeWeapons(ConsoleEvent e) 
-	{
-		int pnum = e.Player;
-		if (!playeringame[pnum])
-			return;
-			
-		PlayerInfo player = players[pnum];
-
-		if (!player) // Return if the player is null
-			return;
-
-		Array<String> commandStrings;
-		e.Name.Split (commandStrings, ":");
-		if (commandStrings.Size() < 2) // Return if the array contains less than two strings
-			return;
-			
-		
-		
-		let ready = player.ReadyWeapon;
-		let pending = player.PendingWeapon;
-		let aready = AEoDWeaponBase(ready);
-		let apending = AEoDWeaponBase(pending);
-		
-		AEoDWeaponIdentifier Finder = new("AEoDWeaponIdentifier");
-		Weapon next = null;
-		if (commandStrings[1] == 'next')
-		{
-			next = Finder.GetNextWeapon(player, AEoDWeaponIdentifier.Ins_SetNext);
-		}
-		else if (commandStrings[1] == 'prev')
-		{
-			next = Finder.GetNextWeapon(player, AEoDWeaponIdentifier.Ins_SetPrev);
-		}
-		else if (commandStrings[1] == 'slot')
-		{
-			// Switching to a weapon in slot.
-			//AEoD_SelectWeapon:slot:#
-			//# is what we want for "slot" command.
-			int len = (commandStrings.Size() > 2) ? commandStrings[2].Length() : 0;
-			if (len < 1)	return;
-			
-			String s = commandStrings[2];
-			if (len > 1)	s = s.CharAt(len - 1);
-			int num = s.ToInt();
-			num %= 10;
-			next = Finder.GetNextWeapon(player, AEoDWeaponIdentifier.Ins_SetSlot, num);
-		}
-		if (next)	player.PendingWeapon = next;
-		Finder.Destroy();
-	}
-	
-	void ToggleDirectors(ConsoleEvent e)
-	{
-		bool good = (L4DDirector || NormalDirector);
-		if (good)
-		{
-			Switch(e.Args[0])
-			{
-				Case 1:	// Enable
-					if (!DirectorsEnabled)
-					{
-						if (e.Args[1])		Console.Printf("Directors Enabled");
-						if (L4DDirector)	L4DDirector.Activate(null);
-						if (NormalDirector)	NormalDirector.Activate(null);
-						DirectorsEnabled = true;
-					}
-					break;
-				Case -1: // Disable
-					if (DirectorsEnabled)
-					{
-						if (e.Args[1])		Console.Printf("Directors Disabled");
-						if (L4DDirector)	L4DDirector.Deactivate(null);
-						if (NormalDirector)	NormalDirector.Deactivate(null);
-						DirectorsEnabled = false;
-					}
-					break;
-				Default: // Toggle
-					if (DirectorsEnabled)
-					{
-						if (e.Args[1])		Console.Printf("Directors Disabled");
-						if (L4DDirector)	L4DDirector.Deactivate(null);
-						if (NormalDirector)	NormalDirector.Deactivate(null);
-					}
-					else
-					{
-						if (e.Args[1])		Console.Printf("Directors Enabled");
-						if (L4DDirector)	L4DDirector.Activate(null);
-						if (NormalDirector)	NormalDirector.Activate(null);
-					}
-					DirectorsEnabled = !DirectorsEnabled;
-					break;
-			}
-		}
-	}
 }
 
+Class DemonMorphTransToken : Inventory {}
 
-
+Class DemonMorphTranslationItem : Inventory
+{
+	uint OldTranslation;
+	uint CurrentTranslation;
+	uint FriendlyTranslation;
+	uint EnemyTranslation;
+	bool wasFriendly;
+	bool resurrecting;
+	bool DestroyMe;
+	bool restored;
+	
+	override bool TryPickup(in out Actor toucher)
+	{
+		if (!toucher || toucher.health < 1 || toucher.CountInv(GetClass()))
+			return false;
+		
+		bool good = Super.TryPickup(toucher);
+		if (good && toucher)
+		{
+			restored = false;
+			OldTranslation = toucher.Translation;
+			toucher.A_SetTranslation("DemonMorphAlly");
+			FriendlyTranslation = toucher.Translation;
+			toucher.A_SetTranslation("DemonMorphTarget");
+			EnemyTranslation = toucher.Translation;
+			
+			if (toucher.bFRIENDLY)	{ toucher.A_SetTranslation("DemonMorphAlly"); wasFriendly = true; }
+			else						toucher.A_SetTranslation("DemonMorphTarget");
+			
+			toucher.bBRIGHT = true;
+			CurrentTranslation = toucher.Translation;
+			//Console.Printf("Translation set");
+		}
+		return good;
+	}
+	
+	//==========================================================================
+	//
+	// The tick function.
+	//
+	//==========================================================================
+	override void DoEffect()
+	{
+		// Destroy the thinker if we no actor, or actor's dead.
+		if (DestroyMe || !owner || owner.health < 1)
+		{
+			return DepleteOrDestroy();
+		}
+		
+		// No point doing anything if invisible.
+		if (owner.alpha <= 0 || owner.GetRenderStyle() <= 0 || 
+			owner.bINVISIBLE || owner.bNOSECTOR)
+			return Super.DoEffect();
+		
+		
+		// Change the translation based on friendly or not.
+		// Make sure not to record it by changing the base and current
+		// at the same time.
+		if (!wasFriendly && owner.bFRIENDLY)
+		{
+			owner.Translation = CurrentTranslation = FriendlyTranslation;
+		}
+		else if (wasFriendly && !owner.bFRIENDLY)
+		{
+			owner.Translation = CurrentTranslation = EnemyTranslation;
+		}
+		wasFriendly = owner.bFRIENDLY;
+		
+		// Should their translation change at any point, record it.
+		if (owner.Translation != CurrentTranslation)
+			OldTranslation = owner.Translation;
+		
+		// Then set it again, and done.
+		owner.Translation = CurrentTranslation;
+		owner.bBRIGHT = true;
+		restored = false;
+		Super.DoEffect();
+	}
+	//==========================================================================
+	//
+	// As of switching to inventory items, this actually works for
+	// monsters that burst into fragments thanks to the special handling of
+	// inventory items upon death.
+	//
+	// Why do we need all three of these functions? Simply put, calling a
+	// function is very time critical. This ensures all corner cases are
+	// covered and all escape paths are cut off, ensuring the gibs are
+	// returned to normal.
+	// 
+	// For example, OwnerDied in the super function calls Destroy() which then
+	// has to process some other stuff first. By this time it may be too late.
+	// Because this is all processed in a virtual machine, this is one exception
+	// to making a function call for doing the work. It may be tidier, but
+	// call speed is imperative if we want things happening in the proper order.
+	// 
+	//==========================================================================
+	override void OwnerDied()
+	{
+		if (owner && !restored)
+		{
+			owner.Translation = OldTranslation;
+			owner.bBRIGHT = false;
+			restored = true;
+		}
+		Super.OwnerDied();
+	}
+	override void OnDestroy()
+	{
+		if (owner && !restored)
+		{
+			owner.Translation = OldTranslation;
+			owner.bBRIGHT = false;
+			restored = true;
+		}
+		Super.OnDestroy();
+	}
+	override void DepleteOrDestroy()
+	{
+		if (owner && !restored)
+		{
+			owner.Translation = OldTranslation;
+			owner.bBRIGHT = false;
+			restored = true;
+		}
+		Super.DepleteOrDestroy();
+	}
+}
