@@ -1,17 +1,41 @@
+/*==============================================================================
+================================================================================
+	AEons of Death 6.66 -- Weapon Switching Core
+ 
+	By Major Cooke
+ ------------------------------------------------------------------------------
+	This is the meat and bones of the weapon switching. Every weapon has a cvar
+	named exactly to it, appended by 'user_'. 
+ 
+	I.e. AEoDTNT's cvar is user_AEoDTNT
+
+	This allows easy integration with almost no changes to any DECORATE or
+	ZScript weapon required. So far, the only change needed was to give them 
+	inheritance from AEoDWeaponBase. More importantly, they must inherit from
+	AEoDWeaponSlot## (in range [01, 10]). Then, assigning them via regular means
+	such as KEYCONF, players, or SlotPriority (ranging [0.0, 1.0]) is the last
+	task.
+	
+	The cvar of the weapon must not conflict with any other in that same group,
+	or it runs the risk of being overridden.
+	
+================================================================================
+==============================================================================*/
+
 
 // Because GZDoom crashes with trying to do array[0].arrayAccessor[1].etc...
 // I've found the need to copy most of the internal functions over.
 Class AEoDWeaponContainer play
 {
 	Array<AEoDWeaponBase> Weapons;
-
+	int TSlot;
 	override void OnDestroy() { Weapons.Clear(); Super.OnDestroy(); }
-	void 	Init()		{	Weapons.Clear();	}
+	void 	Init(int s)		{	Weapons.Clear(); TSlot = s;	}
 	void 	Clear()		{	Weapons.Clear();	}
 	uint 	GetSize() 	{	return Weapons.Size(); }
 	AEoDWeaponBase Get(uint pos)
 	{
-		return (pos > 0 && pos < Weapons.Size()) ? Weapons[pos] : null;
+		return (pos >= 0 && pos < Weapons.Size()) ? Weapons[pos] : null;
 	}
 	
 	uint Find(AEoDWeaponBase who)		
@@ -26,6 +50,8 @@ Class AEoDWeaponContainer play
 	
 	void Insert(uint index, AEoDWeaponBase item)
 	{
+		Name nam = (item) ? (item.GetClassName()) : 'Null';
+		//Console.Printf("Added %s to slot %d, index %d", nam, TSlot, index);
 		Weapons.Insert(index, item);	
 	}
 	
@@ -35,35 +61,43 @@ Class AEoDWeaponContainer play
 	}
 	
 	// 
-	uint, uint GetCaps()
+	int, int GetCaps()
 	{
 		int Hi = -1, Lo = 1000;
 		
 		if (Weapons.Size() < 1)	
+		{
+			//Console.Printf("Weapons size < 1");
 			return -1, -1;
+		}
 		int count = 0;
-		Console.Printf("4.001");
+		//Console.Printf("4.001");
 		for (int i = 0; i < Weapons.Size(); i++)
 		{
-			if (Weapons[i] == null)	continue;
-			Console.Printf("4.0010");
+			if (Weapons[i] == null)	
+			{
+				//Console.Printf("%d was null", i);
+				continue;
+			}
+			//Console.Printf("4.0010");
 			let wep = AEoDWeaponBase(Weapons[i]);
-			Console.Printf("4.0011");
+			//Console.Printf("4.0011");
 			
 			if (wep)
 			{
-				Console.Printf("4.0012");
 				int dex = AEoDWeaponIdentifier.GetModIndex(wep);
-				Console.Printf("4.0013");
 				if (dex < 1)
+				{
+					//Console.Printf("Dex: %d", dex);
 					continue;
+				}
 				count++;
 				Hi = Max(Hi, dex);
 				Lo = Min(Lo, dex);
 				
 			}
 		}
-		Console.Printf("4.002");
+		//Console.Printf("4.002");
 		if (!count)
 			return -1, -1;
 		return Hi, Lo;
@@ -76,11 +110,11 @@ Class AEoDWeaponContainer play
 		
 		if (Index < 1)
 		{
-			Console.Printf("Index is < 1");
+			//Console.Printf("Index is < 1");
 			return null;
 		}
 		
-		Console.Printf("3.001");
+		//Console.Printf("3.001");
 		for (int i = 0; i < Weapons.Size(); i++)
 		{
 			let wep = AEoDWeaponBase(Weapons[i]);
@@ -89,7 +123,7 @@ Class AEoDWeaponContainer play
 			if (AEoDWeaponIdentifier.GetModIndex(wep) == Index)
 				return wep;
 		}
-		Console.Printf("3.002");
+		//Console.Printf("3.002");
 		return null;
 	}
 }
@@ -107,6 +141,7 @@ Class AEoDWeaponIndexer : Object play
 {
 	const Size = 10;
 	AEoDWeaponContainer Base[Size];
+	AEoDWeaponBase CurrentWeapon;
 	
 	override void OnDestroy()
 	{
@@ -115,15 +150,16 @@ Class AEoDWeaponIndexer : Object play
 				Base[i].Destroy();
 	}
 	
-	void Init()
+	void Init(AEoDWeaponBase current)
 	{
-		Console.Printf("2");
+		CurrentWeapon = current;
+		//Console.Printf("2");
 		for (int i = 0; i < Size; i++)
 		{
 			Base[i] = new("AEoDWeaponContainer");
-			Base[i].Init();
+			Base[i].Init(i);
 		}
-		Console.Printf("3");
+		//Console.Printf("3");
 	}
 	
 	bool CheckRange(uint Slot) const	{	return (Slot > -1 && Slot < Size);	}
@@ -140,11 +176,15 @@ Class AEoDWeaponIndexer : Object play
 	}
 	void InsertAt(uint Slot, uint index, AEoDWeaponBase item)
 	{
-		if (!item || !CheckRange(Slot))	return;
+		if (!item || !CheckRange(Slot))	
+		{
+			//Console.Printf("Tried to insert non-weapon at Slot %d Index %d", Slot, index);
+			return;
+		}
 		
 		if (Base[Slot])
 			Base[Slot].Insert(index, item);
-		else Console.Printf("-1");
+		//else Console.Printf("Base[%d] is null!", Slot);
 	}
 	
 	void PushAt(uint Slot, AEoDWeaponBase item)
@@ -153,7 +193,7 @@ Class AEoDWeaponIndexer : Object play
 		
 		if (Base[Slot])
 			Base[Slot].Push(item);
-		else Console.Printf("-2");
+		//else Console.Printf("-2");
 	}
 	void DeleteAt(uint Slot, uint index, int deletecount = 1)
 	{
@@ -166,30 +206,26 @@ Class AEoDWeaponIndexer : Object play
 	AEoDWeaponBase FindNextWeapon(bool prev, uint Slot, uint Index, bool SameSlot = false)
 	{
 		AEoDWeaponBase Pointer = null;
+		bool FixHiLo = false;
 		int CurSlot = Slot, CurIndex = Index, SlotsChecked = 0;
 		int Direction = (prev) ? -1 : 1;
 		int hi = -1, lo = -1;
-		Console.Printf("2.001");
+		//Console.Printf("2.001");
 		if (SameSlot)
 		{
 			if (!Base[Slot] || Base[Slot].GetSize() < 1)
 				return null;
-			Console.Printf("2.002");
+			//Console.Printf("2.002");
 			
 			[hi, lo] = Base[Slot].GetCaps();
 			if (hi == -1 || lo == -1)
 				return null;
-			Console.Printf("2.003");
+			//Console.Printf("2.003");
 			do
 			{
-				Pointer = null;
-				if (CurIndex != Index)
-				{
-					Console.Printf("2.004 + %d", CurIndex);
-					Pointer = Base[Slot].GetSpecific(CurIndex);
-					Console.Printf("2.005");
-				}
-				if (Pointer)
+				//Console.Printf("2.004 + %d", CurIndex);
+				Pointer = Base[Slot].GetSpecific(CurIndex);
+				if (Pointer && Pointer != CurrentWeapon && CheckWeaponSwitch(Pointer))
 				{
 					return Pointer;
 				}
@@ -212,7 +248,7 @@ Class AEoDWeaponIndexer : Object play
 				hi = lo = -1;
 				if (!Base[CurSlot])
 				{
-					Console.Printf("-2.001 + %d", SlotsChecked);
+					//Console.Printf("-2.001 + %d", SlotsChecked);
 					SlotsChecked++;
 					CurSlot += Direction;
 					if (prev)	
@@ -225,45 +261,78 @@ Class AEoDWeaponIndexer : Object play
 					}
 					continue;
 				}
-				Console.Printf("2.006");
+				//Console.Printf("2.006");
 				[hi, lo] = Base[CurSlot].GetCaps();
-				Console.Printf("2.007");
+				
+				//Console.Printf("2.007");
+				
+				if (FixHiLo)
+				{
+					CurIndex = (prev) ? lo : hi;
+					FixHiLo = false;
+					//Console.Printf("%d -- %d, %d", CurIndex, hi, lo);
+				}
+				if (hi == -1 || lo == -1 || CurIndex > hi || CurIndex < lo)
+				{
+					FixHiLo = true;
+					SlotsChecked++;
+					CurSlot += Direction;
+					if (prev)
+					{
+						if (CurSlot < 0)
+							CurSlot = Size - 1;
+					}
+					else
+					{
+						CurSlot %= Size;
+					}
+					continue;
+				}
+				/*
 				if (prev)
 				{
-					CurIndex = hi;
+					
 					if (hi == -1 || lo == -1 || CurIndex < lo)
 					{
+						FixHiLo = true;
 						SlotsChecked++;
 						CurSlot--;
 						if (CurSlot < 0)	CurSlot = Size - 1;	
-						continue;
-					}				
+						continue; // hi and lo must be refreshed again.
+					}
+					if (FixHiLo && CurIndex < lo)
+						CurIndex = hi;
+					
 				}
 				else
 				{
-					CurIndex = lo;
 					if (hi == -1 || lo == -1 || CurIndex > hi)
 					{
+						FixHiLo = true;
+						CurIndex = lo;
 						SlotsChecked++;
 						CurSlot = (CurSlot + 1) % Size;
 						continue;
 					}
+					if (FixHiLo && CurIndex > hi)
+						CurIndex = lo;
+					
 				}
-				if (CurIndex != Index)
-				{
-					Console.Printf("2.007 + %d", CurIndex);
-					Pointer = Base[CurSlot].GetSpecific(CurIndex);
-				}
-				if (Pointer)
+				*/
+				FixHiLo = false;
+				//Console.Printf("2.007 | Slot: %d | Index %d", CurSlot, CurIndex);
+				Pointer = Base[CurSlot].GetSpecific(CurIndex);
+				
+				if (Pointer && Pointer != CurrentWeapon && CheckWeaponSwitch(Pointer))
 				{
 					// Insert a bunch of weapon checks here.
 					return Pointer;
 				}
-				CurIndex += Direction;
+				CurIndex -= Direction;
 				
-				if (SlotsChecked > 9)
+				if (SlotsChecked > Size)
 					return null;
-			}	while (SlotsChecked < 10)
+			}	while ((CurIndex != Index || CurSlot != Slot) && SlotsChecked <= Size)
 		}
 		return null;
 	}
@@ -277,18 +346,30 @@ Class AEoDWeaponIndexer : Object play
 	{
 		AEoDWeaponBase Pointer = null;
 		int hi = -1, lo = -1;
-		if (Base[Slot] && Base[Slot].GetSize() > 0)
+		if (Base[Slot])
 		{
-			Console.Printf("1.001");
+			//Console.Printf("1.001");
 			[hi, lo] = Base[Slot].GetCaps();
 		}
 		if (hi == -1 || lo == -1)
 		{
-			Console.Printf("-1.001");
+			//Console.Printf("-1.001 | %d %d", lo, hi);
 			return null;
 		}
+		//Console.Printf("%d %d", lo, hi);
 		Pointer = Base[Slot].GetSpecific(lo);
 		return Pointer;
+	}
+	
+	bool CheckWeaponSwitch(AEoDWeaponBase item)
+	{
+		if (item)
+		{
+			Cvar Check = Cvar.FindCvar("sv_dontcheckammo");
+			if (item.CheckAmmo(Weapon.EitherFire, false) || (Check && Check.GetBool()))
+				return true;	
+		}
+		return false;
 	}
 }
 
@@ -302,37 +383,12 @@ Class AEoDWeaponIdentifier : Object play
 	};
 	int Instruction;
 	PlayerInfo plr;
-	
-	Array<String> CurrentWeapons, NextWeapons;
-	Array<Int> CurrentPositions, NextPositions;
-	String CurrentWeapon;
 	AEoDWeaponIndexer Base;
 	
 	override void OnDestroy()
 	{
 		if (Base)	Base.Destroy();
 		Super.OnDestroy();
-	}
-	
-	static Int GetModIndex(AEoDWeaponBase item)
-	{	
-		Console.Printf("6.001");
-		if (!item || !item.owner || !(item is "AEoDWeaponBase"))	return -1;
-		Console.Printf("6.002");
-		
-		Name cname = item.GetClassName();
-		Name AEoDCvar = 'user_'..cname;
-		Console.Printf("6.003");
-		Cvar check = Cvar.GetCvar(AEoDCvar, item.owner.player);
-		Console.Printf("6.004");
-		if (!check || check.GetInt() <= 0)
-		{
-			
-			if (!check)						Console.Printf("ERROR: %s is NOT a cvar!", AEoDCvar);
-			else if (check.GetInt() < 1)	Console.Printf("ERROR: %s is < 1!", AEoDCvar);
-			return -1;
-		}
-		return check.GetInt();
 	}
 	
 	// First off, fill the appropriate arrays with the current weapon slot data.
@@ -369,12 +425,11 @@ Class AEoDWeaponIdentifier : Object play
 			// hijack the command to be a direct slot instead.
 			if (DesiredSlot < 0)
 			{
-				DesiredSlot = CurrentSlot;
 				command = Ins_SetSlot;
 			}
 		}
-		Console.Printf("1");
-		Base = new("AEoDWeaponIndexer"); Base.Init();
+		//Console.Printf("1");
+		Base = new("AEoDWeaponIndexer"); Base.Init(wep);
 		if (DesiredSlot < 0)	DesiredSlot = CurrentSlot;
 		
 		
@@ -390,20 +445,24 @@ Class AEoDWeaponIdentifier : Object play
 			// AEoD, except for the current one.
 			let Weap = AEoDWeaponBase(probe);
 			if (Weap && (Weap is "AEoDWeaponBase") && 
-				Weap != player.ReadyWeapon && 
-				Weap.Amount > 0 && Weap.SlotNumber > 0)
+				//Weap != player.ReadyWeapon && 
+				Weap.Amount > 0 && Weap.SlotNumber > -1)
 			{
 				pushed++;
 				int Slot = Weap.SlotNumber;
 				int Index = AEoDWeaponIdentifier.GetModIndex(Weap);
-				if (Index > 0 || Slot > 0)
-					Base.InsertAt(Slot, Index, Weap);
+				if (Index > 0)
+				{
+					//Console.Printf("%d %d - %s", Slot, Index, Weap.GetClassName());
+					//Base.InsertAt(Slot, Index, Weap);
+					Base.PushAt(Slot, Weap);
+				}
 			}
 		}
-		Console.Printf("4");
+		//Console.Printf("4");
 		if (pushed < 1)
 			return null;
-		Console.Printf("5");
+		//Console.Printf("5");
 		AEoDWeaponBase NextWeapon = null;
 		bool SameSlot = false;
 		
@@ -413,51 +472,72 @@ Class AEoDWeaponIdentifier : Object play
 			{
 				if (DesiredSlot != CurrentSlot)
 				{
-					Console.Printf("5.1 - Desired: %d - Current: %d", DesiredSlot, CurrentSlot);
-					if (!Base)	{	return null;	}
+					//Console.Printf("5.1 - Desired: %d - Current: %d", DesiredSlot, CurrentSlot);
+					if (!Base)		
+						return null;
 					NextWeapon = Base.FindFirstSlotWeapon(DesiredSlot);
-					Console.Printf("6");
+					//Console.Printf("6");
 					return (NextWeapon) ? Weapon(NextWeapon) : null;
 				}
 				SameSlot = true;
 			}
 			Case Ins_SetNext:
 			{
-				Console.Printf("5.2");
+				//Console.Printf("5.2");
 				if (!Base)
-				{
-					Console.Printf("WTF");
 					return null;
-				}
 				NextWeapon = Base.FindNextWeapon(false, CurrentSlot, CurrentIndex, SameSlot);
-				Console.Printf("6");
+				//Console.Printf("6");
 				return (NextWeapon) ? Weapon(NextWeapon) : null;
 			}
 			Case Ins_SetPrev:
 			{
-				Console.Printf("5.3");
+				//Console.Printf("5.3");
 				if (!Base)
-				{
-					Console.Printf("WTF");
 					return null;
-				}
 				NextWeapon = Base.FindNextWeapon(true, CurrentSlot, CurrentIndex, SameSlot);
-				Console.Printf("6");
+				//Console.Printf("6");
 				return (NextWeapon) ? Weapon(NextWeapon) : null;
 			}
 		}
 		return null;
 	}
 	
+	static Int GetModIndex(AEoDWeaponBase item)
+	{	
+		//Console.Printf("6.001");
+		if (!item || !item.owner || !(item is "AEoDWeaponBase"))	
+		{
+			//Console.Printf("Null or bad item");
+			return -1;
+		}
+		//Console.Printf("6.002");
+		
+		Name cname = item.GetClassName();
+		Name AEoDCvar = 'user_'..cname;
+		//Console.Printf("6.003");
+		Cvar check = Cvar.GetCvar(AEoDCvar, item.owner.player);
+		//Console.Printf("6.004");
+		if (!check || check.GetInt() < 1)
+		{
+			
+			if (!check)						Console.Printf("ERROR: %s is NOT a cvar!", AEoDCvar);
+			else if (check.GetInt() < 1)	Console.Printf("ERROR: %s is < 1!", AEoDCvar);
+			return -1;
+		}
+		return check.GetInt();
+	}
+	
 	int GetCvarInt(String Cvarname, PlayerInfo player)
 	{
-		if (Cvarname.Length() < 1)	return 0;
+		int ret = -1;
+		if (Cvarname.Length() < 1)	return ret;
 		Cvar thing = null;
 		
 		if (player)		thing = Cvar.GetCvar(Cvarname, player);
 		else			thing = Cvar.FindCvar(Cvarname);
 		
-		return (thing) ? thing.GetInt() : 0;
+		return (thing) ? thing.GetInt() : ret;
 		
 	}
 }

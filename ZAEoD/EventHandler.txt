@@ -126,7 +126,6 @@ Class AEoDHandler : EventHandler
 			
 			DirectorsEnabled = (NorDir || L4DDir);
 		}
-		
 	}
 	
 	// Tremendous thanks to Phantombeta for helping me out with this.
@@ -150,6 +149,8 @@ Class AEoDHandler : EventHandler
 				"slot:6", "slot:7", "slot:8", "slot:9", "slot:0",
 				"next", "prev"	};
 			
+			// Find the key and translate it from the raw command to an 
+			// event-friendly string. Makes splitting it easier.
 			int bind1, bind2;
 			for (int i = 0; i < 12; i++) 
 			{
@@ -159,7 +160,7 @@ Class AEoDHandler : EventHandler
 				{
 				//	EventHandler.SendNetworkEvent (String.Format ("ScrollWheelHijack:%s", KeyBindsNetEvents [i]));
 					EventHandler.SendNetworkEvent(String.Format("AEoD_SelectWeapon:%s", KeyBindsNetEvents[i]));
-					return false;
+					return true;
 				}
 			}
 		}
@@ -176,16 +177,8 @@ Class AEoDHandler : EventHandler
 
 		if (strings.Size() > 1)
 		{
-	//		if (strings[0] == 'AEoD_SelectWeapon')
-	//			ChangeWeapons(e);
-		}
-		else if (e.Name == 'WeapCvar')
-		{
-			// Debug: outputs a cvar if it has one.
-			let wep = (plr) ? AEoDWeaponBase(plr.player.ReadyWeapon) : null;
-			String s = "Null";
-			if (wep)	s = wep.GetCvarThings();
-			Console.Printf("%s", s);
+			if (strings[0] == 'AEoD_SelectWeapon')
+				ChangeWeapons(e);
 		}
 		else if (e.Name == 'EndDemonMorph')
 		{
@@ -198,46 +191,14 @@ Class AEoDHandler : EventHandler
 				}
 			}
 		}
-		
 		else if (!e.IsManual)
 		{
-			
-			if (e.Name == 'DemonMorphOn')
+			if (e.Name == 'DemonMorphOn' || e.Name == 'DemonMorphOff')
 			{
-				DemonMorph = true;
-				int num = e.Player;
-				let plr = players[num].mo;
-				
-				
-				ThinkerIterator it = ThinkerIterator.Create("Actor", Thinker.STAT_DEFAULT);
-				Actor mo;
-				while (mo = Actor(it.Next()))
-				{
-					if (mo.bISMONSTER && mo.health > 0)
-					{
-						if (mo.CountInv("DemonMorphTranslationItem") 
-							|| mo.Species == 'Director'
-							|| mo.Species == 'AEoDSpawner')	continue;
-						
-						mo.A_GiveInventory("DemonMorphTranslationItem", 1);
-					}
-				}
-			}
-			else if (e.Name == 'DemonMorphOff')
-			{
-				//Console.Printf("Called");
-				DemonMorph = false;
-				ThinkerIterator it = ThinkerIterator.Create("Actor", Thinker.STAT_DEFAULT);
-				Actor mo;
-				while (mo = Actor(it.Next()))
-				{
-					let inv = Inventory(mo.FindInventory("DemonMorphTranslationItem"));
-					if (inv)	
-					{
-						//Console.Printf("Attempting Destruction");
-						inv.DepleteOrDestroy();
-					}
-				}
+				bool status = false;
+				if (e.Name == 'DemonMorphOn') 
+					status = true;
+				ToggleDemonMorphEffect(status);
 			}
 			else if (e.Name == 'ToggleDirectors')
 			{
@@ -286,11 +247,22 @@ Class AEoDHandler : EventHandler
 			}
 		}
 	}
-	
+	//==========================================================================
 	//==========================================================================
 	// Custom functions here
 	//==========================================================================
+	//==========================================================================
 	
+	//==========================================================================
+	// ChangeWeapons
+	//
+	// Sets the forthcoming weapon based on the command sent to it. Applicable
+	// commands are:
+	// 
+	// slot # (0-9)
+	// weapnext
+	// weapprev
+	//==========================================================================
 	void ChangeWeapons(ConsoleEvent e) 
 	{
 		int pnum = e.Player;
@@ -307,12 +279,13 @@ Class AEoDHandler : EventHandler
 		if (commandStrings.Size() < 2) // Return if the array contains less than two strings
 			return;
 			
-		
+		// At this point, we should have at minimum two strings in this form:
+		// [0] = AEoD_SelectWeapon
+		// [1] = <command>
+		// See InputProcess for the translations (from first to second array)
 		
 		let ready = player.ReadyWeapon;
 		let pending = player.PendingWeapon;
-		let aready = AEoDWeaponBase(ready);
-		let apending = AEoDWeaponBase(pending);
 		
 		AEoDWeaponIdentifier Finder = new("AEoDWeaponIdentifier");
 		Weapon next = null;
@@ -327,12 +300,11 @@ Class AEoDHandler : EventHandler
 		else if (commandStrings[1] == 'slot')
 		{
 			// Switching to a weapon in slot.
-			//AEoD_SelectWeapon:slot:#
-			//# is what we want for "slot" command.
+			// AEoD_SelectWeapon:slot:#
+			// # is what we want for "slot" command.
 			int len = (commandStrings.Size() > 2) ? commandStrings[2].Length() : 0;
 			if (len < 1)
 			{
-				//Console.Printf("-1");
 				Finder.Destroy();
 				return;
 			}
@@ -347,7 +319,11 @@ Class AEoDHandler : EventHandler
 		//else Console.Printf("-2");
 		Finder.Destroy();
 	}
-	
+	//==========================================================================
+	// ToggleDirectors
+	// 
+	// Self explanatory.
+	//==========================================================================
 	void ToggleDirectors(ConsoleEvent e)
 	{
 		bool good = (L4DDirector || NormalDirector);
@@ -388,6 +364,50 @@ Class AEoDHandler : EventHandler
 					}
 					DirectorsEnabled = !DirectorsEnabled;
 					break;
+			}
+		}
+	}
+	
+	//==========================================================================
+	// ToggleDemonMorphEffect
+	// 
+	// Toggles the Demon Morph effect on monsters. Paints actors:
+	// Enemy - 		Orangeish Yellow
+	// Friendly - 	Blue
+	//==========================================================================
+	private void ToggleDemonMorphEffect(bool on)
+	{
+		if (on)
+		{
+			DemonMorph = true;
+			ThinkerIterator it = ThinkerIterator.Create("Actor", Thinker.STAT_DEFAULT);
+			Actor mo;
+			while (mo = Actor(it.Next()))
+			{
+				if (mo.bISMONSTER && mo.health > 0)
+				{
+					if (mo.CountInv("DemonMorphTranslationItem") 
+						|| mo.Species == 'Director'
+						|| mo.Species == 'AEoDSpawner')	continue;
+					
+					mo.A_GiveInventory("DemonMorphTranslationItem", 1);
+				}
+			}
+		}
+		else
+		{
+			//Console.Printf("Called");
+			DemonMorph = false;
+			ThinkerIterator it = ThinkerIterator.Create("Actor", Thinker.STAT_DEFAULT);
+			Actor mo;
+			while (mo = Actor(it.Next()))
+			{
+				let inv = Inventory(mo.FindInventory("DemonMorphTranslationItem"));
+				if (inv)	
+				{
+					//Console.Printf("Attempting Destruction");
+					inv.DepleteOrDestroy();
+				}
 			}
 		}
 	}
