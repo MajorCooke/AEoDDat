@@ -902,105 +902,7 @@ Class DemonMorphStartSound : Actor
 		Stop;
 	}
 }
-/*
-Class SoulSeekOn : CustomInventory
-{
-	Default
-	{
-		+INVENTORY.ALWAYSPICKUP
-		-COUNTITEM
-	}
-	States
-	{
-	Pickup:
-		TNT1 A 0
-		{
-			A_SetShootable();
-			bCANTSEEK = false;
-		}
-		Stop;
-	}
-}
 
-Class SoulSeekOff : CustomInventory
-{
-	States
-	{
-	Pickup:
-		TNT1 A 0 
-		{
-			if (CheckClass("DMSoulTarget"))
-			{
-				A_UnSetShootable();
-				bCANTSEEK = true;
-				return true;
-			}
-			return false;
-		}
-		Stop;
-	}
-}
-
-Class DMSoulTarget : Actor
-{
-	int count;
-	Default
-	{
-		Monster;
-		+NEVERTARGET
-		-SOLID
-		+NOCLIP
-		+NOBLOOD
-		+NONSHOOTABLE
-		-SHOOTABLE
-		+NODAMAGE
-		-COUNTKILL
-		+NOTONAUTOMAP
-		+DONTTHRUST
-		+CANTSEEK
-		+NOGRAVITY
-		+NOTARGETSWITCH
-		PainChance "Normal", 0;
-		PainChance "SoulReaperPull", 256;
-		DamageFactor "Normal", 0;
-		DamageFactor "SoulReaperPull", 1;
-		Radius 4;
-		Height 4;
-		RenderStyle "None";
-	}
-	States
-	{
-	Spawn:
-		PLAY A 35 NoDelay
-		{
-			if (count < 16 && master)
-			{
-				count++;
-				Vector3 newpos = master.pos;
-				newpos.z += 4;
-				SetOrigin(newpos,false);
-				return ResolveState(null);
-			}
-			return ResolveState("Null");
-		}
-		Wait;
-	Pain.SoulReaperPull:
-	Death.SoulReaperPull:
-		TNT1 A 1
-		{
-			bNOPAIN = true;
-			A_UnsetShootable();
-			A_FaceTarget(0,0);
-			A_SpawnItemEx("DMSoulMissile",flags:SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION|SXF_TRANSFERPOINTERS,tid: tid);
-			if (master)	{	master.Destroy();	}
-		}
-		Stop;
-	Death:
-		TNT1 A 0;
-		Stop;
-	}
-}
-*/
 Class DMSoulMissile : Actor
 {
 	Default
@@ -1290,6 +1192,8 @@ Class PowerDemonMorph : PowerMorph
 					screams.A_StopSound(i);
 				screams.Destroy();
 			}
+			Shader.SetUniform1i(owner.player, "AEoD_RadialBlurShader", "blurSize", 1);
+			Shader.SetEnabled(owner.player, "AEoD_RadialBlurShader", false);
 		}
 		Super.EndEffect();
 	}
@@ -1298,6 +1202,7 @@ Class PowerDemonMorph : PowerMorph
 
 Class DemonPlayerMorph : DoomPlayer
 {
+	int blurSize;
 	Default
 	{
 		//POWER OVERWHELMING.
@@ -1319,6 +1224,7 @@ Class DemonPlayerMorph : DoomPlayer
 		+LAXTELEFRAGDMG
 		+NOSKIN
 		+NOBLOOD
+		+AIMREFLECT
 		Health 666;
 		Player.MorphWeapon "AEoDDemonMorphHand";
 	}
@@ -1360,6 +1266,8 @@ Class AEoDDemonMorphHand : Weapon
 	int sine;
 	int first;
 	int timer;
+	PlayerInfo plr;
+	const ShootFlags = ZOOM_INSTANT|ZOOM_NOSCALETURNING;
 	Default
 	{
 		Inventory.InterhubAmount 0;
@@ -1371,6 +1279,23 @@ Class AEoDDemonMorphHand : Weapon
 		+INVENTORY.UNDROPPABLE
 		+INVENTORY.UNTOSSABLE
 		+THRUACTORS
+	}
+	
+	action void SetShaders(bool on)
+	{
+		Shader.SetEnabled(invoker.owner.player, "AEoD_RadialBlurShader", on);
+		//Shader.SetEnabled(invoker.plr, "AEoD_ZoomShader", on);
+	}
+	
+	action void SetBlur(int amt)
+	{
+		Shader.SetUniform1i(invoker.owner.player, "AEoD_RadialBlurShader", "blurSize", amt);
+	}
+	
+	action void ZoomBlur(double zoom, int blur, int flags = 0)
+	{
+		Shader.SetUniform1i(invoker.owner.player, "AEoD_RadialBlurShader", "blurSize", blur);
+		A_ZoomFactor(zoom, flags);
 	}
 	
 	States
@@ -1413,13 +1338,24 @@ Class AEoDDemonMorphHand : Weapon
 		}
 		Wait;
 	Select:
-		M666 A 0 A_Raise(20000);
+		M666 A 0 
+		{
+			invoker.plr = invoker.owner.player;
+			if (invoker.plr)
+			{
+				SetShaders(true);
+				SetBlur(1);
+			}
+			A_Raise(20000);
+		}
 		Goto Ready;
 	Deselect:
 		M666 A 0 
 		{
 			A_SetInventory("DemonMorphFlashed",0);
 			A_ClearOverlays();
+			SetBlur(1);
+			SetShaders(false);
 			A_ZoomFactor(1.0);
 			A_GiveInventory("DemonMorphRemoval",1);
 			A_TakeInventory("DemonMorphActiveToken",1000,0);
@@ -1448,36 +1384,55 @@ Class AEoDDemonMorphHand : Weapon
 			A_ZoomFactor(1 + (sin(invoker.sine) * 0.095),ZOOM_NOSCALETURNING);
 		}
 		Loop;
+	Overlay.SineFire:
+		M666 A 1 ;
+		M666 A 0
+		{
+			invoker.sine -= 100;
+			if (invoker.sine <= 1)
+				return ResolveState("Null");
+			return ResolveState(null);
+		}
+		Loop;
 	AltFire:
 	Fire:
 		//Note: The damage has been moved directly to the puff itself so it can ignore damagefactors.
 		M666 A 0 
 		{
-			A_RailAttack(20000,0,0,-1,-1,RGF_SILENT,0,"DeathTouchPuff",0,0,32766,0,16,0,"DemonMorphExploder");
+			SetShaders(true);
+			A_RailAttack(20000,0,0,-1,-1,RGF_SILENT,0,"BulletPuff",0,0,32766,0,16,0,"DemonMorphExploder");
 			A_SpawnItemEx("DemonMorphShootingSound", flags: SXF_NOCHECKPOSITION);
-			invoker.sine = 0;
+			invoker.sine = 1001;
+			A_Overlay(40003, "Overlay.SineFire");
+			
 		}
-		M666 A 1 A_ZoomFactor(2.000,ZOOM_INSTANT|ZOOM_NOSCALETURNING);
-		M666 A 1 A_ZoomFactor(1.500,ZOOM_INSTANT|ZOOM_NOSCALETURNING);
-		M666 A 1 A_ZoomFactor(1.250,ZOOM_INSTANT|ZOOM_NOSCALETURNING);
-		M666 A 1 A_ZoomFactor(1.000,ZOOM_INSTANT|ZOOM_NOSCALETURNING);
-		M666 A 1 A_ZoomFactor(0.980,ZOOM_INSTANT|ZOOM_NOSCALETURNING);
-		M666 A 1 A_ZoomFactor(0.960,ZOOM_INSTANT|ZOOM_NOSCALETURNING);
-		M666 A 1 A_ZoomFactor(0.940,ZOOM_INSTANT|ZOOM_NOSCALETURNING);
-		M666 A 1 A_ZoomFactor(0.930,ZOOM_INSTANT|ZOOM_NOSCALETURNING);
-		M666 A 1 A_ZoomFactor(0.940,ZOOM_INSTANT|ZOOM_NOSCALETURNING);
-		M666 A 1 A_ZoomFactor(0.960,ZOOM_INSTANT|ZOOM_NOSCALETURNING);
-		M666 A 1 A_ZoomFactor(0.980,ZOOM_INSTANT|ZOOM_NOSCALETURNING);
-		M666 A 1 A_ZoomFactor(1.000,ZOOM_INSTANT|ZOOM_NOSCALETURNING);
-		M666 A 1 A_ZoomFactor(1.020,ZOOM_INSTANT|ZOOM_NOSCALETURNING);
-		M666 A 1 A_ZoomFactor(1.030,ZOOM_INSTANT|ZOOM_NOSCALETURNING);
-		M666 A 1 A_ZoomFactor(1.040,ZOOM_INSTANT|ZOOM_NOSCALETURNING);
-		M666 A 1 A_ZoomFactor(1.030,ZOOM_INSTANT|ZOOM_NOSCALETURNING);
-		M666 A 1 A_ZoomFactor(1.020,ZOOM_INSTANT|ZOOM_NOSCALETURNING);
-		M666 A 1 A_ZoomFactor(1.015,ZOOM_INSTANT|ZOOM_NOSCALETURNING);
-		M666 A 1 A_ZoomFactor(1.010,ZOOM_INSTANT|ZOOM_NOSCALETURNING);
-		M666 A 1 A_ZoomFactor(1.005,ZOOM_INSTANT|ZOOM_NOSCALETURNING);
-		M666 A 0 A_Refire();
+		M666 A 1 ZoomBlur(2.000,invoker.sine,ShootFlags);
+		M666 A 1 ZoomBlur(1.500,invoker.sine,ShootFlags);
+		M666 A 1 ZoomBlur(1.250,invoker.sine,ShootFlags);
+		M666 A 1 ZoomBlur(1.000,invoker.sine,ShootFlags);
+		M666 A 1 ZoomBlur(0.980,invoker.sine,ShootFlags);
+		M666 A 1 ZoomBlur(0.960,invoker.sine,ShootFlags);
+		M666 A 1 ZoomBlur(0.940,invoker.sine,ShootFlags);
+		M666 A 1 ZoomBlur(0.930,invoker.sine,ShootFlags);
+		M666 A 1 ZoomBlur(0.940,invoker.sine,ShootFlags);
+		M666 A 1 ZoomBlur(0.960,invoker.sine,ShootFlags);
+		M666 A 1 ZoomBlur(0.980,invoker.sine,ShootFlags);
+		M666 A 1 ZoomBlur(1.000,invoker.sine,ShootFlags);
+		M666 A 1 ZoomBlur(1.020,invoker.sine,ShootFlags);
+		M666 A 1 ZoomBlur(1.030,invoker.sine,ShootFlags);
+		M666 A 1 ZoomBlur(1.040,invoker.sine,ShootFlags);
+		M666 A 1 ZoomBlur(1.030,invoker.sine,ShootFlags);
+		M666 A 1 ZoomBlur(1.020,invoker.sine,ShootFlags);
+		M666 A 1 ZoomBlur(1.015,invoker.sine,ShootFlags);
+		M666 A 1 ZoomBlur(1.010,invoker.sine,ShootFlags);
+		M666 A 1 ZoomBlur(1.005,invoker.sine,ShootFlags);
+		M666 A 0 
+		{
+			A_Overlay(40003, "Null");
+			invoker.sine = 0;
+			SetBlur(1);
+			A_Refire();
+		}
 		Goto Ready;
 	Remove:
 		M666 A 1 A_TakeInventory("AEoDDemonMorphHand",1000,0);
@@ -1941,214 +1896,3 @@ Class DemonMorphTranslationItem : Inventory
 		Super.DepleteOrDestroy();
 	}
 }
-
-// ZZYZX, you lovable asshole, what did you do to me. >:D
-class SpeedUp : Inventory
-{
-    default
-    {
-        Inventory.Amount 1;
-        Inventory.MaxAmount 10;
-    }
-
-    override void Tick()
-    {
-        Super.Tick();
-        if (!owner) return;
-        
-        // +0.5 ticks
-        if (amount%2 != level.time%2)
-            return;
-    
-        PlayerPawn pp = PlayerPawn(owner);
-        UserCmd oldCmd;
-        if (pp)
-        {
-            oldCmd = pp.player.cmd;
-            pp.player.cmd.buttons = 0;
-            pp.player.cmd.forwardmove /= amount;
-            pp.player.cmd.sidemove /= amount;
-            pp.player.cmd.upmove /= amount;
-            pp.player.cmd.yaw /= amount;
-            pp.player.cmd.pitch /= amount;
-            pp.player.cmd.roll /= amount;
-        }
-        
-        for (int i = 0; i < amount; i++)
-        {
-            vector3 oldVel = owner.vel;
-            if (pp) pp.PlayerThink();
-            owner.Tick();
-            if (i != amount-1) owner.vel = oldVel;
-        }
-        
-        if (pp)
-        {
-            pp.player.cmd.buttons = oldCmd.buttons;
-            pp.player.cmd.forwardmove = oldCmd.forwardmove;
-            pp.player.cmd.sidemove = oldCmd.sidemove;
-            pp.player.cmd.upmove = oldCmd.upmove;
-            pp.player.cmd.yaw = oldCmd.yaw;
-            pp.player.cmd.pitch = oldCmd.pitch;
-            pp.player.cmd.roll = oldCmd.roll;
-        }
-    }
-}
-
-/*
-Class DemonMorphManager : Actor
-{
-	int waittics, waitfirst;
-	int timer;
-	Weapon weap, holding, h2;
-	int first;
-	Default
-	{
-		+NOINTERACTION
-		+NOTIMEFREEZE
-	}
-	
-	override void Tick()
-	{
-		if (!master)	{	A_LogInt(-1); Destroy(); return;	}
-		Super.Tick();
-	}
-	
-	override void PostBeginPlay()
-	{
-		if (!master)	{	Destroy();	return; 	}
-		
-		// Attempt to unmorph them first.
-		if (master.CountInv("MorphOverrideable") > 0 || master.FindInventory("PowerMorph",true) != null)
-		{
-			waittics = waitfirst = 1;
-		}
-		
-		
-		ThinkerIterator it = ThinkerIterator.Create("DemonMorphManager");
-		Actor mo;
-		while (mo = DemonMorphManager(it.Next()))
-		{
-			if (mo == self)
-			{	continue;	}
-			
-			// Call me paranoid but shit could fail at any time.
-			// Anyway, update any managers around that are already attached
-			// to the player, and then vanish.
-			if (mo.master == master && mo.CheckClass("DemonMorphManager"))
-			{
-				DemonMorphManager mng = DemonMorphManager(mo);
-				if (mng)
-				{
-					mng.timer += 35 * 30;
-					master.A_SetBlend("Grey",1,17);
-					Powerup lite1 = Powerup(master.FindInventory("PowerLightAmp"));
-					
-					if (lite1)
-					{
-						lite1.EffectTics = mng.timer;
-					}
-					Destroy();
-					return;
-				}
-			}
-		}
-		timer = 35 * 35;
-		A_GiveInventory("DemonMorphToken",1,MasterPtr);
-		Super.PostBeginPlay();
-	}
-	
-	States
-	{
-	Spawn:
-		TNT1 A 1 NoDelay
-		{
-			if (waittics > 0)
-			{
-				waittics--;
-				return ResolveState(null);
-			}
-			
-			if (!first)
-			{
-				A_GiveInventory("PowerDemonMorph",1,MasterPtr);
-				A_GiveInventory("WeaponRecorder",1,MasterPtr);
-				master.A_StopSound(5);
-				master.A_StopSound(6);
-				master.A_StopSound(7);
-				master.A_StopSound(CHAN_BODY);
-				master.A_StopSound(CHAN_WEAPON);
-				master.A_StopSound(CHAN_VOICE);
-				master.A_StopSound(CHAN_ITEM);
-				holding = master.player.ReadyWeapon;
-				h2 = master.player.PendingWeapon;
-				master.bDONTMORPH = true;
-				master.player.ReadyWeapon = null;
-				master.player.PendingWeapon = null;
-				A_GiveInventory("AEoDDemonMorphHand",1,MasterPtr);
-				master.A_SelectWeapon("AEoDDemonMorphHand");
-				first = 1;
-			}
-			timer--;
-			
-			// Has the timer expired? 
-			if (timer < 1)
-			{
-				
-				A_SetInventory("DemonMorphGiver",0,MasterPtr);
-				A_SetInventory("PowerDemonMorph",0,MasterPtr);
-				A_SetInventory("DemonMorphToken",0,MasterPtr);
-				A_SetInventory("AEoDDemonMorphHand",0,MasterPtr);
-				A_GiveInventory("DemonMorphRemoval",1,MasterPtr);
-				master.bDONTMORPH = master.bDONTTHRUST = master.bNODAMAGE = master.bNOPAIN = false;
-				master.RipLevelMin = 1;
-				A_SetHealth(200 + CountInv("TempHealthToken",MasterPtr),MasterPtr);
-				
-				
-				if (holding)
-				{
-					if (GetCvar("aeodweapondebug"))	A_LogInt(1);
-					Class<Weapon> hd = (Class<Weapon>)(holding.GetClass());
-					master.A_SelectWeapon(hd);
-				}
-				else
-				{
-					if (GetCvar("aeodweapondebug"))	A_LogInt(2);
-					ACS_NamedExecuteWithResult("AEoDWeaponRestorer",0,0,0,0);
-				}
-				
-				return ResolveState("Null");
-			}
-			return ResolveState(null);
-		}
-		Wait;
-	}
-}
-
-Class WeaponRecorder : CustomInventory
-{
-	Default { +INVENTORY.ALWAYSPICKUP }
-	States
-	{
-	Pickup:
-		TNT1 A 0
-		{
-			ACS_NamedExecuteWithResult("RecordWeapon",0,0,0,0);
-		}
-		Stop;
-	}
-}
-
-Class AEoDWeaponRestorer : CustomInventory
-{
-	Default { +INVENTORY.ALWAYSPICKUP }
-	States
-	{
-	Pickup:
-		TNT1 A 0
-		{
-			ACS_NamedExecuteWithResult("PostMorphWeapon",0,0,0,0);
-		}
-		Stop;
-	}
-}*/
