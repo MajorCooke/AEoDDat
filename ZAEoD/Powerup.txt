@@ -1267,6 +1267,8 @@ Class AEoDDemonMorphHand : Weapon
 	int first;
 	int timer;
 	PlayerInfo plr;
+	transient Cvar CIntensity;
+	double Intensity;
 	const ShootFlags = ZOOM_INSTANT|ZOOM_NOSCALETURNING;
 	Default
 	{
@@ -1298,6 +1300,18 @@ Class AEoDDemonMorphHand : Weapon
 		A_ZoomFactor(zoom, flags);
 	}
 	
+	action double GetIntensity()
+	{
+		if (invoker.CIntensity)
+			return invoker.CIntensity.GetFloat();
+		
+		invoker.CIntensity = Cvar.GetCvar("AEoD_ShaderIntensity", invoker.owner.player);
+		if (invoker.CIntensity)
+			return invoker.CIntensity.GetFloat();
+		
+		return 0;
+	}
+	
 	States
 	{
 	Spawn:
@@ -1317,6 +1331,7 @@ Class AEoDDemonMorphHand : Weapon
 		M666 A 1 A_SetBlend("White",0.875,10);
 		M666 A 0
 		{
+			invoker.CIntensity = Cvar.GetCvar("AEoD_ShaderIntensity", invoker.owner.player);
 			AEoDHandler.SendNetworkEvent("DemonMorphOn");
 			A_SetBlend("White",1.0,10);
 			A_SetInventory("DemonMorphFlashed",1);
@@ -1388,9 +1403,14 @@ Class AEoDDemonMorphHand : Weapon
 		M666 A 1 ;
 		M666 A 0
 		{
-			invoker.sine -= 100;
+			invoker.sine = Max(1, invoker.sine - (100 * invoker.Intensity));
+			
 			if (invoker.sine <= 1)
+			{
+				// Destroy() on a weapon will completely fuck it up.
 				return ResolveState("Null");
+			}	
+			
 			return ResolveState(null);
 		}
 		Loop;
@@ -1399,12 +1419,17 @@ Class AEoDDemonMorphHand : Weapon
 		//Note: The damage has been moved directly to the puff itself so it can ignore damagefactors.
 		M666 A 0 
 		{
-			SetShaders(true);
-			A_RailAttack(20000,0,0,-1,-1,RGF_SILENT,0,"BulletPuff",0,0,32766,0,16,0,"DemonMorphExploder");
+			A_RailAttack(20000,0,0,-1,-1,RGF_SILENT,0,"DeathTouchPuff",0,0,32766,0,16,0,"DemonMorphExploder");
 			A_SpawnItemEx("DemonMorphShootingSound", flags: SXF_NOCHECKPOSITION);
-			invoker.sine = 1001;
-			A_Overlay(40003, "Overlay.SineFire");
-			
+			invoker.Intensity = GetIntensity();
+			if (invoker.Intensity > 0)
+			{
+				SetShaders(true);
+				invoker.sine = 1 + (invoker.Intensity * 1000);
+				A_Overlay(40003, "Overlay.SineFire");
+			}
+			else
+				SetShaders(false);
 		}
 		M666 A 1 ZoomBlur(2.000,invoker.sine,ShootFlags);
 		M666 A 1 ZoomBlur(1.500,invoker.sine,ShootFlags);
