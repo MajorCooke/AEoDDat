@@ -181,8 +181,10 @@ Class AEoDHandler : EventHandler
 				ChangeWeapons(e);
 		}
 		else if (e.Name == 'EndDemonMorph')
-		{
-			if (plr)
+		{	
+			// Don't let outside mods try to end the morph.
+			// Only if done by console will it allow an abrupt ending.
+			if (e.IsManual && plr)
 			{
 				let dm = DemonPlayerMorph(plr);
 				if (dm)
@@ -193,12 +195,13 @@ Class AEoDHandler : EventHandler
 		}
 		else if (!e.IsManual)
 		{
-			if (e.Name == 'DemonMorphOn' || e.Name == 'DemonMorphOff')
+			if (e.Name == 'DemonMorphOn')
 			{
-				bool status = false;
-				if (e.Name == 'DemonMorphOn') 
-					status = true;
-				ToggleDemonMorphEffect(status);
+				ToggleDemonMorphEffect(true);
+			}
+			else if (e.Name == 'DemonMorphOff')
+			{
+				ToggleDemonMorphEffect(false);
 			}
 			else if (e.Name == 'ToggleDirectors')
 			{
@@ -218,7 +221,10 @@ Class AEoDHandler : EventHandler
 			if (playeringame[i])
 			{
 				let plr = players[i].mo;
-				if (plr)	plr.A_SetInventory("RemoveDirector",0);
+				if (plr)	
+				{
+					plr.A_SetInventory("RemoveDirector",0);
+				}
 			}
 		}
 	}
@@ -228,8 +234,14 @@ Class AEoDHandler : EventHandler
 		if (DemonMorph)
 		{
 			Actor mo = e.Thing;
-			if (!mo || mo.bNOINTERACTION)	return;
-			if (!(mo is "DirectorBase") && mo.bISMONSTER && mo.health > 0)
+			
+			// Don't give to things that are always invisible such as the directors
+			// or the base monster spawners. Obviously ignore anything with NOINTERACTION
+			// since giving that to a monster while alive is just a bad idea.
+			if (!mo || mo.bNOINTERACTION || mo is "DirectorBase" || mo is "AEoDMonsterSpawner")	
+				return;
+			
+			if (mo.bISMONSTER && mo.health > 0)
 			{
 				mo.A_GiveInventory("DemonMorphTranslationItem", 1);
 			}
