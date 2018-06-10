@@ -29,29 +29,36 @@ Class AEoDWeaponContainer play
 {
 	Array<AEoDWeaponBase> Weapons;
 	int TSlot;
-	override void OnDestroy() { Weapons.Clear(); Super.OnDestroy(); }
-	void 	Init(int s)		{	Weapons.Clear(); TSlot = s;	}
-	void 	Clear()		{	Weapons.Clear();	}
-	uint 	GetSize() 	{	return Weapons.Size(); }
+	
+	// Some simple stuff. 
+	override void OnDestroy() 	{	Weapons.Clear(); Super.OnDestroy(); }
+	void 	Init(int s)			{	Weapons.Clear(); TSlot = s;	}
+	void 	Clear()				{	Weapons.Clear();	}
+	uint 	GetSize() 			{	return Weapons.Size(); }
+	
+	// Gets the weapon at the specified position.
 	AEoDWeaponBase Get(uint pos)
 	{
 		return (pos >= 0 && pos < Weapons.Size()) ? Weapons[pos] : null;
 	}
 	
+	// Attempts to find the position of the weapon if available.
 	uint Find(AEoDWeaponBase who)		
 	{
 		return (who) ? Weapons.Find(who) : Weapons.Size();
 	}
 	
+	// Makes a weapon ineligible for counting towards 
 	void Delete(uint index, int deletecount = 1)
 	{
 		Weapons.Delete(index, deletecount);
 	}
 	
+	// Inserts a weapon at an index.
 	void Insert(uint index, AEoDWeaponBase item)
 	{
-		Name nam = (item) ? (item.GetClassName()) : 'Null';
-		//Console.Printf("Added %s to slot %d, index %d", nam, TSlot, index);
+		// Name nam = (item) ? (item.GetClassName()) : 'Null';
+		// Console.Printf("Added %s to slot %d, index %d", nam, TSlot, index);
 		Weapons.Insert(index, item);	
 	}
 	
@@ -60,7 +67,9 @@ Class AEoDWeaponContainer play
 		return Weapons.Push(item);
 	}
 	
-	// 
+	// Gets the highest and lowest ranking weapon indexes of available weapons
+	// in the player inventory. Used by the system to determine where
+	// to begin the search at for the next weapon.
 	int, int GetCaps()
 	{
 		int Hi = -1, Lo = 1000;
@@ -103,6 +112,7 @@ Class AEoDWeaponContainer play
 		return Hi, Lo;
 	}
 	
+	// Tries to find a weapon with the specified slot index in particular.
 	AEoDWeaponBase GetSpecific(uint Index)
 	{		
 		if (Weapons.Size() < 1)
@@ -203,6 +213,7 @@ Class AEoDWeaponIndexer : Object play
 			Base[Slot].Delete(index, deletecount);
 	}
 	
+	// The meat of the array searching is here. 
 	AEoDWeaponBase FindNextWeapon(bool prev, uint Slot, uint Index, bool SameSlot = false)
 	{
 		AEoDWeaponBase Pointer = null;
@@ -361,6 +372,7 @@ Class AEoDWeaponIndexer : Object play
 		return Pointer;
 	}
 	
+	// Simply does the ammo check if the weapon has enough ammmo to switch to it.
 	bool CheckWeaponSwitch(AEoDWeaponBase item)
 	{
 		if (item)
@@ -373,6 +385,12 @@ Class AEoDWeaponIndexer : Object play
 	}
 }
 
+//==============================================================================
+//==============================================================================
+// The main weapon switching class.
+// Creates the above class which acts as an array manager. 
+//==============================================================================
+//==============================================================================
 Class AEoDWeaponIdentifier : Object play
 {
 	enum EInstruction
