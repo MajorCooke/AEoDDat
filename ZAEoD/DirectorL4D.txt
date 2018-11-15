@@ -100,7 +100,7 @@ Class TheDirectorL4D : DirectorMain
 		if (Event.L4DDirector)	
 		{
 			Console.Printf("Destroyed");
-			return Destroy();
+			Destroy();	return;
 		}
 		Event.L4DDirector = self;
 		GrabCvars();
@@ -578,7 +578,7 @@ Class L4DLargeMobRunner : DirectorKid
 			A_ChangeLinkFlags(false);
 			bTHRUACTORS = false;
 			if (A_CheckBlock("Stuck",CBF_DROPOFF))
-			{	return Destroy();	}
+			{	Destroy();	return;	}
 			bTHRUACTORS = true;
 			A_ChangeLinkFlags(true);
 		}
@@ -644,7 +644,7 @@ Class L4DLargeMobRunner : DirectorKid
 		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 1 
 		{
 			if (!A_GiveToChildren("DropTimer",1))
-			{	return Destroy();	}
+			{	Destroy();	return;	}
 			
 		}
 		Stop;
@@ -720,7 +720,7 @@ Class L4DMediumMobRunner : DirectorKid
 			A_ChangeLinkFlags(false);
 			bTHRUACTORS = false;
 			if (A_CheckBlock("Stuck",CBF_DROPOFF))
-			{	return Destroy();	}
+			{	Destroy();	return;	}
 			bTHRUACTORS = true;
 			A_ChangeLinkFlags(true);
 		}
@@ -759,7 +759,7 @@ Class L4DMediumMobRunner : DirectorKid
 			return ResolveState("Wanderbout");
 		}
 	Vanish:
-		TNT1 A 0 { if (!Spawner) return Destroy(); }
+		TNT1 A 0 { if (!Spawner) {	Destroy();	return;	} }
 	VanishHorde:
 		TNT1 A 1;
 		Goto End;
@@ -794,7 +794,7 @@ Class L4DMediumMobRunner : DirectorKid
 		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 1 
 		{
 			if (!A_GiveToChildren("DropTimer",1))
-			{	return Destroy();	}
+			{	Destroy();	return;	}
 		}
 		Stop;
 	}
@@ -886,7 +886,7 @@ Class L4DSmallMobRunner : DirectorKid
 			A_ChangeLinkFlags(false);
 			bTHRUACTORS = false;
 			if (A_CheckBlock("Stuck",CBF_DROPOFF))
-			{	return Destroy();	}
+			{	Destroy();	return;	}
 			bTHRUACTORS = true;
 			A_ChangeLinkFlags(true);
 		}
@@ -1021,7 +1021,7 @@ Class L4DSmallMobRunner : DirectorKid
 		}
 		Goto End;
 	VanishNightmare:
-		TNT1 A 0 { if (!master && random(1,256) >= 32)	return Destroy();	}
+		TNT1 A 0 { if (!master && random(1,256) >= 32)	{	Destroy();	return;	}	}
 	VanishNightmare2:
 		TNT1 A 1 
 		{
@@ -1070,7 +1070,7 @@ Class L4DSmallMobRunner : DirectorKid
 		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 1 
 		{
 			if (!A_GiveToChildren("DropTimer",1))
-			{	return Destroy();	}
+			{	Destroy();	return;	}
 		}
 		Stop;
 	}
@@ -1412,7 +1412,7 @@ Class L4DItemSpawner : RandomSpawner
 			}
 			if (n == 0)
 			{ // Nothing left to spawn.
-				return Destroy();
+				Destroy();	return;
 			}
 			// Then we reset the iterator to the start position...
 			di = drop;

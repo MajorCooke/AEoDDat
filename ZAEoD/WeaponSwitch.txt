@@ -213,6 +213,7 @@ Class AEoDWeaponIndexer : Object play
 			Base[Slot].Delete(index, deletecount);
 	}
 	
+	//--------------------------------------------------------------------------
 	// The meat of the array searching is here. 
 	AEoDWeaponBase FindNextWeapon(bool prev, uint Slot, uint Index, bool SameSlot = false)
 	{
@@ -224,14 +225,16 @@ Class AEoDWeaponIndexer : Object play
 		//Console.Printf("2.001");
 		if (SameSlot)
 		{
-			if (!Base[Slot] || Base[Slot].GetSize() < 1)
-				return null;
+			if (!Base[Slot] || Base[Slot].GetSize() < 1)	// No weapons in that slot.
+				return null; 
 			//Console.Printf("2.002");
 			
 			[hi, lo] = Base[Slot].GetCaps();
 			if (hi == -1 || lo == -1)
 				return null;
 			//Console.Printf("2.003");
+			
+			
 			do
 			{
 				//Console.Printf("2.004 + %d", CurIndex);
@@ -299,37 +302,6 @@ Class AEoDWeaponIndexer : Object play
 					}
 					continue;
 				}
-				/*
-				if (prev)
-				{
-					
-					if (hi == -1 || lo == -1 || CurIndex < lo)
-					{
-						FixHiLo = true;
-						SlotsChecked++;
-						CurSlot--;
-						if (CurSlot < 0)	CurSlot = Size - 1;	
-						continue; // hi and lo must be refreshed again.
-					}
-					if (FixHiLo && CurIndex < lo)
-						CurIndex = hi;
-					
-				}
-				else
-				{
-					if (hi == -1 || lo == -1 || CurIndex > hi)
-					{
-						FixHiLo = true;
-						CurIndex = lo;
-						SlotsChecked++;
-						CurSlot = (CurSlot + 1) % Size;
-						continue;
-					}
-					if (FixHiLo && CurIndex > hi)
-						CurIndex = lo;
-					
-				}
-				*/
 				FixHiLo = false;
 				//Console.Printf("2.007 | Slot: %d | Index %d", CurSlot, CurIndex);
 				Pointer = Base[CurSlot].GetSpecific(CurIndex);
@@ -351,7 +323,7 @@ Class AEoDWeaponIndexer : Object play
 	//==========================================================================
 	// FindFirstSlotWeapon
 	//
-	// Used for getting the highest ranking weapon available.
+	// Used for getting the lowest ranking weapon available.
 	//==========================================================================
 	AEoDWeaponBase FindFirstSlotWeapon(uint Slot)
 	{
@@ -372,13 +344,13 @@ Class AEoDWeaponIndexer : Object play
 		return Pointer;
 	}
 	
-	// Simply does the ammo check if the weapon has enough ammmo to switch to it.
-	bool CheckWeaponSwitch(AEoDWeaponBase item)
+	// Simply does the ammo check if the weapon has enough ammo to switch to it.
+	bool CheckWeaponSwitch(Weapon item)
 	{
 		if (item)
 		{
 			Cvar Check = Cvar.FindCvar("sv_dontcheckammo");
-			if (item.CheckAmmo(Weapon.EitherFire, false) || (Check && Check.GetBool()))
+			if ((Check && Check.GetBool()) || item.CheckAmmo(Weapon.EitherFire, false))
 				return true;	
 		}
 		return false;
@@ -395,9 +367,9 @@ Class AEoDWeaponIdentifier : Object play
 {
 	enum EInstruction
 	{
-		Ins_SetSlot,
-		Ins_SetNext,
-		Ins_SetPrev
+		Ins_SetSlot,		// "slot #" command
+		Ins_SetNext,		// "weapnext" command
+		Ins_SetPrev			// "weapprev" command
 	};
 	int Instruction;
 	PlayerInfo plr;
@@ -486,6 +458,7 @@ Class AEoDWeaponIdentifier : Object play
 		
 		Switch(Instruction)
 		{
+			// Find the first priority slot if changing slots.
 			Case Ins_SetSlot:
 			{
 				if (DesiredSlot != CurrentSlot)
@@ -499,6 +472,7 @@ Class AEoDWeaponIdentifier : Object play
 				}
 				SameSlot = true;
 			}
+			// If not changing slots, then find the next weapon. This is how it works in GZDoom.
 			Case Ins_SetNext:
 			{
 				//Console.Printf("5.2");
@@ -508,6 +482,7 @@ Class AEoDWeaponIdentifier : Object play
 				//Console.Printf("6");
 				return (NextWeapon) ? Weapon(NextWeapon) : null;
 			}
+			// Get the previous weapon.
 			Case Ins_SetPrev:
 			{
 				//Console.Printf("5.3");
@@ -521,6 +496,10 @@ Class AEoDWeaponIdentifier : Object play
 		return null;
 	}
 	
+	//--------------------------------------------------------------------------
+	// Gets the index of the item, which is to say, the order of selection.
+	// This is found by gathering the cvar with the name of the weapon, which is
+	// the same with an added 'user_' appending the name in the CVARINFO lump.
 	static Int GetModIndex(AEoDWeaponBase item)
 	{	
 		//Console.Printf("6.001");
@@ -536,26 +515,15 @@ Class AEoDWeaponIdentifier : Object play
 		//Console.Printf("6.003");
 		Cvar check = Cvar.GetCvar(AEoDCvar, item.owner.player);
 		//Console.Printf("6.004");
+		
+		// Notify the player and/or modder that the weapon doesn't have a cvar.
 		if (!check || check.GetInt() < 1)
 		{
 			
-			if (!check)						Console.Printf("ERROR: %s is NOT a cvar!", AEoDCvar);
+			if (!check)						Console.Printf("ERROR: %s is NOT a cvar! Check your CVARINFO definitions!", AEoDCvar);
 			else if (check.GetInt() < 1)	Console.Printf("ERROR: %s is < 1!", AEoDCvar);
 			return -1;
 		}
 		return check.GetInt();
-	}
-	
-	int GetCvarInt(String Cvarname, PlayerInfo player)
-	{
-		int ret = -1;
-		if (Cvarname.Length() < 1)	return ret;
-		Cvar thing = null;
-		
-		if (player)		thing = Cvar.GetCvar(Cvarname, player);
-		else			thing = Cvar.FindCvar(Cvarname);
-		
-		return (thing) ? thing.GetInt() : ret;
-		
 	}
 }

@@ -92,7 +92,7 @@ Class RightCube : RealForceCube
 	Spawn:
 		FCB2 A 1 NoDelay
 		{
-			if (!target || countdown < 1)	return Destroy();
+			if (!target || countdown < 1)	{ Destroy(); return; }
 			
 			A_SeekerMissile(0,0,SMF_LOOK,256);
 			if (tracer && tracer.health > 0)
@@ -165,7 +165,7 @@ Class ForceCubeTrail : Actor
 		LPUF A 1 Bright
 		{
 			if (Scale.X <= 0.0)
-				return Destroy();
+			{	Destroy(); return;	}
 			
 			A_SetScale(Scale.X - 0.05);
 		}
@@ -573,7 +573,7 @@ Class PentagramOfProtection : CustomInventory
 			if (random(1,256) < 256 - 224)
 			{
 				A_SpawnItemEx("DemonMorphPowerup",0,0,0,vel.x,vel.y,vel.z,0,SXF_NOCHECKPOSITION|SXF_ABSOLUTEMOMENTUM|SXF_TRANSFERSPECIAL,0,tid);
-				return Destroy();
+				Destroy(); return;
 			}
 		}
 	Form:
@@ -1840,13 +1840,14 @@ Class DemonMorphTranslationItem : Inventory
 		// Destroy the thinker if we no actor, or actor's dead.
 		if (DestroyMe || !owner || owner.health < 1)
 		{
-			return DepleteOrDestroy();
+			DepleteOrDestroy();
+			return;
 		}
-		
+		Super.DoEffect();
 		// No point doing anything if invisible.
 		if (owner.alpha <= 0 || owner.GetRenderStyle() <= 0 || 
 			owner.bINVISIBLE || owner.bNOSECTOR)
-			return Super.DoEffect();
+			return;
 		
 		
 		// Change the translation based on friendly or not.
@@ -1870,7 +1871,6 @@ Class DemonMorphTranslationItem : Inventory
 		owner.Translation = CurrentTranslation;
 		owner.bBRIGHT = true;
 		restored = false;
-		Super.DoEffect();
 	}
 	//==========================================================================
 	//

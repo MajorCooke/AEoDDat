@@ -104,7 +104,6 @@ Class ExtraBlood : NewBlood
 
 Class MCBloodSprite : AEoDFX
 {
-	int user_t;
 	Default
 	{
 		Projectile;
@@ -131,8 +130,6 @@ Class MCBloodSprite : AEoDFX
 	Spawn:
 		TNT1 A 0 NoDelay 
 		{
-			user_t = tid;
-			Thing_ChangeTID(0,0);
 			A_SetScale(Scale.X*randompick(-1,1),Scale.Y*randompick(-1,1));
 			return A_Jump(256,"B1","B2","B3");
 		}
@@ -221,173 +218,6 @@ enum bloodcolors//TIDs ONLY. DO NOT USE IN THE TRANSLATIONS PROPERTY.
 
 //==============================================================================
 //==============================================================================
-//
-// Globalized Gib Spawners
-//
-//==============================================================================
-//==============================================================================
-
-// The Base Spawner
-
-Class GibSpawnerBase : AEoDFX
-{
-	const MulMin = 1.0;
-	const MulMax = 2.0;
-	int user_t;
-	bool simple, added;
-	int Index;
-	int Cap;
-	int SpawnChance;				// Just for the sake of making things simple...
-	Color Trans;
-	Color P1;
-	Vector3 Vel;
-	double MulBy[2];
-	double RAdd;
-	
-	Array<Class<Actor> > Gib;
-	Array<Int> Amt;
-	Array<int> SimpleGib;
-	
-	//--------------------------------------------------------------------------
-	// PostBeginPlay
-	//
-	// Since we have no reason to even do anything else, take care of business 
-	// go away.
-	//--------------------------------------------------------------------------
-	override void PostBeginPlay()
-	{
-		if (GetClass() == 'GibSpawnerBase')
-		{	 return Destroy();	}
-		
-		user_t = tid;
-		ChangeTID(0);
-		
-		if (A_CheckSightOrRange(BloodDistanceLimit,"Null"))
-		{
-			simple = true;
-		}
-		/*
-		g = AEoDGlobals.Get();
-		if (!g.CheckGibCount())	return Destroy();
-		
-		simple = g.CheckGibCount(true);
-		*/
-		
-		
-		
-		int count = 0;
-		int SoftGibMax = GetCvar("MaxSoftGibCount");
-		int HardGibMax = GetCvar("MaxGibCount");
-
-		ThinkerIterator it = ThinkerIterator.Create("GibletBase",STAT_GIBS);
-		Actor mo;
-
-		while ((mo = GibletBase(it.Next())))
-		{
-			count++;
-			// Too many gibs spawned.
-			if (count >= HardGibMax)
-				return Destroy();
-			
-			// Over the soft gib threshold.
-			if (!simple && count >= SoftGibMax)
-				simple = true;	
-			
-		}
-		
-		
-		Super.PostBeginPlay();
-		RAdd = 8;
-		
-		Gib.Clear();
-		Amt.Clear();
-		
-		if (Gib01 && Gam01 > 0) { Gib.Push(Gib01);	Amt.Push(Gam01);	SimpleGib.Push(Sim01);	}
-		if (Gib02 && Gam02 > 0) { Gib.Push(Gib02);	Amt.Push(Gam02);	SimpleGib.Push(Sim02);	}
-		if (Gib03 && Gam03 > 0) { Gib.Push(Gib03);	Amt.Push(Gam03);	SimpleGib.Push(Sim03);	}
-		if (Gib04 && Gam04 > 0) { Gib.Push(Gib04);	Amt.Push(Gam04);	SimpleGib.Push(Sim04);	}
-		if (Gib05 && Gam05 > 0) { Gib.Push(Gib05);	Amt.Push(Gam05);	SimpleGib.Push(Sim05);	}
-		if (Gib06 && Gam06 > 0) { Gib.Push(Gib06);	Amt.Push(Gam06);	SimpleGib.Push(Sim06);	}
-		if (Gib07 && Gam07 > 0) { Gib.Push(Gib07);	Amt.Push(Gam07);	SimpleGib.Push(Sim07);	}
-		if (Gib08 && Gam08 > 0) { Gib.Push(Gib08);	Amt.Push(Gam08);	SimpleGib.Push(Sim08);	}
-		if (Gib09 && Gam09 > 0) { Gib.Push(Gib09);	Amt.Push(Gam09);	SimpleGib.Push(Sim09);	}
-		if (Gib10 && Gam10 > 0) { Gib.Push(Gib10);	Amt.Push(Gam10);	SimpleGib.Push(Sim10);	}
-		
-		if (Gib.Size() < 1)	return Destroy();
-		
-		for (int i = 0; i < Gib.Size(); i++)
-		{
-			// If not flagged for simple spawning, don't spawn it if the spawners outside of view.
-			if (simple && !SimpleGib[i])	continue;
-			
-			for (int j = 0; j < Amt[i]; j++)
-			{
-				Class<Actor> ngib = Gib[i];
-				if (!ngib)
-				{
-					Console.Printf(Gib[i]..": bad actor");
-					continue;
-				}
-				let spawned = GibletBase(Spawn(ngib, pos));
-				// The target is intentionally set to this
-				if (spawned)	
-				{	
-					spawned.Pitch = Pitch;
-					spawned.Angle = Angle;
-					spawned.target = self; 
-					spawned.master = master;
-					spawned.tracer = tracer;
-					
-					Vector3 tvel = tracer ? tracer.vel : (0,0,0);
-					spawned.A_ChangeVelocity(
-						tvel.X * frandom(MulMin,MulMax) + frandom(-RAdd,RAdd),
-						tvel.Y * frandom(MulMin,MulMax) + frandom(-RAdd,RAdd),
-						tvel.Z * frandom(MulMin,MulMax) + frandom(-RAdd,RAdd),
-						CVF_REPLACE);
-					if (target)	spawned.P1 = (target.bloodcolor & 0xffffff);
-					else		spawned.P1 = Color(255, 255, 0, 0);
-				}
-			}
-		}
-		
-		return Destroy();
-	}
-	
-	Class<Actor> Gib01, Gib02, Gib03, Gib04, Gib05, Gib06, Gib07, Gib08, Gib09, Gib10;
-	int Gam01, Gam02, Gam03, Gam04, Gam05, Gam06, Gam07, Gam08, Gam09, Gam10;
-	bool Sim01, Sim02, Sim03, Sim04, Sim05, Sim06, Sim07, Sim08, Sim09, Sim10;
-	
-	property Gib1: Gib01, Gam01, Sim01;
-	property Gib2: Gib02, Gam02, Sim02;
-	property Gib3: Gib03, Gam03, Sim03;
-	property Gib4: Gib04, Gam04, Sim04;
-	property Gib5: Gib05, Gam05, Sim05;
-	property Gib6: Gib06, Gam06, Sim06;
-	property Gib7: Gib07, Gam07, Sim07;
-	property Gib8: Gib08, Gam08, Sim08;
-	property Gib9: Gib09, Gam09, Sim09;
-	property Gib10: Gib10, Gam10, Sim10;
-	
-	Default
-	{
-		+NOTELESTOMP
-		+NOTONAUTOMAP
-		+NOINTERACTION
-		+INVISIBLE
-		RenderStyle "None";
-		BloodColor "Red";
-	}
-	
-	States
-	{
-	Spawn:
-		TNT1 A 1;
-		Stop;
-	}
-}
-
-//==============================================================================
-//==============================================================================
 // Blood
 //==============================================================================
 //==============================================================================
@@ -395,7 +225,6 @@ Class GibSpawnerBase : AEoDFX
 Class MCBloodFXMain : AEoDFX replaces Blood
 {
 	const VelMul = 1.0;
-	int user_t;
 	int user_count;
 	int user_inv;
 	Color P1;
@@ -424,11 +253,7 @@ Class MCBloodFXMain : AEoDFX replaces Blood
 	{
 		Super.PostBeginPlay();
 		if (A_CheckSightOrRange(BloodDistanceLimit,"Null"))
-		{	
-			return Destroy();
-		}
-		user_t = tid;
-		ChangeTID(0);
+		{	Destroy();	return;	}
 		A_FaceMovementDirection();
 	}
 	
@@ -475,7 +300,7 @@ Class MCBloodFXMain : AEoDFX replaces Blood
 			}
 			
 			if (user_inv <= 0)
-				return Destroy();
+			{	Destroy();	return;	}
 		}
 		TNT1 A 1 
 		{
@@ -483,7 +308,7 @@ Class MCBloodFXMain : AEoDFX replaces Blood
 			if (user_inv >= 1)
 			{	A_SpawnItemEx("MCBloodSprite",frandom(0,2),0,random(1,4),frandom(0,1.5),0,frandom(0.1,2.0),random(0,359),GibFlags|SXF_TRANSFERTRANSLATION,0);	}
 			else
-				return Destroy();	
+			{	Destroy();	return;	}
 		}
 		Stop;
 	}
@@ -577,7 +402,6 @@ Class MCBloodParticle : AEoDFX
 	const VelMul = 0.85; //0.75;
 	const YVelMul = VelMul;
 	const VelAccel = -0.15;
-	int user_t;
 	int user_count;
 	double user_vel;
 	double user_angle;
@@ -602,8 +426,6 @@ Class MCBloodParticle : AEoDFX
 	const arraySize = 19;
 	override void PostBeginPlay()
 	{
-		user_t = tid;
-		ChangeTID(0);
 		Super.PostBeginPlay();
 		user_vel = vel.Length() * VelMul;
 		user_pitch = pitch;
@@ -666,9 +488,151 @@ Class GibBloodTrailMediumSize	: MCBloodFXTrail	{}
 
 //==============================================================================
 //==============================================================================
+//
+// Globalized Gib Spawners
+//
+//==============================================================================
+//==============================================================================
 
-//==============================================================================
-//==============================================================================
+// The Base Spawner
+
+Class GibSpawnerBase : AEoDFX
+{
+	AEoDHandler Event;
+	const MulMin = 1.0;
+	const MulMax = 2.0;
+	bool simple, added, ShortGibTime;
+	int Index;
+	int Cap;
+	int SpawnChance;				// Just for the sake of making things simple...
+	Color Trans;
+	Color P1;
+	Vector3 Vel;
+	double MulBy[2];
+	double RAdd;
+	
+	Array<Class<Actor> > Gib;
+	Array<Int> Amt;
+	Array<int> SimpleGib;
+	
+	Property ShortGibTime: ShortGibTime;
+	//--------------------------------------------------------------------------
+	// PostBeginPlay
+	//
+	// Since we have no reason to even do anything else, take care of business 
+	// go away.
+	//--------------------------------------------------------------------------
+	override void PostBeginPlay()
+	{
+		Event = AEoDHandler(StaticEventHandler.Find("AEoDHandler"));
+		if (Event)
+		{			
+			// Too many gibs.
+			if (Event.GibCount >= Event.GibHard)
+			{	Destroy();	return;	}
+			
+			// Force simplification since we're at the softer limit.
+			if (Event.GibCount >= Event.GibSoft)
+				simple = true;
+			
+		}
+		Super.PostBeginPlay();
+		if (!simple && A_CheckSightOrRange(BloodDistanceLimit,"Null"))
+		{
+			simple = true;
+		}
+		
+		RAdd = 8;
+		
+		Gib.Clear();
+		Amt.Clear();
+		
+		if (Gib01 && Gam01 > 0) { Gib.Push(Gib01);	Amt.Push(Gam01);	SimpleGib.Push(Sim01);	}
+		if (Gib02 && Gam02 > 0) { Gib.Push(Gib02);	Amt.Push(Gam02);	SimpleGib.Push(Sim02);	}
+		if (Gib03 && Gam03 > 0) { Gib.Push(Gib03);	Amt.Push(Gam03);	SimpleGib.Push(Sim03);	}
+		if (Gib04 && Gam04 > 0) { Gib.Push(Gib04);	Amt.Push(Gam04);	SimpleGib.Push(Sim04);	}
+		if (Gib05 && Gam05 > 0) { Gib.Push(Gib05);	Amt.Push(Gam05);	SimpleGib.Push(Sim05);	}
+		if (Gib06 && Gam06 > 0) { Gib.Push(Gib06);	Amt.Push(Gam06);	SimpleGib.Push(Sim06);	}
+		if (Gib07 && Gam07 > 0) { Gib.Push(Gib07);	Amt.Push(Gam07);	SimpleGib.Push(Sim07);	}
+		if (Gib08 && Gam08 > 0) { Gib.Push(Gib08);	Amt.Push(Gam08);	SimpleGib.Push(Sim08);	}
+		if (Gib09 && Gam09 > 0) { Gib.Push(Gib09);	Amt.Push(Gam09);	SimpleGib.Push(Sim09);	}
+		if (Gib10 && Gam10 > 0) { Gib.Push(Gib10);	Amt.Push(Gam10);	SimpleGib.Push(Sim10);	}
+		
+		if (Gib.Size() < 1)	{	Destroy();	return;	}
+		
+		for (int i = 0; i < Gib.Size(); i++)
+		{
+			// If not flagged for simple spawning, don't spawn it if the spawners outside of view.
+			if (simple && !SimpleGib[i])	continue;
+			
+			for (int j = 0; j < Amt[i]; j++)
+			{
+				Class<Actor> ngib = Gib[i];
+				if (!ngib)
+				{
+					Console.Printf(Gib[i]..": bad actor");
+					continue;
+				}
+				let spawned = GibletBase(Spawn(ngib, pos));
+				// The target is intentionally set to this
+				if (spawned)	
+				{	
+					spawned.Pitch = Pitch;
+					spawned.Angle = Angle;
+					spawned.Target = self; 
+					spawned.Master = Master;
+					spawned.Tracer = Tracer;
+					spawned.ShortGibTime = ShortGibTime;
+					
+					Vector3 tvel = tracer ? tracer.vel : (0,0,0);
+					spawned.A_ChangeVelocity(
+						tvel.X * frandom(MulMin,MulMax) + frandom(-RAdd,RAdd),
+						tvel.Y * frandom(MulMin,MulMax) + frandom(-RAdd,RAdd),
+						tvel.Z * frandom(MulMin,MulMax) + frandom(-RAdd,RAdd),
+						CVF_REPLACE);
+					if (target)	spawned.P1 = (target.bloodcolor & 0xffffff);
+					else		spawned.P1 = Color(255, 255, 0, 0);
+				}
+			}
+		}
+		
+		Destroy();	
+		return;
+	}
+	
+	Class<Actor> Gib01, Gib02, Gib03, Gib04, Gib05, Gib06, Gib07, Gib08, Gib09, Gib10;
+	int Gam01, Gam02, Gam03, Gam04, Gam05, Gam06, Gam07, Gam08, Gam09, Gam10;
+	bool Sim01, Sim02, Sim03, Sim04, Sim05, Sim06, Sim07, Sim08, Sim09, Sim10;
+	
+	property Gib1: Gib01, Gam01, Sim01;
+	property Gib2: Gib02, Gam02, Sim02;
+	property Gib3: Gib03, Gam03, Sim03;
+	property Gib4: Gib04, Gam04, Sim04;
+	property Gib5: Gib05, Gam05, Sim05;
+	property Gib6: Gib06, Gam06, Sim06;
+	property Gib7: Gib07, Gam07, Sim07;
+	property Gib8: Gib08, Gam08, Sim08;
+	property Gib9: Gib09, Gam09, Sim09;
+	property Gib10: Gib10, Gam10, Sim10;
+	
+	Default
+	{
+		GibSpawnerBase.ShortGibTime false;
+		+NOTELESTOMP
+		+NOTONAUTOMAP
+		+NOINTERACTION
+		+INVISIBLE
+		RenderStyle "None";
+		BloodColor "Red";
+	}
+	
+	States
+	{
+	Spawn:
+		TNT1 A 1;
+		Stop;
+	}
+}
 
 Class SmallGibDropper : GibSpawnerBase
 {
@@ -690,6 +654,9 @@ Class GibDropper : GibSpawnerBase
 	}
 }
 
+Class GibDropperShort : GibDropper
+{	Default { GibSpawnerBase.ShortGibTime true;	}	}
+
 Class QuakeGibDropper : GibSpawnerBase
 {
 	Default
@@ -701,10 +668,6 @@ Class QuakeGibDropper : GibSpawnerBase
 	
 	override void PostBeginPlay()
 	{
-		if (A_CheckSightOrRange(BloodDistanceLimit,"Null"))
-		{
-			return Destroy(); // Super.PostBeginPlay();
-		}
 		int a1 = random(3,6);
 		int a2 = random(1, a1 - 1);
 		a2 = a1 - a2;
@@ -714,6 +677,10 @@ Class QuakeGibDropper : GibSpawnerBase
 		Super.PostBeginPlay();
 	}
 }
+
+Class QuakeGibDropperShort : QuakeGibDropper
+{	Default { GibSpawnerBase.ShortGibTime true;	}	}
+
 Class QuakeSmallGibDropper : GibSpawnerBase
 {
 	Default
@@ -726,9 +693,7 @@ Class QuakeSmallGibDropper : GibSpawnerBase
 	override void PostBeginPlay()
 	{
 		if (A_CheckSightOrRange(BloodDistanceLimit,"Null"))
-		{
-			return Destroy();
-		}
+		{	Destroy();	return;	}
 		int a1 = random(3,5);
 		int a2 = random(1, a1 - 1);
 		a2 = a1 - a2;
@@ -753,9 +718,7 @@ Class BloodGibDropper : GibSpawnerBase
 	override void PostBeginPlay()
 	{
 		if (A_CheckSightOrRange(BloodDistanceLimit,"Null"))
-		{
-			return Destroy();
-		}
+		{	Destroy();	return;	}
 		
 		Gam01 = 6;
 		Gam02 = random(1,3);
@@ -785,18 +748,19 @@ Class BloodGibDropper : GibSpawnerBase
 Class GibletBase : AEoDFX 
 {
 	//AEoDGlobals g;
-	int user_short;
-	int user_time;
-	int user_t;
-	int user_w;
+	AEoDHandler Event;
 	int user_spawntrail;
 	Color P1;
-	int waittime;
-	property WaitTimer: waittime;
+	int WaitTime;
+	bool ShortGibTime;
 	StateLabel next;
+	
+	Property WaitTimer: WaitTime;
+	Property ShortGibTime: ShortGibTime;
 	Default 
 	{
 		GibletBase.WaitTimer 300;
+		GibletBase.ShortGibTime false;
 		Projectile;
 		+THRUACTORS
 		-NOLIFTDROP
@@ -818,25 +782,7 @@ Class GibletBase : AEoDFX
 	{	
 		user_spawntrail = GetCvar("SpawnBloodTrails");
 		ChangeStatNum(STAT_GIBS);
-		//g = AEoDGlobals.Get();
-		//if (g) g.GibUp();
 		Actor.BeginPlay();
-	}
-	/*
-	override void OnDestroy()
-	{
-		if (!g) g = AEoDGlobals.Get();
-		if (g)	g.GibDown();
-	}
-	*/
-	override void PostBeginPlay()
-	{
-		user_t = tid;
-		ChangeTID(0);
-		if (user_t < GibTID)	{	user_w = user_t;	}
-		else					{	user_w = user_t - GibTID;	}
-		
-		Super.PostBeginPlay();
 	}
 	
 	void SpawnGibBloodTrail()
@@ -864,21 +810,12 @@ Class GibletBase : AEoDFX
 	md1:
 	Death:
 	DeathReal:
-		"####" "#" 0
+		"####" "#" 1
 		{
-			if (GetCvar("user_ShortGibLives") || user_t >= GibTID)
-				waittime = 0;
+			WaitTime = (ShortGibTime || GetCvar("user_ShortGibLives")) ? 0 : Default.WaitTime;
+			A_SetTics(WaitTime);
 		}
-		"####" "#" 2
-		{
-			if (waittime < 1)
-				A_FadeOut();
-			else
-			{
-				A_SetTics(waittime);
-				waittime = 0;
-			}
-		}
+		"----" A 1 A_FadeOut();
 		Wait;
 	}
 }
@@ -904,6 +841,7 @@ Class NewMeat : GibletBase replaces Meat
 		{
 			sprite = GetSpriteIndex("MEAT");
 			frame = random(0,19);
+			WaitTime = 0;
 		}
 		//MEAT ABCDEFGHIJLKMNOPQRST 0 { return ResolveState("Play1"); }
 	Play1:
@@ -912,14 +850,12 @@ Class NewMeat : GibletBase replaces Meat
 			SpawnGibBloodTrail();
 			StateLabel dest = null;
 			
-			user_time++;
-			
-			if (pos.z <= floorz || user_time >= 87)		
-			{	
+			if (pos.z <= floorz || WaitTime++ >= 87)
 				dest = "Death";	
-			}
+			
 			return ResolveState(dest);
 		}
+		Wait;
 	}
 }
 
@@ -941,7 +877,7 @@ Class HGib1Small : GibletBase
 	Spawn:
 		TNT1 A 0 NoDelay 
 		{
-			A_ChangeVelocity(0,0,random(3,15));
+			A_ChangeVelocity(0,0,random(3,12));
 			return ResolveState("Play");
 		}
 	Play:
@@ -1039,7 +975,7 @@ Class HGib1 : GibletBase
 	Spawn:
 		TNT1 A 0 NoDelay 
 		{
-			A_ChangeVelocity(0,0,random(5,18));
+			A_ChangeVelocity(0,0,random(3,12));
 			return ResolveState("Play");
 		}
 	Play:
@@ -1138,9 +1074,9 @@ Class Gib1 : GibletBase
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay 
+		Q99B B 0 NoDelay 
 		{
-			A_ChangeVelocity(0,0,random(5,18));
+			A_ChangeVelocity(0,0,random(3,12));
 			return ResolveState("Play");
 		}
 	Play:
@@ -1251,24 +1187,24 @@ Class BloodGib1 : GibletBase
 	States
 	{
 	Spawn:
-		TNT1 A 0 NoDelay 
+		ANYG A 0 NoDelay 
 		{
-			ThrustThingZ(0,random(12,80),0,1);
+			//ThrustThingZ(0,random(12,80),0,1);
+			A_ChangeVelocity(0,0,random(3,12));
 			return ResolveState("Looping");
 		}
 	Looping:
 		ANYG AABBCCDD 2 SpawnGibBloodTrail();
 		"####" "#" 0 
 		{
-			user_c++;
-			if (user_c > 5)
+			if (user_c++ > 5)
+			{
+				Frame = Fr_E;
 				next = "Death";
+			}
 			return ResolveState(next);
 		}
 		Loop;
-	Death:
-		ANYG E 0;
-		Goto Super::DeathReal;
 	}
 }
 
@@ -1285,15 +1221,14 @@ Class BloodGib2 : BloodGib1		//eye
 		ANYG FFGGHHII 2 SpawnGibBloodTrail();
 		"####" "#" 0 
 		{
-			user_c++;
-			if (user_c > 5)
+			if (user_c++ > 5)
+			{
 				next = "Death";
+				Frame = Fr_J;
+			}
 			return ResolveState(next);
 		}
 		Loop;
-	Death:
-		ANYG J 0;
-		Goto Super::DeathReal;
 	}
 }
 
@@ -1310,15 +1245,14 @@ Class BloodGib3 : BloodGib1		//liver
 		ANYG KKLLMMNN 2 SpawnGibBloodTrail();
 		"####" "#" 0 
 		{
-			user_c++;
-			if (user_c > 5)
+			if (user_c++ > 5)
+			{
 				next = "Death";
+				Frame = Fr_O;
+			}
 			return ResolveState(next);
 		}
 		Loop;
-	Death:
-		ANYG O 0;
-		Goto Super::DeathReal;
 	}
 }
 
@@ -1335,25 +1269,19 @@ Class BloodGib4 : BloodGib1		//bloodthing
 		ANYG PPQQRRSS 2 SpawnGibBloodTrail();
 		"####" "#" 0 
 		{
-			user_c++;
-			if (user_c > 5)
+			if (user_c++ > 5)
+			{
 				next = "Death";
+				Frame = Fr_T;
+			}
 			return ResolveState(next);
 		}
 		Loop;
-	Death:
-		ANYG T 0;
-		Goto Super::DeathReal;
 	}
 }
 
 //==============================================================================
 //==============================================================================
-
-
-
-
-
 
 
 //==============================================================================
@@ -1400,10 +1328,10 @@ Class GreenGib : GibletBaseSpawner
 	Spawn:
 		TNT1 A 0;
 		TNT1 A 0 A_CheckSight(2);
-		TNT1 AA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),GibFlags,0,tid);
+		TNT1 AA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),GibFlags);
 		Stop;
 	Spawn2:
-		TNT1 A 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),GibFlags,0,tid);
+		TNT1 A 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),GibFlags);
 		Stop;
 	}
 }
@@ -1421,27 +1349,27 @@ Class GreenGibSp : GreenGib
 		TNT1 A 0 NoDelay A_CheckSight("Spawn2");
 		TNT1 AAAAAAAA 0 
 		{
-			A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),GibFlags,0,tid);
+			A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),GibFlags);
 			A_TossGib();
 		}
 		TNT1 A 0 
 		{
-			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),GibFlags,0,tid);
-			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),GibFlags,0,tid);
-			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),GibFlags,0,tid);
-			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),GibFlags,0,tid);
+			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),GibFlags);
+			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),GibFlags);
+			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),GibFlags);
+			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),GibFlags);
 		}
 		Stop;
 	Spawn2:
 		TNT1 AA 0
 		{
-			A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),GibFlags,0,tid);
+			A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),GibFlags);
 			A_TossGib();
 		}
 		TNT1 A 0 
 		{
-			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),GibFlags,0,tid);
-			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),GibFlags,0,tid);
+			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),GibFlags);
+			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),GibFlags);
 		}
 		Stop;
 	}
@@ -1460,7 +1388,7 @@ Class BlueGib : GibletBaseSpawner
 	Spawn:
 		TNT1 A 0 ;
 		TNT1 A 0 A_CheckSight("Spawn2");
-		TNT1 AA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),GibFlags,0,tid);
+		TNT1 AA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),GibFlags);
 		Stop;
 	Spawn2:
 		TNT1 A 0;
@@ -1481,27 +1409,27 @@ Class BlueGibSp : BlueGib
 		TNT1 A 0 NoDelay A_CheckSight("Spawn2");
 		TNT1 AAAAAAAA 0 
 		{
-			A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),GibFlags,0,tid);
+			A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),GibFlags);
 			A_TossGib();
 		}
 		TNT1 A 0 
 		{
-			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),GibFlags,0,tid);
-			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),GibFlags,0,tid);
-			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),GibFlags,0,tid);
-			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),GibFlags,0,tid);
+			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),GibFlags);
+			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),GibFlags);
+			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),GibFlags);
+			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),GibFlags);
 		}
 		Stop;
 	Spawn2:
 		TNT1 AA 0
 		{
-			A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),GibFlags,0,tid);
+			A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),GibFlags);
 			A_TossGib();
 		}
 		TNT1 A 0 
 		{
-			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),GibFlags,0,tid);
-			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),GibFlags,0,tid);
+			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),GibFlags);
+			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),GibFlags);
 		}
 		Stop;
 	}
@@ -1521,7 +1449,7 @@ Class OrangeGib : GibletBaseSpawner
 	Spawn:
 		TNT1 A 0;
 		TNT1 A 0 A_CheckSight("Spawn2");
-		TNT1 A 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),GibFlags,0,tid);
+		TNT1 A 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),GibFlags);
 		TNT1 A 0 A_TossGib();
 		Stop;
 	Spawn2:
@@ -1543,27 +1471,27 @@ Class OrangeGibSp : GreenGib
 		TNT1 A 0 NoDelay A_CheckSight("Spawn2");
 		TNT1 AAAAAAAA 0 
 		{
-			A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),GibFlags,0,tid);
+			A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),GibFlags);
 			A_TossGib();
 		}
 		TNT1 A 0 
 		{
-			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),GibFlags,0,tid);
-			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),GibFlags,0,tid);
-			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),GibFlags,0,tid);
-			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),GibFlags,0,tid);
+			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),GibFlags);
+			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),GibFlags);
+			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),GibFlags);
+			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),GibFlags);
 		}
 		Stop;
 	Spawn2:
 		TNT1 AA 0
 		{
-			A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),GibFlags,0,tid);
+			A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),GibFlags);
 			A_TossGib();
 		}
 		TNT1 A 0 
 		{
-			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),GibFlags,0,tid);
-			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),GibFlags,0,tid);
+			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),GibFlags);
+			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),GibFlags);
 		}
 		Stop;
 	}
@@ -1583,7 +1511,7 @@ Class GrayGib : GibletBaseSpawner
 	Spawn:
 		TNT1 A 0;
 		TNT1 A 0 A_CheckSight("Spawn2");
-		TNT1 AA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),GibFlags,0,tid);
+		TNT1 AA 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),GibFlags);
 		Stop;
 	Spawn2:
 		TNT1 A 0 A_TossGib();
@@ -1604,27 +1532,27 @@ Class GrayGibSp : BlueGib
 		TNT1 A 0 NoDelay A_CheckSight("Spawn2");
 		TNT1 AAAAAAAA 0 
 		{
-			A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),GibFlags,0,tid);
+			A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),GibFlags);
 			A_TossGib();
 		}
 		TNT1 A 0 
 		{
-			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),GibFlags,0,tid);
-			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),GibFlags,0,tid);
-			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),GibFlags,0,tid);
-			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),GibFlags,0,tid);
+			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),GibFlags);
+			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),GibFlags);
+			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),GibFlags);
+			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),GibFlags);
 		}
 		Stop;
 	Spawn2:
 		TNT1 AA 0
 		{
-			A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),GibFlags,0,tid);
+			A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),GibFlags);
 			A_TossGib();
 		}
 		TNT1 A 0 
 		{
-			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),GibFlags,0,tid);
-			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),GibFlags,0,tid);
+			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),GibFlags);
+			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),GibFlags);
 		}
 		Stop;
 	}
@@ -1643,7 +1571,7 @@ Class PurpleGib : GibletBaseSpawner
 	Spawn:
 		TNT1 A 0;
 		TNT1 A 0 A_CheckSight(2);
-		TNT1 A 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),GibFlags,0,tid);
+		TNT1 A 0 A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),GibFlags);
 		TNT1 A 0 A_TossGib();
 		Stop;
 	Spawn2:
@@ -1665,15 +1593,15 @@ Class PurpleGibSp : GreenGib
 		TNT1 A 0 NoDelay A_CheckSight("Spawn2");
 		TNT1 AAAAAAAA 0 
 		{
-			A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),GibFlags,0,tid);
+			A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),GibFlags);
 			A_TossGib();
 		}
 		TNT1 A 0 
 		{
-			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),GibFlags,0,tid);
-			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),GibFlags,0,tid);
-			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),GibFlags,0,tid);
-			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),GibFlags,0,tid);
+			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),GibFlags);
+			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),GibFlags);
+			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),GibFlags);
+			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),GibFlags);
 		}
 		Stop;
 	Spawn2:
@@ -1686,13 +1614,13 @@ Class PurpleGibSp : GreenGib
 		TNT1 AA 0
 		{
 			
-			A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),GibFlags,0,tid);
+			A_SpawnItemEx("NewMeat",0,0,random(10,40),random(-7,7),random(-7,7),random(1,16),random(1,359),GibFlags);
 			A_TossGib();
 		}
 		TNT1 A 0 
 		{
-			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),GibFlags,0,tid);
-			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),GibFlags,0,tid);
+			A_SpawnItemEx("BloodGib3",0,0,0,random(-7,7),0,0,random(1,359),GibFlags);
+			A_SpawnItemEx("BloodGib4",0,0,0,random(-7,7),0,0,random(1,359),GibFlags);
 		}
 		Stop;
 	}

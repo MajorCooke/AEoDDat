@@ -30,8 +30,8 @@ Class AEoDFX : Actor
 	
 	override void PostBeginPlay()
 	{
-		if (bINVISIBLE) return Super.PostBeginPlay();
 		Super.PostBeginPlay();
+		if (bINVISIBLE) return;
 		if (RandomScaleFlip) 	A_SetScale(Scale.X*randompick(-1,1),Scale.Y*randompick(-1,1));
 		if (RandomRoll)			roll = frandom(0.0, 359.9);
 		if (bROLLSPRITE)
@@ -43,8 +43,8 @@ Class AEoDFX : Actor
 	
 	override void Tick()
 	{
-		if (bINVISIBLE)	return Super.Tick();
 		Super.Tick();
+		if (bINVISIBLE)	return;
 		
 		if (bROLLSPRITE)
 		{
@@ -322,7 +322,7 @@ Class BulletTracerFX : AEoDFX
 		TNT1 A 0 NoDelay 
 		{	
 			if (A_CheckSight("Null"))
-			{	return Destroy();	}
+			{	Destroy();	return;	}
 			
 			A_FaceMovementDirection();
 			//pitch *= -1;
@@ -335,7 +335,7 @@ Class BulletTracerFX : AEoDFX
 		TNT1 A 1 
 		{
 			if (user_count > 14 || A_CheckSight("Null") || (pos.z < floorz) || (pos.z > ceilingz) ) 
-			{	return Destroy();	} // Destroy it.
+			{	Destroy();	return;	} // Destroy it.
 			user_dista = 0;
 		}
 	Looping:	// Spawns the trail.

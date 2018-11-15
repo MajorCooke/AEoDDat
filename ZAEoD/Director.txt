@@ -318,7 +318,7 @@ Class TheDirector : DirectorMain
 		Event = AEoDHandler(EventHandler.Find("AEoDHandler"));
 		if (Event.NormalDirector)	
 		{
-			return Destroy();
+			Destroy();	return;
 		}
 		Event.NormalDirector = self;
 		target = players[0].mo;
@@ -639,7 +639,7 @@ Class MCLargeMobRunner : DirectorKid
 		{
 			ChangeTID(0);
 			if (!Spawner || (target && target.CountInv("RemoveDirector")))
-				return Destroy();
+			{	Destroy();	return;	}
 		}
 		TNT1 A 1 A_Chase(null,null);
 		TNT1 AAAAAAAAA 1 A_Wander();
@@ -653,7 +653,7 @@ Class MCLargeMobRunner : DirectorKid
 			bTHRUACTORS = false;
 			if (A_CheckBlock("Stuck",CBF_DROPOFF))
 			{	
-				return Destroy();	
+				Destroy();	return;
 			}
 			bTHRUACTORS = true;
 			A_ChangeLinkFlags(true);
@@ -758,7 +758,7 @@ Class MCLargeMobRunner : DirectorKid
 		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 1 
 		{
 			if (!A_GiveToChildren("DropTimer",1))
-			{	return Destroy();	}
+			{	Destroy();	return;	}
 		}
 		Stop;
 	}
@@ -821,7 +821,7 @@ Class MCMediumMobRunner : DirectorKid
 		{
 			ChangeTID(0);
 			if (!Spawner || !target || target.CountInv("RemoveDirector"))
-				return Destroy();
+			{	Destroy();	return;	}
 		}
 		TNT1 A 1 A_Chase(null,null);
 		TNT1 AAAAAAAAA 1 A_Wander();
@@ -927,7 +927,7 @@ Class MCMediumMobRunner : DirectorKid
 		{
 			//if (A_RadiusGive("DropTimer",256,RGF_ITEMS|RGF_NOSIGHT,1))
 			if (!A_GiveToChildren("DropTimer",1))
-				return Destroy();	
+			{	Destroy();	return;	}
 		}
 		Stop;
 	}
@@ -995,7 +995,7 @@ Class MCSmallMobRunner : DirectorKid
 		{
 			ChangeTID(0);
 			if (!Spawner || !target || target.CountInv("RemoveDirector"))
-				return Destroy();
+			{	Destroy();	return;	}
 		}
 		TNT1 A 1 A_Chase(null,null);
 		TNT1 AAAAAAAAA 1 A_Wander();
@@ -1088,7 +1088,7 @@ Class MCSmallMobRunner : DirectorKid
 		{
 			//if (A_RadiusGive("DropTimer",256,RGF_ITEMS|RGF_NOSIGHT,1))
 			if (!A_GiveToChildren("DropTimer",1))
-				return Destroy();	
+			{	Destroy();	return;	}
 		}
 		Stop;
 	}

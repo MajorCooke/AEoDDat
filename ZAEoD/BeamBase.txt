@@ -18,7 +18,7 @@ Class PlayerLightningFlasher : AEoDFX
 	{
 		// Don't even bother since the noise and flash is what it's designed to do.
 		if (Silent && NoFlash)	
-			return Destroy();
+		{	Destroy();	return;	}
 		Super.PostBeginPlay();
 	}
 	
@@ -40,7 +40,7 @@ Class PlayerLightningFlasher : AEoDFX
 					plr.A_Light(lamt);
 				}
 			}
-			else return Destroy();
+			else {	Destroy();	return;	}
 		}
 		TNT1 A 1 
 		{
@@ -49,7 +49,7 @@ Class PlayerLightningFlasher : AEoDFX
 				lamt--;
 				plr.A_Light(lamt);
 			}
-			else return Destroy();
+			else {	Destroy();	return;	}
 		}
 		Wait;
 	}
@@ -230,11 +230,13 @@ Class AEoDBeamSpawnerBase : AEoDFX
 		---- A 0
 		{
 			if (!EndPuff)
-				return ThrowAbortException("EndPuff is invalid! Make sure the class is defined!");
-				
+			{
+				ThrowAbortException("EndPuff is invalid! Make sure the class is defined!");	return;
+			}	
 			if (!Beam)
-				return ThrowAbortException("Beam is invalid! Make sure the class is defined!");
-			
+			{
+				ThrowAbortException("Beam is invalid! Make sure the class is defined!");	return;
+			}
 			if (IsBranch)
 			{
 				StartPuff = null;
@@ -259,7 +261,7 @@ Class AEoDBeamSpawnerBase : AEoDFX
 	Stepping:
 		---- A 1
 		{
-			if (DestroyMe)	return Destroy();
+			if (DestroyMe)	{	Destroy();	return;	}
 			else if (Puff[0] || Puff[2] || IsBranch)
 			{
 				if (Puff[2])	Puff[0] = Puff[2];
@@ -383,13 +385,13 @@ Class AEoDBeamSpawnerBase : AEoDFX
 					if (!IsBranch)	dist = Distance3D(Puff[0]);
 				}
 				// Either expiration or a branch. A branch should never attempt to spawn more.
-				if (IsBranch || !TickLife())	return Destroy();
+				if (IsBranch || !TickLife())	{	Destroy();	return;	}
 				
 				// If enabled, randomize 
 				if (!Puff[2] && RandomAim)	CreateLightningTarget(true,(StartPuff != null));
 				
 			}
-			else return Destroy();
+			else {	Destroy();	return;	}
 		}
 		Wait;
 	}
@@ -462,7 +464,7 @@ Class AEoDBeamBase : AEoDFX
 			}
 			
 			Scale.X -= ScaleSub;
-			if (Scale.X <= 0.0)	return Destroy();
+			if (Scale.X <= 0.0)	{	Destroy();	return;	}
 		}
 		Wait;
 	// Without someone using these, modeldefs will throw a fit and refuse to start.
