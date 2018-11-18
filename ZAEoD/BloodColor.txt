@@ -516,6 +516,7 @@ Class GibSpawnerBase : AEoDFX
 	Array<int> SimpleGib;
 	
 	Property ShortGibTime: ShortGibTime;
+	Property RAdd: RAdd;
 	//--------------------------------------------------------------------------
 	// PostBeginPlay
 	//
@@ -524,6 +525,7 @@ Class GibSpawnerBase : AEoDFX
 	//--------------------------------------------------------------------------
 	override void PostBeginPlay()
 	{
+		/*
 		Event = AEoDHandler(StaticEventHandler.Find("AEoDHandler"));
 		if (Event)
 		{			
@@ -536,16 +538,24 @@ Class GibSpawnerBase : AEoDFX
 				simple = true;
 			
 		}
+		*/
 		Super.PostBeginPlay();
+		
+		DropItem di;   // di will be our drop item list iterator
+		DropItem drop; // while drop stays as the reference point.
+		
+		drop = GetDropItems();
+		if (!drop)	{	Destroy();	return;	}
 		if (!simple && A_CheckSightOrRange(BloodDistanceLimit,"Null"))
-		{
 			simple = true;
-		}
 		
-		RAdd = 8;
-		
+		/*
 		Gib.Clear();
 		Amt.Clear();
+		
+		
+		
+		
 		
 		if (Gib01 && Gam01 > 0) { Gib.Push(Gib01);	Amt.Push(Gam01);	SimpleGib.Push(Sim01);	}
 		if (Gib02 && Gam02 > 0) { Gib.Push(Gib02);	Amt.Push(Gam02);	SimpleGib.Push(Sim02);	}
@@ -559,21 +569,38 @@ Class GibSpawnerBase : AEoDFX
 		if (Gib10 && Gam10 > 0) { Gib.Push(Gib10);	Amt.Push(Gam10);	SimpleGib.Push(Sim10);	}
 		
 		if (Gib.Size() < 1)	{	Destroy();	return;	}
-		
-		for (int i = 0; i < Gib.Size(); i++)
+		*/
+		bool first = true;
+		for (di = drop; di != null; di = di.Next)
 		{
-			// If not flagged for simple spawning, don't spawn it if the spawners outside of view.
-			if (simple && !SimpleGib[i])	continue;
+			int Amount = di.Amount;
+			int Prob = di.Probability;
+			if (Amount == 0 || Prob < 1 || (simple && !first))	continue;
 			
-			for (int j = 0; j < Amt[i]; j++)
+			if (Amount < 0)	Amount = 1;
+		
+			if (di.Name == 'None')
 			{
-				Class<Actor> ngib = Gib[i];
-				if (!ngib)
-				{
-					Console.Printf(Gib[i]..": bad actor");
+				Destroy();
+				return;
+			}
+			Class<Actor> Check = di.Name;
+			if (!Check)
+			{
+				Console.Printf(di.Name..": bad actor");
+				continue;
+			}
+						
+			for (int j = 0; j < Amount; j++)
+			{
+				if (simple && !first)
 					continue;
-				}
-				let spawned = GibletBase(Spawn(ngib, pos));
+					
+				if (Prob < random[rng](1,254))
+					continue;
+					
+				first = false;
+				let spawned = GibletBase(Spawn(Check, pos));
 				// The target is intentionally set to this
 				if (spawned)	
 				{	
@@ -595,11 +622,10 @@ Class GibSpawnerBase : AEoDFX
 				}
 			}
 		}
-		
-		Destroy();	
+		Destroy();
 		return;
 	}
-	
+	/*
 	Class<Actor> Gib01, Gib02, Gib03, Gib04, Gib05, Gib06, Gib07, Gib08, Gib09, Gib10;
 	int Gam01, Gam02, Gam03, Gam04, Gam05, Gam06, Gam07, Gam08, Gam09, Gam10;
 	bool Sim01, Sim02, Sim03, Sim04, Sim05, Sim06, Sim07, Sim08, Sim09, Sim10;
@@ -614,9 +640,10 @@ Class GibSpawnerBase : AEoDFX
 	property Gib8: Gib08, Gam08, Sim08;
 	property Gib9: Gib09, Gam09, Sim09;
 	property Gib10: Gib10, Gam10, Sim10;
-	
+	*/
 	Default
 	{
+		GibSpawnerBase.RAdd 8;
 		GibSpawnerBase.ShortGibTime false;
 		+NOTELESTOMP
 		+NOTONAUTOMAP
@@ -638,9 +665,9 @@ Class SmallGibDropper : GibSpawnerBase
 {
 	Default
 	{
-		GibSpawnerBase.Gib1 "HGib1Small", 1, 1;
-		GibSpawnerBase.Gib2 "HGib2Small", 1, 0;
-		GibSpawnerBase.Gib3 "HGib3Small", 1, 0;
+		DropItem "HGib1Small", 255, 1;
+		DropItem "HGib2Small", 255, 1;
+		DropItem "HGib3Small", 255, 1;
 	}
 }
 
@@ -648,9 +675,9 @@ Class GibDropper : GibSpawnerBase
 {
 	Default
 	{
-		GibSpawnerBase.Gib1 "HGib1", 1, 1;
-		GibSpawnerBase.Gib2 "HGib2", 1, 0;
-		GibSpawnerBase.Gib3 "HGib3", 1, 0;
+		DropItem "HGib1", 255, 1;
+		DropItem "HGib2", 255, 1;
+		DropItem "HGib3", 255, 1;
 	}
 }
 
@@ -661,11 +688,13 @@ Class QuakeGibDropper : GibSpawnerBase
 {
 	Default
 	{
-		GibSpawnerBase.Gib1 "Gib1", 1, 1;
-		GibSpawnerBase.Gib2 "Gib2", 1, 0;
-		GibSpawnerBase.Gib3 "GibTorso", 1, 0;
+		DropItem "Gib1", 		255, 1;
+		DropItem "Gib2", 		255, 1;
+		DropItem "Gib1", 		48, 5;
+		DropItem "Gib2", 		48, 5;
+		DropItem "GibTorso", 	255, 1;
 	}
-	
+	/*
 	override void PostBeginPlay()
 	{
 		int a1 = random(3,6);
@@ -676,6 +705,7 @@ Class QuakeGibDropper : GibSpawnerBase
 		Gam02 = a2;
 		Super.PostBeginPlay();
 	}
+	*/
 }
 
 Class QuakeGibDropperShort : QuakeGibDropper
@@ -685,11 +715,11 @@ Class QuakeSmallGibDropper : GibSpawnerBase
 {
 	Default
 	{
-		GibSpawnerBase.Gib1 "SmallGib1", 1, 1;
-		GibSpawnerBase.Gib2 "SmallGib2", 1, 0;
-		GibSpawnerBase.Gib3 "SmallGibTorso", 1, 0;
+		DropItem "SmallGib1",		255, 1;
+		DropItem "SmallGib2",		255, 1;
+		DropItem "SmallGibTorso",	255, 1;
 	}
-	
+	/*
 	override void PostBeginPlay()
 	{
 		if (A_CheckSightOrRange(BloodDistanceLimit,"Null"))
@@ -702,19 +732,21 @@ Class QuakeSmallGibDropper : GibSpawnerBase
 		Gam02 = a2;
 		Super.PostBeginPlay();
 	}
+	*/
 }
 
 Class BloodGibDropper : GibSpawnerBase
 {
 	Default
 	{
-		GibSpawnerBase.Gib1 "NewMeat", 2, 1;
-		GibSpawnerBase.Gib2 "BloodGib1", 1, 0;
-		GibSpawnerBase.Gib3 "BloodGib2", 1, 0;
-		GibSpawnerBase.Gib4 "BloodGib3", 1, 0;
-		GibSpawnerBase.Gib5 "BloodGib4", 1, 0;
+		GibSpawnerBase.RAdd 7;
+		DropItem "NewMeat",		255, 2;
+		DropItem "BloodGib1",	255, 1;
+		DropItem "BloodGib2",	255, 1;
+		DropItem "BloodGib3",	255, 1;
+		DropItem "BloodGib4",	255, 1;
 	}
-	
+	/*
 	override void PostBeginPlay()
 	{
 		if (A_CheckSightOrRange(BloodDistanceLimit,"Null"))
@@ -727,12 +759,7 @@ Class BloodGibDropper : GibSpawnerBase
 		Gam05 = random(1,3);
 		Super.PostBeginPlay();
 	}
-	
-	override void BeginPlay()
-	{
-		RAdd = 7;
-		Super.BeginPlay();
-	}
+	*/
 }
 
 //==============================================================================

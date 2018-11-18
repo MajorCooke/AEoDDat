@@ -235,3 +235,54 @@ Class SoulReaperBeamTrail : Actor
 		Wait
 	}
 }*/
+
+extend class AEoDWeaponBase
+{
+	AEoDHandler Event;
+}
+
+extend class AEoDWeaponSlot10
+{
+	action void A_FireApocalypseSpray(int dmg, double distance = 4096, double fulldist = 256)
+	{
+		Weapon weapon = player.ReadyWeapon;
+		if (weapon == null)	
+			return;
+		if (!weapon.DepleteAmmo(weapon.bAltFire))
+			return;
+			
+		A_GunFlash();
+		A_SetBlend("DarkRed",0.4,50);
+		
+		let it = ThinkerIterator.Create("Actor", Thinker.STAT_DEFAULT);
+		Actor mo;
+		while (mo = Actor(it.Next()))
+		{
+			if (mo.health < 1 || (!mo.bSHOOTABLE && !mo.bVULNERABLE))
+				continue;
+			
+			if (absangle(angle, AngleTo(mo)) > 45.0)
+				continue;
+			
+			double dist = Distance3DSquared(mo);
+			if (dist >= (distance ** 2))
+				continue;
+				
+			if (!CheckSight(mo, SF_IGNOREWATERBOUNDARY|SF_IGNOREVISIBILITY))
+				continue;
+				
+			let apoc = Actor.Spawn("ApocSprayPlayer", mo.pos, ALLOW_REPLACE);
+			if (!apoc)	continue;
+			apoc.Angle = AngleTo(apoc);
+			
+			
+			if (dmg < 1)	continue;
+			
+			int damage = GetRadiusDamage(mo, dmg, distance, fulldist);
+			if (damage > 0)
+			{
+				mo.DamageMobj(apoc, self, damage, apoc.DamageType, DMG_FOILINVUL|DMG_USEANGLE, apoc.Angle);
+			}
+		}
+	}
+}

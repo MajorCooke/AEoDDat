@@ -41,6 +41,7 @@ Class AEoDHandler : EventHandler
 		TotalCount = GameCount + ExtraCount
 	};
 	
+	Array<Actor> Monsters, DeadMonsters;
 	bool DemonMorph;
 	bool CvarsUpdated;
 	bool DirectorsEnabled, NoDirectors;
@@ -117,8 +118,8 @@ Class AEoDHandler : EventHandler
 	private uint8 Timer;
 	override void WorldTick()
 	{
-		Timer = (Timer + 1) % 35;
-		if (Timer <= 0)
+		Timer++;
+		if (Timer % 35 <= 0)
 		{
 			if (!CGibSoft || !CGibHard)
 			{
@@ -131,6 +132,17 @@ Class AEoDHandler : EventHandler
 				GibHard = CGibHard.GetInt();
 			}
 		}
+		if (Timer >= 350)
+		{
+			Timer = 0;
+			/*
+			int i = 0;
+			for (i = 0; i < Monsters.Size(); i++)		if (!Monsters[i])		{	Monsters.Delete(i); i--;		}
+			for (i = 0; i < DeadMonsters.Size(); i++)	if (!DeadMonsters[i])	{	DeadMonsters.Delete(i); i--;	}
+			Monsters.ShrinkToFit();
+			DeadMonsters.ShrinkToFit();
+			*/
+		}
 	}
 	
 	override void WorldLoaded(WorldEvent e)
@@ -138,7 +150,7 @@ Class AEoDHandler : EventHandler
 		GibCount = 0; Timer = 0;
 		GetCvars();
 		let plr = players[0].mo;
-		if (!e.IsReopen)
+		if (!e.IsReopen && !e.IsSaveGame)
 		{
 			if (GameMode == 1)
 			{
@@ -161,6 +173,8 @@ Class AEoDHandler : EventHandler
 	
 	override void WorldUnloaded(WorldEvent e)
 	{
+		Monsters.Clear();
+		DeadMonsters.Clear();
 		GibCount = 0; Timer = 0;
 		DemonMorph = CvarsUpdated = false;
 		for (int i = 0; i < MAXPLAYERS; i++)
@@ -269,32 +283,50 @@ Class AEoDHandler : EventHandler
 			GibCount++;
 			return;
 		}
-		if (DemonMorph)
+		if (!mo || mo.bNOINTERACTION || mo.bNOBLOCKMAP || mo is "DirectorBase" || mo is "AEoDMonsterSpawner")
+			return;
+		if (mo.bISMONSTER || mo.bSHOOTABLE)
 		{
-			
-			
+			/*
+			if (health > 0)
+				if (Monsters.Find(mo) >= Monsters.Size())
+					Monsters.Push(mo);
+			else if (DeadMonsters.Find(mo) >= DeadMonsters.Size())
+				DeadMonsters.Push(mo);
+			*/
 			// Don't give to things that are always invisible such as the directors
 			// or the base monster spawners. Obviously ignore anything with NOINTERACTION
 			// since giving that to a monster while alive is just a bad idea.
-			if (!mo || mo.bNOINTERACTION || mo is "DirectorBase" || mo is "AEoDMonsterSpawner")	
-				return;
-			
-			if (mo.bISMONSTER && mo.health > 0)
-			{
+			if (DemonMorph && mo.bISMONSTER && mo.health > 0)
 				mo.A_GiveInventory("DemonMorphTranslationItem", 1);
-			}
 		}
+	}
+	
+	override void WorldThingDied(WorldEvent e)
+	{
+		Actor mo = e.Thing;
+		if (!mo || mo.bNOINTERACTION || mo.bNOBLOCKMAP || mo is "DirectorBase" || mo is "AEoDMonsterSpawner")
+			return;
+		
+		/*
+		if (Monsters.Find(mo) < Monsters.Size())
+		{
+			DeadMonsters.Push(mo);
+			Monsters.Delete(Monsters.Find(mo));
+		}
+		*/
 	}
 	
 	override void WorldThingRevived(WorldEvent e)
 	{
-		if (DemonMorph && e.Thing)
+		Actor mo = e.Thing;
+		if (mo && mo.bISMONSTER)
 		{
-			Actor mo = e.Thing;
-			if (mo && mo.bISMONSTER)
-			{
+			if (DemonMorph)
 				mo.A_GiveInventory("DemonMorphTranslationItem", 1);
-			}
+				
+		//	Monsters.Push(mo);
+		//	DeadMonsters.Delete(DeadMonsters.Find(mo));
 		}
 	}
 	
@@ -303,6 +335,13 @@ Class AEoDHandler : EventHandler
 		Actor mo = e.Thing;
 		if (mo is "GibletBase")
 			GibCount--;
+		/*
+		else if (mo.bISMONSTER || mo.bSHOOTABLE)
+		{
+			Monsters.Delete(Monsters.Find(mo));
+			DeadMonsters.Delete(DeadMonsters.Find(mo));
+		}
+		*/
 	}
 	
 	//==========================================================================
