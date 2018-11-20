@@ -243,46 +243,120 @@ extend class AEoDWeaponBase
 
 extend class AEoDWeaponSlot10
 {
-	action void A_FireApocalypseSpray(int dmg, double distance = 4096, double fulldist = 256)
+	action int A_FireApocalypseSpray(
+		int dmg, double distance = 1024, double fulldist = 256, double conesize = 55.0)
 	{
+		// Make sure there's a weapon first.
 		Weapon weapon = player.ReadyWeapon;
-		if (weapon == null)	
-			return;
-		if (!weapon.DepleteAmmo(weapon.bAltFire))
-			return;
+		if (!weapon || !weapon.DepleteAmmo(weapon.bAltFire))	
+			return 0;
 			
 		A_GunFlash();
 		A_SetBlend("DarkRed",0.4,50);
 		
+		// Now, check the player's aiming methods.
+		// 0 & 1 we don't care about.
+		// 2 = Don't damage allies.
+		// 3 = Don't damage non-monsters unless there aren't any.
+		CVar CSmartAim = Cvar.GetCvar("sv_smartaim", player);
+		int SmartAim = 0;
+		if (CSmartAim)	SmartAim = CSmartAim.GetInt();
+		int count = 0;
+		
+		// Convert the conesize, and set up an array for targets to damage.
+		conesize = cos(conesize);
+		Array<Actor> Targets;	
+		Targets.Clear();
+		
+		// Iterate through all actors on STAT_DEFAULT.
 		let it = ThinkerIterator.Create("Actor", Thinker.STAT_DEFAULT);
 		Actor mo;
 		while (mo = Actor(it.Next()))
 		{
-			if (mo.health < 1 || (!mo.bSHOOTABLE && !mo.bVULNERABLE))
-				continue;
-			
-			if (absangle(angle, AngleTo(mo)) > 45.0)
-				continue;
-			
+			if (!mo.bICECORPSE)
+			{
+				if (SmartAim > 1 && mo.bFRIENDLY && mo.bISMONSTER)
+					continue; // Player wants to not hit friendlies.
+				if ((mo.health < 1 || (!mo.bSHOOTABLE && !mo.bVULNERABLE)))
+					continue; // Dead or not shootable.
+			}
 			double dist = Distance3DSquared(mo);
 			if (dist >= (distance ** 2))
-				continue;
+				continue; // Too far away.
 				
 			if (!CheckSight(mo, SF_IGNOREWATERBOUNDARY|SF_IGNOREVISIBILITY))
-				continue;
-				
+				continue; // Can't see it due to level blocking vision.
+			
+			Vector3 forw = ( cos(angle) * cos(pitch), sin(angle) * cos(pitch), -sin(pitch) );
+			Vector3 offs = Vec2OffsetZ(0, 0, player.viewz);		// Account for the view height
+			Vector3 epos = mo.Vec3Offset(0, 0, mo.height * 0.5);
+			Vector3 diff = LevelLocals.Vec3Diff(offs, epos);	// Internally does v2 - v1.
+			double dl = diff.Length();
+			if (dl != 0.0)
+			{
+				double cone = (forw dot diff) / dl;
+				if (cone <= conesize) // Outside 'conesize' degrees.
+					continue;
+			}
+			Targets.Push(mo);
+		}
+		// Nothing to hit.
+		if (Targets.Size() < 1)	return 0;
+		
+		// Check if the player wants to avoid hitting objects if monsters are
+		// ripe for damaging, and remove all non-monsters.
+		if (SmartAim > 2)
+		{
+			bool FoundMonsters = false;
+			for (int i = 0; i < Targets.Size(); i++)
+			{
+				mo = Targets[i];
+				if (!mo)	{	Targets.Delete(i); i--;	continue;	}
+				if (!FoundMonsters && mo.bISMONSTER)
+				{
+					FoundMonsters = true;
+					break;
+				}
+			}
+			// Found some monsters. Remove non-monsters now.
+			if (FoundMonsters)
+			{
+				for (int i = 0; i < Targets.Size(); i++)
+				{
+					mo = Targets[i];
+					if (!mo || !mo.bISMONSTER)
+					{
+						Targets.Delete(i);
+						i--;
+					}
+				}
+			}
+			Targets.ShrinkToFit();
+			if (Targets.Size() < 1)	return 0;
+		}
+		
+		// Now dish out the damage.
+		for (int i = 0; i < Targets.Size(); i++)
+		{
+			mo = Targets[i];
+			if (!mo)	continue;
+			
+			// Spawn the effect.
 			let apoc = Actor.Spawn("ApocSprayPlayer", mo.pos, ALLOW_REPLACE);
 			if (!apoc)	continue;
 			apoc.Angle = AngleTo(apoc);
 			
-			
-			if (dmg < 1)	continue;
-			
+			// Similar to A_Explode's calculations. GetRadiusDamage will do the
+			// distance falloff stuff for us and use the returned damage.
 			int damage = GetRadiusDamage(mo, dmg, distance, fulldist);
 			if (damage > 0)
-			{
+			{	
+				// Now take that damage and open up a can of Whoopie Goldass!
 				mo.DamageMobj(apoc, self, damage, apoc.DamageType, DMG_FOILINVUL|DMG_USEANGLE, apoc.Angle);
+				count++;
 			}
 		}
+		Targets.Clear();
+		return count;
 	}
 }
