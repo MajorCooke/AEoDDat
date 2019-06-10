@@ -1,0 +1,123 @@
+//==============================================================================
+//==============================================================================
+// AArray Class
+// Designed by Major Cooke
+//
+// The goal behind this is an adjustable actor array with functions for
+// maintaining and cleaning more easily.
+//==============================================================================
+//==============================================================================
+
+Class AArray
+{
+	const DefaultSize = 16;
+	protected Class<Actor> ClassType;
+	
+	Array<Actor> Actors;
+	
+	//--------------------------------------------------------------------------
+	// Initialization functions.
+	//--------------------------------------------------------------------------
+	static AArray Create(int size = -1, Name type = '')
+	{
+		AArray arr = new('AArray');
+		arr.Init(size, type);
+		return arr;
+	}
+	
+	void Init(int size, Class<Actor> type)
+	{
+		ClassType = type;
+		
+		Actors.Clear();
+		
+		if (size > 0)
+			SetSize(size);
+	}
+	
+	//--------------------------------------------------------------------------
+	// Information.
+	//--------------------------------------------------------------------------
+	
+	int Size()	{	return Actors.Size();	}
+	
+	//--------------------------------------------------------------------------
+	// Manipulation functions.
+	//--------------------------------------------------------------------------
+	void Push(Actor mo)
+	{
+		// Make sure it exists and isn't restricted from insertion.
+		if (!mo || (ClassType != null && !(mo is ClassType)))	return;
+		Actors.Push(mo);
+	}
+	
+	void Delete(Actor mo)
+	{
+		int size = Actors.Size();
+		if (mo && size > 0)
+		{
+			int pos = Actors.Find(mo);
+			if (pos < size)
+				Actors[pos] = null;
+		}
+	}
+	
+	private int SetSize(int size)
+	{
+		int old = Actors.Size();
+		if (old == size)
+			return 0;
+		if (size < 1)
+		{
+			Actors.Clear();
+			return -old;
+		}
+		
+		Actors.Resize(size);
+		if (old < size)
+		{
+			for (int i = old; i < size; i++)
+				Actors[i] = null;
+		}
+		return old - size;
+	}
+	
+	// Apparently returns cannot convert from UInt to Int properly, GZDoom refuses
+	// to start up. So it must be assigned to variable first before being returned.
+	int Find(Actor mo)
+	{
+		int pos = Actors.Find(mo);
+		return pos;
+	}
+	
+	Actor FindActor(Actor mo)
+	{
+		int size = Actors.Size();
+		if (size < 1)
+			return null;
+			
+		int pos = Actors.Find(mo);
+		Actor ret = null;
+		
+		if (pos < size)	
+			ret = Actors[pos];
+		return ret;
+	}
+	
+	//==========================================================================
+	// Cleans up an array by copying all non-nulls to a temp array and overriding
+	// the original.
+	//==========================================================================
+	void Clean()
+	{
+		int size = Actors.Size();
+		if (size < 1)
+			return;
+			
+		Array<Actor> temp; temp.Clear();
+		for (int i = 0; i < size; i++)
+			if (Actors[i] != null)	temp.Push(Actors[i]);
+			
+		Actors.Move(temp);
+	}
+}

@@ -1,0 +1,35 @@
+//
+Class AEoDProjectile : Actor
+{	
+	void SplitFlares(Class<Actor> mobj)
+	{
+		if (!mobj)	return;
+		
+		// First, get the axes. X = forward, Y = right, Z = up, all made relative
+		// to the direction of travel.
+		Vector3 x, y, z;
+		[x, y, z] = MC_CoordUtil.GetAxes(pitch, angle, roll);
+		double len = vel.length();
+		
+		for (double a = 0.0; a < 360.0; a += 45.0)
+		{
+			Actor mo = Spawn(mobj, pos, ALLOW_REPLACE);
+			
+			if (mo)
+			{
+				mo.target = target;
+				mo.master = master;
+				mo.tracer = tracer;
+				mo.pitch = pitch;
+				mo.angle = angle;
+				mo.roll = roll;
+				
+				// For flares that go in two directions, spread slower.
+				double s = (a % 90.0 == 0.0) ? 4 : 2;
+				s = tan(s);
+				Vector3 dir = (X + Y*cos(a)*s + Z*sin(a)*s).unit();
+				mo.vel = len*dir;
+			}
+		}
+	}
+}

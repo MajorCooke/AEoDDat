@@ -1,0 +1,97 @@
+/*
+   Quaternion math helper class.
+   (C)2018 Marisa Kirisame, UnSX Team.
+   Released under the GNU Lesser General Public License version 3 (or later).
+   See https://www.gnu.org/licenses/lgpl-3.0.txt for its terms.
+*/
+
+Class MC_Quat
+{
+	protected double W, X, Y, Z;
+
+	MC_Quat init( double w, double x, double y, double z )
+	{
+		self.W = w;
+		self.X = x;
+		self.Y = y;
+		self.Z = z;
+		return self;
+	}
+
+	void copy( MC_Quat q )
+	{
+		W = q.W;
+		X = q.X;
+		Y = q.Y;
+		Z = q.Z;
+	}
+
+	static MC_Quat create( double w, double x, double y, double z )
+	{
+		return new("MC_Quat").init(w,x,y,z);
+	}
+
+	static MC_Quat create_axis( Vector3 axis, double theta )
+	{
+		double scale = axis dot axis;
+		if ( scale < double.epsilon ) return MC_Quat.create(1,0,0,0);
+		theta *= 0.5;
+		double f = sin(theta)/sqrt(scale);
+		return MC_Quat.create(cos(theta),axis.x*f,axis.y*f,axis.z*f);
+	}
+
+	static MC_Quat create_euler( double pitch, double yaw, double roll )
+	{
+		MC_Quat zrot = MC_Quat.create_axis((0,0,1),yaw);
+		MC_Quat yrot = MC_Quat.create_axis((0,1,0),pitch);
+		MC_Quat xrot = MC_Quat.create_axis((1,0,0),roll);
+		MC_Quat sum = zrot.qmul(yrot);
+		sum = sum.qmul(xrot);
+		return sum;
+	}
+
+	// copied here since Actor.Normalize180 is not (yet) clearscope
+	static double Normalize180( double ang )
+	{
+		ang = ang%360;
+		ang = (ang+360)%360;
+		if ( ang > 180 ) ang -= 360;
+		return ang;
+	}
+
+	double, double, double to_euler()
+	{
+		double stest = z*x-w*y;
+		double yawY = 2*(w*z+x*y);
+		double yawX = 1-2*(y*y+z*z);
+		double st = 0.4999995;
+		double pitch = 0;
+		double yaw = 0;
+		double roll = 0;
+		if ( stest <= -st )
+		{
+			pitch = 90;
+			yaw = atan2(yawY,yawX);
+			roll = Normalize180(yaw+(2*atan2(x,w)));
+		}
+		else if ( stest > st )
+		{
+			pitch = -90;
+			yaw = atan2(yawY,yawX);
+			roll = Normalize180(yaw+(2*atan2(x,w)));
+		}
+		else
+		{
+			pitch = -asin(2*stest);
+			yaw = atan2(yawY,yawX);
+			roll = atan2(2*(w*x+y*z),(1-2*(x*x+y*y)));
+		}
+		return pitch, yaw, roll;
+	}
+
+	MC_Quat qmul( MC_Quat q )
+	{
+		return MC_Quat.create(w*q.w-x*q.x-y*q.y-z*q.z,w*q.x+x*q.w+y*q.z-z
+			*q.y,w*q.y+y*q.w+z*q.x-x*q.z,w*q.z+z*q.w+x*q.y-y*q.x);
+	}
+}
