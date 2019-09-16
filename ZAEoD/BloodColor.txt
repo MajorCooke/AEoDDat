@@ -523,124 +523,8 @@ Class GibSpawnerBase : AEoDFX
 	// Since we have no reason to even do anything else, take care of business 
 	// go away.
 	//--------------------------------------------------------------------------
-	override void PostBeginPlay()
-	{
-		/*
-		Event = AEoDHandler(StaticEventHandler.Find("AEoDHandler"));
-		if (Event)
-		{			
-			// Too many gibs.
-			if (Event.GibCount >= Event.GibHard)
-			{	Destroy();	return;	}
-			
-			// Force simplification since we're at the softer limit.
-			if (Event.GibCount >= Event.GibSoft)
-				simple = true;
-			
-		}
-		*/
-		Super.PostBeginPlay();
-		
-		DropItem di;   // di will be our drop item list iterator
-		DropItem drop; // while drop stays as the reference point.
-		
-		drop = GetDropItems();
-		if (!drop)	{	Destroy();	return;	}
-		if (!simple && A_CheckSightOrRange(BloodDistanceLimit,"Null"))
-			simple = true;
-		
-		/*
-		Gib.Clear();
-		Amt.Clear();
-		
-		
-		
-		
-		
-		if (Gib01 && Gam01 > 0) { Gib.Push(Gib01);	Amt.Push(Gam01);	SimpleGib.Push(Sim01);	}
-		if (Gib02 && Gam02 > 0) { Gib.Push(Gib02);	Amt.Push(Gam02);	SimpleGib.Push(Sim02);	}
-		if (Gib03 && Gam03 > 0) { Gib.Push(Gib03);	Amt.Push(Gam03);	SimpleGib.Push(Sim03);	}
-		if (Gib04 && Gam04 > 0) { Gib.Push(Gib04);	Amt.Push(Gam04);	SimpleGib.Push(Sim04);	}
-		if (Gib05 && Gam05 > 0) { Gib.Push(Gib05);	Amt.Push(Gam05);	SimpleGib.Push(Sim05);	}
-		if (Gib06 && Gam06 > 0) { Gib.Push(Gib06);	Amt.Push(Gam06);	SimpleGib.Push(Sim06);	}
-		if (Gib07 && Gam07 > 0) { Gib.Push(Gib07);	Amt.Push(Gam07);	SimpleGib.Push(Sim07);	}
-		if (Gib08 && Gam08 > 0) { Gib.Push(Gib08);	Amt.Push(Gam08);	SimpleGib.Push(Sim08);	}
-		if (Gib09 && Gam09 > 0) { Gib.Push(Gib09);	Amt.Push(Gam09);	SimpleGib.Push(Sim09);	}
-		if (Gib10 && Gam10 > 0) { Gib.Push(Gib10);	Amt.Push(Gam10);	SimpleGib.Push(Sim10);	}
-		
-		if (Gib.Size() < 1)	{	Destroy();	return;	}
-		*/
-		bool first = true;
-		for (di = drop; di != null; di = di.Next)
-		{
-			int Amount = di.Amount;
-			int Prob = di.Probability;
-			if (Amount == 0 || Prob < 1 || (simple && !first))	continue;
-			
-			if (Amount < 0)	Amount = 1;
-		
-			if (di.Name == 'None')
-			{
-				Destroy();
-				return;
-			}
-			Class<Actor> Check = di.Name;
-			if (!Check)
-			{
-				Console.Printf(di.Name..": bad actor");
-				continue;
-			}
-						
-			for (int j = 0; j < Amount; j++)
-			{
-				if (simple && !first)
-					continue;
-					
-				if (Prob < random[rng](1,254))
-					continue;
-					
-				first = false;
-				let spawned = GibletBase(Spawn(Check, pos));
-				// The target is intentionally set to this
-				if (spawned)	
-				{	
-					spawned.Pitch = Pitch;
-					spawned.Angle = Angle;
-					spawned.Target = self; 
-					spawned.Master = Master;
-					spawned.Tracer = Tracer;
-					spawned.ShortGibTime = ShortGibTime;
-					
-					Vector3 tvel = tracer ? tracer.vel : (0,0,0);
-					spawned.A_ChangeVelocity(
-						tvel.X * frandom(MulMin,MulMax) + frandom(-RAdd,RAdd),
-						tvel.Y * frandom(MulMin,MulMax) + frandom(-RAdd,RAdd),
-						tvel.Z * frandom(MulMin,MulMax) + frandom(-RAdd,RAdd),
-						CVF_REPLACE);
-					if (target)	spawned.P1 = (target.bloodcolor & 0xffffff);
-					else		spawned.P1 = Color(255, 255, 0, 0);
-				}
-			}
-		}
-		Destroy();
-		return;
-	}
-	/*
-	Class<Actor> Gib01, Gib02, Gib03, Gib04, Gib05, Gib06, Gib07, Gib08, Gib09, Gib10;
-	int Gam01, Gam02, Gam03, Gam04, Gam05, Gam06, Gam07, Gam08, Gam09, Gam10;
-	bool Sim01, Sim02, Sim03, Sim04, Sim05, Sim06, Sim07, Sim08, Sim09, Sim10;
 	
-	property Gib1: Gib01, Gam01, Sim01;
-	property Gib2: Gib02, Gam02, Sim02;
-	property Gib3: Gib03, Gam03, Sim03;
-	property Gib4: Gib04, Gam04, Sim04;
-	property Gib5: Gib05, Gam05, Sim05;
-	property Gib6: Gib06, Gam06, Sim06;
-	property Gib7: Gib07, Gam07, Sim07;
-	property Gib8: Gib08, Gam08, Sim08;
-	property Gib9: Gib09, Gam09, Sim09;
-	property Gib10: Gib10, Gam10, Sim10;
-	*/
+	
 	Default
 	{
 		GibSpawnerBase.RAdd 8;
@@ -656,7 +540,87 @@ Class GibSpawnerBase : AEoDFX
 	States
 	{
 	Spawn:
-		TNT1 A 1;
+		TNT1 A 0;
+		TNT1 A 1
+		{
+			if (!Event)
+			{
+				Destroy();
+				return;
+			}
+			if (Event)
+			{			
+				// Too many gibs.
+				if (Event.GibCount >= Event.GibHard)
+				{	Destroy();	return;	}
+				
+				// Force simplification since we're at the softer limit.
+				if (Event.GibCount >= Event.GibSoft)
+					simple = true;
+				
+			}
+			
+			DropItem di;   // di will be our drop item list iterator
+			DropItem drop; // while drop stays as the reference point.
+			
+			drop = GetDropItems();
+			if (!drop)	{	Destroy();	return;	}
+			if (!simple && A_CheckSightOrRange(BloodDistanceLimit,"Null"))
+				simple = true;
+			
+			bool first = true;
+			for (di = drop; di != null; di = di.Next)
+			{
+				int Amount = di.Amount;
+				int Prob = di.Probability;
+				if (Amount == 0 || Prob < 1 || (simple && !first))	continue;
+				
+				if (Amount < 0)	Amount = 1;
+			
+				if (di.Name == 'None')
+				{
+					Destroy();
+					return;
+				}
+				Class<Actor> Check = di.Name;
+				if (!Check)
+				{
+					Console.Printf(di.Name..": bad actor");
+					continue;
+				}
+							
+				for (int j = 0; j < Amount; j++)
+				{
+					if (simple && !first)
+						continue;
+						
+					if (Prob < random[rng](1,254))
+						continue;
+						
+					first = false;
+					let spawned = GibletBase(Spawn(Check, pos));
+					// The target is intentionally set to this
+					if (spawned)	
+					{	
+						spawned.Pitch = Pitch;
+						spawned.Angle = Angle;
+						spawned.Target = self; 
+						spawned.Master = Master;
+						spawned.Tracer = Tracer;
+						spawned.ShortGibTime = ShortGibTime;
+						
+						Vector3 tvel = tracer ? tracer.vel : (0,0,0);
+						spawned.A_ChangeVelocity(
+							tvel.X * frandom(MulMin,MulMax) + frandom(-RAdd,RAdd),
+							tvel.Y * frandom(MulMin,MulMax) + frandom(-RAdd,RAdd),
+							tvel.Z * frandom(MulMin,MulMax) + frandom(-RAdd,RAdd),
+							CVF_REPLACE);
+						if (target)	spawned.P1 = (target.bloodcolor & 0xffffff);
+						else		spawned.P1 = Color(255, 255, 0, 0);
+					}
+				}
+			}
+		}
 		Stop;
 	}
 }

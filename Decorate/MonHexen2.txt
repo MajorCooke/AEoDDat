@@ -562,7 +562,7 @@ Actor NovaLightningFingerND
 	}
 }
 
-actor SWSkull
+actor SWSkull : AEoDCorpse
 {
     +DOOMBOUNCE
     Scale 0.33
@@ -578,7 +578,7 @@ actor SWSkull
     }
 }
 
-actor SWBook
+actor SWBook : AEoDCorpse
 {
     Scale 0.33
     Speed 3
@@ -608,7 +608,7 @@ ACTOR Praevus //7267			//spider mastermind
 	DropItem "Mana1BigAmmo" 128
 	DropItem "Mana1BigAmmo" 128
 	DropItem "Mana1BigAmmo" 128
-	DropItem "MegaHeart" 210
+	DropItem "MegaHeart"
 	DropItem "PowerslaveSpawner" 28
 	DropItem "PowerupSpawner" 
 	DropItem "PowerupSpawner" 
@@ -654,10 +654,6 @@ ACTOR Praevus //7267			//spider mastermind
 	DamageFactor "PlasmaDisint", 1.5
     States
     {
-        Pain.Drain:
-		TNT1 A 0
-		TNT1 A 0 A_SpawnItemEx("DrainGiver",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
-		Goto See
     Spawn:
 		PRVS A 3 A_Look 
 		Loop
@@ -669,7 +665,7 @@ ACTOR Praevus //7267			//spider mastermind
 		Loop
     Teleport:
 		TNT1 A 0 A_PlaySound ("praveus/teleportin")
-		PRVS O 0 A_UnSetShootable
+		PRVS O 0 A_ChangeFlag("NONSHOOTABLE", true)
 		PRVS O 1 A_SetTranslucent(0.9)
 		PRVS O 1 A_SetTranslucent(0.8)
 		PRVS O 1 A_SetTranslucent(0.7)
@@ -680,8 +676,7 @@ ACTOR Praevus //7267			//spider mastermind
 		PRVS K 1 A_SetTranslucent(0.2)
 		PRVS K 1 A_SetTranslucent(0.1)
 		PRVS L 1 A_SetTranslucent(0)
-		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 1 A_Wander
-		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 1 A_Wander
+		TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_Wander
 		PRVS K 1 A_SetTranslucent(0.1)
 		PRVS K 1 A_SetTranslucent(0.2)
 		PRVS K 1 A_SetTranslucent(0.3)
@@ -691,9 +686,12 @@ ACTOR Praevus //7267			//spider mastermind
 		PRVS O 1 A_SetTranslucent(0.7)
 		PRVS O 1 A_SetTranslucent(0.8)
 		PRVS O 1 A_SetTranslucent(0.9)
-		PRVW A 1 A_SetTranslucent(1)
-		TNT1 A 0 A_PlaySound ("praveus/teleportout")
-			PRVW AABBDDEEGGHHJJ 2 A_FaceTarget
+		PRVW A 1 
+		{
+			A_SetTranslucent(1);
+			A_PlaySound ("praveus/teleportout");
+		}
+		PRVW AABBDDEEGGHHJJ 2 A_FaceTarget
 		TNT1 A 0 A_SetShootable
 		Goto "Walking"
 	Missile: 

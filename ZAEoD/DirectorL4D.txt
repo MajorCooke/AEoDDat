@@ -1091,12 +1091,12 @@ Class DropTimer : CustomInventory
 		{
 			// Only remove spawned items via the director. Exceptions
 			// are weapons.
-			if (!CheckClass("Inventory",DefPtr,true) ||
-				A_CheckSpecies("Null","Permanent") ||
-				CheckClass("AEoDWeaponPickup",DefPtr,true) ||
-				CheckClass("AEoDWeaponBase",DefPtr,true) ||
-				CheckClass("AEoDWeaponDrop",DefPtr,true) ||
-				CheckClass("Weapon",DefPtr,true))
+			if (!(self is "Inventory") ||
+				species == 'Permanent' ||
+				self is 'AEoDWeaponPickup' ||
+				self is 'AEoDWeaponBase' ||
+				self is 'AEoDWeaponDrop' ||
+				self is 'Weapon')
 			{	return false;		}
 			
 			A_FadeOut(0.05,FTF_REMOVE);

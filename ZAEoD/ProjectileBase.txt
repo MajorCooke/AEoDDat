@@ -1,6 +1,7 @@
 //
 Class AEoDProjectile : Actor
 {	
+	// Big thanks to Marisa Kirisame for helping me with this function.
 	void SplitFlares(Class<Actor> mobj)
 	{
 		if (!mobj)	return;
@@ -9,7 +10,7 @@ Class AEoDProjectile : Actor
 		// to the direction of travel.
 		Vector3 x, y, z;
 		[x, y, z] = MC_CoordUtil.GetAxes(pitch, angle, roll);
-		double len = vel.length();
+		double len = vel.length(); //No need to perform sqrt more than once.
 		
 		for (double a = 0.0; a < 360.0; a += 45.0)
 		{

@@ -327,7 +327,7 @@ Class BulletTracerFX : AEoDFX
 			A_FaceMovementDirection();
 			//pitch *= -1;
 
-			user_distb = tracer ? Clamp(GetDistance(true,TracerPtr),0.0,3000.0) : 0.0;
+			user_distb = tracer ? Clamp(Distance3D(tracer),0.0,3000.0) : 0.0;
 		}
 	B1:
 		TNT1 A 1;
@@ -393,11 +393,8 @@ Class BulletTracerFXInverted : BulletTracerFX
 			
 			A_FaceMovementDirection();
 			pitch *= -1;
-
-			if (!IsPointerEqual(TracerPtr,NullPtr))
-			{	user_distb = Clamp(GetDistance(true,TracerPtr),0.0,3000.0);	}
-			else
-			{	user_distb = 0;	}
+			
+			user_distb = tracer ? Clamp(Distance3D(tracer),0.0,3000.0) : 0;
 			
 			return ResolveState("B1");
 		}
@@ -534,7 +531,7 @@ Class MovingTrailBeam : AEoDFX
 			user_scale = Scale.X;
 			user_angle = angle;
 			user_pitch = pitch;
-			user_dist = GetDistance(false, TargetPtr);
+			user_dist = target ? Distance2D(target) : 0;
 			next1 = pos;
 			
 			// Move to the shooter so we can get just how far out we are.

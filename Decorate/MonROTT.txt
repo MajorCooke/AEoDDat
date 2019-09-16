@@ -2576,6 +2576,7 @@ ACTOR GoldFace
 	Radius 4
 	Scale .87
 	Speed 25
+	Damage 30
 	Projectile
 	+FORCERADIUSDMG
 	DeathSound "shared/explo1"
@@ -2598,6 +2599,7 @@ ACTOR GoldFace
 ACTOR GoldFaceHoly : GoldFace
 {
 	+MTHRUSPECIES
+	Damage 50
 	DamageType "TempestLightning"
 }
  
@@ -2605,6 +2607,7 @@ ACTOR SilverMissile : GoldFace
 {
 	DamageType "AEMagic"
 	Speed 30
+	Damage 5
 	States
 	{
 	Spawn:
@@ -2625,12 +2628,14 @@ Actor SilverMissileHoly : SilverMissile
 	DamageType "Holy"
 	+MTHRUSPECIES
 	DamageType "TempestLightning"
+	Damage 10
 }
  
 ACTOR GreenSphere : GoldFace
 {
 	DamageType "AEMagic"
 	Speed 35
+	Damage 5
 	States
 	{
 	Spawn:
@@ -2649,6 +2654,7 @@ Actor GreenSphereHoly : GreenSphere
 {
 	+MTHRUSPECIES
 	DamageType "TempestLightning"
+	Damage 10
 }
  
 ACTOR SeekerStar : GoldFace
@@ -2677,11 +2683,19 @@ Actor SeekerStarHoly : SeekerStar
 {
 	+MTHRUSPECIES
 	DamageType "TempestLightning"
+	Damage 60
+	States
+	{
+	Spawn:
+		OMSE AB 3 bright A_SeekerMissile(90,90, SMF_PRECISE)
+		Loop
+	}
 }
  
 ACTOR IceRetaliation : SilverMissile
 {
 	DamageType "Fire"
+	Damage 20
 	States
 	{
 	Spawn:
@@ -2694,6 +2708,8 @@ Actor IceRetaliationHoly : IceRetaliation
 {
 	+MTHRUSPECIES
 	DamageType "TempestLightning"
+	Damage 40
+	
 }
  
 ACTOR FlameRetaliation
@@ -2729,7 +2745,13 @@ Actor FlameRetaliationHoly : FlameRetaliation
 	+MTHRUSPECIES
 	DamageType "TempestLightning"
 }
- 
+
+Actor MeteorHoly : Meteor 
+{
+	+MTHRUSPECIES
+	DamageType "TempestLightning" 
+}
+
 ACTOR MeteorWeak
 {
 	Height 4
@@ -2807,7 +2829,7 @@ ACTOR MeteorWeak
 	}
 }
  
-Actor MeteorWeakHoly : MeteorWeak
+Actor MeteorWeakHoly : Meteor
 {
 	+MTHRUSPECIES
 	DamageType "TempestLightning"

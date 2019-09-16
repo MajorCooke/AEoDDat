@@ -346,8 +346,8 @@ Actor OscuroPlayer
 	+BOSSDEATH
 	+NOBLOCKMONST
 	+NOICEDEATH
-	+FULLVOLACTIVE
-	+FULLVOLDEATH
+	-FULLVOLACTIVE
+	-FULLVOLDEATH
 	+NOTIMEFREEZE
 	+DONTMORPH
 	+QUICKTORETALIATE
@@ -475,7 +475,7 @@ Actor OscuroPlayer
 				return state("Chasing");
 			}
 			
-			if (random(1,2) == 1)
+			if (random(1,8) > 1)
 			{	return state("GoldFaceAttack");	}
 			
 			A_ChangeFlag("NOPAIN",1); A_SetInvulnerable; A_ChangeFlag("SOLID",1); A_SetUserVar("user_chasecount",0); 
@@ -496,21 +496,21 @@ Actor OscuroPlayer
 		TNT1 A 0 A_ChangeFlag("SOLID",0)
 		TNT1 A 0 A_Stop
 		TNT1 A 0 A_UnSetInvulnerable
-		OCHA A 0 A_Jump(64,"GoldFaceAttack")
+		OCHA A 0 A_Jump(256,"GoldFaceAttack")
 		OCHA A 0 A_JumpIfCloser(128,"MeleeReachCheck")
 		Goto GoldFaceAttack
 	MeleeReachCheck:
 		OCHA A 0 A_Jump(205,"Melee")
 		Goto GoldFaceAttack
 	GoldFaceAttack:
-		OATS AAAAAAAA 4 A_FaceTarget
-		OATS BCD 4 Bright A_FaceTarget
+		OATS ABCD 4 Bright A_FaceTarget
 		OATS D 0 Bright A_PlaySound("oscuro/specialfire")
 		OATS E 4 Bright A_CustomMissile("GoldFaceHoly",48,0)
 		OATS FGHI 4 //36 frames
 		//OATS I 0 A_JumpIfCloser(128,"GoldFaceAttack")
 		Goto Chasing
 	Missile:
+		TNT1 A 0 A_Jump(64, "Ret.Ice", "Ret.Fire", "Ret.Disintegrate")
 		TNT1 A 0 A_Jump(129,"Missile2")
 		//TNT1 A 0 A_SetInvulnerable
 		OATG ABCDEF 2 Bright A_FaceTarget
@@ -542,9 +542,7 @@ Actor OscuroPlayer
 		Goto Chasing
 	MeteorFire:
 		OATS A 0 A_SetInvulnerable
-		OATS AAAAAAAA 4 Bright A_FaceTarget
-		OATS B 4 bright
-		OATS C 4 bright
+		OATS ABC 4 Bright A_FaceTarget
 		OATS D 0 Bright A_PlaySound("weapons/volcanofire")
 		OATS D 4 Bright A_CustomMissile("MeteorWeakHoly",0,0)
 		OATS EFGHI 4 bright
@@ -553,8 +551,7 @@ Actor OscuroPlayer
 	ApocalypseFire:
 		TNT1 A 0 A_SetInvulnerable
 		TNT1 A 0 A_PlaySound("castspell/fire")
-		OAT1 AAAAAAAA 4 A_FaceTarget
-		OAT1 BCDEF 2 Bright A_FaceTarget
+		OAT1 ABCDEF 2 Bright A_FaceTarget
 		OAT1 G 0 Bright A_PlaySound("oscuro/specialfire")
 		OAT1 G 2 Bright A_CustomMissile("ApocalypseStarter2",48,0)
 		OAT1 HI 2
@@ -570,13 +567,14 @@ Actor OscuroPlayer
 		OATS A 0 A_SetUserVar("user_life",user_life+50)
 		Goto Pain.Seeker
 	Pain.Ice:
+		OATS A 0 A_SetUserVar("user_life",user_life+35)
+	Ret.Ice:
 		OATS A 0 A_ChangeFlag("NOPAIN",1)
 		OATS A 0 A_FadeIn(1,FTF_CLAMP)
 		OATS A 0 A_Jump(30,"MeteorFire")
 		OATS A 0 A_SetInvulnerable
-		OATS A 0 A_SetUserVar("user_life",user_life+35)
-		OATI AAAAAAAA 4 Bright A_FaceTarget
-		OATI BCDE 2 bright
+		
+		OATI ABCDE 2 bright A_FaceTarget
 		OATI F 4 Bright A_CustomMissile("IceRetaliationHoly",48,0)
 		OATI F 0 Bright A_PlaySound("oscuro/flamefire")
 		OATI F 4 Bright A_CustomMissile("IceRetaliationHoly",48,0)
@@ -597,9 +595,11 @@ Actor OscuroPlayer
 		Goto Chasing
 	Pain.AEPoison:
 	Pain.Fire:
+		OATS A 0 A_SetUserVar("user_life",user_life+30)
+	Ret.Fire:
 		OATS A 0 A_ChangeFlag("NOPAIN",1)
 		OATS A 0 A_FadeIn(1,FTF_CLAMP)
-		OATS A 0 A_SetUserVar("user_life",user_life+30)
+		
 		OATS A 0 A_Jump(30,"ApocalypseFire")
 		OATF ABC 2 Bright A_FaceTarget
 		OATF D 0 Bright A_CustomMissile("FlameRetaliationHoly",0,0,0,CMF_AIMDIRECTION)
@@ -644,10 +644,10 @@ Actor OscuroPlayer
 		OATF EF 4
 		Goto Chasing
 	Pain.Seeker:
+	Ret.Seeker:
 		OATS A 0 A_ChangeFlag("NOPAIN",1)
 		OATS A 0 A_FadeIn(1,FTF_CLAMP)
-		OAT1 AAAAAAAA 4 A_FaceTarget
-		OAT1 BCDEF 2 Bright A_FaceTarget
+		OAT1 ABCDEF 2 Bright A_FaceTarget
 		OAT1 G 0 Bright A_PlaySound("oscuro/specialfire")
 		OAT1 G 2 Bright A_CustomMissile("SeekerStarHoly",58,17) //Same actions as the gold face, only instead this one seeks.
 		OAT1 HI 2
@@ -11956,6 +11956,7 @@ Actor SoulReaperBlade
 	+SEEKERMISSILE
 	+CANBOUNCEWATER
 	+HITTRACER
+	+BOUNCEONACTORS
 	//+THRUACTORS
 	RipperLevel 666 //It will rip through the greatest of monsters... Almost. 
 	Damage 40

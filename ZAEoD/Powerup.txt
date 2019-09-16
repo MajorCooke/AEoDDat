@@ -680,7 +680,7 @@ Class PowerInvulBase : PowerInvulnerable
 		{
 			modded = false;
 			if (delay > 0)	delay--;
-			if (globalfreeze || level.Frozen)
+			if (IsFrozen())
 			{
 				EffectTics++; //'Freeze' the timer.
 			}
@@ -938,7 +938,8 @@ Class DMSoulMissile : Actor
 		{
 			A_FaceTracer(0,0,0,0,FAF_TOP);
 			A_ChangeVelocity(cos(pitch)*20,0,-sin(pitch)*20,CVF_RELATIVE|CVF_REPLACE);
-			if (GetDistance(true,TracerPtr) <= 32)
+			if (!Tracer || 
+				Distance3DSquared(Tracer) <= (Tracer.Height ** 2))
 			{	return ResolveState("End");	}
 			return ResolveState(null);
 		}
@@ -1591,7 +1592,7 @@ Class DemonMorphFogOff : Actor
 			while (mo = DemonMorphScreams(it.Next()))
 			{
 				// Make sure the targets align.
-				if (mo.CheckClass("DemonMorphScreams") /*&& mo.target == target */)
+				if (mo is "DemonMorphScreams")
 				{
 					for (int i = 1; i < 8; i++)
 					{	

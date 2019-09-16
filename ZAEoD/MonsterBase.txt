@@ -1,0 +1,70 @@
+Class AEoDMonster : Actor
+{
+	private int _count;	// Internal use only.
+	Default
+	{
+		Monster;
+	}
+	
+	//--------------------------------------------------------------------------
+	// Custom overrides
+	//--------------------------------------------------------------------------
+	override void PostBeginPlay()
+	{
+		// Don't allow the base class to be spawned.
+		if (GetClass() == "AEoDMonster")
+		{	Destroy(); return;	}
+		
+		Super.PostBeginPlay();
+	}
+	
+	// Always destroy the spawner upon ending existence.
+	override void OnDestroy() 
+	{
+		KillSpawner();
+		Super.OnDestroy();
+	}
+	
+	void KillSpawner()
+	{
+		if (master && master is "AEoDSpawner" && master.health > 0)
+			master.A_Die("Massacre");		
+	}
+	
+	//--------------------------------------------------------------------------
+	// Monster specific functions.
+	//--------------------------------------------------------------------------
+	
+	void NihilanthDeathFX()
+	{
+		alpha -= 0.01;
+		if (++_count > 2)
+		{
+			_count = 0;
+			A_SpawnItemEx("NihDeathFX3",random(60,-60),random(60,-60),random(20,130),0,0,0,0,0);
+		}
+		
+		A_SpawnItemEx("NihDeathFX1",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0);
+		A_SpawnItemEx("NihDeathFX2",0,0,100,random(-2,2),random(-2,2),random(2,6),random(0,359),0);
+		
+		if (alpha <= 0.0)
+		{
+			Destroy();
+			return;
+		}
+	}
+}
+
+//==============================================================================
+// Used for things like Set's and Quake heads so they can be absorbed properly.
+//==============================================================================
+Class AEoDCorpse : Actor
+{}
+
+//==============================================================================
+// Temporary compatibility. Will eventually be removed.
+//==============================================================================
+Class AEoDSpawner : Actor abstract
+{
+	AEoDHandler Handler;
+}
