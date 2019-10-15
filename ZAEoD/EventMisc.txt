@@ -51,15 +51,19 @@ Class AArray
 		Actors.Push(mo);
 	}
 	
-	void Delete(Actor mo)
+	bool Delete(Actor mo)
 	{
 		int size = Actors.Size();
 		if (mo && size > 0)
 		{
 			int pos = Actors.Find(mo);
 			if (pos < size)
+			{
 				Actors[pos] = null;
+				return true;
+			}
 		}
+		return false;
 	}
 	
 	private int SetSize(int size)

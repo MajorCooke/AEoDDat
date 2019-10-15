@@ -70,7 +70,7 @@ Class SmallSpawnToken : Inventory
 Class DirectorBase : Actor 
 {	
 	AEoDHandler Event;
-	
+	Array<Actor> Items;
 	override void BeginPlay()
 	{
 		ChangeStatNum(STAT_DIRECTOR);
@@ -101,7 +101,7 @@ Class DirectorBase : Actor
 
 Class DirectorMain : DirectorBase
 {
-	Array<Actor> SmallKids, MediumKids, LargeKids;
+	AArray SmallKids, MediumKids, LargeKids;
 	bool Destroyed, Removed;
 	int RealIntensity;
 	int RealDelay;
@@ -145,99 +145,74 @@ Class DirectorMain : DirectorBase
 		DamageFactor "Normal", 0;
 	}
 	
+	override void PostBeginPlay()
+	{
+		SmallKids = AArray.Create();
+		MediumKids = AArray.Create();
+		LargeKids = AArray.Create();
+		
+		Super.PostBeginPlay();
+	}
+	
 	override void OnDestroy()
 	{
 		Destroyed = true;
-		if (SmallKids.Size() > 0)
-		{	for (int i = 0; i < SmallKids.Size(); i++)	if (SmallKids[i])	SmallKids[i].Destroy();		}
-		if (MediumKids.Size() > 0)
-		{	for (int i = 0; i < MediumKids.Size(); i++)	if (MediumKids[i])	MediumKids[i].Destroy();	}
-		if (LargeKids.Size() > 0)
-		{	for (int i = 0; i < LargeKids.Size(); i++)	if (LargeKids[i])	LargeKids[i].Destroy();		}
+		int size = SmallKids.Actors.Size();
+		for (int i = 0; i < SmallKids.Actors.Size(); i++)	if (SmallKids.Actors[i])	SmallKids.Actors[i].Destroy();
+		size = MediumKids.Actors.Size();
+		for (int i = 0; i < MediumKids.Actors.Size(); i++)	if (MediumKids.Actors[i])	MediumKids.Actors[i].Destroy();
+		size = LargeKids.Actors.Size();
+		for (int i = 0; i < LargeKids.Actors.Size(); i++)	if (LargeKids.Actors[i])	LargeKids.Actors[i].Destroy();
 		Super.OnDestroy();
 	}
 	
 	override void Activate(Actor activator)
 	{
 		if (target)	SetOrigin(target.pos, false);
-		if (SmallKids.Size() > 0)
-		{	for (int i = 0; i < SmallKids.Size(); i++)	if (SmallKids[i])	{	SmallKids[i].Activate(activator);	SmallKids[i].SetXYZ(pos);	}	}
-		if (MediumKids.Size() > 0)
-		{	for (int i = 0; i < MediumKids.Size(); i++)	if (MediumKids[i])	{	MediumKids[i].Activate(activator);	MediumKids[i].SetXYZ(pos);	}	}
-		if (LargeKids.Size() > 0)
-		{	for (int i = 0; i < LargeKids.Size(); i++)	if (LargeKids[i])	{	LargeKids[i].Activate(activator);	LargeKids[i].SetXYZ(pos);	}	}
+		int size = SmallKids.Actors.Size();
+		for (int i = 0; i < size; i++)	if (SmallKids.Actors[i])	{	SmallKids.Actors[i].Activate(activator);	SmallKids.Actors[i].SetOrigin(pos, false);	}
+		size = MediumKids.Actors.Size();
+		for (int i = 0; i < size; i++)	if (MediumKids.Actors[i])	{	MediumKids.Actors[i].Activate(activator);	MediumKids.Actors[i].SetOrigin(pos, false);	}
+		size = LargeKids.Actors.Size();
+		for (int i = 0; i < size; i++)	if (LargeKids.Actors[i])	{	LargeKids.Actors[i].Activate(activator);	LargeKids.Actors[i].SetOrigin(pos, false);	}
 		Super.Activate(activator);
 	}
 	
 	override void Deactivate(Actor activator)
 	{
-		if (SmallKids.Size() > 0)
-		{	for (int i = 0; i < SmallKids.Size(); i++)	if (SmallKids[i])	SmallKids[i].Deactivate(activator);		}
-		if (MediumKids.Size() > 0)
-		{	for (int i = 0; i < MediumKids.Size(); i++)	if (MediumKids[i])	MediumKids[i].Deactivate(activator);	}
-		if (LargeKids.Size() > 0)
-		{	for (int i = 0; i < LargeKids.Size(); i++)	if (LargeKids[i])	LargeKids[i].Deactivate(activator);		}
+		int size = SmallKids.Actors.Size();
+		for (int i = 0; i < size; i++)	if (SmallKids.Actors[i])	SmallKids.Actors[i].Deactivate(activator);
+		size = MediumKids.Actors.Size();
+		for (int i = 0; i < size; i++)	if (MediumKids.Actors[i])	MediumKids.Actors[i].Deactivate(activator);
+		size = LargeKids.Actors.Size();
+		for (int i = 0; i < size; i++)	if (LargeKids.Actors[i])	LargeKids.Actors[i].Deactivate(activator);
 		Super.Deactivate(activator);
-	}
-	
-	void ClearNulls(int which)
-	{
-		Array<Actor> Cleaner;
-		bool DoAll = (which < 1 || which > 3);
-		int maxsize = DoAll ? 3 : which;
-		int j = DoAll ? 1 : which;
-		
-		while (true)
-		{
-			Switch(j)
-			{
-				Case 1:		Cleaner.Copy(SmallKids);	break;
-				Case 2:		Cleaner.Copy(MediumKids);	break;
-				Case 3:		Cleaner.Copy(LargeKids);	break;
-			}
-			
-			if (Cleaner.Size() > 0)
-			{
-				for (int i = 0; i < Cleaner.Size(); i++)	
-				{	
-					if (Cleaner[i] == null) 
-					{	
-						int ts = Cleaner.Size();
-						Cleaner.Delete(i); i = 0;
-						int ns = Cleaner.Size();
-						Console.Printf("Deleted %d - old %d - new %d", i, ts, ns);
-						if (Cleaner.Size() < 1)	break;
-					} 
-				} 	
-				Cleaner.ShrinkToFit();	
-			}
-			
-			Switch(j)
-			{
-				Case 1:		SmallKids.Copy(Cleaner);	break;
-				Case 2:		MediumKids.Copy(Cleaner);	break;
-				Case 3:		LargeKids.Copy(Cleaner);	break;
-			}
-			if (j++ >= maxsize)
-				return;
-		}
 	}
 	
 	void RemoveKid(Actor who)
 	{
 		if (!who || Destroyed)	return;
 		
-		int s = SmallKids.Find(who);		
-		if (s != SmallKids.Size())
-		{	SmallKids.Delete(s);	return;		}
-
-		s = MediumKids.Find(who);
-		if (s != MediumKids.Size())
-		{	MediumKids.Delete(s);	return;		}
-
-		s = LargeKids.Find(who);
-		if (s != LargeKids.Size())
-		{	LargeKids.Delete(s);	return;		}
+		if (!SmallKids.Delete(who))
+			if (!MediumKids.Delete(who))
+				LargeKids.Delete(who);
+	}
+	
+	int Timer;
+	override void Tick()
+	{
+		Super.Tick();
+		
+		if (IsFrozen())
+			return;
+		
+		Timer++;
+		if (Timer >= 350)
+		{
+			SmallKids.Clean();
+			MediumKids.Clean();
+			LargeKids.Clean();
+		}
 	}
 }
 
@@ -467,18 +442,6 @@ Class TheDirector : DirectorMain
 				//Console.Printf("Size: %d - Cooldown: %d", MediumKids.Size(), cooldown[0]);
 				return ResolveState("Chasing");
 			}
-			
-			/*
-			int count = 0;
-			ThinkerIterator telefragger = ThinkerIterator.Create("MCMediumMobRunner");
-			Actor mo;
-			while (mo = MCMediumMobRunner(telefragger.Next()))
-			{
-				count++;
-				if (count >= cc[1] + mul || count >= cc[3])
-				{	return ResolveState("Chasing");	}
-			}
-			*/
 			let kid = MCMediumMobRunner(Spawn("MCMediumMobRunner",pos, ALLOW_REPLACE));
 			if (kid)
 			{
@@ -503,19 +466,7 @@ Class TheDirector : DirectorMain
 				//Console.Printf("Size: %d - Cooldown: %d", SmallKids.Size(), cooldown[1]);
 				return ResolveState("Chasing");
 			}
-			/*
-			int count = 0;
-			ThinkerIterator telefragger = ThinkerIterator.Create("MCSmallMobRunner");
-			Actor mo;
-			while (mo = MCSmallMobRunner(telefragger.Next()))
-			{
-				count++;
-				if (count >= cc[0] + mul || count >= cc[3])
-				{	return ResolveState("Chasing");	}
-			}
-			*/
-		//	if (A_SpawnItemEx("MCSmallMobRunner",flags: SXF_SETMASTER|SXF_TRANSFERPOINTERS|SXF_CLEARCALLERTID, tid: mul))
-		//	{
+
 			let kid = MCSmallMobRunner(Spawn("MCSmallMobRunner",pos, ALLOW_REPLACE));
 			if (kid)
 			{
@@ -563,8 +514,7 @@ Class TheDirector : DirectorMain
 //==============================================================================
 Class DirectorKid : DirectorBase
 {
-	DirectorMain Spawner;	
-	Array<Actor> Items;
+	DirectorMain Spawner;
 	
 	void A_SpawnItemEx2(Class<Actor> itemtype, double xofs = 0, double yofs = 0, double zofs = 0, double xvel = 0, double yvel = 0, double zvel = 0, double angle = 0, int flags = 0, int failchance = 0, int tid = 0)
 	{
