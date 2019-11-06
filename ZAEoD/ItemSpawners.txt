@@ -8,6 +8,19 @@ class DropItem : Object native
 }
 */
 
+Class AEoDThemeSpawner : Inventory //
+{
+	private int Themes;
+	AEoDHandler Event;
+	
+	Default
+	{
+		+NOINTERACTION
+	}
+	
+	
+}
+
 Class AEoDRandomSpawner : RandomSpawner
 {
 	override void PostSpawn(Actor spawned)
@@ -85,14 +98,19 @@ Class MedikitSpawner : Actor replaces Medikit
 		+NOTELESTOMP
 		+NOINTERACTION
 	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		A_SpawnItemEx("FMedikit",
+				flags: SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS|SXF_TRANSFERSPECIAL|SXF_CLEARCALLERSPECIAL|SXF_CLEARCALLERTID,
+				tid: tid);
+		A_SpawnItemEx("HealthBottle",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS,256-160);
+	}
+	
 	States 
 	{ 
 	Spawn: 
-		TNT1 A 0 NoDelay
-		{
-			A_SpawnItemEx("FMedikit",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS);
-			A_SpawnItemEx("HealthBottle",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS,256-160);
-		}
+		TNT1 A 1;
 		Stop;
 	} 
 }

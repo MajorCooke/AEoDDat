@@ -41,18 +41,17 @@ Class AEoDHandler : EventHandler
 		ExtraCount = 5,
 		TotalCount = GameCount + ExtraCount
 	};
-	AArray Monsters, DeadMonsters, Absorbables, FX;
-	Array<Actor> Tracker;
-	bool DemonMorph;
-	bool CvarsUpdated;
-	bool DirectorsEnabled, NoDirectors;
-	DirectorBase L4DDirector;
-	DirectorBase NormalDirector;
-	int L4DIntensity, MonIntensity, DirDelay, GameMode, L4DDir, NorDir;
-	uint16 GibCount, GibSoft, GibHard;
 	
-	//Array<uint8> SectorD;	
-	//transient Cvar DirCvar[3];
+	private int		Themes;
+	
+	AArray 			Monsters, DeadMonsters, Absorbables, FX;
+	bool 			DemonMorph, CvarsUpdated, DirectorsEnabled, NoDirectors;
+	DirectorBase 	L4DDirector, NormalDirector;
+	int 			L4DIntensity, MonIntensity, L4DDir, NorDir,
+					DirDelay, GameMode;
+	uint16 			GibCount, GibSoft, GibHard;
+	
+	
 	
 	static clearscope AEoDHandler Fetch()
 	{
@@ -61,57 +60,77 @@ Class AEoDHandler : EventHandler
 	
 	void GetCvars()
 	{
-		/*
-		static const String Cvars[] =
-		{
-			"user_Doom",
-			"user_Blood",
-			"user_Duke",
-			"user_HL",
-			"user_HL2",
-			"user_Heretic",
-			"user_Hexen",
-			"user_Hexen2",
-			"user_MM",
-			"user_Powerslave",
-			"user_Quake1",
-			"user_Quake2",
-			"user_Quake4",
-			"user_SW",
-			"user_Strife"
-			//-------------- The rest below are extras, not themes.
-			"user_Dm64", 
-			"user_Hellspawn", 
-			"user_Joke", 
-			"user_L4DMon", 
-			"user_ROTT" 
-		};
-		
-		for (int i = 0; i < Themes.Size(); i++)
-		{
-			
-		}
-		*/
-		
 		L4DIntensity = 		user_L4DIntensity;
 		MonIntensity = 		user_MonIntensity;
 		DirDelay = 			DirectorDelay;
 		GameMode =			AEoDGameMode;
 		NorDir =			user_NorDir;
 		L4DDir =			user_L4DDir;
-		GibSoft =			MaxSoftGibCount;
-		GibHard =			MaxGibCount;
+	}
+	
+	private void UpdateThemes()
+	{
+		/*
+		"user_Doom",			// Normal
+		"user_Blood",			// Normal + Magic
+		"user_Duke",			// Normal
+		"user_HL",				// Normal + Tech
+		"user_HL2",				// Tech
+		"user_Heretic",			// Magic
+		"user_Hexen",			// Magic
+		"user_Hexen2",			// Magic
+		"user_MM",				// Magic
+		"user_Powerslave",		// Normal
+		"user_Quake1",			// Normal
+		"user_Quake2",			// Tech
+		"user_Quake4",			// Tech
+		"user_SW",				// Normal
+		"user_Strife"			// Tech
+		
+		// These are extras, not full themes, but they still count for weapon
+		// and ammo spawning.
+		"user_Dm64", 			// Normal + Magic (Final boss drops a magic weapon)
+		"user_Hellspawn", 		// Normal + Tech
+		"user_Joke", 			// Joke
+		"user_L4DMon", 			// Normal
+		"user_ROTT" 			// Normal + Magic
+		*/
+		
+		// Start from a fresh slate.
+		Themes = 0;
+		
+		// If any single one of these are active, it counts towards that theme
+		// and the desired items will spawn.
+		
+		
+		if (user_Doom || user_Blood || user_Duke || user_Powerslave || user_Quake1 ||
+			user_SW || user_Dm64 || user_Hellspawn || user_L4DMon || user_ROTT ||
+			user_HL)
+			Themes |= Theme_Normal;
+		
+		if (user_Blood || user_Heretic || user_Hexen || user_Hexen2 || user_MM ||
+			user_Dm64 || user_ROTT)
+			Themes |= Theme_Magic;
+			
+		if (user_HL || user_HL2 || user_Quake2 || user_Quake4 || user_Strife)
+			Themes |= Theme_Tech;
+			
+		if (user_Joke)
+			Themes |= Theme_Joke;
+	}
+	
+	int GetThemes()	{ return Themes; }
+	
+	override void OnRegister()
+	{
+		Super.OnRegister();
+		UpdateThemes();
 	}
 	
 	private uint8 Timer;
 	override void WorldTick()
 	{
 		Timer++;
-		if (Timer % 35 <= 0)
-		{
-			GibSoft = MaxSoftGibCount;
-			GibHard = MaxGibCount;
-		}
 		if (Timer >= 350)
 		{
 			Timer = 0;
@@ -119,7 +138,7 @@ Class AEoDHandler : EventHandler
 			for (int i = 0; i < size; i++)
 			{
 				Actor mo = Monsters.Actors[i];
-				if (mo && mo.health < 1)
+				if (mo && (mo.health < 1 || mo is 'AEoDCorpse'))
 				{
 					if (DeadMonsters.Find(mo) >= DeadMonsters.Size())
 						DeadMonsters.Push(mo);
@@ -130,7 +149,7 @@ Class AEoDHandler : EventHandler
 			for (int i = 0; i < size; i++)
 			{
 				Actor mo = DeadMonsters.Actors[i];
-				if (mo && mo.health > 0)
+				if (mo && mo.health > 0 && !(mo is 'AEoDCorpse'))
 				{
 					Monsters.Push(mo);
 					DeadMonsters.Actors[i] = null;
@@ -146,15 +165,17 @@ Class AEoDHandler : EventHandler
 	
 	override void WorldLoaded(WorldEvent e)
 	{
+		GibCount = Timer = 0;
 		Monsters = AArray.Create();
 		DeadMonsters = AArray.Create();
 		Absorbables = AArray.Create();
 		FX = AArray.Create();
 		
-		GibCount = 0; Timer = 0;
+		
 		GetCvars();
+		UpdateThemes();
 		let plr = players[0].mo;
-		if (!e.IsReopen && !e.IsSaveGame)
+		if (!e.IsReopen && !e.IsSaveGame && plr)
 		{
 			if (GameMode == 1)
 			{
@@ -172,22 +193,6 @@ Class AEoDHandler : EventHandler
 			}
 			
 			DirectorsEnabled = (NorDir || L4DDir);
-		}
-	}
-	
-	override void WorldUnloaded(WorldEvent e)
-	{
-		DemonMorph = CvarsUpdated = false;
-		for (int i = 0; i < MAXPLAYERS; i++)
-		{
-			if (playeringame[i])
-			{
-				let plr = players[i].mo;
-				if (plr)	
-				{
-					plr.A_SetInventory("RemoveDirector",0);
-				}
-			}
 		}
 	}
 	
@@ -284,13 +289,21 @@ Class AEoDHandler : EventHandler
 			GibCount++;
 			return;
 		}
-		else if (mo is 'GibSpawnerBase')
+		if (GibCount < MaxGibCount)
 		{
 			let gib = GibSpawnerBase(mo);
-			if (gib)	gib.Event = self;
-			return;
+			if (gib)
+			{
+				gib.Event = self;
+				return;
+			}
 		}
 		
+		if (mo.bCORPSE || mo is 'AEoDCorpse')
+		{
+			DeadMonsters.Push(mo);
+			return;
+		}
 		// Don't give to things that are always invisible such as the directors
 		// or the base monster spawners. Obviously ignore anything with NOINTERACTION
 		// since giving that to a monster while alive is just a bad idea.
@@ -308,8 +321,7 @@ Class AEoDHandler : EventHandler
 			else
 				DeadMonsters.Push(mo);
 		}
-		else if (mo.bCORPSE)
-			DeadMonsters.Push(mo);
+		
 		else if ((mo is "Inventory" && mo.species == 'Absorbable') || mo is "AEoDCorpse")
 			Absorbables.Push(mo);
 		
@@ -346,7 +358,7 @@ Class AEoDHandler : EventHandler
 	{
 		Actor mo = e.Thing;
 		if (mo is "GibletBase")
-			GibCount--;
+			GibCount = Max(0, GibCount - 1);
 	}
 	
 	//==========================================================================
@@ -354,21 +366,6 @@ Class AEoDHandler : EventHandler
 	// Custom Functions
 	//==========================================================================
 	//==========================================================================
-	
-	//--------------------------------------------------------------------------
-	// Gib Count
-	//--------------------------------------------------------------------------
-	int GetGibCount()
-	{
-		return GibCount;
-	}
-	
-	int CheckGibCount()
-	{
-		if (GibCount >= GibHard)	return 0;
-		if (GibCount >= GibSoft)	return 1;
-		return 2;
-	}
 	
 	//==========================================================================
 	// ChangeWeapons

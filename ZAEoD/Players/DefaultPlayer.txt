@@ -59,28 +59,37 @@ Class AEoDmarine : DoomPlayer
 	{
 		if (mod == 'Reflection')
 			return Super.DamageMobj(inflictor, source, damage, mod, flags, angle);
-		if (CountInv("PowerPlayerGrounder"))
+		
+		// HHH protection. Reflect whatever damage is dished out to the player
+		// right back at the enemy. This is very powerful, as it can also reflect
+		// projectiles. Even if the projectile doesn't reflect, contact and explosion
+		// damage is too. This could very easily dish back WELL OVER double the damage,
+		// in some situations! A L4D witch could kill herself in 6-10 melee attacks.
+		if (CountInv("PowerPlayerGrounder")) // HHH protection
 		{
 			if (damage < 1)
-				return 0;
+				return -1;
 			
-			if (inflictor)
+			// 
+			if (inflictor && !source)
 			{
-				if (!source && inflictor.target)
+				if (inflictor.target && inflictor.target != self)
 					source = inflictor.target;
 			}
 			
-			// Make sure never to do this to self! Otherwise, infiniloops happen.
-			// Doze are bad. Weally weally bad. :(
-			if (source && source != self && (source.bSHOOTABLE || source.bVULNERABLE))
+			Actor src = source;
+			Actor inf = inflictor;
+			
+			// No infinite loops or the game will crash.
+			if (src && src != self && !(src is 'PlayerPawn') && (src.bSHOOTABLE || src.bVULNERABLE))
 			{
-				source.DamageMobj(null, self, damage, "Reflection");
+				source.DamageMobj(null, self, damage, mod);
 			}
-			else if (inflictor && inflictor != self && (inflictor.bSHOOTABLE || inflictor.bVULNERABLE))
+			else if (inf && inf != self && !(inf is 'PlayerPawn') && (inf.bSHOOTABLE || inf.bVULNERABLE))
 			{
-				source.DamageMobj(null, self, damage, "Reflection");
+				source.DamageMobj(null, self, damage, mod);
 			}
-			return 0;
+			return -1;
 		}
 		
 		return Super.DamageMobj(inflictor, source, damage, mod, flags, angle);

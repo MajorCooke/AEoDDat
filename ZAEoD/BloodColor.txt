@@ -543,22 +543,15 @@ Class GibSpawnerBase : AEoDFX
 		TNT1 A 0;
 		TNT1 A 1
 		{
+			// Too many gibs. The event handler won't assign itself in this case.
 			if (!Event)
-			{
-				Destroy();
-				return;
-			}
-			if (Event)
-			{			
-				// Too many gibs.
-				if (Event.GibCount >= Event.GibHard)
-				{	Destroy();	return;	}
+			{	Destroy();	return;	}
+			
+			// Force simplification since we're at the softer limit.
+			if (Event.GibCount >= MaxSoftGibCount)
+				simple = true;
 				
-				// Force simplification since we're at the softer limit.
-				if (Event.GibCount >= Event.GibSoft)
-					simple = true;
-				
-			}
+			
 			
 			DropItem di;   // di will be our drop item list iterator
 			DropItem drop; // while drop stays as the reference point.

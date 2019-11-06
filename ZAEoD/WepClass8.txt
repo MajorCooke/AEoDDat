@@ -1,0 +1,312 @@
+Class StakeGunStake : FastProjectile
+{
+	const ZVel = -0.2;
+	const WaitTime = 6;
+	private int 	count, crash, forcepain, extra;
+	private double	ang, angdiff, tradius, theight;
+	private Vector3 off, tvel;
+	
+	
+	bool			onfire;
+	Property Empowered: OnFire;
+	Default
+	{
+		StakeGunStake.Empowered false;
+		Projectile;
+		+DONTREFLECT
+		+DONTBLAST
+		+BLOODSPLATTER
+		+HITTRACER
+		+EXTREMEDEATH
+		+RIPPER
+		+NOTIMEFREEZE
+		+FORCERADIUSDMG
+		+PAINLESS
+		Speed 70;
+		Radius 8;
+		Height 8;
+		Scale 0.15;
+		Damage 0;	// Handled in SpecialMissileHit instead.
+		Alpha 0.7;
+		MissileType "StakeTrail";
+		MissileHeight 8;
+		RipperLevel 0;
+		BounceFactor 0.4;
+	}
+	
+	override void PostBeginPlay()
+	{
+		if (onfire)
+		{
+			extra = WaitTime;
+			forcepain = random(0,1);
+		}
+		Super.PostBeginPlay();
+	}
+	
+	override void Tick()
+	{
+		if (IsFrozen())	return;
+		
+		// Don't process stuff if the stake has hit its mark.
+		if (bKILLED || bNOINTERACTION)	
+			Actor.Tick();
+		else			
+			Super.Tick();
+	}
+	
+	
+	override int SpecialMissileHit(Actor victim)
+	{
+		if (bKILLED || !victim || victim == target || victim.health < 1)
+			return 1;
+		
+		bPAINLESS = false;
+		int rng = random(1, (bSTRIFEDAMAGE ? 4 : 8));
+		victim.DamageMobj(self, target,(130 * rng) + (extra * random(1,4) + random(50,100) * count), DamageType);
+		bPAINLESS = true;
+		
+		// If the monster survived, let the ripper levels handle it.
+		if (victim && victim.health > 0 && victim.bSHOOTABLE)
+			return -1;
+		
+		// If the monster dies, keep flying through it.
+		return 1;
+	}
+	
+	States
+	{
+	Spawn:
+		D008 P 0 NoDelay { bFORCEPAIN = randompick(0,0,1); }
+	Normal:
+		D008 P 1 A_Explode(30,24,0,0,24);
+	Looping:
+		D008 P 1 
+		{
+			extra++;
+			if (onfire)
+			{
+				A_SpawnItemEx("StakeFireTrail",-2,0,0,0,0,0,0,SXF_NOCHECKPOSITION);
+				bNODAMAGETHRUST = true;
+				A_Explode(90,64,0,0,64);
+				bNODAMAGETHRUST = false;
+			}
+			else
+			{
+				bNODAMAGETHRUST = true;
+				A_Explode(30,36,0,0,36);
+				bNODAMAGETHRUST = false;
+			}
+			if (count < WaitTime)
+			{
+				count++;
+				if (count >= WaitTime - 1)
+				{
+					if (!forcepain)
+						forcepain = random(0,1);
+					count = WaitTime;
+				}
+			}
+			else onfire = true;
+			
+			A_ChangeVelocity(0,0,ZVel);	
+		}
+		Loop;
+	Crash:
+		D008 P 0 { crash = 1; return ResolveState("XDeath"); }
+	XDeath:
+		D008 P 0
+		{
+			bNOINTERACTION = true;
+			bKILLED = true;
+			bPAINLESS = false;
+			
+			if (count >= 11)	
+			{	
+				bNODAMAGETHRUST = false;
+				A_Explode(random(300,600),96,0,0,96);
+			}
+			
+			if (forcepain)	bFORCEPAIN = true;
+			
+			Sound snd = "painkiller/weapon/StakeGun/StakeCrash";
+			if (crash != 1)
+				snd = "painkiller/weapon/StakeGun/StakeHitFlesh";
+				
+			A_PlaySound(snd);
+			
+			
+			// Set up for sticking.
+			count = 0;
+			if (tracer && tracer.health > 0)
+			{
+				ang = angle;
+				angdiff = DeltaAngle(AngleTo(tracer), angle);
+				off = level.Vec3Diff(tracer.pos, pos);
+				
+				/*
+				tradius = tracer.radius;
+				theight = tracer.height;
+				let posDiff = level.Vec3Diff (tracer.pos, pos);
+
+				stickAngle = DeltaAngle (tracer.angle, atan2 (posDiff.Y, posDiff.X));
+				stickRadius = (posDiff.XY.Length () / tracer.radius);
+				stickHeight = (posDiff.Z / tracer.height);
+
+				ret.XY = Actor.AngleToVector (tracer.angle + stickAngle, tracer.radius * stickRadius);
+				ret.Z = tracer.Height * stickHeight;
+
+				ret = level.Vec3Offset (tracer.pos, ret);
+				*/
+			}
+		}
+	Sticking:
+		---- A 1
+		{
+			if (++count >= 300)
+				A_FadeOut();
+			
+			if (tracer && tracer.health > 0) // Keep sticking.
+			{
+				Vector2 ofr = off.XY;
+				ofr = RotateVector(ofr, angdiff - 90.0);
+				Warp(tracer, ofr.x, -ofr.y, off.z, 0, WARPF_NOCHECKPOSITION);
+				tvel = tracer.vel;
+				angle = tracer.angle - angdiff;
+				return ResolveState(null);
+			}
+			return ResolveState("Dropout");
+		}
+		Wait;
+	// Fall off the dead.
+	Dropout:
+		---- A 0
+		{
+			bTHRUACTORS = true;
+			bNOINTERACTION = false;
+			bBOUNCEONFLOORS = true;
+			bBOUNCEONWALLS = true;
+			bBOUNCEONCEILINGS = true;
+			bBOUNCEAUTOOFF = true;
+			bDONTSPLASH = true;
+			bNOGRAVITY = false;
+			vel = tvel;
+		}
+		---- A 1
+		{
+			if (++count >= 300)
+				A_FadeOut();
+		}
+		Wait;
+	Death:
+		D008 P 300 { bNOINTERACTION = bKILLED = true; }
+		D008 P 1 A_FadeOut();
+		Wait;
+	}
+}
+
+Class StakeGunStakeEmpowered : StakeGunStake
+{
+	Default
+	{
+		StakeGunStake.Empowered true;
+	}
+	/*
+	States
+	{
+	Spawn:
+		D008 P 0 NoDelay 
+		{
+			extra = WaitTime;
+			forcepain = random(0,1);
+			onfire = 1;
+		}
+		Goto Super::Looping;
+	}
+	*/
+}
+/*
+Class StakeGunStakeStoke
+{
+	int uangle[2];
+	int count;
+	int oldangle;
+	double uz;
+	Default
+	{
+		Projectile;
+		Scale 0.15;
+		BounceFactor 0.4;
+		BounceType "Doom";
+		+BOUNCEONWALLS
+		+BOUNCEONCEILINGS
+		+SEEKERMISSILE
+		+THRUACTORS
+		+NOTIMEFREEZE
+		+NOEXPLODEFLOOR
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_JumpIf(IsPointerEqual(AAPTR_TRACER,AAPTR_NULL),"Dropout")
+		TNT1 A 0 A_SetUserArray(uangle,0,angle)
+		TNT1 A 0 A_SetUserVar(uz,z)
+		TNT1 A 0 A_Warp(AAPTR_TRACER,0,0,0,0,WARPF_NOCHECKPOSITION)
+		TNT1 A 0 A_SetUserArray(uangle,1,angle)
+		TNT1 A 0 A_SetUserVar(uz,uz-z)
+		TNT1 A 0 A_Warp(AAPTR_TRACER,0,0,uz,uangle[0]-uangle[1],WARPF_NOCHECKPOSITION,"",0,-0.75)
+	Warping:
+		D008 P 0 A_JumpIf(IsPointerEqual(AAPTR_TRACER,AAPTR_NULL),"Dropout")
+		D008 P 0 A_JumpIfHealthLower(1,"DropOut",AAPTR_TRACER)
+		D008 P 0 A_Warp(AAPTR_TRACER,0,0,uz,uangle[0]-uangle[1],WARPF_NOCHECKPOSITION|WARPF_INTERPOLATE,"",0,-0.75)
+		D008 P 1 A_SetUserVar("count",count+1)
+		D008 P 0 A_JumpIf(count>=300,1)
+		Loop
+		D008 P 0 A_FadeOut(0.02)
+		Loop
+	Death:
+	Dropout:
+		D008 P 0 A_Gravity
+		D008 P 1 A_SetUserVar("count",count+1)
+		D008 P 0 A_JumpIf(count<=299,"Dropout")
+		D008 P 0 A_FadeOut(0.02)
+		Wait
+		
+	}
+}
+*/
+Class StakeOnFireToken : Inventory {	Default { Inventory.MaxAmount 1;	} }
+
+Class StakeFireTrail : AEoDFX
+{
+	Default
+	{
+		+NOINTERACTION
+		Scale 0.2;
+		RenderStyle "Add";
+	}
+	States
+	{
+	Spawn:
+		XPLO ABCDEFGHIJKL 1 Bright A_FadeOut(0.03);
+		Stop;
+	}
+}
+
+Class StakeTrail : AEoDFX
+{
+	Default
+	{
+		+NOINTERACTION
+		+NOTIMEFREEZE
+		RenderStyle "Translucent";
+		Scale 0.2;
+		Alpha 0.7;
+	}
+	States
+	{
+	Spawn:
+		FX04 D 1 A_FadeOut(0.05);
+		Wait;
+	}
+}
