@@ -134,6 +134,7 @@ Class AEoDHandler : EventHandler
 	}
 	private bool DestroyMe;
 	private uint8 Timer;
+	private bool FirstTime;
 	override void WorldTick()
 	{
 		if (DestroyMe)
@@ -142,8 +143,38 @@ Class AEoDHandler : EventHandler
 				Destroy();
 			return;
 		}
-	
+		
 		Timer++;
+		
+		if ((Timer % 35) == 0)
+		{
+			Actor plr;
+			if (playeringame[0])
+				plr = players[0].mo;
+			if (plr)
+			{
+				if (GameMode == 1)
+				{
+					if (!L4DDirector)
+					{
+						Actor.Spawn("TheDirectorL4D", plr.pos);
+						plr.A_GiveInventory("L4DDirToken");
+					}
+				}
+				else
+				{
+					if (NorDir && !NormalDirector)	Actor.Spawn("TheDirector", plr.pos);
+					if (L4DDir && !L4DDirector)	
+					{
+						Actor.Spawn("TheDirectorL4D", plr.pos);
+						plr.A_GiveInventory("L4DDirToken");
+					}
+				}
+			}
+			DirectorsEnabled = (NorDir || L4DDir);
+		}
+		
+		
 		if (Timer >= 350)
 		{
 			Timer = 0;
@@ -188,29 +219,9 @@ Class AEoDHandler : EventHandler
 		Souls = AEArray.Create();
 		FX = AEArray.Create();
 		
-		
 		GetCvars();
 		UpdateThemes();
 		let plr = players[0].mo;
-		if (!e.IsReopen && !e.IsSaveGame && plr)
-		{
-			if (GameMode == 1)
-			{
-				Actor.Spawn("TheDirectorL4D", plr.pos);
-				plr.A_GiveInventory("L4DDirToken");
-			}
-			else
-			{
-				if (NorDir)	Actor.Spawn("TheDirector", plr.pos);
-				if (L4DDir)	
-				{
-					Actor.Spawn("TheDirectorL4D", plr.pos);
-					plr.A_GiveInventory("L4DDirToken");
-				}
-			}
-			
-			DirectorsEnabled = (NorDir || L4DDir);
-		}
 	}
 	
 	// Tremendous thanks to Phantombeta for helping me out with this.

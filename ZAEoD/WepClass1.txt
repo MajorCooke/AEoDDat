@@ -244,7 +244,7 @@ Class AEoDJackBomb : AEoDWeaponSlot01 // 6151
 Class JackBomb : Actor
 {
 	int user_time;
-	
+	AEoDHandler Event;
 	Default
 	{
 		Speed 0;
@@ -284,6 +284,27 @@ Class JackBomb : Actor
 		JBTH A 0 Bright 
 		{
 			bool found = false;
+			
+			if (!Event)	Event = AEoDHandler.Fetch();
+			if (Event)
+			{
+				for (int i = 0; i < Event.Monsters.Size(); i++)
+				{
+					let mo = Event.Monsters.Actors[i];
+					
+					if (!mo || mo == self || mo.bKILLED || mo.bFRIENDLY || mo.bMISSILE || 
+						mo.bNOINTERACTION || mo.bNOSECTOR || mo.bKILLED || 
+						mo.bNOTARGETSWITCH || mo.bDORMANT)
+						continue;
+						
+					if (CheckSight(mo,SF_IGNOREVISIBILITY|SF_IGNOREWATERBOUNDARY))
+					{
+						found = true;
+						mo.target = self;
+					}
+				}
+			}
+			/*
 			let it = ThinkerIterator.Create("Actor", Thinker.STAT_DEFAULT);
 			Actor mo;
 			while (mo = Actor(it.Next()))
@@ -302,7 +323,7 @@ Class JackBomb : Actor
 					mo.target = self;
 				}
 			}
-			
+			*/
 			if (found)
 				A_AlertMonsters(0, AMF_TARGETEMITTER);
 			
