@@ -34,37 +34,38 @@ Class AEoDWeaponContainer play
 	override void OnDestroy() 	{	Weapons.Clear(); Super.OnDestroy(); }
 	void 	Init(int s)			{	Weapons.Clear(); TSlot = s;	}
 	void 	Clear()				{	Weapons.Clear();	}
-	uint 	GetSize() 			{	return Weapons.Size(); }
+	int 	GetSize() 			{	return Weapons.Size(); }
 	
 	// Gets the weapon at the specified position.
-	AEoDWeaponBase Get(uint pos)
+	AEoDWeaponBase Get(int pos)
 	{
 		return (pos >= 0 && pos < Weapons.Size()) ? Weapons[pos] : null;
 	}
 	
 	// Attempts to find the position of the weapon if available.
-	uint Find(AEoDWeaponBase who)		
+	int Find(AEoDWeaponBase who)		
 	{
 		return (who) ? Weapons.Find(who) : Weapons.Size();
 	}
 	
 	// Makes a weapon ineligible for counting towards 
-	void Delete(uint index, int deletecount = 1)
+	void Delete(int index, int deletecount = 1)
 	{
 		Weapons.Delete(index, deletecount);
 	}
 	
 	// Inserts a weapon at an index.
-	void Insert(uint index, AEoDWeaponBase item)
+	void Insert(int index, AEoDWeaponBase item)
 	{
 		// Name nam = (item) ? (item.GetClassName()) : 'Null';
 		// Console.Printf("Added %s to slot %d, index %d", nam, TSlot, index);
 		Weapons.Insert(index, item);	
 	}
 	
-	uint Push(AEoDWeaponBase item)
+	int Push(AEoDWeaponBase item)
 	{
-		return Weapons.Push(item);
+		int id = Weapons.Push(item);
+		return id;
 	}
 	
 	// Gets the highest and lowest ranking weapon indexes of available weapons
@@ -113,7 +114,7 @@ Class AEoDWeaponContainer play
 	}
 	
 	// Tries to find a weapon with the specified slot index in particular.
-	AEoDWeaponBase GetSpecific(uint Index)
+	AEoDWeaponBase GetSpecific(int Index)
 	{		
 		if (Weapons.Size() < 1)
 			return null;
@@ -172,7 +173,7 @@ Class AEoDWeaponIndexer : Object play
 		//Console.Printf("3");
 	}
 	
-	bool CheckRange(uint Slot) const	{	return (Slot > -1 && Slot < Size);	}
+	bool CheckRange(int Slot) const	{	return (Slot > -1 && Slot < Size);	}
 	
 	void ClearAt(int Slot = -1)
 	{
@@ -184,7 +185,7 @@ Class AEoDWeaponIndexer : Object play
 		}
 		else if (Base[Slot])	Base[Slot].Clear();
 	}
-	void InsertAt(uint Slot, uint index, AEoDWeaponBase item)
+	void InsertAt(int Slot, int index, AEoDWeaponBase item)
 	{
 		if (!item || !CheckRange(Slot))	
 		{
@@ -197,7 +198,7 @@ Class AEoDWeaponIndexer : Object play
 		//else Console.Printf("Base[%d] is null!", Slot);
 	}
 	
-	void PushAt(uint Slot, AEoDWeaponBase item)
+	void PushAt(int Slot, AEoDWeaponBase item)
 	{
 		if (!CheckRange(Slot))	return;
 		
@@ -205,7 +206,7 @@ Class AEoDWeaponIndexer : Object play
 			Base[Slot].Push(item);
 		//else Console.Printf("-2");
 	}
-	void DeleteAt(uint Slot, uint index, int deletecount = 1)
+	void DeleteAt(int Slot, int index, int deletecount = 1)
 	{
 		if (!CheckRange(Slot))	return;
 		
@@ -215,7 +216,7 @@ Class AEoDWeaponIndexer : Object play
 	
 	//--------------------------------------------------------------------------
 	// The meat of the array searching is here. 
-	AEoDWeaponBase FindNextWeapon(bool prev, uint Slot, uint Index, bool SameSlot = false)
+	AEoDWeaponBase FindNextWeapon(bool prev, int Slot, int Index, bool SameSlot = false)
 	{
 		AEoDWeaponBase Pointer = null;
 		bool FixHiLo = false;
@@ -325,7 +326,7 @@ Class AEoDWeaponIndexer : Object play
 	//
 	// Used for getting the lowest ranking weapon available.
 	//==========================================================================
-	AEoDWeaponBase FindFirstSlotWeapon(uint Slot)
+	AEoDWeaponBase FindFirstSlotWeapon(int Slot)
 	{
 		AEoDWeaponBase Pointer = null;
 		int hi = -1, lo = -1;

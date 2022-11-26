@@ -44,7 +44,7 @@ Class AEoDHandler : EventHandler
 	
 	private int		Themes;
 	
-	AArray 			Monsters, DeadMonsters, Absorbables, FX;
+	AEArray 		Monsters, DeadMonsters, Absorbables, FX, Souls;
 	bool 			DemonMorph, CvarsUpdated, DirectorsEnabled, NoDirectors;
 	DirectorBase 	L4DDirector, NormalDirector;
 	int 			L4DIntensity, MonIntensity, L4DDir, NorDir,
@@ -124,12 +124,25 @@ Class AEoDHandler : EventHandler
 	override void OnRegister()
 	{
 		Super.OnRegister();
-		UpdateThemes();
+		if (level.mapname == 'TitleMap' || level.levelname == 'TitleMap')
+			DestroyMe = true;
+		else
+		{
+			
+			UpdateThemes();
+		}
 	}
-	
+	private bool DestroyMe;
 	private uint8 Timer;
 	override void WorldTick()
 	{
+		if (DestroyMe)
+		{
+			if (!bDESTROYED)
+				Destroy();
+			return;
+		}
+	
 		Timer++;
 		if (Timer >= 350)
 		{
@@ -159,17 +172,21 @@ Class AEoDHandler : EventHandler
 			Monsters.Clean();
 			DeadMonsters.Clean();
 			Absorbables.Clean();
+			Souls.Clean();
 			FX.Clean();
 		}
 	}
 	
 	override void WorldLoaded(WorldEvent e)
 	{
+		if (DestroyMe)	return;
+		
 		GibCount = Timer = 0;
-		Monsters = AArray.Create();
-		DeadMonsters = AArray.Create();
-		Absorbables = AArray.Create();
-		FX = AArray.Create();
+		Monsters = AEArray.Create();
+		DeadMonsters = AEArray.Create();
+		Absorbables = AEArray.Create();
+		Souls = AEArray.Create();
+		FX = AEArray.Create();
 		
 		
 		GetCvars();
@@ -199,7 +216,7 @@ Class AEoDHandler : EventHandler
 	// Tremendous thanks to Phantombeta for helping me out with this.
 	override bool InputProcess(InputEvent ev)
 	{
-		
+		if (DestroyMe)	return false;
 		if (ev.Type == InputEvent.Type_KeyDown)// && ev.KeyChar >= 0x30 && ev.KeyChar <= 0x39) // 0x30, 0x39 are '0' and '9'
 		{		
 			// Make sure the player exists.
@@ -239,6 +256,8 @@ Class AEoDHandler : EventHandler
 	
 	override void NetworkProcess(ConsoleEvent e)
 	{	
+		if (DestroyMe)	return;
+		
 		int num = e.Player;
 		let plr = players[num].mo;
 		if (!plr)	return;
@@ -281,15 +300,28 @@ Class AEoDHandler : EventHandler
 		}
 	}
 	
+	bool, bool CheckGibCount()
+	{
+		bool soft = (GibCount < MaxSoftGibCount);
+		bool hard = (GibCount < MaxGibCount);
+		return hard, soft;
+	}
+	
 	override void WorldThingSpawned(WorldEvent e)
 	{
+		if (DestroyMe)	return;
+		
 		Actor mo = e.Thing;
+		if (!mo)
+			return;
+		
 		if (mo is "GibletBase")
 		{
 			GibCount++;
 			return;
 		}
-		if (GibCount < MaxGibCount)
+		
+		if (mo is 'GibSpawnerBase')
 		{
 			let gib = GibSpawnerBase(mo);
 			if (gib)
@@ -298,16 +330,29 @@ Class AEoDHandler : EventHandler
 				return;
 			}
 		}
-		
 		if (mo.bCORPSE || mo is 'AEoDCorpse')
 		{
 			DeadMonsters.Push(mo);
 			return;
 		}
+		
+		if (mo is 'DMSoulFragment')
+		{
+			Souls.Push(mo);
+			return;
+		}
+		
+		if (mo is 'SoulReaperBeam')
+		{
+			let beam = SoulReaperBeam(mo);
+			if (beam)	beam.Event = self;
+			return;
+		}
+		
 		// Don't give to things that are always invisible such as the directors
 		// or the base monster spawners. Obviously ignore anything with NOINTERACTION
 		// since giving that to a monster while alive is just a bad idea.
-		if (!mo || mo.bNOINTERACTION || mo.bNOBLOCKMAP || mo is "DirectorBase" || mo is "AEoDMonsterSpawner")
+		if (mo.bNOINTERACTION || mo.bNOBLOCKMAP || mo is "DirectorBase" || mo is "AEoDMonsterSpawner")
 			return;
 			
 		if (mo.bISMONSTER || mo.bSHOOTABLE)
@@ -329,6 +374,8 @@ Class AEoDHandler : EventHandler
 	
 	override void WorldThingDied(WorldEvent e)
 	{
+		if (DestroyMe)	return;
+	
 		Actor mo = e.Thing;
 		if (!mo || mo.bNOINTERACTION || mo.bNOBLOCKMAP || mo is "DirectorBase" || mo is "AEoDMonsterSpawner")
 			return;
@@ -342,13 +389,15 @@ Class AEoDHandler : EventHandler
 	
 	override void WorldThingRevived(WorldEvent e)
 	{
+		if (DestroyMe)	return;
+	
 		Actor mo = e.Thing;
 		if (mo && mo.bISMONSTER)
 		{
 			if (DemonMorph)
 				mo.A_GiveInventory("DemonMorphTranslationItem", 1);
 			
-			// AArray handles Delete differently than expected.
+			// AEArray handles Delete differently than expected.
 			Monsters.Push(mo);
 			DeadMonsters.Delete(mo);
 		}
@@ -356,9 +405,13 @@ Class AEoDHandler : EventHandler
 	
 	override void WorldThingDestroyed(WorldEvent e)
 	{
+		if (DestroyMe)	return;
+		
 		Actor mo = e.Thing;
 		if (mo is "GibletBase")
+		{
 			GibCount = Max(0, GibCount - 1);
+		}
 	}
 	
 	//==========================================================================
@@ -379,6 +432,8 @@ Class AEoDHandler : EventHandler
 	//==========================================================================
 	void ChangeWeapons(ConsoleEvent e) 
 	{
+		if (DestroyMe)	return;
+	
 		int pnum = e.Player;
 		if (!playeringame[pnum])
 			return;
@@ -426,7 +481,6 @@ Class AEoDHandler : EventHandler
 			String s = commandStrings[2];
 			if (len > 1)	s = s.Left(len - 1);
 			int num = s.ToInt();
-			//int num = (len > 0) ? s.ByteAt(len - 1) : 0;
 			if (Finder)
 				next = Finder.GetNextWeapon(player, AEoDWeaponIdentifier.Ins_SetSlot, num);
 		}
@@ -439,13 +493,15 @@ Class AEoDHandler : EventHandler
 	// 
 	// Self explanatory.
 	//==========================================================================
-	static void GlobalToggleDirectors(int on = 0, bool text = false, bool forced = false)
+	static void GlobalToggleDirectors(int on = 0, int notext = 0, bool forced = false)
 	{
-		AEoDHandler.SendNetworkEvent("ToggleDirectors", on, text, forced);
+		AEoDHandler.SendNetworkEvent("ToggleDirectors", on, notext, forced);
 	}
 	
-	void ToggleDirectors(int status, bool silent, bool forced = false)
+	void ToggleDirectors(int status, int silent = 0, bool forced = false)
 	{
+		if (DestroyMe)	return;
+		
 		bool good = (L4DDirector || NormalDirector);
 		
 		if (!forced)
@@ -453,7 +509,7 @@ Class AEoDHandler : EventHandler
 			if (AEoDGameMode == GameMode_L4D)
 			{
 				status = 1;
-				silent = true;
+				silent = 1;
 				Console.Printf("Directors cannot be toggled in this game mode.");
 			}
 		}
@@ -499,20 +555,18 @@ Class AEoDHandler : EventHandler
 	//==========================================================================
 	private void ToggleDemonMorphEffect(bool on)
 	{
+		if (DestroyMe)	return;
+		
 		if (on)
 		{
 			DemonMorph = true;
-			ThinkerIterator it = ThinkerIterator.Create("Actor", Thinker.STAT_DEFAULT);
-			Actor mo;
-			while (mo = Actor(it.Next()))
+			for (int i = 0; i < Monsters.Size(); i++)
 			{
-				if (mo.bISMONSTER && mo.health > 0)
+				let mo = Monsters.Actors[i];
+				if (mo.bISMONSTER && !mo.bKILLED)
 				{
-					if (mo.CountInv("DemonMorphTranslationItem") 
-						|| mo.Species == 'Director'
-						|| mo.Species == 'AEoDSpawner')	continue;
-					
-					mo.A_GiveInventory("DemonMorphTranslationItem", 1);
+					if (mo.CountInv("DemonMorphTranslationItem") < 1)
+						mo.A_GiveInventory("DemonMorphTranslationItem",1);
 				}
 			}
 		}
@@ -520,15 +574,13 @@ Class AEoDHandler : EventHandler
 		{
 			//Console.Printf("Called");
 			DemonMorph = false;
-			ThinkerIterator it = ThinkerIterator.Create("Actor", Thinker.STAT_DEFAULT);
-			Actor mo;
-			while (mo = Actor(it.Next()))
+			for (int i = 0; i < Monsters.Size(); i++)
 			{
-				let inv = Inventory(mo.FindInventory("DemonMorphTranslationItem"));
-				if (inv)	
+				let mo = Monsters.Actors[i];
+				if (mo.bISMONSTER && !mo.bKILLED)
 				{
-					//Console.Printf("Attempting Destruction");
-					inv.DepleteOrDestroy();
+					let inv = mo.FindInventory("DemonMorphTranslationItem");
+					if (inv)	inv.DepleteOrDestroy();
 				}
 			}
 		}

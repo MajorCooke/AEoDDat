@@ -536,6 +536,17 @@ Class GibSpawnerBase : AEoDFX
 		RenderStyle "None";
 		BloodColor "Red";
 	}
+	bool, bool CheckGibCount()
+	{
+		if (!Event)	Event = AEoDHandler.Fetch();
+		if (Event)
+		{
+		//	bool soft, hard;
+		//	[soft, hard] = Event.CheckGibCount();
+			return Event.CheckGibCount();
+		}
+		return true, true;
+	}
 	
 	States
 	{
@@ -543,12 +554,24 @@ Class GibSpawnerBase : AEoDFX
 		TNT1 A 0;
 		TNT1 A 1
 		{
-			// Too many gibs. The event handler won't assign itself in this case.
+			
+			
+			// Too many gibs.
 			if (!Event)
-			{	Destroy();	return;	}
+			{
+				Destroy();	return;	
+			}
+			
+			bool soft, hard;
+			[hard, soft] = Event.CheckGibCount();
+			
+			if (!hard)
+			{
+				Destroy();	return;
+			}
 			
 			// Force simplification since we're at the softer limit.
-			if (Event.GibCount >= MaxSoftGibCount)
+			if (!soft)
 				simple = true;
 				
 			
@@ -764,9 +787,8 @@ Class GibletBase : AEoDFX
 	
 	override void BeginPlay()
 	{	
-		user_spawntrail = GetCvar("SpawnBloodTrails");
-		ChangeStatNum(STAT_GIBS);
 		Actor.BeginPlay();
+		user_spawntrail = GetCvar("SpawnBloodTrails");
 	}
 	
 	void SpawnGibBloodTrail()
@@ -1273,7 +1295,7 @@ Class BloodGib4 : BloodGib1		//bloodthing
 
 Class GibletBaseSpawner : AEoDFX 
 {	
-	Color P1;
+//	Color P1;
 	Default 
 	{
 		+NOTELESTOMP
@@ -1589,12 +1611,6 @@ Class PurpleGibSp : GreenGib
 		}
 		Stop;
 	Spawn2:
-		TNT1 A 0
-		{
-			if (A_CheckProximity("Null","GibletBase",2048,GetCVar("MaxGibCount"),CPXF_ANCESTOR|CPXF_NOZ,Player1))
-			{	return ResolveState("Null");	}
-			return ResolveState(1);
-		}
 		TNT1 AA 0
 		{
 			

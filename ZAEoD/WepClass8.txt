@@ -3,8 +3,9 @@ Class StakeGunStake : FastProjectile
 	const ZVel = -0.2;
 	const WaitTime = 6;
 	private int 	count, crash, forcepain, extra;
-	private double	ang, angdiff, tradius, theight;
-	private Vector3 off, tvel;
+	private double	ang, angdiff, tradius, theight, 
+					stickAngle, stickRadius, stickHeight;
+	private Vector3 off, tvel, ret;
 	
 	
 	bool			onfire;
@@ -22,6 +23,7 @@ Class StakeGunStake : FastProjectile
 		+NOTIMEFREEZE
 		+FORCERADIUSDMG
 		+PAINLESS
+		+NODAMAGETHRUST
 		Speed 70;
 		Radius 8;
 		Height 8;
@@ -61,17 +63,17 @@ Class StakeGunStake : FastProjectile
 		if (bKILLED || !victim || victim == target || victim.health < 1)
 			return 1;
 		
-		bPAINLESS = false;
+		bPAINLESS = bNODAMAGETHRUST = false;
 		int rng = random(1, (bSTRIFEDAMAGE ? 4 : 8));
-		victim.DamageMobj(self, target,(130 * rng) + (extra * random(1,4) + random(50,100) * count), DamageType);
-		bPAINLESS = true;
-		
-		// If the monster survived, let the ripper levels handle it.
-		if (victim && victim.health > 0 && victim.bSHOOTABLE)
-			return -1;
+		victim.DamageMobj(self, target, (130 * rng) + (extra * random(1,4) + random(50,100) * count), DamageType);
+		bPAINLESS = bNODAMAGETHRUST = true;
 		
 		// If the monster dies, keep flying through it.
-		return 1;
+		if (!victim || (victim.health < 1 && (victim.bISMONSTER || victim.bSHOOTABLE)))
+			return 1;
+		
+		// If the monster survived, let the ripper levels handle it.
+		return -1;
 	}
 	
 	States
@@ -87,15 +89,11 @@ Class StakeGunStake : FastProjectile
 			if (onfire)
 			{
 				A_SpawnItemEx("StakeFireTrail",-2,0,0,0,0,0,0,SXF_NOCHECKPOSITION);
-				bNODAMAGETHRUST = true;
 				A_Explode(90,64,0,0,64);
-				bNODAMAGETHRUST = false;
 			}
 			else
 			{
-				bNODAMAGETHRUST = true;
 				A_Explode(30,36,0,0,36);
-				bNODAMAGETHRUST = false;
 			}
 			if (count < WaitTime)
 			{
@@ -140,24 +138,18 @@ Class StakeGunStake : FastProjectile
 			count = 0;
 			if (tracer && tracer.health > 0)
 			{
+				/*
 				ang = angle;
 				angdiff = DeltaAngle(AngleTo(tracer), angle);
 				off = level.Vec3Diff(tracer.pos, pos);
+				*/
 				
-				/*
-				tradius = tracer.radius;
-				theight = tracer.height;
 				let posDiff = level.Vec3Diff (tracer.pos, pos);
 
 				stickAngle = DeltaAngle (tracer.angle, atan2 (posDiff.Y, posDiff.X));
 				stickRadius = (posDiff.XY.Length () / tracer.radius);
 				stickHeight = (posDiff.Z / tracer.height);
 
-				ret.XY = Actor.AngleToVector (tracer.angle + stickAngle, tracer.radius * stickRadius);
-				ret.Z = tracer.Height * stickHeight;
-
-				ret = level.Vec3Offset (tracer.pos, ret);
-				*/
 			}
 		}
 	Sticking:
@@ -168,11 +160,18 @@ Class StakeGunStake : FastProjectile
 			
 			if (tracer && tracer.health > 0) // Keep sticking.
 			{
+				/*
 				Vector2 ofr = off.XY;
-				ofr = RotateVector(ofr, angdiff - 90.0);
-				Warp(tracer, ofr.x, -ofr.y, off.z, 0, WARPF_NOCHECKPOSITION);
+				ofr = RotateVector(ofr, angdiff + 90.0);
+				Warp(tracer, ofr.x, ofr.y, off.z, 0, WARPF_NOCHECKPOSITION);
 				tvel = tracer.vel;
 				angle = tracer.angle - angdiff;
+				*/
+				ret.XY = Actor.AngleToVector (tracer.angle + stickAngle, tracer.radius * stickRadius);
+				ret.Z = tracer.Height * stickHeight;
+
+				ret = level.Vec3Offset (tracer.pos, ret);
+				SetOrigin(ret, true);
 				return ResolveState(null);
 			}
 			return ResolveState("Dropout");

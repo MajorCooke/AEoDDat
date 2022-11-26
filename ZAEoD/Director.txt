@@ -84,12 +84,6 @@ Class DirectorBase : Actor
 		Species "Director";
 	}
 	
-	override void BeginPlay()
-	{
-		ChangeStatNum(STAT_DIRECTOR);
-		Super.BeginPlay();
-	}
-	
 	override bool CanCollideWith(Actor other, bool passive)
 	{
 		if (!other)	return false;
@@ -113,16 +107,16 @@ Class DirectorBase : Actor
 
 Class DirectorMain : DirectorBase
 {
-	AArray SmallKids, MediumKids, LargeKids;
+	AEArray SmallKids, MediumKids, LargeKids;
 	int RealIntensity;
 	int RealDelay;
 	
 	
 	override void PostBeginPlay()
 	{
-		SmallKids = AArray.Create();
-		MediumKids = AArray.Create();
-		LargeKids = AArray.Create();
+		SmallKids = AEArray.Create();
+		MediumKids = AEArray.Create();
+		LargeKids = AEArray.Create();
 		
 		Super.PostBeginPlay();
 	}
@@ -182,7 +176,7 @@ Class DirectorMain : DirectorBase
 	//--------------------------------------------------------------------------
 	// Custom Functions
 	//--------------------------------------------------------------------------
-	// Removes a kid from the arrays. Note that the AArray Delete() function just
+	// Removes a kid from the arrays. Note that the AEArray Delete() function just
 	// nulls it out. Said nulls are cleaned by an auto timer every 10 seconds
 	// (see above
 	void RemoveKid(Actor who)

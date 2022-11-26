@@ -281,7 +281,7 @@ Class JackBomb : Actor
 			//A_SpawnItemEx("JackBombMonsterForcer",0,0,1,0,0,0,0,SXF_SETMASTER|SXF_NOCHECKPOSITION|SXF_ORIGINATOR);
 		}
 	Looping:
-		JBTH BCDEDCBA 5 Bright 
+		JBTH A 0 Bright 
 		{
 			bool found = false;
 			let it = ThinkerIterator.Create("Actor", Thinker.STAT_DEFAULT);
@@ -296,7 +296,7 @@ Class JackBomb : Actor
 					mo.bNOTARGETSWITCH || mo.bDORMANT)
 					continue;
 					
-				if (mo.bISMONSTER && mo.health > 0 && CheckSight(mo,SF_IGNOREWATERBOUNDARY))
+				if (mo.bISMONSTER && CheckSight(mo,SF_IGNOREVISIBILITY|SF_IGNOREWATERBOUNDARY))
 				{
 					found = true;
 					mo.target = self;
@@ -305,6 +305,10 @@ Class JackBomb : Actor
 			
 			if (found)
 				A_AlertMonsters(0, AMF_TARGETEMITTER);
+			
+		}
+		JBTH BCDEDCBA 5 Bright 
+		{
 			
 			user_time++;
 			return A_JumpIf(user_time >= 73,"LoopEnd");

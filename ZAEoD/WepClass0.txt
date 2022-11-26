@@ -8,6 +8,8 @@ Class SoulReaperBeam : Actor
 	double closestDist;
 	bool skip;
 	
+	AEoDHandler Event;
+	
 	Default
 	{
 		Projectile;
@@ -99,8 +101,31 @@ Class SoulReaperBeam : Actor
 			closestDist = closestCon;
 			closest = null;
 			
+			
+			
+			Actor mo = null;
+			
+			if (Event)
+			{
+				for (int i = 0; i < Event.Souls.Size(); i++)
+				{
+					mo = Event.Souls.Actors[i];
+					if (!mo || mo.bKILLED)	continue;
+					
+					double dist = Distance3DSquared(mo);
+				
+					if (dist > closestDist)
+						continue;
+					
+					if (!CheckSight(mo, SF_IGNOREVISIBILITY|SF_IGNOREWATERBOUNDARY))
+						continue;
+						
+					closest = mo;
+					closestDist = dist;
+				}
+			}
+			/*
 			ThinkerIterator it = ThinkerIterator.Create("DMSoulFragment",STAT_SOULS);
-			Actor mo;
 			while (mo = Actor(it.Next()))
 			{
 				double dist = Distance3DSquared(mo);
@@ -114,7 +139,7 @@ Class SoulReaperBeam : Actor
 				closest = mo;
 				closestDist = dist;
 			}
-			
+			*/
 			if (closest)
 			{
 				bTHRUACTORS = true;

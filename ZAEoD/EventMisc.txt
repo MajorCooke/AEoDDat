@@ -1,6 +1,6 @@
 //==============================================================================
 //==============================================================================
-// AArray Class
+// AEArray Class
 // Designed by Major Cooke
 //
 // The goal behind this is an adjustable actor array with functions for
@@ -8,7 +8,7 @@
 //==============================================================================
 //==============================================================================
 
-Class AArray
+Class AEArray
 {
 	const DefaultSize = 16;
 	protected Class<Actor> ClassType;
@@ -18,9 +18,9 @@ Class AArray
 	//--------------------------------------------------------------------------
 	// Initialization functions.
 	//--------------------------------------------------------------------------
-	static AArray Create(int size = -1, Name type = '')
+	static AEArray Create(int size = -1, Name type = '')
 	{
-		AArray arr = new('AArray');
+		AEArray arr = new('AEArray');
 		arr.Init(size, type);
 		return arr;
 	}
@@ -86,12 +86,9 @@ Class AArray
 		return old - size;
 	}
 	
-	// Apparently returns cannot convert from UInt to Int properly, GZDoom refuses
-	// to start up. So it must be assigned to variable first before being returned.
 	int Find(Actor mo)
 	{
-		int pos = Actors.Find(mo);
-		return pos;
+		return Actors.Find(mo);
 	}
 	
 	Actor FindActor(Actor mo)
@@ -115,6 +112,26 @@ Class AArray
 	void Clean()
 	{
 		int size = Actors.Size();
+		// Array empty.
+		if (size < 1)	return;
+		
+		Array<Actor> temp; temp.Clear(); temp.Resize(Actors.Size());
+		int j = 0;
+		for (int i = 0; i < size; i++)
+		{
+			if (Actors[i])
+			{
+				temp[j] = Actors[i];
+				j++;
+			}
+		}	
+		temp.Resize(j);
+		Actors.Move(temp);
+	}
+	/*
+	void Clean()
+	{
+		int size = Actors.Size();
 		if (size < 1)
 			return;
 			
@@ -124,4 +141,5 @@ Class AArray
 			
 		Actors.Move(temp);
 	}
+	*/
 }
